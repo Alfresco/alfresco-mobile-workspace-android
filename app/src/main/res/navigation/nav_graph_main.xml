@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/baseFragment">
+
+    <fragment
+        android:id="@+id/basicAuthFragment"
+        android:name="com.alfresco.dbp.sample.features.basic.BasicAuthFragment"
+        android:label="BasicAuthFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/baseFragment"
+        android:name="com.alfresco.dbp.sample.features.BaseFragment"
+        android:label="BaseFragment" >
+        <action
+            android:id="@+id/action_baseFragment_to_basicAuthFragment"
+            app:destination="@id/basicAuthFragment" />
+        <action
+            android:id="@+id/navigateToAdvancedSettings"
+            app:destination="@id/advancedSettingsFragment" />
+        <action
+            android:id="@+id/navigateToRefreshToken"
+            app:destination="@id/refreshTokenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/advancedSettingsFragment"
+        android:name="com.alfresco.dbp.sample.features.pkce.AdvancedSettingsFragment"
+        android:label="AdvancedSettingsFragment" />
+    <fragment
+        android:id="@+id/refreshTokenFragment"
+        android:name="com.alfresco.dbp.sample.features.pkce.RefreshTokenFragment"
+        android:label="RefreshTokenFragment" />
+</navigation>

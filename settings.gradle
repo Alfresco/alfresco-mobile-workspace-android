@@ -1,0 +1,2 @@
+rootProject.name='android-dbp-sample-app'
+include ':app'

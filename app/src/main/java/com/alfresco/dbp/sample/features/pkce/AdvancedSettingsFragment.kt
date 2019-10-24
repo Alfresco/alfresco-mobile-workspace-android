@@ -25,8 +25,8 @@ class AdvancedSettingsFragment : Fragment(R.layout.fragment_advanced_settings) {
         btnSave.setOnClickListener {
             mainViewModel.changeSettings(
                     tilRealm.editText?.text.toString(),
-                    tilRedirectUrl.editText?.text.toString(),
-                    tilClientId.editText?.text.toString())
+                    tilClientId.editText?.text.toString(),
+                    tilRedirectUrl.editText?.text.toString())
             findNavController().popBackStack()
         }
 

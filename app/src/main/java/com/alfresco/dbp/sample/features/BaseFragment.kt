@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.alfresco.dbp.sample.MainViewModel
 import com.alfresco.dbp.sample.PkceAuthUiModel
 import com.alfresco.dbp.sample.R
+import com.alfresco.dbp.sample.common.navigateToRefreshToken
 import com.alfresco.dbp.sample.common.observe
 import kotlinx.android.synthetic.main.fragment_base.*
 
@@ -35,7 +36,7 @@ class BaseFragment : Fragment(R.layout.fragment_base) {
 
     private fun onResult(authUiModel: PkceAuthUiModel) {
         if (authUiModel.success) {
-            findNavController().navigate(BaseFragmentDirections.navigateToRefreshToken())
+            navigateToRefreshToken()
         } else {
             onError(authUiModel.error)
         }

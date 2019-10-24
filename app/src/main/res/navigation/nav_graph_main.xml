@@ -5,20 +5,9 @@
     app:startDestination="@id/baseFragment">
 
     <fragment
-        android:id="@+id/basicAuthFragment"
-        android:name="com.alfresco.dbp.sample.features.basic.BasicAuthFragment"
-        android:label="BasicAuthFragment" >
-        <argument
-            android:name="url"
-            app:argType="string" />
-    </fragment>
-    <fragment
         android:id="@+id/baseFragment"
         android:name="com.alfresco.dbp.sample.features.BaseFragment"
-        android:label="BaseFragment" >
-        <action
-            android:id="@+id/action_baseFragment_to_basicAuthFragment"
-            app:destination="@id/basicAuthFragment" />
+        android:label="BaseFragment">
         <action
             android:id="@+id/navigateToAdvancedSettings"
             app:destination="@id/advancedSettingsFragment" />
@@ -33,5 +22,8 @@
     <fragment
         android:id="@+id/refreshTokenFragment"
         android:name="com.alfresco.dbp.sample.features.pkce.RefreshTokenFragment"
-        android:label="RefreshTokenFragment" />
+        android:label="RefreshTokenFragment" >
+
+        <deepLink app:uri="alfresco.sample://refreshToken" />
+    </fragment>
 </navigation>

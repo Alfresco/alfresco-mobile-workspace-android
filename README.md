@@ -1,1 +1,1 @@
-# android-dbp-sample-app
+# content-app-android

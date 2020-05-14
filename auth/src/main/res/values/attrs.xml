@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="isTablet">false</bool>
+
+    <integer name="auth_visibility_phone_only">0</integer><!-- VISIBLE -->
+    <integer name="auth_visibility_tablet_only">2</integer><!-- GONE -->
+    <dimen name="auth_box_elevation">32dp</dimen>
+
+    <!-- LOGIN SETTINGS -->
+    <dimen name="auth_theme_default_padding">34dp</dimen>
+    <dimen name="auth_settings_section_spacing">40dp</dimen>
+    <dimen name="auth_settings_field_spacing">11dp</dimen>
+    <dimen name="auth_settings_header_spacing">6dp</dimen>
+
+    <dimen name="auth_dialog_max_width">420dp</dimen>
+
+    <declare-styleable name="Widget.Alfresco.ActionBar">
+        <attr name="actionBarPaddingLeft" format="dimension"/>
+        <attr name="actionBarPaddingRight" format="dimension"/>
+    </declare-styleable>
+</resources>

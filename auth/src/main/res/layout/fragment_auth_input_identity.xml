@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.alfresco.auth.activity.LoginViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/auth_theme_default_padding"
+            android:paddingEnd="@dimen/auth_theme_default_padding">
+
+            <include
+                layout="@layout/layout_auth_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp" />
+
+            <com.alfresco.ui.components.TextInputLayout
+                android:id="@+id/tilConnectUrl"
+                style="@style/Widget.Alfresco.TextField.Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:hint="@string/auth_connect_field_hint"
+                android:singleLine="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etConnectUrl"
+                    style="@style/Widget.Alfresco.TextField.Edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri"
+                    android:text="@={viewModel.identityUrl}" />
+
+            </com.alfresco.ui.components.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConnect"
+                style="@style/Widget.Alfresco.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:onClick="@{() -> viewModel.connect()}"
+                android:enabled="@{viewModel.connectEnabled}"
+                android:text="@string/auth_connect_button" />
+
+            <RelativeLayout
+                android:id="@+id/rlSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvSeparator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/muli_light"
+                    android:text="@string/auth_or_label"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/left_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tvSeparator"
+                    android:background="#1F000000" />
+
+                <View
+                    android:id="@+id/right_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/tvSeparator"
+                    android:background="#1F000000" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAdvancedSettings"
+                    style="@style/Widget.Alfresco.Action.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.showSettings()}"
+                    android:text="@string/auth_settings_button" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHelp"
+                    style="@style/Widget.Alfresco.Action.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:onClick="@{() -> viewModel.showWelcomeHelp()}"
+                    android:text="@string/auth_help_button" />
+
+                <include
+                    layout="@layout/view_alfresco_copyright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="@integer/auth_visibility_phone_only"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

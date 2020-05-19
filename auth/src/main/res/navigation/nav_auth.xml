@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_auth"
+    app:startDestination="@id/inputIdentityFragment">
+
+    <fragment
+        android:id="@+id/inputIdentityFragment"
+        android:name="com.alfresco.auth.fragments.InputIdentityFragment"
+        android:label="InputIdentityFragment"
+        tools:layout="@layout/fragment_auth_input_identity">
+        <action
+            android:id="@+id/action_auth_connect"
+            app:destination="@id/inputServerFragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:popExitAnim="@anim/anim_slide_out_right" />
+        <action
+            android:id="@+id/action_auth_settings"
+            app:destination="@id/advancedSettingsFragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:popExitAnim="@anim/anim_slide_out_right" />
+        <action
+            android:id="@+id/action_auth_basic"
+            app:destination="@id/basicAuthFragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:popExitAnim="@anim/anim_slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/inputServerFragment"
+        android:name="com.alfresco.auth.fragments.InputServerFragment"
+        android:label="InputServerFragment"
+        tools:layout="@layout/fragment_auth_input_server"/>
+    <fragment
+        android:id="@+id/advancedSettingsFragment"
+        android:name="com.alfresco.auth.fragments.AdvancedSettingsFragment"
+        android:label="AdvancedSettingsFragment"
+        tools:layout="@layout/fragment_auth_settings"/>
+    <fragment
+        android:id="@+id/basicAuthFragment"
+        android:name="com.alfresco.auth.fragments.BasicAuthFragment"
+        android:label="BasicAuthFragment"
+        tools:layout="@layout/fragment_auth_basic"/>
+</navigation>

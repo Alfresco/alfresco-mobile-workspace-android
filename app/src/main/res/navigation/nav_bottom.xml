@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_bottom"
+    app:startDestination="@id/nav_search">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.alfresco.content.app.fragment.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.alfresco.content.app.fragment.SearchFragment"
+        android:label="SearchFragment" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.alfresco.content.app.fragment.SettingsFragment"
+        android:label="SettingsFragment" />
+</navigation>

@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:theme="@style/Theme.Alfresco.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -19,7 +19,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/Theme.Alfresco"/>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.Alfresco"/>
 
     </application>
 

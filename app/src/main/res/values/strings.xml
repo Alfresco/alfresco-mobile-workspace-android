@@ -5,4 +5,12 @@
     <string name="nav_title_home">Home</string>
     <string name="nav_title_search">Search</string>
     <string name="nav_title_settings">Settings</string>
+
+    <string name="settings_theme">Theme</string>
+    <string-array name="settings_theme_labels">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+
 </resources>

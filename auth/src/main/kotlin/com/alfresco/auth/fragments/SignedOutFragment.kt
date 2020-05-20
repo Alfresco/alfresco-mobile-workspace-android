@@ -97,7 +97,7 @@ class SignedOutBottomSheet() : BottomSheetDialogFragment() {
         activity?.requestedOrientation = activityOrientation
     }
 
-    fun with(adapter: SignedOutAdapter) : SignedOutBottomSheet {
+    fun with(adapter: SignedOutAdapter): SignedOutBottomSheet {
         this.adapter = adapter
         return this
     }
@@ -143,7 +143,7 @@ class SignedOutFragmentViewModel : ViewModel() {
     lateinit var adapter: SignedOutAdapter
 }
 
-private fun onViewCreated(self: AppCompatDialogFragment, view: View,  adapter: SignedOutAdapter) {
+private fun onViewCreated(self: AppCompatDialogFragment, view: View, adapter: SignedOutAdapter) {
 
     // Disable dismissing the dialog
     self.isCancelable = false

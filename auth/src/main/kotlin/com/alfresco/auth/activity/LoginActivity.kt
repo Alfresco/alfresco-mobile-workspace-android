@@ -17,7 +17,11 @@ import androidx.core.view.ViewCompat
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.Credentials
-import com.alfresco.auth.fragments.*
+import com.alfresco.auth.fragments.AdvancedSettingsFragment
+import com.alfresco.auth.fragments.BasicAuthFragment
+import com.alfresco.auth.fragments.HelpFragment
+import com.alfresco.auth.fragments.InputIdentityFragment
+import com.alfresco.auth.fragments.InputServerFragment
 import com.alfresco.auth.ui.AuthenticationActivity
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.getViewModel
@@ -83,7 +87,6 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         if (hasNavigation) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
             toolbar.setNavigationOnClickListener { onBackPressed() }
-
         } else {
             toolbar.setNavigationIcon(null)
             toolbar.setNavigationOnClickListener(null)
@@ -101,7 +104,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
             LoginViewModel.Step.InputAppServer -> InputServerFragment.with(this).display()
             LoginViewModel.Step.EnterBasicCredentials -> BasicAuthFragment.with(this).display()
             LoginViewModel.Step.EnterPkceCredentials -> viewModel.ssoLogin()
-            LoginViewModel.Step.Cancelled -> finish();
+            LoginViewModel.Step.Cancelled -> finish()
         }
     }
 
@@ -115,7 +118,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         // Hide progress view on error
         viewModel.isLoading.value = false
 
-        val parentLayout: View = findViewById(android.R.id.content);
+        val parentLayout: View = findViewById(android.R.id.content)
         Snackbar.make(parentLayout,
                 Snackbar.STYLE_ERROR,
                 resources.getString(R.string.auth_error_title),
@@ -164,7 +167,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         var current: ViewGroup? = rootView
         while (current != null) {
             for (i in 0..current.childCount) {
-                val child = current.getChildAt(i);
+                val child = current.getChildAt(i)
                 if (child is ViewGroup) {
                     queue.add(child)
                 }

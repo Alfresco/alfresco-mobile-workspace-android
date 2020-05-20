@@ -43,7 +43,6 @@ class BasicAuthFragment : DialogFragment() {
             rootView.findViewById<View>(R.id.tvConnectUrl).visibility = View.GONE
 
             rootView.findViewById<View>(R.id.tvBasicAuthInfoCloud).visibility = View.VISIBLE
-
         } else {
             rootView.findViewById<View>(R.id.tvSigninTo).visibility = View.VISIBLE
             rootView.findViewById<View>(R.id.tvConnectUrl).visibility = View.VISIBLE

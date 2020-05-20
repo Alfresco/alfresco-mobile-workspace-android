@@ -8,7 +8,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.alfresco.android.aims.R
-import com.alfresco.auth.*
+import com.alfresco.auth.AuthConfig
+import com.alfresco.auth.AuthInterceptor
+import com.alfresco.auth.AuthType
+import com.alfresco.auth.Credentials
 import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.ui.AuthenticationViewModel
 import com.alfresco.core.data.LiveEvent
@@ -29,7 +32,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     private val _onSsoLogin = MutableLiveEvent<String>()
 
     val hasNavigation: LiveData<Boolean> get() = _hasNavigation
-    val step: LiveData<Step> get () =  _step
+    val step: LiveData<Step> get() = _step
     val onShowHelp: LiveEvent<Int> = _onShowHelp
     val onShowSettings: LiveEvent<Int> = _onShowSettings
     val onSsoLogin: LiveEvent<String> get() = _onSsoLogin
@@ -47,7 +50,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     private val previousAuthState: String? = authState
 
     val canonicalApplicationUrl: String
-        get()  {
+        get() {
             return previousAppEndpoint
                     ?: discoveryService.serviceDocumentsEndpoint(applicationUrl.value!!).toString()
         }
@@ -154,7 +157,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
 
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     private fun loadSavedConfig() {
-        val sharedPrefs  = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val configJson = sharedPrefs.getString(SHARED_PREFS_CONFIG_KEY, null)
 
         authConfig = try {
@@ -171,7 +174,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         val config = authConfigEditor.get()
 
         // Save state to persistent storage
-        val sharedPrefs  = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
         editor.putString(SHARED_PREFS_CONFIG_KEY, Gson().toJson(config))
         editor.apply()
@@ -296,7 +299,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
          * loading the bindings.
          */
         fun onHttpsToggle() {
-            port.value = if(https.value == true) DEFAULT_HTTPS_PORT else DEFAULT_HTTP_PORT
+            port.value = if (https.value == true) DEFAULT_HTTPS_PORT else DEFAULT_HTTP_PORT
         }
 
         private fun onChange(ignored: Boolean) {

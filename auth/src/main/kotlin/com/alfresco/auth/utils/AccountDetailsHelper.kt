@@ -8,14 +8,14 @@ import net.openid.appauth.AuthState
 
 class AccountDetailsHelper {
 
-    data class Item (
+    data class Item(
         var title: String,
         var value: String
     )
 
     companion object {
         @JvmStatic
-        fun itemsWith(context: Context, username: String, authType: String, authState: String, authConfig: String, serverUrl: String) : List<Item> {
+        fun itemsWith(context: Context, username: String, authType: String, authState: String, authConfig: String, serverUrl: String): List<Item> {
             val type = AuthType.fromValue(authType)
             val result = ArrayList<Item>()
 
@@ -28,7 +28,7 @@ class AccountDetailsHelper {
             return result
         }
 
-        private fun commonInformation(context: Context, authConfig: AuthConfig) : List<Item> {
+        private fun commonInformation(context: Context, authConfig: AuthConfig): List<Item> {
             val list = ArrayList<Item>()
 
             list.add(Item(context.getString(R.string.auth_account_details_protocol), if (authConfig.https) "HTTPS" else "HTTP"))
@@ -38,7 +38,7 @@ class AccountDetailsHelper {
             return list
         }
 
-        private fun basicInformation(context: Context, authConfig: String, serverUrl: String) : List<Item> {
+        private fun basicInformation(context: Context, authConfig: String, serverUrl: String): List<Item> {
             val list = ArrayList<Item>()
 
             list.add(applicationServerItem(context, serverUrl))
@@ -50,7 +50,7 @@ class AccountDetailsHelper {
             return list
         }
 
-        private fun pkceInformation(context: Context, authState: String, authConfig: String, serverUrl: String) : List<Item> {
+        private fun pkceInformation(context: Context, authState: String, authConfig: String, serverUrl: String): List<Item> {
             val list = ArrayList<Item>()
 
             AuthState.jsonDeserialize(authState)?.let {

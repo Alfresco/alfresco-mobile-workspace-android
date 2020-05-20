@@ -1,7 +1,6 @@
 package com.alfresco.auth.fragments
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class HelpFragment : BottomSheetDialogFragment() {
             return fragment
         }
 
-        fun message(@StringRes msgResId: Int) : Builder {
+        fun message(@StringRes msgResId: Int): Builder {
             extraConfiguration.putInt(ARG_MESSAGE_RES_ID, msgResId)
             return this
         }

@@ -1,26 +1,26 @@
 package com.alfresco.ui.components
 
 import android.annotation.SuppressLint
-
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
-import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.alfresco.android.aims.R
 import com.google.android.material.snackbar.BaseTransientBottomBar
 
 class Snackbar private constructor(
-        parent: ViewGroup,
-        content: View,
-        contentViewCallback: com.google.android.material.snackbar.ContentViewCallback) : BaseTransientBottomBar<Snackbar?>(parent, content, contentViewCallback) {
+    parent: ViewGroup,
+    content: View,
+    contentViewCallback: com.google.android.material.snackbar.ContentViewCallback
+) : BaseTransientBottomBar<Snackbar?>(parent, content, contentViewCallback) {
     private val accessibilityManager: AccessibilityManager?
     private var hasAction = false
 
@@ -115,7 +115,9 @@ class Snackbar private constructor(
      * @param listener callback to be invoked when the action is clicked
      */
     fun setAction(
-            text: CharSequence?, listener: View.OnClickListener?): Snackbar {
+        text: CharSequence?,
+        listener: View.OnClickListener?
+    ): Snackbar {
         val contentLayout = view.getChildAt(0) as SnackbarContentLayout
         val tv = contentLayout.actionView!!
         if (TextUtils.isEmpty(text) || listener == null) {

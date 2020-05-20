@@ -6,7 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import com.alfresco.content.app.BuildConfig
 
-data class Account (
+data class Account(
     val username: String,
     val authState: String,
     val authType: String,
@@ -37,7 +37,7 @@ data class Account (
                 return Account(
                     acc.name,
                     am.getPassword(acc),
-                    am.getUserData(acc,"type"),
+                    am.getUserData(acc, "type"),
                     am.getUserData(acc, "server")
                 )
             }

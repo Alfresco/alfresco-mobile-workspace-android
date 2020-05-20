@@ -1,7 +1,11 @@
 package com.alfresco.auth.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -18,7 +22,7 @@ import com.alfresco.ui.components.Snackbar
 class AdvancedSettingsFragment : DialogFragment() {
 
     private val viewModel: LoginViewModel by activityViewModels()
-    private val rootView: View get() = view!!
+    private val rootView: View get() = requireView()
     private lateinit var saveTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {

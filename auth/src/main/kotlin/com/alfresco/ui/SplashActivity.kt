@@ -8,7 +8,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.alfresco.android.aims.R
 
-abstract class SplashActivity: AppCompatActivity() {
+abstract class SplashActivity : AppCompatActivity() {
 
     private val handler = Handler()
     private lateinit var logoImageView: ImageView

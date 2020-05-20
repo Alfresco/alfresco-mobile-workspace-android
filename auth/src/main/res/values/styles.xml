@@ -27,7 +27,7 @@
         <!-- Need to be fixed for Dark mode -->
         <!-- <item name="android:textColorPrimary">@color/alfresco_text_primary</item> -->
         <!-- <item name="android:textColorSecondary">@color/alfresco_text_secondary</item> -->
-        
+
         <!-- Action bar -->
         <item name="actionBarSize">44dp</item>
         <item name="actionBarPaddingLeft">14dp</item>
@@ -125,7 +125,7 @@
         <item name="boxBackgroundColor">@color/transparent</item>
         <item name="endIconMode">clear_text</item>
     </style>
-    
+
     <style name="Widget.Alfresco.TextField.Edit">
         <item name="android:paddingLeft">0dp</item> <!-- removes implicit indentation -->
         <item name="android:paddingBottom">4dp</item> <!-- distance to underline -->

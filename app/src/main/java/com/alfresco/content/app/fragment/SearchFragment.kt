@@ -2,5 +2,4 @@ package com.alfresco.content.app.fragment
 
 import androidx.fragment.app.Fragment
 
-class SearchFragment: Fragment() {
-}
+class SearchFragment : Fragment()

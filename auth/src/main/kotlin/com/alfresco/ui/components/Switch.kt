@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import android.widget.Switch
 import androidx.databinding.BindingAdapter
 
-
 /**
  * Subclass used only for data binding drag interaction
  */

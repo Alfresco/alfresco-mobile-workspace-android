@@ -9,7 +9,7 @@ abstract class FragmentBuilder(protected val parent: FragmentActivity) {
     val extraConfiguration = Bundle()
     abstract val fragmentTag: String
 
-    abstract fun build(args: Bundle): Fragment;
+    abstract fun build(args: Bundle): Fragment
 
     fun display() {
         if (parent.supportFragmentManager.findFragmentById(R.id.frame_placeholder) != null) {

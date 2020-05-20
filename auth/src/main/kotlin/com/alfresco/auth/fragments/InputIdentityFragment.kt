@@ -9,9 +9,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
-import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.android.aims.R
 import com.alfresco.android.aims.databinding.ContainerAuthInputIdentityBinding
+import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.common.FragmentBuilder
 
 class InputIdentityFragment : DialogFragment() {

@@ -1,5 +1,6 @@
 package com.alfresco.content.app.activity
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.alfresco.content.app.R
+import com.alfresco.content.app.platform.Account
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -28,6 +30,13 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         updateAppTheme()
+
+        val acc = Account.getAccount(this)
+        if (acc == null) {
+            val i = Intent(this, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        }
     }
 
     override fun onResume() {

@@ -26,6 +26,18 @@
             android:name=".activity.LoginActivity"
             android:theme="@style/Theme.Alfresco"/>
 
+        <service
+            android:name=".platform.AuthenticatorService"
+            android:exported="true"
+            android:permission="android.permission.ACCOUNT_MANAGER">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
     </application>
 
 </manifest>

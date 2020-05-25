@@ -1,1 +1,3 @@
-include ':app', ':auth'
+include ':mimetype'
+include ':auth'
+include ':app'

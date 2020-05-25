@@ -4,21 +4,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-apply from: "$project.rootDir/config/spotless.gradle"
-
 buildscript {
     repositories { mavenCentral() }
     dependencies { classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" }
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
-
-
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -30,19 +22,8 @@ android {
         }
     }
 
-    sourceSets['main'].java.srcDir('src/main/kotlin')
-
     dataBinding {
         enabled = true
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 

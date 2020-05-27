@@ -30,11 +30,22 @@
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/subtitle"
+            android:id="@+id/properties"
             style="@style/Widget.Alfresco.BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="11sp"
             tools:text="Subtitle" />
+
+        <TextView
+            android:id="@+id/path"
+            style="@style/Widget.Alfresco.BodyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textSize="11sp"
+            tools:text="top / level / dir" />
     </LinearLayout>
 
 </LinearLayout>

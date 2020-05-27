@@ -5,8 +5,9 @@ import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.models.RequestFilterQueriesInner
+import com.alfresco.content.models.RequestIncludeEnum
 import com.alfresco.content.models.RequestQuery
-import com.alfresco.content.models.ResultSetRowEntry
+import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SearchRequest
 import com.alfresco.content.tools.GeneratedCodeConverters
 import okhttp3.OkHttpClient
@@ -35,12 +36,13 @@ class SearchRepository(context: Context) {
         retrofit.create(SearchApi::class.java)
     }
 
-    suspend fun search(query: String): List<ResultSetRowEntry> {
+    suspend fun search(query: String): List<ResultNode> {
         val queryString = "((cm:name:\"$query*\" OR cm:title:\"$query*\" OR cm:description:\"$query*\" OR TEXT:\"$query*\" OR TAG:\"$query*\"))"
         val reqQuery = RequestQuery(queryString, RequestQuery.LanguageEnum.AFTS)
         val filter = listOf(RequestFilterQueriesInner("+TYPE:'cm:folder' OR +TYPE:'cm:content'"))
-        val req = SearchRequest(reqQuery, filterQueries = filter)
+        val include = listOf(RequestIncludeEnum.PATH)
+        val req = SearchRequest(reqQuery, filterQueries = filter, include = include)
 
-        return service.search(req).list?.entries!!
+        return service.search(req).list?.entries?.map { it.entry } ?: emptyList()
     }
 }

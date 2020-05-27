@@ -46,8 +46,8 @@ class SearchFragment : BaseMvRxFragment() {
         recycler_view.withModels {
             it.results()?.forEach() {
                 searchResultRow {
-                    id(it.entry.id)
-                    entry(it)
+                    id(it.id)
+                    node(it)
                 }
             }
         }

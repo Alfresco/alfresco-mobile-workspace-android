@@ -5,7 +5,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.SearchRepository
-import com.alfresco.content.models.ResultSetRowEntry
+import com.alfresco.content.models.ResultNode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -20,7 +20,7 @@ class SearchViewModel(
     repository: SearchRepository
 ) : MvRxViewModel<SearchViewState>(state) {
     private val query = ConflatedBroadcastChannel<String>()
-    private val results = ConflatedBroadcastChannel<List<ResultSetRowEntry>>()
+    private val results = ConflatedBroadcastChannel<List<ResultNode>>()
 
     init {
         viewModelScope.launch {

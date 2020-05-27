@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation project(':account')
     implementation project(':auth')
+    implementation project(':browse')
     implementation project(':search')
 
     implementation Libs.Kotlin.stdlib

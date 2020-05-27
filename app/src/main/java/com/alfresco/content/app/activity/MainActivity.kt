@@ -6,12 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
-import com.alfresco.content.app.R
 import com.alfresco.content.account.Account
+import com.alfresco.content.app.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -23,11 +21,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
-
         bottomNav.setupWithNavController(navController)
-        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
-        setupActionBarWithNavController(navController, appBarConfiguration)
 
         updateAppTheme()
 

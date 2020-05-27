@@ -50,6 +50,8 @@ object Libs {
 
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:1.1.3"
 
+        const val coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+
         const val preference = "androidx.preference:preference:1.1.1"
 
         object Navigation {

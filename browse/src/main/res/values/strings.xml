@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_title_home">Home</string>
+
+    <string name="browse_tab_recents">Recents</string>
+    <string name="browse_tab_favorites">Favorites</string>
+    <string name="browse_tab_libraries">Libraries</string>
+</resources>

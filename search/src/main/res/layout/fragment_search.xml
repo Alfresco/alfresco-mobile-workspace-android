@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:theme="@style/Theme.Alfresco.ActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/nav_title_search"
+            app:menu="@menu/menu_toolbar" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            app:tabMode="scrollable"
+            app:tabGravity="start"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.tabs.TabItem
+                android:text="@string/search_tab_everything"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content" />
+            <com.google.android.material.tabs.TabItem
+                android:text="@string/search_tab_files"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content" />
+            <com.google.android.material.tabs.TabItem
+                android:text="@string/search_tab_folders"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content" />
+            <com.google.android.material.tabs.TabItem
+                android:text="@string/search_tab_libraries"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content" />
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

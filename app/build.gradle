@@ -31,6 +31,7 @@ android {
 dependencies {
     implementation project(':account')
     implementation project(':auth')
+    implementation project(':search')
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

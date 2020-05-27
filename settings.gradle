@@ -1,4 +1,7 @@
 include ':account'
+include ':data'
+include ':common'
 include ':mimetype'
 include ':auth'
 include ':app'
+include ':search'

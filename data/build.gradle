@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation project(':account')
+
+    implementation 'com.alfresco.dbp.android:auth:0.4-SNAPSHOT'
+    implementation 'com.alfresco.dbp.android:core:0.1-SNAPSHOT'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72"
+    implementation 'com.alfresco.dbp.android:content:0.1-SNAPSHOT'
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.7.2")
+}

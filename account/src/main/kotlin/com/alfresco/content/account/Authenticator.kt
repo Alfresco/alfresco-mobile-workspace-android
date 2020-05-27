@@ -1,4 +1,4 @@
-package com.alfresco.content.app.platform
+package com.alfresco.content.account
 
 import android.accounts.AbstractAccountAuthenticator
 import android.accounts.Account

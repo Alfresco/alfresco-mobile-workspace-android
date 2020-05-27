@@ -26,17 +26,19 @@
             android:name=".activity.LoginActivity"
             android:theme="@style/Theme.Alfresco"/>
 
-        <service
-            android:name=".platform.AuthenticatorService"
-            android:exported="true"
-            android:permission="android.permission.ACCOUNT_MANAGER">
+        <activity android:name="com.alfresco.auth.pkce.RedirectUriReceiverActivity">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="aims"
+                    android:path="/auth"
+                    android:scheme="androidacsapp" />
             </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
+        </activity>
 
     </application>
 

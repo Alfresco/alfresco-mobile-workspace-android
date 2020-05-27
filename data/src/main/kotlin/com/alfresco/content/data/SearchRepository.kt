@@ -4,7 +4,6 @@ import android.content.Context
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
 import com.alfresco.content.apis.SearchApi
-import com.alfresco.content.models.RequestFilterQueries
 import com.alfresco.content.models.RequestFilterQueriesInner
 import com.alfresco.content.models.RequestQuery
 import com.alfresco.content.models.ResultSetRowEntry

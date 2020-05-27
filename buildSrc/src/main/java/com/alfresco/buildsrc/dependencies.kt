@@ -2,6 +2,8 @@ package com.alfresco.buildsrc
 
 object Libs {
 
+    const val androidGradlePlugin = "com.android.tools.build:gradle:3.6.3"
+
     const val junit = "junit:junit:4.13"
 
     object AlfrescoDbp {
@@ -55,7 +57,7 @@ object Libs {
         const val preference = "androidx.preference:preference:1.1.1"
 
         object Navigation {
-            private const val version = "2.2.1"
+            private const val version = "2.2.2"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
         }

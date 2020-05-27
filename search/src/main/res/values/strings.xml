@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_title_search">Search</string>
+
     <string name="search_tab_everything">Everything</string>
     <string name="search_tab_files">Files</string>
     <string name="search_tab_folders">Folders</string>

@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.alfresco.content.app.R
-import com.alfresco.content.app.platform.Account
+import com.alfresco.content.account.Account
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         updateAppTheme()
 
-        val acc = Account.getAccount(this)
+        val acc = com.alfresco.content.account.Account.getAccount(this)
         if (acc == null) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)

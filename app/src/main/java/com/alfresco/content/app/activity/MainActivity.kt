@@ -3,9 +3,12 @@ package com.alfresco.content.app.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.alfresco.content.account.Account
@@ -21,11 +24,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(findViewById(R.id.toolbar))
         bottomNav.setupWithNavController(navController)
+        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         updateAppTheme()
 
-        val acc = com.alfresco.content.account.Account.getAccount(this)
+        val acc = Account.getAccount(this)
         if (acc == null) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
@@ -51,6 +57,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         when (key) {
             getString(R.string.settings_theme_key) -> updateAppTheme()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_action_bar, menu)
+        return true
     }
 
     private fun updateAppTheme() {

@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/nav_home"
-        android:title="@string/nav_title_home"
-        android:icon="@drawable/ic_home" />
+        android:id="@+id/nav_recents"
+        android:title="@string/nav_title_recents"
+        android:icon="@drawable/ic_recents" />
     <item
-        android:id="@+id/nav_search"
-        android:title="@string/nav_title_search"
-        android:icon="@drawable/ic_search" />
+        android:id="@+id/nav_favorites"
+        android:title="@string/nav_title_favorites"
+        android:icon="@drawable/ic_favorites" />
+    <item
+        android:id="@+id/nav_files"
+        android:title="@string/nav_title_browse"
+        android:icon="@drawable/ic_browse" />
     <item
         android:id="@+id/nav_settings"
         android:title="@string/nav_title_settings"

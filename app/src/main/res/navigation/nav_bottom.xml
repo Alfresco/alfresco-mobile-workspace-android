@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_bottom"
-    app:startDestination="@id/nav_search">
+    app:startDestination="@id/nav_recents">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_recents"
         android:name="com.alfresco.content.browse.BrowseFragment"
-        android:label="@string/nav_title_home" />
+        android:label="@string/nav_title_recents">
+        <argument
+            android:name="mvrx:arg"
+            app:argType="string"
+            android:defaultValue="recents" />
+    </fragment>
     <fragment
-        android:id="@+id/nav_search"
-        android:name="com.alfresco.content.search.SearchFragment"
-        android:label="@string/nav_title_search" />
+        android:id="@+id/nav_favorites"
+        android:name="com.alfresco.content.browse.BrowseFragment"
+        android:label="@string/nav_title_favorites" />
+    <fragment
+        android:id="@+id/nav_files"
+        android:name="com.alfresco.content.browse.BrowseMenuFragment"
+        android:label="@string/nav_title_browse" />
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.alfresco.content.app.fragment.SettingsFragment"

@@ -2,9 +2,6 @@
 <resources>
     <string name="nav_title_home">Home</string>
 
-    <string name="browse_tab_recents">Recents</string>
-    <string name="browse_tab_favorites">Favorites</string>
-    <string name="browse_tab_libraries">Libraries</string>
     <string name="browse_menu_personal">Personal Files</string>
     <string name="browse_menu_libraries">File Libraries</string>
     <string name="browse_menu_shared">Shared</string>

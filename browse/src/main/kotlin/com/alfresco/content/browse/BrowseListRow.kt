@@ -9,7 +9,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.mimetype.MimeType
-import com.alfresco.content.models.NodeChildAssociationEntry
+import com.alfresco.content.models.Node
 import kotlinx.android.synthetic.main.view_browse_list_row.view.icon
 import kotlinx.android.synthetic.main.view_browse_list_row.view.subtitle
 import kotlinx.android.synthetic.main.view_browse_list_row.view.title
@@ -28,13 +28,13 @@ class BrowseListRow @JvmOverloads constructor(
     }
 
     @ModelProp
-    fun setNode(node: NodeChildAssociationEntry) {
-        title.text = node.entry.name
-        val type = if (node.entry.isFolder) MimeType.FOLDER else MimeType.fromFilename(node.entry.name)
+    fun setNode(node: Node) {
+        title.text = node.name
+        val type = if (node.isFolder) MimeType.FOLDER else MimeType.fromFilename(node.name)
         icon.setImageDrawable(resources.getDrawable(type.icon, null))
-        subtitle.text = "Modified: " + node.entry.modifiedAt.format(
+        subtitle.text = "Modified: " + node.modifiedAt.format(
             DateTimeFormatter.ofLocalizedDate(
-                FormatStyle.MEDIUM)) + " by " + node.entry.modifiedByUser.displayName
+                FormatStyle.MEDIUM)) + " by " + node.modifiedByUser.displayName
     }
 
     @CallbackProp

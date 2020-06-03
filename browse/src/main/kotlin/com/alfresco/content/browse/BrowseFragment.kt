@@ -29,7 +29,7 @@ class BrowseFragment : BaseMvRxFragment() {
         recycler_view.withModels {
             it.nodes()?.forEach() {
                 browseListRow {
-                    id(it.entry.id)
+                    id(it.id)
                     node(it)
                 }
             }

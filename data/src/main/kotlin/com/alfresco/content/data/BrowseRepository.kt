@@ -4,7 +4,7 @@ import android.content.Context
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
 import com.alfresco.content.apis.NodesApi
-import com.alfresco.content.models.NodeChildAssociationEntry
+import com.alfresco.content.models.Node
 import com.alfresco.content.tools.GeneratedCodeConverters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -34,9 +34,22 @@ class BrowseRepository(context: Context) {
         retrofit.create(NodesApi::class.java)
     }
 
-    suspend fun getNodes(): Flow<List<NodeChildAssociationEntry>> {
+    private suspend fun myFiles(): List<Node> {
+        return service.listNodeChildren(
+            "-my-",
+            null,
+            25,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null).list?.entries?.map { with(it.entry) } ?: emptyList()
+    }
+
+    suspend fun getNodes(): Flow<List<Node>> {
         return flow {
-            emit(service.listNodeChildren("-my-", null, 25, null, null, null, null, null, null).list!!.entries!!)
+            emit(myFiles())
         }
     }
 }

@@ -6,12 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.Alfresco.ActionBar"
-        android:theme="@style/Theme.Alfresco.ActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include layout="@layout/layout_toolbar"/>
 
     <fragment
         android:id="@+id/nav_host_fragment"
@@ -20,13 +15,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_bottom"/>
+        app:navGraph="@navigation/nav_bottom" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/menu_bottom_nav"
-        app:labelVisibilityMode="selected"/>
+        app:labelVisibilityMode="selected"
+        app:menu="@menu/menu_bottom_nav" />
 
 </LinearLayout>

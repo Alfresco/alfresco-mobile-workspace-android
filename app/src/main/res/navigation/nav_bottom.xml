@@ -23,5 +23,12 @@
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.alfresco.content.app.fragment.SettingsFragment"
-        android:label="@string/nav_title_settings" />
+        android:label="@string/nav_title_settings"/>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.alfresco.content.search.SearchFragment"
+        android:label="SearchFragment" />
+    <action
+        android:id="@+id/enter_search"
+        app:destination="@id/searchFragment"/>
 </navigation>

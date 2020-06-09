@@ -48,6 +48,8 @@ dependencies {
 
     implementation Libs.Google.material
 
+    implementation Libs.mvRx
+
     // Testing
     testImplementation Libs.junit
     androidTestImplementation Libs.AndroidX.Test.core

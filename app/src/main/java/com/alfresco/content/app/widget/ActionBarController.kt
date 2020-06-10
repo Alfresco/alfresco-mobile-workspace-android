@@ -21,6 +21,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
         activity.setSupportActionBar(layout.toolbar)
         activity.setupActionBarWithNavController(navController, appBarConfiguration)
 
+        layout.profileIcon.setOnClickListener {
+            navController.navigate(R.id.nav_settings)
+        }
+
         layout.card.setOnClickListener {
             enterSearchUi()
         }

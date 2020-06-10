@@ -10,7 +10,16 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search</string>
 
+    <string name="sign_out_confirmation_title">Sign Out</string>
+    <string name="sign_out_confirmation_message">Are you sure you want to sign out?</string>
+    <string name="sign_out_confirmation_positive">Yes</string>
+    <string name="sign_out_confirmation_negative">Cancel</string>
+
     <string name="fab_description">Add document</string>
+
+    <string name="settings_account_category">Account</string>
+    <string name="settings_sign_out">Sign Out</string>
+    <string name="settings_app_category">Application</string>
 
     <string name="settings_theme">Theme</string>
     <string-array name="settings_theme_labels">

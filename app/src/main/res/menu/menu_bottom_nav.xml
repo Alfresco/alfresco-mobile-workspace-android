@@ -13,8 +13,4 @@
         android:id="@+id/nav_files"
         android:title="@string/nav_title_browse"
         android:icon="@drawable/ic_browse" />
-    <item
-        android:id="@+id/nav_settings"
-        android:title="@string/nav_title_settings"
-        android:icon="@drawable/ic_settings" />
 </menu>

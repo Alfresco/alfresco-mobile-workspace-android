@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
-        android:title="Application">
+        android:title="@string/settings_account_category">
+
+        <Preference
+            android:icon="@drawable/ic_account"
+            android:key="@string/settings_account_key"
+            android:summary="e-mail"
+            android:title="Display Name" />
+        <Preference
+            android:icon="@drawable/ic_logout"
+            android:key="@string/settings_sign_out_key"
+            android:title="@string/settings_sign_out" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_app_category">
 
         <ListPreference
-            android:key="@string/settings_theme_key"
-            android:title="@string/settings_theme"
-            app:useSimpleSummaryProvider="true"
+            android:defaultValue="@string/settings_theme_system"
             android:entries="@array/settings_theme_labels"
             android:entryValues="@array/settings_theme_values"
-            android:defaultValue="@string/settings_theme_system" />
-
+            android:icon="@drawable/ic_theme"
+            android:key="@string/settings_theme_key"
+            android:title="@string/settings_theme"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

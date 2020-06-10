@@ -17,6 +17,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
 
     lateinit var toolbar: Toolbar
     lateinit var card: CardView
+    lateinit var profileIcon: View
 
     private lateinit var expandedView: View
     private lateinit var collapsedView: View
@@ -32,6 +33,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         card = findViewById(R.id.toolbar_back)
         expandedView = findViewById(R.id.expanded_toolbar)
         collapsedView = findViewById(R.id.collapsed_toolbar)
+        profileIcon = findViewById(R.id.profile_icon)
 
         originalRadius = card.radius
         originalTopMargin = (card.layoutParams as MarginLayoutParams).topMargin

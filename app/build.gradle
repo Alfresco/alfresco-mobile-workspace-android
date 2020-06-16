@@ -15,6 +15,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        playStore {
+            storeFile file(envOrDef('KEYSTORE_FILE', 'keystore.jks'))
+            storePassword envOrDef('KEYSTORE_PASSWORD', '')
+            keyAlias envOrDef('KEY_ALIAS', '')
+            keyPassword envOrDef('KEY_PASSWORD', '')
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -23,6 +32,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        playStore {
+            initWith release
+            signingConfig signingConfigs.playStore
         }
     }
 
@@ -60,4 +74,8 @@ dependencies {
     testImplementation Libs.junit
     androidTestImplementation Libs.AndroidX.Test.core
     androidTestImplementation Libs.AndroidX.Test.espressoCore
+}
+
+static Object envOrDef(String varName, Object defaultValue) {
+    return System.getenv(varName) ?: defaultValue
 }

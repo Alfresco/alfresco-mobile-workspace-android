@@ -8,10 +8,15 @@ pool:
 
 variables:
   - group: source-clear-credentials
+  - group: android-signing
   - name: version_code
     value: $[counter('versionCode', 0)]
 
 steps:
+  - task: DownloadSecureFile@1
+    name: keystore
+    inputs:
+      secureFile: alfresco-android-mobile-keystore
   - task: Gradle@2
     inputs:
       workingDirectory: ''
@@ -19,7 +24,12 @@ steps:
       gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'assembleDebug'
+      tasks: 'assemblePlayStore'
+    env:
+      KEYSTORE_FILE: $(keystore.secureFilePath)
+      KEYSTORE_PASSWORD: $(keystore_password)
+      KEY_ALIAS: $(key_alias)
+      KEY_PASSWORD: $(key_password)
   - bash: |
       curl -sSL https://download.sourceclear.com/ci.sh | sh
     displayName: 'SourceClearCheck'
@@ -30,3 +40,8 @@ steps:
       contents: '**/*.apk'
       targetFolder: '$(build.artifactStagingDirectory)'
   - task: PublishBuildArtifacts@1
+  - task: GooglePlayRelease@3
+    inputs:
+      apkFile: '**/*.apk'
+      serviceEndpoint: 'Play Store Publisher'
+      track: 'internal'

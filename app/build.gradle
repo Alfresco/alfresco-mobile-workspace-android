@@ -36,6 +36,7 @@ android {
 
         playStore {
             initWith release
+            matchingFallbacks = ['release']
             signingConfig signingConfigs.playStore
         }
     }

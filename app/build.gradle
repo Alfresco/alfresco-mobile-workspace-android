@@ -44,6 +44,11 @@ android {
     dataBinding {
         enabled = true
     }
+
+    // Temporary kotlin module duplication fix
+    packagingOptions {
+        pickFirst 'META-INF/auth_release.kotlin_module'
+    }
 }
 
 dependencies {

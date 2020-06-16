@@ -31,9 +31,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.72"
-            android:src="@drawable/ic_search_mat"
-            android:tint="@color/mtrl_navigation_item_icon_tint" />
+            android:src="@drawable/ic_search_mat" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -50,9 +48,7 @@
             android:id="@+id/profile_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.72"
-            android:src="@drawable/ic_account"
-            android:tint="@color/mtrl_navigation_item_icon_tint" />
+            android:src="@drawable/ic_account" />
     </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar

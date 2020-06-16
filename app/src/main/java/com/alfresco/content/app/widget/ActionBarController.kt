@@ -48,6 +48,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
         })
     }
 
+    fun refreshData() {
+        layout.refreshData()
+    }
+
     fun setupOptionsMenu(menu: Menu) {
         this.menu = menu
 

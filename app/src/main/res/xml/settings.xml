@@ -8,8 +8,9 @@
         <Preference
             android:icon="@drawable/ic_account"
             android:key="@string/settings_account_key"
-            android:summary="e-mail"
-            android:title="Display Name" />
+            android:summary=""
+            android:title=""
+            android:layout="@layout/layout_preference" />
         <Preference
             android:icon="@drawable/ic_logout"
             android:key="@string/settings_sign_out_key"

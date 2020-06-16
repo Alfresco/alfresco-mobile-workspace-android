@@ -10,10 +10,10 @@ import android.os.IBinder
  */
 class AuthenticatorService : Service() {
 
-    private lateinit var authenticator: com.alfresco.content.account.Authenticator
+    private lateinit var authenticator: Authenticator
 
     override fun onCreate() {
-        authenticator = com.alfresco.content.account.Authenticator(this)
+        authenticator = Authenticator(this)
     }
 
     override fun onBind(intent: Intent?): IBinder = authenticator.iBinder

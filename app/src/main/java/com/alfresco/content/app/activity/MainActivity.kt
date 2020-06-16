@@ -13,11 +13,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
-import com.alfresco.content.account.Account
+import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.session.SessionManager
 import com.alfresco.content.search.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -38,11 +40,23 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         updateAppTheme()
 
-        val acc = Account.getAccount(this)
-        if (acc == null) {
+        // Start a new session
+        val session = SessionManager.newSession(this)
+
+        // On empty session show login
+        if (session == null) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
+        }
+
+        // Else update logged in state
+        actionBarController.refreshData()
+
+        session?.onSignedOut() {
+            runOnUiThread {
+                showSignedOutPrompt()
+            }
         }
     }
 
@@ -88,6 +102,27 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         })
 
         return true
+    }
+
+    private fun showSignedOutPrompt() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.auth_signed_out_title))
+            .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
+            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
+            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { dialog, which ->
+                navigateToReLogin()
+            }
+            .show()
+    }
+
+    private fun navigateToReLogin() {
+        val i = Intent(this, LoginActivity::class.java)
+        val acc = SessionManager.requireSession.account
+        i.putExtra(LoginViewModel.EXTRA_ENDPOINT, acc.serverUrl)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_TYPE, acc.authType)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
+        startActivity(i)
     }
 
     private fun getForegroundFragment(): Fragment? {

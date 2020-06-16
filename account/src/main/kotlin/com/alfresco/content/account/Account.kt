@@ -2,49 +2,88 @@ package com.alfresco.content.account
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 
 data class Account(
-    val username: String,
+    val id: String,
     val authState: String,
     val authType: String,
     val authConfig: String,
-    val serverUrl: String
+    val serverUrl: String,
+    val displayName: String?,
+    val email: String?
 ) {
     companion object {
-        private const val type = "com.alfresco.content.app.debug" // TODO:
+        private const val displayNameKey = "displayName"
+        private const val emailKey = "email"
+        private const val authTypeKey = "type"
+        private const val authConfigKey = "config"
+        private const val serverKey = "server"
 
         fun createAccount(
             context: Context,
-            username: String,
+            id: String,
             authState: String,
             authType: String,
             authConfig: String,
-            serverUrl: String
+            serverUrl: String,
+            displayName: String,
+            email: String
         ) {
             val b = Bundle()
-            b.putString("type", authType)
-            b.putString("config", authConfig)
-            b.putString("server", serverUrl)
-            val acc = Account(username, type) // TODO: does it need to be unique?
+            b.putString(authTypeKey, authType)
+            b.putString(authConfigKey, authConfig)
+            b.putString(serverKey, serverUrl)
+            b.putString(displayNameKey, displayName)
+            b.putString(emailKey, email)
+            val acc = Account(id, context.getString(R.string.account_type))
             AccountManager.get(context).addAccountExplicitly(acc, authState, b)
+        }
+
+        fun update(context: Context, id: String, authState: String) {
+            val am = AccountManager.get(context)
+            val acc = getAndroidAccount(context)
+            am.setPassword(acc, authState)
+        }
+
+        fun delete(activity: Activity, callback: () -> Unit) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                AccountManager.get(activity).removeAccount(getAndroidAccount(activity), activity, {
+                    callback()
+                }, null)
+            } else {
+                @Suppress("DEPRECATION")
+                AccountManager.get(activity).removeAccount(getAndroidAccount(activity), {
+                    callback()
+                }, null)
+            }
         }
 
         fun getAccount(context: Context): com.alfresco.content.account.Account? {
             val am = AccountManager.get(context)
-            val accountList = am.getAccountsByType(type)
+            val accountList = am.getAccountsByType(context.getString(R.string.account_type))
             if (accountList.isNotEmpty()) {
                 val acc = accountList[0]
                 return Account(
                     acc.name,
                     am.getPassword(acc),
-                    am.getUserData(acc, "type"),
-                    am.getUserData(acc, "config"),
-                    am.getUserData(acc, "server")
+                    am.getUserData(acc, authTypeKey),
+                    am.getUserData(acc, authConfigKey),
+                    am.getUserData(acc, serverKey),
+                    am.getUserData(acc, displayNameKey),
+                    am.getUserData(acc, emailKey)
                 )
             }
             return null
+        }
+
+        private fun getAndroidAccount(context: Context): Account? {
+            val am = AccountManager.get(context)
+            val accountList = am.getAccountsByType(context.getString(R.string.account_type))
+            return accountList.first()
         }
     }
 }

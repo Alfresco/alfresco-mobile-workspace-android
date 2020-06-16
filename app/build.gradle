@@ -33,9 +33,13 @@ android {
 
 dependencies {
     implementation project(':account')
+    implementation project(':session')
     implementation project(':auth')
     implementation project(':browse')
     implementation project(':search')
+
+    implementation project(':data')
+    implementation Libs.AlfrescoDbp.content
 
     implementation Libs.Kotlin.stdlib
 
@@ -49,6 +53,8 @@ dependencies {
     implementation Libs.Google.material
 
     implementation Libs.mvRx
+
+    implementation Libs.coil
 
     // Testing
     testImplementation Libs.junit

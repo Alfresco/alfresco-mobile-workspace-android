@@ -16,7 +16,7 @@ class Authenticator(context: Context) :
 
     override fun confirmCredentials(
         response: AccountAuthenticatorResponse?,
-        account: android.accounts.Account?,
+        account: Account?,
         options: Bundle?
     ): Bundle {
         throw UnsupportedOperationException()

@@ -1,9 +1,19 @@
 package com.alfresco.content.app.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import coil.transform.CircleCropTransformation
+import com.alfresco.auth.activity.LogoutActivity
+import com.alfresco.auth.activity.LogoutViewModel
+import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
+import com.alfresco.content.app.activity.LoginActivity
+import com.alfresco.content.app.loadAny
+import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -11,8 +21,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
+        val acc = SessionManager.requireSession.account
         preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_account_key))?.apply {
-            setSummary("other summary")
+            title = acc.displayName
+            summary = acc.email
+            loadAny(PeopleRepository.myPicture(context)) {
+                placeholder(R.drawable.ic_account)
+                transformations(CircleCropTransformation())
+            }
         }
 
         preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_sign_out_key))?.apply {
@@ -28,10 +44,41 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setMessage(resources.getString(R.string.sign_out_confirmation_message))
             .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
             .setPositiveButton(resources.getString(R.string.sign_out_confirmation_positive)) { dialog, which ->
-                // Respond to positive button press
+                logout()
             }
             .show()
 
         return true
+    }
+
+    private fun logout() {
+        val acc = SessionManager.requireSession.account
+        val i = Intent(context, LogoutActivity::class.java)
+        i.putExtra(LogoutViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
+        i.putExtra(LogoutViewModel.EXTRA_AUTH_STATE, acc.authState)
+        startActivityForResult(i, REQUEST_CODE_LOGOUT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_LOGOUT) {
+            if (resultCode == Activity.RESULT_OK) {
+                deleteAccount()
+            } else {
+                // no-op
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun deleteAccount() {
+        Account.delete(requireActivity()) {
+            requireActivity().startActivity(Intent(activity, LoginActivity::class.java))
+            requireActivity().finish()
+        }
+    }
+
+    companion object {
+        const val REQUEST_CODE_LOGOUT = 0
     }
 }

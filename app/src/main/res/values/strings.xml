@@ -28,4 +28,6 @@
         <item>System Default</item>
     </string-array>
 
+    <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>
+
 </resources>

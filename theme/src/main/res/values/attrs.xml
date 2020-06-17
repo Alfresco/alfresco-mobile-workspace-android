@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="isTablet">false</bool>
+
+    <declare-styleable name="Widget.Alfresco.ActionBar">
+        <attr name="actionBarPaddingLeft" format="dimension"/>
+        <attr name="actionBarPaddingRight" format="dimension"/>
+    </declare-styleable>
+</resources>

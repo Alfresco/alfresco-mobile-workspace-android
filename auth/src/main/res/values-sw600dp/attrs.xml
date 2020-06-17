@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="isTablet">true</bool>
     <integer name="auth_visibility_phone_only">2</integer><!-- GONE -->
     <integer name="auth_visibility_tablet_only">0</integer><!-- VISIBLE -->
 

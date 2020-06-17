@@ -18,6 +18,8 @@ android {
 }
 
 dependencies {
+    implementation project(':theme')
+
     implementation Libs.Kotlin.stdlib
 
     api Libs.AlfrescoDbp.core

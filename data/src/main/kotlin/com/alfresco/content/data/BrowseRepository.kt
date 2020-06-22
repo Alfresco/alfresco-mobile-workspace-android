@@ -1,21 +1,19 @@
 package com.alfresco.content.data
 
-import android.content.Context
 import com.alfresco.content.apis.NodesApi
-import com.alfresco.content.models.Node
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class BrowseRepository(context: Context) {
+class BrowseRepository() {
 
     private val service: NodesApi by lazy {
         SessionManager.requireSession.createService(NodesApi::class.java)
     }
 
-    private suspend fun myFiles(): List<Node> {
+    private suspend fun files(path: String): List<Entry> {
         return service.listNodeChildren(
-            "-my-",
+            path,
             null,
             25,
             null,
@@ -23,12 +21,17 @@ class BrowseRepository(context: Context) {
             null,
             null,
             null,
-            null).list?.entries?.map { with(it.entry) } ?: emptyList()
+            null
+        ).list?.entries?.map { Entry.with(it.entry) } ?: emptyList()
     }
 
-    suspend fun getNodes(): Flow<List<Node>> {
+    suspend fun getNodes(path: String): Flow<List<Entry>> {
         return flow {
-            emit(myFiles())
+            emit(files(path))
         }
+    }
+
+    suspend fun getMyFiles(): Flow<List<Entry>> {
+        return getNodes("-my-")
     }
 }

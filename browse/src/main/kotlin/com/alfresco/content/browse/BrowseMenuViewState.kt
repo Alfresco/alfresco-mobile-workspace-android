@@ -3,6 +3,7 @@ package com.alfresco.content.browse
 import com.airbnb.mvrx.MvRxState
 
 data class FileEntry(
+    val path: String,
     val title: String,
     val icon: Int
 )

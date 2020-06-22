@@ -46,7 +46,7 @@ class SearchViewModel(
 
     companion object : MvRxViewModelFactory<SearchViewModel, SearchViewState> {
         override fun create(viewModelContext: ViewModelContext, state: SearchViewState): SearchViewModel? {
-            return SearchViewModel(state, SearchRepository(viewModelContext.app()))
+            return SearchViewModel(state, SearchRepository())
         }
     }
 }

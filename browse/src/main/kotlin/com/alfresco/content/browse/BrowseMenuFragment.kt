@@ -1,9 +1,11 @@
 package com.alfresco.content.browse
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -27,8 +29,17 @@ class BrowseMenuFragment : BaseMvRxFragment() {
                 browseMenuRow {
                     id(it.title)
                     entry(it)
+                    clickListener { _ -> navigateTo(it.path, it.title) }
                 }
             }
         }
+    }
+
+    private fun navigateTo(path: String, title: String) {
+        navigateTo(Uri.parse("alfresco-content://folder/${path}?title=${Uri.encode(title)}"))
+    }
+
+    private fun navigateTo(uri: Uri) {
+        findNavController().navigate(uri)
     }
 }

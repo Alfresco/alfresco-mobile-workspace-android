@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_path_recents">recents</string>
+    <string name="nav_path_favorites">favorites</string>
+
+    <string name="nav_path_my_files">my-files</string>
+    <string name="nav_path_my_libraries">my-libraries</string>
+    <string name="nav_path_fav_libraries">fav-libraries</string>
+    <string name="nav_path_shared">shared</string>
+    <string name="nav_path_trash">trash</string>
+</resources>

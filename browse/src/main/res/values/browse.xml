@@ -10,8 +10,8 @@
 
     <integer-array name="browse_menu_icons">
         <item>@drawable/ic_personal</item>
-        <item>@drawable/ic_libraries</item>
-        <item>@drawable/ic_libraries</item>
+        <item>@drawable/ic_my_libraries</item>
+        <item>@drawable/ic_fav_libraries</item>
         <item>@drawable/ic_shared</item>
         <item>@drawable/ic_trash</item>
     </integer-array>

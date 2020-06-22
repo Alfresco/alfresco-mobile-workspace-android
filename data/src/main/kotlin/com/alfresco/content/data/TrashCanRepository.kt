@@ -12,10 +12,11 @@ class TrashCanRepository {
     }
 
     private suspend fun nodes(): List<Entry> {
+        val include = listOf("path")
         return service.listDeletedNodes(
             0,
             25,
-            null
+            include
         ).list?.entries?.map { Entry.with(it.entry!!) } ?: emptyList()
     }
 

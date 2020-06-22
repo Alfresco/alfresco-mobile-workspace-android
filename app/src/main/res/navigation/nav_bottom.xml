@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_bottom"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_bottom"
     app:startDestination="@id/nav_recents">
 
     <fragment
@@ -9,26 +11,49 @@
         android:label="@string/nav_title_recents">
         <argument
             android:name="mvrx:arg"
-            app:argType="string"
-            android:defaultValue="recents" />
+            android:defaultValue="recents"
+            app:argType="string" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_favorites"
         android:name="com.alfresco.content.browse.BrowseFragment"
-        android:label="@string/nav_title_favorites" />
+        android:label="@string/nav_title_favorites">
+        <argument
+            android:name="mvrx:arg"
+            android:defaultValue="favorites"
+            app:argType="string" />
+    </fragment>
+
     <fragment
-        android:id="@+id/nav_files"
+        android:id="@+id/nav_browse"
         android:name="com.alfresco.content.browse.BrowseMenuFragment"
         android:label="@string/nav_title_browse" />
+
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.alfresco.content.app.fragment.SettingsFragment"
-        android:label="@string/nav_title_settings"/>
+        android:label="@string/nav_title_settings" />
+
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.alfresco.content.search.SearchFragment"
         android:label="SearchFragment" />
     <action
         android:id="@+id/enter_search"
-        app:destination="@id/searchFragment"/>
+        app:destination="@id/searchFragment" />
+
+    <fragment
+        android:id="@+id/nav_folder"
+        android:name="com.alfresco.content.browse.BrowseFragment"
+        android:label="{title}">
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="mvrx:arg"
+            app:argType="string" />
+        <deepLink app:uri="alfresco-content://folder/{mvrx:arg}?title={title}" />
+    </fragment>
 </navigation>

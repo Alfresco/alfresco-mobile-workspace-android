@@ -16,8 +16,8 @@ import androidx.preference.PreferenceManager
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
-import com.alfresco.content.session.SessionManager
 import com.alfresco.content.search.SearchFragment
+import com.alfresco.content.session.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

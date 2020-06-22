@@ -7,7 +7,6 @@ import coil.ImageLoader
 import coil.util.CoilUtils
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
-import com.alfresco.content.session.BuildConfig
 import com.alfresco.content.tools.GeneratedCodeConverters
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

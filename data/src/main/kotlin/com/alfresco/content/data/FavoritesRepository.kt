@@ -1,6 +1,5 @@
 package com.alfresco.content.data
 
-import android.content.Context
 import com.alfresco.content.apis.FavoritesApi
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.flow.Flow

@@ -15,8 +15,6 @@
     <string name="sign_out_confirmation_positive">Yes</string>
     <string name="sign_out_confirmation_negative">Cancel</string>
 
-    <string name="fab_description">Add document</string>
-
     <string name="settings_account_category">Account</string>
     <string name="settings_sign_out">Sign Out</string>
     <string name="settings_app_category">Application</string>

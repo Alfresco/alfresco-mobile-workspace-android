@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.SearchRepository

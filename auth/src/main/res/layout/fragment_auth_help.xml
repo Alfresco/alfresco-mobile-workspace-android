@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/muli_semibold"
+            android:fontFamily="@font/base_medium"
             android:text="@string/auth_help_overlay_title"
             android:textColor="@android:color/black"
             android:textSize="20sp"

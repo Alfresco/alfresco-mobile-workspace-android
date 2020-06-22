@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/progressBar"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/muli_light"
+            android:fontFamily="@font/base_light"
             android:gravity="center"
             android:text="@string/auth_progress_bar_message"
             android:textColor="#919191"

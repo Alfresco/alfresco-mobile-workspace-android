@@ -1,10 +1,12 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.data.Entry.Companion.formattedString
 import com.alfresco.content.models.DeletedNode
 import com.alfresco.content.models.Favorite
 import com.alfresco.content.models.FavoriteTargetNode
 import com.alfresco.content.models.Node
 import com.alfresco.content.models.NodeChildAssociation
+import com.alfresco.content.models.PathInfo
 import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.SiteRole
@@ -41,7 +43,7 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                null
+                node.path?.formattedString()
             )
         }
 
@@ -50,7 +52,7 @@ data class Entry(
                 result.id,
                 Type.from(result.nodeType),
                 result.name,
-                null
+                result.path?.formattedString()
             )
         }
 
@@ -59,7 +61,7 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                null
+                node.path?.formattedString()
             )
         }
 
@@ -71,7 +73,7 @@ data class Entry(
                     file.id,
                     Type.File,
                     file.name,
-                    file.path?.name
+                    file.path?.formattedString()
                 )
             }
             if (map.folder != null) {
@@ -80,7 +82,7 @@ data class Entry(
                     folder.id,
                     Type.Folder,
                     folder.name,
-                    folder.path?.name
+                    folder.path?.formattedString()
                 )
             }
             if (map.site != null) {
@@ -118,8 +120,13 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                null
+                node.path?.formattedString()
             )
+        }
+
+        private fun PathInfo.formattedString(): String? {
+            return elements?.map { it.name }
+                ?.reduce{ out, el -> "$out > $el" }
         }
     }
 }

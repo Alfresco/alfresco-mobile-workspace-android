@@ -28,8 +28,13 @@ class BrowseListRow @JvmOverloads constructor(
     @ModelProp
     fun setData(entry: Entry) {
         title.text = entry.title
-        val type = if (entry.type == Entry.Type.Folder) MimeType.FOLDER else MimeType.fromFilename(entry.title)
-        icon.setImageDrawable(resources.getDrawable(type.icon, null))
+
+        if (entry.type == Entry.Type.Site) {
+            icon.setImageDrawable(resources.getDrawable(R.drawable.ic_library, null))
+        } else {
+            val type = if (entry.type == Entry.Type.Folder) MimeType.FOLDER else MimeType.fromFilename(entry.title)
+            icon.setImageDrawable(resources.getDrawable(type.icon, null))
+        }
 
         subtitle.text = entry.subtitle
         subtitle.visibility = if (entry.subtitle != null) View.VISIBLE else View.GONE

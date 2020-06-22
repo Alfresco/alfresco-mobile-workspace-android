@@ -3,26 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="48dp"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:paddingStart="26dp"
+    android:paddingEnd="26dp">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:scaleType="fitStart"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="fitCenter"
+        android:alpha="0.72"
         android:tint="@color/mtrl_bottom_nav_item_tint"/>
 
     <TextView
         android:id="@+id/title"
-        style="@style/Widget.Alfresco.BodyText"
+        style="@style/Widget.Alfresco.ListItem.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="16sp"
+        android:layout_marginStart="26dp"
         tools:text="Title" />
 
 </LinearLayout>

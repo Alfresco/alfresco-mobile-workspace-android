@@ -34,6 +34,8 @@
             style="@style/Widget.Alfresco.BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:singleLine="true"
             tools:text="Subtitle" />
     </LinearLayout>
 

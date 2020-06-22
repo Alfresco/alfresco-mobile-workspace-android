@@ -88,7 +88,7 @@ data class Entry(
             if (map.site != null) {
                 val site = map.site!!
                 return Entry(
-                    site.id,
+                    site.guid,
                     Type.Site,
                     site.title,
                     null
@@ -99,7 +99,7 @@ data class Entry(
 
         fun with(role: SiteRole): Entry {
             return Entry(
-                role.site.id,
+                role.site.guid,
                 Type.Site,
                 role.site.title,
                 null

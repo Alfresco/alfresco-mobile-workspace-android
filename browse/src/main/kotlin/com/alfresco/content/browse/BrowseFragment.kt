@@ -41,7 +41,7 @@ class BrowseFragment : BaseMvRxFragment() {
     }
 
     private fun onItemClicked(entry: Entry) {
-        if (entry.type == Entry.Type.Folder) {
+        if (entry.type == Entry.Type.Folder || entry.type == Entry.Type.Site) {
             navigateTo(Uri.parse("alfresco-content://folder/${entry.id}?title=${Uri.encode(entry.title)}"))
         }
     }

@@ -126,7 +126,7 @@ data class Entry(
 
         private fun PathInfo.formattedString(): String? {
             return elements?.map { it.name }
-                ?.reduce{ out, el -> "$out > $el" }
+                ?.reduce{ out, el -> "$out \u203A $el" }
         }
     }
 }

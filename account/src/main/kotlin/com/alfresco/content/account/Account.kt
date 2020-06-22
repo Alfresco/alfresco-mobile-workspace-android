@@ -39,7 +39,7 @@ data class Account(
             b.putString(serverKey, serverUrl)
             b.putString(displayNameKey, displayName)
             b.putString(emailKey, email)
-            val acc = Account(id, context.getString(R.string.account_type))
+            val acc = Account(id, context.getString(R.string.android_auth_account_type))
             AccountManager.get(context).addAccountExplicitly(acc, authState, b)
         }
 
@@ -64,7 +64,7 @@ data class Account(
 
         fun getAccount(context: Context): com.alfresco.content.account.Account? {
             val am = AccountManager.get(context)
-            val accountList = am.getAccountsByType(context.getString(R.string.account_type))
+            val accountList = am.getAccountsByType(context.getString(R.string.android_auth_account_type))
             if (accountList.isNotEmpty()) {
                 val acc = accountList[0]
                 return Account(
@@ -82,7 +82,7 @@ data class Account(
 
         private fun getAndroidAccount(context: Context): Account? {
             val am = AccountManager.get(context)
-            val accountList = am.getAccountsByType(context.getString(R.string.account_type))
+            val accountList = am.getAccountsByType(context.getString(R.string.android_auth_account_type))
             return accountList.first()
         }
     }

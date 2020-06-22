@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Android Account Authenticator Config -->
+    <string name="android_auth_account_type">com.alfresco.content.app</string>
+    <string name="android_auth_label">Alfresco Content Services</string>
+
+    <!-- Settings Config -->
     <string name="settings_account_key">account</string>
     <string name="settings_sign_out_key">sign_out</string>
 

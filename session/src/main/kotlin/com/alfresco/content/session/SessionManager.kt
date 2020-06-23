@@ -8,6 +8,10 @@ object SessionManager {
     val requireSession get() = currentSession!!
 
     fun newSession(context: Context): Session? {
+        // Cleanup current session
+        currentSession?.finish()
+
+        // Create a new session
         val account = Account.getAccount(context)
         currentSession = if (account != null) Session(
             context,

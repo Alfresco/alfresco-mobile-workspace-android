@@ -81,4 +81,8 @@ class Session(context: Context, var account: Account) {
     fun onSignedOut(callback: () -> Unit) {
         onSignedOut = callback
     }
+
+    fun finish() {
+        authInterceptor.finish()
+    }
 }

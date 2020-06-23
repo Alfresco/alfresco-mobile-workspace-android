@@ -7,7 +7,7 @@ object Libs {
     const val junit = "junit:junit:4.13"
 
     object AlfrescoDbp {
-        const val auth = "com.alfresco.dbp.android:auth:0.4-SNAPSHOT"
+        const val auth = "com.alfresco.dbp.android:auth:0.5-SNAPSHOT"
         const val core = "com.alfresco.dbp.android:core:0.1-SNAPSHOT"
         const val content = "com.alfresco.dbp.android:content:0.1-SNAPSHOT"
     }

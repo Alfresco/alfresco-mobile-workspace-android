@@ -3,14 +3,17 @@ package com.alfresco.auth.activity
 import android.content.Context
 import android.os.Bundle
 import com.alfresco.auth.AuthConfig
+import com.alfresco.auth.AuthType
 import com.alfresco.auth.ui.EndSessionActivity
 import com.alfresco.auth.ui.EndSessionViewModel
 import com.alfresco.common.getViewModel
 import org.json.JSONException
 
-class LogoutViewModel(context: Context, authState: String, authConfig: AuthConfig) : EndSessionViewModel(context, authState, authConfig) {
+class LogoutViewModel(context: Context, authType: AuthType?, authState: String, authConfig: AuthConfig) :
+    EndSessionViewModel(context, authType, authState, authConfig) {
 
     companion object {
+        const val EXTRA_AUTH_TYPE = "authType"
         const val EXTRA_AUTH_STATE = "authState"
         const val EXTRA_AUTH_CONFIG = "authConfig"
 
@@ -19,6 +22,7 @@ class LogoutViewModel(context: Context, authState: String, authConfig: AuthConfi
 
             val stateString = bundle.getString(EXTRA_AUTH_STATE)
             val configString = bundle.getString(EXTRA_AUTH_CONFIG)
+            val authType = bundle.getString(EXTRA_AUTH_TYPE)?.let { AuthType.fromValue(it) }
 
             val config = try {
                 if (configString != null) {
@@ -32,7 +36,7 @@ class LogoutViewModel(context: Context, authState: String, authConfig: AuthConfi
             requireNotNull(stateString)
             requireNotNull(config)
 
-            return LogoutViewModel(context, stateString, config)
+            return LogoutViewModel(context, authType, stateString, config)
         }
     }
 }

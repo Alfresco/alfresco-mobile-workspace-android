@@ -43,7 +43,9 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
             Account.update(
                 this,
                 person.id,
-                credentials.authState
+                credentials.authState,
+                person.displayName ?: "",
+                person.email
             )
         }
     }

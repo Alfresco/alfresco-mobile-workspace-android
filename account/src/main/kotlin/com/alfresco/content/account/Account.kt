@@ -49,6 +49,24 @@ data class Account(
             am.setPassword(acc, authState)
         }
 
+        fun update(
+            context: Context,
+            id: String,
+            authState: String,
+            displayName: String,
+            email: String
+        ) {
+            val am = AccountManager.get(context)
+            val acc = getAndroidAccount(context)
+            am.setPassword(acc, authState)
+            am.setUserData(acc, displayNameKey, displayName)
+            am.setUserData(acc, emailKey, email)
+
+            if (acc?.name != id) {
+                am.renameAccount(acc, id, null, null)
+            }
+        }
+
         fun delete(activity: Activity, callback: () -> Unit) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 AccountManager.get(activity).removeAccount(getAndroidAccount(activity), activity, {

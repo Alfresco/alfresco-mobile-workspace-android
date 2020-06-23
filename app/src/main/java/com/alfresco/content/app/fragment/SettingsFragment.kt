@@ -54,6 +54,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun logout() {
         val acc = SessionManager.requireSession.account
         val i = Intent(context, LogoutActivity::class.java)
+        i.putExtra(LogoutViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_STATE, acc.authState)
         startActivityForResult(i, REQUEST_CODE_LOGOUT)

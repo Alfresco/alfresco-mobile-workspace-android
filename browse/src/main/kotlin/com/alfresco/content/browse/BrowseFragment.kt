@@ -29,12 +29,21 @@ class BrowseFragment : BaseMvRxFragment() {
 
     override fun invalidate() = withState(viewModel) {
         loading_animation.isVisible = it.nodes is Loading
+
         recycler_view.withModels {
-            it.nodes()?.forEach() {
-                browseListRow {
-                    id(it.id)
-                    data(it)
-                    clickListener { _ -> onItemClicked(it) }
+            if (it.nodes()?.isEmpty() != false && it.nodes.complete) {
+                browseListMessageView {
+                    id("empty_message")
+                    iconRes(R.drawable.ic_personal)
+                    title("Nothing to see here.")
+                }
+            } else {
+                it.nodes()?.forEach() {
+                    browseListRow {
+                        id(it.id)
+                        data(it)
+                        clickListener { _ -> onItemClicked(it) }
+                    }
                 }
             }
         }

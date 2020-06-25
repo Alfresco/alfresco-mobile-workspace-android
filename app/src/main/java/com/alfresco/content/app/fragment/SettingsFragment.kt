@@ -27,6 +27,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             summary = acc.email
             loadAny(PeopleRepository.myPicture(context)) {
                 placeholder(R.drawable.ic_account)
+                error(R.drawable.ic_account)
                 transformations(CircleCropTransformation())
             }
         }

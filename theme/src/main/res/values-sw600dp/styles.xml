@@ -10,8 +10,6 @@
 
         <!-- Action bar -->
         <item name="actionBarSize">44dp</item>
-        <item name="actionBarPaddingLeft">14dp</item>
-        <item name="actionBarPaddingRight">34dp</item>
 
         <!-- Status bar -->
         <item name="android:windowLightStatusBar">true</item>

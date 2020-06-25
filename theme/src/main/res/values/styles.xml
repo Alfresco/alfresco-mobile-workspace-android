@@ -11,8 +11,6 @@
 
         <!-- Action bar -->
         <item name="actionBarSize">44dp</item>
-        <item name="actionBarPaddingLeft">14dp</item>
-        <item name="actionBarPaddingRight">34dp</item>
 
         <!-- Status bar -->
         <item name="android:windowLightStatusBar">true</item>
@@ -142,8 +140,6 @@
 
     <style name="Widget.Alfresco.ActionBar" parent="Widget.MaterialComponents.ActionBar.Surface">
         <item name="android:itemTextAppearance">@android:color/black</item>
-        <!-- <item name="android:paddingLeft">?attr/actionBarPaddingLeft</item> -->
-        <!-- <item name="android:paddingRight">?attr/actionBarPaddingRight</item> -->
     </style>
 
     <!-- SnackBar -->

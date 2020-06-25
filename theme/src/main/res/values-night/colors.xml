@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="alfresco_status_bar_color">@color/design_dark_default_color_background</color>
+</resources>

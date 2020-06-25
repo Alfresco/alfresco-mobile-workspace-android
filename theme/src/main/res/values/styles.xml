@@ -3,7 +3,7 @@
 
     <style name="Theme.Alfresco" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/alfresco_primary</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/alfresco_status_bar_color</item>
         <item name="colorAccent">@color/alfresco_primary</item>
         <!-- Need to be fixed for Dark mode -->
         <!-- <item name="android:textColorPrimary">@color/alfresco_text_primary</item> -->
@@ -13,7 +13,7 @@
         <item name="actionBarSize">44dp</item>
 
         <!-- Status bar -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">@bool/alfresco_light_status_bar</item>
     </style>
 
     <style name="Theme.Alfresco.Splash">

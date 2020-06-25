@@ -40,14 +40,14 @@
         android:id="@+id/rlProgress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <View
             android:id="@+id/progressBarBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.87"
-            android:background="#FFFFFFFF"
+            android:background="?attr/colorSurface"
             android:clickable="true"
             android:focusable="true" />
 

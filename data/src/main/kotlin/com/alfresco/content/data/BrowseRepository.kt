@@ -11,27 +11,27 @@ class BrowseRepository() {
         SessionManager.requireSession.createService(NodesApi::class.java)
     }
 
-    private suspend fun files(path: String): List<Entry> {
-        return service.listNodeChildren(
+    private suspend fun files(path: String, skipCount: Int, maxItems: Int): ResponsePaging {
+        return ResponsePaging.with(service.listNodeChildren(
             path,
-            null,
-            25,
+            skipCount,
+            maxItems,
             null,
             null,
             null,
             null,
             null,
             null
-        ).list?.entries?.map { Entry.with(it.entry) } ?: emptyList()
+        ))
     }
 
-    suspend fun getNodes(path: String): Flow<List<Entry>> {
+    suspend fun getNodes(path: String, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(files(path))
+            emit(files(path, skipCount, maxItems))
         }
     }
 
-    suspend fun getMyFiles(): Flow<List<Entry>> {
-        return getNodes("-my-")
+    suspend fun getMyFiles(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+        return getNodes("-my-", skipCount, maxItems)
     }
 }

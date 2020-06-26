@@ -10,22 +10,22 @@ class SitesRepository {
         SessionManager.requireSession.createService(SitesApi::class.java)
     }
 
-    private suspend fun nodes(userId: String): List<Entry> {
+    private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/site))"
-        return service.listSiteMembershipsForPerson(
+        return ResponsePaging.with(service.listSiteMembershipsForPerson(
             userId,
-            null,
-            25,
+            skipCount,
+            maxItems,
             null,
             null,
             null,
             null
-        ).list.entries.map { Entry.with(it.entry) }
+        ))
     }
 
-    suspend fun getMySites(): Flow<List<Entry>> {
+    suspend fun getMySites(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(nodes("-me-"))
+            emit(nodes("-me-", skipCount, maxItems))
         }
     }
 }

@@ -10,19 +10,20 @@ class SharedLinksRepository {
         SessionManager.requireSession.createService(SharedLinksApi::class.java)
     }
 
-    private suspend fun nodes(): List<Entry> {
-        return service.listSharedLinks(
-            0,
-            25,
+    private suspend fun nodes(skipCount: Int, maxItems: Int): ResponsePaging {
+        val include = listOf("path")
+        return ResponsePaging.with(service.listSharedLinks(
+            skipCount,
+            maxItems,
             null,
-            null,
+            include,
             null
-        ).list.entries.map { Entry.with(it.entry) } ?: emptyList()
+        ))
     }
 
-    suspend fun getSharedLinks(): Flow<List<Entry>> {
+    suspend fun getSharedLinks(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(nodes())
+            emit(nodes(skipCount, maxItems))
         }
     }
 }

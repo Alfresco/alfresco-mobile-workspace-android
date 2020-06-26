@@ -3,6 +3,7 @@ package com.alfresco.content.data
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.models.RequestFilterQueriesInner
 import com.alfresco.content.models.RequestIncludeEnum
+import com.alfresco.content.models.RequestPagination
 import com.alfresco.content.models.RequestQuery
 import com.alfresco.content.models.RequestSortDefinitionInner
 import com.alfresco.content.models.ResultNode
@@ -27,7 +28,7 @@ class SearchRepository() {
         return service.search(req).list?.entries?.map { it.entry } ?: emptyList()
     }
 
-    private suspend fun recents(): List<Entry> {
+    private suspend fun recents(skipCount: Int, maxItems: Int): ResponsePaging {
         val queryString = "*"
         val currentId = SessionManager.requireSession.account.id
 
@@ -39,14 +40,15 @@ class SearchRepository() {
         )
         val include = listOf(RequestIncludeEnum.PATH)
         val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "cm:modified", false))
-        val req = SearchRequest(reqQuery, sort = sort, filterQueries = filter, include = include)
+        val pagination = RequestPagination(maxItems, skipCount)
+        val req = SearchRequest(reqQuery, sort = sort, filterQueries = filter, include = include, paging = pagination)
 
-        return service.search(req).list?.entries?.map { Entry.with(it.entry) } ?: emptyList()
+        return ResponsePaging.with(service.search(req))
     }
 
-    suspend fun getRecents(): Flow<List<Entry>> {
+    suspend fun getRecents(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(recents())
+            emit(recents(skipCount, maxItems))
         }
     }
 }

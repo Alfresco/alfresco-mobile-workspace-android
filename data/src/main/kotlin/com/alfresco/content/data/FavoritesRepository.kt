@@ -10,42 +10,42 @@ class FavoritesRepository() {
         SessionManager.requireSession.createService(FavoritesApi::class.java)
     }
 
-    private suspend fun nodes(userId: String): List<Entry> {
+    private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
         val include = listOf("path")
-        return service.listFavorites(
+        return ResponsePaging.with(service.listFavorites(
             userId,
-            null,
-            25,
+            skipCount,
+            maxItems,
             null,
             where,
             include,
             null
-        ).list.entries.map { Entry.with(it.entry) }
+        ))
     }
 
-    suspend fun getFavorites(): Flow<List<Entry>> {
+    suspend fun getFavorites(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(nodes("-me-"))
+            emit(nodes("-me-", skipCount, maxItems))
         }
     }
 
-    private suspend fun favoritesLibraries(userId: String): List<Entry> {
+    private suspend fun favoritesLibraries(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/site))"
-        return service.listFavorites(
+        return ResponsePaging.with(service.listFavorites(
             userId,
-            null,
-            25,
+            skipCount,
+            maxItems,
             null,
             where,
             null,
             null
-        ).list.entries.map { Entry.with(it.entry) }
+        ))
     }
 
-    suspend fun getFavoriteLibraries(): Flow<List<Entry>> {
+    suspend fun getFavoriteLibraries(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(favoritesLibraries("-me-"))
+            emit(favoritesLibraries("-me-", skipCount, maxItems))
         }
     }
 }

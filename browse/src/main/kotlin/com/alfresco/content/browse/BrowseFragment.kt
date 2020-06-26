@@ -27,22 +27,31 @@ class BrowseFragment : BaseMvRxFragment() {
         return inflater.inflate(R.layout.fragment_browse, container, false)
     }
 
-    override fun invalidate() = withState(viewModel) {
-        loading_animation.isVisible = it.nodes is Loading
+    override fun invalidate() = withState(viewModel) { state ->
+        loading_animation.isVisible = state.req is Loading && state.entries.isEmpty()
 
         recycler_view.withModels {
-            if (it.nodes()?.isEmpty() != false && it.nodes.complete) {
+            if (state.entries.isEmpty() && state.req.complete) {
                 browseListMessageView {
                     id("empty_message")
                     iconRes(R.drawable.ic_personal)
                     title("Nothing to see here.")
                 }
-            } else {
-                it.nodes()?.forEach() {
+            } else if (state.entries.isNotEmpty()) {
+                state.entries.forEach() {
                     browseListRow {
                         id(it.id)
                         data(it)
                         clickListener { _ -> onItemClicked(it) }
+                    }
+                }
+
+                if (state.req()?.pagination?.hasMoreItems == true) {
+                    browseListLoadingRow {
+                        // Changing the ID will force it to rebind when new data is loaded even if it is
+                        // still on screen which will ensure that we trigger loading again.
+                        id("loading${state.entries.count()}")
+                        onBind { _, _, _ -> viewModel.fetchNextPage() }
                     }
                 }
             }

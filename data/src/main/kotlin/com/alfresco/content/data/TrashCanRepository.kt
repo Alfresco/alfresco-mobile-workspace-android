@@ -10,18 +10,18 @@ class TrashCanRepository {
         SessionManager.requireSession.createService(TrashcanApi::class.java)
     }
 
-    private suspend fun nodes(): List<Entry> {
+    private suspend fun nodes(skipCount: Int, maxItems: Int): ResponsePaging {
         val include = listOf("path")
-        return service.listDeletedNodes(
-            0,
-            25,
+        return ResponsePaging.with(service.listDeletedNodes(
+            skipCount,
+            maxItems,
             include
-        ).list?.entries?.map { Entry.with(it.entry!!) } ?: emptyList()
+        ))
     }
 
-    suspend fun getDeletedNodes(): Flow<List<Entry>> {
+    suspend fun getDeletedNodes(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(nodes())
+            emit(nodes(skipCount, maxItems))
         }
     }
 }

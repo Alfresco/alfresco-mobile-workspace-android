@@ -14,12 +14,16 @@ import com.alfresco.content.data.TrashCanRepository
 import kotlinx.coroutines.launch
 
 class BrowseViewModel(
-    state: BrowseViewState,
-    path: String?,
-    context: Context
+    val state: BrowseViewState,
+    val path: String?,
+    val context: Context
 ) : MvRxViewModel<BrowseViewState>(state) {
 
     init {
+        fetchNextPage()
+    }
+
+    fun fetchNextPage() = withState { state ->
         val req = when (path) {
             context.getString(R.string.nav_path_recents) -> SearchRepository()::getRecents
             context.getString(R.string.nav_path_favorites) -> FavoritesRepository()::getFavorites
@@ -33,14 +37,26 @@ class BrowseViewModel(
 
         viewModelScope.launch {
             if (req != null) {
-                req.invoke().execute { copy(nodes = it) }
+                req.invoke(state.entries.count(), ITEMS_PER_PAGE).execute {
+                    copy(
+                        entries = entries + (it()?.entries ?: emptyList()),
+                        req = it
+                    )
+                }
             } else {
-                BrowseRepository().getNodes(path ?: "").execute { copy(nodes = it) }
+                BrowseRepository().getNodes(path ?: "", state.entries.count(), ITEMS_PER_PAGE).execute {
+                    copy(
+                        entries = entries + (it()?.entries ?: emptyList()),
+                        req = it
+                    )
+                }
             }
         }
     }
 
     companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {
+        private const val ITEMS_PER_PAGE = 25
+
         override fun create(viewModelContext: ViewModelContext, state: BrowseViewState): BrowseViewModel? {
             return BrowseViewModel(state, viewModelContext.args as? String, viewModelContext.app())
         }

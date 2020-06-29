@@ -21,9 +21,19 @@ class SearchRepository() {
     suspend fun search(query: String): List<ResultNode> {
         val queryString = "((cm:name:\"$query*\" OR cm:title:\"$query*\" OR cm:description:\"$query*\" OR TEXT:\"$query*\" OR TAG:\"$query*\"))"
         val reqQuery = RequestQuery(queryString, RequestQuery.LanguageEnum.AFTS)
-        val filter = listOf(RequestFilterQueriesInner("+TYPE:'cm:folder' OR +TYPE:'cm:content'"))
+        val filter = listOf(
+            RequestFilterQueriesInner("+TYPE:'cm:folder' OR +TYPE:'cm:content'"),
+            RequestFilterQueriesInner("-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"),
+            RequestFilterQueriesInner("-cm:creator:System AND -QNAME:comment"),
+            RequestFilterQueriesInner("-TYPE:'st:site' AND -ASPECT:'st:siteContainer' AND -ASPECT:'sys:hidden'"),
+            RequestFilterQueriesInner("-TYPE:'dl:dataList' AND -TYPE:'dl:todoList' AND -TYPE:'dl:issue'"),
+            RequestFilterQueriesInner("-TYPE:'fm:topic' AND -TYPE:'fm:post'"),
+            RequestFilterQueriesInner("-TYPE:'lnk:link'"),
+            RequestFilterQueriesInner("-PNAME:'0/wiki'")
+        )
         val include = listOf(RequestIncludeEnum.PATH)
-        val req = SearchRequest(reqQuery, filterQueries = filter, include = include)
+        val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "score", false))
+        val req = SearchRequest(reqQuery, sort = sort, filterQueries = filter, include = include)
 
         return service.search(req).list?.entries?.map { it.entry } ?: emptyList()
     }
@@ -36,7 +46,7 @@ class SearchRepository() {
         val filter = listOf(
             RequestFilterQueriesInner("cm:modified:[NOW/DAY-30DAYS TO NOW/DAY+1DAY]"),
             RequestFilterQueriesInner("cm:modifier:$currentId OR cm:creator:$currentId"),
-            RequestFilterQueriesInner("TYPE:'cm:content' OR TYPE:'cm:folder'")
+            RequestFilterQueriesInner("TYPE:\"content\" AND -PNAME:\"0/wiki\" AND -TYPE:\"app:filelink\" AND -TYPE:\"cm:thumbnail\" AND -TYPE:\"cm:failedThumbnail\" AND -TYPE:\"cm:rating\" AND -TYPE:\"dl:dataList\" AND -TYPE:\"dl:todoList\" AND -TYPE:\"dl:issue\" AND -TYPE:\"dl:contact\" AND -TYPE:\"dl:eventAgenda\" AND -TYPE:\"dl:event\" AND -TYPE:\"dl:task\" AND -TYPE:\"dl:simpletask\" AND -TYPE:\"dl:meetingAgenda\" AND -TYPE:\"dl:location\" AND -TYPE:\"fm:topic\" AND -TYPE:\"fm:post\" AND -TYPE:\"ia:calendarEvent\" AND -TYPE:\"lnk:link\"")
         )
         val include = listOf(RequestIncludeEnum.PATH)
         val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "cm:modified", false))

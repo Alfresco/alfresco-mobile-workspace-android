@@ -32,7 +32,7 @@ class BrowseListRow @JvmOverloads constructor(
         if (entry.type == Entry.Type.Site) {
             icon.setImageDrawable(resources.getDrawable(R.drawable.ic_library, null))
         } else {
-            val type = if (entry.type == Entry.Type.Folder) MimeType.FOLDER else MimeType.fromFilename(entry.title)
+            val type = if (entry.type == Entry.Type.Folder) MimeType.FOLDER else MimeType.with(entry.mimeType)
             icon.setImageDrawable(resources.getDrawable(type.icon, null))
         }
 

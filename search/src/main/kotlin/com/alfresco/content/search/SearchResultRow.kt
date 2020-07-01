@@ -39,7 +39,7 @@ class SearchResultRow @JvmOverloads constructor(
     }
 
     private fun icon(node: ResultNode): Drawable {
-        val type = if (node.isFolder) MimeType.FOLDER else MimeType.fromFilename(node.name)
+        val type = if (node.isFolder) MimeType.FOLDER else MimeType.with(node.content?.mimeType)
         return resources.getDrawable(type.icon, null)
     }
 

@@ -18,334 +18,132 @@ enum class MimeType(val icon: Int) {
     FOLDER(R.drawable.file_ic_folder);
 
     companion object {
-        private val map by lazy() {
-            val map = HashMap<String, MimeType>()
-
-            add(map, "application/andrew-inset", "ez")
-            add(map, "application/dsptype", "tsp")
-            add(map, "application/futuresplash", "spl")
-            add(map, "application/hta", "hta")
-            add(map, "application/mac-binhex40", "hqx")
-            add(map, "application/mac-compactpro", "cpt")
-            add(map, "application/mathematica", "nb")
-            add(map, "application/msaccess", "mdb", DATABASE)
-            add(map, "application/oda", "oda")
-            add(map, "application/ogg", "ogg", AUDIO)
-            add(map, "application/pdf", "pdf", PDF)
-            add(map, "application/pgp-keys", "key")
-            add(map, "application/pgp-signature", "pgp")
-            add(map, "application/pics-rules", "prf")
-            add(map, "application/rar", "rar", ARCHIVE)
-            add(map, "application/rdf+xml", "rdf")
-            add(map, "application/rss+xml", "rss")
-            add(map, "application/zip", "zip", ARCHIVE)
-            add(map, "application/vnd.android.package-archive", "apk")
-            add(map, "application/vnd.cinderella", "cdy")
-            add(map, "application/vnd.ms-pki.stl", "stl")
-            add(map, "application/vnd.oasis.opendocument.database", "odb", DATABASE)
-            add(map, "application/vnd.oasis.opendocument.formula", "odf")
-            add(map, "application/vnd.oasis.opendocument.graphics", "odg", IMAGE)
-            add(map, "application/vnd.oasis.opendocument.graphics-template", "otg", IMAGE)
-            add(map, "application/vnd.oasis.opendocument.image", "odi", IMAGE)
-            add(map, "application/vnd.oasis.opendocument.spreadsheet", "ods", SHEET_OTHER)
-            add(map, "application/vnd.oasis.opendocument.spreadsheet-template", "ots", SHEET_OTHER)
-            add(map, "application/vnd.oasis.opendocument.text", "odt", DOC_OTHER)
-            add(map, "application/vnd.oasis.opendocument.text-master", "odm", DOC_OTHER)
-            add(map, "application/vnd.oasis.opendocument.text-template", "ott", DOC_OTHER)
-            add(map, "application/vnd.oasis.opendocument.text-web", "oth")
-            add(map, "application/vnd.google-earth.kml+xml", "kml")
-            add(map, "application/vnd.google-earth.kmz", "kmz")
-            add(map, "application/msword", "doc", MS_WORD)
-            add(map, "application/msword", "dot", MS_WORD)
-            add(map, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx", MS_WORD)
-            add(map, "application/vnd.openxmlformats-officedocument.wordprocessingml.template", "dotx", MS_WORD)
-            add(map, "application/vnd.ms-excel", "xls", MS_EXCEL)
-            add(map, "application/vnd.ms-excel", "xlt", MS_EXCEL)
-            add(map, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx", MS_EXCEL)
-            add(map, "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "xltx", MS_EXCEL)
-            add(map, "application/vnd.ms-powerpoint", "ppt", MS_PPT)
-            add(map, "application/vnd.ms-powerpoint", "pot", MS_PPT)
-            add(map, "application/vnd.ms-powerpoint", "pps", MS_PPT)
-            add(map, "application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx", MS_PPT)
-            add(map, "application/vnd.openxmlformats-officedocument.presentationml.template", "potx", MS_PPT)
-            add(map, "application/vnd.openxmlformats-officedocument.presentationml.slideshow", "ppsx", MS_PPT)
-            add(map, "application/vnd.rim.cod", "cod")
-            add(map, "application/vnd.smaf", "mmf")
-            add(map, "application/vnd.stardivision.calc", "sdc", SHEET_OTHER)
-            add(map, "application/vnd.stardivision.draw", "sda")
-            add(map, "application/vnd.stardivision.impress", "sdd", PPT_OTHER)
-            add(map, "application/vnd.stardivision.impress", "sdp", PPT_OTHER)
-            add(map, "application/vnd.stardivision.math", "smf")
-            add(map, "application/vnd.stardivision.writer", "sdw", DOC_OTHER)
-            add(map, "application/vnd.stardivision.writer", "vor", DOC_OTHER)
-            add(map, "application/vnd.stardivision.writer-global", "sgl", DOC_OTHER)
-            add(map, "application/vnd.sun.xml.calc", "sxc", SHEET_OTHER)
-            add(map, "application/vnd.sun.xml.calc.template", "stc", SHEET_OTHER)
-            add(map, "application/vnd.sun.xml.draw", "sxd")
-            add(map, "application/vnd.sun.xml.draw.template", "std")
-            add(map, "application/vnd.sun.xml.impress", "sxi", PPT_OTHER)
-            add(map, "application/vnd.sun.xml.impress.template", "sti", PPT_OTHER)
-            add(map, "application/vnd.sun.xml.math", "sxm")
-            add(map, "application/vnd.sun.xml.writer", "sxw", DOC_OTHER)
-            add(map, "application/vnd.sun.xml.writer.global", "sxg", DOC_OTHER)
-            add(map, "application/vnd.sun.xml.writer.template", "stw", DOC_OTHER)
-            add(map, "application/vnd.visio", "vsd")
-            add(map, "application/x-abiword", "abw")
-            add(map, "application/x-apple-diskimage", "dmg")
-            add(map, "application/x-bcpio", "bcpio")
-            add(map, "application/x-bittorrent", "torrent")
-            add(map, "application/x-cdf", "cdf")
-            add(map, "application/x-cdlink", "vcd")
-            add(map, "application/x-chess-pgn", "pgn")
-            add(map, "application/x-cpio", "cpio")
-            add(map, "application/x-debian-package", "deb")
-            add(map, "application/x-debian-package", "udeb")
-            add(map, "application/x-director", "dcr")
-            add(map, "application/x-director", "dir")
-            add(map, "application/x-director", "dxr")
-            add(map, "application/x-dms", "dms")
-            add(map, "application/x-doom", "wad")
-            add(map, "application/x-dvi", "dvi")
-            add(map, "application/x-flac", "flac", AUDIO)
-            add(map, "application/x-font", "pfa")
-            add(map, "application/x-font", "pfb")
-            add(map, "application/x-font", "gsf")
-            add(map, "application/x-font", "pcf")
-            add(map, "application/x-font", "pcf.Z")
-            add(map, "application/x-freemind", "mm")
-            add(map, "application/x-futuresplash", "spl")
-            add(map, "application/x-gnumeric", "gnumeric")
-            add(map, "application/x-go-sgf", "sgf")
-            add(map, "application/x-graphing-calculator", "gcf")
-            add(map, "application/x-gtar", "gtar")
-            add(map, "application/x-gtar", "tgz")
-            add(map, "application/x-gtar", "taz")
-            add(map, "application/x-hdf", "hdf")
-            add(map, "application/x-ica", "ica")
-            add(map, "application/x-internet-signup", "ins")
-            add(map, "application/x-internet-signup", "isp")
-            add(map, "application/x-iphone", "iii")
-            add(map, "application/x-iso9660-image", "iso")
-            add(map, "application/x-jmol", "jmz")
-            add(map, "application/x-kchart", "chrt")
-            add(map, "application/x-killustrator", "kil")
-            add(map, "application/x-koan", "skp")
-            add(map, "application/x-koan", "skd")
-            add(map, "application/x-koan", "skt")
-            add(map, "application/x-koan", "skm")
-            add(map, "application/x-kpresenter", "kpr")
-            add(map, "application/x-kpresenter", "kpt")
-            add(map, "application/x-kspread", "ksp")
-            add(map, "application/x-kword", "kwd")
-            add(map, "application/x-kword", "kwt")
-            add(map, "application/x-latex", "latex")
-            add(map, "application/x-lha", "lha")
-            add(map, "application/x-lzh", "lzh")
-            add(map, "application/x-lzx", "lzx")
-            add(map, "application/x-maker", "frm")
-            add(map, "application/x-maker", "maker")
-            add(map, "application/x-maker", "frame")
-            add(map, "application/x-maker", "fb")
-            add(map, "application/x-maker", "book")
-            add(map, "application/x-maker", "fbdoc")
-            add(map, "application/x-mif", "mif")
-            add(map, "application/x-ms-wmd", "wmd")
-            add(map, "application/x-ms-wmz", "wmz")
-            add(map, "application/x-msi", "msi")
-            add(map, "application/x-ns-proxy-autoconfig", "pac")
-            add(map, "application/x-nwc", "nwc")
-            add(map, "application/x-object", "o")
-            add(map, "application/x-oz-application", "oza")
-            add(map, "application/x-pkcs12", "p12")
-            add(map, "application/x-pkcs12", "pfx")
-            add(map, "application/x-pkcs7-certreqresp", "p7r")
-            add(map, "application/x-pkcs7-crl", "crl")
-            add(map, "application/x-quicktimeplayer", "qtl")
-            add(map, "application/x-shar", "shar")
-            add(map, "application/x-shockwave-flash", "swf")
-            add(map, "application/x-stuffit", "sit")
-            add(map, "application/x-sv4cpio", "sv4cpio")
-            add(map, "application/x-sv4crc", "sv4crc")
-            add(map, "application/x-tar", "tar", ARCHIVE)
-            add(map, "application/x-texinfo", "texinfo")
-            add(map, "application/x-texinfo", "texi")
-            add(map, "application/x-troff", "t")
-            add(map, "application/x-troff", "roff")
-            add(map, "application/x-troff-man", "man")
-            add(map, "application/x-ustar", "ustar")
-            add(map, "application/x-wais-source", "src")
-            add(map, "application/x-wingz", "wz")
-            add(map, "application/x-webarchive", "webarchive")
-            add(map, "application/x-webarchive-7zxml", "webarchivexml")
-            add(map, "application/x-x509-ca-cert", "crt")
-            add(map, "application/x-x509-user-cert", "crt")
-            add(map, "application/x-xcf", "xcf")
-            add(map, "application/x-xfig", "fig")
-            add(map, "application/xhtml+xml", "xhtml", WEB)
-            add(map, "audio/3gpp", "3gpp", AUDIO)
-            add(map, "audio/amr", "amr", AUDIO)
-            add(map, "audio/basic", "snd", AUDIO)
-            add(map, "audio/midi", "mid", AUDIO)
-            add(map, "audio/midi", "midi", AUDIO)
-            add(map, "audio/midi", "kar", AUDIO)
-            add(map, "audio/midi", "xmf", AUDIO)
-            add(map, "audio/mobile-xmf", "mxmf", AUDIO)
-            add(map, "audio/mpeg", "mpga", AUDIO)
-            add(map, "audio/mpeg", "mpega", AUDIO)
-            add(map, "audio/mpeg", "mp2", AUDIO)
-            add(map, "audio/mpeg", "mp3", AUDIO)
-            add(map, "audio/mpeg", "m4a", AUDIO)
-            add(map, "audio/mpegurl", "m3u", AUDIO)
-            add(map, "audio/prs.sid", "sid", AUDIO)
-            add(map, "audio/x-aiff", "aif", AUDIO)
-            add(map, "audio/x-aiff", "aiff", AUDIO)
-            add(map, "audio/x-aiff", "aifc", AUDIO)
-            add(map, "audio/x-gsm", "gsm", AUDIO)
-            add(map, "audio/x-mpegurl", "m3u", AUDIO)
-            add(map, "audio/x-ms-wma", "wma", AUDIO)
-            add(map, "audio/x-ms-wax", "wax", AUDIO)
-            add(map, "audio/x-pn-realaudio", "ra", AUDIO)
-            add(map, "audio/x-pn-realaudio", "rm", AUDIO)
-            add(map, "audio/x-pn-realaudio", "ram", AUDIO)
-            add(map, "audio/x-realaudio", "ra", AUDIO)
-            add(map, "audio/x-scpls", "pls", AUDIO)
-            add(map, "audio/x-sd2", "sd2", AUDIO)
-            add(map, "audio/x-wav", "wav", AUDIO)
-            add(map, "image/bmp", "bmp", IMAGE)
-            add(map, "image/gif", "gif", IMAGE)
-            add(map, "image/ico", "cur", IMAGE)
-            add(map, "image/ico", "ico", IMAGE)
-            add(map, "image/ief", "ief", IMAGE)
-            add(map, "image/jpeg", "jpeg", IMAGE)
-            add(map, "image/jpeg", "jpg", IMAGE)
-            add(map, "image/jpeg", "jpe", IMAGE)
-            add(map, "image/pcx", "pcx", IMAGE)
-            add(map, "image/png", "png", IMAGE)
-            add(map, "image/svg+xml", "svg", IMAGE)
-            add(map, "image/svg+xml", "svgz", IMAGE)
-            add(map, "image/tiff", "tiff", IMAGE)
-            add(map, "image/tiff", "tif", IMAGE)
-            add(map, "image/vnd.djvu", "djvu", IMAGE)
-            add(map, "image/vnd.djvu", "djv", IMAGE)
-            add(map, "image/vnd.wap.wbmp", "wbmp", IMAGE)
-            add(map, "image/x-cmu-raster", "ras", IMAGE)
-            add(map, "image/x-coreldraw", "cdr", IMAGE)
-            add(map, "image/x-coreldrawpattern", "pat", IMAGE)
-            add(map, "image/x-coreldrawtemplate", "cdt", IMAGE)
-            add(map, "image/x-corelphotopaint", "cpt", IMAGE)
-            add(map, "image/x-icon", "ico", IMAGE)
-            add(map, "image/x-jg", "art", IMAGE)
-            add(map, "image/x-jng", "jng", IMAGE)
-            add(map, "image/x-ms-bmp", "bmp", IMAGE)
-            add(map, "image/x-photoshop", "psd", IMAGE)
-            add(map, "image/x-portable-anymap", "pnm", IMAGE)
-            add(map, "image/x-portable-bitmap", "pbm", IMAGE)
-            add(map, "image/x-portable-graymap", "pgm", IMAGE)
-            add(map, "image/x-portable-pixmap", "ppm", IMAGE)
-            add(map, "image/x-rgb", "rgb", IMAGE)
-            add(map, "image/x-xbitmap", "xbm", IMAGE)
-            add(map, "image/x-xpixmap", "xpm", IMAGE)
-            add(map, "image/x-xwindowdump", "xwd", IMAGE)
-            add(map, "model/iges", "igs")
-            add(map, "model/iges", "iges")
-            add(map, "model/mesh", "msh")
-            add(map, "model/mesh", "mesh")
-            add(map, "model/mesh", "silo")
-            add(map, "text/calendar", "ics")
-            add(map, "text/calendar", "icz")
-            add(map, "text/comma-separated-values", "csv")
-            add(map, "text/css", "css")
-            add(map, "text/html", "htm", WEB)
-            add(map, "text/html", "html", WEB)
-            add(map, "text/h323", "323")
-            add(map, "text/iuls", "uls")
-            add(map, "text/mathml", "mml")
-            add(map, "text/plain", "txt")
-            add(map, "text/plain", "asc")
-            add(map, "text/plain", "text")
-            add(map, "text/plain", "diff")
-            add(map, "text/plain", "po")
-            add(map, "text/richtext", "rtx")
-            add(map, "text/rtf", "rtf")
-            add(map, "text/texmacs", "ts")
-            add(map, "text/text", "phps")
-            add(map, "text/tab-separated-values", "tsv")
-            add(map, "text/xml", "xml")
-            add(map, "text/x-bibtex", "bib")
-            add(map, "text/x-boo", "boo")
-            add(map, "text/x-c++hdr", "h++")
-            add(map, "text/x-c++hdr", "hpp")
-            add(map, "text/x-c++hdr", "hxx")
-            add(map, "text/x-c++hdr", "hh")
-            add(map, "text/x-c++src", "c++")
-            add(map, "text/x-c++src", "cpp")
-            add(map, "text/x-c++src", "cxx")
-            add(map, "text/x-chdr", "h")
-            add(map, "text/x-component", "htc")
-            add(map, "text/x-csh", "csh")
-            add(map, "text/x-csrc", "c")
-            add(map, "text/x-dsrc", "d")
-            add(map, "text/x-haskell", "hs")
-            add(map, "text/x-java", "java")
-            add(map, "text/x-literate-haskell", "lhs")
-            add(map, "text/x-moc", "moc")
-            add(map, "text/x-pascal", "p")
-            add(map, "text/x-pascal", "pas")
-            add(map, "text/x-pcs-gcd", "gcd")
-            add(map, "text/x-setext", "etx")
-            add(map, "text/x-tcl", "tcl")
-            add(map, "text/x-tex", "tex")
-            add(map, "text/x-tex", "ltx")
-            add(map, "text/x-tex", "sty")
-            add(map, "text/x-tex", "cls")
-            add(map, "text/x-vcalendar", "vcs")
-            add(map, "text/x-vcard", "vcf")
-            add(map, "video/3gpp", "3gpp", VIDEO)
-            add(map, "video/3gpp", "3gp", VIDEO)
-            add(map, "video/3gpp", "3g2", VIDEO)
-            add(map, "video/dl", "dl", VIDEO)
-            add(map, "video/dv", "dif", VIDEO)
-            add(map, "video/dv", "dv", VIDEO)
-            add(map, "video/fli", "fli", VIDEO)
-            add(map, "video/m4v", "m4v", VIDEO)
-            add(map, "video/mpeg", "mpeg", VIDEO)
-            add(map, "video/mpeg", "mpg", VIDEO)
-            add(map, "video/mpeg", "mpe", VIDEO)
-            add(map, "video/mp4", "mp4", VIDEO)
-            add(map, "video/mpeg", "VOB", VIDEO)
-            add(map, "video/quicktime", "qt", VIDEO)
-            add(map, "video/quicktime", "mov", VIDEO)
-            add(map, "video/vnd.mpegurl", "mxu", VIDEO)
-            add(map, "video/x-la-asf", "lsf", VIDEO)
-            add(map, "video/x-la-asf", "lsx", VIDEO)
-            add(map, "video/x-mng", "mng", VIDEO)
-            add(map, "video/x-ms-asf", "asf", VIDEO)
-            add(map, "video/x-ms-asf", "asx", VIDEO)
-            add(map, "video/x-ms-wm", "wm", VIDEO)
-            add(map, "video/x-ms-wmv", "wmv", VIDEO)
-            add(map, "video/x-ms-wmx", "wmx", VIDEO)
-            add(map, "video/x-ms-wvx", "wvx", VIDEO)
-            add(map, "video/x-msvideo", "avi", VIDEO)
-            add(map, "video/x-sgi-movie", "movie", VIDEO)
-            add(map, "video/x-webex", "wrf", VIDEO)
-            add(map, "x-conference/x-cooltalk", "ice")
-            add(map, "x-epoc/x-sisx-app", "sisx")
-
-            map
+        private val map by lazy {
+            mapOf(
+                "application/gzip" to ARCHIVE,
+                "application/json" to DOC_OTHER,
+                "application/msaccess" to DATABASE,
+                "application/msword" to MS_WORD,
+                "application/ogg" to AUDIO,
+                "application/pdf" to PDF,
+                "application/postscript" to IMAGE,
+                "application/rar" to ARCHIVE,
+                "application/vnd.apple.keynote" to PPT_OTHER,
+                "application/vnd.apple.numbers" to SHEET_OTHER,
+                "application/vnd.apple.pages" to DOC_OTHER,
+                "application/vnd.ms-excel" to  MS_EXCEL,
+                "application/vnd.ms-powerpoint" to  MS_PPT,
+                "application/vnd.oasis.opendocument.database" to DATABASE,
+                "application/vnd.oasis.opendocument.graphics" to IMAGE,
+                "application/vnd.oasis.opendocument.graphics-template" to IMAGE,
+                "application/vnd.oasis.opendocument.image" to IMAGE,
+                "application/vnd.oasis.opendocument.spreadsheet" to SHEET_OTHER,
+                "application/vnd.oasis.opendocument.spreadsheet-template" to SHEET_OTHER,
+                "application/vnd.oasis.opendocument.text" to DOC_OTHER,
+                "application/vnd.oasis.opendocument.text-master" to DOC_OTHER,
+                "application/vnd.oasis.opendocument.text-template" to DOC_OTHER,
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation" to  MS_PPT,
+                "application/vnd.openxmlformats-officedocument.presentationml.slideshow" to  MS_PPT,
+                "application/vnd.openxmlformats-officedocument.presentationml.template" to  MS_PPT,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" to  MS_EXCEL,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.template" to  MS_EXCEL,
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document" to  MS_WORD,
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.template" to  MS_WORD,
+                "application/vnd.stardivision.calc" to  SHEET_OTHER,
+                "application/vnd.stardivision.impress" to  PPT_OTHER,
+                "application/vnd.stardivision.writer" to  DOC_OTHER,
+                "application/vnd.stardivision.writer-global" to  DOC_OTHER,
+                "application/vnd.sun.xml.calc" to  SHEET_OTHER,
+                "application/vnd.sun.xml.calc.template" to  SHEET_OTHER,
+                "application/vnd.sun.xml.impress" to  PPT_OTHER,
+                "application/vnd.sun.xml.impress.template" to  PPT_OTHER,
+                "application/vnd.sun.xml.writer" to  DOC_OTHER,
+                "application/vnd.sun.xml.writer.global" to  DOC_OTHER,
+                "application/vnd.sun.xml.writer.template" to  DOC_OTHER,
+                "application/x-flac" to  AUDIO,
+                "application/xhtml+xml" to  WEB,
+                "application/zip" to  ARCHIVE,
+                "audio/3gpp" to  AUDIO,
+                "audio/amr" to  AUDIO,
+                "audio/basic" to  AUDIO,
+                "audio/midi" to  AUDIO,
+                "audio/mobile-xmf" to  AUDIO,
+                "audio/midi" to AUDIO,
+                "audio/mpeg" to  AUDIO,
+                "audio/mpegurl" to  AUDIO,
+                "audio/prs.sid" to  AUDIO,
+                "audio/x-aiff" to  AUDIO,
+                "audio/x-gsm" to  AUDIO,
+                "audio/x-mpegurl" to  AUDIO,
+                "audio/x-ms-wax" to  AUDIO,
+                "audio/x-ms-wma" to  AUDIO,
+                "audio/x-pn-realaudio" to  AUDIO,
+                "audio/x-realaudio" to  AUDIO,
+                "audio/x-scpls" to  AUDIO,
+                "audio/x-sd2" to  AUDIO,
+                "audio/x-wav" to  AUDIO,
+                "image/bmp" to  IMAGE,
+                "image/gif" to  IMAGE,
+                "image/ico" to  IMAGE,
+                "image/ief" to  IMAGE,
+                "image/jpeg" to  IMAGE,
+                "image/pcx" to  IMAGE,
+                "image/png" to  IMAGE,
+                "image/svg+xml" to  IMAGE,
+                "image/tiff" to  IMAGE,
+                "image/vnd.adobe.photoshop" to IMAGE,
+                "image/vnd.djvu" to  IMAGE,
+                "image/vnd.wap.wbmp" to  IMAGE,
+                "image/x-cmu-raster" to  IMAGE,
+                "image/x-coreldraw" to  IMAGE,
+                "image/x-coreldrawpattern" to  IMAGE,
+                "image/x-coreldrawtemplate" to  IMAGE,
+                "image/x-corelphotopaint" to  IMAGE,
+                "image/x-icon" to  IMAGE,
+                "image/x-jg" to  IMAGE,
+                "image/x-jng" to  IMAGE,
+                "image/x-ms-bmp" to  IMAGE,
+                "image/x-photoshop" to  IMAGE,
+                "image/x-portable-anymap" to  IMAGE,
+                "image/x-portable-bitmap" to  IMAGE,
+                "image/x-portable-graymap" to  IMAGE,
+                "image/x-portable-pixmap" to  IMAGE,
+                "image/x-rgb" to  IMAGE,
+                "image/x-xbitmap" to  IMAGE,
+                "image/x-xpixmap" to  IMAGE,
+                "image/x-xwindowdump" to  IMAGE,
+                "text/comma-separated-values" to DOC_OTHER,
+                "text/html" to  WEB,
+                "text/plain" to DOC_OTHER,
+                "text/richtext" to DOC_OTHER,
+                "text/rtf" to DOC_OTHER,
+                "text/tab-separated-values" to DOC_OTHER,
+                "text/text" to DOC_OTHER,
+                "text/xml" to DOC_OTHER,
+                "video/3gpp" to  VIDEO,
+                "video/dl" to  VIDEO,
+                "video/dv" to  VIDEO,
+                "video/fli" to  VIDEO,
+                "video/m4v" to  VIDEO,
+                "video/mp4" to  VIDEO,
+                "video/mpeg" to  VIDEO,
+                "video/quicktime" to  VIDEO,
+                "video/vnd.mpegurl" to  VIDEO,
+                "video/x-la-asf" to  VIDEO,
+                "video/x-mng" to  VIDEO,
+                "video/x-ms-asf" to  VIDEO,
+                "video/x-ms-wm" to  VIDEO,
+                "video/x-ms-wmv" to  VIDEO,
+                "video/x-ms-wmx" to  VIDEO,
+                "video/x-ms-wvx" to  VIDEO,
+                "video/x-msvideo" to  VIDEO,
+                "video/x-sgi-movie" to  VIDEO,
+                "video/x-webex" to  VIDEO
+            )
         }
 
-        private fun add(map: HashMap<String, MimeType>, mimeType: String, extension: String, type: MimeType? = null) {
-            if (type != null) {
-                map[extension] = type
-            }
-        }
-
-        fun fromExt(ext: String): MimeType {
-            return map[ext] ?: OTHER
-        }
-
-        fun fromFilename(filename: String): MimeType {
-            return fromExt(filename.substring(filename.lastIndexOf('.') + 1))
+        fun with(type: String?): MimeType {
+            return map[type] ?: OTHER
         }
     }
 }

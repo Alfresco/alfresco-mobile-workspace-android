@@ -15,7 +15,8 @@ data class Entry(
     val id: String,
     val type: Type,
     val title: String,
-    val subtitle: String?
+    val subtitle: String?,
+    val mimeType: String?
 ) {
     enum class Type {
         File,
@@ -43,7 +44,8 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                node.path?.formattedString()
+                node.path?.formattedString(),
+                node.content?.mimeType
             )
         }
 
@@ -52,7 +54,8 @@ data class Entry(
                 result.id,
                 Type.from(result.nodeType),
                 result.name,
-                result.path?.formattedString()
+                result.path?.formattedString(),
+                result.content?.mimeType
             )
         }
 
@@ -61,7 +64,8 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                node.path?.formattedString()
+                node.path?.formattedString(),
+                node.content?.mimeType
             )
         }
 
@@ -73,7 +77,8 @@ data class Entry(
                     file.id,
                     Type.File,
                     file.name,
-                    file.path?.formattedString()
+                    file.path?.formattedString(),
+                    file.content?.mimeType
                 )
             }
             if (map.folder != null) {
@@ -82,7 +87,8 @@ data class Entry(
                     folder.id,
                     Type.Folder,
                     folder.name,
-                    folder.path?.formattedString()
+                    folder.path?.formattedString(),
+                    null
                 )
             }
             if (map.site != null) {
@@ -91,6 +97,7 @@ data class Entry(
                     site.guid,
                     Type.Site,
                     site.title,
+                    null,
                     null
                 )
             }
@@ -102,6 +109,7 @@ data class Entry(
                 role.site.guid,
                 Type.Site,
                 role.site.title,
+                null,
                 null
             )
         }
@@ -111,7 +119,8 @@ data class Entry(
                 link.id ?: "",
                 Type.Link,
                 link.name ?: "",
-                null
+                null,
+                link.content?.mimeType
             )
         }
 
@@ -120,7 +129,8 @@ data class Entry(
                 node.id,
                 Type.from(node.nodeType),
                 node.name,
-                node.path?.formattedString()
+                node.path?.formattedString(),
+                node.content?.mimeType
             )
         }
 

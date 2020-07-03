@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Alfresco" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/alfresco_primary</item>
+        <item name="colorPrimary">@color/dark</item>
         <item name="colorPrimaryDark">@color/alfresco_status_bar_color</item>
         <item name="colorAccent">@color/alfresco_primary</item>
          <item name="android:textColorPrimary">@color/alfresco_text_primary</item>

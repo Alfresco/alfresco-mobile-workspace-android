@@ -26,10 +26,16 @@ class BrowseMenuFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel) {
         recycler_view.withModels {
             it.entries.forEach {
-                browseMenuRow {
-                    id(it.title)
-                    entry(it)
-                    clickListener { _ -> navigateTo(it.path, it.title) }
+                if (it.path.isNotEmpty()) {
+                    browseMenuRow {
+                        id(it.title)
+                        entry(it)
+                        clickListener { _ -> navigateTo(it.path, it.title) }
+                    }
+                } else {
+                    browseMenuSeparator {
+                        id(it.title)
+                    }
                 }
             }
         }

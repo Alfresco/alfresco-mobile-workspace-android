@@ -3,15 +3,15 @@
     <string-array name="browse_menu_titles">
         <item>@string/browse_menu_personal</item>
         <item>@string/browse_menu_my_libraries</item>
-        <item>@string/browse_menu_fav_libraries</item>
+        <item/>
         <item>@string/browse_menu_shared</item>
         <item>@string/browse_menu_trash</item>
     </string-array>
 
     <integer-array name="browse_menu_icons">
         <item>@drawable/ic_personal</item>
-        <item>@drawable/ic_my_libraries</item>
-        <item>@drawable/ic_fav_libraries</item>
+        <item>@drawable/ic_library</item>
+        <item/>
         <item>@drawable/ic_shared</item>
         <item>@drawable/ic_trash</item>
     </integer-array>
@@ -19,7 +19,7 @@
     <string-array name="browse_menu_paths">
         <item>@string/nav_path_my_files</item>
         <item>@string/nav_path_my_libraries</item>
-        <item>@string/nav_path_fav_libraries</item>
+        <item/>
         <item>@string/nav_path_shared</item>
         <item>@string/nav_path_trash</item>
     </string-array>

@@ -96,11 +96,14 @@
     <style name="Widget.Alfresco.ListItem.Title">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/base_regular</item>
+        <item name="android:textColor">@color/dark</item>
     </style>
 
     <style name="Widget.Alfresco.ListItem.SubTitle">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/base_regular</item>
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:alpha">0.54</item>
     </style>
 
     <!-- TextInputFields -->

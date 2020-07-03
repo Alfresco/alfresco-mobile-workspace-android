@@ -5,4 +5,6 @@
     <color name="alfresco_text_secondary">#8CFFFFFF</color>
 
     <color name="alfresco_status_bar_color">@color/design_dark_default_color_background</color>
+
+    <color name="dark">#dedcd7</color>
 </resources>

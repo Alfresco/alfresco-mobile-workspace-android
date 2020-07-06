@@ -1,11 +1,13 @@
 package com.alfresco.content.data
 
 import com.alfresco.content.apis.SearchApi
+import com.alfresco.content.models.RequestDefaults
 import com.alfresco.content.models.RequestFilterQueriesInner
 import com.alfresco.content.models.RequestIncludeEnum
 import com.alfresco.content.models.RequestPagination
 import com.alfresco.content.models.RequestQuery
 import com.alfresco.content.models.RequestSortDefinitionInner
+import com.alfresco.content.models.RequestTemplatesInner
 import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SearchRequest
 import com.alfresco.content.session.SessionManager
@@ -19,8 +21,9 @@ class SearchRepository() {
     }
 
     suspend fun search(query: String): List<ResultNode> {
-        val queryString = "((cm:name:\"$query*\" OR cm:title:\"$query*\" OR cm:description:\"$query*\" OR TEXT:\"$query*\" OR TAG:\"$query*\"))"
-        val reqQuery = RequestQuery(queryString, RequestQuery.LanguageEnum.AFTS)
+        val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
+        val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
+        val defaults = RequestDefaults(defaultFieldName = "keywords")
         val filter = listOf(
             RequestFilterQueriesInner("+TYPE:'cm:folder' OR +TYPE:'cm:content'"),
             RequestFilterQueriesInner("-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"),
@@ -33,7 +36,7 @@ class SearchRepository() {
         )
         val include = listOf(RequestIncludeEnum.PATH)
         val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "score", false))
-        val req = SearchRequest(reqQuery, sort = sort, filterQueries = filter, include = include)
+        val req = SearchRequest(reqQuery, sort = sort, templates = templates, defaults = defaults, filterQueries = filter, include = include)
 
         return service.search(req).list?.entries?.map { it.entry } ?: emptyList()
     }

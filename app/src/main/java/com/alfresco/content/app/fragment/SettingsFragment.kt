@@ -2,7 +2,10 @@ package com.alfresco.content.app.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.os.Bundle
+import android.view.View
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import coil.transform.CircleCropTransformation
@@ -12,30 +15,39 @@ import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
 import com.alfresco.content.app.activity.LoginActivity
 import com.alfresco.content.app.loadAny
+import com.alfresco.content.app.widget.AccountPreference
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    override fun onStart() {
+        super.onStart()
+        requireActivity().title = resources.getString(R.string.nav_title_settings)
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
         val acc = SessionManager.requireSession.account
-        preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_account_key))?.apply {
+        preferenceScreen.findPreference<AccountPreference>(resources.getString(R.string.settings_account_key))?.apply {
             title = acc.displayName
             summary = acc.email
             loadAny(PeopleRepository.myPicture(context)) {
-                placeholder(R.drawable.ic_account)
-                error(R.drawable.ic_account)
+                placeholder(R.drawable.ic_transparent)
+                error(R.drawable.ic_transparent)
                 transformations(CircleCropTransformation())
+            }
+            onSignOutClickListener = View.OnClickListener {
+                showSignOutConfirmation()
             }
         }
 
-        preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_sign_out_key))?.apply {
-            setOnPreferenceClickListener {
-                showSignOutConfirmation()
-            }
+        preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_version_key))?.apply {
+            val pkg = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
+            val version = "${pkg.versionName}-${PackageInfoCompat.getLongVersionCode(pkg)}"
+            summary = resources.getString(R.string.settings_version, version)
         }
     }
 

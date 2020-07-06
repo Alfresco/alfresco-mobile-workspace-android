@@ -30,9 +30,9 @@
         android:name="com.alfresco.content.browse.BrowseMenuFragment"
         android:label="@string/nav_title_browse" />
 
-    <fragment
+    <activity
         android:id="@+id/nav_settings"
-        android:name="com.alfresco.content.app.fragment.SettingsFragment"
+        android:name="com.alfresco.content.app.activity.SettingsActivity"
         android:label="@string/nav_title_settings" />
 
     <fragment

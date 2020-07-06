@@ -6,9 +6,8 @@
 
     <!-- Settings Config -->
     <string name="settings_account_key">account</string>
-    <string name="settings_sign_out_key">sign_out</string>
-
     <string name="settings_theme_key">theme</string>
+    <string name="settings_version_key">version</string>
 
     <string name="settings_theme_light">light</string>
     <string name="settings_theme_dark">dark</string>

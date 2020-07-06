@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="@string/settings_account_category">
+    <com.alfresco.content.app.widget.AccountPreference
+        android:icon="@drawable/ic_account"
+        android:key="@string/settings_account_key"
+        android:layout="@layout/layout_pref_account"
+        android:summary=""
+        android:title=""
+        app:allowDividerBelow="true" />
 
-        <Preference
-            android:icon="@drawable/ic_account"
-            android:key="@string/settings_account_key"
-            android:summary=""
-            android:title=""
-            android:layout="@layout/layout_preference" />
-        <Preference
-            android:icon="@drawable/ic_logout"
-            android:key="@string/settings_sign_out_key"
-            android:title="@string/settings_sign_out" />
-    </PreferenceCategory>
+    <ListPreference
+        android:defaultValue="@string/settings_theme_system"
+        android:entries="@array/settings_theme_labels"
+        android:entryValues="@array/settings_theme_values"
+        android:icon="@drawable/ic_theme"
+        android:key="@string/settings_theme_key"
+        android:title="@string/settings_theme"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:useSimpleSummaryProvider="true"
+        android:layout="@layout/layout_pref"/>
 
-    <PreferenceCategory
-        android:title="@string/settings_app_category">
-
-        <ListPreference
-            android:defaultValue="@string/settings_theme_system"
-            android:entries="@array/settings_theme_labels"
-            android:entryValues="@array/settings_theme_values"
-            android:icon="@drawable/ic_theme"
-            android:key="@string/settings_theme_key"
-            android:title="@string/settings_theme"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    <Preference
+        app:allowDividerAbove="true"
+        android:key="@string/settings_version_key"
+        android:summary="App Version: 1.00"
+        android:layout="@layout/layout_pref_text"/>
 
 </androidx.preference.PreferenceScreen>

@@ -16,6 +16,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.data.Entry
 import kotlinx.android.synthetic.main.fragment_browse.loading_animation
 import kotlinx.android.synthetic.main.fragment_browse.recycler_view
+import kotlinx.android.synthetic.main.fragment_browse.refresh_layout
 
 class BrowseFragment : BaseMvRxFragment() {
 
@@ -29,8 +30,21 @@ class BrowseFragment : BaseMvRxFragment() {
         return inflater.inflate(R.layout.fragment_browse, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        refresh_layout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
-        loading_animation.isVisible = state.req is Loading && state.entries.isEmpty()
+        loading_animation.isVisible =
+            state.req is Loading && state.entries.isEmpty() && !refresh_layout.isRefreshing
+
+        if (state.req.complete) {
+            refresh_layout.isRefreshing = false
+        }
 
         recycler_view.withModels {
             if (state.entries.isEmpty() && state.req.complete) {

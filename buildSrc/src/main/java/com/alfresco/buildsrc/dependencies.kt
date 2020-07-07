@@ -54,6 +54,8 @@ object Libs {
 
         const val coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
+        const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
         const val preference = "androidx.preference:preference:1.1.1"
 
         object Navigation {

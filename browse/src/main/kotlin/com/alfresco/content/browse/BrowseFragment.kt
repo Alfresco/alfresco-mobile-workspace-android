@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.Entry
@@ -66,5 +68,15 @@ class BrowseFragment : BaseMvRxFragment() {
 
     private fun navigateTo(uri: Uri) {
         findNavController().navigate(uri)
+    }
+
+    companion object {
+        fun arg(path: String) = bundleOf(MvRx.KEY_ARG to path)
+
+        fun withArg(path: String): BrowseFragment {
+            val fragment = BrowseFragment()
+            fragment.arguments = arg(path)
+            return fragment
+        }
     }
 }

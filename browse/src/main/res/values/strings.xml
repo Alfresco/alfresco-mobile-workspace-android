@@ -10,4 +10,6 @@
 
     <string name="fab_description">Add document</string>
 
+    <string name="favorites_tab_files">Files and Folders</string>
+    <string name="favorites_tab_libraries">Libraries</string>
 </resources>

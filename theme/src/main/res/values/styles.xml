@@ -144,6 +144,14 @@
         <item name="android:itemTextAppearance">@android:color/black</item>
     </style>
 
+    <!-- Tabs -->
+    <style name="Theme.Alfresco.Tab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/base_medium</item>
+    </style>
+
     <!-- SnackBar -->
     <style name="Widget.Alfresco.Snackbar" />
 

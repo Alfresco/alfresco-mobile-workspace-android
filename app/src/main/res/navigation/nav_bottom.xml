@@ -17,12 +17,8 @@
 
     <fragment
         android:id="@+id/nav_favorites"
-        android:name="com.alfresco.content.browse.BrowseFragment"
+        android:name="com.alfresco.content.browse.FavoritesFragment"
         android:label="@string/nav_title_favorites">
-        <argument
-            android:name="mvrx:arg"
-            android:defaultValue="favorites"
-            app:argType="string" />
     </fragment>
 
     <fragment

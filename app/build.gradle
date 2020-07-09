@@ -55,6 +55,7 @@ dependencies {
     implementation project(':account')
     implementation project(':session')
     implementation project(':auth')
+    implementation project(':listview')
     implementation project(':browse')
     implementation project(':search')
 

@@ -29,7 +29,7 @@ class ListViewRow @JvmOverloads constructor(
     fun setData(entry: Entry) {
         title.text = entry.title
 
-        val type = when(entry.type) {
+        val type = when (entry.type) {
             Entry.Type.Site -> MimeType.LIBRARY
             Entry.Type.Folder -> MimeType.FOLDER
             else -> MimeType.with(entry.mimeType)

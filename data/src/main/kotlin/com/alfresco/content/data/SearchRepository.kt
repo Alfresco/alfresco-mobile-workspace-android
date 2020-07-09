@@ -8,7 +8,6 @@ import com.alfresco.content.models.RequestPagination
 import com.alfresco.content.models.RequestQuery
 import com.alfresco.content.models.RequestSortDefinitionInner
 import com.alfresco.content.models.RequestTemplatesInner
-import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SearchRequest
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.flow.Flow

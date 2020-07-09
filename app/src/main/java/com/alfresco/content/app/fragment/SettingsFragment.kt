@@ -2,7 +2,6 @@ package com.alfresco.content.app.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.pm.PackageInfoCompat

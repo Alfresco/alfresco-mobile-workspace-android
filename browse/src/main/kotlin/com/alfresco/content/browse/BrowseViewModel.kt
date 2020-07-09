@@ -3,8 +3,6 @@ package com.alfresco.content.browse
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.listview.ListViewModel
-import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.ResponsePaging
@@ -12,6 +10,8 @@ import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SharedLinksRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
+import com.alfresco.content.listview.ListViewModel
+import com.alfresco.content.listview.ListViewState
 import kotlin.reflect.KSuspendFunction2
 import kotlinx.coroutines.flow.Flow
 

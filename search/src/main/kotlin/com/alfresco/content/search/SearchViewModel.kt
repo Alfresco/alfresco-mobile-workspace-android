@@ -8,6 +8,7 @@ import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import kotlin.reflect.KSuspendFunction2
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,15 +17,14 @@ import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlin.reflect.KSuspendFunction2
 
 class SearchViewModel(
     state: ListViewState,
     val repository: SearchRepository
 ) : ListViewModel(state) {
     private val inputStream = MutableStateFlow("")
-    private val results : MutableStateFlow<ResponsePaging?> = MutableStateFlow(null)
-    private var queryString = "" //TODO: State
+    private val results: MutableStateFlow<ResponsePaging?> = MutableStateFlow(null)
+    private var queryString = "" // TODO: State
 
     init {
         viewModelScope.launch {

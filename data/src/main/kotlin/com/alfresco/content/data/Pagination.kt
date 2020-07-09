@@ -9,9 +9,12 @@ data class Pagination(
 ) {
     companion object {
         fun with(raw: com.alfresco.content.models.Pagination): Pagination {
+            // MNT-20822: hasMoreItems returns true incorrectly in some cases
+            val hasMoreItems =
+                raw.totalItems?.let { raw.count + raw.skipCount < it } ?: raw.hasMoreItems
             return Pagination(
                 raw.count,
-                raw.hasMoreItems,
+                hasMoreItems,
                 raw.skipCount,
                 raw.maxItems,
                 raw.totalItems

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search</string>
+
     <string name="recent_search_title">Recent Searches</string>
 
     <string name="search_chip_files">Files</string>

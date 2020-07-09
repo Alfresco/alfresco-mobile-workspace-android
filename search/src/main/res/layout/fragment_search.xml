@@ -43,14 +43,14 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/recents_fragment"
             android:name="com.alfresco.content.search.RecentSearchFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/results_fragment"
             android:name="com.alfresco.content.search.SearchResultsFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone" />
     </FrameLayout>
 

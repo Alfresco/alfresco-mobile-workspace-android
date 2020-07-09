@@ -17,6 +17,8 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel>() {
     }
 
     override fun onItemClicked(entry: Entry) {
-        TODO("Not yet implemented")
+        viewModel.saveSearch(requireContext())
+
+        // TODO: missing implementation
     }
 }

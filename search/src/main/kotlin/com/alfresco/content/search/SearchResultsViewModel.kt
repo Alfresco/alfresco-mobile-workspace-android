@@ -1,13 +1,17 @@
 package com.alfresco.content.search
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
+import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.getStringList
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.content.putStringList
 import kotlin.reflect.KSuspendFunction2
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +71,21 @@ class SearchResultsViewModel(
     fun setFilters(filters: SearchFilters) {
         this.filters = filters
         refresh()
+    }
+
+    fun saveSearch(context: Context) {
+        val key = context.getString(R.string.recent_searches_key)
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        var list = sharedPrefs.getStringList(key).toMutableList()
+
+        // At most 15 distinct values, with the latest added to top
+        list.remove(queryString)
+        list.add(0, queryString)
+        list = list.subList(0, minOf(list.count(), 15))
+
+        val editor = sharedPrefs.edit()
+        editor.putStringList(key, list)
+        editor.apply()
     }
 
     fun clearQuery() = setSearchQuery("")

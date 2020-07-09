@@ -2,9 +2,14 @@ package com.alfresco.content.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_search.chip_files
 import kotlinx.android.synthetic.main.fragment_search.chip_folders
 import kotlinx.android.synthetic.main.fragment_search.chip_libraries
@@ -12,6 +17,8 @@ import kotlinx.android.synthetic.main.fragment_search.recents_fragment
 import kotlinx.android.synthetic.main.fragment_search.results_fragment
 
 class SearchFragment : Fragment() {
+
+    private lateinit var searchView: SearchView
 
     private val recentsFragment by lazy {
         childFragmentManager.findFragmentById(R.id.recents_fragment) as RecentSearchFragment
@@ -25,13 +32,49 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
+        setHasOptionsMenu(true)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupChips()
+
+        recentsFragment.onEntrySelected = { searchView.setQuery(it, true) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search, menu)
+
+        val searchItem: MenuItem = menu.findItem(R.id.search)
+        searchView = searchItem.actionView as SearchView
+        searchView.queryHint = resources.getString(R.string.search_hint)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                setSearchQuery(newText ?: "")
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+        })
+
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                this@SearchFragment.findNavController().navigateUp()
+                return true
+            }
+        })
+
+        searchItem.expandActionView()
     }
 
     fun setSearchQuery(query: String) {

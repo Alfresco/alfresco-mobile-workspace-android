@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_title_search">Search</string>
+    <string name="recent_search_title">Recent Searches</string>
 
-    <string name="search_tab_everything">Everything</string>
-    <string name="search_tab_files">Files</string>
-    <string name="search_tab_folders">Folders</string>
-    <string name="search_tab_libraries">Libraries</string>
+    <string name="search_chip_files">Files</string>
+    <string name="search_chip_folders">Folders</string>
+    <string name="search_chip_libraries">Libraries</string>
 </resources>

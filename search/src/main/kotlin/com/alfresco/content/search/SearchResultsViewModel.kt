@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
+class SearchResultsViewModel(
     state: ListViewState,
     val repository: SearchRepository
 ) : ListViewModel(state) {
@@ -69,12 +69,12 @@ class SearchViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SearchViewModel, ListViewState> {
+    companion object : MvRxViewModelFactory<SearchResultsViewModel, ListViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: ListViewState
-        ): SearchViewModel? {
-            return SearchViewModel(state, SearchRepository())
+        ): SearchResultsViewModel? {
+            return SearchResultsViewModel(state, SearchRepository())
         }
     }
 }

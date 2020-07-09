@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_files"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_chip_files" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_folders"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_chip_folders" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_libraries"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_chip_libraries"
+            android:visibility="gone" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/recents_fragment"
+            android:name="com.alfresco.content.search.RecentSearchFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/results_fragment"
+            android:name="com.alfresco.content.search.SearchResultsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</LinearLayout>

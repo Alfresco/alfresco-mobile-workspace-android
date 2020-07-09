@@ -1,18 +1,15 @@
 package com.alfresco.content.app.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
@@ -21,7 +18,7 @@ import com.alfresco.content.session.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class MainActivity : AppCompatActivity() {
 
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
@@ -37,8 +34,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         actionBarController.setupActionBar(this, navController, appBarConfiguration)
 
         bottomNav.setupWithNavController(navController)
-
-        updateAppTheme()
 
         // Start a new session
         val session = SessionManager.newSession(this)
@@ -60,27 +55,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        PreferenceManager.getDefaultSharedPreferences(this)
-            .registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        PreferenceManager.getDefaultSharedPreferences(this)
-            .unregisterOnSharedPreferenceChangeListener(this)
-    }
-
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when (key) {
-            getString(R.string.settings_theme_key) -> updateAppTheme()
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_action_bar, menu)
@@ -129,13 +104,5 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         return navHostFragment?.childFragmentManager?.fragments?.get(0)
-    }
-
-    private fun updateAppTheme() {
-        when (PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_system))) {
-            getString(R.string.settings_theme_light) -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            getString(R.string.settings_theme_dark) -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            getString(R.string.settings_theme_system) -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
     }
 }

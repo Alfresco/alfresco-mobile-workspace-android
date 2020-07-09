@@ -12,6 +12,10 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel>() {
         viewModel.setSearchQuery(query)
     }
 
+    fun setFilters(filters: SearchFilters) {
+        viewModel.setFilters(filters)
+    }
+
     override fun onItemClicked(entry: Entry) {
         TODO("Not yet implemented")
     }

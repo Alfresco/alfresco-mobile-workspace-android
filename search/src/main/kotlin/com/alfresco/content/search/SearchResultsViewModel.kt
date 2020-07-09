@@ -25,6 +25,7 @@ class SearchResultsViewModel(
     private val inputStream = MutableStateFlow("")
     private val results: MutableStateFlow<ResponsePaging?> = MutableStateFlow(null)
     private var queryString = "" // TODO: State
+    private var filters = emptyFilters()
 
     init {
         viewModelScope.launch {
@@ -32,7 +33,13 @@ class SearchResultsViewModel(
                 .filterNot { it.isEmpty() || it.length < 3 }
                 .collectLatest { query ->
                     val job = launch {
-                        results.value = repository.search(query, 0, ITEMS_PER_PAGE)
+                        results.value = repository.search(
+                            query,
+                            0,
+                            ITEMS_PER_PAGE,
+                            filters.contains(SearchFilter.Files),
+                            filters.contains(SearchFilter.Folders)
+                        )
                     }
                     job.invokeOnCompletion { }
                     job.join()
@@ -57,6 +64,11 @@ class SearchResultsViewModel(
         inputStream.value = queryString
     }
 
+    fun setFilters(filters: SearchFilters) {
+        this.filters = filters
+        refresh()
+    }
+
     fun clearQuery() = setSearchQuery("")
 
     override fun fetchRequest(): KSuspendFunction2<Int, Int, Flow<ResponsePaging>> {
@@ -65,7 +77,15 @@ class SearchResultsViewModel(
 
     private suspend fun getResults(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(repository.search(queryString, skipCount, maxItems))
+            emit(
+                repository.search(
+                    queryString,
+                    skipCount,
+                    maxItems,
+                    filters.contains(SearchFilter.Files),
+                    filters.contains(SearchFilter.Folders)
+                )
+            )
         }
     }
 

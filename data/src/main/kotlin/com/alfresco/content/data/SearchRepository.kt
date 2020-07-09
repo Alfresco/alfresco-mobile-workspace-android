@@ -19,12 +19,17 @@ class SearchRepository() {
         SessionManager.requireSession.createService(SearchApi::class.java)
     }
 
-    suspend fun search(query: String, skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun search(query: String, skipCount: Int, maxItems: Int, includeFiles: Boolean, includeFolders: Boolean): ResponsePaging {
         val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
         val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
         val defaults = RequestDefaults(defaultFieldName = "keywords")
+        val typeFilter = if (includeFiles) {
+            if (includeFolders) "+TYPE:'cm:folder' OR +TYPE:'cm:content'" else "+TYPE:'cm:content'"
+        } else {
+            if (includeFolders) "+TYPE:'cm:folder'" else "+TYPE:'cm:folder' OR +TYPE:'cm:content'"
+        }
         val filter = listOf(
-            RequestFilterQueriesInner("+TYPE:'cm:folder' OR +TYPE:'cm:content'"),
+            RequestFilterQueriesInner(typeFilter),
             RequestFilterQueriesInner("-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"),
             RequestFilterQueriesInner("-cm:creator:System AND -QNAME:comment"),
             RequestFilterQueriesInner("-TYPE:'st:site' AND -ASPECT:'st:siteContainer' AND -ASPECT:'sys:hidden'"),

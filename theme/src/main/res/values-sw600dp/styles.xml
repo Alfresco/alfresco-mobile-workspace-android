@@ -9,7 +9,7 @@
         <item name="android:textColorSecondary">@color/alfresco_text_secondary</item>
 
         <!-- Action bar -->
-        <item name="actionBarSize">44dp</item>
+        <item name="actionBarSize">52dp</item>
 
         <!-- Status bar -->
         <item name="android:windowLightStatusBar">@bool/alfresco_light_status_bar</item>

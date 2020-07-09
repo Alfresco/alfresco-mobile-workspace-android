@@ -8,7 +8,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import coil.api.load
+import coil.transform.CircleCropTransformation
 import com.alfresco.content.app.R
+import com.alfresco.content.data.PeopleRepository
 
 class ActionBarController(private val layout: ActionBarLayout) {
 
@@ -21,7 +24,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
         activity.setSupportActionBar(layout.toolbar)
         activity.setupActionBarWithNavController(navController, appBarConfiguration)
 
-        layout.profileIcon.setOnClickListener {
+        layout.profileView.setOnClickListener {
             navController.navigate(R.id.nav_settings)
         }
 
@@ -49,7 +52,11 @@ class ActionBarController(private val layout: ActionBarLayout) {
     }
 
     fun refreshData() {
-        layout.refreshData()
+        layout.profileIcon.load(PeopleRepository.myPicture()) {
+            placeholder(R.drawable.ic_account)
+            error(R.drawable.ic_account)
+            transformations(CircleCropTransformation())
+        }
     }
 
     fun setupOptionsMenu(menu: Menu) {

@@ -34,7 +34,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceScreen.findPreference<AccountPreference>(resources.getString(R.string.settings_account_key))?.apply {
             title = acc.displayName
             summary = acc.email
-            loadAny(PeopleRepository.myPicture(context)) {
+            loadAny(PeopleRepository.myPicture()) {
                 placeholder(R.drawable.ic_transparent)
                 error(R.drawable.ic_transparent)
                 transformations(CircleCropTransformation())

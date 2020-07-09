@@ -37,7 +37,7 @@ class PeopleRepository(context: Context, account: Account) {
     }
 
     companion object {
-        fun myPicture(context: Context): Uri {
+        fun myPicture(): Uri {
             return Uri.parse(SessionManager.currentSession?.baseUrl + "alfresco/versions/1/people/-me-/avatar")
         }
     }

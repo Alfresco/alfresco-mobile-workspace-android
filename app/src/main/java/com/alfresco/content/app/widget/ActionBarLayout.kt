@@ -11,10 +11,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import coil.api.load
-import coil.transform.CircleCropTransformation
 import com.alfresco.content.app.R
-import com.alfresco.content.data.PeopleRepository
 
 class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     FrameLayout(context, attrs) {
@@ -22,6 +19,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     lateinit var toolbar: Toolbar
     lateinit var card: CardView
     lateinit var profileIcon: ImageView
+    lateinit var profileView: View
 
     private lateinit var expandedView: View
     private lateinit var collapsedView: View
@@ -38,18 +36,11 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         expandedView = findViewById(R.id.expanded_toolbar)
         collapsedView = findViewById(R.id.collapsed_toolbar)
         profileIcon = findViewById(R.id.profile_icon)
+        profileView = findViewById(R.id.profile_icon_frame)
 
         originalRadius = card.radius
         originalTopMargin = (card.layoutParams as MarginLayoutParams).topMargin
         originalHorizontalMargin = (card.layoutParams as MarginLayoutParams).marginStart
-    }
-
-    fun refreshData() {
-        profileIcon.load(PeopleRepository.myPicture(context)) {
-            placeholder(R.drawable.ic_account)
-            error(R.drawable.ic_account)
-            transformations(CircleCropTransformation())
-        }
     }
 
     fun expand(animated: Boolean) {

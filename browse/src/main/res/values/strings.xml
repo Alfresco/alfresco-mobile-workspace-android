@@ -8,8 +8,6 @@
     <string name="browse_menu_shared">Shared</string>
     <string name="browse_menu_trash">Trash</string>
 
-    <string name="fab_description">Add document</string>
-
     <string name="favorites_tab_files">Files and Folders</string>
     <string name="favorites_tab_libraries">Libraries</string>
 </resources>

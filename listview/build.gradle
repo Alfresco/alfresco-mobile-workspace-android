@@ -18,16 +18,14 @@ dependencies {
     implementation project(':data')
     implementation project(':mimetype')
     implementation project(':theme')
-    implementation project(':listview')
-
-    implementation Libs.AlfrescoDbp.content
 
     implementation Libs.Kotlin.reflect
+    implementation Libs.Coroutines.core
+
     implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.Lifecycle.viewmodelKtx
     implementation Libs.AndroidX.coordinatorlayout
     implementation Libs.AndroidX.swiperefreshlayout
-    implementation Libs.AndroidX.Navigation.fragment
 
     implementation Libs.mvRx
 

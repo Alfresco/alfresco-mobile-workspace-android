@@ -15,7 +15,8 @@ enum class MimeType(val icon: Int) {
     AUDIO(R.drawable.file_ic_audio),
     WEB(R.drawable.file_ic_web),
     OTHER(R.drawable.file_ic_other),
-    FOLDER(R.drawable.file_ic_folder);
+    FOLDER(R.drawable.file_ic_folder),
+    LIBRARY(R.drawable.file_ic_library);
 
     companion object {
         private val map by lazy {

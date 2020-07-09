@@ -20,7 +20,7 @@ class SearchRepository() {
         SessionManager.requireSession.createService(SearchApi::class.java)
     }
 
-    suspend fun search(query: String): List<ResultNode> {
+    suspend fun search(query: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
         val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
         val defaults = RequestDefaults(defaultFieldName = "keywords")
@@ -36,9 +36,10 @@ class SearchRepository() {
         )
         val include = listOf(RequestIncludeEnum.PATH)
         val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "score", false))
-        val req = SearchRequest(reqQuery, sort = sort, templates = templates, defaults = defaults, filterQueries = filter, include = include)
+        val pagination = RequestPagination(maxItems, skipCount)
+        val req = SearchRequest(reqQuery, sort = sort, templates = templates, defaults = defaults, filterQueries = filter, include = include, paging = pagination)
 
-        return service.search(req).list?.entries?.map { it.entry } ?: emptyList()
+        return ResponsePaging.with(service.search(req))
     }
 
     private suspend fun recents(skipCount: Int, maxItems: Int): ResponsePaging {

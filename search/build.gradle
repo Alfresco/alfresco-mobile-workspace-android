@@ -21,6 +21,7 @@ dependencies {
     implementation project(':data')
     implementation project(':mimetype')
     implementation project(':theme')
+    implementation project(':listview')
 
     implementation Libs.AlfrescoDbp.content
 

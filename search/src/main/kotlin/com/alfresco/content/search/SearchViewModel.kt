@@ -2,50 +2,78 @@ package com.alfresco.content.search
 
 import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchRepository
-import com.alfresco.content.models.ResultNode
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.asFlow
+import com.alfresco.content.listview.ListViewModel
+import com.alfresco.content.listview.ListViewState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlin.reflect.KSuspendFunction2
 
 class SearchViewModel(
-    state: SearchViewState,
-    repository: SearchRepository
-) : MvRxViewModel<SearchViewState>(state) {
-    private val query = ConflatedBroadcastChannel<String>()
-    private val results = ConflatedBroadcastChannel<List<ResultNode>>()
+    state: ListViewState,
+    val repository: SearchRepository
+) : ListViewModel(state) {
+    private val inputStream = MutableStateFlow("")
+    private val results : MutableStateFlow<ResponsePaging?> = MutableStateFlow(null)
+    private var queryString = "" //TODO: State
 
     init {
         viewModelScope.launch {
-            query.asFlow()
-                .debounce(300)
+            inputStream.debounce(300)
+                .filterNot { it.isEmpty() || it.length < 3 }
                 .collectLatest { query ->
-                    val job = async(Dispatchers.IO) {
-                        results.send(repository.search(query))
+                    val job = launch {
+                        results.value = repository.search(query, 0, ITEMS_PER_PAGE)
                     }
                     job.invokeOnCompletion { }
-                    job.await()
+                    job.join()
                 }
         }
 
-        viewModelScope.launch { results.asFlow().execute { copy(results = it) } }
+        viewModelScope.launch {
+            results.filterNotNull().collectLatest() {
+                val req = Success(it)
+                setState {
+                    copy(
+                        entries = it.entries,
+                        req = req
+                    )
+                }
+            }
+        }
     }
 
     fun setSearchQuery(query: String) {
-        this.query.sendBlocking(query)
+        queryString = query.trim()
+        inputStream.value = queryString
     }
 
     fun clearQuery() = setSearchQuery("")
 
-    companion object : MvRxViewModelFactory<SearchViewModel, SearchViewState> {
-        override fun create(viewModelContext: ViewModelContext, state: SearchViewState): SearchViewModel? {
+    override fun fetchRequest(): KSuspendFunction2<Int, Int, Flow<ResponsePaging>> {
+        return this::getResults
+    }
+
+    private suspend fun getResults(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+        return flow {
+            emit(repository.search(queryString, skipCount, maxItems))
+        }
+    }
+
+    companion object : MvRxViewModelFactory<SearchViewModel, ListViewState> {
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: ListViewState
+        ): SearchViewModel? {
             return SearchViewModel(state, SearchRepository())
         }
     }

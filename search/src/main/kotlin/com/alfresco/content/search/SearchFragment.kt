@@ -1,38 +1,18 @@
 package com.alfresco.content.search
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
-import com.airbnb.mvrx.withState
-import kotlinx.android.synthetic.main.fragment_search.recycler_view
+import com.alfresco.content.data.Entry
+import com.alfresco.content.listview.ListFragment
 
-class SearchFragment : BaseMvRxFragment() {
+class SearchFragment : ListFragment<SearchViewModel>() {
 
-    private val viewModel: SearchViewModel by fragmentViewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
-
-    override fun invalidate() = withState(viewModel) {
-        recycler_view.withModels {
-            it.results()?.forEach() {
-                searchResultRow {
-                    id(it.id)
-                    node(it)
-                }
-            }
-        }
-    }
+    override val viewModel: SearchViewModel by fragmentViewModel()
 
     fun setSearchQuery(query: String) {
         viewModel.setSearchQuery(query)
+    }
+
+    override fun onItemClicked(entry: Entry) {
+        TODO("Not yet implemented")
     }
 }

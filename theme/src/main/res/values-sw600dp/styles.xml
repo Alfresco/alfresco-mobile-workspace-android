@@ -16,6 +16,8 @@
 
         <!-- (*) Background -->
 <!--        <item name="android:windowBackground">@drawable/bg_alfresco_splash</item>-->
-    </style>
 
+        <item name="bottomNavigationStyle">@style/Widget.Alfresco.BottomNavigationView</item>
+        <item name="tabStyle">@style/Widget.Alfresco.TabLayout</item>
+    </style>
 </resources>

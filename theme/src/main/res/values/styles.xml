@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Alfresco" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/dark</item>
+        <item name="colorPrimary">@color/alfresco_primary</item>
         <item name="colorPrimaryDark">@color/alfresco_status_bar_color</item>
         <item name="colorAccent">@color/alfresco_primary</item>
          <item name="android:textColorPrimary">@color/alfresco_text_primary</item>
@@ -13,15 +13,34 @@
 
         <!-- Status bar -->
         <item name="android:windowLightStatusBar">@bool/alfresco_light_status_bar</item>
+
+        <item name="bottomNavigationStyle">@style/Widget.Alfresco.BottomNavigationView</item>
+        <item name="tabStyle">@style/Widget.Alfresco.TabLayout</item>
     </style>
 
     <style name="Theme.Alfresco.Splash">
         <item name="android:windowBackground">@drawable/bg_alfresco_splash</item>
     </style>
 
-    <style name="Widget" />
+    <!-- Overlays -->
+    <style name="ThemeOverlay" />
+    <style name="ThemeOverlay.Alfresco" />
 
+    <style name="ThemeOverlay.Alfresco.Dark">
+        <item name="colorPrimary">@color/dark</item>
+    </style>
+
+    <!-- Widgets -->
+    <style name="Widget" />
     <style name="Widget.Alfresco" />
+
+    <style name="Widget.Alfresco.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+    </style>
+
+    <style name="Widget.Alfresco.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+    </style>
 
     <!-- Buttons -->
     <style name="Widget.Alfresco.Button.Primary" parent="@style/Widget.MaterialComponents.Button">

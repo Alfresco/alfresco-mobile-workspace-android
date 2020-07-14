@@ -1,5 +1,6 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.apis.QueriesApi
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.models.RequestDefaults
 import com.alfresco.content.models.RequestFilterQueriesInner
@@ -15,11 +16,28 @@ import kotlinx.coroutines.flow.flow
 
 class SearchRepository() {
 
-    private val service: SearchApi by lazy {
+    private val searchService: SearchApi by lazy {
         SessionManager.requireSession.createService(SearchApi::class.java)
     }
 
-    suspend fun search(query: String, skipCount: Int, maxItems: Int, includeFiles: Boolean, includeFolders: Boolean): ResponsePaging {
+    private val queryService: QueriesApi by lazy {
+        SessionManager.requireSession.createService(QueriesApi::class.java)
+    }
+
+    suspend fun search(
+        terms: String,
+        filters: SearchFilters,
+        skipCount: Int,
+        maxItems: Int
+    ): ResponsePaging {
+        return if (filters.contains(SearchFilter.Libraries)) {
+            siteSearch(terms, skipCount, maxItems)
+        } else {
+            fileSearch(terms, skipCount, maxItems, filters.contains(SearchFilter.Files), filters.contains(SearchFilter.Folders))
+        }
+    }
+
+    private suspend fun fileSearch(query: String, skipCount: Int, maxItems: Int, includeFiles: Boolean, includeFolders: Boolean): ResponsePaging {
         val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
         val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
         val defaults = RequestDefaults(defaultFieldName = "keywords")
@@ -43,7 +61,11 @@ class SearchRepository() {
         val pagination = RequestPagination(maxItems, skipCount)
         val req = SearchRequest(reqQuery, sort = sort, templates = templates, defaults = defaults, filterQueries = filter, include = include, paging = pagination)
 
-        return ResponsePaging.with(service.search(req))
+        return ResponsePaging.with(searchService.search(req))
+    }
+
+    private suspend fun siteSearch(terms: String, skipCount: Int, maxItems: Int): ResponsePaging {
+        return ResponsePaging.with(queryService.findSites(terms, skipCount, maxItems, null, null))
     }
 
     private suspend fun recents(skipCount: Int, maxItems: Int): ResponsePaging {
@@ -61,7 +83,7 @@ class SearchRepository() {
         val pagination = RequestPagination(maxItems, skipCount)
         val req = SearchRequest(reqQuery, sort = sort, filterQueries = filter, include = include, paging = pagination)
 
-        return ResponsePaging.with(service.search(req))
+        return ResponsePaging.with(searchService.search(req))
     }
 
     suspend fun getRecents(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {

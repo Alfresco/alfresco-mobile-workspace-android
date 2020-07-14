@@ -1,47 +1,65 @@
 package com.alfresco.content.listview
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.airbnb.epoxy.EpoxyRecyclerView
+import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
+import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.Entry
-import kotlinx.android.synthetic.main.fragment_list.loading_animation
-import kotlinx.android.synthetic.main.fragment_list.recycler_view
-import kotlinx.android.synthetic.main.fragment_list.refresh_layout
+import com.alfresco.content.data.ResponsePaging
 
-abstract class ListFragment<VM : ListViewModel> : BaseMvRxFragment() {
+interface ListViewState : MvRxState {
+    val entries: List<Entry>
+    val request: Async<ResponsePaging>
+}
+
+abstract class ListViewModel<S : ListViewState>(
+    initialState: S
+) : MvRxViewModel<S>(initialState) {
+
+    abstract fun refresh()
+    abstract fun fetchNextPage()
+
+    companion object {
+        const val ITEMS_PER_PAGE = 25
+    }
+}
+
+abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRxFragment(R.layout.fragment_list) {
     abstract val viewModel: VM
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
-    }
+    lateinit var loadingAnimation: View
+    lateinit var recyclerView: EpoxyRecyclerView
+    lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        refresh_layout.setOnRefreshListener {
+        loadingAnimation = view.findViewById(R.id.loading_animation)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        refreshLayout = view.findViewById(R.id.refresh_layout)
+
+        refreshLayout.setOnRefreshListener {
             viewModel.refresh()
         }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        loading_animation.isVisible =
-            state.req is Loading && state.entries.isEmpty() && !refresh_layout.isRefreshing
+        loadingAnimation.isVisible =
+            state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
 
-        if (state.req.complete) {
-            refresh_layout.isRefreshing = false
+        if (state.request.complete) {
+            refreshLayout.isRefreshing = false
         }
 
-        recycler_view.withModels {
-            if (state.entries.isEmpty() && state.req.complete) {
+        recyclerView.withModels {
+            if (state.entries.isEmpty() && state.request.complete) {
                 listViewMessage {
                     id("empty_message")
                     iconRes(R.drawable.file_ic_folder)
@@ -56,7 +74,7 @@ abstract class ListFragment<VM : ListViewModel> : BaseMvRxFragment() {
                     }
                 }
 
-                if (state.req()?.pagination?.hasMoreItems == true) {
+                if (state.request()?.pagination?.hasMoreItems == true) {
                     listViewRowLoading {
                         // Changing the ID will force it to rebind when new data is loaded even if it is
                         // still on screen which will ensure that we trigger loading again.

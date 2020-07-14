@@ -8,7 +8,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.alfresco.content.data.Entry
 import com.alfresco.content.listview.ListFragment
 
-class BrowseFragment : ListFragment<BrowseViewModel>() {
+class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     override val viewModel: BrowseViewModel by fragmentViewModel()
 

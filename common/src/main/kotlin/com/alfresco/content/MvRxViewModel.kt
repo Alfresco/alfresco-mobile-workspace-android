@@ -13,10 +13,12 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.Success
 import com.alfresco.content.common.BuildConfig
 import io.reactivex.disposables.Disposable
+import java.lang.Exception
 import kotlin.reflect.KProperty1
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 
 open class MvRxViewModel<S : MvRxState>(
@@ -49,6 +51,21 @@ open class MvRxViewModel<S : MvRxState>(
                 emit(Fail(it))
             }
             .collect { setState { stateReducer(it) } }
+    }
+
+    protected suspend fun <T, V> Flow<T>.executeOnLatest(
+        action: suspend (value: T) -> V,
+        stateReducer: S.(Async<V>) -> S
+    ) {
+        collectLatest {
+            setState { stateReducer(Loading()) }
+            try {
+                val result = action(it)
+                setState { stateReducer(Success(result)) }
+            } catch (ex: Exception) {
+                setState { stateReducer(Fail(ex)) }
+            }
+        }
     }
 
     fun observeAsLiveData(): LiveData<S> = liveData

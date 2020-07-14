@@ -8,7 +8,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 
-class SearchResultsFragment : ListFragment<SearchResultsViewModel>() {
+class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResultsState>() {
 
     override val viewModel: SearchResultsViewModel by fragmentViewModel()
 

@@ -50,6 +50,8 @@ object Libs {
             const val runtime = "androidx.lifecycle:lifecycle-runtime:$version"
         }
 
+        const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0"
+
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:1.1.3"
 
         const val coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"

@@ -3,61 +3,65 @@ package com.alfresco.content.search
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
-import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.getStringList
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.putStringList
-import kotlin.reflect.KSuspendFunction2
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
+data class SearchResultsState(
+    override val entries: List<Entry> = emptyList(),
+    override val request: Async<ResponsePaging> = Uninitialized
+) : ListViewState
+
+data class SearchParams(
+    val terms: String,
+    val filters: SearchFilters,
+    val skipCount: Int,
+    val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
+)
+
 class SearchResultsViewModel(
-    state: ListViewState,
-    val repository: SearchRepository
-) : ListViewModel(state) {
-    private val inputStream = MutableStateFlow("")
-    private val results: MutableStateFlow<ResponsePaging?> = MutableStateFlow(null)
-    private var queryString = "" // TODO: State
-    private var filters = emptyFilters()
+    state: SearchResultsState,
+    private val repository: SearchRepository
+) : ListViewModel<SearchResultsState>(state) {
+    private val liveSearchEvents = ConflatedBroadcastChannel<SearchParams>()
+    private val searchEvents = ConflatedBroadcastChannel<SearchParams>()
+    private var params = SearchParams("", emptyFilters(), 0)
 
     init {
         viewModelScope.launch {
-            inputStream.debounce(300)
-                .filterNot { it.isEmpty() || it.length < 3 }
-                .collectLatest { query ->
-                    val job = launch {
-                        results.value = repository.search(
-                            query,
-                            0,
-                            ITEMS_PER_PAGE,
-                            filters.contains(SearchFilter.Files),
-                            filters.contains(SearchFilter.Folders)
-                        )
-                    }
-                    job.invokeOnCompletion { }
-                    job.join()
-                }
-        }
-
-        viewModelScope.launch {
-            results.filterNotNull().collectLatest() {
-                val req = Success(it)
-                setState {
+            merge(
+                liveSearchEvents.asFlow().debounce(300),
+                searchEvents.asFlow()
+            ).executeOnLatest({ repository.search(it.terms, it.filters, it.skipCount, it.maxItems) }) {
+                if (it is Loading) {
+                    copy(request = it)
+                } else {
+                    val newEntries = it()?.entries ?: emptyList()
+                    val skipCount = it()?.pagination?.skipCount ?: 0L
                     copy(
-                        entries = it.entries,
-                        req = req
+                        entries = if (skipCount != 0L) {
+                            entries + newEntries
+                        } else {
+                            newEntries
+                        },
+                        request = it
                     )
                 }
             }
@@ -65,12 +69,12 @@ class SearchResultsViewModel(
     }
 
     fun setSearchQuery(query: String) {
-        queryString = query.trim()
-        inputStream.value = queryString
+        params = params.copy(terms = query)
+        liveSearchEvents.sendBlocking(params)
     }
 
     fun setFilters(filters: SearchFilters) {
-        this.filters = filters
+        params = params.copy(filters = filters)
         refresh()
     }
 
@@ -80,8 +84,8 @@ class SearchResultsViewModel(
         var list = sharedPrefs.getStringList(key).toMutableList()
 
         // At most 15 distinct values, with the latest added to top
-        list.remove(queryString)
-        list.add(0, queryString)
+        list.remove(params.terms)
+        list.add(0, params.terms)
         list = list.subList(0, minOf(list.count(), 15))
 
         val editor = sharedPrefs.edit()
@@ -91,28 +95,21 @@ class SearchResultsViewModel(
 
     fun clearQuery() = setSearchQuery("")
 
-    override fun fetchRequest(): KSuspendFunction2<Int, Int, Flow<ResponsePaging>> {
-        return this::getResults
+    override fun refresh() {
+        searchEvents.sendBlocking(params)
     }
 
-    private suspend fun getResults(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return flow {
-            emit(
-                repository.search(
-                    queryString,
-                    skipCount,
-                    maxItems,
-                    filters.contains(SearchFilter.Files),
-                    filters.contains(SearchFilter.Folders)
-                )
-            )
+    override fun fetchNextPage() {
+        withState {
+            params = params.copy(skipCount = it.entries.count())
+            searchEvents.sendBlocking(params)
         }
     }
 
-    companion object : MvRxViewModelFactory<SearchResultsViewModel, ListViewState> {
+    companion object : MvRxViewModelFactory<SearchResultsViewModel, SearchResultsState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ListViewState
+            state: SearchResultsState
         ): SearchResultsViewModel? {
             return SearchResultsViewModel(state, SearchRepository())
         }

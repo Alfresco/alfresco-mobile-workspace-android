@@ -24,6 +24,10 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel>() {
         viewModel.setFilters(filters)
     }
 
+    fun saveCurrentSearch() {
+        viewModel.saveSearch(requireContext())
+    }
+
     override fun onItemClicked(entry: Entry) {
         viewModel.saveSearch(requireContext())
 

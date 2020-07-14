@@ -42,7 +42,7 @@ class SearchFragment : Fragment() {
 
         setupChips()
 
-        recentsFragment.onEntrySelected = { searchView.setQuery(it, true) }
+        recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -55,10 +55,12 @@ class SearchFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
                 setSearchQuery(newText ?: "")
-                return false
+                return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
+                resultsFragment.saveCurrentSearch()
+                hideSoftInput()
                 return true
             }
         })

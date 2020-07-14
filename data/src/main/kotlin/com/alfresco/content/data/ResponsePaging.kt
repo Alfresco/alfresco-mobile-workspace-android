@@ -19,6 +19,13 @@ data class ResponsePaging(
             )
         }
 
+        fun with(raw: com.alfresco.content.models.SitePaging): ResponsePaging {
+            return ResponsePaging(
+                raw.list.entries.map { Entry.with(it.entry) },
+                Pagination.with(raw.list.pagination)
+            )
+        }
+
         fun with(raw: com.alfresco.content.models.FavoritePaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },

@@ -1,6 +1,5 @@
 package com.alfresco.content.data
 
-import com.alfresco.content.data.Entry.Companion.formattedString
 import com.alfresco.content.models.DeletedNode
 import com.alfresco.content.models.Favorite
 import com.alfresco.content.models.FavoriteTargetNode
@@ -9,6 +8,7 @@ import com.alfresco.content.models.NodeChildAssociation
 import com.alfresco.content.models.PathInfo
 import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
+import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
 
 data class Entry(
@@ -30,7 +30,7 @@ data class Entry(
                 when (value) {
                     "cm:content" -> return File
                     "cm:folder" -> return Folder
-                    "cm:site" -> return Site
+                    "st:site" -> return Site
                     "cm:link" -> return Link
                 }
                 return Unknown
@@ -93,15 +93,19 @@ data class Entry(
             }
             if (map.site != null) {
                 val site = map.site!!
-                return Entry(
-                    site.guid,
-                    Type.Site,
-                    site.title,
-                    null,
-                    null
-                )
+                return with(site)
             }
             throw IllegalStateException()
+        }
+
+        fun with(site: Site): Entry {
+            return Entry(
+                site.guid,
+                Type.Site,
+                site.title,
+                null,
+                null
+            )
         }
 
         fun with(role: SiteRole): Entry {

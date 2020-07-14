@@ -1,4 +1,4 @@
-package com.alfresco.content.search
+package com.alfresco.content.data
 
 import java.util.EnumSet
 

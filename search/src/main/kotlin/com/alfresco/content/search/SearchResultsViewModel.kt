@@ -7,6 +7,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.getStringList
 import com.alfresco.content.listview.ListViewModel

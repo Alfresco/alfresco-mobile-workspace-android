@@ -21,6 +21,7 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
@@ -47,9 +48,11 @@ class SearchResultsViewModel(
     init {
         viewModelScope.launch {
             merge(
-                liveSearchEvents.asFlow().debounce(300),
+                liveSearchEvents.asFlow().debounce(DEFAULT_DEBOUNCE_TIME),
                 searchEvents.asFlow()
-            ).executeOnLatest({ repository.search(it.terms, it.filters, it.skipCount, it.maxItems) }) {
+            ).filter {
+                it.terms.isNotEmpty()
+            }.executeOnLatest({ repository.search(it.terms, it.filters, it.skipCount, it.maxItems) }) {
                 if (it is Loading) {
                     copy(request = it)
                 } else {
@@ -74,8 +77,11 @@ class SearchResultsViewModel(
     }
 
     fun setFilters(filters: SearchFilters) {
-        params = params.copy(filters = filters)
-        refresh()
+        // Avoid triggering refresh when filters don't change
+        if (filters != params.filters) {
+            params = params.copy(filters = filters)
+            refresh()
+        }
     }
 
     fun saveSearch(context: Context) {
@@ -107,6 +113,8 @@ class SearchResultsViewModel(
     }
 
     companion object : MvRxViewModelFactory<SearchResultsViewModel, SearchResultsState> {
+        const val DEFAULT_DEBOUNCE_TIME = 300L
+
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchResultsState

@@ -85,10 +85,11 @@ class SearchFragment : Fragment() {
     }
 
     fun setSearchQuery(query: String) {
-        if (query.trim().length > 2) {
+        val terms = query.trim()
+        if (terms.length > 2) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
-            resultsFragment.setSearchQuery(query)
+            resultsFragment.setSearchQuery(terms)
         } else {
             recents_fragment.visibility = View.VISIBLE
             results_fragment.visibility = View.GONE

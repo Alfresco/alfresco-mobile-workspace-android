@@ -1,5 +1,7 @@
 package com.alfresco.content.search
 
+import android.os.Bundle
+import android.view.View
 import com.airbnb.mvrx.fragmentViewModel
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.Entry

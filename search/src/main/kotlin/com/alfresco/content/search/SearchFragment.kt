@@ -10,6 +10,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.data.and
+import com.alfresco.content.data.emptyFilters
+import com.alfresco.content.hideSoftInput
 import kotlinx.android.synthetic.main.fragment_search.chip_files
 import kotlinx.android.synthetic.main.fragment_search.chip_folders
 import kotlinx.android.synthetic.main.fragment_search.chip_libraries

@@ -14,9 +14,6 @@ import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.hideSoftInput
-import kotlinx.android.synthetic.main.fragment_search.chip_files
-import kotlinx.android.synthetic.main.fragment_search.chip_folders
-import kotlinx.android.synthetic.main.fragment_search.chip_libraries
 import kotlinx.android.synthetic.main.fragment_search.recents_fragment
 import kotlinx.android.synthetic.main.fragment_search.results_fragment
 
@@ -30,6 +27,10 @@ class SearchFragment : Fragment() {
     private val resultsFragment by lazy {
         childFragmentManager.findFragmentById(R.id.results_fragment) as SearchResultsFragment
     }
+
+    private lateinit var filterFiles: FilterChip
+    private lateinit var filterFolders: FilterChip
+    private lateinit var filterLibraries: FilterChip
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,20 +96,44 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupChips() {
-        // Initial State
-        chip_files.isChecked = true
-        chip_folders.isChecked = true
+        filterFiles = requireView().findViewById(R.id.chip_files)
+        filterFolders = requireView().findViewById(R.id.chip_folders)
+        filterLibraries = requireView().findViewById(R.id.chip_libraries)
 
-        listOf(chip_files, chip_folders, chip_libraries).forEach { it.setOnCheckedChangeListener { _, _ ->
-            updateFilter()
-        } }
+        // Initial State
+        filterFiles.isChecked = true
+        filterFolders.isChecked = true
+        applyFilters()
+
+        // Bind state change listeners
+        filterFiles.setOnCheckedChangeListener { _, _ ->
+            filterLibraries.uncheck(false)
+            applyFilters()
+        }
+
+        filterFolders.setOnCheckedChangeListener { _, _ ->
+            filterLibraries.uncheck(false)
+            applyFilters()
+        }
+
+        filterLibraries.setOnCheckedChangeListener { _, _ ->
+            filterFiles.uncheck(false)
+            filterFolders.uncheck(false)
+            applyFilters()
+        }
     }
 
-    private fun updateFilter() {
+    private fun applyFilters() {
         var filter = emptyFilters()
-        if (chip_files.isChecked) filter = filter and SearchFilter.Files
-        if (chip_folders.isChecked) filter = filter and SearchFilter.Folders
-        if (chip_libraries.isChecked) filter = filter and SearchFilter.Libraries
+        if (filterFiles.isChecked) {
+            filter = filter and SearchFilter.Files
+        }
+        if (filterFolders.isChecked) {
+            filter = filter and SearchFilter.Folders
+        }
+        if (filterLibraries.isChecked) {
+            filter = filter and SearchFilter.Libraries
+        }
         resultsFragment.setFilters(filter)
     }
 }

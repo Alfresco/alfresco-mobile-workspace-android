@@ -19,6 +19,9 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResults
     }
 
     fun setSearchQuery(query: String) {
+        // Scroll to top when updating the query
+        recyclerView.layoutManager?.scrollToPosition(0)
+
         viewModel.setSearchQuery(query)
     }
 

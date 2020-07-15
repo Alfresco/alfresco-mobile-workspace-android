@@ -40,7 +40,7 @@ class SearchRepository() {
     private suspend fun fileSearch(query: String, skipCount: Int, maxItems: Int, includeFiles: Boolean, includeFolders: Boolean): ResponsePaging {
         val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
         val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
-        val defaults = RequestDefaults(defaultFieldName = "keywords")
+        val defaults = RequestDefaults(defaultFieldName = "keywords", defaultFTSOperator = RequestDefaults.DefaultFTSOperatorEnum.AND)
         val typeFilter = if (includeFiles) {
             if (includeFolders) "+TYPE:'cm:folder' OR +TYPE:'cm:content'" else "+TYPE:'cm:content'"
         } else {

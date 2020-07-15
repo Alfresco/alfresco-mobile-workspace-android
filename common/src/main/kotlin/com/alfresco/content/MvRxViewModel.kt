@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
+import java.util.concurrent.CancellationException
 
 open class MvRxViewModel<S : MvRxState>(
     initialState: S
@@ -62,8 +63,10 @@ open class MvRxViewModel<S : MvRxState>(
             try {
                 val result = action(it)
                 setState { stateReducer(Success(result)) }
-            } catch (ex: Exception) {
-                setState { stateReducer(Fail(ex)) }
+            } catch (e: CancellationException) {
+                // No-op
+            } catch (e: Throwable) {
+                setState { stateReducer(Fail(e)) }
             }
         }
     }

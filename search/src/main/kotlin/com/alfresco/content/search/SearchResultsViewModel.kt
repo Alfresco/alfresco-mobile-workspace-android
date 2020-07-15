@@ -72,7 +72,7 @@ class SearchResultsViewModel(
     }
 
     fun setSearchQuery(query: String) {
-        params = params.copy(terms = query)
+        params = params.copy(terms = query, skipCount = 0)
         liveSearchEvents.sendBlocking(params)
     }
 

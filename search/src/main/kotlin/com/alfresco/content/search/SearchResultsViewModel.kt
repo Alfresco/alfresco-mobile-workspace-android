@@ -102,6 +102,7 @@ class SearchResultsViewModel(
     fun clearQuery() = setSearchQuery("")
 
     override fun refresh() {
+        params = params.copy(skipCount = 0)
         searchEvents.sendBlocking(params)
     }
 

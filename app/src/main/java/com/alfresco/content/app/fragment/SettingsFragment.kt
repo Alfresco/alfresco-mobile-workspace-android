@@ -16,6 +16,7 @@ import com.alfresco.content.app.activity.LoginActivity
 import com.alfresco.content.app.loadAny
 import com.alfresco.content.app.widget.AccountPreference
 import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -85,6 +86,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun deleteAccount() {
+        // Extra cleanup before removing the account
+        SearchRepository().clearRecentSearch()
+
+        // Actual account removal
         Account.delete(requireActivity()) {
             requireActivity().startActivity(Intent(activity, LoginActivity::class.java))
             requireActivity().finish()

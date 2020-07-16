@@ -12,7 +12,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
-class Session(context: Context, var account: Account) {
+class Session(
+    val context: Context,
+    var account: Account
+) {
 
     private var authInterceptor: AuthInterceptor
     private var loggingInterceptor: HttpLoggingInterceptor

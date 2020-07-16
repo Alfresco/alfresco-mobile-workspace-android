@@ -5,7 +5,7 @@ import com.alfresco.content.account.Account
 
 object SessionManager {
     var currentSession: Session? = null
-    val requireSession get() = currentSession!!
+    val requireSession get() = requireNotNull(currentSession)
 
     fun newSession(context: Context): Session? {
         // Cleanup current session

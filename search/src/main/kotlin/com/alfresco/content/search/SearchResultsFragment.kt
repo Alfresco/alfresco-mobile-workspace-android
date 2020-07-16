@@ -30,11 +30,11 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResults
     }
 
     fun saveCurrentSearch() {
-        viewModel.saveSearch(requireContext())
+        viewModel.saveSearch()
     }
 
     override fun onItemClicked(entry: Entry) {
-        viewModel.saveSearch(requireContext())
+        viewModel.saveSearch()
 
         // TODO: missing implementation
     }

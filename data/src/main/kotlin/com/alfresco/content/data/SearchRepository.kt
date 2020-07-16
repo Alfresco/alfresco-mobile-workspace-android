@@ -1,5 +1,8 @@
 package com.alfresco.content.data
 
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.alfresco.content.apis.QueriesApi
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.models.RequestDefaults
@@ -15,6 +18,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SearchRepository() {
+
+    private val context get() = SessionManager.requireSession.context
 
     private val searchService: SearchApi by lazy {
         SessionManager.requireSession.createService(SearchApi::class.java)
@@ -90,5 +95,53 @@ class SearchRepository() {
         return flow {
             emit(recents(skipCount, maxItems))
         }
+    }
+
+    fun getRecentSearches(): List<String> {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return sharedPrefs.getStringList(RECENT_SEARCH_KEY).toMutableList()
+    }
+
+    fun saveSearch(query: String) {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        var list = sharedPrefs.getStringList(RECENT_SEARCH_KEY).toMutableList()
+
+        // At most 15 distinct values, with the latest added to top
+        list.remove(query)
+        list.add(0, query)
+        list = list.subList(0, minOf(list.count(), 15))
+
+        val editor = sharedPrefs.edit()
+        editor.putStringList(RECENT_SEARCH_KEY, list)
+        editor.apply()
+    }
+
+    fun clearRecentSearch() {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = sharedPrefs.edit()
+        editor.remove(RECENT_SEARCH_KEY)
+        editor.apply()
+    }
+
+    class RecentSearchesChangeListener(
+        val context: Context,
+        val onChange: () -> Unit
+    ) : SharedPreferences.OnSharedPreferenceChangeListener {
+
+        init {
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .registerOnSharedPreferenceChangeListener(this)
+        }
+
+        override fun onSharedPreferenceChanged(
+            sharedPreferences: SharedPreferences?,
+            key: String?
+        ) {
+            onChange()
+        }
+    }
+
+    companion object {
+        const val RECENT_SEARCH_KEY = "recent_searches"
     }
 }

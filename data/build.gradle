@@ -18,5 +18,7 @@ dependencies {
     implementation Libs.AlfrescoDbp.auth
     implementation Libs.AlfrescoDbp.content
 
+    implementation Libs.AndroidX.preference
+
     implementation Libs.OkHttp.loggingInterceptor
 }

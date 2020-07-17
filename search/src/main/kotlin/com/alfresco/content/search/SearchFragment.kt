@@ -86,10 +86,13 @@ class SearchFragment : Fragment() {
 
     fun setSearchQuery(query: String) {
         val terms = cleanupSearchQuery(query)
+        // Always update search query in internal state.
+        // This avoids extra network requests caused by modifying filters after input clear.
+        resultsFragment.setSearchQuery(terms)
+
         if (terms.length > 2) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
-            resultsFragment.setSearchQuery(terms)
         } else {
             recents_fragment.visibility = View.VISIBLE
             results_fragment.visibility = View.GONE

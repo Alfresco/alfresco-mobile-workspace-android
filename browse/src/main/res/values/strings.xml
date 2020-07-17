@@ -10,4 +10,10 @@
 
     <string name="favorites_tab_files">Files and Folders</string>
     <string name="favorites_tab_libraries">Libraries</string>
+
+    <string name="modified_group_today">Today</string>
+    <string name="modified_group_yesterday">Yesterday</string>
+    <string name="modified_group_this_week">This Week</string>
+    <string name="modified_group_last_week">Last Week</string>
+    <string name="modified_group_older">Older</string>
 </resources>

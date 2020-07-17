@@ -10,19 +10,22 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
+import org.threeten.bp.ZonedDateTime
 
 data class Entry(
     val id: String,
     val type: Type,
     val title: String,
     val subtitle: String?,
-    val mimeType: String?
+    val mimeType: String?,
+    val modified: ZonedDateTime? = null
 ) {
     enum class Type {
         File,
         Folder,
         Site,
         Link,
+        Group,
         Unknown;
 
         companion object {
@@ -36,6 +39,11 @@ data class Entry(
                 return Unknown
             }
         }
+    }
+
+    enum class SortOrder {
+        ByModifiedDate,
+        Default
     }
 
     companion object {
@@ -55,7 +63,8 @@ data class Entry(
                 Type.from(result.nodeType),
                 result.name,
                 result.path?.formattedString(),
-                result.content?.mimeType
+                result.content?.mimeType,
+                result.modifiedAt
             )
         }
 

@@ -2,9 +2,7 @@ package com.alfresco.content.browse
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MvRxViewModelFactory
-import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
@@ -15,15 +13,9 @@ import com.alfresco.content.data.SharedLinksRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
-import com.alfresco.content.listview.ListViewState
 import kotlin.reflect.KSuspendFunction2
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-
-data class BrowseViewState(
-    override val entries: List<Entry> = emptyList(),
-    override val request: Async<ResponsePaging> = Uninitialized
-) : ListViewState
 
 class BrowseViewModel(
     state: BrowseViewState,
@@ -33,6 +25,10 @@ class BrowseViewModel(
 
     init {
         refresh()
+
+        if (sortOrder() == Entry.SortOrder.ByModifiedDate) {
+            BrowseViewState.ModifiedGroup.prepare(context)
+        }
     }
 
     override fun refresh() = fetch()
@@ -48,15 +44,7 @@ class BrowseViewModel(
                 skipCount,
                 ITEMS_PER_PAGE
             ).execute {
-                val newEntries = it()?.entries ?: emptyList()
-                copy(
-                    entries = if (nextPage) {
-                        entries + newEntries
-                    } else {
-                        newEntries
-                    },
-                    request = it
-                )
+                updateEntries(it(), sortOrder()).copy(request = it)
             }
         }
     }
@@ -71,6 +59,13 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_shared) -> SharedLinksRepository()::getSharedLinks
             context.getString(R.string.nav_path_trash) -> TrashCanRepository()::getDeletedNodes
             else -> this::getNodesInFolder
+        }
+    }
+
+    private fun sortOrder(): Entry.SortOrder {
+        return when (path) {
+            context.getString(R.string.nav_path_recents) -> Entry.SortOrder.ByModifiedDate
+            else -> Entry.SortOrder.Default
         }
     }
 

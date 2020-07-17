@@ -67,10 +67,17 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 }
             } else if (state.entries.isNotEmpty()) {
                 state.entries.forEach() {
-                    listViewRow {
-                        id(it.id)
-                        data(it)
-                        clickListener { _ -> onItemClicked(it) }
+                    if (it.type == Entry.Type.Group) {
+                        listViewGroupHeader {
+                            id(it.title)
+                            title(it.title)
+                        }
+                    } else {
+                        listViewRow {
+                            id(it.id)
+                            data(it)
+                            clickListener { _ -> onItemClicked(it) }
+                        }
                     }
                 }
 

@@ -4,10 +4,13 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 class AlfrescoApplication : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
 
         updateAppTheme()
 

@@ -19,17 +19,19 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResults
     }
 
     fun setSearchQuery(query: String) {
-        // Scroll to top when updating the query
-        recyclerView.layoutManager?.scrollToPosition(0)
-
+        scrollToTop()
         viewModel.setSearchQuery(query)
     }
 
     fun setFilters(filters: SearchFilters) {
-        // Scroll to top when updating the query
-        recyclerView.layoutManager?.scrollToPosition(0)
-        
+        scrollToTop()
         viewModel.setFilters(filters)
+    }
+
+    private fun scrollToTop() {
+        if (isResumed) {
+            recyclerView.layoutManager?.scrollToPosition(0)
+        }
     }
 
     fun saveCurrentSearch() {

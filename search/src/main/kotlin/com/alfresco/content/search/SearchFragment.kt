@@ -85,7 +85,7 @@ class SearchFragment : Fragment() {
     }
 
     fun setSearchQuery(query: String) {
-        val terms = query.trim()
+        val terms = cleanupSearchQuery(query)
         if (terms.length > 2) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
@@ -95,6 +95,13 @@ class SearchFragment : Fragment() {
             results_fragment.visibility = View.GONE
             recentsFragment.scrollToTop()
         }
+    }
+
+    /**
+     * Removes consecutive whitespace and leading/trailing whitespace
+     */
+    private fun cleanupSearchQuery(query: String): String {
+        return query.replace("\\s+".toRegex(), " ").trim()
     }
 
     private fun setupChips() {

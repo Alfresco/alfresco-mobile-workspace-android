@@ -93,6 +93,7 @@ class SearchFragment : Fragment() {
         } else {
             recents_fragment.visibility = View.VISIBLE
             results_fragment.visibility = View.GONE
+            recentsFragment.scrollToTop()
         }
     }
 

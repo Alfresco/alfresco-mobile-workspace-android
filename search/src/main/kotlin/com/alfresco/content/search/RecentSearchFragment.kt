@@ -22,6 +22,12 @@ class RecentSearchFragment : BaseMvRxFragment() {
         return inflater.inflate(R.layout.fragment_recent_search, container, false)
     }
 
+    fun scrollToTop() {
+        if (isResumed) {
+            recycler_view.layoutManager?.scrollToPosition(0)
+        }
+    }
+
     override fun invalidate() = withState(viewModel) {
         recycler_view.withModels {
             it.entries.forEach {

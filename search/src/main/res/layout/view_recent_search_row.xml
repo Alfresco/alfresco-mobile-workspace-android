@@ -24,6 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true"
         tools:text="Title" />
 
     <ImageView

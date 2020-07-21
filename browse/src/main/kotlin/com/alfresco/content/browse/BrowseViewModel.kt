@@ -37,7 +37,7 @@ class BrowseViewModel(
 
     private fun fetch(nextPage: Boolean = false) = withState { state ->
         val req = fetchRequest()
-        val skipCount = if (nextPage) state.entries.count() else 0
+        val skipCount = if (nextPage) state.baseEntries.count() else 0
 
         viewModelScope.launch {
             req.invoke(

@@ -8,16 +8,17 @@
     android:orientation="vertical">
 
 
-    <com.google.android.material.card.MaterialCardView
+    <com.alfresco.content.app.widget.ActionBarBackground
         android:id="@+id/toolbar_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="1dp"
-        app:rippleColor="@android:color/transparent">
-
-    </com.google.android.material.card.MaterialCardView>
+        app:backgroundColor="?android:attr/colorBackground"
+        app:strokeWidth="1dp"
+        app:strokeColor="?attr/separatorColor"
+        app:shapeAppearance="?attr/shapeAppearanceMediumComponent" />
 
     <LinearLayout
         android:id="@+id/collapsed_toolbar"

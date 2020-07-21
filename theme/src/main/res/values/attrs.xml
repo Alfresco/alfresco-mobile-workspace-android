@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="separatorColor" format="reference|color"/>
+
     <bool name="isTablet">false</bool>
     <bool name="alfresco_light_status_bar">true</bool>
 </resources>

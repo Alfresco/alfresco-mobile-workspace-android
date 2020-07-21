@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
-import androidx.cardview.widget.CardView
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
@@ -17,7 +16,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     FrameLayout(context, attrs) {
 
     lateinit var toolbar: Toolbar
-    lateinit var card: CardView
+    lateinit var background: ActionBarBackground
     lateinit var profileIcon: ImageView
     lateinit var profileView: View
 
@@ -32,28 +31,28 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         super.onFinishInflate()
 
         toolbar = findViewById(R.id.expanded_toolbar)
-        card = findViewById(R.id.toolbar_back)
+        background = findViewById(R.id.toolbar_back)
         expandedView = findViewById(R.id.expanded_toolbar)
         collapsedView = findViewById(R.id.collapsed_toolbar)
         profileIcon = findViewById(R.id.profile_icon)
         profileView = findViewById(R.id.profile_icon_frame)
 
-        originalRadius = card.radius
-        originalTopMargin = (card.layoutParams as MarginLayoutParams).topMargin
-        originalHorizontalMargin = (card.layoutParams as MarginLayoutParams).marginStart
+        originalRadius = background.radius
+        originalTopMargin = (background.layoutParams as MarginLayoutParams).topMargin
+        originalHorizontalMargin = (background.layoutParams as MarginLayoutParams).marginStart
     }
 
     fun expand(animated: Boolean) {
         if (animated) {
             TransitionManager.beginDelayedTransition(this, makeTransition())
         }
-        card.radius = 0f
+        background.radius = 0f
 
-        val params = card.layoutParams as MarginLayoutParams
-        params.marginStart = 0
-        params.marginEnd = 0
-        params.topMargin = 0
-        card.layoutParams = params
+        val params = background.layoutParams as MarginLayoutParams
+        params.marginStart = -background.strokeWidth
+        params.marginEnd = -background.strokeWidth
+        params.topMargin = -background.strokeWidth
+        background.layoutParams = params
 
         collapsedView.visibility = View.GONE
         expandedView.visibility = View.VISIBLE
@@ -64,13 +63,13 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
             TransitionManager.beginDelayedTransition(this, makeTransition())
         }
 
-        card.radius = originalRadius
+        background.radius = originalRadius
 
-        val params = card.layoutParams as MarginLayoutParams
+        val params = background.layoutParams as MarginLayoutParams
         params.marginStart = originalHorizontalMargin
         params.marginEnd = originalHorizontalMargin
         params.topMargin = originalTopMargin
-        card.layoutParams = params
+        background.layoutParams = params
 
         collapsedView.visibility = View.VISIBLE
         expandedView.visibility = View.GONE

@@ -25,7 +25,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
             navController.navigate(R.id.nav_settings)
         }
 
-        layout.card.setOnClickListener {
+        layout.background.setOnClickListener {
             enterSearchUi()
         }
 

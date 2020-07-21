@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Auth -->
-    <style name="Theme.Alfresco.Auth" />
+    <style name="Widget.Alfresco.Auth" />
+
+    <style name="Widget.Alfresco.Auth.SectionText">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">@color/color_on_surface_60</item>
+        <item name="android:fontFamily">@font/base_regular</item>
+    </style>
 
     <!-- Tablet Card -->
-    <style name="Theme.Alfresco.Auth.Card">
+    <style name="Widget.Alfresco.Auth.Card">
         <item name="android:layout_width">456dp</item>
         <item name="android:layout_height">562dp</item>
         <item name="android:background">@drawable/rounded_corner_back</item>

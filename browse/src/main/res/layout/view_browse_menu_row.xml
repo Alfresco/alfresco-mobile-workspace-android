@@ -15,14 +15,14 @@
         android:layout_height="20dp"
         android:scaleType="fitCenter"
         android:alpha="0.72"
-        android:tint="@color/mtrl_bottom_nav_item_tint"/>
+        android:tint="?attr/colorControlNormal"/>
 
     <TextView
         android:id="@+id/title"
-        style="@style/Widget.Alfresco.ListItem.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
+        android:textAppearance="@style/TextAppearance.Alfresco.Body1"
         tools:text="Title" />
 
 </LinearLayout>

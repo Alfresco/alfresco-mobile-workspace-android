@@ -22,29 +22,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/base_medium"
             android:text="@string/auth_help_overlay_title"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:layout_marginStart="@dimen/auth_theme_default_padding"/>
 
-        <com.google.android.material.button.MaterialButton
+        <ImageView
             android:id="@+id/btnClose"
-            style="@style/Widget.Alfresco.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            app:icon="@drawable/ic_close"
-            android:layout_marginEnd="20dp"/>
+            android:layout_marginEnd="20dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:minWidth="40dp"
+            android:minHeight="40dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_close" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/bodyTxt"
-        style="@style/Widget.Alfresco.BodyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="@dimen/auth_theme_default_padding"
-        android:layout_marginEnd="@dimen/auth_theme_default_padding"/>
+        android:layout_marginEnd="@dimen/auth_theme_default_padding"
+        android:textAppearance="?attr/textAppearanceBody2" />
 
 </LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.V21.Theme.Alfresco" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/alfresco_blue_700</item>
+        <item name="colorPrimaryVariant">@color/alfresco_blue_900</item>
+        <item name="colorSecondary">?attr/colorPrimary</item>
+        <item name="colorOnSurface">@color/alfresco_gray_900</item>
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="separatorColor">@color/color_on_surface_12</item>
+
+        <!-- Action Bar -->
+        <item name="actionBarSize">52dp</item>
+
+        <!-- System Elements -->
+        <item name="android:statusBarColor">@color/alfresco_gray_900</item>
+        <item name="android:navigationBarColor">@color/alfresco_gray_900</item>
+
+        <!-- Widget Styles -->
+        <item name="actionBarStyle">@style/Widget.Alfresco.ActionBar</item>
+        <item name="bottomNavigationStyle">@style/Widget.Alfresco.BottomNavigationView</item>
+        <item name="searchViewStyle">@style/Widget.Alfresco.SearchView</item>
+        <item name="tabStyle">@style/Widget.Alfresco.TabLayout</item>
+        <item name="textInputStyle">@style/Widget.Alfresco.TextInputLayout</item>
+
+        <!-- Type Style -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.Alfresco.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.Alfresco.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.Alfresco.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.Alfresco.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Alfresco.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Alfresco.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Alfresco.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Alfresco.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Alfresco.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Alfresco.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Alfresco.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Alfresco.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Alfresco.Overline</item>
+    </style>
+
+    <style name="Base.V21.Theme.Alfresco.Dark" parent="Base.V21.Theme.Alfresco">
+        <item name="colorPrimaryVariant">@color/alfresco_blue_300</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="android:colorBackground">@color/design_dark_default_color_background</item>
+
+        <!-- Widget Styles -->
+        <item name="actionBarStyle">@style/Widget.Alfresco.ActionBar.Dark</item>
+
+        <!-- System Elements -->
+        <item name="android:statusBarColor">@color/design_dark_default_color_background</item>
+        <item name="android:navigationBarColor">#2D2D2D</item>
+    </style>
+
+    <style name="Base.Theme.Alfresco" parent="Base.V21.Theme.Alfresco" />
+
+    <style name="Base.Theme.Alfresco.Dark" parent="Base.V21.Theme.Alfresco.Dark" />
+
+    <style name="Theme.Alfresco" parent="Base.Theme.Alfresco" />
+
+    <style name="Theme.Alfresco.Splash">
+        <item name="android:windowBackground">@drawable/bg_alfresco_splash</item>
+    </style>
+
+    <!-- Overlays -->
+    <style name="ThemeOverlay" />
+
+    <style name="ThemeOverlay.Alfresco" />
+
+    <style name="ThemeOverlay.Alfresco.Dark">
+        <item name="colorPrimary">@color/alfresco_gray_900</item>
+    </style>
+
+</resources>

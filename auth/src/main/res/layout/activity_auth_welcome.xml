@@ -31,8 +31,6 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.Alfresco.ActionBar"
-        android:theme="@style/Theme.Alfresco.ActionBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"/>
 
@@ -55,7 +53,7 @@
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
         <TextView
@@ -64,11 +62,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/progressBar"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/base_light"
             android:gravity="center"
             android:text="@string/auth_progress_bar_message"
-            android:textColor="#919191"
-            android:textSize="16sp" />
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/color_on_surface_60" />
 
     </RelativeLayout>
 

@@ -77,6 +77,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
     private fun setupToolbar() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun onLoading(isLoading: Boolean) {
@@ -84,13 +85,8 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
     }
 
     private fun onNavigation(hasNavigation: Boolean) {
-        if (hasNavigation) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
-            toolbar.setNavigationOnClickListener { onBackPressed() }
-        } else {
-            toolbar.setNavigationIcon(null)
-            toolbar.setNavigationOnClickListener(null)
-        }
+        supportActionBar?.setDisplayShowHomeEnabled(hasNavigation)
+        supportActionBar?.setDisplayHomeAsUpEnabled(hasNavigation)
     }
 
     private fun onMoveToStep(step: LoginViewModel.Step) {

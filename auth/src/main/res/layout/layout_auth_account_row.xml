@@ -23,18 +23,16 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/Widget.Alfresco.BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textAppearance="?attr/textAppearanceBody1"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/subtitle"
-            style="@style/Widget.Alfresco.BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/alfresco_text_secondary"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="Subtitle" />
     </LinearLayout>
 

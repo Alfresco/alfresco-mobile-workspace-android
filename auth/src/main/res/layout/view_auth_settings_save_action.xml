@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingEnd="22dp">
+    android:paddingEnd="22dp"
+    tools:ignore="RtlSymmetry">
+
     <TextView
         android:id="@+id/tvSaveSettingsAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/base_regular"
         android:text="@string/auth_settings_save"
-        android:textAllCaps="true"
-        android:textColor="@color/selector_alfresco_action_primary"
-        android:textSize="17sp" />
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/alfresco_action_text_color" />
 </FrameLayout>

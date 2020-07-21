@@ -29,7 +29,7 @@
 
             <TextView
                 android:id="@+id/tvProtocolTitle"
-                style="@style/Widget.Alfresco.SectionText"
+                style="@style/Widget.Alfresco.Auth.SectionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/auth_settings_transport_section" />
@@ -41,14 +41,14 @@
                 android:layout_marginTop="@dimen/auth_settings_header_spacing">
 
                 <TextView
-                    style="@style/Widget.Alfresco.SectionText"
+                    style="@style/Widget.Alfresco.Auth.SectionText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/tvProtocolSwitch"
                     android:layout_marginEnd="10dp"
                     android:layout_centerVertical="true"
                     android:text="@string/auth_settings_transport_https"
-                    android:textSize="17sp"
+                    android:textColor="@color/alfresco_text_primary_color"
                     android:enabled="@{viewModel.authConfigEditor.https}" />
 
                 <com.alfresco.ui.components.Switch
@@ -64,7 +64,6 @@
 
             <com.alfresco.ui.components.TextInputLayout
                 android:id="@+id/tilPort"
-                style="@style/Widget.Alfresco.TextField.Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_field_spacing"
@@ -72,7 +71,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPort"
-                    style="@style/Widget.Alfresco.TextField.Edit"
+                    style="@style/Widget.Alfresco.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -83,7 +82,7 @@
 
             <TextView
                 android:id="@+id/tvServiceDocumentTitle"
-                style="@style/Widget.Alfresco.SectionText"
+                style="@style/Widget.Alfresco.Auth.SectionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_section_spacing"
@@ -91,7 +90,6 @@
 
             <com.alfresco.ui.components.TextInputLayout
                 android:id="@+id/tilServiceDocument"
-                style="@style/Widget.Alfresco.TextField.Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_header_spacing"
@@ -99,7 +97,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etServiceDocument"
-                    style="@style/Widget.Alfresco.TextField.Edit"
+                    style="@style/Widget.Alfresco.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|textNoSuggestions"
@@ -109,7 +107,7 @@
 
             <TextView
                 android:id="@+id/tvAuthentication"
-                style="@style/Widget.Alfresco.SectionText"
+                style="@style/Widget.Alfresco.Auth.SectionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_section_spacing"
@@ -117,7 +115,6 @@
 
             <com.alfresco.ui.components.TextInputLayout
                 android:id="@+id/tilRealm"
-                style="@style/Widget.Alfresco.TextField.Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_header_spacing"
@@ -125,7 +122,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRealm"
-                    style="@style/Widget.Alfresco.TextField.Edit"
+                    style="@style/Widget.Alfresco.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|textNoSuggestions"
@@ -135,7 +132,6 @@
 
             <com.alfresco.ui.components.TextInputLayout
                 android:id="@+id/tilClientId"
-                style="@style/Widget.Alfresco.TextField.Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_field_spacing"
@@ -143,7 +139,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etClientId"
-                    style="@style/Widget.Alfresco.TextField.Edit"
+                    style="@style/Widget.Alfresco.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|textNoSuggestions"
@@ -167,8 +163,8 @@
                     android:id="@+id/btnResetSettings"
                     style="@style/Widget.Alfresco.Action.Primary"
                     android:layout_width="wrap_content"
-                    android:layout_height="64dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:onClick="@{() -> viewModel.authConfigEditor.resetToDefaultConfig()}"
                     android:text="@string/auth_settings_reset" />
 
@@ -185,7 +181,7 @@
                     layout="@layout/view_alfresco_copyright"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="10dp" />
             </LinearLayout>
 

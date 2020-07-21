@@ -15,7 +15,7 @@
 
         <FrameLayout
             android:id="@+id/content"
-            style="@style/Theme.Alfresco.Auth.Card"
+            style="@style/Widget.Alfresco.Auth.Card"
             android:layout_centerInParent="true">
 
             <include

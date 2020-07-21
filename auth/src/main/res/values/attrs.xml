@@ -7,8 +7,8 @@
     <!-- LOGIN SETTINGS -->
     <dimen name="auth_theme_default_padding">34dp</dimen>
     <dimen name="auth_settings_section_spacing">40dp</dimen>
-    <dimen name="auth_settings_field_spacing">11dp</dimen>
-    <dimen name="auth_settings_header_spacing">6dp</dimen>
+    <dimen name="auth_settings_field_spacing">20dp</dimen>
+    <dimen name="auth_settings_header_spacing">12dp</dimen>
 
     <dimen name="auth_dialog_max_width">420dp</dimen>
 </resources>

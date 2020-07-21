@@ -3,6 +3,8 @@ package com.alfresco.content.app.widget
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.Dimension
@@ -69,6 +71,10 @@ class ActionBarBackground(
         loadFromAttributes(context, attributes)
 
         attributes.recycle()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            foreground = ColorDrawable()
+        }
     }
 
     private fun loadFromAttributes(context: Context, attributes: TypedArray) {

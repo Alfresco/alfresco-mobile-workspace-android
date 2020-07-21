@@ -23,20 +23,20 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/Widget.Alfresco.ListItem.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBody1"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/subtitle"
-            style="@style/Widget.Alfresco.ListItem.SubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="start"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="Subtitle" />
     </LinearLayout>
 

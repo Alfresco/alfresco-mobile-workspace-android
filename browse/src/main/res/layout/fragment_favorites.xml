@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             app:tabGravity="center"
-            app:tabTextAppearance="@style/Theme.Alfresco.Tab"
             android:elevation="1dp" />
     </androidx.viewpager.widget.ViewPager>
 </LinearLayout>

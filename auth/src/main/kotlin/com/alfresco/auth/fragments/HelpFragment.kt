@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
@@ -34,7 +33,7 @@ class HelpFragment : BottomSheetDialogFragment() {
             bodyTv.setText(HtmlCompat.fromHtml(value, HtmlCompat.FROM_HTML_MODE_LEGACY), TextView.BufferType.SPANNABLE)
         }
 
-        val closeBtn: Button = view.findViewById(R.id.btnClose)
+        val closeBtn: View = view.findViewById(R.id.btnClose)
         closeBtn.setOnClickListener { dismiss() }
 
         // Fix for https://issuetracker.google.com/issues/37132390

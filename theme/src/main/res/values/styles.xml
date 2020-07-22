@@ -22,7 +22,7 @@
     <style name="Widget.Alfresco.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
         <item name="tabTextAppearance">?attr/textAppearanceButton</item>
-        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="android:background">@drawable/bottom_separator</item>
     </style>
 
     <style name="Widget.Alfresco.SearchView" parent="Widget.AppCompat.Light.SearchView">

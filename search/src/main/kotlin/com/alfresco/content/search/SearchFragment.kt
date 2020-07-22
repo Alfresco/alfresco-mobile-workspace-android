@@ -90,7 +90,7 @@ class SearchFragment : Fragment() {
         // This avoids extra network requests caused by modifying filters after input clear.
         resultsFragment.setSearchQuery(terms)
 
-        if (terms.length > 2) {
+        if (terms.length >= SearchResultsViewModel.MIN_QUERY_LENGTH) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
         } else {

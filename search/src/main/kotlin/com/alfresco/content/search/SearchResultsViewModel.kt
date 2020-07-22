@@ -47,7 +47,7 @@ class SearchResultsViewModel(
                 liveSearchEvents.asFlow().debounce(DEFAULT_DEBOUNCE_TIME),
                 searchEvents.asFlow()
             ).filter {
-                it.terms.isNotEmpty()
+                it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({ repository.search(it.terms, it.filters, it.skipCount, it.maxItems) }) {
                 if (it is Loading) {
                     copy(request = it)
@@ -97,6 +97,7 @@ class SearchResultsViewModel(
     }
 
     companion object : MvRxViewModelFactory<SearchResultsViewModel, SearchResultsState> {
+        const val MIN_QUERY_LENGTH = 3
         const val DEFAULT_DEBOUNCE_TIME = 300L
 
         override fun create(

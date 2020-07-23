@@ -37,6 +37,14 @@
         <item name="textAppearanceCaption">@style/TextAppearance.Alfresco.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.Alfresco.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.Alfresco.Overline</item>
+
+        <!-- Shape styles -->
+        <item name="shapeAppearanceSmallComponent">
+            @style/ShapeAppearance.Alfresco.SmallComponent
+        </item>
+        <item name="shapeAppearanceMediumComponent">
+            @style/ShapeAppearance.Alfresco.MediumComponent
+        </item>
     </style>
 
     <style name="Base.V21.Theme.Alfresco.Dark" parent="Base.V21.Theme.Alfresco">

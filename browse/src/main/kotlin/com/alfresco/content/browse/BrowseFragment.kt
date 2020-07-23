@@ -1,17 +1,20 @@
 package com.alfresco.content.browse
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class BrowseArgs(
     val path: String,
     val id: String?,
     val title: String?
-) {
+) : Parcelable {
     companion object {
         const val PATH_KEY = "path"
         const val ID_KEY = "id"

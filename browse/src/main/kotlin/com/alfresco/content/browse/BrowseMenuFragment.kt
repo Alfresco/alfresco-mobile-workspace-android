@@ -42,7 +42,7 @@ class BrowseMenuFragment : BaseMvRxFragment() {
     }
 
     private fun navigateTo(path: String, title: String) {
-        navigateTo(Uri.parse("alfresco-content://folder/$path?title=${Uri.encode(title)}"))
+        navigateTo(Uri.parse("alfresco://content/$path?title=${Uri.encode(title)}"))
     }
 
     private fun navigateTo(uri: Uri) {

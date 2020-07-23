@@ -13,21 +13,22 @@ import com.alfresco.content.data.SharedLinksRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
-import kotlin.reflect.KSuspendFunction2
+import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class BrowseViewModel(
     state: BrowseViewState,
-    val path: String?,
     val context: Context
 ) : ListViewModel<BrowseViewState>(state) {
 
     init {
         refresh()
 
-        if (sortOrder() == Entry.SortOrder.ByModifiedDate) {
-            BrowseViewState.ModifiedGroup.prepare(context)
+        withState {
+            if (sortOrder(state.path) == Entry.SortOrder.ByModifiedDate) {
+                BrowseViewState.ModifiedGroup.prepare(context)
+            }
         }
     }
 
@@ -36,47 +37,66 @@ class BrowseViewModel(
     override fun fetchNextPage() = fetch(true)
 
     private fun fetch(nextPage: Boolean = false) = withState { state ->
-        val req = fetchRequest()
+        val path = state.path
+        val nodeId = state.nodeId
         val skipCount = if (nextPage) state.baseEntries.count() else 0
 
         viewModelScope.launch {
-            req.invoke(
+            loadResults(
+                path,
+                nodeId,
                 skipCount,
                 ITEMS_PER_PAGE
             ).execute {
-                updateEntries(it(), sortOrder()).copy(request = it)
+                updateEntries(it(), sortOrder(path)).copy(request = it)
             }
         }
     }
 
-    private fun fetchRequest(): KSuspendFunction2<Int, Int, Flow<ResponsePaging>> {
+    private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return when (path) {
-            context.getString(R.string.nav_path_recents) -> SearchRepository()::getRecents
-            context.getString(R.string.nav_path_favorites) -> FavoritesRepository()::getFavorites
-            context.getString(R.string.nav_path_my_files) -> BrowseRepository()::getMyFiles
-            context.getString(R.string.nav_path_my_libraries) -> SitesRepository()::getMySites
-            context.getString(R.string.nav_path_fav_libraries) -> FavoritesRepository()::getFavoriteLibraries
-            context.getString(R.string.nav_path_shared) -> SharedLinksRepository()::getSharedLinks
-            context.getString(R.string.nav_path_trash) -> TrashCanRepository()::getDeletedNodes
-            else -> this::getNodesInFolder
+            context.getString(R.string.nav_path_recents) ->
+                SearchRepository().getRecents(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_favorites) ->
+                FavoritesRepository().getFavorites(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_my_files) ->
+                BrowseRepository().loadMyFiles(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_my_libraries) ->
+                SitesRepository().getMySites(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_fav_libraries) ->
+                FavoritesRepository().getFavoriteLibraries(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_shared) ->
+                SharedLinksRepository().getSharedLinks(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_trash) ->
+                TrashCanRepository().getDeletedNodes(skipCount, maxItems)
+
+            context.getString(R.string.nav_path_folder) ->
+                BrowseRepository().loadItemsInFolder(requireNotNull(item), skipCount, maxItems)
+
+            context.getString(R.string.nav_path_site) ->
+                BrowseRepository().loadItemsInSite(requireNotNull(item), skipCount, maxItems)
+
+            else -> throw IllegalStateException()
         }
     }
 
-    private fun sortOrder(): Entry.SortOrder {
+    private fun sortOrder(path: String): Entry.SortOrder {
         return when (path) {
             context.getString(R.string.nav_path_recents) -> Entry.SortOrder.ByModifiedDate
             else -> Entry.SortOrder.Default
         }
     }
 
-    private suspend fun getNodesInFolder(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return BrowseRepository().getNodes(path ?: "", skipCount, maxItems)
-    }
-
     companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {
 
         override fun create(viewModelContext: ViewModelContext, state: BrowseViewState): BrowseViewModel? {
-            return BrowseViewModel(state, viewModelContext.args as? String, viewModelContext.app())
+            return BrowseViewModel(state, viewModelContext.app())
         }
     }
 }

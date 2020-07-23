@@ -8,4 +8,7 @@
     <string name="nav_path_fav_libraries">fav-libraries</string>
     <string name="nav_path_shared">shared</string>
     <string name="nav_path_trash">trash</string>
+
+    <string name="nav_path_folder">folder</string>
+    <string name="nav_path_site">site</string>
 </resources>

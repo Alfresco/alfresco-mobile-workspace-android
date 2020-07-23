@@ -10,7 +10,7 @@
         android:name="com.alfresco.content.browse.BrowseFragment"
         android:label="@string/nav_title_recents">
         <argument
-            android:name="mvrx:arg"
+            android:name="path"
             android:defaultValue="recents"
             app:argType="string" />
     </fragment>
@@ -44,12 +44,16 @@
         android:name="com.alfresco.content.browse.BrowseFragment"
         android:label="{title}">
         <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
-        <argument
-            android:name="mvrx:arg"
-            app:argType="string" />
-        <deepLink app:uri="alfresco-content://folder/{mvrx:arg}?title={title}" />
+        <deepLink app:uri="alfresco://content/{path}/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/{path}?title={title}" />
     </fragment>
 </navigation>

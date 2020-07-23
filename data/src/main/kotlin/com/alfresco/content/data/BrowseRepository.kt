@@ -11,9 +11,19 @@ class BrowseRepository() {
         SessionManager.requireSession.createService(NodesApi::class.java)
     }
 
-    private suspend fun files(path: String, skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun loadItemsInFolder(folderId: String, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+        return flow {
+            emit(fetchItemsInFolder(folderId, skipCount, maxItems))
+        }
+    }
+
+    suspend fun loadMyFiles(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+        return loadItemsInFolder("-my-", skipCount, maxItems)
+    }
+
+    private suspend fun fetchItemsInFolder(folderId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         return ResponsePaging.with(service.listNodeChildren(
-            path,
+            folderId,
             skipCount,
             maxItems,
             null,
@@ -25,13 +35,23 @@ class BrowseRepository() {
         ))
     }
 
-    suspend fun getNodes(path: String, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+    suspend fun loadItemsInSite(siteId: String, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
-            emit(files(path, skipCount, maxItems))
+            emit(fetchLibraryItems(siteId, skipCount, maxItems))
         }
     }
 
-    suspend fun getMyFiles(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return getNodes("-my-", skipCount, maxItems)
+    private suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int): ResponsePaging {
+        return ResponsePaging.with(service.listNodeChildren(
+            siteId,
+            skipCount,
+            maxItems,
+            null,
+            null,
+            null,
+            "documentLibrary",
+            null,
+            null
+        ))
     }
 }

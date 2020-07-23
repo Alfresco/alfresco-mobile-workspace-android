@@ -10,10 +10,14 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
 data class BrowseViewState(
+    val path: String,
+    val nodeId: String?,
     override val entries: List<Entry> = emptyList(),
     override val request: Async<ResponsePaging> = Uninitialized,
     val baseEntries: List<Entry> = emptyList()
 ) : ListViewState {
+
+    constructor(args: BrowseArgs) : this(args.path, args.id)
 
     fun updateEntries(
         response: ResponsePaging?,

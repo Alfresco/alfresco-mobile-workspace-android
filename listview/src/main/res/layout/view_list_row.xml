@@ -37,6 +37,7 @@
             android:ellipsize="start"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceCaption"
+            android:letterSpacing="0"
             tools:text="Subtitle" />
     </LinearLayout>
 

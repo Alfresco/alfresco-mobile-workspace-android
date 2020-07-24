@@ -6,23 +6,21 @@
     android:layout_height="48dp"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:paddingStart="26dp"
-    android:paddingEnd="26dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:scaleType="fitCenter"
-        android:alpha="0.72"
-        android:tint="?attr/colorControlNormal"/>
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
-        android:textAppearance="@style/TextAppearance.Alfresco.Body1"
+        android:layout_marginStart="24dp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="Title" />
 
 </LinearLayout>

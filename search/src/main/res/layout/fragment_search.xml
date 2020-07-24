@@ -8,9 +8,8 @@
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="8dp">
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="16dp">
 
         <com.alfresco.content.search.FilterChip
             android:id="@+id/chip_files"

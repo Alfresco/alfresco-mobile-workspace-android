@@ -12,10 +12,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.72"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_history"
-        android:tint="@color/mtrl_bottom_nav_item_tint" />
+        android:src="@drawable/ic_history" />
 
     <TextView
         android:id="@+id/title"
@@ -25,15 +22,12 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textAppearance="?attr/textAppearanceBody1"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="Title" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.72"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_arrow_open"
-        android:tint="@color/mtrl_bottom_nav_item_tint" />
+        android:src="@drawable/ic_arrow_open" />
 
 </LinearLayout>

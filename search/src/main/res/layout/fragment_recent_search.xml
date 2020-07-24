@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/recent_search_title"
-        android:layout_marginHorizontal="24dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="14dp"
-        android:textAppearance="@style/TextAppearance.Alfresco.Subtitle2"/>
+        android:textAppearance="?attr/textAppearanceSubtitle2"/>
 
     <com.airbnb.epoxy.EpoxyRecyclerView
         android:id="@+id/recycler_view"

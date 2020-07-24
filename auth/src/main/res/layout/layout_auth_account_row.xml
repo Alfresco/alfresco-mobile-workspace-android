@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:background="@drawable/alfresco_button_borderless_material"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">

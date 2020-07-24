@@ -83,7 +83,7 @@
 
     <LinearLayout
         android:id="@+id/add_account_button"
-        android:background="@drawable/alfresco_button_borderless_material"
+        android:background="?attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:gravity="center_vertical"

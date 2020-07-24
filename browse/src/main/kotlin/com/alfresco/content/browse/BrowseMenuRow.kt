@@ -25,7 +25,7 @@ class BrowseMenuRow @JvmOverloads constructor(
     @ModelProp
     fun setEntry(entry: FileEntry) {
         title.text = entry.title
-        icon.setImageDrawable(resources.getDrawable(entry.icon, null))
+        icon.setImageDrawable(resources.getDrawable(entry.icon, context.theme))
     }
 
     @CallbackProp

@@ -35,7 +35,7 @@ class ListViewRow @JvmOverloads constructor(
             else -> MimeType.with(entry.mimeType)
         }
 
-        icon.setImageDrawable(resources.getDrawable(type.icon, null))
+        icon.setImageDrawable(resources.getDrawable(type.icon, context.theme))
 
         subtitle.text = entry.subtitle
         subtitle.visibility = if (entry.subtitle != null) View.VISIBLE else View.GONE

@@ -20,5 +20,9 @@ data class Pagination(
                 raw.totalItems
             )
         }
+
+        fun empty(): Pagination {
+            return Pagination(0, false, 0, 0)
+        }
     }
 }

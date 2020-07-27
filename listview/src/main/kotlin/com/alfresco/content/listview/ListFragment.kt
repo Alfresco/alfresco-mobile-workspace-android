@@ -14,11 +14,13 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
 
 interface ListViewState : MvRxState {
     val entries: List<Entry>
+    val lastPage: Pagination
     val request: Async<ResponsePaging>
 }
 
@@ -99,12 +101,16 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 }
             }
 
-            if (state.request()?.pagination?.hasMoreItems == true) {
-                listViewRowLoading {
-                    // Changing the ID will force it to rebind when new data is loaded even if it is
-                    // still on screen which will ensure that we trigger loading again.
-                    id("loading${state.entries.count()}")
-                    onBind { _, _, _ -> viewModel.fetchNextPage() }
+            if (state.lastPage.hasMoreItems) {
+                if (state.request is Loading) {
+                    listViewPageLoading {
+                        id("loading at ${state.lastPage.count}")
+                    }
+                } else {
+                    listViewPageBoundary {
+                        id("boundary at ${state.lastPage.count}")
+                        onBind { _, _, _ -> viewModel.fetchNextPage() }
+                    }
                 }
             }
         }

@@ -7,6 +7,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
@@ -23,8 +24,20 @@ import kotlinx.coroutines.launch
 
 data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
+    override val lastPage: Pagination = Pagination.empty(),
     override val request: Async<ResponsePaging> = Uninitialized
-) : ListViewState
+) : ListViewState {
+
+    fun updateEntries(response: ResponsePaging?): SearchResultsState {
+        if (response == null) return this
+
+        val nextPage = response.pagination.skipCount > 0
+        val pageEntries = response.entries
+        val newEntries = if (nextPage) { entries + pageEntries } else { pageEntries }
+
+        return copy(entries = newEntries, lastPage = response.pagination)
+    }
+}
 
 data class SearchParams(
     val terms: String,
@@ -52,16 +65,7 @@ class SearchResultsViewModel(
                 if (it is Loading) {
                     copy(request = it)
                 } else {
-                    val newEntries = it()?.entries ?: emptyList()
-                    val skipCount = it()?.pagination?.skipCount ?: 0L
-                    copy(
-                        entries = if (skipCount != 0L) {
-                            entries + newEntries
-                        } else {
-                            newEntries
-                        },
-                        request = it
-                    )
+                    updateEntries(it()).copy(request = it)
                 }
             }
         }

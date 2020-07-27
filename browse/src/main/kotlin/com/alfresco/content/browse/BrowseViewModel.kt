@@ -2,6 +2,7 @@ package com.alfresco.content.browse
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
@@ -48,7 +49,11 @@ class BrowseViewModel(
                 skipCount,
                 ITEMS_PER_PAGE
             ).execute {
-                updateEntries(it(), sortOrder(path)).copy(request = it)
+                if (it is Loading) {
+                    copy(request = it)
+                } else {
+                    updateEntries(it(), sortOrder(path)).copy(request = it)
+                }
             }
         }
     }

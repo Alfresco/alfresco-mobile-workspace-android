@@ -2,11 +2,13 @@ package com.alfresco.content.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.fragmentViewModel
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.navigateTo
 
 class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResultsState>() {
 
@@ -41,6 +43,6 @@ class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResults
     override fun onItemClicked(entry: Entry) {
         viewModel.saveSearch()
 
-        // TODO: missing implementation
+        findNavController().navigateTo(entry)
     }
 }

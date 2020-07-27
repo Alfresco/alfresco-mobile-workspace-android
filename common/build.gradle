@@ -11,10 +11,13 @@ android {
 }
 
 dependencies {
+    implementation project(':data')
+
     implementation Libs.Coroutines.core
 
     implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.recyclerview
+    implementation Libs.AndroidX.Navigation.fragment
 
     implementation Libs.mvRx
     implementation Libs.Epoxy.epoxy

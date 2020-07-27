@@ -1,12 +1,12 @@
 package com.alfresco.content.browse
 
-import android.net.Uri
 import android.os.Parcelable
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.navigateTo
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -34,23 +34,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onItemClicked(entry: Entry) {
-        when (entry.type) {
-            Entry.Type.Folder -> navigateToFolder(entry)
-            Entry.Type.Site -> navigateToSite(entry)
-            else -> { } // no-op for now
-        }
-    }
-
-    private fun navigateToFolder(entry: Entry) {
-        navigateTo(Uri.parse("alfresco://content/folder/${entry.id}?title=${Uri.encode(entry.title)}"))
-    }
-
-    private fun navigateToSite(entry: Entry) {
-        navigateTo(Uri.parse("alfresco://content/site/${entry.id}?title=${Uri.encode(entry.title)}"))
-    }
-
-    private fun navigateTo(uri: Uri) {
-        findNavController().navigate(uri)
+        findNavController().navigateTo(entry)
     }
 
     companion object {

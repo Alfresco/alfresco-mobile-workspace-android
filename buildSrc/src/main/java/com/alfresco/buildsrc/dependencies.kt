@@ -9,7 +9,7 @@ object Libs {
     object AlfrescoDbp {
         const val auth = "com.alfresco.dbp.android:auth:0.5-SNAPSHOT"
         const val core = "com.alfresco.dbp.android:core:0.1-SNAPSHOT"
-        const val content = "com.alfresco.dbp.android:content:0.1-SNAPSHOT"
+        const val content = "com.alfresco.dbp.android:content:0.2-SNAPSHOT"
     }
 
     object Kotlin {

@@ -10,7 +10,7 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
-import org.threeten.bp.ZonedDateTime
+import java.time.ZonedDateTime
 
 data class Entry(
     val id: String,

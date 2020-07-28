@@ -7,8 +7,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.listview.ListViewState
-import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.temporal.ChronoField
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoField
 
 data class BrowseViewState(
     val path: String,

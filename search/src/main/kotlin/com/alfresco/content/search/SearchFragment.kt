@@ -59,7 +59,9 @@ class SearchFragment : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
-                setSearchQuery(newText ?: "")
+                if (isResumed) {
+                    setSearchQuery(newText ?: "")
+                }
                 return true
             }
 

@@ -22,13 +22,13 @@ dependencies {
 
     implementation Libs.Kotlin.stdlib
 
-    api Libs.AlfrescoDbp.core
     api Libs.AlfrescoDbp.auth
 
     implementation Libs.Google.material
 
     implementation Libs.AndroidX.appcompat
     implementation Libs.AndroidX.coreKtx
+    implementation Libs.AndroidX.constraintlayout
 
     implementation Libs.AndroidX.Lifecycle.extensions
     implementation Libs.AndroidX.Lifecycle.viewmodelKtx

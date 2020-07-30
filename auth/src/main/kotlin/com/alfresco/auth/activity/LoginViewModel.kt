@@ -14,9 +14,8 @@ import com.alfresco.auth.AuthType
 import com.alfresco.auth.Credentials
 import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.ui.AuthenticationViewModel
-import com.alfresco.core.data.LiveEvent
-import com.alfresco.core.data.MutableLiveEvent
-import com.alfresco.core.extension.isNotBlankNorEmpty
+import com.alfresco.auth.data.LiveEvent
+import com.alfresco.auth.data.MutableLiveEvent
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 
@@ -80,8 +79,8 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             loadSavedConfig()
         }
 
-        connectEnabled = Transformations.map(identityUrl) { it.isNotBlankNorEmpty() }
-        ssoLoginEnabled = Transformations.map(applicationUrl) { it.isNotBlankNorEmpty() }
+        connectEnabled = Transformations.map(identityUrl) { it.isNotBlank() }
+        ssoLoginEnabled = Transformations.map(applicationUrl) { it.isNotBlank() }
     }
 
     fun setHasNavigation(enableNavigation: Boolean) {

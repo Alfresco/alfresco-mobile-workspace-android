@@ -14,7 +14,6 @@ dependencies {
     implementation project(':account')
     implementation project(':session')
 
-    implementation Libs.AlfrescoDbp.core
     implementation Libs.AlfrescoDbp.auth
     implementation Libs.AlfrescoDbp.content
 

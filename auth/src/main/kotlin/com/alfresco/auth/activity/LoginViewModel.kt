@@ -13,11 +13,9 @@ import com.alfresco.auth.AuthInterceptor
 import com.alfresco.auth.AuthType
 import com.alfresco.auth.Credentials
 import com.alfresco.auth.config.defaultConfig
-import com.alfresco.auth.ui.AuthenticationViewModel
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
+import com.alfresco.auth.ui.AuthenticationViewModel
 
 class LoginViewModel(private val applicationContext: Context, authType: AuthType?, authState: String?, authConfig: AuthConfig?, endpoint: String?) : AuthenticationViewModel() {
 
@@ -157,16 +155,9 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     private fun loadSavedConfig() {
         val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        val configJson = sharedPrefs.getString(SHARED_PREFS_CONFIG_KEY, null)
+        val configJson = sharedPrefs.getString(SHARED_PREFS_CONFIG_KEY, null) ?: ""
 
-        authConfig = try {
-            if (configJson != null)
-                Gson().fromJson(configJson, AuthConfig::class.java)
-            else
-                AuthConfig.defaultConfig
-        } catch (e: JsonSyntaxException) {
-            AuthConfig.defaultConfig
-        }
+        authConfig = AuthConfig.jsonDeserialize(configJson) ?: AuthConfig.defaultConfig
     }
 
     fun saveConfigChanges() {
@@ -175,7 +166,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         // Save state to persistent storage
         val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
-        editor.putString(SHARED_PREFS_CONFIG_KEY, Gson().toJson(config))
+        editor.putString(SHARED_PREFS_CONFIG_KEY, config.jsonSerialize())
         editor.apply()
 
         // Update local field

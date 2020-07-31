@@ -60,7 +60,7 @@ dependencies {
     implementation project(':search')
 
     implementation project(':data')
-    implementation Libs.AlfrescoDbp.content
+    implementation Libs.Alfresco.content
 
     implementation Libs.Kotlin.stdlib
 

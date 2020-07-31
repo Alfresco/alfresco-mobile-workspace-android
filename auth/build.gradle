@@ -22,7 +22,7 @@ dependencies {
 
     implementation Libs.Kotlin.stdlib
 
-    api Libs.AlfrescoDbp.auth
+    api Libs.Alfresco.auth
 
     implementation Libs.Google.material
 

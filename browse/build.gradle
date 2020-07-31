@@ -20,7 +20,7 @@ dependencies {
     implementation project(':theme')
     implementation project(':listview')
 
-    implementation Libs.AlfrescoDbp.content
+    implementation Libs.Alfresco.content
 
     implementation Libs.Kotlin.reflect
     implementation Libs.AndroidX.coreKtx

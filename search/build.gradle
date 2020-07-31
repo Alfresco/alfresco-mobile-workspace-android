@@ -23,7 +23,7 @@ dependencies {
     implementation project(':theme')
     implementation project(':listview')
 
-    implementation Libs.AlfrescoDbp.content
+    implementation Libs.Alfresco.content
 
     implementation Libs.Coroutines.core
     implementation Libs.AndroidX.Lifecycle.viewmodelKtx

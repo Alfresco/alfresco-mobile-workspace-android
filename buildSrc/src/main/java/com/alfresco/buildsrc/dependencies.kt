@@ -7,6 +7,8 @@ object Libs {
 
     const val junit = "junit:junit:4.13"
 
+    const val spotless = "com.diffplug.spotless:spotless-plugin-gradle:5.1.1"
+
     const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.29.0"
 
     object Alfresco {

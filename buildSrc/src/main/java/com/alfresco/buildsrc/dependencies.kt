@@ -3,7 +3,7 @@ package com.alfresco.buildsrc
 @Suppress("unused")
 object Libs {
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:3.6.3"
+    const val androidGradlePlugin = "com.android.tools.build:gradle:4.0.1"
 
     const val junit = "junit:junit:4.13"
 
@@ -25,15 +25,15 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.3.7"
+        private const val version = "1.3.8"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.1.0"
-        const val coreKtx = "androidx.core:core-ktx:1.2.0"
+        const val appcompat = "androidx.appcompat:appcompat:1.2.0"
+        const val coreKtx = "androidx.core:core-ktx:1.3.1"
 
         object Activity {
             private const val version = "1.1.0"
@@ -42,7 +42,7 @@ object Libs {
         }
 
         object Fragment {
-            private const val version = "1.2.4"
+            private const val version = "1.2.5"
             const val fragment = "androidx.fragment:fragment:$version"
             const val fragmentKtx = "androidx.fragment:fragment-ktx:$version"
         }
@@ -65,7 +65,7 @@ object Libs {
         const val preference = "androidx.preference:preference:1.1.1"
 
         object Navigation {
-            private const val version = "2.2.2"
+            private const val version = "2.3.0"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
         }
@@ -81,16 +81,16 @@ object Libs {
     }
 
     object Google {
-        const val material = "com.google.android.material:material:1.2.0-alpha06"
+        const val material = "com.google.android.material:material:1.2.0"
     }
 
     object OkHttp {
-        private const val version = "4.7.2"
+        private const val version = "4.8.1"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
 
-    const val mvRx = "com.airbnb.android:mvrx:1.5.0"
+    const val mvRx = "com.airbnb.android:mvrx:1.5.1"
 
     object Epoxy {
         private const val version = "3.11.0"

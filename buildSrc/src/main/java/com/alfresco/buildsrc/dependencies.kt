@@ -7,6 +7,8 @@ object Libs {
 
     const val junit = "junit:junit:4.13"
 
+    const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.29.0"
+
     object Alfresco {
         const val auth = "com.alfresco.android:auth:0.6-SNAPSHOT"
         const val content = "com.alfresco.android:content:0.2-SNAPSHOT"

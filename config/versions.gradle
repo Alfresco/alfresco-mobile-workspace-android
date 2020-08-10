@@ -1,0 +1,14 @@
+apply plugin: "com.github.ben-manes.versions"
+
+def isNonStable = { String version ->
+    def regex = /^[0-9,.v-]+$/
+    return !(version ==~ regex)
+}
+
+// Use `gradle dependencyUpdates -Pstable` to exclude pre-release versions
+dependencyUpdates {
+    checkForGradleUpdate = true
+    rejectVersionIf {
+        isNonStable(it.candidate.version) && project.hasProperty('stable')
+    }
+}

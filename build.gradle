@@ -8,22 +8,8 @@ buildscript {
     dependencies {
         classpath Libs.androidGradlePlugin
         classpath Libs.Kotlin.gradlePlugin
-    }
-}
 
-plugins {
-    id 'com.diffplug.gradle.spotless' version '4.0.1'
-    id 'com.github.ben-manes.versions' version '0.28.0'
-}
-
-def isNonStable = { String version ->
-    def regex = /^[0-9,.v-]+$/
-    return !(version ==~ regex)
-}
-
-dependencyUpdates {
-    rejectVersionIf {
-        isNonStable(it.candidate.version) && project.hasProperty('stable')
+        classpath Libs.gradleVersions
     }
 }
 
@@ -73,3 +59,5 @@ subprojects {
         }
     }
 }
+
+apply from: "$rootDir/config/versions.gradle"

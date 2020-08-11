@@ -1,6 +1,7 @@
 package com.alfresco.content.search
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,16 +9,42 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.withState
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
+import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_search.recents_fragment
 import kotlinx.android.synthetic.main.fragment_search.results_fragment
 
-class SearchFragment : Fragment() {
+@Parcelize
+data class ContextualSearchArgs(
+    val id: String?,
+    val title: String?
+) : Parcelable {
+    companion object {
+        private const val ID_KEY = "id"
+        private const val TITLE_KEY = "title"
+
+        fun with(args: Bundle?): ContextualSearchArgs? {
+            if (args == null) return null
+            return ContextualSearchArgs(
+                args.getString(ID_KEY, null),
+                args.getString(TITLE_KEY, null)
+            )
+        }
+    }
+}
+
+class SearchFragment : BaseMvRxFragment() {
+
+    private val viewModel: SearchResultsViewModel by fragmentViewModelWithArgs {
+        ContextualSearchArgs.with(arguments)
+    }
 
     private lateinit var searchView: SearchView
 
@@ -28,6 +55,7 @@ class SearchFragment : Fragment() {
         childFragmentManager.findFragmentById(R.id.results_fragment) as SearchResultsFragment
     }
 
+    private lateinit var filterContextual: FilterChip
     private lateinit var filterFiles: FilterChip
     private lateinit var filterFolders: FilterChip
     private lateinit var filterLibraries: FilterChip
@@ -48,6 +76,10 @@ class SearchFragment : Fragment() {
         setupChips()
 
         recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
+    }
+
+    override fun invalidate() {
+        // TODO: rework code to update UI based on associated state
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,9 +142,21 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupChips() {
+        filterContextual = requireView().findViewById(R.id.chip_contextual)
         filterFiles = requireView().findViewById(R.id.chip_files)
         filterFolders = requireView().findViewById(R.id.chip_folders)
         filterLibraries = requireView().findViewById(R.id.chip_libraries)
+
+        withState(viewModel) { state ->
+            if (state.isContextual) {
+                filterContextual.text = getString(R.string.search_chip_contextual, state.contextTitle)
+
+                // Initial State
+                filterContextual.visibility = View.VISIBLE
+                filterLibraries.visibility = View.GONE
+                filterContextual.isChecked = true
+            }
+        }
 
         // Initial State
         filterFiles.isChecked = true
@@ -120,6 +164,10 @@ class SearchFragment : Fragment() {
         applyFilters()
 
         // Bind state change listeners
+        filterContextual.setOnCheckedChangeListener { _, _ ->
+            applyFilters()
+        }
+
         filterFiles.setOnCheckedChangeListener { _, _ ->
             filterLibraries.uncheck(false)
             applyFilters()
@@ -139,6 +187,9 @@ class SearchFragment : Fragment() {
 
     private fun applyFilters() {
         var filter = emptyFilters()
+        if (filterContextual.isChecked) {
+            filter = filter and SearchFilter.Contextual
+        }
         if (filterFiles.isChecked) {
             filter = filter and SearchFilter.Files
         }

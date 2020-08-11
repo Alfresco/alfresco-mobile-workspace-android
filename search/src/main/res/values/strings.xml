@@ -5,6 +5,7 @@
 
     <string name="recent_search_title">Recent Searches</string>
 
+    <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Files</string>
     <string name="search_chip_folders">Folders</string>
     <string name="search_chip_libraries">Libraries</string>

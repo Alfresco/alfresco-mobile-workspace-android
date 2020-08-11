@@ -31,6 +31,7 @@ class SearchRepository() {
 
     suspend fun search(
         terms: String,
+        nodeId: String?,
         filters: SearchFilters,
         skipCount: Int,
         maxItems: Int
@@ -38,11 +39,25 @@ class SearchRepository() {
         return if (filters.contains(SearchFilter.Libraries)) {
             siteSearch(terms, skipCount, maxItems)
         } else {
-            fileSearch(terms, skipCount, maxItems, filters.contains(SearchFilter.Files), filters.contains(SearchFilter.Folders))
+            fileSearch(
+                terms,
+                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+                skipCount,
+                maxItems,
+                filters.contains(SearchFilter.Files),
+                filters.contains(SearchFilter.Folders)
+            )
         }
     }
 
-    private suspend fun fileSearch(query: String, skipCount: Int, maxItems: Int, includeFiles: Boolean, includeFolders: Boolean): ResponsePaging {
+    private suspend fun fileSearch(
+        query: String,
+        nodeId: String?,
+        skipCount: Int,
+        maxItems: Int,
+        includeFiles: Boolean,
+        includeFolders: Boolean
+    ): ResponsePaging {
         val reqQuery = RequestQuery("$query*", RequestQuery.LanguageEnum.AFTS)
         val templates = listOf(RequestTemplatesInner("keywords", "%(cm:name cm:title cm:description TEXT TAG)"))
         val defaults = RequestDefaults(defaultFieldName = "keywords", defaultFTSOperator = RequestDefaults.DefaultFTSOperatorEnum.AND)
@@ -51,7 +66,7 @@ class SearchRepository() {
         } else {
             if (includeFolders) "+TYPE:'cm:folder'" else "+TYPE:'cm:folder' OR +TYPE:'cm:content'"
         }
-        val filter = listOf(
+        val filter = mutableListOf(
             RequestFilterQueriesInner(typeFilter),
             RequestFilterQueriesInner("-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"),
             RequestFilterQueriesInner("-cm:creator:System AND -QNAME:comment"),
@@ -61,6 +76,11 @@ class SearchRepository() {
             RequestFilterQueriesInner("-TYPE:'lnk:link'"),
             RequestFilterQueriesInner("-PNAME:'0/wiki'")
         )
+
+        if (nodeId != null) {
+            filter.add(RequestFilterQueriesInner("ANCESTOR:'workspace://SpacesStore/$nodeId'"))
+        }
+
         val include = listOf(RequestIncludeEnum.PATH)
         val sort = listOf(RequestSortDefinitionInner(RequestSortDefinitionInner.TypeEnum.FIELD, "score", false))
         val pagination = RequestPagination(maxItems, skipCount)

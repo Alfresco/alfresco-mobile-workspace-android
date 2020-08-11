@@ -40,6 +40,20 @@
         app:destination="@id/searchFragment" />
 
     <fragment
+        android:id="@+id/contextualSearchFragment"
+        android:name="com.alfresco.content.search.SearchFragment"
+        android:label="SearchFragment">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+        <deepLink app:uri="alfresco://content/{path}/{id}/search?title={title}" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_folder"
         android:name="com.alfresco.content.browse.BrowseFragment"
         android:label="{title}">

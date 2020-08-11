@@ -3,7 +3,7 @@ package com.alfresco.content.search
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.parentFragmentViewModel
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFilters
@@ -12,7 +12,7 @@ import com.alfresco.content.navigateTo
 
 class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResultsState>() {
 
-    override val viewModel: SearchResultsViewModel by fragmentViewModel()
+    override val viewModel: SearchResultsViewModel by parentFragmentViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

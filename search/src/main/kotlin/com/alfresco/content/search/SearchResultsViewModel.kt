@@ -25,8 +25,15 @@ import kotlinx.coroutines.launch
 data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
     override val lastPage: Pagination = Pagination.empty(),
-    override val request: Async<ResponsePaging> = Uninitialized
+    override val request: Async<ResponsePaging> = Uninitialized,
+
+    val contextId: String? = null,
+    val contextTitle: String? = null
 ) : ListViewState {
+
+    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title)
+
+    val isContextual: Boolean get() { return contextId != null }
 
     fun updateEntries(response: ResponsePaging?): SearchResultsState {
         if (response == null) return this
@@ -41,6 +48,7 @@ data class SearchResultsState(
 
 data class SearchParams(
     val terms: String,
+    val contextId: String?,
     val filters: SearchFilters,
     val skipCount: Int,
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
@@ -52,7 +60,7 @@ class SearchResultsViewModel(
 ) : ListViewModel<SearchResultsState>(state) {
     private val liveSearchEvents = ConflatedBroadcastChannel<SearchParams>()
     private val searchEvents = ConflatedBroadcastChannel<SearchParams>()
-    private var params = SearchParams("", emptyFilters(), 0)
+    private var params = SearchParams("", state.contextId, emptyFilters(), 0)
 
     init {
         viewModelScope.launch {
@@ -61,7 +69,7 @@ class SearchResultsViewModel(
                 searchEvents.asFlow()
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
-            }.executeOnLatest({ repository.search(it.terms, it.filters, it.skipCount, it.maxItems) }) {
+            }.executeOnLatest({ repository.search(it.terms, it.contextId, it.filters, it.skipCount, it.maxItems) }) {
                 if (it is Loading) {
                     copy(request = it)
                 } else {

@@ -3,6 +3,7 @@ package com.alfresco.content.data
 import java.util.EnumSet
 
 enum class SearchFilter {
+    Contextual,
     Files,
     Folders,
     Libraries;

@@ -72,7 +72,7 @@ class SearchRepository() {
             RequestFilterQueriesInner("-cm:creator:System AND -QNAME:comment"),
             RequestFilterQueriesInner("-TYPE:'st:site' AND -ASPECT:'st:siteContainer' AND -ASPECT:'sys:hidden'"),
             RequestFilterQueriesInner("-TYPE:'dl:dataList' AND -TYPE:'dl:todoList' AND -TYPE:'dl:issue'"),
-            RequestFilterQueriesInner("-TYPE:'fm:topic' AND -TYPE:'fm:post'"),
+            RequestFilterQueriesInner("-TYPE:'fm:forum' AND -TYPE:'fm:topic' AND -TYPE:'fm:post'"),
             RequestFilterQueriesInner("-TYPE:'lnk:link'"),
             RequestFilterQueriesInner("-PNAME:'0/wiki'")
         )

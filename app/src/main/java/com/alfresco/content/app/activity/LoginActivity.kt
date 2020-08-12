@@ -8,6 +8,7 @@ import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.models.Person
+import com.alfresco.content.session.Session
 import kotlinx.coroutines.launch
 
 class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
@@ -18,7 +19,8 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
         lifecycleScope.launch {
             try {
-                val person = PeopleRepository(context, account).me()
+                val session = Session(context, account)
+                val person = PeopleRepository(session).me()
                 processAccountInformation(person, credentials, authConfig, endpoint)
                 navigateToMain()
             } catch (ex: Exception) {
@@ -27,7 +29,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
         }
     }
 
-    private fun processAccountInformation(person: Person, credentials: Credentials, authConfig: AuthConfig, endpoint: String) {
+    private fun processAccountInformation(person: Person, myFiles: Node, credentials: Credentials, authConfig: AuthConfig, endpoint: String) {
         if (!viewModel.isReLogin) {
             Account.createAccount(
                 this,

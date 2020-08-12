@@ -6,6 +6,7 @@ import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.Credentials
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
+import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.models.Person
 import com.alfresco.content.session.Session
@@ -14,14 +15,15 @@ import kotlinx.coroutines.launch
 class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
     override fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig) {
-        val account = Account(credentials.username, credentials.authState, credentials.authType, authConfig.jsonSerialize(), endpoint, null, null)
+        val account = Account(credentials.username, credentials.authState, credentials.authType, authConfig.jsonSerialize(), endpoint)
         val context = applicationContext
 
         lifecycleScope.launch {
             try {
                 val session = Session(context, account)
                 val person = PeopleRepository(session).me()
-                processAccountInformation(person, credentials, authConfig, endpoint)
+                val myFiles = BrowseRepository(session).myFilesNodeId()
+                processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
                 navigateToMain()
             } catch (ex: Exception) {
                 onError(R.string.auth_error_wrong_credentials)
@@ -29,7 +31,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
         }
     }
 
-    private fun processAccountInformation(person: Person, myFiles: Node, credentials: Credentials, authConfig: AuthConfig, endpoint: String) {
+    private fun processAccountInformation(person: Person, myFiles: String, credentials: Credentials, authConfig: AuthConfig, endpoint: String) {
         if (!viewModel.isReLogin) {
             Account.createAccount(
                 this,
@@ -39,7 +41,8 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 authConfig.jsonSerialize(),
                 endpoint,
                 person.displayName ?: "",
-                person.email
+                person.email,
+                myFiles
             )
         } else {
             Account.update(

@@ -1,15 +1,18 @@
 package com.alfresco.content.data
 
 import com.alfresco.content.apis.NodesApi
+import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class BrowseRepository() {
+class BrowseRepository(session: Session = SessionManager.requireSession) {
 
     private val service: NodesApi by lazy {
-        SessionManager.requireSession.createService(NodesApi::class.java)
+        session.createService(NodesApi::class.java)
     }
+
+    val myFilesNodeId: String get() = SessionManager.requireSession.account.myFiles ?: ""
 
     suspend fun loadItemsInFolder(folderId: String, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return flow {
@@ -17,8 +20,8 @@ class BrowseRepository() {
         }
     }
 
-    suspend fun loadMyFiles(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return loadItemsInFolder("-my-", skipCount, maxItems)
+    suspend fun myFilesNodeId(): String {
+        return service.getNode("-my-", null, null, null).entry.id
     }
 
     private suspend fun fetchItemsInFolder(folderId: String, skipCount: Int, maxItems: Int): ResponsePaging {

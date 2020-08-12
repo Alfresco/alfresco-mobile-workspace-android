@@ -13,8 +13,9 @@ data class Account(
     val authType: String,
     val authConfig: String,
     val serverUrl: String,
-    val displayName: String?,
-    val email: String?
+    val displayName: String? = null,
+    val email: String? = null,
+    val myFiles: String? = null
 ) {
     companion object {
         private const val displayNameKey = "displayName"
@@ -22,6 +23,7 @@ data class Account(
         private const val authTypeKey = "type"
         private const val authConfigKey = "config"
         private const val serverKey = "server"
+        private const val myFilesKey = "myFiles"
 
         fun createAccount(
             context: Context,
@@ -31,7 +33,8 @@ data class Account(
             authConfig: String,
             serverUrl: String,
             displayName: String,
-            email: String
+            email: String,
+            myFiles: String
         ) {
             val b = Bundle()
             b.putString(authTypeKey, authType)
@@ -39,6 +42,7 @@ data class Account(
             b.putString(serverKey, serverUrl)
             b.putString(displayNameKey, displayName)
             b.putString(emailKey, email)
+            b.putString(myFilesKey, myFiles)
             val acc = Account(id, context.getString(R.string.android_auth_account_type))
             AccountManager.get(context).addAccountExplicitly(acc, authState, b)
         }
@@ -92,7 +96,8 @@ data class Account(
                     am.getUserData(acc, authConfigKey),
                     am.getUserData(acc, serverKey),
                     am.getUserData(acc, displayNameKey),
-                    am.getUserData(acc, emailKey)
+                    am.getUserData(acc, emailKey),
+                    am.getUserData(acc, myFilesKey)
                 )
             }
             return null

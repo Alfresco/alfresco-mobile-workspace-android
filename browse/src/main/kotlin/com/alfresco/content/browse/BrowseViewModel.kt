@@ -66,9 +66,6 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_favorites) ->
                 FavoritesRepository().getFavorites(skipCount, maxItems)
 
-            context.getString(R.string.nav_path_my_files) ->
-                BrowseRepository().loadMyFiles(skipCount, maxItems)
-
             context.getString(R.string.nav_path_my_libraries) ->
                 SitesRepository().getMySites(skipCount, maxItems)
 

@@ -7,6 +7,7 @@ import androidx.annotation.ArrayRes
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.data.BrowseRepository
 
 class BrowseMenuViewModel(
     viewState: BrowseMenuViewState,
@@ -21,6 +22,8 @@ class BrowseMenuViewModel(
 
         setState { copy(entries = entries) }
     }
+
+    fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
 
     companion object : MvRxViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
         override fun create(viewModelContext: ViewModelContext, viewState: BrowseMenuViewState): BrowseMenuViewModel? {

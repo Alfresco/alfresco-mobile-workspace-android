@@ -19,6 +19,7 @@ dependencies {
     implementation project(':mimetype')
     implementation project(':theme')
     implementation project(':listview')
+    implementation project(':session')
 
     implementation Libs.Alfresco.content
 

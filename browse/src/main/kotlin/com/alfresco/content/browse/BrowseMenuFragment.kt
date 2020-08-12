@@ -42,7 +42,12 @@ class BrowseMenuFragment : BaseMvRxFragment() {
     }
 
     private fun navigateTo(path: String, title: String) {
-        navigateTo(Uri.parse("alfresco://content/$path?title=${Uri.encode(title)}"))
+        if (path == getString(R.string.nav_path_my_files)) {
+            val nodeId = viewModel.getMyFilesNodeId()
+            navigateTo(Uri.parse("alfresco://content/folder/$nodeId?title=${Uri.encode(title)}"))
+        } else {
+            navigateTo(Uri.parse("alfresco://content/$path?title=${Uri.encode(title)}"))
+        }
     }
 
     private fun navigateTo(uri: Uri) {

@@ -50,7 +50,8 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.id,
                 credentials.authState,
                 person.displayName ?: "",
-                person.email
+                person.email,
+                myFiles
             )
         }
     }

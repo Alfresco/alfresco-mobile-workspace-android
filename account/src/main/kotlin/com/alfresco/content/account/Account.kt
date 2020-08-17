@@ -58,13 +58,15 @@ data class Account(
             id: String,
             authState: String,
             displayName: String,
-            email: String
+            email: String,
+            myFiles: String
         ) {
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
             am.setPassword(acc, authState)
             am.setUserData(acc, displayNameKey, displayName)
             am.setUserData(acc, emailKey, email)
+            am.setUserData(acc, myFilesKey, myFiles)
 
             if (acc?.name != id) {
                 am.renameAccount(acc, id, null, null)

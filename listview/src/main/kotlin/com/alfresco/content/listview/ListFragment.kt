@@ -1,6 +1,7 @@
 package com.alfresco.content.listview
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
@@ -43,6 +45,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
     lateinit var recyclerView: EpoxyRecyclerView
     lateinit var refreshLayout: SwipeRefreshLayout
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
+    private var delayedBoundary: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -107,9 +110,20 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                         id("loading at ${state.lastPage.count}")
                     }
                 } else {
-                    listViewPageBoundary {
-                        id("boundary at ${state.lastPage.count}")
-                        onBind { _, _, _ -> viewModel.fetchNextPage() }
+                    // On failure delay creating the boundary so that the list scrolls up
+                    // and the user has to scroll back down to activate a retry
+                    val isFail = state.request is Fail
+                    if (isFail && !delayedBoundary) {
+                        delayedBoundary = true
+                        Handler().postDelayed({ this.requestModelBuild() }, 300)
+                    } else {
+                        if (isFail) {
+                            delayedBoundary = false
+                        }
+                        listViewPageBoundary {
+                            id("boundary at ${state.lastPage.count}")
+                            onBind { _, _, _ -> viewModel.fetchNextPage() }
+                        }
                     }
                 }
             }

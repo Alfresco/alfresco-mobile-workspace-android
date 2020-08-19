@@ -41,8 +41,8 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
 
     // Temporary kotlin module duplication fix

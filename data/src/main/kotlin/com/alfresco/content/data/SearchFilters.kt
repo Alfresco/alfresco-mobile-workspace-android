@@ -11,7 +11,7 @@ enum class SearchFilter {
 
 typealias SearchFilters = EnumSet<SearchFilter>
 
-infix fun SearchFilter.and(other: SearchFilter) = SearchFilters.of(this, other)
+infix fun SearchFilter.and(other: SearchFilter): SearchFilters = SearchFilters.of(this, other)
 infix fun SearchFilters.allOf(other: SearchFilters) = this.containsAll(other)
-infix fun SearchFilters.and(other: SearchFilter) = SearchFilters.of(other, *this.toTypedArray())
+infix fun SearchFilters.and(other: SearchFilter): SearchFilters = SearchFilters.of(other, *this.toTypedArray())
 fun emptyFilters(): SearchFilters = SearchFilters.noneOf(SearchFilter::class.java)

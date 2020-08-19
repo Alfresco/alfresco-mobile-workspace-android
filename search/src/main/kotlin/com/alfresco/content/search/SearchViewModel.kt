@@ -56,7 +56,7 @@ data class SearchParams(
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
 )
 
-class SearchResultsViewModel(
+class SearchViewModel(
     state: SearchResultsState,
     private val repository: SearchRepository
 ) : ListViewModel<SearchResultsState>(state) {
@@ -131,15 +131,15 @@ class SearchResultsViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SearchResultsViewModel, SearchResultsState> {
+    companion object : MvRxViewModelFactory<SearchViewModel, SearchResultsState> {
         const val MIN_QUERY_LENGTH = 3
         const val DEFAULT_DEBOUNCE_TIME = 300L
 
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchResultsState
-        ): SearchResultsViewModel? {
-            return SearchResultsViewModel(state, SearchRepository())
+        ): SearchViewModel? {
+            return SearchViewModel(state, SearchRepository())
         }
     }
 }

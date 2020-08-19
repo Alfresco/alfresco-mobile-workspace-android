@@ -42,7 +42,7 @@ data class ContextualSearchArgs(
 
 class SearchFragment : BaseMvRxFragment() {
 
-    private val viewModel: SearchResultsViewModel by fragmentViewModelWithArgs {
+    private val viewModel: SearchViewModel by fragmentViewModelWithArgs {
         ContextualSearchArgs.with(arguments)
     }
 
@@ -133,7 +133,7 @@ class SearchFragment : BaseMvRxFragment() {
     }
 
     private fun updateFragmentVisibility(terms: String) {
-        if (terms.length >= SearchResultsViewModel.MIN_QUERY_LENGTH) {
+        if (terms.length >= SearchViewModel.MIN_QUERY_LENGTH) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
         } else {

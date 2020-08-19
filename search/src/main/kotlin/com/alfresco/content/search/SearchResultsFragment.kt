@@ -10,9 +10,9 @@ import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 
-class SearchResultsFragment : ListFragment<SearchResultsViewModel, SearchResultsState>() {
+class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
 
-    override val viewModel: SearchResultsViewModel by parentFragmentViewModel()
+    override val viewModel: SearchViewModel by parentFragmentViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

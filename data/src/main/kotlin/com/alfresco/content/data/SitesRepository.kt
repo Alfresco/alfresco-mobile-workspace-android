@@ -11,7 +11,6 @@ class SitesRepository {
     }
 
     private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
-        val where = "(EXISTS(target/site))"
         return ResponsePaging.with(service.listSiteMembershipsForPerson(
             userId,
             skipCount,

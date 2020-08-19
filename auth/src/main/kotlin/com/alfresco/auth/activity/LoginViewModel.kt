@@ -216,7 +216,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             _enabled.addSource(password, this::onFieldChange)
         }
 
-        private fun onFieldChange(ignored: String) {
+        private fun onFieldChange(@Suppress("UNUSED_PARAMETER") value: String) {
             _enabled.value = !email.value.isNullOrEmpty() && !password.value.isNullOrEmpty()
         }
 
@@ -292,11 +292,11 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             port.value = if (https.value == true) DEFAULT_HTTPS_PORT else DEFAULT_HTTP_PORT
         }
 
-        private fun onChange(ignored: Boolean) {
+        private fun onChange(@Suppress("UNUSED_PARAMETER") value: Boolean) {
             onChange()
         }
 
-        private fun onChange(ignored: String) {
+        private fun onChange(@Suppress("UNUSED_PARAMETER") value: String) {
             onChange()
         }
 

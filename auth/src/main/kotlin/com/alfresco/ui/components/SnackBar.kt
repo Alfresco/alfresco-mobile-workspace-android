@@ -119,7 +119,7 @@ class Snackbar private constructor(
         listener: View.OnClickListener?
     ): Snackbar {
         val contentLayout = view.getChildAt(0) as SnackbarContentLayout
-        val tv = contentLayout.actionView!!
+        val tv = contentLayout.actionView
         if (TextUtils.isEmpty(text) || listener == null) {
             tv.visibility = View.GONE
             tv.setOnClickListener(null)
@@ -140,12 +140,16 @@ class Snackbar private constructor(
     @Duration
     override fun getDuration(): Int {
         val userSetDuration = super.getDuration()
-        if (userSetDuration == LENGTH_INDEFINITE) {
-            return LENGTH_INDEFINITE
+        if (userSetDuration == BaseTransientBottomBar.LENGTH_INDEFINITE) {
+            return userSetDuration
         }
 
         // If touch exploration is enabled override duration to give people chance to interact.
-        return if (hasAction && accessibilityManager!!.isTouchExplorationEnabled) LENGTH_INDEFINITE else userSetDuration
+        return if (hasAction && accessibilityManager!!.isTouchExplorationEnabled) {
+            BaseTransientBottomBar.LENGTH_INDEFINITE
+        } else {
+            userSetDuration
+        }
     }
 
     /**

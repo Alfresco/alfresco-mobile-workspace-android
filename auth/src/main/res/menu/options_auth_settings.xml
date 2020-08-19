@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/auth_settings_save"
+        android:title="@string/auth_settings_save"
         app:actionLayout="@layout/view_auth_settings_save_action"
         app:showAsAction="always" />
 </menu>

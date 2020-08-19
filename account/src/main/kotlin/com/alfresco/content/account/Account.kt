@@ -50,7 +50,9 @@ data class Account(
         fun update(context: Context, id: String, authState: String) {
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
-            am.setPassword(acc, authState)
+            if (acc?.name == id) {
+                am.setPassword(acc, authState)
+            }
         }
 
         fun update(

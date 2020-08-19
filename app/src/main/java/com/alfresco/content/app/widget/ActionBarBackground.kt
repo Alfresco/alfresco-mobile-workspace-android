@@ -56,7 +56,7 @@ class ActionBarBackground(
         requireNotNull(context)
 
         // Setup background
-        background = MaterialShapeDrawable(context!!, attrs, defStyleAttr, defStyleRes)
+        background = MaterialShapeDrawable(context, attrs, defStyleAttr, defStyleRes)
         shapeAppearanceModel = background.shapeAppearanceModel
         ViewCompat.setBackground(this, background)
 

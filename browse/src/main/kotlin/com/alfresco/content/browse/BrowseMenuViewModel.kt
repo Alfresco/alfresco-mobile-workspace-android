@@ -26,8 +26,8 @@ class BrowseMenuViewModel(
     fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
 
     companion object : MvRxViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
-        override fun create(viewModelContext: ViewModelContext, viewState: BrowseMenuViewState): BrowseMenuViewModel? {
-            return BrowseMenuViewModel(viewState, viewModelContext.app())
+        override fun create(viewModelContext: ViewModelContext, state: BrowseMenuViewState): BrowseMenuViewModel? {
+            return BrowseMenuViewModel(state, viewModelContext.app())
         }
     }
 }

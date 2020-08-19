@@ -15,7 +15,7 @@ class AccountDetailsHelper {
 
     companion object {
         @JvmStatic
-        fun itemsWith(context: Context, username: String, authType: String, authState: String, authConfig: String, serverUrl: String): List<Item> {
+        fun itemsWith(context: Context, authType: String, authState: String, authConfig: String, serverUrl: String): List<Item> {
             val type = AuthType.fromValue(authType)
             val result = ArrayList<Item>()
 

@@ -56,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             .setTitle(resources.getString(R.string.sign_out_confirmation_title))
             .setMessage(resources.getString(R.string.sign_out_confirmation_message))
             .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.sign_out_confirmation_positive)) { dialog, which ->
+            .setPositiveButton(resources.getString(R.string.sign_out_confirmation_positive)) { _, _ ->
                 logout()
             }
             .show()

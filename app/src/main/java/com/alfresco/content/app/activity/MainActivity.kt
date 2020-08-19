@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle(resources.getString(R.string.auth_signed_out_title))
             .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
             .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { dialog, which ->
+            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
                 navigateToReLogin()
             }
             .show()

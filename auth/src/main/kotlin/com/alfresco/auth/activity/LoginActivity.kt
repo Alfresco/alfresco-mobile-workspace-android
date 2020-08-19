@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
@@ -123,7 +124,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
         // Hacky way to set error state to match design
         updateAll<TextInputLayout> {
-            it.setBoxStrokeColorStateList(resources.getColorStateList(R.color.alfresco_textinput_stroke_error))
+            it.setBoxStrokeColorStateList(ContextCompat.getColorStateList(this, R.color.alfresco_textinput_stroke_error)!!)
         }
     }
 
@@ -131,7 +132,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         onError(resources.getString(messageResId))
     }
 
-    private fun showSettings(ignored: Int) {
+    private fun showSettings(@Suppress("UNUSED_PARAMETER") value: Int) {
         AdvancedSettingsFragment.with(this).display()
     }
 

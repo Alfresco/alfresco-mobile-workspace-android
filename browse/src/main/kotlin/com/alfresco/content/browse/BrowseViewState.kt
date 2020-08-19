@@ -54,10 +54,9 @@ data class BrowseViewState(
         var currentGroup = ModifiedGroup.None
         val groupedList = mutableListOf<Entry>()
         for (entry in newEntries) {
-            var targetGroup = ModifiedGroup.None
             val modified = entry.modified ?: startOfDay
 
-            targetGroup = when {
+            val targetGroup = when {
                 modified >= startOfDay -> ModifiedGroup.Today
                 modified >= startOfYesterday -> ModifiedGroup.Yesterday
                 modified >= firstOfWeek -> ModifiedGroup.ThisWeek

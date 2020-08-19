@@ -20,7 +20,7 @@ class BasicAuthFragment : DialogFragment() {
 
     private var withCloud: Boolean = false
 
-    private val rootView: View get() = view!!
+    private val rootView: View get() = requireView()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<ContainerAuthBasicBinding>(inflater, R.layout.container_auth_basic, container, false)

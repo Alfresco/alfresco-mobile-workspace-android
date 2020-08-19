@@ -9,6 +9,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyFilters
@@ -27,6 +28,7 @@ data class SearchResultsState(
     override val lastPage: Pagination = Pagination.empty(),
     override val request: Async<ResponsePaging> = Uninitialized,
 
+    val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null
 ) : ListViewState {
@@ -63,6 +65,8 @@ class SearchResultsViewModel(
     private var params = SearchParams("", state.contextId, emptyFilters(), 0)
 
     init {
+        setState { copy(filters = defaultFilters(state)) }
+
         viewModelScope.launch {
             merge(
                 liveSearchEvents.asFlow().debounce(DEFAULT_DEBOUNCE_TIME),
@@ -79,9 +83,28 @@ class SearchResultsViewModel(
         }
     }
 
+    private fun defaultFilters(state: SearchResultsState): SearchFilters {
+        return if (state.isContextual) {
+            SearchFilters.of(
+                SearchFilter.Contextual,
+                SearchFilter.Files,
+                SearchFilter.Folders
+            )
+        } else {
+            SearchFilters.of(
+                SearchFilter.Files,
+                SearchFilter.Folders
+            )
+        }
+    }
+
     fun setSearchQuery(query: String) {
         params = params.copy(terms = query, skipCount = 0)
         liveSearchEvents.sendBlocking(params)
+    }
+
+    fun getSearchQuery(): String {
+        return params.terms
     }
 
     fun setFilters(filters: SearchFilters) {

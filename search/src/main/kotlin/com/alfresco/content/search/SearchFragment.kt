@@ -79,7 +79,9 @@ class SearchFragment : BaseMvRxFragment() {
     }
 
     override fun invalidate() {
-        // TODO: rework code to update UI based on associated state
+        // No-op.
+        // State is read only once on screen setup.
+        // This does not include results which are updated in their fragment.
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,6 +90,11 @@ class SearchFragment : BaseMvRxFragment() {
         val searchItem: MenuItem = menu.findItem(R.id.search)
         searchView = searchItem.actionView as SearchView
         searchView.queryHint = resources.getString(R.string.search_hint)
+
+        // Initial State
+        searchItem.expandActionView()
+        searchView.setQuery(viewModel.getSearchQuery(), false)
+        updateFragmentVisibility(viewModel.getSearchQuery())
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -114,8 +121,6 @@ class SearchFragment : BaseMvRxFragment() {
                 return true
             }
         })
-
-        searchItem.expandActionView()
     }
 
     fun setSearchQuery(query: String) {
@@ -124,6 +129,10 @@ class SearchFragment : BaseMvRxFragment() {
         // This avoids extra network requests caused by modifying filters after input clear.
         resultsFragment.setSearchQuery(terms)
 
+        updateFragmentVisibility(terms)
+    }
+
+    private fun updateFragmentVisibility(terms: String) {
         if (terms.length >= SearchResultsViewModel.MIN_QUERY_LENGTH) {
             recents_fragment.visibility = View.GONE
             results_fragment.visibility = View.VISIBLE
@@ -147,21 +156,28 @@ class SearchFragment : BaseMvRxFragment() {
         filterFolders = requireView().findViewById(R.id.chip_folders)
         filterLibraries = requireView().findViewById(R.id.chip_libraries)
 
+        // Initial State
         withState(viewModel) { state ->
-            if (state.isContextual) {
-                filterContextual.text = getString(R.string.search_chip_contextual, state.contextTitle)
+            filterContextual.text = getString(R.string.search_chip_contextual, state.contextTitle)
 
-                // Initial State
+            if (state.filters.contains(SearchFilter.Contextual)) {
                 filterContextual.visibility = View.VISIBLE
                 filterLibraries.visibility = View.GONE
                 filterContextual.isChecked = true
             }
-        }
 
-        // Initial State
-        filterFiles.isChecked = true
-        filterFolders.isChecked = true
-        applyFilters()
+            if (state.filters.contains(SearchFilter.Files)) {
+                filterFiles.isChecked = true
+            }
+
+            if (state.filters.contains(SearchFilter.Folders)) {
+                filterFolders.isChecked = true
+            }
+
+            if (state.filters.contains(SearchFilter.Libraries)) {
+                filterLibraries.isChecked = true
+            }
+        }
 
         // Bind state change listeners
         filterContextual.setOnCheckedChangeListener { _, _ ->

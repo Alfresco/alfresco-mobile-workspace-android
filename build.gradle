@@ -40,6 +40,13 @@ subprojects {
                     targetCompatibility JavaVersion.VERSION_1_8
                 }
                 sourceSets['main'].java.srcDir('src/main/kotlin')
+
+                // Force kotlin-reflect version until Moshi is updated
+                configurations.all {
+                    resolutionStrategy {
+                        force Libs.Kotlin.reflect
+                    }
+                }
             }
         }
     }

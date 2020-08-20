@@ -62,10 +62,13 @@ class SearchViewModel(
 ) : ListViewModel<SearchResultsState>(state) {
     private val liveSearchEvents = ConflatedBroadcastChannel<SearchParams>()
     private val searchEvents = ConflatedBroadcastChannel<SearchParams>()
-    private var params = SearchParams("", state.contextId, emptyFilters(), 0)
+    private var params: SearchParams
 
     init {
         setState { copy(filters = defaultFilters(state)) }
+
+        // TODO: move search params to state object
+        params = SearchParams("", state.contextId, defaultFilters(state), 0)
 
         viewModelScope.launch {
             merge(

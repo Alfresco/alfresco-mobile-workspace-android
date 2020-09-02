@@ -1,12 +1,14 @@
 package com.alfresco.content.data
 
+import android.net.Uri
 import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import java.io.InputStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class BrowseRepository(session: Session = SessionManager.requireSession) {
+class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     private val service: NodesApi by lazy {
         session.createService(NodesApi::class.java)
@@ -56,5 +58,23 @@ class BrowseRepository(session: Session = SessionManager.requireSession) {
             null,
             null
         ))
+    }
+
+    public suspend fun fetchContent(documentId: String): String {
+        return service.getNodeContent(documentId, null, null, null).string()
+    }
+
+    public suspend fun fetchContentStream(documentId: String): InputStream {
+        return service.getNodeContent(documentId, null, null, null).byteStream()
+    }
+
+    fun contentUri(id: String): Uri {
+        val baseUrl = SessionManager.currentSession?.baseUrl
+        return Uri.parse("${baseUrl}alfresco/versions/1/nodes/$id/content?attachment=false&alf_ticket=${session.ticket}")
+    }
+
+    fun renditionUri(id: String): Uri {
+        val baseUrl = SessionManager.currentSession?.baseUrl
+        return Uri.parse("${baseUrl}alfresco/versions/1/nodes/$id/renditions/pdf/content?attachment=false&alf_ticket=${session.ticket}")
     }
 }

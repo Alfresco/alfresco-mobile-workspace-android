@@ -16,6 +16,7 @@ class Session(
     val context: Context,
     var account: Account
 ) {
+    var ticket: String? = null
 
     private var authInterceptor: AuthInterceptor
     private var loggingInterceptor: HttpLoggingInterceptor

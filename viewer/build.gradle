@@ -1,0 +1,32 @@
+import com.alfresco.buildsrc.Libs
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+
+    androidExtensions {
+        features = ["parcelize"]
+    }
+}
+
+dependencies {
+    implementation project(':theme')
+    implementation project(':common')
+    implementation project(':session')
+    implementation project(':data')
+
+    implementation Libs.Kotlin.stdlib
+    implementation Libs.AndroidX.appcompat
+    implementation Libs.AndroidX.Fragment.fragment
+    implementation Libs.AndroidX.Lifecycle.runtime
+
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+
+    implementation Libs.mvRx
+}

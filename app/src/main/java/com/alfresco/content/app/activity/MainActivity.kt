@@ -3,15 +3,18 @@ package com.alfresco.content.app.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +40,11 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
+        } else {
+            // TODO: Temporary
+            lifecycleScope.launch {
+                session.ticket = AuthenticationRepository().fetchTicket()
+            }
         }
 
         // Else update logged in state

@@ -6,6 +6,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     defaultConfig {
         applicationId "com.alfresco.content.app"
@@ -51,6 +54,20 @@ android {
     }
 }
 
+project.afterEvaluate {
+    def gservices_cfg = envOrDef('GOOGLE_SERVICES_FILE', 'none')
+    if (file("${gservices_cfg}").exists()) {
+        println "Copying ${gservices_cfg} into ${projectDir}/google-services.json"
+        copy {
+            from file("${gservices_cfg}")
+            into file("${projectDir}")
+            rename '(.*)', 'google-services.json'
+        }
+    } else {
+        println "Using dummy ${projectDir}/google-services.json"
+    }
+}
+
 dependencies {
     implementation project(':account')
     implementation project(':session')
@@ -77,6 +94,9 @@ dependencies {
     implementation Libs.mvRx
 
     implementation Libs.coil
+
+    releaseImplementation Libs.Google.Firebase.analytics
+    releaseImplementation Libs.Google.Firebase.crashlytics
 
     // Testing
     testImplementation Libs.junit

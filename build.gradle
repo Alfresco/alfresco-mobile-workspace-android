@@ -9,6 +9,9 @@ buildscript {
         classpath Libs.androidGradlePlugin
         classpath Libs.Kotlin.gradlePlugin
 
+        classpath Libs.Google.servicesPlugin
+        classpath Libs.Google.Firebase.crashlyticsPlugin
+
         classpath Libs.spotless
         classpath Libs.gradleVersions
     }

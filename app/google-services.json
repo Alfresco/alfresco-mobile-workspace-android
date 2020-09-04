@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "0000000",
+    "firebase_url": "https://alfresco-mobile-workspace.firebaseio.com",
+    "project_id": "alfresco-mobile-workspace",
+    "storage_bucket": "alfresco-mobile-workspace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "0000000",
+        "android_client_info": {
+          "package_name": "com.alfresco.content.app"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "0000000"
+        }
+      ]
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "0000000",
+        "android_client_info": {
+          "package_name": "com.alfresco.content.app.debug"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "0000000"
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}

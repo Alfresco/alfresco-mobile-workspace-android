@@ -81,6 +81,14 @@ object Libs {
 
     object Google {
         const val material = "com.google.android.material:material:1.2.0"
+
+        const val servicesPlugin = "com.google.gms:google-services:4.3.3"
+
+        object Firebase {
+            const val analytics = "com.google.firebase:firebase-analytics-ktx:17.5.0"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:17.2.1"
+            const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.2.1"
+        }
     }
 
     object OkHttp {

@@ -43,7 +43,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             // TODO: Temporary
             lifecycleScope.launch {
-                session.ticket = AuthenticationRepository().fetchTicket()
+                try {
+                    session.ticket = AuthenticationRepository().fetchTicket()
+                } catch (_: Exception) {
+                    
+                }
             }
         }
 

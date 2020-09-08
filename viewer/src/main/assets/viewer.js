@@ -22,15 +22,12 @@ if (!pdfjsLib.getDocument || !pdfjsViewer.PDFViewer) {
 var USE_ONLY_CSS_ZOOM = true;
 var TEXT_LAYER_MODE = 1; // ENABLED
 var MAX_IMAGE_SIZE = bridge.getMaxTextureSize() * bridge.getMaxTextureSize();
-var CMAP_URL = "../../node_modules/pdfjs-dist/cmaps/";
-var CMAP_PACKED = true;
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf.worker.js";
 
 var DEFAULT_URL = bridge.getAssetUrl()
 var DEFAULT_SCALE_DELTA = 1;
-var MIN_SCALE = 1.0;
-var MAX_SCALE = 10.0;
+var MAX_SCALE = 3.0;
 var DEFAULT_SCALE_VALUE = "auto";
 
 var PDFViewerApplication = {
@@ -41,6 +38,8 @@ var PDFViewerApplication = {
   pdfLinkService: null,
   eventBus: null,
   findController: null,
+  initialScale: 1.0,
+  maxScale: MAX_SCALE,
 
   /**
    * Opens PDF document specified by URL.
@@ -318,26 +317,6 @@ var PDFViewerApplication = {
     this.pdfViewer.currentPageNumber = val;
   },
 
-  zoomIn: function pdfViewZoomIn(ticks) {
-    var newScale = this.pdfViewer.currentScale;
-    do {
-      newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
-      newScale = Math.ceil(newScale * 10) / 10;
-      newScale = Math.min(MAX_SCALE, newScale);
-    } while (--ticks && newScale < MAX_SCALE);
-    this.pdfViewer.currentScaleValue = newScale;
-  },
-
-  zoomOut: function pdfViewZoomOut(ticks) {
-    var newScale = this.pdfViewer.currentScale;
-    do {
-      newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
-      newScale = Math.floor(newScale * 10) / 10;
-      newScale = Math.max(MIN_SCALE, newScale);
-    } while (--ticks && newScale > MIN_SCALE);
-    this.pdfViewer.currentScaleValue = newScale;
-  },
-
   initUI: function pdfViewInitUI() {
     var eventBus = new pdfjsViewer.EventBus();
     this.eventBus = eventBus;
@@ -376,6 +355,7 @@ var PDFViewerApplication = {
     eventBus.on("pagesinit", function () {
       // We can use pdfViewer now, e.g. let's change default scale.
       pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
+      PDFViewerApplication.initialScale = pdfViewer.currentScale;
 
 //      pdfViewer.findController.executeCommand("find", {
 //        caseSensitive: false,

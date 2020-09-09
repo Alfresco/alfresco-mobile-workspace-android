@@ -3,6 +3,8 @@ package com.alfresco.content.viewer
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,11 +17,14 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.session.SessionManager
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.io.IOException
 import java.io.InputStream
 import java.util.HashMap
@@ -52,7 +57,11 @@ class PdfViewerFragment(
             "application/pdf" -> BrowseRepository().contentUri(documentId).toString()
             else -> BrowseRepository().renditionUri(documentId).toString()
         }
-        val jsBridge = NativeBridge(EglExt.maxTextureSize, uri)
+        val jsBridge = NativeBridge(EglExt.maxTextureSize, uri) { reason ->
+            requireActivity().runOnUiThread {
+                showPasswordPrompt(reason)
+            }
+        }
 
         val settings = webView.settings
         settings.allowContentAccess = false
@@ -111,8 +120,14 @@ class PdfViewerFragment(
 
     class NativeBridge(
         @get:JavascriptInterface val maxTextureSize: Int,
-        @get:JavascriptInterface val assetUrl: String
-    )
+        @get:JavascriptInterface val assetUrl: String,
+        val onPasswordPrompt: (Int) -> Unit
+    ) {
+        @JavascriptInterface
+        fun showPasswordPrompt(reason: Int) {
+            onPasswordPrompt(reason)
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -153,6 +168,46 @@ class PdfViewerFragment(
                 return true
             }
         })
+    }
+
+    /**
+     * Displays the password prompt, with [reason] equals 1 if it's the first time.
+     */
+    private fun showPasswordPrompt(reason: Int) {
+        val context = requireContext()
+        val textInputLayout = TextInputLayout(context)
+        val padding = TypedValue()
+        context.theme.resolveAttribute(R.attr.dialogPreferredPadding, padding, true)
+        textInputLayout.setPadding(
+            padding.getDimension(resources.displayMetrics).toInt(),
+            0,
+            padding.getDimension(resources.displayMetrics).toInt(),
+            0
+        )
+        val input = TextInputEditText(context)
+        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        textInputLayout.hint = "Password"
+        textInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
+        textInputLayout.addView(input)
+
+        val title = if (reason == 1) getString(R.string.password_prompt_title) else getString(R.string.password_prompt_fail_title)
+        val message = if (reason == 1) getString(R.string.password_prompt_message) else getString(R.string.password_prompt_fail_message)
+        val alert = AlertDialog.Builder(context)
+            .setTitle(title)
+            .setView(textInputLayout)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.password_prompt_positive)) { dialog, _ ->
+                webView.evaluateJavascript(
+                    "PDFViewerApplication.onPassword(\"${input.text}\")",
+                    null
+                )
+                dialog.cancel()
+            }
+            .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
+                dialog.cancel()
+            }.create()
+
+        alert.show()
     }
 
     companion object {

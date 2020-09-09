@@ -40,6 +40,7 @@ var PDFViewerApplication = {
   findController: null,
   initialScale: 1.0,
   maxScale: MAX_SCALE,
+  onPassword: null,
 
   /**
    * Opens PDF document specified by URL.
@@ -70,6 +71,11 @@ var PDFViewerApplication = {
 
     loadingTask.onProgress = function (progressData) {
       self.progress(progressData.loaded / progressData.total);
+    };
+
+    loadingTask.onPassword = function (callback, reason) {
+      self.onPassword = callback;
+      bridge.showPasswordPrompt(reason);
     };
 
     return loadingTask.promise.then(

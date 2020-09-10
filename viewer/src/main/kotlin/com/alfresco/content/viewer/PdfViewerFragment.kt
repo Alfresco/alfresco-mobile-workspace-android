@@ -201,10 +201,12 @@ class PdfViewerFragment(
                     "PDFViewerApplication.onPassword(\"${input.text}\")",
                     null
                 )
-                dialog.cancel()
             }
             .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
                 dialog.cancel()
+            }
+            .setOnCancelListener { dialog ->
+                requireActivity().onBackPressed()
             }.create()
 
         alert.show()

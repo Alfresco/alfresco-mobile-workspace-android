@@ -3,6 +3,8 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search</string>
 
+    <string name="error_preview_not_available">Preview Not Available</string>
+
     <string name="password_prompt_title">File Locked</string>
     <string name="password_prompt_message">Please enter the password to unlock the file.</string>
     <string name="password_prompt_fail_title">Incorrect Password</string>

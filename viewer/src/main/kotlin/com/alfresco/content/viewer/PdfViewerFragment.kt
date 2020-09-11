@@ -20,7 +20,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.textfield.TextInputEditText
@@ -30,8 +29,7 @@ import java.io.InputStream
 import java.util.HashMap
 
 class PdfViewerFragment(
-    private val documentId: String,
-    private val mimeType: String
+    private val uri: String
 ) : Fragment() {
 
     private lateinit var webView: WebView
@@ -53,10 +51,6 @@ class PdfViewerFragment(
         webView = view.findViewById(R.id.webview)
         WebView.setWebContentsDebuggingEnabled(true)
 
-        val uri: String = when (mimeType) {
-            "application/pdf" -> BrowseRepository().contentUri(documentId).toString()
-            else -> BrowseRepository().renditionUri(documentId).toString()
-        }
         val jsBridge = NativeBridge(EglExt.maxTextureSize, uri) { reason ->
             requireActivity().runOnUiThread {
                 showPasswordPrompt(reason)

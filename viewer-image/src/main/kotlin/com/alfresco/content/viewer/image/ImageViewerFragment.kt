@@ -1,23 +1,23 @@
-package com.alfresco.content.viewer
+package com.alfresco.content.viewer.image
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.alfresco.content.data.BrowseRepository
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.io.File
 
 class ImageViewerFragment(
     private val documentId: String,
-    private val mimeType: String
+    private val uri: String
 ) : Fragment(R.layout.viewer_image) {
 
     private lateinit var downloadMonitor: DownloadStateReceiver
@@ -27,6 +27,7 @@ class ImageViewerFragment(
 
         val progressIndicator = view.findViewById<ProgressBar>(R.id.progress_indicator)
         val imageView = view.findViewById<SubsamplingScaleImageView>(R.id.imageView)
+        imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
 
         val path = requireContext().getExternalFilesDir(null)?.path + "/" + documentId
         val renderImage = {
@@ -41,7 +42,7 @@ class ImageViewerFragment(
         }
 
         val dm = ContextCompat.getSystemService(requireContext(), DownloadManager::class.java)
-        val request = DownloadManager.Request(BrowseRepository().contentUri(documentId))
+        val request = DownloadManager.Request(Uri.parse(uri))
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         request.setTitle(documentId)
         request.setDescription("")
@@ -58,7 +59,7 @@ class ImageViewerFragment(
     class DownloadStateReceiver(
         private val downloadId: Long,
         private val onComplete: () -> Unit
-    ): BroadcastReceiver() {
+    ) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val referenceId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (referenceId == downloadId) {

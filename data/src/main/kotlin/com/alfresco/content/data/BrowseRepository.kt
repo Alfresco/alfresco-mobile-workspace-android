@@ -1,6 +1,5 @@
 package com.alfresco.content.data
 
-import android.net.Uri
 import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -68,13 +67,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         return service.getNodeContent(documentId, null, null, null).byteStream()
     }
 
-    fun contentUri(id: String): Uri {
+    fun contentUri(id: String): String {
         val baseUrl = SessionManager.currentSession?.baseUrl
-        return Uri.parse("${baseUrl}alfresco/versions/1/nodes/$id/content?attachment=false&alf_ticket=${session.ticket}")
-    }
-
-    fun renditionUri(id: String): Uri {
-        val baseUrl = SessionManager.currentSession?.baseUrl
-        return Uri.parse("${baseUrl}alfresco/versions/1/nodes/$id/renditions/pdf/content?attachment=false&alf_ticket=${session.ticket}")
+        return "${baseUrl}alfresco/versions/1/nodes/$id/content?attachment=false&alf_ticket=${session.ticket}"
     }
 }

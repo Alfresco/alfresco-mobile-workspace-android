@@ -2,6 +2,5 @@
 <androidx.fragment.app.FragmentContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragmentContainerView"
-    android:name="com.alfresco.content.viewer.PdfViewerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

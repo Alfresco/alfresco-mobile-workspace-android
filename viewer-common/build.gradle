@@ -11,11 +11,7 @@ android {
 }
 
 dependencies {
-    implementation project(':viewer-common')
-
     implementation Libs.Kotlin.stdlib
-    implementation Libs.AndroidX.Lifecycle.runtime
-    implementation Libs.AndroidX.appcompat
-
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    implementation Libs.Coroutines.core
+    implementation Libs.OkHttp.okhttp
 }

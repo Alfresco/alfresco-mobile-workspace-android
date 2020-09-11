@@ -8,6 +8,8 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.viewer.image.ImageViewerFragment
+import com.alfresco.content.viewer.pdf.PdfViewerFragment
+import com.alfresco.content.viewer.text.TextViewerFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.parcel.Parcelize
 

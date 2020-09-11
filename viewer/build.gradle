@@ -20,10 +20,11 @@ dependencies {
     implementation project(':common')
     implementation project(':session')
     implementation project(':data')
+    implementation project(':viewer-pdf')
     implementation project(':viewer-image')
+    implementation project(':viewer-text')
 
     implementation Libs.Kotlin.stdlib
-    implementation Libs.AndroidX.appcompat
     implementation Libs.AndroidX.Fragment.fragment
     implementation Libs.AndroidX.Lifecycle.runtime
     implementation Libs.AndroidX.Lifecycle.viewmodelKtx

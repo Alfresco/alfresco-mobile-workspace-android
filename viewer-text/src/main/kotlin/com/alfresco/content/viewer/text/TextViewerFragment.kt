@@ -1,4 +1,4 @@
-package com.alfresco.content.viewer
+package com.alfresco.content.viewer.text
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod

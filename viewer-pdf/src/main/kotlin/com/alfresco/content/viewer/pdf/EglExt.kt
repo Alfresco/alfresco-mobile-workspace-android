@@ -1,4 +1,4 @@
-package com.alfresco.content.viewer
+package com.alfresco.content.viewer.pdf
 
 import android.opengl.EGL14
 import android.opengl.EGLConfig

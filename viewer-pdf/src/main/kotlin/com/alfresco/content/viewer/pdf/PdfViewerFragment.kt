@@ -1,4 +1,4 @@
-package com.alfresco.content.viewer
+package com.alfresco.content.viewer.pdf
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
@@ -18,9 +15,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import com.alfresco.content.hideSoftInput
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -40,7 +35,6 @@ class PdfViewerFragment(
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.viewer_pdf, container, false)
-        setHasOptionsMenu(true)
         return view
     }
 
@@ -133,35 +127,6 @@ class PdfViewerFragment(
         val sessionUri = Uri.parse(SessionManager.requireSession.baseUrl)
         val baseUrl = "${sessionUri.scheme}://${sessionUri.authority}"
         webView.loadUrl("$baseUrl/$LOCAL_PATH_PREFIX/viewer.html")
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_viewer_search, menu)
-
-        val searchItem: MenuItem = menu.findItem(R.id.search)
-        val searchView = searchItem.actionView as SearchView
-        searchView.queryHint = resources.getString(R.string.search_hint)
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                hideSoftInput()
-                return true
-            }
-        })
-
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return true
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                return true
-            }
-        })
     }
 
     /**

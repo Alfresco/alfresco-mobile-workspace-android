@@ -3,8 +3,6 @@ package com.alfresco.content.viewer.pdf
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.text.InputType
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +12,10 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.alfresco.content.session.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import java.io.IOException
 import java.io.InputStream
 import java.util.HashMap
@@ -134,26 +131,15 @@ class PdfViewerFragment(
      */
     private fun showPasswordPrompt(reason: Int) {
         val context = requireContext()
-        val textInputLayout = TextInputLayout(context)
-        val padding = TypedValue()
-        context.theme.resolveAttribute(R.attr.dialogPreferredPadding, padding, true)
-        textInputLayout.setPadding(
-            padding.getDimension(resources.displayMetrics).toInt(),
-            0,
-            padding.getDimension(resources.displayMetrics).toInt(),
-            0
-        )
-        val input = TextInputEditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-        textInputLayout.hint = "Password"
-        textInputLayout.endIconMode = TextInputLayout.END_ICON_PASSWORD_TOGGLE
-        textInputLayout.addView(input)
+
+        val view = layoutInflater.inflate(R.layout.view_alert_password, null)
+        val input = view.findViewById<TextInputEditText>(R.id.password_input)
 
         val title = if (reason == 1) getString(R.string.password_prompt_title) else getString(R.string.password_prompt_fail_title)
         val message = if (reason == 1) getString(R.string.password_prompt_message) else getString(R.string.password_prompt_fail_message)
-        val alert = AlertDialog.Builder(context)
+        val alert = MaterialAlertDialogBuilder(context)
             .setTitle(title)
-            .setView(textInputLayout)
+            .setView(view)
             .setMessage(message)
             .setPositiveButton(getString(R.string.password_prompt_positive)) { dialog, _ ->
                 webView.evaluateJavascript(

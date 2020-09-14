@@ -3,17 +3,16 @@ package com.alfresco.content.app
 import androidx.preference.Preference
 import coil.Coil
 import coil.ImageLoader
-import coil.request.LoadRequest
-import coil.request.LoadRequestBuilder
-import coil.request.RequestDisposable
+import coil.request.Disposable
+import coil.request.ImageRequest
 
 @JvmSynthetic
 inline fun Preference.loadAny(
     data: Any?,
     imageLoader: ImageLoader = Coil.imageLoader(context),
-    builder: LoadRequestBuilder.() -> Unit = {}
-): RequestDisposable {
-    val request = LoadRequest.Builder(context)
+    builder: ImageRequest.Builder.() -> Unit = {}
+): Disposable {
+    val request = ImageRequest.Builder(context)
         .data(data)
         .target(
             onStart = { placeholder ->
@@ -28,5 +27,5 @@ inline fun Preference.loadAny(
         )
         .apply(builder)
         .build()
-    return imageLoader.execute(request)
+    return imageLoader.enqueue(request)
 }

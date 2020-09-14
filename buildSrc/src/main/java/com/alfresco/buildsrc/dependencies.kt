@@ -105,5 +105,5 @@ object Libs {
         const val processor = "com.airbnb.android:epoxy-processor:$version"
     }
 
-    const val coil = "io.coil-kt:coil:0.11.0"
+    const val coil = "io.coil-kt:coil:0.13.0"
 }

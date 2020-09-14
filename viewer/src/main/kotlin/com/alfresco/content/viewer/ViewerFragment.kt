@@ -52,6 +52,7 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
         if (state.ready) {
             fragmentFactory.id = state.id
             fragmentFactory.uri = state.viewerUri ?: ""
+            fragmentFactory.mimeType = state.mimeType ?: ""
 
             if (state.viewerType != null) {
                 val fragment = viewerFragment(state.viewerType)
@@ -82,12 +83,13 @@ class ViewerFragmentFactory() : FragmentFactory() {
 
     var id: String = ""
     var uri: String = ""
+    var mimeType: String = ""
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
             PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
             TextViewerFragment::class.java.name -> TextViewerFragment("documentId", "mimeType")
-            ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri)
+            ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri, mimeType)
             else -> super.instantiate(classLoader, className)
         }
     }

@@ -60,7 +60,7 @@ class ViewerViewModel(
         when {
             mimeType == "application/pdf" ->
                 return Pair(ViewerType.Pdf, BrowseRepository().contentUri(id))
-            mimeType == "image/jpeg" || mimeType == "image/png" ->
+            mimeType == "image/jpeg" || mimeType == "image/png" || mimeType == "image/gif" || mimeType == "image/svg xml" ->
                 return Pair(ViewerType.Image, BrowseRepository().contentUri(id))
             mimeType?.startsWith("text/") == true ->
                 return Pair(ViewerType.Text, BrowseRepository().contentUri(id))

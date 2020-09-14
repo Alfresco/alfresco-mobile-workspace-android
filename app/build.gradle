@@ -93,7 +93,7 @@ dependencies {
 
     implementation Libs.mvRx
 
-    implementation Libs.coil
+    implementation Libs.Coil.core
 
     releaseImplementation Libs.Google.Firebase.analytics
     releaseImplementation Libs.Google.Firebase.crashlytics

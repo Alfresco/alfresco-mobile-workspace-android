@@ -164,33 +164,46 @@ canvas {
   display: block;
 }
 
-.pdfViewer .page .loadingIcon {
-  width: 2.9rem;
-  height: 2.9rem;
-  background: url("images/spinner.png") no-repeat left top / 38rem ;
-  border: medium none;
-  animation: 1s steps(10, end) 0s normal none infinite moveDefault;
-  display: block;
-  position: absolute;
-  top: calc((100% - 2.9rem) / 2);
-  left: calc((100% - 2.9rem) / 2);
+.pdfViewer .page .loadingIcon,
+.pdfViewer .page .loadingIcon:before {
+  height: .2rem;
+  width: 100%;
+  margin: 0;
 }
 
-@keyframes moveDefault {
-  from {
-    background-position: 0 top;
-  }
+.pdfViewer .page .loadingIcon {
+  background-color: #F5F5F5;
+  display: -webkit-flex;
+  display: flex;
+}
 
-  to {
-    background-position: -39rem top;
-  }
+.pdfViewer .page .loadingIcon:before {
+  background-color: #2A7DE1;
+  content: '';
+  -webkit-animation: running-progress 2s linear infinite;
+  animation: running-progress 2s linear infinite;
+}
+
+@-webkit-keyframes running-progress {
+  0% { margin-left: 0px; margin-right: 100%; }
+  25% { margin-left: 0px; margin-right: 50%; }
+  50% { margin-left: 25%; margin-right: 25%; }
+  75% { margin-left: 50%; margin-right: 0%; }
+  100% { margin-left: 100%; margin-right: 0; }
+}
+
+@keyframes running-progress {
+  0% { margin-left: 0px; margin-right: 100%; }
+  25% { margin-left: 0px; margin-right: 50%; }
+  50% { margin-left: 25%; margin-right: 25%; }
+  75% { margin-left: 50%; margin-right: 0%; }
+  100% { margin-left: 100%; margin-right: 0; }
 }
 
 #loadingBar {
   position: relative;
-  height: .6rem;
-  background-color: rgba(51, 51, 51, 1);
-  border-bottom: 1px solid rgba(51, 51, 51, 1);
+  height: .4rem;
+  background-color: #F5F5F5;
   margin-top: 0rem;
 }
 
@@ -199,7 +212,7 @@ canvas {
   left: 0;
   width: 0;
   height: 100%;
-  background-color: rgba(221, 221, 221, 1);
+  background-color: #2A7DE1;
   overflow: hidden;
   transition: width 200ms;
 }

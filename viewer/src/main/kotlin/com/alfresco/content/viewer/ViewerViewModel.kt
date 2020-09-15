@@ -60,12 +60,16 @@ class ViewerViewModel(
         when {
             mimeType == "application/pdf" ->
                 return Pair(ViewerType.Pdf, BrowseRepository().contentUri(id))
-            mimeType == "image/jpeg" || mimeType == "image/png" || mimeType == "image/gif" || mimeType == "image/svg xml" ->
+            imageFormats.contains(mimeType) ->
                 return Pair(ViewerType.Image, BrowseRepository().contentUri(id))
             mimeType?.startsWith("text/") == true ->
                 return Pair(ViewerType.Text, BrowseRepository().contentUri(id))
         }
 
         return null
+    }
+
+    companion object {
+        val imageFormats = setOf("image/bmp", "image/jpeg", "image/gif", "image/webp", "image/gif", "image/svg xml")
     }
 }

@@ -37,8 +37,7 @@ class ImageViewerFragment(
         progressIndicator = view.findViewById<ProgressBar>(R.id.progress_indicator)
         val container = view.findViewById<FrameLayout>(R.id.container)
 
-        if (mimeType == "image/jpeg" ||
-            mimeType == "image/png") {
+        if (largeScaleFormats.contains(mimeType)) {
             setupLargeScalePreview(container).loadImage(uri)
         } else {
             setupCompatPreview(container).loadImage(uri)
@@ -126,5 +125,9 @@ class ImageViewerFragment(
             })
             .build()
         imageLoader.enqueue(request)
+    }
+
+    companion object {
+        private val largeScaleFormats = setOf("image/jpeg", "image/png")
     }
 }

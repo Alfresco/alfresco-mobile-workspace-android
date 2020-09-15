@@ -164,6 +164,8 @@ enum class MimeType(val icon: Int) {
                 "image/png" to IMAGE,
                 "image/svg+xml" to IMAGE,
                 "image/tiff" to IMAGE,
+                "image/tif" to IMAGE,
+                "image/webp" to IMAGE,
                 "image/vnd.adobe.photoshop" to IMAGE,
                 "image/vnd.adobe.premiere" to VIDEO,
                 "image/vnd.dwg" to OTHER,

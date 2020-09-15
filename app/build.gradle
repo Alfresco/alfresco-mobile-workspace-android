@@ -95,8 +95,8 @@ dependencies {
 
     implementation Libs.Coil.core
 
-    releaseImplementation Libs.Google.Firebase.analytics
-    releaseImplementation Libs.Google.Firebase.crashlytics
+    playStoreImplementation Libs.Google.Firebase.analytics
+    playStoreImplementation Libs.Google.Firebase.crashlytics
 
     // Testing
     testImplementation Libs.junit

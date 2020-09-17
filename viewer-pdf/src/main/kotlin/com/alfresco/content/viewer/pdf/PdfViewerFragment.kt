@@ -40,7 +40,9 @@ class PdfViewerFragment(
         super.onViewCreated(view, savedInstanceState)
 
         webView = view.findViewById(R.id.webview)
-        WebView.setWebContentsDebuggingEnabled(true)
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
 
         val jsBridge = NativeBridge(EglExt.maxTextureSize, uri) { reason ->
             requireActivity().runOnUiThread {

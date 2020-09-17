@@ -243,6 +243,23 @@ canvas {
   animation: progressIndeterminate 2s linear infinite;
 }
 
+#pageIndicator {
+  position: absolute;
+  left: 1.4rem;
+  bottom: 6rem;
+  border-radius: 0.3rem;
+  padding: 0.6rem;
+  color: #ffffff;
+  background-color: #212328;
+  opacity: 0;
+  transition:opacity 1s ease-out;
+}
+
+#pageIndicator.fadeIn {
+  opacity: 1;
+  transition:opacity .3s ease-in;
+}
+
 #errorWrapper {
   background: none repeat scroll 0 0 rgba(255, 85, 85, 1);
   color: rgba(255, 255, 255, 1);

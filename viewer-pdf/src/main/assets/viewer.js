@@ -371,6 +371,24 @@ var PDFViewerApplication = {
 //        query: "earth"
 //      });
     });
+
+    var self = this;
+    var pageIndicator = document.getElementById("pageIndicator");
+    var padeIndicatorTimeout;
+    eventBus.on("pagechanging", function (evt) {
+      const page = evt.pageNumber;
+      const total = self.pdfDocument.numPages;
+      pageIndicator.textContent = `${page} of ${total}`;
+
+      if (!pageIndicator.classList.contains('fadeIn')) {
+        pageIndicator.classList.add('fadeIn');
+      }
+
+      clearTimeout(padeIndicatorTimeout);
+      padeIndicatorTimeout = setTimeout(function() {
+        pageIndicator.classList.remove('fadeIn');
+      }, 2000);
+    });
   },
 };
 

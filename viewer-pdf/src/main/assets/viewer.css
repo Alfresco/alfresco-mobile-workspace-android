@@ -43,8 +43,7 @@ header h1 {
 }
 
 body {
-  _background: url(images/document_bg.png);
-  background-color: #EFEFEB
+  background: #f5f5f5;
   color: rgba(255, 255, 255, 1);
   font-family: sans-serif;
   font-size: 10px;
@@ -172,13 +171,13 @@ canvas {
 }
 
 .pdfViewer .page .loadingIcon {
-  background-color: #F5F5F5;
+  background: #F5F5F5;
   display: -webkit-flex;
   display: flex;
 }
 
 .pdfViewer .page .loadingIcon:before {
-  background-color: #2A7DE1;
+  background: #2A7DE1;
   content: '';
   -webkit-animation: running-progress 2s linear infinite;
   animation: running-progress 2s linear infinite;

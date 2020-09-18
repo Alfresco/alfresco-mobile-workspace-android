@@ -1,6 +1,7 @@
 package com.alfresco.content.viewer.pdf
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -61,6 +62,15 @@ class PdfViewerFragment(
         webView.addJavascriptInterface(jsBridge, "bridge")
 
         webView.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                // Open URIs in external browser
+                startActivity(Intent(Intent.ACTION_VIEW, request?.url))
+                return true
+            }
 
             override fun shouldInterceptRequest(
                 view: WebView?,

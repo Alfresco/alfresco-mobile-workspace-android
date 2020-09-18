@@ -8,6 +8,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.viewer.image.ImageViewerFragment
+import com.alfresco.content.viewer.media.MediaViewerFragment
 import com.alfresco.content.viewer.pdf.PdfViewerFragment
 import com.alfresco.content.viewer.text.TextViewerFragment
 import com.google.android.material.snackbar.Snackbar
@@ -71,6 +72,7 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
             ViewerType.Pdf -> childFragmentManager.fragmentFactory.instantiate(classLoader, PdfViewerFragment::class.java.name)
             ViewerType.Image -> childFragmentManager.fragmentFactory.instantiate(classLoader, ImageViewerFragment::class.java.name)
             ViewerType.Text -> childFragmentManager.fragmentFactory.instantiate(classLoader, TextViewerFragment::class.java.name)
+            ViewerType.Media -> childFragmentManager.fragmentFactory.instantiate(classLoader, MediaViewerFragment::class.java.name)
         }
     }
 
@@ -90,6 +92,7 @@ class ViewerFragmentFactory() : FragmentFactory() {
             PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
             TextViewerFragment::class.java.name -> TextViewerFragment(uri)
             ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri, mimeType)
+            MediaViewerFragment::class.java.name -> MediaViewerFragment(uri)
             else -> super.instantiate(classLoader, className)
         }
     }

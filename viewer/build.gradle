@@ -23,6 +23,7 @@ dependencies {
     implementation project(':viewer-pdf')
     implementation project(':viewer-image')
     implementation project(':viewer-text')
+    implementation project(':viewer-media')
 
     implementation Libs.Kotlin.stdlib
     implementation Libs.AndroidX.Fragment.fragment

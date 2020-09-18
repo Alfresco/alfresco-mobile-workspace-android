@@ -1,0 +1,19 @@
+import com.alfresco.buildsrc.Libs
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation Libs.AndroidX.appcompat
+    implementation Libs.Google.material
+
+    implementation Libs.ExoPlayer.core
+    implementation Libs.ExoPlayer.ui
+}

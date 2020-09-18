@@ -10,7 +10,8 @@ import kotlinx.coroutines.launch
 enum class ViewerType {
     Pdf,
     Image,
-    Text
+    Text,
+    Media
 }
 
 data class ViewerState(
@@ -64,6 +65,8 @@ class ViewerViewModel(
                 return Pair(ViewerType.Image, BrowseRepository().contentUri(id))
             mimeType?.startsWith("text/") == true ->
                 return Pair(ViewerType.Text, BrowseRepository().contentUri(id))
+            mimeType?.startsWith("audio/") == true || mimeType?.startsWith("video/") == true ->
+                return Pair(ViewerType.Media, BrowseRepository().contentUri(id))
         }
 
         return null

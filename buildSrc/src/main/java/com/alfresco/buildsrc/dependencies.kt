@@ -111,4 +111,10 @@ object Libs {
         const val gifExt = "io.coil-kt:coil-gif:$version"
         const val svgExt = "io.coil-kt:coil-svg:$version"
     }
+
+    object ExoPlayer {
+        private const val version = "2.12.0"
+        const val core = "com.google.android.exoplayer:exoplayer-core:$version"
+        const val ui = "com.google.android.exoplayer:exoplayer-ui:$version"
+    }
 }

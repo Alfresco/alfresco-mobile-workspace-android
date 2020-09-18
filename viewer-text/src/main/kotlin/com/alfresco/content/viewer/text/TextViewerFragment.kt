@@ -6,23 +6,29 @@ import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.alfresco.content.data.BrowseRepository
+import com.alfresco.content.viewer.common.ContentDownloader
+import java.io.File
 import kotlinx.coroutines.launch
 
 class TextViewerFragment(
-    private val documentId: String,
-    private val mimeType: String
+    private val uri: String
 ) : Fragment(R.layout.viewer_text) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Stream data and improve performance
         val textView = view.findViewById<TextView>(R.id.textView)
         textView.movementMethod = ScrollingMovementMethod()
+        val output = File(requireContext().cacheDir, "content.tmp")
+
         lifecycleScope.launch {
-            val content = BrowseRepository().fetchContent(documentId)
-            textView.text = content
+            ContentDownloader.downloadFileTo(uri, output.path)
+
+            // progressIndicator.visibility = View.GONE
+            textView.text = readFile(output.path)
         }
     }
+
+    private fun readFile(fileName: String) =
+        File(fileName).inputStream().readBytes().toString(Charsets.UTF_8)
 }

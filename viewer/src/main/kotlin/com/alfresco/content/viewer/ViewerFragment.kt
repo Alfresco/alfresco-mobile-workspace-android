@@ -88,7 +88,7 @@ class ViewerFragmentFactory() : FragmentFactory() {
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
             PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
-            TextViewerFragment::class.java.name -> TextViewerFragment("documentId", "mimeType")
+            TextViewerFragment::class.java.name -> TextViewerFragment(uri)
             ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri, mimeType)
             else -> super.instantiate(classLoader, className)
         }

@@ -158,6 +158,12 @@ footer {
   right: 0;
 }
 
+#viewerContainer.singlePage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 canvas {
   margin: auto;
   display: block;

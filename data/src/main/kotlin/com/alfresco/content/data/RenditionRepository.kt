@@ -16,15 +16,22 @@ class RenditionRepository(val session: Session = SessionManager.requireSession) 
 
     suspend fun fetchRenditionUri(id: String): String? {
         val list = service.listRenditions(id, null).list?.entries ?: emptyList()
-        var result = checkAndCreateRendition(list, id, "pdf")
-        if (result == null) {
-            result = checkAndCreateRendition(list, id, "imgpreview")
-        }
-        return result
+        val rendition = preferredRendition(list)
+        return checkAndCreateRendition(rendition, id)
     }
 
-    private suspend fun checkAndCreateRendition(list: List<RenditionEntry>, id: String, renditionId: String): String? {
-        val rendition = list.find { it.entry.id == renditionId }
+    private fun preferredRendition(list: List<RenditionEntry>): RenditionEntry? {
+        for (type in priorityList) {
+            val rendition = list.find { it.entry.id == type }
+            if (rendition != null) {
+                return rendition
+            }
+        }
+        return null
+    }
+
+    private suspend fun checkAndCreateRendition(rendition: RenditionEntry?, id: String): String? {
+        val renditionId = rendition?.entry?.id ?: ""
         if (rendition != null) {
             if (rendition.entry.status == Rendition.StatusEnum.CREATED) {
                 return renditionUri(id, renditionId)
@@ -50,7 +57,8 @@ class RenditionRepository(val session: Session = SessionManager.requireSession) 
     }
 
     companion object {
-        const val MAX_TRIES = 10
-        const val RETRY_DELAY = 5000L
+        private const val MAX_TRIES = 10
+        private const val RETRY_DELAY = 5000L
+        private val priorityList = listOf("pdf", "imgpreview")
     }
 }

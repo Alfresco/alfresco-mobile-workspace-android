@@ -72,6 +72,7 @@ dependencies {
     implementation project(':account')
     implementation project(':session')
     implementation project(':auth')
+    implementation project(':common')
     implementation project(':listview')
     implementation project(':browse')
     implementation project(':search')
@@ -88,6 +89,8 @@ dependencies {
 
     implementation Libs.AndroidX.Navigation.fragment
     implementation Libs.AndroidX.Navigation.ui
+
+    implementation Libs.AndroidX.Lifecycle.process
 
     implementation Libs.Google.material
 

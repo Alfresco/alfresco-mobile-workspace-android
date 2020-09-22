@@ -51,6 +51,7 @@ object Libs {
             private const val version = "2.2.0"
             const val viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
+            const val process = "androidx.lifecycle:lifecycle-process:$version"
         }
 
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0"

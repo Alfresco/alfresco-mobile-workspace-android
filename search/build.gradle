@@ -26,8 +26,11 @@ dependencies {
     implementation Libs.Alfresco.content
 
     implementation Libs.Coroutines.core
+    implementation Libs.AndroidX.appcompat
     implementation Libs.AndroidX.Lifecycle.viewmodelKtx
     implementation Libs.AndroidX.Navigation.fragment
+
+    implementation Libs.Google.material
 
     implementation Libs.mvRx
 

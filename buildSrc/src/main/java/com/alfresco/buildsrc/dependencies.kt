@@ -7,9 +7,9 @@ object Libs {
 
     const val junit = "junit:junit:4.13"
 
-    const val spotless = "com.diffplug.spotless:spotless-plugin-gradle:5.1.1"
+    const val spotless = "com.diffplug.spotless:spotless-plugin-gradle:5.6.1"
 
-    const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.29.0"
+    const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.33.0"
 
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.4"
 
@@ -19,7 +19,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.4.0"
+        private const val version = "1.4.10"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
@@ -58,11 +58,11 @@ object Libs {
 
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0"
 
-        const val constraintlayout = "androidx.constraintlayout:constraintlayout:1.1.3"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
 
-        const val coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+        const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
-        const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+        const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
         const val preference = "androidx.preference:preference:1.1.1"
 
@@ -73,29 +73,29 @@ object Libs {
         }
 
         object Test {
-            private const val version = "1.2.0"
+            private const val version = "1.3.0"
             const val core = "androidx.test:core:$version"
             const val runner = "androidx.test:runner:$version"
             const val rules = "androidx.test:rules:$version"
 
-            const val espressoCore = "androidx.test.espresso:espresso-core:3.2.0"
+            const val espressoCore = "androidx.test.espresso:espresso-core:3.3.0"
         }
     }
 
     object Google {
-        const val material = "com.google.android.material:material:1.2.0"
+        const val material = "com.google.android.material:material:1.2.1"
 
         const val servicesPlugin = "com.google.gms:google-services:4.3.3"
 
         object Firebase {
             const val analytics = "com.google.firebase:firebase-analytics-ktx:17.5.0"
             const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:17.2.1"
-            const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.2.1"
+            const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.3.0"
         }
     }
 
     object OkHttp {
-        private const val version = "4.8.1"
+        private const val version = "4.9.0"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
@@ -103,7 +103,7 @@ object Libs {
     const val mvRx = "com.airbnb.android:mvrx:1.5.1"
 
     object Epoxy {
-        private const val version = "3.11.0"
+        private const val version = "4.1.0"
         const val epoxy = "com.airbnb.android:epoxy:$version"
         const val processor = "com.airbnb.android:epoxy-processor:$version"
     }

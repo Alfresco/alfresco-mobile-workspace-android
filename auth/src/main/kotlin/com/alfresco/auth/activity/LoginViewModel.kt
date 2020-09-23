@@ -85,10 +85,15 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         _hasNavigation.value = enableNavigation
     }
 
-    override fun onAuthType(authType: AuthType) {
+    override suspend fun onAuthType(authType: AuthType) {
         when (authType) {
             AuthType.PKCE -> {
-                moveToStep(Step.InputAppServer)
+                if (discoveryService.isContentServicesInstalled(identityUrl.value ?: "")) {
+                    applicationUrl.value = identityUrl.value
+                    moveToStep(Step.EnterPkceCredentials)
+                } else {
+                    moveToStep(Step.InputAppServer)
+                }
             }
 
             AuthType.BASIC -> {

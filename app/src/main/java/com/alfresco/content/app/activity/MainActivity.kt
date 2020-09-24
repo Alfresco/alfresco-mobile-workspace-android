@@ -1,6 +1,7 @@
 package com.alfresco.content.app.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -35,6 +36,10 @@ class MainActivity : BaseMvRxActivity() {
         actionBarController.setupActionBar(this, navController, appBarConfiguration)
 
         bottomNav.setupWithNavController(navController)
+
+        if (!resources.getBoolean(R.bool.isTablet)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

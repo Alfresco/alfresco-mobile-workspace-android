@@ -199,7 +199,7 @@ class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
     }
 
     private fun clearStartPosition() {
-        startAutoPlay = true
+        startAutoPlay = false
         startWindow = C.INDEX_UNSET
         startPosition = C.TIME_UNSET
     }

@@ -2,11 +2,14 @@ package com.alfresco.content.viewer
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
+import com.alfresco.content.viewer.common.ViewerTypeArgs
 import com.alfresco.content.viewer.image.ImageViewerFragment
 import com.alfresco.content.viewer.media.MediaViewerFragment
 import com.alfresco.content.viewer.pdf.PdfViewerFragment
@@ -51,29 +54,31 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
 
     override fun invalidate() = withState(viewModel) { state ->
         if (state.ready) {
-            fragmentFactory.id = state.id
-            fragmentFactory.uri = state.viewerUri ?: ""
-            fragmentFactory.mimeType = state.mimeType ?: ""
-
             if (state.viewerType != null) {
-                val fragment = viewerFragment(state.viewerType)
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, fragment)
-                    .commit()
+                if (childFragmentManager.findFragmentByTag(state.viewerType.toString()) == null) {
+                    val fragment = viewerFragment(state.viewerType, typeArgs(state.viewerUri ?: ""))
+                    childFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, fragment, state.viewerType.toString())
+                        .commit()
+                }
             } else {
                 showError(getString(R.string.error_preview_not_available))
             }
         }
     }
 
-    private fun viewerFragment(type: ViewerType): Fragment {
+    private fun typeArgs(uri: String): ViewerTypeArgs {
+        return ViewerTypeArgs(args.id, uri, args.type)
+    }
+
+    private fun viewerFragment(type: ViewerType, args: ViewerTypeArgs): Fragment {
         val classLoader = ViewerFragmentFactory::class.java.classLoader!!
         return when (type) {
             ViewerType.Pdf -> childFragmentManager.fragmentFactory.instantiate(classLoader, PdfViewerFragment::class.java.name)
             ViewerType.Image -> childFragmentManager.fragmentFactory.instantiate(classLoader, ImageViewerFragment::class.java.name)
-            ViewerType.Text -> childFragmentManager.fragmentFactory.instantiate(classLoader, TextViewerFragment::class.java.name)
+            ViewerType.Text -> TextViewerFragment()
             ViewerType.Media -> childFragmentManager.fragmentFactory.instantiate(classLoader, MediaViewerFragment::class.java.name)
-        }
+        }.apply { arguments = bundleOf(MvRx.KEY_ARG to args) }
     }
 
     private fun showError(message: String) {
@@ -90,7 +95,7 @@ class ViewerFragmentFactory() : FragmentFactory() {
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
             PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
-            TextViewerFragment::class.java.name -> TextViewerFragment(uri)
+            TextViewerFragment::class.java.name -> TextViewerFragment()
             ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri, mimeType)
             MediaViewerFragment::class.java.name -> MediaViewerFragment(uri)
             else -> super.instantiate(classLoader, className)

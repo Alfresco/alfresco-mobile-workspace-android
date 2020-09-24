@@ -5,21 +5,21 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import com.alfresco.content.viewer.common.ContentDownloader
-import java.io.File
-import kotlinx.coroutines.launch
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 
-class TextViewerFragment(
-    private val uri: String
-) : Fragment(R.layout.viewer_text) {
+class TextViewerFragment : BaseMvRxFragment(R.layout.viewer_text) {
+
+    private val viewModel: TextViewerViewModel by fragmentViewModel()
+    private lateinit var webView: WebView
+    private lateinit var progressIndicator: ProgressBar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val webView = view.findViewById<WebView>(R.id.webview)
-        val progressIndicator = view.findViewById<ProgressBar>(R.id.progress_indicator)
+        webView = view.findViewById(R.id.webview)
+        progressIndicator = view.findViewById(R.id.progress_indicator)
 
         val settings = webView.settings
         settings.setSupportZoom(true)
@@ -37,12 +37,11 @@ class TextViewerFragment(
                 progressIndicator.visibility = View.GONE
             }
         }
+    }
 
-        val output = File(requireContext().cacheDir, "content.tmp")
-
-        lifecycleScope.launch {
-            ContentDownloader.downloadFileTo(uri, output.path)
-            webView.loadUrl("file://${output.path}")
+    override fun invalidate() = withState(viewModel) { state ->
+        if (state.path != null) {
+            webView.loadUrl(state.path)
         }
     }
 }

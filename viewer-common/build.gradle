@@ -2,11 +2,16 @@ import com.alfresco.buildsrc.Libs
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
+    }
+
+    androidExtensions {
+        features = ["parcelize"]
     }
 }
 

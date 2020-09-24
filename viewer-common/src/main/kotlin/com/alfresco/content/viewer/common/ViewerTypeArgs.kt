@@ -1,0 +1,26 @@
+package com.alfresco.content.viewer.common
+
+import android.os.Bundle
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class ViewerTypeArgs(
+    val id: String,
+    val uri: String,
+    val type: String
+) : Parcelable {
+    companion object {
+        private const val ID_KEY = "id"
+        private const val URI_KEY = "uri"
+        private const val TYPE_KEY = "type"
+
+        fun with(args: Bundle): ViewerTypeArgs {
+            return ViewerTypeArgs(
+                args.getString(ID_KEY, ""),
+                args.getString(URI_KEY, ""),
+                args.getString(TYPE_KEY, "")
+            )
+        }
+    }
+}

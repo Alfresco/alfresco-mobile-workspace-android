@@ -11,8 +11,12 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
+    implementation project(':viewer-common')
     implementation project(':session')
 
     implementation Libs.AndroidX.appcompat
     implementation Libs.Google.material
+
+    implementation Libs.mvRx
 }

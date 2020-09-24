@@ -11,9 +11,14 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
+    implementation project(':viewer-common')
+
     implementation Libs.AndroidX.appcompat
     implementation Libs.Google.material
 
     implementation Libs.ExoPlayer.core
     implementation Libs.ExoPlayer.ui
+
+    implementation Libs.mvRx
 }

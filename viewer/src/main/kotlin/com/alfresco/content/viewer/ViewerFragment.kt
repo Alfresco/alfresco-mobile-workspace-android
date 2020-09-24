@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentFactory
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
@@ -42,11 +41,8 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
 
     private lateinit var args: ViewerArgs
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
-    private val fragmentFactory = ViewerFragmentFactory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        childFragmentManager.fragmentFactory = fragmentFactory
-
         super.onCreate(savedInstanceState)
 
         args = ViewerArgs.with(requireArguments())
@@ -72,31 +68,15 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
     }
 
     private fun viewerFragment(type: ViewerType, args: ViewerTypeArgs): Fragment {
-        val classLoader = ViewerFragmentFactory::class.java.classLoader!!
         return when (type) {
-            ViewerType.Pdf -> childFragmentManager.fragmentFactory.instantiate(classLoader, PdfViewerFragment::class.java.name)
+            ViewerType.Pdf -> PdfViewerFragment()
             ViewerType.Image -> ImageViewerFragment()
             ViewerType.Text -> TextViewerFragment()
-            ViewerType.Media -> childFragmentManager.fragmentFactory.instantiate(classLoader, MediaViewerFragment::class.java.name)
+            ViewerType.Media -> MediaViewerFragment()
         }.apply { arguments = bundleOf(MvRx.KEY_ARG to args) }
     }
 
     private fun showError(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
-    }
-}
-
-class ViewerFragmentFactory() : FragmentFactory() {
-
-    var id: String = ""
-    var uri: String = ""
-    var mimeType: String = ""
-
-    override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-        return when (className) {
-            PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
-            MediaViewerFragment::class.java.name -> MediaViewerFragment(uri)
-            else -> super.instantiate(classLoader, className)
-        }
     }
 }

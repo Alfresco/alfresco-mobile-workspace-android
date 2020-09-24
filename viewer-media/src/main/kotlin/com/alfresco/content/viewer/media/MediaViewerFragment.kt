@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Pair
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -29,9 +31,9 @@ import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 import kotlin.math.max
 
-class MediaViewerFragment(
-    private val uri: String
-) : Fragment(R.layout.fragment_viewer_media) {
+class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
+
+    private val viewModel: MediaViewerViewModel by fragmentViewModel()
 
     private lateinit var playerView: StyledPlayerView
     private lateinit var dataSourceFactory: DataSource.Factory
@@ -75,6 +77,10 @@ class MediaViewerFragment(
             trackSelectorParameters = builder.build()
             clearStartPosition()
         }
+    }
+
+    override fun invalidate() {
+        // no-op
     }
 
     override fun onStart() {
@@ -160,9 +166,11 @@ class MediaViewerFragment(
     }
 
     private fun createMediaItem(): MediaItem {
-        return MediaItem.Builder()
-            .setUri(uri)
-            .build()
+        return withState(viewModel) {
+            MediaItem.Builder()
+                .setUri(it.uri)
+                .build()
+        }
     }
 
     private fun releasePlayer() {

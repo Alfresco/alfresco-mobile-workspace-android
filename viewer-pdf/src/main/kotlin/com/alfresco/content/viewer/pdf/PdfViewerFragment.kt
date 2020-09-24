@@ -13,7 +13,9 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -21,10 +23,9 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.HashMap
 
-class PdfViewerFragment(
-    private val uri: String
-) : Fragment() {
+class PdfViewerFragment : BaseMvRxFragment() {
 
+    private val viewModel: PdfViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView
 
     override fun onCreateView(
@@ -45,9 +46,11 @@ class PdfViewerFragment(
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
-        val jsBridge = NativeBridge(EglExt.maxTextureSize, uri) { reason ->
-            requireActivity().runOnUiThread {
-                showPasswordPrompt(reason)
+        val jsBridge = withState(viewModel) {
+            NativeBridge(EglExt.maxTextureSize, it.uri) { reason ->
+                requireActivity().runOnUiThread {
+                    showPasswordPrompt(reason)
+                }
             }
         }
 
@@ -130,6 +133,10 @@ class PdfViewerFragment(
         super.onResume()
 
         load()
+    }
+
+    override fun invalidate() {
+        // no-op
     }
 
     private fun load() {

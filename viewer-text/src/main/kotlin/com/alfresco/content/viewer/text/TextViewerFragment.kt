@@ -69,7 +69,7 @@ class TextViewerFragment : BaseMvRxFragment(R.layout.viewer_text) {
     override fun invalidate() = withState(viewModel) { state ->
         progressIndicator.isVisible = state.path is Loading
         if (state.path is Success && webView.url != state.path()) {
-            webView.loadUrl(state.path())
+            webView.loadUrl("file://${state.path()}")
         }
     }
 }

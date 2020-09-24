@@ -30,7 +30,7 @@ object ContentDownloader {
     suspend fun downloadFile(uri: String, outputPath: String): Flow<String> {
         return flow {
             downloadFileTo(uri, outputPath)
-            emit("file://$outputPath")
+            emit(outputPath)
         }
     }
 }

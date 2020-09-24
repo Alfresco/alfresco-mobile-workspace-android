@@ -11,11 +11,13 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
     implementation project(':viewer-common')
 
     implementation Libs.Kotlin.stdlib
-    implementation Libs.AndroidX.Lifecycle.runtime
     implementation Libs.AndroidX.appcompat
+    implementation Libs.AndroidX.Lifecycle.runtime
+    implementation Libs.AndroidX.Lifecycle.viewmodelKtx
 
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -23,4 +25,6 @@ dependencies {
     implementation Libs.Coil.core
     implementation Libs.Coil.gifExt
     implementation Libs.Coil.svgExt
+
+    implementation Libs.mvRx
 }

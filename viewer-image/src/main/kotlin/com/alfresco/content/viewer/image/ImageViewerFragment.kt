@@ -1,46 +1,57 @@
 package com.alfresco.content.viewer.image
 
 import android.graphics.drawable.Drawable
-import android.os.Build.VERSION.SDK_INT
+import android.os.Build
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.target.ImageViewTarget
-import com.alfresco.content.viewer.common.ContentDownloader
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.chrisbanes.photoview.PhotoView
-import java.io.File
-import kotlinx.coroutines.launch
 
-class ImageViewerFragment(
-    private val documentId: String,
-    private val uri: String,
-    private val mimeType: String
-) : Fragment(R.layout.viewer_image) {
+class ImageViewerFragment : BaseMvRxFragment(R.layout.viewer_image) {
+
+    private val viewModel: ImageViewerViewModel by fragmentViewModel()
 
     private lateinit var progressIndicator: ProgressBar
+    private lateinit var largeScaleViewer: SubsamplingScaleImageView
+    private lateinit var compatViewer: PhotoView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        progressIndicator = view.findViewById<ProgressBar>(R.id.progress_indicator)
+        progressIndicator = view.findViewById(R.id.progress_indicator)
         val container = view.findViewById<FrameLayout>(R.id.container)
 
-        if (largeScaleFormats.contains(mimeType)) {
-            setupLargeScalePreview(container).loadImage(uri)
+        withState(viewModel) { state ->
+            if (state.largeScale) {
+                largeScaleViewer = setupLargeScalePreview(container)
+            } else {
+                compatViewer = setupCompatPreview(container)
+            }
+        }
+    }
+
+    override fun invalidate() = withState(viewModel) { state ->
+        if (state.largeScale) {
+            if (state.path is Success) {
+                largeScaleViewer.loadImage(state.path() ?: "")
+            }
         } else {
-            setupCompatPreview(container).loadImage(uri)
+            compatViewer.loadImage(state.uri)
         }
     }
 
@@ -57,15 +68,9 @@ class ImageViewerFragment(
         return view
     }
 
-    private fun SubsamplingScaleImageView.loadImage(uri: String) {
-        val output = File(requireContext().cacheDir, "content.tmp")
-
-        lifecycleScope.launch {
-            ContentDownloader.downloadFileTo(uri, output.path)
-
-            progressIndicator.visibility = View.GONE
-            setImage(ImageSource.uri(output.path))
-        }
+    private fun SubsamplingScaleImageView.loadImage(path: String) {
+        progressIndicator.visibility = View.GONE
+        setImage(ImageSource.uri(path))
     }
 
     private fun setupCompatPreview(container: FrameLayout): PhotoView {
@@ -106,7 +111,7 @@ class ImageViewerFragment(
     private fun PhotoView.loadImage(uri: String) {
         val imageLoader = ImageLoader.Builder(requireContext())
             .componentRegistry {
-                if (SDK_INT >= 28) {
+                if (Build.VERSION.SDK_INT >= 28) {
                     add(ImageDecoderDecoder())
                 } else {
                     add(GifDecoder())
@@ -115,6 +120,7 @@ class ImageViewerFragment(
             }
             .build()
 
+        // TODO: bypass download on configuration change
         val request = ImageRequest.Builder(context)
             .data(uri)
             .target(object : ImageViewTarget(this) {
@@ -125,9 +131,5 @@ class ImageViewerFragment(
             })
             .build()
         imageLoader.enqueue(request)
-    }
-
-    companion object {
-        private val largeScaleFormats = setOf("image/jpeg", "image/png")
     }
 }

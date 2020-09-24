@@ -75,7 +75,7 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
         val classLoader = ViewerFragmentFactory::class.java.classLoader!!
         return when (type) {
             ViewerType.Pdf -> childFragmentManager.fragmentFactory.instantiate(classLoader, PdfViewerFragment::class.java.name)
-            ViewerType.Image -> childFragmentManager.fragmentFactory.instantiate(classLoader, ImageViewerFragment::class.java.name)
+            ViewerType.Image -> ImageViewerFragment()
             ViewerType.Text -> TextViewerFragment()
             ViewerType.Media -> childFragmentManager.fragmentFactory.instantiate(classLoader, MediaViewerFragment::class.java.name)
         }.apply { arguments = bundleOf(MvRx.KEY_ARG to args) }
@@ -95,8 +95,6 @@ class ViewerFragmentFactory() : FragmentFactory() {
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
             PdfViewerFragment::class.java.name -> PdfViewerFragment(uri)
-            TextViewerFragment::class.java.name -> TextViewerFragment()
-            ImageViewerFragment::class.java.name -> ImageViewerFragment(id, uri, mimeType)
             MediaViewerFragment::class.java.name -> MediaViewerFragment(uri)
             else -> super.instantiate(classLoader, className)
         }

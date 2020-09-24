@@ -1,9 +1,12 @@
 package com.alfresco.content.viewer.common
 
+import android.util.Log
 import java.io.File
 import java.io.IOException
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -18,9 +21,17 @@ import okio.sink
 
 object ContentDownloader {
     suspend fun downloadFileTo(uri: String, outputPath: String) {
+        Log.d("ContentDownloader", "Getting $uri")
         val req = Request.Builder().get().url(uri).build()
         val client = OkHttpClient()
         client.newCall(req).downloadAndSaveTo(File(outputPath))
+    }
+
+    suspend fun downloadFile(uri: String, outputPath: String): Flow<String> {
+        return flow {
+            downloadFileTo(uri, outputPath)
+            emit("file://$outputPath")
+        }
     }
 }
 

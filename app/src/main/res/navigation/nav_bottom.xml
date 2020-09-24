@@ -71,9 +71,9 @@
         <deepLink app:uri="alfresco://content/{path}?title={title}" />
     </fragment>
 
-    <fragment
-        android:id="@+id/nav_details"
-        android:name="com.alfresco.content.viewer.ViewerFragment"
+    <activity
+        android:id="@+id/nav_viewer"
+        android:name="com.alfresco.content.viewer.ViewerActivity"
         android:label="{title}">
         <argument
             android:name="id"
@@ -85,5 +85,5 @@
             android:name="type"
             app:argType="string" />
         <deepLink app:uri="alfresco://content/{path}/{id}/preview?title={title}&amp;type={type}" />
-    </fragment>
+    </activity>
 </navigation>

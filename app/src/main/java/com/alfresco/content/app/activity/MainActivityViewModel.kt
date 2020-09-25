@@ -14,6 +14,7 @@ import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MainActivityState(
@@ -56,7 +57,7 @@ class MainActivityViewModel(
         refreshTicketJob?.cancel()
         refreshTicketJob = viewModelScope.launch {
             var success = false
-            while (!success) {
+            while (!success && isActive) {
                 try {
                     val session = SessionManager.currentSession ?: return@launch
                     session.ticket = AuthenticationRepository().fetchTicket()

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Content Application</string>
+    <string name="app_name">Workspace</string>
     <string name="auth_app_name">@string/app_name</string>
 
     <string name="nav_title_recents">Recents</string>

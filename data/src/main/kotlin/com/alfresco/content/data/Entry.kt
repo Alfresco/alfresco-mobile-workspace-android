@@ -129,8 +129,8 @@ data class Entry(
 
         fun with(link: SharedLink): Entry {
             return Entry(
-                link.id ?: "",
-                Type.Link,
+                link.nodeId ?: "",
+                Type.File,
                 link.name ?: "",
                 null,
                 link.content?.mimeType

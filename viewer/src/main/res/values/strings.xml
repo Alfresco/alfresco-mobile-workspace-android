@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="info_creating_rendition">Preparing Preview…</string>
+    <string name="info_fetching_content">Loading Preview…</string>
     <string name="error_preview_not_available">Preview Not Available</string>
 </resources>

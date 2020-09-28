@@ -10,16 +10,20 @@ android {
         versionName "1.0"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     androidExtensions {
         features = ["parcelize"]
     }
 }
 
 dependencies {
-    implementation project(':theme')
     implementation project(':common')
     implementation project(':session')
     implementation project(':data')
+    implementation project(':mimetype')
     implementation project(':viewer-common')
     implementation project(':viewer-pdf')
     implementation project(':viewer-image')

@@ -7,33 +7,30 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ProgressBar
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.target.ImageViewTarget
-import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.chrisbanes.photoview.PhotoView
 
-class ImageViewerFragment : BaseMvRxFragment(R.layout.viewer_image) {
+class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image) {
 
     private val viewModel: ImageViewerViewModel by fragmentViewModel()
 
-    private lateinit var progressIndicator: ProgressBar
     private lateinit var largeScaleViewer: SubsamplingScaleImageView
     private lateinit var compatViewer: PhotoView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        progressIndicator = view.findViewById(R.id.progress_indicator)
         val container = view.findViewById<FrameLayout>(R.id.container)
 
         withState(viewModel) { state ->
@@ -69,7 +66,7 @@ class ImageViewerFragment : BaseMvRxFragment(R.layout.viewer_image) {
     }
 
     private fun SubsamplingScaleImageView.loadImage(path: String) {
-        progressIndicator.visibility = View.GONE
+        loadingListener.get()?.onContentLoaded()
         setImage(ImageSource.uri(path))
     }
 
@@ -126,7 +123,7 @@ class ImageViewerFragment : BaseMvRxFragment(R.layout.viewer_image) {
             .target(object : ImageViewTarget(this) {
                 override fun onSuccess(result: Drawable) {
                     super.onSuccess(result)
-                    progressIndicator.visibility = View.GONE
+                    loadingListener.get()?.onContentLoaded()
                 }
             })
             .build()

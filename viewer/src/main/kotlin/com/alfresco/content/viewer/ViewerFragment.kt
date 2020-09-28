@@ -2,13 +2,20 @@ package com.alfresco.content.viewer
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
-import com.alfresco.content.viewer.common.ViewerTypeArgs
+import com.alfresco.content.mimetype.MimeType
+import com.alfresco.content.viewer.common.ChildViewerArgs
+import com.alfresco.content.viewer.common.ChildViewerFragment
+import com.alfresco.content.viewer.common.LoadingListener
+import com.alfresco.content.viewer.databinding.ViewerBinding
 import com.alfresco.content.viewer.image.ImageViewerFragment
 import com.alfresco.content.viewer.media.MediaViewerFragment
 import com.alfresco.content.viewer.pdf.PdfViewerFragment
@@ -37,10 +44,21 @@ data class ViewerArgs(
     }
 }
 
-class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
+class ViewerFragment : BaseMvRxFragment(), LoadingListener {
 
     private lateinit var args: ViewerArgs
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
+    private lateinit var binding: ViewerBinding
+    private var childFragment: ChildViewerFragment? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = ViewerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +66,30 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
         args = ViewerArgs.with(requireArguments())
     }
 
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+
+        if (childFragment is ChildViewerFragment) {
+            this.childFragment = childFragment
+            this.childFragment?.setLoadingListener(this)
+        }
+    }
+
+    override fun onContentLoaded() {
+        binding.loading.visibility = View.GONE
+        if (this.childFragment?.showInfoWhenLoaded() == true) {
+            binding.info.visibility = View.VISIBLE
+        } else {
+            binding.info.visibility = View.GONE
+        }
+        binding.status.text = ""
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
+        binding.title.text = args.title
+        val type = MimeType.with(state.mimeType)
+        binding.icon.setImageDrawable(resources.getDrawable(type.icon, requireContext().theme))
+
         if (state.ready) {
             if (state.viewerType != null) {
                 if (childFragmentManager.findFragmentByTag(state.viewerType.toString()) == null) {
@@ -57,17 +98,21 @@ class ViewerFragment : BaseMvRxFragment(R.layout.viewer) {
                         .replace(R.id.fragmentContainerView, fragment, state.viewerType.toString())
                         .commit()
                 }
+                binding.status.text = getString(R.string.info_fetching_content)
             } else {
-                showError(getString(R.string.error_preview_not_available))
+                binding.loading.visibility = View.GONE
+                binding.status.text = getString(R.string.error_preview_not_available)
             }
+        } else {
+            binding.status.text = getString(R.string.info_creating_rendition)
         }
     }
 
-    private fun typeArgs(uri: String): ViewerTypeArgs {
-        return ViewerTypeArgs(args.id, uri, args.type)
+    private fun typeArgs(uri: String): ChildViewerArgs {
+        return ChildViewerArgs(args.id, uri, args.type)
     }
 
-    private fun viewerFragment(type: ViewerType, args: ViewerTypeArgs): Fragment {
+    private fun viewerFragment(type: ViewerType, args: ChildViewerArgs): Fragment {
         return when (type) {
             ViewerType.Pdf -> PdfViewerFragment()
             ViewerType.Image -> ImageViewerFragment()

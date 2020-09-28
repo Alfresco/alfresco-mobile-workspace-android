@@ -13,17 +13,17 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 import java.io.InputStream
 import java.util.HashMap
 
-class PdfViewerFragment : BaseMvRxFragment() {
+class PdfViewerFragment : ChildViewerFragment() {
 
     private val viewModel: PdfViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView
@@ -116,6 +116,9 @@ class PdfViewerFragment : BaseMvRxFragment() {
                 }
             }
         }
+
+        // Loading state is handled by pdf viewer
+        loadingListener.get()?.onContentLoaded()
     }
 
     class NativeBridge(

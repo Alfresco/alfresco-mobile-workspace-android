@@ -8,8 +8,8 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.common.ContentDownloader
-import com.alfresco.content.viewer.common.ViewerTypeArgs
 import java.io.File
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,7 @@ data class ImageViewerState(
     val largeScale: Boolean = false,
     val path: Async<String> = Uninitialized
 ) : MvRxState {
-    constructor(args: ViewerTypeArgs) : this(args.uri, args.type)
+    constructor(args: ChildViewerArgs) : this(args.uri, args.type)
 }
 
 class ImageViewerViewModel(

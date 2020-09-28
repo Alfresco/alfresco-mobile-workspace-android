@@ -6,23 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.ProgressBar
-import androidx.core.view.isVisible
-import com.airbnb.mvrx.BaseMvRxFragment
-import com.airbnb.mvrx.Loading
+import android.webkit.WebViewClient
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.viewer.common.ChildViewerFragment
 
 /**
  * Viewer for displaying plain text backed by a [WebView]
  * Fragment is retained across configuration changes, and webView is reattached to maintain state.
  */
-class TextViewerFragment : BaseMvRxFragment(R.layout.viewer_text) {
+class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
 
     private val viewModel: TextViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView
-    private lateinit var progressIndicator: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +50,22 @@ class TextViewerFragment : BaseMvRxFragment(R.layout.viewer_text) {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
 
         view.addView(webView, 0)
-        progressIndicator = view.findViewById(R.id.progress_indicator)
+        webView.visibility = View.GONE
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                webView.visibility = View.VISIBLE
+                loadingListener.get()?.onContentLoaded()
+            }
+        }
+
+        // On configuration change content may be loaded
+        withState(viewModel) { state ->
+            if (isContentLoaded(state)) {
+                webView.visibility = View.VISIBLE
+                loadingListener.get()?.onContentLoaded()
+            }
+        }
 
         return view
     }
@@ -67,9 +79,12 @@ class TextViewerFragment : BaseMvRxFragment(R.layout.viewer_text) {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        progressIndicator.isVisible = state.path is Loading
         if (state.path is Success && webView.url != state.path()) {
-            webView.loadUrl("file://${state.path()}")
+            webView.loadUrl(state.path())
         }
+    }
+
+    private fun isContentLoaded(state: TextViewerState): Boolean {
+        return state.path is Success && webView.url == state.path()
     }
 }

@@ -19,4 +19,7 @@ dependencies {
     implementation Libs.Kotlin.stdlib
     implementation Libs.Coroutines.core
     implementation Libs.OkHttp.okhttp
+
+    implementation Libs.AndroidX.appcompat
+    implementation Libs.mvRx
 }

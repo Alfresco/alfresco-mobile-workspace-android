@@ -8,16 +8,17 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.common.ContentDownloader
-import com.alfresco.content.viewer.common.ViewerTypeArgs
 import java.io.File
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 data class TextViewerState(
     val uri: String,
     val path: Async<String> = Uninitialized
 ) : MvRxState {
-    constructor(args: ViewerTypeArgs) : this(args.uri)
+    constructor(args: ChildViewerArgs) : this(args.uri)
 }
 
 class TextViewerViewModel(
@@ -31,6 +32,7 @@ class TextViewerViewModel(
         viewModelScope.launch {
             ContentDownloader
                 .downloadFile(state.uri, output.path)
+                .map { "file://$it" }
                 .execute { copy(path = it) }
         }
     }

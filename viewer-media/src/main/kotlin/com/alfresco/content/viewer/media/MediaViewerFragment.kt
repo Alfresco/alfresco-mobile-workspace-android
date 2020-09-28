@@ -1,12 +1,17 @@
 package com.alfresco.content.viewer.media
 
+import android.media.session.PlaybackState
 import android.os.Bundle
 import android.util.Pair
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.viewer.common.ChildViewerArgs
+import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -31,8 +36,9 @@ import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 import kotlin.math.max
 
-class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
+class MediaViewerFragment : ChildViewerFragment() {
 
+    private lateinit var args: ChildViewerArgs
     private val viewModel: MediaViewerViewModel by fragmentViewModel()
 
     private lateinit var playerView: StyledPlayerView
@@ -45,6 +51,20 @@ class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
     private var startAutoPlay = false
     private var startWindow = 0
     private var startPosition: Long = 0
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        args = requireNotNull(arguments?.getParcelable(MvRx.KEY_ARG))
+        val layout = if (args.type.startsWith("audio/")) {
+            R.layout.fragment_viewer_audio
+        } else {
+            R.layout.fragment_viewer_video
+        }
+        return inflater.inflate(layout, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -214,6 +234,13 @@ class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
 
     private inner class PlayerEventListener : Player.EventListener {
 
+        override fun onPlaybackStateChanged(state: Int) {
+            if (state == PlaybackState.STATE_PLAYING ||
+                state == PlaybackState.STATE_STOPPED) {
+                loadingListener.get()?.onContentLoaded()
+            }
+        }
+
         override fun onTracksChanged(
             trackGroups: TrackGroupArray,
             trackSelections: TrackSelectionArray
@@ -269,6 +296,8 @@ class MediaViewerFragment : BaseMvRxFragment(R.layout.fragment_viewer_media) {
             return Pair.create(0, errorString)
         }
     }
+
+    override fun showInfoWhenLoaded(): Boolean = args.type.startsWith("audio/")
 
     companion object {
         private const val KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters"

@@ -73,6 +73,6 @@ class ViewerViewModel(
     }
 
     companion object {
-        val imageFormats = setOf("image/bmp", "image/jpeg", "image/gif", "image/webp", "image/gif", "image/svg xml")
+        private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg xml")
     }
 }

@@ -159,9 +159,11 @@ footer {
 }
 
 #viewerContainer.singlePage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+}
+
+#viewerContainer.singlePage > .pdfViewer {
+  margin: auto;
 }
 
 canvas {

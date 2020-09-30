@@ -132,20 +132,21 @@ class PdfViewerFragment : ChildViewerFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        load()
-    }
-
     override fun invalidate() {
-        // no-op
+        loadContent()
     }
 
-    private fun load() {
+    /**
+     * Loads the current content unless it's already loaded
+     */
+    private fun loadContent() {
         val sessionUri = Uri.parse(SessionManager.requireSession.baseUrl)
         val baseUrl = "${sessionUri.scheme}://${sessionUri.authority}"
-        webView.loadUrl("$baseUrl/$LOCAL_PATH_PREFIX/viewer.html")
+        val targetUrl = "$baseUrl/$LOCAL_PATH_PREFIX/viewer.html"
+
+        if (webView.url != targetUrl) {
+            webView.loadUrl(targetUrl)
+        }
     }
 
     /**

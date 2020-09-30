@@ -5,17 +5,6 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="220dp"
-        android:src="@drawable/splash_alfresco_logo" />
-
     <include
         layout="@layout/view_alfresco_copyright"
         android:layout_width="wrap_content"

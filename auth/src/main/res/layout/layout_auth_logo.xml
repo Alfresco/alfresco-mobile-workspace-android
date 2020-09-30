@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/auth_alfresco_logo" />
+<merge
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         style="@style/Widget.Alfresco.LogoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/auth_app_name" />
-</LinearLayout>
+        android:layout_marginTop="96dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/auth_app_name"
+        app:drawableTopCompat="@drawable/ic_product_76" />
+</merge>

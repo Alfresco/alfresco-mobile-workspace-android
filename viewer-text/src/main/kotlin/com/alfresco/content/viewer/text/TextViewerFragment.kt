@@ -13,18 +13,20 @@ import com.alfresco.content.viewer.common.ChildViewerFragment
 
 /**
  * Viewer for displaying plain text backed by a [WebView]
- * Fragment is retained across configuration changes, and webView is reattached to maintain state.
  */
 class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
 
     private val viewModel: TextViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         webView = createWebView(requireContext())
-        retainInstance = true
+        webView.visibility = View.GONE
+        return webView
     }
 
     private fun createWebView(context: Context): WebView {
@@ -41,44 +43,11 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
-
-        view.addView(webView, 0)
-        webView.visibility = View.GONE
-
-        // On configuration change content may be loaded
-        withState(viewModel) { state ->
-            if (isContentLoaded(state)) {
-                webView.visibility = View.VISIBLE
-                loadingListener.get()?.onContentLoaded()
-            }
-        }
-
-        return view
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-
-        if (retainInstance && webView.parent is ViewGroup) {
-            (webView.parent as ViewGroup).removeView(webView)
-        }
-    }
-
     override fun invalidate() = withState(viewModel) { state ->
         if (state.path is Success && webView.url != state.path()) {
             webView.visibility = View.VISIBLE
             webView.loadUrl(state.path())
             loadingListener.get()?.onContentLoaded()
         }
-    }
-
-    private fun isContentLoaded(state: TextViewerState): Boolean {
-        return state.path is Success && webView.url == state.path()
     }
 }

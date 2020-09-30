@@ -4,6 +4,8 @@
     package="com.alfresco.content.viewer">
 
     <application>
-        <activity android:name=".ViewerActivity" />
+        <activity
+            android:name=".ViewerActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 </manifest>

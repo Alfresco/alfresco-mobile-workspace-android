@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -52,13 +51,6 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
         view.addView(webView, 0)
         webView.visibility = View.GONE
 
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                webView.visibility = View.VISIBLE
-                loadingListener.get()?.onContentLoaded()
-            }
-        }
-
         // On configuration change content may be loaded
         withState(viewModel) { state ->
             if (isContentLoaded(state)) {
@@ -80,7 +72,9 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
 
     override fun invalidate() = withState(viewModel) { state ->
         if (state.path is Success && webView.url != state.path()) {
+            webView.visibility = View.VISIBLE
             webView.loadUrl(state.path())
+            loadingListener.get()?.onContentLoaded()
         }
     }
 

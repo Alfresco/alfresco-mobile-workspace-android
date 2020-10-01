@@ -16,10 +16,14 @@ import kotlinx.coroutines.launch
 data class ImageViewerState(
     val uri: String,
     val mimeType: String,
-    val largeScale: Boolean = false,
+    val largeScale: Boolean = largeScaleFormats.contains(mimeType),
     val path: Async<String> = Uninitialized
 ) : MvRxState {
     constructor(args: ChildViewerArgs) : this(args.uri, args.type)
+
+    companion object {
+        private val largeScaleFormats = setOf("image/jpeg", "image/png")
+    }
 }
 
 class ImageViewerViewModel(
@@ -28,10 +32,7 @@ class ImageViewerViewModel(
 ) : MvRxViewModel<ImageViewerState>(state) {
 
     init {
-        val largeScale = largeScaleFormats.contains(state.mimeType)
-        if (largeScale) {
-            setState { copy(largeScale = largeScale) }
-
+        if (state.largeScale) {
             val output = File(context.cacheDir, TMP_FILE_NAME)
             viewModelScope.launch {
                 ContentDownloader
@@ -43,7 +44,6 @@ class ImageViewerViewModel(
 
     companion object : MvRxViewModelFactory<ImageViewerViewModel, ImageViewerState> {
         private const val TMP_FILE_NAME = "content.tmp"
-        private val largeScaleFormats = setOf("image/jpeg", "image/png")
 
         override fun create(viewModelContext: ViewModelContext, state: ImageViewerState): ImageViewerViewModel? {
             return ImageViewerViewModel(viewModelContext.app(), state)

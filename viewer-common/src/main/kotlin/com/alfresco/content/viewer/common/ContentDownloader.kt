@@ -21,7 +21,6 @@ import okio.sink
 
 object ContentDownloader {
     suspend fun downloadFileTo(uri: String, outputPath: String) {
-        Log.d("ContentDownloader", "Getting $uri")
         val req = Request.Builder().get().url(uri).build()
         val client = OkHttpClient()
         client.newCall(req).downloadAndSaveTo(File(outputPath))
@@ -70,10 +69,10 @@ suspend fun Call.downloadAndSaveTo(
                         return
                     }
                     val contentLength = body.contentLength()
-                    val buffer = Buffer()
                     var finished = false
                     output.sink().buffer().use { out ->
                         body.source().use { source ->
+                            val buffer = out.buffer
                             var totalLength = 0L
                             while (cont.isActive) {
                                 val read = source.read(buffer, bufferSize)
@@ -81,11 +80,11 @@ suspend fun Call.downloadAndSaveTo(
                                     finished = true
                                     break
                                 }
-                                out.write(buffer, read)
-                                out.flush()
+                                out.emit()
                                 totalLength += read
                                 progress?.invoke(totalLength, contentLength)
                             }
+                            out.flush()
                         }
                     }
                     if (finished) {

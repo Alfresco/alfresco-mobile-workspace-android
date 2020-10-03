@@ -120,4 +120,8 @@ object Libs {
         const val core = "com.google.android.exoplayer:exoplayer-core:$version"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:$version"
     }
+
+    const val subsamplingImageView = "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
+
+    const val photoView = "com.github.chrisbanes:PhotoView:2.3.0"
 }

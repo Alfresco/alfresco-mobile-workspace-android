@@ -11,7 +11,7 @@ variables:
   - group: android-signing
   - name: version_code
     value: $[counter('versionCode', 0)]
-  - name: gradle_home_path
+  - name: GRADLE_USER_HOME
     value: $(Pipeline.Workspace)/.gradle
   - name: deps_def_path
     value: buildSrc/src/main/java/com/alfresco/buildsrc/dependencies.kt
@@ -21,7 +21,7 @@ steps:
     inputs:
       key: 'gradle | "$(Agent.OS)" | $(deps_def_path)'
       restoreKeys: gradle
-      path: $(gradle_home_path)
+      path: $(GRADLE_USER_HOME)
     displayName: Cache Gradle Files
   - task: DownloadSecureFile@1
     name: keystore
@@ -40,7 +40,6 @@ steps:
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'assemblePlayStore'
     env:
-      GRADLE_USER_HOME: $(gradle_home_path)
       KEYSTORE_FILE: $(keystore.secureFilePath)
       KEYSTORE_PASSWORD: $(keystore_password)
       KEY_ALIAS: $(key_alias)

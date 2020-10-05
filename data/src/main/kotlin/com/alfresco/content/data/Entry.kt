@@ -33,6 +33,7 @@ data class Entry(
                 when (value) {
                     "cm:content" -> return File
                     "cm:folder" -> return Folder
+                    "st:sites" -> return Folder // Special folder for admins
                     "st:site" -> return Site
                     "cm:link" -> return Link
                 }

@@ -77,7 +77,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvConnectInfo"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="32dp"
                     android:hint="@string/auth_sso_repo_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -95,7 +95,7 @@
                 style="@style/Widget.Alfresco.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="36dp"
                 android:enabled="@{viewModel.ssoLoginEnabled}"
                 android:onClick="@{() -> viewModel.ssoLogin()}"
                 android:text="@string/auth_sso_sign_in_button"
@@ -110,6 +110,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -118,7 +119,6 @@
                     style="@style/Widget.Alfresco.Action.Secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:onClick="@{() -> viewModel.showSsoHelp()}"
                     android:text="@string/auth_help_button" />
 
@@ -126,7 +126,7 @@
                     layout="@layout/view_alfresco_copyright"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="24dp"
                     android:layout_marginBottom="10dp"
                     android:visibility="@integer/auth_visibility_phone_only" />
             </LinearLayout>

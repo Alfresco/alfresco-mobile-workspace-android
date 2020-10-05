@@ -68,7 +68,7 @@
                 android:id="@+id/tilUsernameEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="24dp"
                 android:hint="@string/auth_basic_user_hint"
                 app:endIconDrawable="@drawable/ic_person"
                 app:endIconMode="custom">
@@ -86,7 +86,7 @@
                 android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="22dp"
                 android:hint="@string/auth_basic_password_hint"
                 app:endIconMode="password_toggle">
 
@@ -104,7 +104,7 @@
                 style="@style/Widget.Alfresco.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="36dp"
                 android:enabled="@{viewModel.basicAuth.enabled}"
                 android:onClick="@{() -> viewModel.basicAuth.login()}"
                 android:text="@string/auth_basic_sign_in_button"
@@ -119,6 +119,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -127,7 +128,6 @@
                     style="@style/Widget.Alfresco.Action.Secondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:text="@string/auth_help_button"
                     android:visibility="gone" />
 
@@ -135,7 +135,7 @@
                     layout="@layout/view_alfresco_copyright"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="24dp"
                     android:layout_marginBottom="10dp"
                     android:visibility="@integer/auth_visibility_phone_only" />
             </LinearLayout>

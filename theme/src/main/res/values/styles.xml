@@ -70,20 +70,6 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
     </style>
 
-    <!-- TextViews -->
-    <style name="Widget.Alfresco.LogoText">
-        <!-- This should always match branding and not reference changing styles/colors -->
-        <item name="android:fontFamily">@font/base_light</item>
-        <item name="android:textColor">@color/alfresco_word_mark_color</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:letterSpacing">-0.04</item>
-    </style>
-
-    <style name="Widget.Alfresco.FooterText">
-        <item name="android:textColor">@color/color_on_surface_60</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-    </style>
-
     <!-- SnackBar -->
     <style name="Widget.Alfresco.Snackbar" />
 

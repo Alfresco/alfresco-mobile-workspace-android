@@ -46,7 +46,7 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
     override fun invalidate() = withState(viewModel) { state ->
         if (state.path is Success && webView.url != state.path()) {
             webView.visibility = View.VISIBLE
-            webView.loadUrl(state.path())
+            webView.loadUrl(state.path() ?: "")
             loadingListener.get()?.onContentLoaded()
         }
     }

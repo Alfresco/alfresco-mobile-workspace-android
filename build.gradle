@@ -20,11 +20,14 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
+        maven {
+            url  "https://dl.bintray.com/agologan/com.agologan"
+            content { includeGroup "com.agologan" }
+        }
         maven { url "https://artifacts.alfresco.com/nexus/content/groups/public" }
         maven { url "https://artifacts.alfresco.com/nexus/content/groups/public-snapshots" }
         google()
         jcenter()
-        mavenCentral()
         maven { url "https://jitpack.io" }
     }
 }
@@ -33,11 +36,11 @@ subprojects {
     afterEvaluate {
         if(it.hasProperty('android')) {
             android {
-                compileSdkVersion 29
+                compileSdkVersion 30
 
                 defaultConfig {
                     minSdkVersion 21
-                    targetSdkVersion 29
+                    targetSdkVersion 30
                 }
                 compileOptions {
                     sourceCompatibility JavaVersion.VERSION_1_8

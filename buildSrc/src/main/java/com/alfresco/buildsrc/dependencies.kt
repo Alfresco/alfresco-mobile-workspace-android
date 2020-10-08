@@ -3,7 +3,10 @@ package com.alfresco.buildsrc
 @Suppress("unused")
 object Libs {
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:4.0.1"
+    object AndroidTools {
+        const val gradlePlugin = "com.android.tools.build:gradle:4.0.1"
+        const val desugar = "com.android.tools:desugar_jdk_libs:1.0.10"
+    }
 
     const val junit = "junit:junit:4.13"
 

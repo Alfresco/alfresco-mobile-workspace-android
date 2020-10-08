@@ -48,6 +48,10 @@ android {
         dataBinding = true
     }
 
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
+
     // Temporary kotlin module duplication fix
     packagingOptions {
         pickFirst 'META-INF/auth_release.kotlin_module'
@@ -97,6 +101,8 @@ dependencies {
     implementation Libs.mvRx
 
     implementation Libs.Coil.core
+
+    coreLibraryDesugaring Libs.AndroidTools.desugar
 
     debugImplementation Libs.leakCanary
 

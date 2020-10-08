@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath Libs.androidGradlePlugin
+        classpath Libs.AndroidTools.gradlePlugin
         classpath Libs.Kotlin.gradlePlugin
 
         classpath Libs.Google.servicesPlugin

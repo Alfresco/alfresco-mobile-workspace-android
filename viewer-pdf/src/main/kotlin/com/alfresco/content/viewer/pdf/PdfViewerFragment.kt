@@ -48,7 +48,7 @@ class PdfViewerFragment : ChildViewerFragment() {
 
         val jsBridge = withState(viewModel) {
             NativeBridge(EglExt.maxTextureSize, it.uri) { reason ->
-                requireActivity().runOnUiThread {
+                activity?.runOnUiThread {
                     showPasswordPrompt(reason)
                 }
             }
@@ -109,8 +109,7 @@ class PdfViewerFragment : ChildViewerFragment() {
 
             private fun fromAsset(mime: String, path: String): WebResourceResponse? {
                 return try {
-                    val inputStream: InputStream = requireContext().assets.open(path)
-                    WebResourceResponse(mime, null, inputStream)
+                    context?.let { WebResourceResponse(mime, "utf-8", it.assets.open(path)) }
                 } catch (e: IOException) {
                     null
                 }
@@ -153,7 +152,7 @@ class PdfViewerFragment : ChildViewerFragment() {
      * Displays the password prompt, with [reason] equals 1 if it's the first time.
      */
     private fun showPasswordPrompt(reason: Int) {
-        val context = requireContext()
+        val context = context ?: return
 
         val view = layoutInflater.inflate(R.layout.view_alert_password, null)
         val input = view.findViewById<TextInputEditText>(R.id.password_input)

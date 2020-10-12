@@ -2,7 +2,6 @@ package com.alfresco.content.account
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -75,14 +74,14 @@ data class Account(
             }
         }
 
-        fun delete(activity: Activity, callback: () -> Unit) {
+        fun delete(context: Context, callback: () -> Unit) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                AccountManager.get(activity).removeAccount(getAndroidAccount(activity), activity, {
+                AccountManager.get(context).removeAccount(getAndroidAccount(context), null, {
                     callback()
                 }, null)
             } else {
                 @Suppress("DEPRECATION")
-                AccountManager.get(activity).removeAccount(getAndroidAccount(activity), {
+                AccountManager.get(context).removeAccount(getAndroidAccount(context), {
                     callback()
                 }, null)
             }

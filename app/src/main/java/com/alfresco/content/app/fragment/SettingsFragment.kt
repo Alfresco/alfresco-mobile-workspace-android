@@ -12,13 +12,14 @@ import com.alfresco.auth.activity.LogoutActivity
 import com.alfresco.auth.activity.LogoutViewModel
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
-import com.alfresco.content.app.activity.LoginActivity
+import com.alfresco.content.app.activity.MainActivity
 import com.alfresco.content.app.loadAny
 import com.alfresco.content.app.widget.AccountPreference
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -90,9 +91,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         SearchRepository().clearRecentSearch()
 
         // Actual account removal
-        Account.delete(requireActivity()) {
-            requireActivity().startActivity(Intent(activity, LoginActivity::class.java))
-            requireActivity().finish()
+        val weakRef = WeakReference(requireActivity())
+        Account.delete(requireContext().applicationContext) {
+            val activity = weakRef.get() ?: return@delete
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            activity.startActivity(intent)
+            activity.finish()
         }
     }
 

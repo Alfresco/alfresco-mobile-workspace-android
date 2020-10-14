@@ -7,15 +7,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
-import com.alfresco.auth.AuthInterceptor
 import com.alfresco.auth.AuthType
-import com.alfresco.auth.Credentials
 import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
 import com.alfresco.auth.ui.AuthenticationViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val applicationContext: Context, authType: AuthType?, authState: String?, authConfig: AuthConfig?, endpoint: String?) : AuthenticationViewModel() {
 
@@ -26,13 +28,11 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     private val _step = MutableLiveData<Step>()
     private val _onShowHelp = MutableLiveEvent<Int>()
     private val _onShowSettings = MutableLiveEvent<Int>()
-    private val _onSsoLogin = MutableLiveEvent<String>()
 
     val hasNavigation: LiveData<Boolean> get() = _hasNavigation
     val step: LiveData<Step> get() = _step
     val onShowHelp: LiveEvent<Int> = _onShowHelp
     val onShowSettings: LiveEvent<Int> = _onShowSettings
-    val onSsoLogin: LiveEvent<String> get() = _onSsoLogin
     val isLoading = MutableLiveData<Boolean>()
     val identityUrl = MutableLiveData<String>("")
     val applicationUrl = MutableLiveData<String>("")
@@ -85,14 +85,35 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         _hasNavigation.value = enableNavigation
     }
 
-    override suspend fun onAuthType(authType: AuthType) {
+    fun startEditing() {
+        authConfigEditor = AuthConfigEditor()
+        authConfigEditor.reset(authConfig)
+    }
+
+    fun connect() {
+        isLoading.value = true
+
+        try {
+            checkAuthType(identityUrl.value!!, authConfig, ::onAuthType)
+        } catch (ex: Exception) {
+            _onError.value = ex.message
+        }
+    }
+
+    private fun onAuthType(authType: AuthType) {
         when (authType) {
             AuthType.PKCE -> {
-                if (discoveryService.isContentServicesInstalled(identityUrl.value ?: "")) {
-                    applicationUrl.value = identityUrl.value
-                    moveToStep(Step.EnterPkceCredentials)
-                } else {
-                    moveToStep(Step.InputAppServer)
+                viewModelScope.launch() {
+                    val isContentServicesInstalled = withContext(Dispatchers.IO) {
+                        discoveryService.isContentServicesInstalled(identityUrl.value ?: "")
+                    }
+
+                    if (isContentServicesInstalled) {
+                        applicationUrl.value = identityUrl.value
+                        moveToStep(Step.EnterPkceCredentials)
+                    } else {
+                        moveToStep(Step.InputAppServer)
+                    }
                 }
             }
 
@@ -106,31 +127,11 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         }
     }
 
-    fun startEditing() {
-        authConfigEditor = AuthConfigEditor()
-        authConfigEditor.reset(authConfig)
-    }
-
-    fun connect() {
-        isLoading.value = true
-
-        try {
-            checkAuthType(identityUrl.value!!, authConfig)
-        } catch (ex: Exception) {
-            _onError.value = ex.message
-        }
-    }
-
     fun ssoLogin() {
         isLoading.value = true
 
-        pkceAuth.initServiceWith(authConfig, previousAuthState)
-
-        try {
-            _onSsoLogin.value = identityUrl.value!!
-        } catch (ex: Exception) {
-            _onError.value = ex.message
-        }
+        val endpoint = requireNotNull(identityUrl.value)
+        pkceLogin(endpoint, authConfig, previousAuthState)
     }
 
     override fun onPkceAuthCancelled() {
@@ -227,10 +228,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
 
         fun login() {
             isLoading.value = true
-
-            val username = email.value ?: ""
-            val state = AuthInterceptor.basicState(username, password.value ?: "")
-            _onCredentials.value = Credentials(username, state, AuthType.BASIC.value)
+            basicLogin(email.value ?: "", password.value ?: "")
         }
     }
 

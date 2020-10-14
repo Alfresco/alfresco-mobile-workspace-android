@@ -67,7 +67,6 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         observe(viewModel.hasNavigation, ::onNavigation)
         observe(viewModel.isLoading, ::onLoading)
         observe(viewModel.step, ::onMoveToStep)
-        observe(viewModel.onSsoLogin, ::pkceLogin)
 
         observe(viewModel.onShowHelp, ::showHelp)
         observe(viewModel.onShowSettings, ::showSettings)

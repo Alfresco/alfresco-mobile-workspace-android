@@ -6,4 +6,8 @@
     <style name="ShapeAppearance.Alfresco.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">8dp</item>
     </style>
+    <style name="ShapeAppearance.Alfresco.BottomComponent" parent="ShapeAppearance.Alfresco.MediumComponent">
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
 </resources>

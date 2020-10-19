@@ -40,6 +40,8 @@
         <item name="textAppearanceButton">@style/TextAppearance.Alfresco.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.Alfresco.Overline</item>
 
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Alfresco.BottomSheetDialog</item>
+
         <!-- Shape styles -->
         <item name="shapeAppearanceSmallComponent">
             @style/ShapeAppearance.Alfresco.SmallComponent
@@ -80,6 +82,10 @@
 
     <style name="ThemeOverlay.Alfresco.Dark">
         <item name="colorPrimary">@color/alfresco_gray_900</item>
+    </style>
+
+    <style name="ThemeOverlay.Alfresco.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Alfresco.BottomSheet</item>
     </style>
 
 </resources>

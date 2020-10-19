@@ -39,6 +39,10 @@
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
     </style>
 
+    <style name="Widget.Alfresco.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Alfresco.BottomComponent</item>
+    </style>
+
     <!-- TextInputFields -->
 
     <style name="Widget.Alfresco.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

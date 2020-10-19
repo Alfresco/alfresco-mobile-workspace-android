@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="9dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="0dp"
         app:backgroundColor="?android:attr/colorBackground"
         app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
         app:strokeColor="?attr/separatorColor"

@@ -7,7 +7,7 @@
         <item name="colorSecondary">?attr/colorPrimary</item>
         <item name="colorOnSurface">@color/alfresco_gray_900</item>
         <item name="android:colorBackground">@android:color/white</item>
-        <item name="separatorColor">@color/color_on_surface_12</item>
+        <item name="separatorColor">@color/color_on_surface_15</item>
         <item name="colorControlNormal">@color/alfresco_gray_900_60</item> <!-- sdk21 workaround -->
 
         <!-- Action Bar -->

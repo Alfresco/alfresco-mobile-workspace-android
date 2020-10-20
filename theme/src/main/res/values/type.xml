@@ -52,6 +52,7 @@
     </style>
 
     <style name="TextAppearance.Alfresco.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/color_on_surface_60</item>
         <item name="fontFamily">@font/base_regular</item>
         <item name="android:fontFamily">@font/base_regular</item>
     </style>

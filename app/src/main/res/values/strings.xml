@@ -2,7 +2,7 @@
     <string name="app_name">Workspace</string>
     <string name="auth_app_name">Alfresco\nMobile Workspace</string>
 
-    <string name="nav_title_recents">Recents</string>
+    <string name="nav_title_recents">Recent</string>
     <string name="nav_title_favorites">Favorites</string>
     <string name="nav_title_browse">Browse</string>
     <string name="nav_title_settings">Account</string>

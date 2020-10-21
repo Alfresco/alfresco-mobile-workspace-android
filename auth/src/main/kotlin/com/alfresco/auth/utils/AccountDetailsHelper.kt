@@ -33,7 +33,7 @@ class AccountDetailsHelper {
 
             list.add(Item(context.getString(R.string.auth_account_details_protocol), if (authConfig.https) "HTTPS" else "HTTP"))
             list.add(Item(context.getString(R.string.auth_account_details_port), authConfig.port))
-            list.add(Item(context.getString(R.string.auth_account_details_service_docs), authConfig.serviceDocuments))
+            list.add(Item(context.getString(R.string.auth_account_details_service_path), authConfig.contentServicePath))
 
             return list
         }

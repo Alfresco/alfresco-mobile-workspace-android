@@ -47,7 +47,7 @@
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Port</string>
     <string name="auth_settings_service_section">Alfresco Content Services Settings</string>
-    <string name="auth_settings_service_document">Service Documents</string>
+    <string name="auth_settings_service_path">Path</string>
     <string name="auth_settings_auth_section">Authentication</string>
     <string name="auth_settings_auth_realm">Realm</string>
     <string name="auth_settings_auth_client_id">Client ID</string>
@@ -73,7 +73,7 @@
     <string name="auth_account_details_server">%1$s URL</string>
     <string name="auth_account_details_protocol">Protocol</string>
     <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
-    <string name="auth_account_details_service_docs">@string/auth_settings_service_document</string>
+    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
     <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
     <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
 

@@ -80,7 +80,6 @@
             </com.alfresco.ui.components.TextInputLayout>
 
             <TextView
-                android:id="@+id/tvServiceDocumentTitle"
                 style="@style/Widget.Alfresco.Auth.SectionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,19 +87,17 @@
                 android:text="@string/auth_settings_service_section" />
 
             <com.alfresco.ui.components.TextInputLayout
-                android:id="@+id/tilServiceDocument"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_settings_header_spacing"
-                android:hint="@string/auth_settings_service_document">
+                android:hint="@string/auth_settings_service_path">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etServiceDocument"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
-                    android:text="@={viewModel.authConfigEditor.serviceDocuments}" />
+                    android:text="@={viewModel.authConfigEditor.contentServicePath}" />
             </com.alfresco.ui.components.TextInputLayout>
 
             <TextView

@@ -9,5 +9,5 @@ val AuthConfig.Companion.defaultConfig: AuthConfig
             clientId = "alfresco-android-acs-app",
             realm = "alfresco",
             redirectUrl = "androidacsapp://aims/auth",
-            serviceDocuments = "alfresco"
+            contentServicePath = "alfresco"
     )

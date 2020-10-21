@@ -49,7 +49,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     val canonicalApplicationUrl: String
         get() {
             return previousAppEndpoint
-                    ?: discoveryService.serviceDocumentsEndpoint(applicationUrl.value!!).toString()
+                    ?: discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
         }
 
     // Used for display purposes
@@ -105,7 +105,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             AuthType.PKCE -> {
                 viewModelScope.launch() {
                     val isContentServicesInstalled = withContext(Dispatchers.IO) {
-                        discoveryService.isContentServicesInstalled(identityUrl.value ?: "")
+                        discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
                     }
 
                     if (isContentServicesInstalled) {
@@ -268,7 +268,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
 
         val https = MutableLiveData<Boolean>()
         val port = MutableLiveData<String>()
-        val serviceDocuments = MutableLiveData<String>()
+        val contentServicePath = MutableLiveData<String>()
         val realm = MutableLiveData<String>()
         val clientId = MutableLiveData<String>()
         val redirectUrl = MutableLiveData<String>()
@@ -278,7 +278,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         init {
             _changed.addSource(https, this::onChange)
             _changed.addSource(port, this::onChange)
-            _changed.addSource(serviceDocuments, this::onChange)
+            _changed.addSource(contentServicePath, this::onChange)
             _changed.addSource(realm, this::onChange)
             _changed.addSource(clientId, this::onChange)
         }
@@ -320,7 +320,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         private fun load(config: AuthConfig) {
             https.value = config.https
             port.value = config.port
-            serviceDocuments.value = config.serviceDocuments
+            contentServicePath.value = config.contentServicePath
             realm.value = config.realm
             clientId.value = config.clientId
             redirectUrl.value = config.redirectUrl
@@ -331,7 +331,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             return AuthConfig(
                     https = https.value ?: false,
                     port = port.value ?: "",
-                    serviceDocuments = serviceDocuments.value ?: "",
+                    contentServicePath = contentServicePath.value ?: "",
                     realm = realm.value ?: "",
                     clientId = clientId.value ?: "",
                     redirectUrl = redirectUrl.value ?: ""

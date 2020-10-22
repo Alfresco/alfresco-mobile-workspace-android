@@ -7,19 +7,19 @@
     <string name="nav_title_browse">Browse</string>
     <string name="nav_title_settings">Account</string>
 
-    <string name="sign_out_confirmation_title">Sign Out</string>
+    <string name="sign_out_confirmation_title">Sign out</string>
     <string name="sign_out_confirmation_message">Are you sure you want to sign out?</string>
     <string name="sign_out_confirmation_positive">Yes</string>
     <string name="sign_out_confirmation_negative">Cancel</string>
 
-    <string name="settings_sign_out">Sign Out</string>
-    <string name="settings_version">App Version %1$s</string>
+    <string name="settings_sign_out">Sign out</string>
+    <string name="settings_version">App version: %1$s</string>
 
     <string name="settings_theme">Theme</string>
     <string-array name="settings_theme_labels">
         <item>Light</item>
         <item>Dark</item>
-        <item>System Default</item>
+        <item>System default</item>
     </string-array>
 
     <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>

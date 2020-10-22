@@ -3,7 +3,7 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search</string>
 
-    <string name="recent_search_title">Recent Searches</string>
+    <string name="recent_search_title">Recent searches</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Files</string>

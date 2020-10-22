@@ -2,19 +2,19 @@
 <resources>
     <string name="nav_title_home">Home</string>
 
-    <string name="browse_menu_personal">Personal Files</string>
-    <string name="browse_menu_my_libraries">My Libraries</string>
-    <string name="browse_menu_fav_libraries">Favorite Libraries</string>
+    <string name="browse_menu_personal">Personal files</string>
+    <string name="browse_menu_my_libraries">My libraries</string>
+    <string name="browse_menu_fav_libraries">Favorite libraries</string>
     <string name="browse_menu_shared">Shared</string>
     <string name="browse_menu_trash">Trash</string>
 
-    <string name="favorites_tab_files">Files and Folders</string>
+    <string name="favorites_tab_files">Files and folders</string>
     <string name="favorites_tab_libraries">Libraries</string>
 
     <string name="modified_group_today">Today</string>
     <string name="modified_group_yesterday">Yesterday</string>
-    <string name="modified_group_this_week">This Week</string>
-    <string name="modified_group_last_week">Last Week</string>
+    <string name="modified_group_this_week">This week</string>
+    <string name="modified_group_last_week">Last week</string>
     <string name="modified_group_older">Older</string>
 
     <string name="contextual_search_title">Search</string>

@@ -20,7 +20,7 @@
     </string>
 
     <string name="auth_help_sso_body">
-        <![CDATA[<h6>Content Repository Location</h6>
+        <![CDATA[<h6>Content repository location</h6>
         <p>Alfresco Content Services URL:</p>
         <p>This is the URL of your Alfresco Content Services instance.</p>
         <p>Talk to your Alfresco administrator if you require help.</p>]]>
@@ -40,13 +40,13 @@
     <string name="auth_error_app_incorrect">Service incorrectly configured.</string>
 
     <!-- Settings -->
-    <string name="auth_settings_title">Advanced Settings</string>
+    <string name="auth_settings_title">Advanced settings</string>
     <string name="auth_settings_prompt_success_title">Success!</string>
     <string name="auth_settings_prompt_success_subtitle">Changes to the configuration have been saved</string>
-    <string name="auth_settings_transport_section">Transport Protocol</string>
+    <string name="auth_settings_transport_section">Transport protocol</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Port</string>
-    <string name="auth_settings_service_section">Alfresco Content Services Settings</string>
+    <string name="auth_settings_service_section">Alfresco Content Services settings</string>
     <string name="auth_settings_service_path">Path</string>
     <string name="auth_settings_auth_section">Authentication</string>
     <string name="auth_settings_auth_realm">Realm</string>
@@ -58,16 +58,16 @@
 
     <!-- Basic Auth -->
     <string name="auth_basic_connected_to">Connected to:</string>
-    <string name="auth_basic_sign_in_button">Sign In</string>
+    <string name="auth_basic_sign_in_button">Sign in</string>
     <string name="auth_basic_info_cloud">Helpful introduction and information text about Content Services Cloud.</string>
-    <string name="auth_basic_user_hint">Username or Email</string>
+    <string name="auth_basic_user_hint">Username or email</string>
     <string name="auth_basic_password_hint">Password</string>
 
     <!-- Enter Server Url -->
     <string name="auth_sso_connected_to">Signing in to:</string>
     <string name="auth_sso_info">Please provide the URL of your Content Services environment.</string>
     <string name="auth_sso_repo_hint">Content Services URL</string>
-    <string name="auth_sso_sign_in_button">Sign In With SSO</string>
+    <string name="auth_sso_sign_in_button">Sign in with SSO</string>
 
     <string name="auth_account_details_identity">Connect to URL</string>
     <string name="auth_account_details_server">%1$s URL</string>
@@ -78,7 +78,7 @@
     <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
 
     <!-- Signed out dialog -->
-    <string name="auth_signed_out_title">Session Expired.</string>
+    <string name="auth_signed_out_title">Session expired</string>
     <string name="auth_signed_out_subtitle">You are no longer signed in. Please Sign In again to continue.</string>
     <string name="auth_signed_out_other_account">Try another account</string>
     <string name="auth_signed_out_add_account">Add account</string>

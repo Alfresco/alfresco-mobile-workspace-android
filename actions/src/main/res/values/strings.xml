@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_add_favorite_title">Favorite</string>
-    <string name="action_remove_favorite_title">Remove Favorite</string>
+    <string name="action_remove_favorite_title">Remove favorite</string>
     <string name="action_delete_title">Delete</string>
     <string name="action_download_title">Download</string>
 </resources>

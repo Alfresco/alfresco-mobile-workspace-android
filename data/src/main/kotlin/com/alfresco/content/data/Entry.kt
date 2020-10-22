@@ -81,7 +81,9 @@ data class Entry(
                 result.name,
                 result.path?.formattedString(),
                 result.content?.mimeType,
-                result.modifiedAt
+                result.modifiedAt,
+                result.isFavorite ?: false,
+                result.allowableOperations?.contains("delete") ?: false
             )
         }
 
@@ -94,7 +96,7 @@ data class Entry(
                 node.content?.mimeType,
                 node.modifiedAt,
                 node.isFavorite ?: false,
-                node.allowableOperations?.indexOf("delete") ?: -1 >= 0
+                node.allowableOperations?.contains("delete") ?: false
             )
         }
 
@@ -109,7 +111,8 @@ data class Entry(
                     file.path?.formattedString(),
                     file.content?.mimeType,
                     file.modifiedAt,
-                    true
+                    true,
+                    file.allowableOperations?.contains("delete") ?: false
                 )
             }
             if (map.folder != null) {
@@ -121,7 +124,8 @@ data class Entry(
                     folder.path?.formattedString(),
                     null,
                     folder.modifiedAt,
-                    true
+                    true,
+                    folder.allowableOperations?.contains("delete") ?: false
                 )
             }
             if (map.site != null) {

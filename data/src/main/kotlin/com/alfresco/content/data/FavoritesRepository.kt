@@ -13,7 +13,7 @@ class FavoritesRepository() {
 
     private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
-        val include = listOf("path")
+        val include = listOf(listOf("path", "allowableOperations").joinToString(","))
         return ResponsePaging.with(service.listFavorites(
             userId,
             skipCount,
@@ -33,13 +33,14 @@ class FavoritesRepository() {
 
     private suspend fun favoritesLibraries(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/site))"
+        val include = listOf("allowableOperations")
         return ResponsePaging.with(service.listFavorites(
             userId,
             skipCount,
             maxItems,
             null,
             where,
-            null,
+            include,
             null
         ))
     }

@@ -16,6 +16,7 @@ android {
 dependencies {
     implementation project(':common')
     implementation project(':data')
+    implementation project(':actions')
     implementation project(':mimetype')
     implementation project(':theme')
     implementation project(':listview')

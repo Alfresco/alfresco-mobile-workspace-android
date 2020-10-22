@@ -26,13 +26,14 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private suspend fun fetchItemsInFolder(folderId: String, skipCount: Int, maxItems: Int): ResponsePaging {
+        val include = listOf(listOf("isFavorite", "allowableOperations").joinToString(","))
         return ResponsePaging.with(service.listNodeChildren(
             folderId,
             skipCount,
             maxItems,
             null,
             null,
-            null,
+            include,
             null,
             null,
             null
@@ -71,4 +72,6 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         val baseUrl = SessionManager.currentSession?.baseUrl
         return "${baseUrl}alfresco/versions/1/nodes/$id/content?attachment=false&alf_ticket=${session.ticket}"
     }
+
+    suspend fun deleteEntry(entry: Entry) = service.deleteNode(entry.id, null)
 }

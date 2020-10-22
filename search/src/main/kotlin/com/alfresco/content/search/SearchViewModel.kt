@@ -46,6 +46,8 @@ data class SearchResultsState(
 
         return copy(entries = newEntries, lastPage = response.pagination)
     }
+
+    override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 }
 
 data class SearchParams(

@@ -108,4 +108,6 @@ data class BrowseViewState(
             }
         }
     }
+
+    override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 }

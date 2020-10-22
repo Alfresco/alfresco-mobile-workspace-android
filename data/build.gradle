@@ -1,18 +1,24 @@
 import com.alfresco.buildsrc.Libs
 
 apply plugin: 'com.android.library'
+
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 dependencies {
     implementation project(':account')
-    implementation project(':session')
+    api project(':session')
 
     implementation Libs.Alfresco.auth
     implementation Libs.Alfresco.content
@@ -20,4 +26,6 @@ dependencies {
     implementation Libs.AndroidX.preference
 
     implementation Libs.OkHttp.loggingInterceptor
+
+    coreLibraryDesugaring Libs.AndroidTools.desugar
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -15,6 +16,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ActionListSheet
+import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
@@ -24,11 +28,41 @@ interface ListViewState : MvRxState {
     val entries: List<Entry>
     val lastPage: Pagination
     val request: Async<ResponsePaging>
+
+    fun copy(_entries: List<Entry>): ListViewState
 }
 
 abstract class ListViewModel<S : ListViewState>(
     initialState: S
 ) : MvRxViewModel<S>(initialState) {
+
+    init {
+        viewModelScope.on<Action.Delete> { action ->
+            setState { copy(entries.filter { it.id != action.entry.id }) as S }
+        }
+
+        viewModelScope.on<Action.AddFavorite> { action ->
+            setState {
+                copy(entries.replace(action.entry) {
+                    it.id == action.entry.id
+                }) as S
+            }
+        }
+
+        viewModelScope.on<Action.RemoveFavorite> { action ->
+            setState {
+                copy(entries.replace(action.entry) {
+                    it.id == action.entry.id
+                }) as S
+            }
+        }
+    }
+
+    fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
+        return map {
+            if (block(it)) newValue else it
+        }
+    }
 
     abstract fun refresh()
     abstract fun fetchNextPage()
@@ -97,9 +131,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                     }
                 } else {
                     listViewRow {
-                        id(it.id)
+                        id(it.stableId)
                         data(it)
                         clickListener { _ -> onItemClicked(it) }
+                        moreClickListener { _ -> onItemMoreClicked(it) }
                     }
                 }
             }
@@ -131,4 +166,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
     }
 
     abstract fun onItemClicked(entry: Entry)
+
+    open fun onItemMoreClicked(entry: Entry) {
+        ActionListSheet(entry).show(childFragmentManager, null)
+    }
 }

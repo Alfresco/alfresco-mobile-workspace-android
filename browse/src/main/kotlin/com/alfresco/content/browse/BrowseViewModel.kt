@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.on
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -29,6 +31,34 @@ class BrowseViewModel(
         withState {
             if (sortOrder(state.path) == Entry.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
+            }
+        }
+
+        if (state.path == context.getString(R.string.nav_path_favorites)) {
+            viewModelScope.on<Action.AddFavorite> { action ->
+                if (action.entry.type == Entry.Type.File ||
+                    action.entry.type == Entry.Type.Folder) {
+                    setState { copy(entries = listOf(action.entry) + entries) }
+                }
+            }
+            viewModelScope.on<Action.RemoveFavorite> { action ->
+                if (action.entry.type == Entry.Type.File ||
+                    action.entry.type == Entry.Type.Folder) {
+                    setState { copy(entries = entries.filter { it.id != action.entry.id }) }
+                }
+            }
+        }
+
+        if (state.path == context.getString(R.string.nav_path_fav_libraries)) {
+            viewModelScope.on<Action.AddFavorite> { action ->
+                if (action.entry.type == Entry.Type.Site) {
+                    setState { copy(entries = listOf(action.entry) + entries) }
+                }
+            }
+            viewModelScope.on<Action.RemoveFavorite> { action ->
+                if (action.entry.type == Entry.Type.Site) {
+                    setState { copy(entries = entries.filter { it.id != action.entry.id }) }
+                }
             }
         }
     }

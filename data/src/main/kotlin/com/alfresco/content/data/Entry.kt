@@ -1,5 +1,7 @@
 package com.alfresco.content.data
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.alfresco.content.models.DeletedNode
 import com.alfresco.content.models.Favorite
 import com.alfresco.content.models.FavoriteTargetNode
@@ -10,16 +12,28 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
+import java.time.Instant
 import java.time.ZonedDateTime
+import kotlinx.android.parcel.Parceler
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.TypeParceler
 
+@Parcelize
+@TypeParceler<ZonedDateTime, DateParceler>
 data class Entry(
     val id: String,
     val type: Type,
     val title: String,
     val subtitle: String?,
     val mimeType: String?,
-    val modified: ZonedDateTime? = null
-) {
+    val modified: ZonedDateTime? = null,
+    val isFavorite: Boolean = false,
+    val canDelete: Boolean = false
+) : Parcelable {
+
+    val stableId: String
+        get() = id + if (isFavorite) 1 else 0
+
     enum class Type {
         File,
         Folder,
@@ -54,7 +68,9 @@ data class Entry(
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
-                node.content?.mimeType
+                node.content?.mimeType,
+                node.modifiedAt,
+                node.isFavorite ?: false
             )
         }
 
@@ -75,7 +91,10 @@ data class Entry(
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
-                node.content?.mimeType
+                node.content?.mimeType,
+                node.modifiedAt,
+                node.isFavorite ?: false,
+                node.allowableOperations?.indexOf("delete") ?: -1 >= 0
             )
         }
 
@@ -88,7 +107,9 @@ data class Entry(
                     Type.File,
                     file.name,
                     file.path?.formattedString(),
-                    file.content?.mimeType
+                    file.content?.mimeType,
+                    file.modifiedAt,
+                    true
                 )
             }
             if (map.folder != null) {
@@ -98,12 +119,14 @@ data class Entry(
                     Type.Folder,
                     folder.name,
                     folder.path?.formattedString(),
-                    null
+                    null,
+                    folder.modifiedAt,
+                    true
                 )
             }
             if (map.site != null) {
                 val site = map.site!!
-                return with(site)
+                return with(site).copy(isFavorite = true)
             }
             throw IllegalStateException()
         }
@@ -152,5 +175,17 @@ data class Entry(
             return elements?.map { it.name }
                 ?.reduce { out, el -> "$out \u203A $el" }
         }
+    }
+}
+
+object DateParceler : Parceler<ZonedDateTime> {
+    private val zone = ZonedDateTime.now().zone
+
+    override fun create(parcel: Parcel): ZonedDateTime {
+        return ZonedDateTime.ofInstant(Instant.ofEpochSecond(parcel.readLong()), zone)
+    }
+
+    override fun ZonedDateTime.write(parcel: Parcel, flags: Int) {
+        parcel.writeLong(this.toInstant().epochSecond)
     }
 }

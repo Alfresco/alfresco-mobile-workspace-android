@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:paddingStart="24dp"
-    android:paddingEnd="24dp">
+    android:paddingEnd="12dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -16,9 +17,11 @@
         tools:src="@drawable/file_ic_other" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -37,8 +40,23 @@
             android:ellipsize="start"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceCaption"
-            android:letterSpacing="0"
             tools:text="Subtitle" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/more_icon_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/more_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_more_vert" />
+    </FrameLayout>
 
 </LinearLayout>

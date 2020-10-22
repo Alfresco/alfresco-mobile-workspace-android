@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import com.alfresco.content.apis.FavoritesApi
+import com.alfresco.content.models.FavoriteBodyCreate
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -47,5 +48,25 @@ class FavoritesRepository() {
         return flow {
             emit(favoritesLibraries("-me-", skipCount, maxItems))
         }
+    }
+
+    suspend fun addFavorite(entry: Entry) {
+        val key = when (entry.type) {
+            Entry.Type.File -> "file"
+            Entry.Type.Folder -> "folder"
+            Entry.Type.Site -> "site"
+            else -> ""
+        }
+
+        service.createFavorite(
+            "-me-",
+            FavoriteBodyCreate(mapOf(key to mapOf("guid" to entry.id))),
+            null,
+            null
+        )
+    }
+
+    suspend fun removeFavorite(entry: Entry) {
+        service.deleteFavorite("-me-", entry.id)
     }
 }

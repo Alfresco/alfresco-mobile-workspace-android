@@ -24,6 +24,8 @@ class ViewerActivity : AppCompatActivity() {
     override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
 
-        fragment.arguments = intent.extras
+        if (fragment is ViewerFragment) {
+            fragment.arguments = intent.extras
+        }
     }
 }

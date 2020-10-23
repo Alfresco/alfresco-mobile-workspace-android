@@ -29,6 +29,7 @@ dependencies {
     implementation project(':viewer-image')
     implementation project(':viewer-text')
     implementation project(':viewer-media')
+    implementation project(':actions')
 
     implementation Libs.Kotlin.stdlib
     implementation Libs.AndroidX.coreKtx

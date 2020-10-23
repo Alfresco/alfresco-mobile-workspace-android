@@ -39,6 +39,12 @@ class ActionListViewModel(
         if (state.entry.canDelete) actions.add(Action.Delete(state.entry))
         setState { copy(actions = actions) }
     }
+
+    fun <T : Action> execute(actionClass: Class<T>) {
+        withState { st ->
+            st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(GlobalScope)
+        }
+    }
 }
 
 class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fragment_list_item_actions) {

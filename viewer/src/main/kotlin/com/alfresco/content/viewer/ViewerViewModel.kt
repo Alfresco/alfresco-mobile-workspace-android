@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.MvRxState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.BrowseRepository
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.RenditionRepository
 import kotlinx.coroutines.launch
 
@@ -16,12 +17,12 @@ enum class ViewerType {
 
 data class ViewerState(
     val id: String,
-    val mimeType: String?,
+    val entry: Entry? = null,
     val ready: Boolean = false,
     val viewerType: ViewerType? = null,
     val viewerUri: String? = null
 ) : MvRxState {
-    constructor(args: ViewerArgs) : this(args.id, args.type)
+    constructor(args: ViewerArgs) : this(args.id)
 }
 
 class ViewerViewModel(
@@ -31,7 +32,10 @@ class ViewerViewModel(
     init {
         viewModelScope.launch {
             try {
-                val result = getContentUri(state.id, state.mimeType)
+                val entry = BrowseRepository().fetchNode(state.id)
+                setState { copy(entry = entry) }
+
+                val result = getContentUri(state.id, entry.mimeType)
                 if (result != null) {
                     setState {
                         copy(
@@ -53,7 +57,9 @@ class ViewerViewModel(
                         )
                     }
                 }
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+                setState { copy(ready = true) }
+            }
         }
     }
 

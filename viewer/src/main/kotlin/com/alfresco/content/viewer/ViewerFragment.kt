@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionBarFragment
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.viewer.common.ChildViewerArgs
@@ -87,8 +88,18 @@ class ViewerFragment : BaseMvRxFragment(), LoadingListener {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.title.text = args.title
-        val type = MimeType.with(state.mimeType)
+        val type = MimeType.with(state.entry?.mimeType)
         binding.icon.setImageDrawable(resources.getDrawable(type.icon, requireContext().theme))
+
+        if (state.entry != null) {
+            val fragment = ActionBarFragment().apply {
+                arguments = bundleOf(MvRx.KEY_ARG to state.entry)
+            }
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.action_list_bar, fragment)
+                .commit()
+        }
 
         if (state.ready) {
             if (state.viewerType != null) {

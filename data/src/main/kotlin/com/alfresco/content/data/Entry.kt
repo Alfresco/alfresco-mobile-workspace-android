@@ -70,7 +70,8 @@ data class Entry(
                 node.path?.formattedString(),
                 node.content?.mimeType,
                 node.modifiedAt,
-                node.isFavorite ?: false
+                node.isFavorite ?: false,
+                node.allowableOperations?.contains("delete") ?: false
             )
         }
 

@@ -60,6 +60,11 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         ))
     }
 
+    suspend fun fetchNode(entryId: String): Entry {
+        val include = listOf(listOf("isFavorite", "allowableOperations").joinToString(","))
+        return Entry.with(service.getNode(entryId, include, null, null).entry)
+    }
+
     public suspend fun fetchContent(documentId: String): String {
         return service.getNodeContent(documentId, null, null, null).string()
     }

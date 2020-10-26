@@ -7,49 +7,12 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
-import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.Entry
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.lang.ref.WeakReference
 import kotlinx.android.synthetic.main.fragment_list_item_actions.recycler_view
-import kotlinx.coroutines.GlobalScope
-
-data class ActionListState(
-    val actions: List<Action> = emptyList(),
-    val entry: Entry
-) : MvRxState {
-    constructor(target: Entry) : this(entry = target)
-}
-
-class ActionListViewModel(
-    state: ActionListState
-) : MvRxViewModel<ActionListState>(state) {
-
-    init {
-        val actions = mutableListOf<Action>()
-        actions.add(if (state.entry.isFavorite) Action.RemoveFavorite(state.entry) else Action.AddFavorite(state.entry))
-
-        if (BuildConfig.DEBUG) {
-            actions.add(Action.Download(state.entry))
-        }
-
-        if (state.entry.canDelete) actions.add(Action.Delete(state.entry))
-        setState { copy(actions = actions) }
-    }
-
-    fun <T : Action> execute(actionClass: Class<T>) {
-        withState { st ->
-            st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(GlobalScope)
-        }
-    }
-
-    fun execute(action: Action) {
-        action.execute(GlobalScope)
-    }
-}
 
 class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fragment_list_item_actions) {
     private val viewModel: ActionListViewModel by fragmentViewModel()
@@ -62,7 +25,7 @@ class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fr
                     id(it.title)
                     action(it)
                     clickListener { _ ->
-                        it.execute(GlobalScope) // TODO: use dedicated scope
+                        viewModel.execute(it)
                         parent.get()?.dismiss()
                     }
                 }

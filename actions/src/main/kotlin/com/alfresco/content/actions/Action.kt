@@ -7,91 +7,95 @@ import com.alfresco.content.data.FavoritesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-abstract class Action(
-    var entry: Entry,
-    val icon: Int,
+interface Action {
+    val entry: Entry
+    val icon: Int
     val title: Int
-) {
 
-    abstract suspend fun execute()
+    suspend fun execute(): Entry
+    fun copy(_entry: Entry): Action
 
     fun execute(
-        scope: CoroutineScope
+        scope: CoroutineScope,
+        block: (suspend CoroutineScope.(action: Action) -> Unit)? = null
     ) = scope.launch {
         try {
-            execute()
-            EventBus.default.send(this@Action)
+            val newEntry = execute()
+            val newAction = copy(newEntry)
+            EventBus.default.send(newAction)
+
+            if (block != null) {
+                block(newAction)
+            }
         } catch (ex: Exception) {
             Log.e("Action", ex.message ?: "")
         }
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return super.equals(other)
-    }
-
-    class AddFavorite(
-        entry: Entry,
+    data class AddFavorite(
+        override val entry: Entry,
+        override val icon: Int = R.drawable.ic_favorite,
+        override val title: Int = R.string.action_add_favorite_title
+    ) : Action {
         private val repository: FavoritesRepository = FavoritesRepository()
-    ) : Action(
-        entry,
-        R.drawable.ic_favorite,
-        R.string.action_add_favorite_title
-    ) {
-        override suspend fun execute() {
+
+        override suspend fun execute(): Entry {
             repository.addFavorite(entry)
-            entry = entry.copy(isFavorite = true)
+            return entry.copy(isFavorite = true)
         }
+
+        override fun copy(_entry: Entry): Action = copy(entry = _entry)
     }
 
-    class RemoveFavorite(
-        entry: Entry,
+    data class RemoveFavorite(
+        override var entry: Entry,
+        override val icon: Int = R.drawable.ic_favorite_filled,
+        override val title: Int = R.string.action_remove_favorite_title
+    ) : Action {
         private val repository: FavoritesRepository = FavoritesRepository()
-    ) : Action(
-        entry,
-        R.drawable.ic_favorite,
-        R.string.action_remove_favorite_title
-    ) {
-        override suspend fun execute() {
+
+        override suspend fun execute(): Entry {
             try {
                 repository.removeFavorite(entry)
             } catch (ex: KotlinNullPointerException) {
                 // no-op. expected for 204
             }
-            entry = entry.copy(isFavorite = false)
+            return entry.copy(isFavorite = false)
         }
+
+        override fun copy(_entry: Entry): Action = copy(entry = _entry)
     }
 
-    class Download(
-        entry: Entry
-    ) : Action(
-        entry,
-        R.drawable.ic_download,
-        R.string.action_download_title
-    ) {
-        override suspend fun execute() {
+    data class Download(
+        override var entry: Entry,
+        override val icon: Int = R.drawable.ic_download,
+        override val title: Int = R.string.action_download_title
+    ) : Action {
+
+        override suspend fun execute(): Entry {
             // TODO:
+            return entry
         }
+
+        override fun copy(_entry: Entry): Action = copy(entry = _entry)
     }
 
-    class Delete(
-        entry: Entry,
+    data class Delete(
+        override var entry: Entry,
+        override val icon: Int = R.drawable.ic_delete,
+        override val title: Int = R.string.action_delete_title
+    ) : Action {
         private val repository: BrowseRepository = BrowseRepository()
-    ) : Action(
-        entry,
-        R.drawable.ic_delete,
-        R.string.action_delete_title
-    ) {
-        override suspend fun execute() {
+
+        override suspend fun execute(): Entry {
             try {
                 repository.deleteEntry(entry)
             } catch (ex: KotlinNullPointerException) {
                 // no-op. expected for 204
             }
+            return entry
         }
+
+        override fun copy(_entry: Entry): Action = copy(entry = _entry)
     }
 }

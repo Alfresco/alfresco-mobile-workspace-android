@@ -22,7 +22,7 @@ class ActionListRow @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_item_action_row, this, true)
     }
 
-    @ModelProp
+    @ModelProp(options = [ModelProp.Option.IgnoreRequireHashCode])
     fun setAction(action: Action) {
         title.text = resources.getString(action.title)
         icon.setImageDrawable(ResourcesCompat.getDrawable(resources, action.icon, context.theme))

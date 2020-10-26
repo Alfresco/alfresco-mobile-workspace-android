@@ -61,7 +61,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     }
 
     suspend fun fetchNode(entryId: String): Entry {
-        val include = listOf(listOf("isFavorite", "allowableOperations").joinToString(","))
+        val include = listOf(listOf("path", "isFavorite", "allowableOperations").joinToString(","))
         return Entry.with(service.getNode(entryId, include, null, null).entry)
     }
 

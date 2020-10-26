@@ -45,6 +45,10 @@ class ActionListViewModel(
             st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(GlobalScope)
         }
     }
+
+    fun execute(action: Action) {
+        action.execute(GlobalScope)
+    }
 }
 
 class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fragment_list_item_actions) {

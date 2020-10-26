@@ -1,12 +1,19 @@
+
 package com.alfresco.content.actions
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.ActionBarFragmentBinding
+import kotlin.math.min
 
 class ActionBarFragment : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
@@ -24,21 +31,81 @@ class ActionBarFragment : BaseMvRxFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.downloadButton.setOnClickListener {
-            viewModel.execute(Action.Download::class.java)
-        }
+        withState(viewModel) { addButtons(binding.container, it.actions) }
+    }
 
-        binding.favoriteButton.setOnClickListener {
-            viewModel.execute(Action.AddFavorite::class.java) // TODO:
-        }
-
-        binding.deleteButton.setOnClickListener {
-            viewModel.execute(Action.Delete::class.java)
-            requireActivity().onBackPressed()
+    private fun addButtons(container: LinearLayout, actions: List<Action>) {
+        val count = min(actions.size, MAX_ITEMS)
+        for (i in 0 until count) {
+            if (i == count - 1) {
+                if (actions.size > MAX_ITEMS) {
+                    container.addView(createMoreButton())
+                } else {
+                    container.addView(createButton(actions[i]))
+                }
+            } else {
+                container.addView(createButton(actions[i]))
+                container.addView(createSeparator())
+            }
         }
     }
 
-    override fun invalidate() {
-        // no-op
+    private fun createButton(action: Action) =
+        ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
+            minimumHeight = minimumWidth
+            background = context.drawableFromAttribute(android.R.attr.actionBarItemBackground)
+            setImageResource(action.icon)
+            setOnClickListener {
+                viewModel.execute(action)
+
+                if (action is Action.Delete) {
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+
+    private fun createSeparator() =
+        View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1.0f
+            )
+        }
+
+    private fun createMoreButton() =
+        ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
+            minimumHeight = minimumWidth
+            background = context.drawableFromAttribute(android.R.attr.actionBarItemBackground)
+            setImageResource(R.drawable.ic_more_vert)
+            setOnClickListener {
+                // TODO: define more interaction
+            }
+        }
+
+    private fun Context.drawableFromAttribute(attribute: Int): Drawable? {
+        val attributes = obtainStyledAttributes(intArrayOf(attribute))
+        val result = attributes.getDrawable(0)
+        attributes.recycle()
+        return result
+    }
+
+    override fun invalidate() = withState(viewModel) {
+        binding.container.removeAllViews()
+        addButtons(binding.container, it.actions)
+    }
+
+    private companion object {
+        const val MAX_ITEMS = 3
     }
 }

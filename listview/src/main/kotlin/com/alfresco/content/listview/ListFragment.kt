@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -102,6 +103,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 }
             }
         })
+
+        Action.showActionToasts(lifecycleScope, view)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

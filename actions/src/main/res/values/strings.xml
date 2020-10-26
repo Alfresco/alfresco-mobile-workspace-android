@@ -4,4 +4,8 @@
     <string name="action_remove_favorite_title">Remove favorite</string>
     <string name="action_delete_title">Delete</string>
     <string name="action_download_title">Download</string>
+
+    <string name="action_add_favorite_toast">Added to favorites</string>
+    <string name="action_remove_favorite_toast">Removed from favorites</string>
+    <string name="action_delete_toast">Moved to trash</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.alfresco.content.actions
 
 import android.util.Log
+import android.view.View
+import androidx.annotation.StringRes
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -32,6 +35,20 @@ interface Action {
         }
     }
 
+    fun showToast(view: View, anchorView: View? = null)
+
+    fun showToast(
+        view: View,
+        anchorView: View?,
+        @StringRes messageResId: Int
+    ) {
+        Snackbar.make(
+            view,
+            messageResId,
+            Snackbar.LENGTH_LONG
+        ).setAnchorView(anchorView).show()
+    }
+
     data class AddFavorite(
         override val entry: Entry,
         override val icon: Int = R.drawable.ic_favorite,
@@ -45,6 +62,9 @@ interface Action {
         }
 
         override fun copy(_entry: Entry): Action = copy(entry = _entry)
+
+        override fun showToast(view: View, anchorView: View?) =
+            showToast(view, anchorView, R.string.action_add_favorite_toast)
     }
 
     data class RemoveFavorite(
@@ -64,6 +84,9 @@ interface Action {
         }
 
         override fun copy(_entry: Entry): Action = copy(entry = _entry)
+
+        override fun showToast(view: View, anchorView: View?) =
+            showToast(view, anchorView, R.string.action_remove_favorite_toast)
     }
 
     data class Download(
@@ -78,6 +101,10 @@ interface Action {
         }
 
         override fun copy(_entry: Entry): Action = copy(entry = _entry)
+
+        override fun showToast(view: View, anchorView: View?) {
+            // no-op
+        }
     }
 
     data class Delete(
@@ -97,5 +124,25 @@ interface Action {
         }
 
         override fun copy(_entry: Entry): Action = copy(entry = _entry)
+
+        override fun showToast(view: View, anchorView: View?) =
+            showToast(view, anchorView, R.string.action_delete_toast)
+    }
+
+    companion object {
+        fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
+            scope.on<AddFavorite> (block = showToast(view, anchorView))
+            scope.on<RemoveFavorite> (block = showToast(view, anchorView))
+            scope.on<Delete> (block = showToast(view, anchorView))
+        }
+
+        private fun <T : Action> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
+            return { action: T ->
+                // Don't call on backstack views
+                if (view != null) {
+                    action.showToast(view, anchorView)
+                }
+            }
+        }
     }
 }

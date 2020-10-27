@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.ActionBarFragmentBinding
 import kotlin.math.min
+import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
@@ -32,6 +34,12 @@ class ActionBarFragment : BaseMvRxFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         withState(viewModel) { addButtons(binding.container, it.actions) }
+
+        lifecycleScope.on<Action.Delete> {
+            // delayed back to present the toast
+            delay(1000)
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun addButtons(container: LinearLayout, actions: List<Action>) {
@@ -62,10 +70,6 @@ class ActionBarFragment : BaseMvRxFragment() {
             setImageResource(action.icon)
             setOnClickListener {
                 viewModel.execute(action)
-
-                if (action is Action.Delete) {
-                    requireActivity().onBackPressed()
-                }
             }
         }
 

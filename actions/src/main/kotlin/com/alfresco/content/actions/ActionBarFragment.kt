@@ -35,7 +35,7 @@ class ActionBarFragment : BaseMvRxFragment() {
 
         withState(viewModel) { addButtons(binding.container, it.actions) }
 
-        lifecycleScope.on<Action.Delete> {
+        lifecycleScope.on<ActionDelete> {
             // delayed back to present the toast
             delay(1000)
             requireActivity().onBackPressed()

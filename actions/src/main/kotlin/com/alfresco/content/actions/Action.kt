@@ -1,11 +1,12 @@
 package com.alfresco.content.actions
 
+import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
-import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -14,21 +15,24 @@ interface Action {
     val icon: Int
     val title: Int
 
-    suspend fun execute(): Entry
+    suspend fun execute(context: Context): Entry
     fun copy(_entry: Entry): Action
 
     fun execute(
+        context: Context,
         scope: CoroutineScope,
         block: (suspend CoroutineScope.(action: Action) -> Unit)? = null
     ) = scope.launch {
         try {
-            val newEntry = execute()
+            val newEntry = execute(context)
             val newAction = copy(newEntry)
             EventBus.default.send(newAction)
 
             if (block != null) {
                 block(newAction)
             }
+        } catch (ex: CancellationException) {
+            // no-op
         } catch (ex: Exception) {
             EventBus.default.send(Error(ex.message ?: ""))
         }
@@ -43,7 +47,7 @@ interface Action {
     ) : Action {
         private val repository: FavoritesRepository = FavoritesRepository()
 
-        override suspend fun execute(): Entry {
+        override suspend fun execute(context: Context): Entry {
             repository.addFavorite(entry)
             return entry.copy(isFavorite = true)
         }
@@ -61,7 +65,7 @@ interface Action {
     ) : Action {
         private val repository: FavoritesRepository = FavoritesRepository()
 
-        override suspend fun execute(): Entry {
+        override suspend fun execute(context: Context): Entry {
             try {
                 repository.removeFavorite(entry)
             } catch (ex: KotlinNullPointerException) {
@@ -82,7 +86,7 @@ interface Action {
         override val title: Int = R.string.action_download_title
     ) : Action {
 
-        override suspend fun execute(): Entry {
+        override suspend fun execute(context: Context): Entry {
             // TODO:
             return entry
         }
@@ -94,35 +98,13 @@ interface Action {
         }
     }
 
-    data class Delete(
-        override var entry: Entry,
-        override val icon: Int = R.drawable.ic_delete,
-        override val title: Int = R.string.action_delete_title
-    ) : Action {
-        private val repository: BrowseRepository = BrowseRepository()
-
-        override suspend fun execute(): Entry {
-            try {
-                repository.deleteEntry(entry)
-            } catch (ex: KotlinNullPointerException) {
-                // no-op. expected for 204
-            }
-            return entry
-        }
-
-        override fun copy(_entry: Entry): Action = copy(entry = _entry)
-
-        override fun showToast(view: View, anchorView: View?) =
-            showToast(view, anchorView, R.string.action_delete_toast)
-    }
-
     data class Error(val message: String)
 
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<AddFavorite> (block = showToast(view, anchorView))
             scope.on<RemoveFavorite> (block = showToast(view, anchorView))
-            scope.on<Delete> (block = showToast(view, anchorView))
+            scope.on<ActionDelete> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, R.string.action_generic_error)
@@ -139,7 +121,7 @@ interface Action {
             }
         }
 
-        private fun showToast(
+        internal fun showToast(
             view: View,
             anchorView: View?,
             @StringRes messageResId: Int

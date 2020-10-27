@@ -18,6 +18,7 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionListSheet
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
@@ -38,7 +39,7 @@ abstract class ListViewModel<S : ListViewState>(
 ) : MvRxViewModel<S>(initialState) {
 
     init {
-        viewModelScope.on<Action.Delete> { action ->
+        viewModelScope.on<ActionDelete> { action ->
             setState { copy(entries.filter { it.id != action.entry.id }) as S }
         }
 

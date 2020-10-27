@@ -41,28 +41,26 @@ abstract class ListViewModel<S : ListViewState>(
 ) : MvRxViewModel<S>(initialState) {
 
     init {
-        viewModelScope.on<ActionDelete> { action ->
-            setState { copy(entries.filter { it.id != action.entry.id }) as S }
-        }
-
-        viewModelScope.on<ActionAddFavorite> { action ->
-            setState {
-                copy(entries.replace(action.entry) {
-                    it.id == action.entry.id
-                }) as S
-            }
-        }
-
-        viewModelScope.on<ActionRemoveFavorite> { action ->
-            setState {
-                copy(entries.replace(action.entry) {
-                    it.id == action.entry.id
-                }) as S
-            }
-        }
+        viewModelScope.on<ActionDelete> { removeEntry(it.entry) }
+        viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
+        viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
     }
 
-    fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
+    @Suppress("UNCHECKED_CAST")
+    private fun removeEntry(entry: Entry) =
+        setState {
+            copy(entries.filter { it.id != entry.id }) as S
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun updateEntry(entry: Entry) =
+        setState {
+            copy(entries.replace(entry) {
+                it.id == entry.id
+            }) as S
+        }
+
+    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
         return map {
             if (block(it)) newValue else it
         }

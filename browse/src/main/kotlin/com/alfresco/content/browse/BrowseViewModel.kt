@@ -36,33 +36,29 @@ class BrowseViewModel(
         }
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
-            viewModelScope.on<ActionAddFavorite> { action ->
-                if (action.entry.type == Entry.Type.File ||
-                    action.entry.type == Entry.Type.Folder) {
-                    setState { copy(entries = listOf(action.entry) + entries) }
-                }
-            }
-            viewModelScope.on<ActionRemoveFavorite> { action ->
-                if (action.entry.type == Entry.Type.File ||
-                    action.entry.type == Entry.Type.Folder) {
-                    setState { copy(entries = entries.filter { it.id != action.entry.id }) }
-                }
-            }
+            val types = setOf(Entry.Type.File, Entry.Type.Folder)
+            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::addEntry) }
+            viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
         }
 
         if (state.path == context.getString(R.string.nav_path_fav_libraries)) {
-            viewModelScope.on<ActionAddFavorite> { action ->
-                if (action.entry.type == Entry.Type.Site) {
-                    setState { copy(entries = listOf(action.entry) + entries) }
-                }
-            }
-            viewModelScope.on<ActionRemoveFavorite> { action ->
-                if (action.entry.type == Entry.Type.Site) {
-                    setState { copy(entries = entries.filter { it.id != action.entry.id }) }
-                }
-            }
+            val types = setOf(Entry.Type.Site)
+            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::addEntry) }
+            viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
         }
     }
+
+    @Suppress("ControlFlowWithEmptyBody")
+    private fun Entry.ifType(
+        types: Set<Entry.Type>,
+        block: (entry: Entry) -> Unit
+    ) = if (types.contains(type)) { block(this) } else { }
+
+    private fun addEntry(entry: Entry) =
+        setState { copy(entries = listOf(entry) + entries) }
+
+    private fun removeEntry(entry: Entry) =
+        setState { copy(entries = entries.filter { it.id != entry.id }) }
 
     override fun refresh() = fetch()
 

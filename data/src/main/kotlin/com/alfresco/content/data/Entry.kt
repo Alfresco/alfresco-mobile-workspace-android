@@ -28,7 +28,8 @@ data class Entry(
     val mimeType: String?,
     val modified: ZonedDateTime? = null,
     val isFavorite: Boolean = false,
-    val canDelete: Boolean = false
+    val canDelete: Boolean = false,
+    val isTrashed: Boolean = false
 ) : Parcelable {
 
     val stableId: String
@@ -172,7 +173,11 @@ data class Entry(
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
-                node.content?.mimeType
+                node.content?.mimeType,
+                node.modifiedAt,
+                node.isFavorite ?: false,
+                canDelete = false,
+                isTrashed = true
             )
         }
 

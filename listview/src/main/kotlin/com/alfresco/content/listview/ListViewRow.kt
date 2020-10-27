@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -41,6 +42,9 @@ class ListViewRow @JvmOverloads constructor(
 
         subtitle.text = entry.subtitle
         subtitle.visibility = if (entry.subtitle != null) View.VISIBLE else View.GONE
+
+        // Disable action on Trash items
+        more_icon_frame.isVisible = !entry.isTrashed
     }
 
     @CallbackProp

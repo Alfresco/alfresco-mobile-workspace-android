@@ -6,6 +6,7 @@ import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.list.replace
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
 
@@ -102,12 +103,6 @@ data class BrowseViewState(
 
     fun copyPrepending(entry: Entry): BrowseViewState =
         copyUpdatingBase(listOf(entry) + baseEntries)
-
-    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
-        return map {
-            if (block(it)) newValue else it
-        }
-    }
 
     enum class ModifiedGroup() {
         Today,

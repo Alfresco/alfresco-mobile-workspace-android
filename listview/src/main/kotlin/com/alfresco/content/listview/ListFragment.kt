@@ -27,6 +27,7 @@ import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
+import com.alfresco.list.replace
 
 interface ListViewState : MvRxState {
     val entries: List<Entry>
@@ -44,12 +45,6 @@ interface ListViewState : MvRxState {
         copy(entries.replace(entry) {
             it.id == entry.id
         })
-
-    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
-        return map {
-            if (block(it)) newValue else it
-        }
-    }
 }
 
 abstract class ListViewModel<S : ListViewState>(

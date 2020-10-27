@@ -11,6 +11,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 dependencies {
@@ -32,6 +36,8 @@ dependencies {
     implementation Libs.AndroidX.coordinatorLayout
     implementation Libs.AndroidX.swipeRefreshLayout
     implementation Libs.AndroidX.Navigation.fragment
+
+    coreLibraryDesugaring Libs.AndroidTools.desugar
 
     implementation Libs.mvRx
 

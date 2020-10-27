@@ -2,6 +2,7 @@ package com.alfresco.content.listview
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -24,13 +25,12 @@ import com.alfresco.content.actions.ActionListSheet
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
 
 interface ListViewState : MvRxState {
     val entries: List<Entry>
-    val lastPage: Pagination
+    val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
 
     fun copy(_entries: List<Entry>): ListViewState
@@ -153,10 +153,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 }
             }
 
-            if (state.lastPage.hasMoreItems) {
+            if (state.hasMoreItems) {
                 if (state.request is Loading) {
                     listViewPageLoading {
-                        id("loading at ${state.lastPage.count}")
+                        id("loading at ${state.entries.size}")
                     }
                 } else {
                     // On failure delay creating the boundary so that the list scrolls up
@@ -164,13 +164,13 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                     val isFail = state.request is Fail
                     if (isFail && !delayedBoundary) {
                         delayedBoundary = true
-                        Handler().postDelayed({ this.requestModelBuild() }, 300)
+                        Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
                     } else {
                         if (isFail) {
                             delayedBoundary = false
                         }
                         listViewPageBoundary {
-                            id("boundary at ${state.lastPage.count}")
+                            id("boundary at ${state.entries.size}")
                             onBind { _, _, _ -> viewModel.fetchNextPage() }
                         }
                     }

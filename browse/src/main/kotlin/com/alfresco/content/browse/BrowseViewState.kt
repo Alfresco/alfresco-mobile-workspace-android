@@ -4,7 +4,6 @@ import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.listview.ListViewState
 import java.time.ZonedDateTime
@@ -14,7 +13,7 @@ data class BrowseViewState(
     val path: String,
     val nodeId: String?,
     override val entries: List<Entry> = emptyList(),
-    override val lastPage: Pagination = Pagination.empty(),
+    override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     val baseEntries: List<Entry> = emptyList()
 ) : ListViewState {
@@ -30,7 +29,7 @@ data class BrowseViewState(
         val pageEntries = response.entries
         val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
 
-        return copyUpdatingBase(newEntries).copy(lastPage = response.pagination)
+        return copyUpdatingBase(newEntries).copy(hasMoreItems = response.pagination.hasMoreItems)
     }
 
     private fun copyUpdatingBase(newEntries: List<Entry>) =

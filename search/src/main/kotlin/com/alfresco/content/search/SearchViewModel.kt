@@ -7,7 +7,6 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.Pagination
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 
 data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
-    override val lastPage: Pagination = Pagination.empty(),
+    override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
     val filters: SearchFilters = emptyFilters(),
@@ -44,7 +43,7 @@ data class SearchResultsState(
         val pageEntries = response.entries
         val newEntries = if (nextPage) { entries + pageEntries } else { pageEntries }
 
-        return copy(entries = newEntries, lastPage = response.pagination)
+        return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)

@@ -18,8 +18,10 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionListSheet
+import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Pagination
@@ -43,7 +45,7 @@ abstract class ListViewModel<S : ListViewState>(
             setState { copy(entries.filter { it.id != action.entry.id }) as S }
         }
 
-        viewModelScope.on<Action.AddFavorite> { action ->
+        viewModelScope.on<ActionAddFavorite> { action ->
             setState {
                 copy(entries.replace(action.entry) {
                     it.id == action.entry.id
@@ -51,7 +53,7 @@ abstract class ListViewModel<S : ListViewState>(
             }
         }
 
-        viewModelScope.on<Action.RemoveFavorite> { action ->
+        viewModelScope.on<ActionRemoveFavorite> { action ->
             setState {
                 copy(entries.replace(action.entry) {
                     it.id == action.entry.id

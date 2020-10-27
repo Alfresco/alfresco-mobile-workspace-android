@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.FavoritesRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -40,70 +39,12 @@ interface Action {
 
     fun showToast(view: View, anchorView: View? = null)
 
-    data class AddFavorite(
-        override val entry: Entry,
-        override val icon: Int = R.drawable.ic_favorite,
-        override val title: Int = R.string.action_add_favorite_title
-    ) : Action {
-        private val repository: FavoritesRepository = FavoritesRepository()
-
-        override suspend fun execute(context: Context): Entry {
-            repository.addFavorite(entry)
-            return entry.copy(isFavorite = true)
-        }
-
-        override fun copy(_entry: Entry): Action = copy(entry = _entry)
-
-        override fun showToast(view: View, anchorView: View?) =
-            showToast(view, anchorView, R.string.action_add_favorite_toast)
-    }
-
-    data class RemoveFavorite(
-        override var entry: Entry,
-        override val icon: Int = R.drawable.ic_favorite_filled,
-        override val title: Int = R.string.action_remove_favorite_title
-    ) : Action {
-        private val repository: FavoritesRepository = FavoritesRepository()
-
-        override suspend fun execute(context: Context): Entry {
-            try {
-                repository.removeFavorite(entry)
-            } catch (ex: KotlinNullPointerException) {
-                // no-op. expected for 204
-            }
-            return entry.copy(isFavorite = false)
-        }
-
-        override fun copy(_entry: Entry): Action = copy(entry = _entry)
-
-        override fun showToast(view: View, anchorView: View?) =
-            showToast(view, anchorView, R.string.action_remove_favorite_toast)
-    }
-
-    data class Download(
-        override var entry: Entry,
-        override val icon: Int = R.drawable.ic_download,
-        override val title: Int = R.string.action_download_title
-    ) : Action {
-
-        override suspend fun execute(context: Context): Entry {
-            // TODO:
-            return entry
-        }
-
-        override fun copy(_entry: Entry): Action = copy(entry = _entry)
-
-        override fun showToast(view: View, anchorView: View?) {
-            // no-op
-        }
-    }
-
     data class Error(val message: String)
 
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
-            scope.on<AddFavorite> (block = showToast(view, anchorView))
-            scope.on<RemoveFavorite> (block = showToast(view, anchorView))
+            scope.on<ActionAddFavorite> (block = showToast(view, anchorView))
+            scope.on<ActionRemoveFavorite> (block = showToast(view, anchorView))
             scope.on<ActionDelete> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {

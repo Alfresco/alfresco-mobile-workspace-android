@@ -37,10 +37,10 @@ class ActionListViewModel(
 
     private fun makeActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
-        actions.add(if (entry.isFavorite) Action.RemoveFavorite(entry) else Action.AddFavorite(entry))
+        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
 
         if (BuildConfig.DEBUG) {
-            if (entry.type == Entry.Type.File) actions.add(Action.Download(entry))
+            if (entry.type == Entry.Type.File) actions.add(ActionDownload(entry))
         }
 
         if (entry.canDelete) actions.add(ActionDelete(entry))

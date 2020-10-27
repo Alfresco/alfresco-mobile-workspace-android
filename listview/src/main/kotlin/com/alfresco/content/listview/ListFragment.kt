@@ -34,6 +34,22 @@ interface ListViewState : MvRxState {
     val request: Async<ResponsePaging>
 
     fun copy(_entries: List<Entry>): ListViewState
+
+    fun copyRemoving(entry: Entry) =
+        copy(entries.filter {
+            it.id != entry.id
+        })
+
+    fun copyUpdating(entry: Entry) =
+        copy(entries.replace(entry) {
+            it.id == entry.id
+        })
+
+    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
+        return map {
+            if (block(it)) newValue else it
+        }
+    }
 }
 
 abstract class ListViewModel<S : ListViewState>(
@@ -48,17 +64,11 @@ abstract class ListViewModel<S : ListViewState>(
 
     @Suppress("UNCHECKED_CAST")
     private fun removeEntry(entry: Entry) =
-        setState {
-            copy(entries.filter { it.id != entry.id }) as S
-        }
+        setState { copyRemoving(entry) as S }
 
     @Suppress("UNCHECKED_CAST")
     private fun updateEntry(entry: Entry) =
-        setState {
-            copy(entries.replace(entry) {
-                it.id == entry.id
-            }) as S
-        }
+        setState { copyUpdating(entry) as S }
 
     private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
         return map {

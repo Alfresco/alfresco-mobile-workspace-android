@@ -30,7 +30,7 @@ class BrowseViewModel(
         refresh()
 
         withState {
-            if (sortOrder(state.path) == Entry.SortOrder.ByModifiedDate) {
+            if (it.sortOrder == Entry.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
             }
         }
@@ -55,10 +55,10 @@ class BrowseViewModel(
     ) = if (types.contains(type)) { block(this) } else { }
 
     private fun addEntry(entry: Entry) =
-        setState { copy(entries = listOf(entry) + entries) }
+        setState { copyPrepending(entry) }
 
     private fun removeEntry(entry: Entry) =
-        setState { copy(entries = entries.filter { it.id != entry.id }) }
+        setState { copyRemoving(entry) as BrowseViewState }
 
     override fun refresh() = fetch()
 
@@ -79,7 +79,7 @@ class BrowseViewModel(
                 if (it is Loading) {
                     copy(request = it)
                 } else {
-                    updateEntries(it(), sortOrder(path)).copy(request = it)
+                    update(it()).copy(request = it)
                 }
             }
         }
@@ -112,13 +112,6 @@ class BrowseViewModel(
                 BrowseRepository().loadItemsInSite(requireNotNull(item), skipCount, maxItems)
 
             else -> throw IllegalStateException()
-        }
-    }
-
-    private fun sortOrder(path: String): Entry.SortOrder {
-        return when (path) {
-            context.getString(R.string.nav_path_recents) -> Entry.SortOrder.ByModifiedDate
-            else -> Entry.SortOrder.Default
         }
     }
 

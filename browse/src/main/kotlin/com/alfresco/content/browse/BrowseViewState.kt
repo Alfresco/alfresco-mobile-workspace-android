@@ -21,9 +21,8 @@ data class BrowseViewState(
 
     constructor(args: BrowseArgs) : this(args.path, args.id)
 
-    fun updateEntries(
-        response: ResponsePaging?,
-        sortOrder: Entry.SortOrder
+    fun update(
+        response: ResponsePaging?
     ): BrowseViewState {
         if (response == null) return this
 
@@ -31,18 +30,26 @@ data class BrowseViewState(
         val pageEntries = response.entries
         val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
 
-        return when (sortOrder) {
-            Entry.SortOrder.ByModifiedDate -> groupByModifiedDateReducer(newEntries)
-            else -> baseReducer(newEntries)
-        }.copy(lastPage = response.pagination)
+        return copyUpdatingBase(newEntries).copy(lastPage = response.pagination)
     }
 
-    private fun baseReducer(newEntries: List<Entry>): BrowseViewState {
-        return copy(
+    private fun copyUpdatingBase(newEntries: List<Entry>) =
+        when (sortOrder) {
+            Entry.SortOrder.ByModifiedDate -> groupByModifiedDateReducer(newEntries)
+            else -> baseReducer(newEntries)
+        }
+
+    val sortOrder: Entry.SortOrder
+        get() = when (path) {
+            "recents" -> Entry.SortOrder.ByModifiedDate // TODO:
+            else -> Entry.SortOrder.Default
+        }
+
+    private fun baseReducer(newEntries: List<Entry>): BrowseViewState =
+        copy(
             entries = newEntries,
             baseEntries = newEntries
         )
-    }
 
     private fun groupByModifiedDateReducer(newEntries: List<Entry>): BrowseViewState {
         val now = ZonedDateTime.now()
@@ -84,6 +91,25 @@ data class BrowseViewState(
         )
     }
 
+    override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
+
+    override fun copyRemoving(entry: Entry): ListViewState =
+        copyUpdatingBase(baseEntries.filter { it.id != entry.id })
+
+    override fun copyUpdating(entry: Entry): ListViewState =
+        copyUpdatingBase(entries.replace(entry) {
+            it.id == entry.id
+        })
+
+    fun copyPrepending(entry: Entry): BrowseViewState =
+        copyUpdatingBase(listOf(entry) + baseEntries)
+
+    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
+        return map {
+            if (block(it)) newValue else it
+        }
+    }
+
     enum class ModifiedGroup() {
         Today,
         Yesterday,
@@ -108,6 +134,4 @@ data class BrowseViewState(
             }
         }
     }
-
-    override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 }

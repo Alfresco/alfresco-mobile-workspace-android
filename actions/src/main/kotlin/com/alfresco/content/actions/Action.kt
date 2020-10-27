@@ -1,6 +1,5 @@
 package com.alfresco.content.actions
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.content.data.BrowseRepository
@@ -31,23 +30,11 @@ interface Action {
                 block(newAction)
             }
         } catch (ex: Exception) {
-            Log.e("Action", ex.message ?: "")
+            EventBus.default.send(Error(ex.message ?: ""))
         }
     }
 
     fun showToast(view: View, anchorView: View? = null)
-
-    fun showToast(
-        view: View,
-        anchorView: View?,
-        @StringRes messageResId: Int
-    ) {
-        Snackbar.make(
-            view,
-            messageResId,
-            Snackbar.LENGTH_LONG
-        ).setAnchorView(anchorView).show()
-    }
 
     data class AddFavorite(
         override val entry: Entry,
@@ -129,11 +116,18 @@ interface Action {
             showToast(view, anchorView, R.string.action_delete_toast)
     }
 
+    data class Error(val message: String)
+
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<AddFavorite> (block = showToast(view, anchorView))
             scope.on<RemoveFavorite> (block = showToast(view, anchorView))
             scope.on<Delete> (block = showToast(view, anchorView))
+            scope.on<Error> {
+                if (view != null) {
+                    showToast(view, anchorView, R.string.action_generic_error)
+                }
+            }
         }
 
         private fun <T : Action> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
@@ -143,6 +137,18 @@ interface Action {
                     action.showToast(view, anchorView)
                 }
             }
+        }
+
+        private fun showToast(
+            view: View,
+            anchorView: View?,
+            @StringRes messageResId: Int
+        ) {
+            Snackbar.make(
+                view,
+                messageResId,
+                Snackbar.LENGTH_LONG
+            ).setAnchorView(anchorView).show()
         }
     }
 }

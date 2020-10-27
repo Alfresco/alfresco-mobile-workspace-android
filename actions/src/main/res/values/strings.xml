@@ -8,4 +8,5 @@
     <string name="action_add_favorite_toast">Added to favorites</string>
     <string name="action_remove_favorite_toast">Removed from favorites</string>
     <string name="action_delete_toast">Moved to trash</string>
+    <string name="action_generic_error">Unknown error occurred</string>
 </resources>

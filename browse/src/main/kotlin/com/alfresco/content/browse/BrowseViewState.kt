@@ -97,7 +97,7 @@ data class BrowseViewState(
         copyUpdatingBase(baseEntries.filter { it.id != entry.id })
 
     override fun copyUpdating(entry: Entry): ListViewState =
-        copyUpdatingBase(entries.replace(entry) {
+        copyUpdatingBase(baseEntries.replace(entry) {
             it.id == entry.id
         })
 

@@ -11,7 +11,7 @@ class SharedLinksRepository {
     }
 
     private suspend fun nodes(skipCount: Int, maxItems: Int): ResponsePaging {
-        val include = listOf("path")
+        val include = listOf(listOf("path", "isFavorite", "allowableOperations").joinToString(","))
         return ResponsePaging.with(service.listSharedLinks(
             skipCount,
             maxItems,

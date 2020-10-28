@@ -163,7 +163,10 @@ data class Entry(
                 Type.File,
                 link.name ?: "",
                 null,
-                link.content?.mimeType
+                link.content?.mimeType,
+                link.modifiedAt,
+                link.isFavorite ?: false,
+                link.allowableOperations?.contains("delete") ?: false
             )
         }
 

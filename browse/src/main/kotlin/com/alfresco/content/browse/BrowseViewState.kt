@@ -21,6 +21,12 @@ data class BrowseViewState(
 
     constructor(args: BrowseArgs) : this(args.path, args.id)
 
+    override val isCompact: Boolean
+        get() = when (path) {
+            "site", "folder", "my-libraries", "fav-libraries", "shared" -> true
+            else -> false
+        }
+
     fun update(
         response: ResponsePaging?
     ): BrowseViewState {

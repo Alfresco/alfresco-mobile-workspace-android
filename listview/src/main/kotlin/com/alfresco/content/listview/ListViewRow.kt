@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -31,6 +32,7 @@ class ListViewRow @JvmOverloads constructor(
     @ModelProp
     fun setData(entry: Entry) {
         title.text = entry.title
+        subtitle.text = entry.subtitle
 
         val type = when (entry.type) {
             Entry.Type.Site -> MimeType.LIBRARY
@@ -40,11 +42,20 @@ class ListViewRow @JvmOverloads constructor(
 
         icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
-        subtitle.text = entry.subtitle
-        subtitle.visibility = if (entry.subtitle != null) View.VISIBLE else View.GONE
-
         // Disable action on Trash items
         more_icon_frame.isVisible = !entry.isTrashed
+    }
+
+    @ModelProp
+    fun setCompact(compact: Boolean) {
+        val heightResId = if (compact) R.dimen.list_row_compact_height else R.dimen.list_row_height
+
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            resources.getDimension(heightResId).toInt()
+        )
+
+        subtitle.isVisible = !compact
     }
 
     @CallbackProp

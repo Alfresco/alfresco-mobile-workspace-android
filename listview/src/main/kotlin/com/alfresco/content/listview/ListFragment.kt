@@ -33,6 +33,7 @@ interface ListViewState : MvRxState {
     val entries: List<Entry>
     val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
+    val isCompact: Boolean
 
     fun copy(_entries: List<Entry>): ListViewState
 
@@ -142,6 +143,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                     listViewRow {
                         id(it.stableId)
                         data(it)
+                        compact(state.isCompact)
                         clickListener { _ -> onItemClicked(it) }
                         moreClickListener { _ -> onItemMoreClicked(it) }
                     }

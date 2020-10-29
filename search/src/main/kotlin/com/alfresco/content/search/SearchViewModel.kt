@@ -26,6 +26,7 @@ data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
+    override val isCompact: Boolean = false,
 
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,

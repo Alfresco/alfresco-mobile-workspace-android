@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundedView">
+        <attr name="backgroundColor" />
+        <attr name="strokeWidth" />
+        <attr name="strokeColor" />
+        <attr name="shapeAppearance" />
+    </declare-styleable>
+</resources>

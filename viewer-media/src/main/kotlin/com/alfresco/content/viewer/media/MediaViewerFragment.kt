@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
@@ -28,7 +30,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.ErrorMessageProvider
@@ -41,7 +43,7 @@ class MediaViewerFragment : ChildViewerFragment() {
     private lateinit var args: ChildViewerArgs
     private val viewModel: MediaViewerViewModel by fragmentViewModel()
 
-    private lateinit var playerView: StyledPlayerView
+    private lateinit var playerView: PlayerView
     private lateinit var dataSourceFactory: DataSource.Factory
     private var player: SimpleExoPlayer? = null
     private var mediaItems: List<MediaItem>? = null
@@ -85,6 +87,8 @@ class MediaViewerFragment : ChildViewerFragment() {
         }
         playerView.setErrorMessageProvider(PlayerErrorMessageProvider())
         playerView.requestFocus()
+        playerView.setControlDispatcher(DefaultControlDispatcher(FAST_FORWARD_MS, REWIND_MS))
+        playerView.videoSurfaceView?.visibility = View.GONE
 
         if (savedInstanceState != null) {
             trackSelectorParameters =
@@ -237,6 +241,7 @@ class MediaViewerFragment : ChildViewerFragment() {
         override fun onPlaybackStateChanged(state: Int) {
             if (state == PlaybackState.STATE_PLAYING ||
                 state == PlaybackState.STATE_STOPPED) {
+                playerView.videoSurfaceView?.isVisible = hasVideoTracks()
                 loadingListener.get()?.onContentLoaded()
             }
         }
@@ -297,12 +302,23 @@ class MediaViewerFragment : ChildViewerFragment() {
         }
     }
 
-    override fun showInfoWhenLoaded(): Boolean = args.type.startsWith("audio/")
+    private fun hasVideoTracks(): Boolean {
+        val trackInfo = trackSelector?.currentMappedTrackInfo
+        if (trackInfo != null) {
+            return (trackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO)
+                != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS)
+        }
+        return false
+    }
 
-    companion object {
-        private const val KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters"
-        private const val KEY_WINDOW = "window"
-        private const val KEY_POSITION = "position"
-        private const val KEY_AUTO_PLAY = "auto_play"
+    override fun showInfoWhenLoaded(): Boolean = !hasVideoTracks()
+
+    private companion object {
+        const val KEY_TRACK_SELECTOR_PARAMETERS = "track_selector_parameters"
+        const val KEY_WINDOW = "window"
+        const val KEY_POSITION = "position"
+        const val KEY_AUTO_PLAY = "auto_play"
+        const val FAST_FORWARD_MS = 10_000L
+        const val REWIND_MS = 10_000L
     }
 }

@@ -7,16 +7,12 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <com.google.android.exoplayer2.ui.StyledPlayerView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:show_subtitle_button="false"
-        app:show_previous_button="false"
-        app:show_next_button="false"
-        app:show_rewind_button="false"
-        app:show_fastforward_button="false"
         app:shutter_background_color="@android:color/transparent"
-        app:surface_type="none" />
+        app:surface_type="none"
+        app:controller_layout_id="@layout/alfresco_exo_player_control_view"/>
 
 </FrameLayout>

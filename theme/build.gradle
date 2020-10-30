@@ -11,6 +11,8 @@ android {
 }
 
 dependencies {
+    implementation project(':base-ui')
+
     implementation Libs.Kotlin.stdlib
     implementation Libs.Google.material
 }

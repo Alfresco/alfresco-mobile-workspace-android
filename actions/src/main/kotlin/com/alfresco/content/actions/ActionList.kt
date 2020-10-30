@@ -4,22 +4,45 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.databinding.FragmentListItemActionsBinding
 import com.alfresco.content.data.Entry
+import com.alfresco.content.mimetype.MimeType
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.lang.ref.WeakReference
-import kotlinx.android.synthetic.main.fragment_list_item_actions.recycler_view
 
 class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fragment_list_item_actions) {
     private val viewModel: ActionListViewModel by fragmentViewModel()
     private val parent = WeakReference(parent)
+    private lateinit var binding: FragmentListItemActionsBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentListItemActionsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun invalidate() = withState(viewModel) { state ->
-        recycler_view.withModels {
+        val type = when (state.entry.type) {
+            Entry.Type.Site -> MimeType.LIBRARY
+            Entry.Type.Folder -> MimeType.FOLDER
+            else -> MimeType.with(state.entry.mimeType)
+        }
+
+        binding.header.apply {
+            icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context?.theme))
+            title.text = state.entry.title
+        }
+
+        binding.recyclerView.withModels {
             state.actions.forEach {
                 actionListRow {
                     id(it.title)

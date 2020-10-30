@@ -3,7 +3,6 @@ import com.alfresco.buildsrc.Libs
 apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -18,8 +17,10 @@ android {
 }
 
 dependencies {
+    implementation project(':base-ui')
     implementation project(':common')
     implementation project(':data')
+    implementation project(':mimetype')
 
     implementation Libs.Kotlin.stdlib
     implementation Libs.Coroutines.core

@@ -8,8 +8,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import kotlinx.android.synthetic.main.view_item_action_row.view.icon
-import kotlinx.android.synthetic.main.view_item_action_row.view.title
+import com.alfresco.content.actions.databinding.ViewItemActionRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ActionListRow @JvmOverloads constructor(
@@ -17,15 +16,14 @@ class ActionListRow @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
-    init {
-        LayoutInflater.from(context).inflate(R.layout.view_item_action_row, this, true)
-    }
+    private val binding = ViewItemActionRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp(options = [ModelProp.Option.IgnoreRequireHashCode])
     fun setAction(action: Action) {
-        title.text = resources.getString(action.title)
-        icon.setImageDrawable(ResourcesCompat.getDrawable(resources, action.icon, context.theme))
+        binding.apply {
+            title.text = resources.getString(action.title)
+            icon.setImageDrawable(ResourcesCompat.getDrawable(resources, action.icon, context.theme))
+        }
     }
 
     @CallbackProp

@@ -14,11 +14,12 @@ class FavoritesRepository() {
     private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
         val include = listOf(listOf("path", "allowableOperations").joinToString(","))
+        val orderBy = listOf("createdAt DESC")
         return ResponsePaging.with(service.listFavorites(
             userId,
             skipCount,
             maxItems,
-            null,
+            orderBy,
             where,
             include,
             null

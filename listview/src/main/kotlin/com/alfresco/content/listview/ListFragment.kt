@@ -53,9 +53,16 @@ abstract class ListViewModel<S : ListViewState>(
 ) : MvRxViewModel<S>(initialState) {
 
     init {
-        viewModelScope.on<ActionDelete> { removeEntry(it.entry) }
+        viewModelScope.on<ActionDelete> { onDelete(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
+    }
+
+    private fun onDelete(entry: Entry) = entry.run {
+        when (type) {
+            Entry.Type.File -> removeEntry(entry)
+            else -> refresh()
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

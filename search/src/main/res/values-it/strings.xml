@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="search_title">Ricerca</string>
+    <string name="search_hint">Ricerca</string>
+
+    <string name="recent_search_title">Ricerche recenti</string>
+
+    <string name="search_chip_contextual">in: %s</string>
+    <string name="search_chip_files">File</string>
+    <string name="search_chip_folders">Cartelle</string>
+    <string name="search_chip_libraries">Librerie</string>
+</resources>

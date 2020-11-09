@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="error_cleartext_not_permitted">Traffico non crittografato non consentito</string>
+    <string name="error_generic">Riproduzione non riuscita</string>
+    <string name="error_no_decoder">Questo dispositivo non fornisce un decodificatore per &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
+    <string name="error_no_secure_decoder">Questo dispositivo non fornisce un decodificatore sicuro per &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
+    <string name="error_querying_decoders">Impossibile eseguire una query sui decodificatori del dispositivo</string>
+    <string name="error_instantiating_decoder">Impossibile creare un\'istanza del decodificatore &lt;xliff:g id=\"decoder_name\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
+    <string name="error_unsupported_video">Il contenuto multimediale comprende tracce video che non sono riproducibili nel dispositivo</string>
+    <string name="error_unsupported_audio">Il contenuto multimediale comprende tracce audio che non sono riproducibili nel dispositivo</string>
+</resources>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="password_prompt_title">File bloccato</string>
+    <string name="password_prompt_message">Immettere la password per sbloccare il file.</string>
+    <string name="password_hint">Password</string>
+    <string name="password_prompt_fail_title">Password errata</string>
+    <string name="password_prompt_fail_message">Immettere nuovamente la password per sbloccare il file.</string>
+    <string name="password_prompt_positive">Invia</string>
+    <string name="password_prompt_negative">Annulla</string>
+</resources>

@@ -1,0 +1,85 @@
+﻿<resources>
+    <string name="auth_app_name">Auth Library</string>
+    <string name="auth_copyright_notice">© 2020 Alfresco Software, Inc. Alle rechten voorbehouden.</string>
+
+    <string name="auth_connect_field_hint">Verbinden met</string>
+    <string name="auth_connect_button">Verbinden</string>
+    <string name="auth_help_button">Hulp nodig?</string>
+    <string name="auth_settings_button">@string/auth_settings_title</string>
+    <string name="auth_progress_bar_message">Verbinding wordt gemaakt</string>
+
+    <string name="auth_help_overlay_title">Help</string>
+    <string name="auth_help_identity_body">
+        <![CDATA[<h1>Verbinding maken met Alfresco&lt;/h5>
+        <h6>Alfresco Content Services-URL<h6>
+        <p>U kunt de URL van uw Alfresco Content Services-instance invoeren. Hiervoor moet u uw gebruikersnaam en wachtwoord opgeven voor verificatie.</p>
+        <h6>Aanmelden met SSO</h6>
+        <p>U kunt de URL van uw Alfresco Identity Management Service invoeren voor verificatie met de identiteitsprovider van uw organisatie.<p>
+        <p>*U moet de URL van uw Alfresco Content Services-instance naderhand opgeven.</p>\n
+        <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
+    </string>
+
+    <string name="auth_help_sso_body">
+        <![CDATA[<h6>Locatie content-repository</h6>
+        <p>Alfresco Content Services-URL:</p>
+        <p>Dit is de URL van uw Alfresco Content Services-instance.</p>
+        <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
+    </string>
+
+    <string name="auth_help_settings_body">
+      <![CDATA[<h1>Verifiëren met Alfresco</h1>
+      <p>Als u de standaard SSO-instellingen niet gebruikt, kunnen uw waarden hier worden ingesteld.</p>
+      <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
+    </string>
+
+    <!-- Errors -->
+    <string name="auth_error_title">Fout</string>
+    <string name="auth_error_check_connect_url">Kan geen verificatieservice vinden op de opgegeven Alfresco-URL.</string>
+    <string name="auth_error_wrong_credentials">Onjuiste gebruikersnaam of wachtwoord opgegeven.</string>
+    <string name="auth_error_app_unreachable">Verificatieservice is momenteel onbereikbaar.</string>
+    <string name="auth_error_app_incorrect">Service is onjuist geconfigureerd.</string>
+
+    <!-- Settings -->
+    <string name="auth_settings_title">Geavanceerde instellingen</string>
+    <string name="auth_settings_prompt_success_title">Succes!</string>
+    <string name="auth_settings_prompt_success_subtitle">Wijzigingen in de configuratie zijn opgeslagen</string>
+    <string name="auth_settings_transport_section">Transportprotocol</string>
+    <string name="auth_settings_transport_https">HTTPS</string>
+    <string name="auth_settings_transport_port">Poort</string>
+    <string name="auth_settings_service_section">Alfresco Content Services-instellingen</string>
+    <string name="auth_settings_service_path">Pad</string>
+    <string name="auth_settings_auth_section">Verificatie</string>
+    <string name="auth_settings_auth_realm">Realm</string>
+    <string name="auth_settings_auth_client_id">Client-id</string>
+    <string name="auth_settings_auth_redirect_url">Omleidings-URL</string>
+    <string name="auth_settings_reset">Standaardinstellingen herstellen</string>
+    <string name="auth_settings_help">@string/auth_help_button</string>
+    <string name="auth_settings_save">Opslaan</string>
+
+    <!-- Basic Auth -->
+    <string name="auth_basic_connected_to">Verbonden met:</string>
+    <string name="auth_basic_sign_in_button">Aanmelden</string>
+    <string name="auth_basic_info_cloud">Nuttige introductie en informatietekst over Content Services-cloud.</string>
+    <string name="auth_basic_user_hint">Gebruikersnaam of e-mailadres</string>
+    <string name="auth_basic_password_hint">Wachtwoord</string>
+
+    <!-- Enter Server Url -->
+    <string name="auth_sso_connected_to">Aanmelden bij:</string>
+    <string name="auth_sso_info">Geef de URL van uw contentservices-omgeving op.</string>
+    <string name="auth_sso_repo_hint">URL contentservices</string>
+    <string name="auth_sso_sign_in_button">Aanmelden met SSO</string>
+
+    <string name="auth_account_details_identity">Verbinden met URL</string>
+    <string name="auth_account_details_server">%1$s URL</string>
+    <string name="auth_account_details_protocol">Protocol</string>
+    <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
+    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
+    <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
+    <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
+
+    <!-- Signed out dialog -->
+    <string name="auth_signed_out_title">Sessie verlopen.</string>
+    <string name="auth_signed_out_subtitle">U bent niet meer aangemeld. Meld u opnieuw aan om door te gaan.</string>
+    <string name="auth_signed_out_other_account">Probeer een ander account</string>
+    <string name="auth_signed_out_add_account">Account toevoegen</string>
+</resources>

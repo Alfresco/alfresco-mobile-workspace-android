@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_title_home">Inicio</string>
+
+    <string name="browse_menu_personal">Ficheros personales</string>
+    <string name="browse_menu_my_libraries">Mis bibliotecas</string>
+    <string name="browse_menu_fav_libraries">Bibliotecas favoritas</string>
+    <string name="browse_menu_shared">Compartido</string>
+    <string name="browse_menu_trash">Papelera</string>
+
+    <string name="favorites_tab_files">Ficheros y carpetas</string>
+    <string name="favorites_tab_libraries">Bibliotecas</string>
+
+    <string name="modified_group_today">Hoy</string>
+    <string name="modified_group_yesterday">Ayer</string>
+    <string name="modified_group_this_week">Esta semana</string>
+    <string name="modified_group_last_week">La semana pasada</string>
+    <string name="modified_group_older">Anterior</string>
+
+    <string name="contextual_search_title">Buscar</string>
+</resources>

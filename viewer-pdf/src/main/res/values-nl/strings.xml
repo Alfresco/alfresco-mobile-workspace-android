@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_prompt_title">Bestand vergrendeld</string>
+    <string name="password_prompt_message">Voer het wachtwoord in om het bestand te ontgrendelen.</string>
+    <string name="password_hint">Wachtwoord</string>
+    <string name="password_prompt_fail_title">Onjuist wachtwoord</string>
+    <string name="password_prompt_fail_message">Voer het wachtwoord opnieuw in om het bestand te ontgrendelen.</string>
+    <string name="password_prompt_positive">Verzenden</string>
+    <string name="password_prompt_negative">Annuleren</string>
+</resources>

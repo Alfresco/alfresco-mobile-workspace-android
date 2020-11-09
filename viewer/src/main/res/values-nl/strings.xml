@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_creating_rendition">Preview voorbereiden&#8230;</string>
+    <string name="info_fetching_content">Preview laden&#8230;</string>
+    <string name="error_preview_not_available">Preview niet beschikbaar</string>
+</resources>

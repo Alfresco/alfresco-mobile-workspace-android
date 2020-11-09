@@ -1,0 +1,85 @@
+﻿<resources>
+    <string name="auth_app_name">Auth Library</string>
+    <string name="auth_copyright_notice">© 2020 Alfresco Software, Inc. Todos los derechos reservados.</string>
+
+    <string name="auth_connect_field_hint">Conectar a</string>
+    <string name="auth_connect_button">Conectar</string>
+    <string name="auth_help_button">¿Necesita ayuda?</string>
+    <string name="auth_settings_button">@string/auth_settings_title</string>
+    <string name="auth_progress_bar_message">Conectando</string>
+
+    <string name="auth_help_overlay_title">Ayuda</string>
+    <string name="auth_help_identity_body">
+        <![CDATA[<h1>Cómo conectarse a Alfresco</h5>
+        <h6>URL de Alfresco Content Services<h6>
+        <p>Puede introducir la URL de su instancia de Alfresco Content Services. Deberá introducir su nombre de usuario y contraseña para autenticarse.</p>
+        <h6>Iniciar sesión con SSO</h6>
+        <p>Puede introducir la URL de Alfresco Identity Management Service para autenticarse con el proveedor de identidades de su organización</p>
+        <p>*Deberá indicar la URL de su instancia de Alfresco Content Services más tarde.</p>
+        <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+    </string>
+
+    <string name="auth_help_sso_body">
+        <![CDATA[<h6>Ubicación del repositorio de contenido</h6>
+        <p>URL de Alfresco Content Services:</p>
+        <p>La URL de su instancia de Alfresco Content Services.</p>
+        <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+    </string>
+
+    <string name="auth_help_settings_body">
+        <![CDATA[<h1>Autenticación con Alfresco</h1>
+        <p>Si no utiliza la configuración de SSO predeterminada, puede establecer sus valores aquí.</p>
+        <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+      </string>
+
+    <!-- Errors -->
+    <string name="auth_error_title">Error</string>
+    <string name="auth_error_check_connect_url">No se ha encontrado un servicio de autenticación en la URL de Alfresco indicada.</string>
+    <string name="auth_error_wrong_credentials">Nombre de usuario o contraseña indicados incorrectos.</string>
+    <string name="auth_error_app_unreachable">El servicio de autenticación no está disponible.</string>
+    <string name="auth_error_app_incorrect">Servicio configurado incorrectamente.</string>
+
+    <!-- Settings -->
+    <string name="auth_settings_title">Config. avanzada</string>
+    <string name="auth_settings_prompt_success_title">Correcto.</string>
+    <string name="auth_settings_prompt_success_subtitle">Los cambios de configuración se han guardado</string>
+    <string name="auth_settings_transport_section">Protocolo de transporte</string>
+    <string name="auth_settings_transport_https">HTTPS</string>
+    <string name="auth_settings_transport_port">Puerto</string>
+    <string name="auth_settings_service_section">Configuración de Alfresco Content Services</string>
+    <string name="auth_settings_service_path">Ruta</string>
+    <string name="auth_settings_auth_section">Autenticación</string>
+    <string name="auth_settings_auth_realm">Dominio</string>
+    <string name="auth_settings_auth_client_id">ID del cliente</string>
+    <string name="auth_settings_auth_redirect_url">URL de redireccionamiento</string>
+    <string name="auth_settings_reset">Restablecer valores predet.</string>
+    <string name="auth_settings_help">@string/auth_help_button</string>
+    <string name="auth_settings_save">Guardar</string>
+
+    <!-- Basic Auth -->
+    <string name="auth_basic_connected_to">Conectado a:</string>
+    <string name="auth_basic_sign_in_button">Iniciar sesión</string>
+    <string name="auth_basic_info_cloud">Introducción y texto de información sobre Content Services Cloud.</string>
+    <string name="auth_basic_user_hint">Nombre de usuario o correo electr.</string>
+    <string name="auth_basic_password_hint">Contraseña</string>
+
+    <!-- Enter Server Url -->
+    <string name="auth_sso_connected_to">Iniciando sesión en:</string>
+    <string name="auth_sso_info">Indique la URL de su entorno de servicios de contenido.</string>
+    <string name="auth_sso_repo_hint">URL de servicios de contenido</string>
+    <string name="auth_sso_sign_in_button">Iniciar sesión con SSO</string>
+
+    <string name="auth_account_details_identity">Conectar a URL</string>
+    <string name="auth_account_details_server">URL de %1$s</string>
+    <string name="auth_account_details_protocol">Protocolo</string>
+    <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
+    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
+    <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
+    <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
+
+    <!-- Signed out dialog -->
+    <string name="auth_signed_out_title">Sesión caducada.</string>
+    <string name="auth_signed_out_subtitle">Su sesión ya no está activa. Vuelva a iniciar sesión para continuar.</string>
+    <string name="auth_signed_out_other_account">Pruebe con otra cuenta</string>
+    <string name="auth_signed_out_add_account">Añadir cuenta</string>
+</resources>

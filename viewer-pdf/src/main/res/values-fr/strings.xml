@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_prompt_title">Fichier verrouillé</string>
+    <string name="password_prompt_message">Entrez le mot de passe pour déverrouiller le fichier.</string>
+    <string name="password_hint">Mot de passe</string>
+    <string name="password_prompt_fail_title">Mot de passe incorrect</string>
+    <string name="password_prompt_fail_message">Entrez à nouveau le mot de passe pour déverrouiller le fichier.</string>
+    <string name="password_prompt_positive">Envoyer</string>
+    <string name="password_prompt_negative">Annuler</string>
+</resources>

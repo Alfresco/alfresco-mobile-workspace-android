@@ -29,7 +29,8 @@ data class Entry(
     val modified: ZonedDateTime? = null,
     val isFavorite: Boolean = false,
     val canDelete: Boolean = false,
-    val isTrashed: Boolean = false
+    val isTrashed: Boolean = false,
+    val otherId: String? = null
 ) : Parcelable {
 
     val stableId: String
@@ -143,7 +144,9 @@ data class Entry(
                 Type.Site,
                 site.title,
                 null,
-                null
+                null,
+                canDelete = site.role == Site.RoleEnum.SITEMANAGER,
+                otherId = site.id
             )
         }
 
@@ -153,7 +156,9 @@ data class Entry(
                 Type.Site,
                 role.site.title,
                 null,
-                null
+                null,
+                canDelete = role.role == SiteRole.RoleEnum.SITEMANAGER,
+                otherId = role.site.id
             )
         }
 

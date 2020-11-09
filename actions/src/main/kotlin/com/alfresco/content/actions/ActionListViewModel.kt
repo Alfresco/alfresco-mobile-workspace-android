@@ -37,6 +37,13 @@ class ActionListViewModel(
 
     private fun makeActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
+
+        if (entry.isTrashed) {
+            actions.add(ActionRestore(entry))
+            actions.add(ActionDeleteForever(entry))
+            return actions
+        }
+
         actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
 
         if (BuildConfig.DEBUG) {

@@ -3,7 +3,6 @@ package com.alfresco.content.listview
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
@@ -41,9 +40,6 @@ class ListViewRow @JvmOverloads constructor(
         }
 
         icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
-
-        // Disable action on Trash items
-        more_icon_frame.isVisible = !entry.isTrashed
     }
 
     @ModelProp

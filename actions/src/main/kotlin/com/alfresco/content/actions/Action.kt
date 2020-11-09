@@ -1,5 +1,6 @@
 package com.alfresco.content.actions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
@@ -46,6 +47,8 @@ interface Action {
             scope.on<ActionAddFavorite> (block = showToast(view, anchorView))
             scope.on<ActionRemoveFavorite> (block = showToast(view, anchorView))
             scope.on<ActionDelete> (block = showToast(view, anchorView))
+            scope.on<ActionRestore> (block = showToast(view, anchorView))
+            scope.on<ActionDeleteForever> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, R.string.action_generic_error)
@@ -62,14 +65,16 @@ interface Action {
             }
         }
 
+        @SuppressLint("ShowToast")
         internal fun showToast(
             view: View,
             anchorView: View?,
-            @StringRes messageResId: Int
+            @StringRes messageResId: Int,
+            vararg formatArgs: String
         ) {
             Snackbar.make(
                 view,
-                messageResId,
+                view.resources.getString(messageResId, *formatArgs),
                 Snackbar.LENGTH_LONG
             ).setAnchorView(anchorView).show()
         }

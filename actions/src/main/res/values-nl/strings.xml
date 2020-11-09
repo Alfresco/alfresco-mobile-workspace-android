@@ -2,7 +2,6 @@
 <resources>
     <string name="action_add_favorite_title">Favoriet</string>
     <string name="action_remove_favorite_title">Favoriet verwijderen</string>
-    <string name="action_delete_title">Verwijderen</string>
     <string name="action_download_title">Downloaden</string>
 
     <string name="action_add_favorite_toast">Toegevoegd aan favorieten</string>
@@ -10,8 +9,6 @@
     <string name="action_delete_toast">Verplaatst naar Prullenbak</string>
     <string name="action_generic_error">Onbekende fout opgetreden</string>
 
-    <string name="action_delete_confirmation_title">Verwijderen</string>
-    <string name="action_delete_confirmation_message">Weet u zeker dat u dit item wilt verwijderen?</string>
     <string name="action_delete_confirmation_negative">Annuleren</string>
-    <string name="action_delete_confirmation_positive">Ja</string>
+    <string name="action_delete_confirmation_positive">Verwijderen</string>
 </resources>

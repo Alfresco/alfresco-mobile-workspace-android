@@ -24,4 +24,13 @@ class TrashCanRepository {
             emit(nodes(skipCount, maxItems))
         }
     }
+
+    suspend fun restoreEntry(entry: Entry) =
+        Entry.with(service.restoreDeletedNode(
+            entry.id,
+            null
+        ).entry)
+
+    suspend fun deleteForeverEntry(entry: Entry) =
+        service.deleteDeletedNode(entry.id)
 }

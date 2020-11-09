@@ -27,4 +27,6 @@ class SitesRepository {
             emit(nodes("-me-", skipCount, maxItems))
         }
     }
+
+    suspend fun deleteSite(entry: Entry) = service.deleteSite(entry.otherId ?: "", null)
 }

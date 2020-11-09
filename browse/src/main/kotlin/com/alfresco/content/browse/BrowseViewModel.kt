@@ -6,7 +6,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddFavorite
+import com.alfresco.content.actions.ActionDeleteForever
 import com.alfresco.content.actions.ActionRemoveFavorite
+import com.alfresco.content.actions.ActionRestore
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
@@ -45,6 +47,11 @@ class BrowseViewModel(
             val types = setOf(Entry.Type.Site)
             viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::addEntry) }
             viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
+        }
+
+        if (state.path == context.getString(R.string.nav_path_trash)) {
+            viewModelScope.on<ActionRestore> { removeEntry(it.entry) }
+            viewModelScope.on<ActionDeleteForever> { removeEntry(it.entry) }
         }
     }
 

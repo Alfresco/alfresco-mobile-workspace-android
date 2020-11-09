@@ -10,8 +10,8 @@
 
     <string name="auth_help_overlay_title">Help</string>
     <string name="auth_help_identity_body">
-        <![CDATA[<h1>Verbinding maken met Alfresco&lt;/h5>
-        <h6>Alfresco Content Services-URL<h6>
+        <![CDATA[<h1>Verbinding maken met Alfresco</h1>
+        <h6>Alfresco Content Services-URL</h6>
         <p>U kunt de URL van uw Alfresco Content Services-instance invoeren. Hiervoor moet u uw gebruikersnaam en wachtwoord opgeven voor verificatie.</p>
         <h6>Aanmelden met SSO</h6>
         <p>U kunt de URL van uw Alfresco Identity Management Service invoeren voor verificatie met de identiteitsprovider van uw organisatie.<p>

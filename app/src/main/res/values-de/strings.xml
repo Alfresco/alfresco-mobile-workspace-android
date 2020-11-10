@@ -1,0 +1,27 @@
+﻿<resources>
+    <string name="app_name">Workspace</string>
+    <string name="auth_app_name">Alfresco\nMobile Workspace</string>
+
+    <string name="nav_title_recents">Aktuelle</string>
+    <string name="nav_title_favorites">Favoriten</string>
+    <string name="nav_title_browse">Durchsuchen</string>
+    <string name="nav_title_settings">Account</string>
+
+    <string name="sign_out_confirmation_title">Abmelden</string>
+    <string name="sign_out_confirmation_message">Möchten Sie sich wirklich abmelden?</string>
+    <string name="sign_out_confirmation_positive">Ja</string>
+    <string name="sign_out_confirmation_negative">Abbrechen</string>
+
+    <string name="settings_sign_out">Abmelden</string>
+    <string name="settings_version">App-Version %1$s</string>
+
+    <string name="settings_theme">Design</string>
+    <string-array name="settings_theme_labels">
+        <item>Hell</item>
+        <item>Dunkel</item>
+        <item>Systemstandard</item>
+    </string-array>
+
+    <string name="auth_error_wrong_credentials">Benutzername oder Passwort falsch.</string>
+
+</resources>

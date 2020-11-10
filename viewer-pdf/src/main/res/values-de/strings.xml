@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_prompt_title">Datei gesperrt</string>
+    <string name="password_prompt_message">Geben Sie das Passwort ein, um die Datei freizugeben.</string>
+    <string name="password_hint">Passwort</string>
+    <string name="password_prompt_fail_title">Falsches Passwort</string>
+    <string name="password_prompt_fail_message">Geben Sie das Passwort erneut ein, um die Datei freizugeben.</string>
+    <string name="password_prompt_positive">Senden</string>
+    <string name="password_prompt_negative">Abbrechen</string>
+</resources>

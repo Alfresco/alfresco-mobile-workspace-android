@@ -71,4 +71,8 @@ class FavoritesRepository() {
     suspend fun removeFavorite(entry: Entry) {
         service.deleteFavorite("-me-", entry.id)
     }
+
+    suspend fun getFavoriteSite(id: String) =
+        Entry.with(service.getFavoriteSite("-me-", id, null).entry)
+            .copy(isPartial = false, isFavorite = true)
 }

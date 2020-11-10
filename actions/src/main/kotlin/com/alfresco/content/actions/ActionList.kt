@@ -43,6 +43,9 @@ class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fr
         }
 
         binding.recyclerView.withModels {
+            if (state.actions.isEmpty()) {
+                actionListLoading { id("loading") }
+            }
             state.actions.forEach {
                 actionListRow {
                     id(it.title)

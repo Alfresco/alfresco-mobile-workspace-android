@@ -1,12 +1,19 @@
 package com.alfresco.content.actions
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.coroutines.asFlow
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class ActionListViewModel(
     val context: Context,
@@ -14,8 +21,30 @@ class ActionListViewModel(
 ) : MvRxViewModel<ActionListState>(state) {
 
     init {
-        setState { copy(actions = makeActions(entry)) }
+        buildModel()
     }
+
+    private fun buildModel() = withState { state ->
+        if (state.entry.isPartial) {
+            viewModelScope.launch {
+                fetchEntry(state.entry).execute {
+                    if (it is Success) {
+                        ActionListState(it(), makeActions(it()), it)
+                    } else {
+                        copy(fetch = it)
+                    }
+                }
+            }
+        } else {
+            setState { copy(actions = makeActions(entry), fetch = Success(entry)) }
+        }
+    }
+
+    private fun fetchEntry(entry: Entry): Flow<Entry> =
+        when (entry.type) {
+            Entry.Type.Site -> FavoritesRepository()::getFavoriteSite.asFlow(entry.otherId ?: "")
+            else -> BrowseRepository()::fetchNode.asFlow(entry.id)
+        }
 
     fun <T : Action> execute(actionClass: Class<T>) {
         withState { st ->

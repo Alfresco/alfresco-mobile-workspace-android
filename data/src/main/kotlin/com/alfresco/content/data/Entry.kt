@@ -27,6 +27,7 @@ data class Entry(
     val subtitle: String?,
     val mimeType: String?,
     val modified: ZonedDateTime? = null,
+    val isPartial: Boolean = false,
     val isFavorite: Boolean = false,
     val canDelete: Boolean = false,
     val isTrashed: Boolean = false,
@@ -72,6 +73,7 @@ data class Entry(
                 node.path?.formattedString(),
                 node.content?.mimeType,
                 node.modifiedAt,
+                node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false
             )
@@ -85,6 +87,7 @@ data class Entry(
                 result.path?.formattedString(),
                 result.content?.mimeType,
                 result.modifiedAt,
+                result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
                 result.allowableOperations?.contains("delete") ?: false
             )
@@ -98,6 +101,7 @@ data class Entry(
                 node.path?.formattedString(),
                 node.content?.mimeType,
                 node.modifiedAt,
+                node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false
             )
@@ -114,6 +118,7 @@ data class Entry(
                     file.path?.formattedString(),
                     file.content?.mimeType,
                     file.modifiedAt,
+                    file.allowableOperations == null,
                     true,
                     file.allowableOperations?.contains("delete") ?: false
                 )
@@ -127,13 +132,14 @@ data class Entry(
                     folder.path?.formattedString(),
                     null,
                     folder.modifiedAt,
+                    folder.allowableOperations == null,
                     true,
                     folder.allowableOperations?.contains("delete") ?: false
                 )
             }
             if (map.site != null) {
                 val site = map.site!!
-                return with(site).copy(isFavorite = true)
+                return with(site).copy(isPartial = false, isFavorite = true)
             }
             throw IllegalStateException()
         }
@@ -145,6 +151,7 @@ data class Entry(
                 site.title,
                 null,
                 null,
+                isPartial = true,
                 canDelete = site.role == Site.RoleEnum.SITEMANAGER,
                 otherId = site.id
             )
@@ -157,6 +164,7 @@ data class Entry(
                 role.site.title,
                 null,
                 null,
+                isPartial = true,
                 canDelete = role.role == SiteRole.RoleEnum.SITEMANAGER,
                 otherId = role.site.id
             )
@@ -170,6 +178,7 @@ data class Entry(
                 null,
                 link.content?.mimeType,
                 link.modifiedAt,
+                link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
                 link.allowableOperations?.contains("delete") ?: false
             )
@@ -183,6 +192,7 @@ data class Entry(
                 node.path?.formattedString(),
                 node.content?.mimeType,
                 node.modifiedAt,
+                isPartial = false,
                 node.isFavorite ?: false,
                 canDelete = false,
                 isTrashed = true

@@ -8,7 +8,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.alfresco.content.actions.databinding.ViewItemActionRowBinding
+import com.alfresco.content.actions.databinding.ViewActionListRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ActionListRow @JvmOverloads constructor(
@@ -16,7 +16,7 @@ class ActionListRow @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private val binding = ViewItemActionRowBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ViewActionListRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp(options = [ModelProp.Option.IgnoreRequireHashCode])
     fun setAction(action: Action) {

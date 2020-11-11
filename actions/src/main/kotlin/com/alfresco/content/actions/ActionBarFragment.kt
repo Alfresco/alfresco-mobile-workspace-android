@@ -13,20 +13,20 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.databinding.ActionBarFragmentBinding
+import com.alfresco.content.actions.databinding.FragmentActionBarBinding
 import kotlin.math.min
 import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
-    private lateinit var binding: ActionBarFragmentBinding
+    private lateinit var binding: FragmentActionBarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = ActionBarFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentActionBarBinding.inflate(inflater, container, false)
         return binding.root
     }
 

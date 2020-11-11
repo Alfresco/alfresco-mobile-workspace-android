@@ -12,7 +12,7 @@
         android:background="@drawable/bottom_separator">
         <include
             android:id="@+id/header"
-            layout="@layout/view_item_action_row" />
+            layout="@layout/view_action_list_row" />
     </FrameLayout>
 
     <com.airbnb.epoxy.EpoxyRecyclerView

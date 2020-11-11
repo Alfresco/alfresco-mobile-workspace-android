@@ -10,23 +10,23 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.databinding.FragmentListItemActionsBinding
+import com.alfresco.content.actions.databinding.FragmentActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.lang.ref.WeakReference
 
-class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment(R.layout.fragment_list_item_actions) {
+class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
     private val parent = WeakReference(parent)
-    private lateinit var binding: FragmentListItemActionsBinding
+    private lateinit var binding: FragmentActionListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentListItemActionsBinding.inflate(inflater, container, false)
+        binding = FragmentActionListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -67,7 +67,7 @@ class ActionListSheet(private val entry: Entry) : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.sheet_list_item_actions, container, false)
+        val view = inflater.inflate(R.layout.sheet_action_list, container, false)
 
         if (savedInstanceState == null) {
             val contentFragment = ActionListFragment(this)

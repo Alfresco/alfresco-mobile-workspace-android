@@ -19,6 +19,7 @@ import com.alfresco.content.data.SharedLinksRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
+import com.alfresco.content.listview.ListViewState
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -120,6 +121,18 @@ class BrowseViewModel(
             else -> throw IllegalStateException()
         }
     }
+
+    override fun emptyMessageArgs(state: ListViewState) =
+        when ((state as BrowseViewState).path) {
+            context.getString(R.string.nav_path_recents) ->
+                Triple(R.drawable.ic_empty_recent, R.string.recent_empty_title, R.string.recent_empty_message)
+            context.getString(R.string.nav_path_favorites) ->
+                Triple(R.drawable.ic_empty_favorites, R.string.favorite_files_empty_title, R.string.favorites_empty_message)
+            context.getString(R.string.nav_path_fav_libraries) ->
+                Triple(R.drawable.ic_empty_favorites, R.string.favorite_sites_empty_title, R.string.favorites_empty_message)
+            else ->
+                Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
+        }
 
     companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {
 

@@ -9,4 +9,7 @@
     <string name="search_chip_files">Files</string>
     <string name="search_chip_folders">Folders</string>
     <string name="search_chip_libraries">Libraries</string>
+
+    <string name="search_empty_title">Oops!</string>
+    <string name="search_empty_message">We can’t find the file\nyou’re looking for.</string>
 </resources>

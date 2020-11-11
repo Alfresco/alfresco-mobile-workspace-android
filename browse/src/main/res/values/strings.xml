@@ -18,4 +18,12 @@
     <string name="modified_group_older">Older</string>
 
     <string name="contextual_search_title">Search</string>
+
+    <string name="recent_empty_title">No recent files</string>
+    <string name="recent_empty_message">Files that you view and\nedit will show here.</string>
+    <string name="favorite_files_empty_title">No favorite files</string>
+    <string name="favorite_sites_empty_title">No favorite libraries</string>
+    <string name="favorites_empty_message">Looks like you haven’t\nadded anything.</string>
+    <string name="folder_empty_title">Folder is empty</string>
+    <string name="folder_empty_message">Looks like there is\nnothing here yet.</string>
 </resources>

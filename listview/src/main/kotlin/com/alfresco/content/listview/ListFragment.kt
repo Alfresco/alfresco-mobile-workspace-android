@@ -81,6 +81,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     abstract fun refresh()
     abstract fun fetchNextPage()
+    abstract fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int>
 
     companion object {
         const val ITEMS_PER_PAGE = 25
@@ -134,10 +135,12 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
 
     private fun epoxyController() = simpleController(viewModel) { state ->
         if (state.entries.isEmpty() && state.request.complete) {
+            val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
-                iconRes(R.drawable.file_ic_folder)
-                title("Nothing to see here.")
+                iconRes(args.first)
+                title(args.second)
+                message(args.third)
             }
         } else if (state.entries.isNotEmpty()) {
             state.entries.forEach() {

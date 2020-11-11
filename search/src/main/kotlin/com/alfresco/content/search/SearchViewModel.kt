@@ -136,6 +136,9 @@ class SearchViewModel(
         }
     }
 
+    override fun emptyMessageArgs(state: ListViewState) =
+        Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)
+
     companion object : MvRxViewModelFactory<SearchViewModel, SearchResultsState> {
         const val MIN_QUERY_LENGTH = 3
         const val DEFAULT_DEBOUNCE_TIME = 300L

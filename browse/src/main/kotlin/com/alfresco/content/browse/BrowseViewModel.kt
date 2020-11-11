@@ -39,13 +39,13 @@ class BrowseViewModel(
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
             val types = setOf(Entry.Type.File, Entry.Type.Folder)
-            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::addEntry) }
+            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
             viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
         }
 
         if (state.path == context.getString(R.string.nav_path_fav_libraries)) {
             val types = setOf(Entry.Type.Site)
-            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::addEntry) }
+            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
             viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
         }
 
@@ -61,8 +61,7 @@ class BrowseViewModel(
         block: (entry: Entry) -> Unit
     ) = if (types.contains(type)) { block(this) } else { }
 
-    private fun addEntry(entry: Entry) =
-        setState { copyPrepending(entry) }
+    private fun refresh(ignored: Entry) = refresh()
 
     private fun removeEntry(entry: Entry) =
         setState { copyRemoving(entry) as BrowseViewState }

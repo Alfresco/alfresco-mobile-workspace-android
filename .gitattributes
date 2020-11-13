@@ -1,4 +1,4 @@
 # https://github.com/github/linguist#using-gitattributes
-viewer-pdf/src/main/assets/pdf.js -linguist-vendored
-viewer-pdf/src/main/assets/pdf.worker.js -linguist-vendored
-viewer-pdf/src/main/assets/pdf-viewer.js -linguist-vendored
+viewer-pdf/src/main/assets/pdf.js linguist-vendored
+viewer-pdf/src/main/assets/pdf.worker.js linguist-vendored
+viewer-pdf/src/main/assets/pdf_viewer.js linguist-vendored

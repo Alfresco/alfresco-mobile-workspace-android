@@ -34,15 +34,17 @@ interface Action {
         } catch (ex: CancellationException) {
             // no-op
         } catch (ex: Exception) {
+            EventBus.default.send(Error(ex.message ?: ""))
+        } catch (ex: kotlin.Exception) {
             EventBus.default.send(Error(context.getString(R.string.action_generic_error)))
-        } catch (err: kotlin.Error) {
-            EventBus.default.send(Error(err.message ?: ""))
         }
     }
 
     fun showToast(view: View, anchorView: View? = null)
 
     data class Error(val message: String)
+
+    class Exception(string: String): kotlin.Exception(string)
 
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {

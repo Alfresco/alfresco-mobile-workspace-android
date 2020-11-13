@@ -28,7 +28,7 @@ data class ActionDownload(
             )) {
             enqueueDownload(context)
         } else {
-            throw Error(context.resources.getString(R.string.action_download_failed_permissions))
+            throw Action.Exception(context.resources.getString(R.string.action_download_failed_permissions))
         }
 
         return entry

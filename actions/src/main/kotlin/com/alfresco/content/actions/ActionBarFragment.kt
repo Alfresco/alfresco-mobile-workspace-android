@@ -44,6 +44,7 @@ class ActionBarFragment : BaseMvRxFragment() {
 
     private fun addButtons(container: LinearLayout, actions: List<Action>) {
         val count = min(actions.size, MAX_ITEMS)
+        container.addView(createSeparator())
         for (i in 0 until count) {
             if (i == count - 1) {
                 if (actions.size > MAX_ITEMS) {
@@ -53,8 +54,8 @@ class ActionBarFragment : BaseMvRxFragment() {
                 }
             } else {
                 container.addView(createButton(actions[i]))
-                container.addView(createSeparator())
             }
+            container.addView(createSeparator())
         }
     }
 

@@ -2,6 +2,7 @@ package com.alfresco.content.actions
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
@@ -28,10 +29,13 @@ class ActionListViewModel(
         if (state.entry.isPartial) {
             viewModelScope.launch {
                 fetchEntry(state.entry).execute {
-                    if (it is Success) {
-                        ActionListState(it(), makeActions(it()), it)
-                    } else {
-                        copy(fetch = it)
+                    when (it) {
+                        is Success ->
+                            ActionListState(it(), makeActions(it()), it)
+                        is Fail ->
+                            ActionListState(state.entry, makeActions(entry), it)
+                        else ->
+                            copy(fetch = it)
                     }
                 }
             }

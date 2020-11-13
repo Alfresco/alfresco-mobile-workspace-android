@@ -14,7 +14,7 @@
     <string name="action_delete_forever_toast">%s deleted</string>
     <string name="action_generic_error">Unknown error occurred</string>
 
-    <string name="action_delete_confirmation_title">Delete %s</string>
+    <string name="action_delete_confirmation_title">Delete</string>
     <string name="action_delete_confirmation_message">%s will be permanently deleted.</string>
     <string name="action_delete_confirmation_negative">Cancel</string>
     <string name="action_delete_confirmation_positive">Delete</string>

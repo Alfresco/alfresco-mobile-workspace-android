@@ -80,7 +80,7 @@ data class ActionDeleteForever(
     private suspend fun showConfirmation(context: Context) = withContext(Dispatchers.Main) {
         suspendCoroutine<Boolean> {
             MaterialAlertDialogBuilder(context)
-                .setTitle(context.getString(R.string.action_delete_confirmation_title, entry.title))
+                .setTitle(context.getString(R.string.action_delete_confirmation_title))
                 .setMessage(context.getString(R.string.action_delete_confirmation_message, entry.title))
                 .setNegativeButton(context.getString(R.string.action_delete_confirmation_negative)) { _, _ ->
                     it.resume(false)

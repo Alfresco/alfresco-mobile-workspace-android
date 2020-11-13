@@ -18,4 +18,7 @@
     <string name="action_delete_confirmation_message">%s will be permanently deleted.</string>
     <string name="action_delete_confirmation_negative">Cancel</string>
     <string name="action_delete_confirmation_positive">Delete</string>
+
+    <string name="action_download_toast">File will be downloaded. See notifications for details</string>
+    <string name="action_download_failed_permissions">Download Failed. You turned off permissions to access storage. To edit, go to App Settings.</string>
 </resources>

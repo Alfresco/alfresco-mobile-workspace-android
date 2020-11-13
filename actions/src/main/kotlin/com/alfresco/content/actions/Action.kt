@@ -34,7 +34,9 @@ interface Action {
         } catch (ex: CancellationException) {
             // no-op
         } catch (ex: Exception) {
-            EventBus.default.send(Error(ex.message ?: ""))
+            EventBus.default.send(Error(context.getString(R.string.action_generic_error)))
+        } catch (err: kotlin.Error) {
+            EventBus.default.send(Error(err.message ?: ""))
         }
     }
 
@@ -49,9 +51,10 @@ interface Action {
             scope.on<ActionDelete> (block = showToast(view, anchorView))
             scope.on<ActionRestore> (block = showToast(view, anchorView))
             scope.on<ActionDeleteForever> (block = showToast(view, anchorView))
+            scope.on<ActionDownload> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
-                    showToast(view, anchorView, R.string.action_generic_error)
+                    showToast(view, anchorView, it.message)
                 }
             }
         }
@@ -65,16 +68,26 @@ interface Action {
             }
         }
 
-        @SuppressLint("ShowToast")
         internal fun showToast(
             view: View,
             anchorView: View?,
             @StringRes messageResId: Int,
             vararg formatArgs: String
+        ) = showToast(
+                view,
+                anchorView,
+                view.resources.getString(messageResId, *formatArgs
+            ))
+
+        @SuppressLint("ShowToast")
+        internal fun showToast(
+            view: View,
+            anchorView: View?,
+            message: CharSequence
         ) {
             Snackbar.make(
                 view,
-                view.resources.getString(messageResId, *formatArgs),
+                message,
                 Snackbar.LENGTH_LONG
             ).setAnchorView(anchorView).show()
         }

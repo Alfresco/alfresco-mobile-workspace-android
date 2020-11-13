@@ -22,6 +22,7 @@ dependencies {
     implementation project(':common')
     implementation project(':data')
     implementation project(':mimetype')
+    implementation project(':download')
 
     implementation Libs.Kotlin.stdlib
     implementation Libs.Coroutines.core

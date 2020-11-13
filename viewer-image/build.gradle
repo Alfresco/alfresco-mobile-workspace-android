@@ -12,6 +12,7 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation project(':download')
     implementation project(':viewer-common')
 
     implementation Libs.Kotlin.stdlib

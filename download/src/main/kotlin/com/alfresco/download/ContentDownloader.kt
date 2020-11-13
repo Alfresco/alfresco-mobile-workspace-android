@@ -1,6 +1,5 @@
-package com.alfresco.content.viewer.common
+package com.alfresco.download
 
-import android.util.Log
 import java.io.File
 import java.io.IOException
 import kotlin.coroutines.resumeWithException
@@ -15,11 +14,13 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okio.Buffer
 import okio.buffer
 import okio.sink
 
 object ContentDownloader {
+
+    const val FILE_PROVIDER_AUTHORITY = "com.alfresco.content.fileprovider"
+
     suspend fun downloadFileTo(uri: String, outputPath: String) {
         val req = Request.Builder().get().url(uri).build()
         val client = OkHttpClient()

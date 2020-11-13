@@ -78,7 +78,12 @@ class ActionListViewModel(
         }
 
         actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
-        if (entry.type == Entry.Type.File) actions.add(ActionDownload(entry))
+        if (entry.type == Entry.Type.File) {
+            if (BuildConfig.DEBUG) {
+                if (entry.type == Entry.Type.File) actions.add(ActionOpenWith(entry))
+            }
+            actions.add(ActionDownload(entry))
+        }
         if (entry.canDelete) actions.add(ActionDelete(entry))
         return actions
     }

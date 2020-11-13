@@ -6,6 +6,7 @@
     <string name="action_restore_title">Restore</string>
     <string name="action_delete_forever_title">Permanently delete</string>
     <string name="action_download_title">Download</string>
+    <string name="action_open_with_title">Open with</string>
 
     <string name="action_add_favorite_toast">Added to favorites</string>
     <string name="action_remove_favorite_toast">Removed from favorites</string>
@@ -21,4 +22,8 @@
 
     <string name="action_download_toast">File will be downloaded. See notifications for details</string>
     <string name="action_download_failed_permissions">Download Failed. You turned off permissions to access storage. To edit, go to App Settings.</string>
+
+    <string name="action_open_with_downloading">Downloading&#8230;</string>
+    <string name="action_open_with_cancel">Cancel</string>
+    <string name="action_open_with_error_no_viewer">No installed app can view this file.</string>
 </resources>

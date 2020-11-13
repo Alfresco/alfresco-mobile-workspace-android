@@ -9,7 +9,7 @@ import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.viewer.common.ChildViewerArgs
-import com.alfresco.content.viewer.common.ContentDownloader
+import com.alfresco.download.ContentDownloader
 import java.io.File
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

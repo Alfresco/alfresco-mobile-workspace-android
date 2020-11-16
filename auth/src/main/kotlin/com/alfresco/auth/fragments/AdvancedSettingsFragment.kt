@@ -17,7 +17,7 @@ import com.alfresco.android.aims.databinding.FragmentAuthSettingsBinding
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.FragmentBuilder
-import com.alfresco.ui.components.Snackbar
+import com.google.android.material.snackbar.Snackbar
 
 class AdvancedSettingsFragment : DialogFragment() {
 
@@ -61,9 +61,7 @@ class AdvancedSettingsFragment : DialogFragment() {
 
         action.setOnClickListener {
             Snackbar.make(rootView,
-                    Snackbar.STYLE_SUCCESS,
-                    R.string.auth_settings_prompt_success_title,
-                    R.string.auth_settings_prompt_success_subtitle,
+                    R.string.auth_settings_prompt_success,
                     Snackbar.LENGTH_LONG).show()
             viewModel.saveConfigChanges()
         }

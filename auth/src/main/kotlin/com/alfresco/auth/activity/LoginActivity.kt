@@ -26,8 +26,8 @@ import com.alfresco.auth.fragments.InputServerFragment
 import com.alfresco.auth.ui.AuthenticationActivity
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.getViewModel
-import com.alfresco.ui.components.Snackbar
 import com.alfresco.ui.components.TextInputLayout
+import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayDeque
 
 abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
@@ -116,8 +116,6 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
         val parentLayout: View = findViewById(android.R.id.content)
         Snackbar.make(parentLayout,
-                Snackbar.STYLE_ERROR,
-                resources.getString(R.string.auth_error_title),
                 error,
                 Snackbar.LENGTH_LONG).show()
 

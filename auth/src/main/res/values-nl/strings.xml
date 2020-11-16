@@ -33,7 +33,6 @@
     </string>
 
     <!-- Errors -->
-    <string name="auth_error_title">Fout</string>
     <string name="auth_error_check_connect_url">Kan geen verificatieservice vinden op de opgegeven Alfresco-URL.</string>
     <string name="auth_error_wrong_credentials">Onjuiste gebruikersnaam of wachtwoord opgegeven.</string>
     <string name="auth_error_app_unreachable">Verificatieservice is momenteel onbereikbaar.</string>
@@ -41,8 +40,7 @@
 
     <!-- Settings -->
     <string name="auth_settings_title">Geavanceerde instellingen</string>
-    <string name="auth_settings_prompt_success_title">Succes!</string>
-    <string name="auth_settings_prompt_success_subtitle">Wijzigingen in de configuratie zijn opgeslagen</string>
+    <string name="auth_settings_prompt_success">Wijzigingen in de configuratie zijn opgeslagen</string>
     <string name="auth_settings_transport_section">Transportprotocol</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Poort</string>

@@ -33,7 +33,6 @@
     </string>
 
     <!-- Errors -->
-    <string name="auth_error_title">Fehler</string>
     <string name="auth_error_check_connect_url">An der angegebenen Alfresco-URL kann kein Authentifizierungsdienst gefunden werden.</string>
     <string name="auth_error_wrong_credentials">Benutzername oder Passwort falsch.</string>
     <string name="auth_error_app_unreachable">Authentifizierungsdienst ist momentan nicht erreichbar.</string>
@@ -41,8 +40,7 @@
 
     <!-- Settings -->
     <string name="auth_settings_title">Erweiterte Einstellungen</string>
-    <string name="auth_settings_prompt_success_title">Erfolgreich!</string>
-    <string name="auth_settings_prompt_success_subtitle">Konfigurationsänderungen wurden gespeichert</string>
+    <string name="auth_settings_prompt_success">Konfigurationsänderungen wurden gespeichert</string>
     <string name="auth_settings_transport_section">Transportprotokoll</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Port</string>

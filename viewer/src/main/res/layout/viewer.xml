@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp" />
+            android:layout_width="72dp"
+            android:layout_height="72dp" />
 
         <TextView
             android:id="@+id/title"

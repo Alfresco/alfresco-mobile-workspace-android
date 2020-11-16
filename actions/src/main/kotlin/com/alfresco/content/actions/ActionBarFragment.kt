@@ -45,8 +45,10 @@ class ActionBarFragment : BaseMvRxFragment() {
             container.addView(createButton(action))
             container.addView(createSeparator())
         }
-        container.addView(createMoreButton())
-        container.addView(createSeparator())
+        if (actions.isNotEmpty()) {
+            container.addView(createMoreButton())
+            container.addView(createSeparator())
+        }
     }
 
     private fun createButton(action: Action) =

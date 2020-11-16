@@ -78,6 +78,7 @@ dependencies {
     implementation project(':session')
     implementation project(':auth')
     implementation project(':common')
+    implementation project(':download')
     implementation project(':listview')
     implementation project(':browse')
     implementation project(':search')

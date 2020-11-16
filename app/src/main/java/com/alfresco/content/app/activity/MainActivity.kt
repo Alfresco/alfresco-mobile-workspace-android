@@ -1,8 +1,10 @@
 package com.alfresco.content.app.activity
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -12,6 +14,7 @@ import com.alfresco.content.BaseMvRxActivity
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
+import com.alfresco.download.DownloadMonitor
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -40,6 +43,8 @@ class MainActivity : BaseMvRxActivity() {
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+
+        setupDownloadNotifications()
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -83,5 +88,23 @@ class MainActivity : BaseMvRxActivity() {
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         startActivity(i)
+    }
+
+    private fun setupDownloadNotifications() {
+        DownloadMonitor
+            .smallIcon(R.drawable.ic_notification_small)
+            .tint(primaryColor(this))
+            .observe(this)
+    }
+
+    private fun primaryColor(context: Context): Int {
+        val typedValue = TypedValue()
+        val arr = context.obtainStyledAttributes(
+            typedValue.data,
+            intArrayOf(R.attr.colorPrimary)
+        )
+        val color = arr.getColor(0, 0)
+        arr.recycle()
+        return color
     }
 }

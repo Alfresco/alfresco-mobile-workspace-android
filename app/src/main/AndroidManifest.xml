@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity android:name=".activity.LoginActivity" />
 

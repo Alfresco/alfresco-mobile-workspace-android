@@ -14,7 +14,6 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.FragmentActionBarBinding
-import kotlin.math.min
 import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {
@@ -33,8 +32,6 @@ class ActionBarFragment : BaseMvRxFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        withState(viewModel) { addButtons(binding.container, it.actions) }
-
         lifecycleScope.on<ActionDelete> {
             // delayed back to present the toast
             delay(1000)
@@ -43,20 +40,13 @@ class ActionBarFragment : BaseMvRxFragment() {
     }
 
     private fun addButtons(container: LinearLayout, actions: List<Action>) {
-        val count = min(actions.size, MAX_ITEMS)
         container.addView(createSeparator())
-        for (i in 0 until count) {
-            if (i == count - 1) {
-                if (actions.size > MAX_ITEMS) {
-                    container.addView(createMoreButton())
-                } else {
-                    container.addView(createButton(actions[i]))
-                }
-            } else {
-                container.addView(createButton(actions[i]))
-            }
+        for (action in actions) {
+            container.addView(createButton(action))
             container.addView(createSeparator())
         }
+        container.addView(createMoreButton())
+        container.addView(createSeparator())
     }
 
     private fun createButton(action: Action) =
@@ -94,7 +84,9 @@ class ActionBarFragment : BaseMvRxFragment() {
             background = context.drawableFromAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
-                // TODO: define more interaction
+                withState(viewModel) {
+                    ActionListSheet(it.entry).show(childFragmentManager, null)
+                }
             }
         }
 
@@ -107,7 +99,7 @@ class ActionBarFragment : BaseMvRxFragment() {
 
     override fun invalidate() = withState(viewModel) {
         binding.container.removeAllViews()
-        addButtons(binding.container, it.actions)
+        addButtons(binding.container, it.topActions)
     }
 
     private companion object {

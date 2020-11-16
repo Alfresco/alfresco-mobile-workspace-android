@@ -8,6 +8,7 @@ import com.alfresco.content.data.Entry
 data class ActionListState(
     val entry: Entry,
     val actions: List<Action> = emptyList(),
+    val topActions: List<Action> = emptyList(),
     val fetch: Async<Entry> = Uninitialized
 ) : MvRxState {
     constructor(target: Entry) : this(entry = target)

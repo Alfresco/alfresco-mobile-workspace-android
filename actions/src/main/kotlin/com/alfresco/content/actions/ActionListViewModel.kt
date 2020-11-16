@@ -31,16 +31,16 @@ class ActionListViewModel(
                 fetchEntry(state.entry).execute {
                     when (it) {
                         is Success ->
-                            ActionListState(it(), makeActions(it()), it)
+                            ActionListState(it(), makeActions(it()), makeTopActions(it()), it)
                         is Fail ->
-                            ActionListState(state.entry, makeActions(entry), it)
+                            ActionListState(state.entry, makeActions(entry), makeTopActions(entry), it)
                         else ->
                             copy(fetch = it)
                     }
                 }
             }
         } else {
-            setState { copy(actions = makeActions(entry), fetch = Success(entry)) }
+            setState { copy(actions = makeActions(entry), topActions = makeTopActions(entry), fetch = Success(entry)) }
         }
     }
 
@@ -62,7 +62,8 @@ class ActionListViewModel(
             weakSelf.get()?.setState {
                 ActionListState(
                     _action.entry,
-                    makeActions(_action.entry)
+                    makeActions(_action.entry),
+                    makeTopActions(_action.entry)
                 )
             }
         }
@@ -79,12 +80,19 @@ class ActionListViewModel(
 
         actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
         if (entry.type == Entry.Type.File) {
-            if (BuildConfig.DEBUG) {
-                if (entry.type == Entry.Type.File) actions.add(ActionOpenWith(entry))
-            }
+            actions.add(ActionOpenWith(entry))
             actions.add(ActionDownload(entry))
         }
         if (entry.canDelete) actions.add(ActionDelete(entry))
+        return actions
+    }
+
+    private fun makeTopActions(entry: Entry): List<Action> {
+        val actions = mutableListOf<Action>()
+        if (entry.type == Entry.Type.File) {
+            actions.add(ActionDownload(entry))
+        }
+        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
         return actions
     }
 

@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 interface Action {
     val entry: Entry
@@ -35,6 +36,8 @@ interface Action {
             // no-op
         } catch (ex: Exception) {
             EventBus.default.send(Error(ex.message ?: ""))
+        } catch (ex: SocketTimeoutException) {
+            EventBus.default.send(Error(context.getString(R.string.action_timeout_error)))
         } catch (ex: kotlin.Exception) {
             EventBus.default.send(Error(context.getString(R.string.action_generic_error)))
         }

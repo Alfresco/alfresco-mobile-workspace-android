@@ -42,6 +42,9 @@ interface Action {
 
     fun showToast(view: View, anchorView: View? = null)
 
+    fun maxFileNameInToast(view: View) =
+        view.context.resources.getInteger(R.integer.action_toast_file_name_max_length)
+
     data class Error(val message: String)
 
     class Exception(string: String): kotlin.Exception(string)

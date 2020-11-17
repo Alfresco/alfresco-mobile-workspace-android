@@ -6,6 +6,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
+import com.alfresco.kotlin.ellipsize
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -39,7 +40,12 @@ data class ActionDelete(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_delete_toast, entry.title)
+        Action.showToast(
+            view,
+            anchorView,
+            R.string.action_delete_toast,
+            entry.title.ellipsize(maxFileNameInToast(view))
+        )
 }
 
 data class ActionRestore(
@@ -55,7 +61,12 @@ data class ActionRestore(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_restored_toast, entry.title)
+        Action.showToast(
+            view,
+            anchorView,
+            R.string.action_restored_toast,
+            entry.title.ellipsize(maxFileNameInToast(view))
+        )
 }
 
 data class ActionDeleteForever(
@@ -97,5 +108,10 @@ data class ActionDeleteForever(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_delete_forever_toast, entry.title)
+        Action.showToast(
+            view,
+            anchorView,
+            R.string.action_delete_forever_toast,
+            entry.title.ellipsize(maxFileNameInToast(view))
+        )
 }

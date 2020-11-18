@@ -1,22 +1,22 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.apis.AlfrescoApi
 import com.alfresco.content.apis.FavoritesApi
 import com.alfresco.content.models.FavoriteBodyCreate
+import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
-class FavoritesRepository() {
+class FavoritesRepository(val session: Session = SessionManager.requireSession) {
     private val service: FavoritesApi by lazy {
-        SessionManager.requireSession.createService(FavoritesApi::class.java)
+        session.createService(FavoritesApi::class.java)
     }
 
-    private suspend fun nodes(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun getFavorites(skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
-        val include = listOf(listOf("path", "allowableOperations").joinToString(","))
+        val include = AlfrescoApi.csvQueryParam("path", "allowableOperations")
         val orderBy = listOf("title ASC")
         return ResponsePaging.with(service.listFavorites(
-            userId,
+            AlfrescoApi.CURRENT_USER,
             skipCount,
             maxItems,
             orderBy,
@@ -26,31 +26,16 @@ class FavoritesRepository() {
         ))
     }
 
-    suspend fun getFavorites(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return flow {
-            emit(nodes("-me-", skipCount, maxItems))
-        }
-    }
-
-    private suspend fun favoritesLibraries(userId: String, skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun getFavoriteLibraries(skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/site))"
-        val include = listOf("allowableOperations")
         val orderBy = listOf("title ASC")
         return ResponsePaging.with(service.listFavorites(
-            userId,
+            AlfrescoApi.CURRENT_USER,
             skipCount,
             maxItems,
             orderBy,
-            where,
-            include,
-            null
+            where
         ))
-    }
-
-    suspend fun getFavoriteLibraries(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return flow {
-            emit(favoritesLibraries("-me-", skipCount, maxItems))
-        }
     }
 
     suspend fun addFavorite(entry: Entry) {
@@ -62,18 +47,14 @@ class FavoritesRepository() {
         }
 
         service.createFavorite(
-            "-me-",
-            FavoriteBodyCreate(mapOf(key to mapOf("guid" to entry.id))),
-            null,
-            null
+            AlfrescoApi.CURRENT_USER,
+            FavoriteBodyCreate(mapOf(key to mapOf("guid" to entry.id)))
         )
     }
 
-    suspend fun removeFavorite(entry: Entry) {
-        service.deleteFavorite("-me-", entry.id)
-    }
+    suspend fun removeFavorite(entry: Entry) =
+        service.deleteFavorite(AlfrescoApi.CURRENT_USER, entry.id)
 
     suspend fun getFavoriteSite(id: String) =
-        Entry.with(service.getFavoriteSite("-me-", id, null).entry)
-            .copy(isPartial = false, isFavorite = true)
+        Entry.with(service.getFavorite(AlfrescoApi.CURRENT_USER, id).entry)
 }

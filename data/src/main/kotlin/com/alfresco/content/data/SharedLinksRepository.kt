@@ -1,29 +1,19 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.apis.AlfrescoApi
 import com.alfresco.content.apis.SharedLinksApi
+import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
-class SharedLinksRepository {
+class SharedLinksRepository(val session: Session = SessionManager.requireSession) {
     private val service: SharedLinksApi by lazy {
-        SessionManager.requireSession.createService(SharedLinksApi::class.java)
+        session.createService(SharedLinksApi::class.java)
     }
 
-    private suspend fun nodes(skipCount: Int, maxItems: Int): ResponsePaging {
-        val include = listOf(listOf("path", "isFavorite", "allowableOperations").joinToString(","))
-        return ResponsePaging.with(service.listSharedLinks(
+    suspend fun getSharedLinks(skipCount: Int, maxItems: Int) =
+        ResponsePaging.with(service.listSharedLinks(
             skipCount,
             maxItems,
-            null,
-            include,
-            null
+            include = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations")
         ))
-    }
-
-    suspend fun getSharedLinks(skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
-        return flow {
-            emit(nodes(skipCount, maxItems))
-        }
-    }
 }

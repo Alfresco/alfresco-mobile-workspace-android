@@ -46,8 +46,8 @@ class ActionListViewModel(
 
     private fun fetchEntry(entry: Entry): Flow<Entry> =
         when (entry.type) {
-            Entry.Type.Site -> FavoritesRepository()::getFavoriteSite.asFlow(entry.otherId ?: "")
-            else -> BrowseRepository()::fetchNode.asFlow(entry.id)
+            Entry.Type.Site -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
+            else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
     fun <T : Action> execute(actionClass: Class<T>) {

@@ -32,7 +32,7 @@ class ViewerViewModel(
     init {
         viewModelScope.launch {
             try {
-                val entry = BrowseRepository().fetchNode(state.id)
+                val entry = BrowseRepository().fetchEntry(state.id)
                 setState { copy(entry = entry) }
 
                 val result = getContentUri(state.id, entry.mimeType)

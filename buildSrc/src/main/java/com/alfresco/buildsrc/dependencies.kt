@@ -19,6 +19,7 @@ object Libs {
     object Alfresco {
         const val auth = "com.alfresco.android:auth:0.7-SNAPSHOT"
         const val content = "com.alfresco.android:content:0.2-SNAPSHOT"
+        const val contentKtx = "com.alfresco.android:content-ktx:0.2-SNAPSHOT"
     }
 
     object Kotlin {

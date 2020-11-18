@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation project(':account')
+    api project(':account')
 
     implementation Libs.Alfresco.auth
     implementation Libs.Alfresco.content

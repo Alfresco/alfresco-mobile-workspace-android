@@ -17,11 +17,11 @@ android {
 }
 
 dependencies {
-    implementation project(':account')
     api project(':session')
 
     implementation Libs.Alfresco.auth
     implementation Libs.Alfresco.content
+    implementation Libs.Alfresco.contentKtx
 
     implementation Libs.AndroidX.preference
 

@@ -20,6 +20,7 @@ import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.coroutines.asFlow
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -92,31 +93,32 @@ class BrowseViewModel(
         }
     }
 
+    // TODO: Interesting...
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return when (path) {
             context.getString(R.string.nav_path_recents) ->
-                SearchRepository().getRecents(skipCount, maxItems)
+                SearchRepository()::getRecents.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_favorites) ->
-                FavoritesRepository().getFavorites(skipCount, maxItems)
+                FavoritesRepository()::getFavorites.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_my_libraries) ->
-                SitesRepository().getMySites(skipCount, maxItems)
+                SitesRepository()::getMySites.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_fav_libraries) ->
-                FavoritesRepository().getFavoriteLibraries(skipCount, maxItems)
+                FavoritesRepository()::getFavoriteLibraries.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_shared) ->
-                SharedLinksRepository().getSharedLinks(skipCount, maxItems)
+                SharedLinksRepository()::getSharedLinks.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_trash) ->
-                TrashCanRepository().getDeletedNodes(skipCount, maxItems)
+                TrashCanRepository()::getDeletedNodes.asFlow(skipCount, maxItems)
 
             context.getString(R.string.nav_path_folder) ->
-                BrowseRepository().loadItemsInFolder(requireNotNull(item), skipCount, maxItems)
+                BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             context.getString(R.string.nav_path_site) ->
-                BrowseRepository().loadItemsInSite(requireNotNull(item), skipCount, maxItems)
+                BrowseRepository()::fetchLibraryItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             else -> throw IllegalStateException()
         }

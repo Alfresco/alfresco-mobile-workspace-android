@@ -60,6 +60,8 @@
         <!-- Widget Styles -->
         <item name="actionBarStyle">@style/Widget.Alfresco.ActionBar.Dark</item>
 
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Alfresco.BottomSheetDialog.Dark</item>
+
         <!-- System Elements -->
         <item name="android:statusBarColor">@color/design_dark_default_color_background</item>
         <item name="android:navigationBarColor">#2D2D2D</item>
@@ -86,6 +88,13 @@
 
     <style name="ThemeOverlay.Alfresco.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.Alfresco.BottomSheet</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
+
+    <style name="ThemeOverlay.Alfresco.BottomSheetDialog.Dark">
+        <item name="android:navigationBarColor">#353535</item>
+    </style>
+
 
 </resources>

@@ -31,20 +31,26 @@ class MainActivity : BaseMvRxActivity() {
 
         // Check login during creation for faster transition on startup
         withState(viewModel) { state ->
-            checkLogin(state)
+            if (checkLogin(state)) {
+                configure()
+            }
         }
-
-        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
-        actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupActionBar(this, navController, appBarConfiguration)
-
-        bottomNav.setupWithNavController(navController)
 
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         setupDownloadNotifications()
+    }
+
+    private fun configure() {
+        navController.setGraph(R.navigation.nav_bottom)
+
+        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
+        actionBarController = ActionBarController(findViewById(R.id.toolbar))
+        actionBarController.setupActionBar(this, navController, appBarConfiguration)
+
+        bottomNav.setupWithNavController(navController)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -55,12 +61,13 @@ class MainActivity : BaseMvRxActivity() {
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
 
-    private fun checkLogin(state: MainActivityState) {
+    private fun checkLogin(state: MainActivityState): Boolean {
         if (state.requiresLogin) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
         }
+        return !state.requiresLogin
     }
 
     private fun checkInvalidLogin(state: MainActivityState) {

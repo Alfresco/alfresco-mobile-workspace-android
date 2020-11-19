@@ -18,7 +18,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MainActivityState(
-    val requiresLogin: Boolean = false,
+    val requiresLogin: Boolean = true,
     val requiresReLogin: Boolean = false
 ) : MvRxState
 

@@ -6,10 +6,10 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.content.data.Entry
 import com.google.android.material.snackbar.Snackbar
+import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
 
 interface Action {
     val entry: Entry
@@ -21,25 +21,21 @@ interface Action {
 
     fun execute(
         context: Context,
-        scope: CoroutineScope,
-        block: (suspend CoroutineScope.(action: Action) -> Unit)? = null
+        scope: CoroutineScope
     ) = scope.launch {
+        val bus = EventBus.default
         try {
             val newEntry = execute(context)
             val newAction = copy(newEntry)
-            EventBus.default.send(newAction)
-
-            if (block != null) {
-                block(newAction)
-            }
+            bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
         } catch (ex: Exception) {
-            EventBus.default.send(Error(ex.message ?: ""))
+            bus.send(Error(ex.message ?: ""))
         } catch (ex: SocketTimeoutException) {
-            EventBus.default.send(Error(context.getString(R.string.action_timeout_error)))
+            bus.send(Error(context.getString(R.string.action_timeout_error)))
         } catch (ex: kotlin.Exception) {
-            EventBus.default.send(Error(context.getString(R.string.action_generic_error)))
+            bus.send(Error(context.getString(R.string.action_generic_error)))
         }
     }
 
@@ -50,7 +46,7 @@ interface Action {
 
     data class Error(val message: String)
 
-    class Exception(string: String): kotlin.Exception(string)
+    class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {

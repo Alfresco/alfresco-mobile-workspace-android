@@ -11,7 +11,6 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.coroutines.asFlow
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -23,6 +22,10 @@ class ActionListViewModel(
 
     init {
         buildModel()
+
+        // Update the model if necessary
+        viewModelScope.on<ActionAddFavorite> (block = ::updateState)
+        viewModelScope.on<ActionRemoveFavorite> (block = ::updateState)
     }
 
     private fun buildModel() = withState { state ->
@@ -44,6 +47,16 @@ class ActionListViewModel(
         }
     }
 
+    private fun updateState(action: Action) {
+        setState {
+            ActionListState(
+                action.entry,
+                makeActions(action.entry),
+                makeTopActions(action.entry)
+            )
+        }
+    }
+
     private fun fetchEntry(entry: Entry): Flow<Entry> =
         when (entry.type) {
             Entry.Type.Site -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
@@ -56,18 +69,8 @@ class ActionListViewModel(
         }
     }
 
-    fun execute(action: Action) {
-        val weakSelf = WeakReference(this)
-        action.execute(context, GlobalScope) { _action ->
-            weakSelf.get()?.setState {
-                ActionListState(
-                    _action.entry,
-                    makeActions(_action.entry),
-                    makeTopActions(_action.entry)
-                )
-            }
-        }
-    }
+    fun execute(action: Action) =
+        action.execute(context, GlobalScope)
 
     private fun makeActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()

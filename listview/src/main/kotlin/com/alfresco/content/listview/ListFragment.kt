@@ -189,6 +189,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
     abstract fun onItemClicked(entry: Entry)
 
     open fun onItemMoreClicked(entry: Entry) {
-        ActionListSheet(entry).show(childFragmentManager, null)
+        ActionListSheet.with(entry).show(childFragmentManager, null)
     }
 }

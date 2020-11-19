@@ -87,7 +87,7 @@ class ActionBarFragment : BaseMvRxFragment() {
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
                 withState(viewModel) {
-                    ActionListSheet(it.entry).show(childFragmentManager, null)
+                    ActionListSheet.with(it.entry).show(childFragmentManager, null)
                 }
             }
         }

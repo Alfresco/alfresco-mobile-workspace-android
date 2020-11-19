@@ -14,11 +14,9 @@ import com.alfresco.content.actions.databinding.FragmentActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.ui.BottomSheetDialogFragment
-import java.lang.ref.WeakReference
 
-class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment() {
+internal class ActionListFragment() : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
-    private val parent = WeakReference(parent)
     private lateinit var binding: FragmentActionListBinding
 
     override fun onCreateView(
@@ -52,7 +50,7 @@ class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment() {
                     action(it)
                     clickListener { _ ->
                         viewModel.execute(it)
-                        parent.get()?.dismiss()
+                        (parentFragment as ActionListSheet).dismiss()
                     }
                 }
             }
@@ -60,7 +58,7 @@ class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment() {
     }
 }
 
-class ActionListSheet(private val entry: Entry) : BottomSheetDialogFragment() {
+class ActionListSheet() : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,8 +68,8 @@ class ActionListSheet(private val entry: Entry) : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.sheet_action_list, container, false)
 
         if (savedInstanceState == null) {
-            val contentFragment = ActionListFragment(this)
-            contentFragment.arguments = bundleOf(MvRx.KEY_ARG to entry)
+            val contentFragment = ActionListFragment()
+            contentFragment.arguments = arguments
             childFragmentManager
                 .beginTransaction()
                 .replace(R.id.content, contentFragment)
@@ -79,5 +77,11 @@ class ActionListSheet(private val entry: Entry) : BottomSheetDialogFragment() {
         }
 
         return view
+    }
+
+    companion object {
+        fun with(entry: Entry) = ActionListSheet().apply {
+            arguments = bundleOf(MvRx.KEY_ARG to entry)
+        }
     }
 }

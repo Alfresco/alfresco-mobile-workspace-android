@@ -18,7 +18,7 @@ android {
 
 dependencies {
     implementation project(':base')
-    implementation project(':base-ui')
+    api project(':base-ui')
     implementation project(':common')
     implementation project(':data')
     implementation project(':mimetype')

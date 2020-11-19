@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
@@ -12,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.alfresco.android.aims.R
 import com.alfresco.common.FragmentBuilder
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.alfresco.ui.BottomSheetDialogFragment
 
 class HelpFragment : BottomSheetDialogFragment() {
+
+    override val requiresFullscreen = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_auth_help, container, false)
@@ -35,20 +34,6 @@ class HelpFragment : BottomSheetDialogFragment() {
 
         val closeBtn: View = view.findViewById(R.id.btnClose)
         closeBtn.setOnClickListener { dismiss() }
-
-        // Fix for https://issuetracker.google.com/issues/37132390
-        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                val bottomSheet = (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                bottomSheet?.let {
-                    BottomSheetBehavior.from<View>(it).apply {
-                        state = BottomSheetBehavior.STATE_EXPANDED
-                        peekHeight = bottomSheet.height
-                    }
-                }
-                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

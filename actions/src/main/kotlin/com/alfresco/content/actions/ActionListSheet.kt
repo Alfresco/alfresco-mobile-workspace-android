@@ -13,7 +13,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.FragmentActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.alfresco.ui.BottomSheetDialogFragment
 import java.lang.ref.WeakReference
 
 class ActionListFragment(parent: ActionListSheet) : BaseMvRxFragment() {

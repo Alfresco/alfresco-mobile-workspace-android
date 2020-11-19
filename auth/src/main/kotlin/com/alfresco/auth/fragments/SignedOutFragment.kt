@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.alfresco.android.aims.R
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.alfresco.ui.BottomSheetDialogFragment
 
 /**
  * Helper class to create screen-dependant dialog

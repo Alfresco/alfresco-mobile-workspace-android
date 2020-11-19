@@ -26,7 +26,6 @@ data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-    override val isCompact: Boolean = false,
 
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
@@ -35,7 +34,11 @@ data class SearchResultsState(
 
     constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title)
 
-    val isContextual: Boolean get() { return contextId != null }
+    val isContextual: Boolean
+        get() { return contextId != null }
+
+    override val isCompact: Boolean
+        get() { return entries.firstOrNull()?.type == Entry.Type.Site }
 
     fun updateEntries(response: ResponsePaging?): SearchResultsState {
         if (response == null) return this

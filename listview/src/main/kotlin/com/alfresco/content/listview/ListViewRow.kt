@@ -32,6 +32,7 @@ class ListViewRow @JvmOverloads constructor(
     fun setData(entry: Entry) {
         title.text = entry.title
         subtitle.text = entry.subtitle
+        subtitle.isVisible = entry.subtitle?.isNotEmpty() ?: false
 
         val type = when (entry.type) {
             Entry.Type.Site -> MimeType.LIBRARY
@@ -50,8 +51,6 @@ class ListViewRow @JvmOverloads constructor(
             ViewGroup.LayoutParams.MATCH_PARENT,
             resources.getDimension(heightResId).toInt()
         )
-
-        subtitle.isVisible = !compact
     }
 
     @CallbackProp

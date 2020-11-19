@@ -17,7 +17,6 @@
 
     <style name="Widget.Alfresco.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
-        <item name="android:background">@drawable/top_separator</item>
     </style>
 
     <style name="Widget.Alfresco.TabLayout" parent="Widget.MaterialComponents.TabLayout">

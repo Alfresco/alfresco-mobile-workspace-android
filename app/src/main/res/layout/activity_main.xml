@@ -16,10 +16,17 @@
         android:layout_weight="1"
         app:defaultNavHost="true" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+    <!-- outlineProvider:none removes shadow-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:outlineProvider="none"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav" />
 

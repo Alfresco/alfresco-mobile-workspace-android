@@ -19,7 +19,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/separatorColor"/>
+        android:background="@android:color/white"
+        android:backgroundTint="?attr/separatorColor" />
 
     <!-- outlineProvider:none removes shadow-->
     <com.google.android.material.bottomnavigation.BottomNavigationView

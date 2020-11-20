@@ -79,6 +79,7 @@ data class ActionOpenWith(
                     ) { _, _ ->
                         downloadJob.get()?.cancel()
                     }
+                    .setCancelable(false)
                     .show()
                 it.invokeOnCancellation {
                     dialog.dismiss()

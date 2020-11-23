@@ -92,10 +92,10 @@ class ActionListViewModel(
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
+        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
         if (entry.type == Entry.Type.File) {
             actions.add(ActionDownload(entry))
         }
-        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
         return actions
     }
 

@@ -69,14 +69,24 @@ object DownloadMonitor {
         if (!cursor.moveToFirst()) return
         val title = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE))
         val size = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+        val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
         cursor.close()
 
         val formattedSize = Formatter.formatFileSize(context, size)
-        val content = context.getString(R.string.notification_download_content, formattedSize)
-
-        val intent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val content = if (status == DownloadManager.STATUS_SUCCESSFUL) {
+            context.getString(R.string.notification_download_content, formattedSize)
+        } else {
+            context.getString(R.string.notification_download_content_error)
         }
+
+        val intent = if (status == DownloadManager.STATUS_SUCCESSFUL) {
+            Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        } else {
+            context.packageManager.getLaunchIntentForPackage(context.applicationContext.packageName)
+        }
+
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val smallIcon = this.smallIcon ?: return

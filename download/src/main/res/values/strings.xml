@@ -2,4 +2,5 @@
 <resources>
     <string name="notification_channel_downloads">Downloads</string>
     <string name="notification_download_content">Downloaded, %s</string>
+    <string name="notification_download_content_error">Unknown error occurred. Please try again.</string>
 </resources>

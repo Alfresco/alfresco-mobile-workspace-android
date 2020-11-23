@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,7 +17,6 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
-import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionListSheet
@@ -118,8 +116,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 }
             }
         })
-
-        Action.showActionToasts(lifecycleScope, view)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

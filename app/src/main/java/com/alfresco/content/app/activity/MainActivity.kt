@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.BaseMvRxActivity
+import com.alfresco.content.actions.Action
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
@@ -41,8 +43,6 @@ class MainActivity : BaseMvRxActivity() {
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-
-        setupDownloadNotifications()
     }
 
     private fun configure() {
@@ -53,6 +53,9 @@ class MainActivity : BaseMvRxActivity() {
         actionBarController.setupActionBar(this, navController, appBarConfiguration)
 
         bottomNav.setupWithNavController(navController)
+
+        setupActionToasts()
+        setupDownloadNotifications()
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -89,12 +92,18 @@ class MainActivity : BaseMvRxActivity() {
         startActivity(i)
     }
 
-    private fun setupDownloadNotifications() {
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content),
+            bottomNav
+        )
+
+    private fun setupDownloadNotifications() =
         DownloadMonitor
             .smallIcon(R.drawable.ic_notification_small)
             .tint(primaryColor(this))
             .observe(this)
-    }
 
     private fun primaryColor(context: Context): Int {
         val typedValue = TypedValue()

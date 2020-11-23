@@ -6,25 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.databinding.FragmentActionListBinding
+import com.alfresco.content.BaseMvRxBottomSheet
+import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
-import com.alfresco.ui.BottomSheetDialogFragment
 
-internal class ActionListFragment() : BaseMvRxFragment() {
+class ActionListSheet() : BaseMvRxBottomSheet() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
-    private lateinit var binding: FragmentActionListBinding
+    private lateinit var binding: SheetActionListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentActionListBinding.inflate(inflater, container, false)
+        binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -50,33 +49,11 @@ internal class ActionListFragment() : BaseMvRxFragment() {
                     action(it)
                     clickListener { _ ->
                         viewModel.execute(it)
-                        (parentFragment as ActionListSheet).dismiss()
+                        dismiss()
                     }
                 }
             }
         }
-    }
-}
-
-class ActionListSheet() : BottomSheetDialogFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.sheet_action_list, container, false)
-
-        if (savedInstanceState == null) {
-            val contentFragment = ActionListFragment()
-            contentFragment.arguments = arguments
-            childFragmentManager
-                .beginTransaction()
-                .replace(R.id.content, contentFragment)
-                .commit()
-        }
-
-        return view
     }
 
     companion object {

@@ -11,6 +11,7 @@ android {
 }
 
 dependencies {
+    api project(':base-ui')
     implementation project(':data')
 
     implementation Libs.Coroutines.core

@@ -18,7 +18,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MainActivityState(
-    val requiresLogin: Boolean = true,
     val requiresReLogin: Boolean = false
 ) : MvRxState
 
@@ -34,9 +33,6 @@ class MainActivityViewModel(
         // Start a new session
         val session = SessionManager.newSession(context)
 
-        // On empty session show login
-        setState { copy(requiresLogin = (session == null)) }
-
         session?.onSignedOut() {
             setState { copy(requiresReLogin = true) }
         }
@@ -44,6 +40,9 @@ class MainActivityViewModel(
         // Receives current state on observe
         processLifecycleOwner.lifecycle.addObserver(this)
     }
+
+    val requiresLogin: Boolean
+        get() = SessionManager.currentSession == null
 
     override fun onCleared() {
         super.onCleared()

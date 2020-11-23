@@ -30,10 +30,12 @@ class MainActivity : BaseMvRxActivity() {
         setContentView(R.layout.activity_main)
 
         // Check login during creation for faster transition on startup
-        withState(viewModel) { state ->
-            if (checkLogin(state)) {
-                configure()
-            }
+        if (viewModel.requiresLogin) {
+            val i = Intent(this, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        } else {
+            configure()
         }
 
         if (!resources.getBoolean(R.bool.isTablet)) {
@@ -54,21 +56,11 @@ class MainActivity : BaseMvRxActivity() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        checkLogin(state)
         checkInvalidLogin(state)
         actionBarController.refreshData()
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
-
-    private fun checkLogin(state: MainActivityState): Boolean {
-        if (state.requiresLogin) {
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            finish()
-        }
-        return !state.requiresLogin
-    }
 
     private fun checkInvalidLogin(state: MainActivityState) {
         if (state.requiresReLogin) {

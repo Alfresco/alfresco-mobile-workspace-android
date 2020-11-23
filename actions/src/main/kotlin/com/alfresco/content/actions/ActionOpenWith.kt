@@ -12,12 +12,11 @@ import com.alfresco.download.ContentDownloader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 data class ActionOpenWith(
@@ -26,23 +25,26 @@ data class ActionOpenWith(
     override val title: Int = R.string.action_open_with_title
 ) : Action {
 
-    private var downloadJob = AtomicReference<Job?>(null)
+    private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)
 
     override suspend fun execute(context: Context): Entry {
 
-        val dialogAsync = showProgressDialogAsync(context)
+        val deferredDialog = showProgressDialogAsync(context)
 
         val uri = BrowseRepository().contentUri(entry.id)
         val output = File(context.cacheDir, entry.title)
-        val downloadJob = GlobalScope.launch(Dispatchers.IO) {
+        val deferredDownload = GlobalScope.async(Dispatchers.IO) {
             ContentDownloader.downloadFileTo(uri, output.path)
         }
-        this.downloadJob.compareAndSet(null, downloadJob)
+        this.deferredDownload.compareAndSet(null, deferredDownload)
 
-        downloadJob.join()
-        dialogAsync.cancelAndJoin()
-
-        if (downloadJob.isCancelled) return entry
+        try {
+            deferredDownload.await()
+        } catch (ex: Exception) {
+            deferredDialog.cancel()
+            throw ex
+        }
+        deferredDialog.cancelAndJoin()
 
         val contentUri = FileProvider.getUriForFile(context, ContentDownloader.FILE_PROVIDER_AUTHORITY, output)
         val intent = Intent(Intent.ACTION_VIEW)
@@ -77,7 +79,7 @@ data class ActionOpenWith(
                     .setNegativeButton(
                         context.getString(R.string.action_open_with_cancel)
                     ) { _, _ ->
-                        downloadJob.get()?.cancel()
+                        deferredDownload.get()?.cancel()
                     }
                     .setCancelable(false)
                     .show()

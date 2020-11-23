@@ -14,7 +14,7 @@ import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 
-class ActionListSheet() : BaseMvRxBottomSheet() {
+class ActionListSheet : BaseMvRxBottomSheet() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionListBinding
 

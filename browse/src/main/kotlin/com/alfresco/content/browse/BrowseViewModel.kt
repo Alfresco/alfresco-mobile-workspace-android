@@ -93,7 +93,6 @@ class BrowseViewModel(
         }
     }
 
-    // TODO: Interesting...
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return when (path) {
             context.getString(R.string.nav_path_recents) ->

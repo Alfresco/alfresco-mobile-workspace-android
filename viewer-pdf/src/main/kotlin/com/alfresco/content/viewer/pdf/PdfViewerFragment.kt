@@ -20,7 +20,6 @@ import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
-import java.io.InputStream
 import java.util.HashMap
 
 class PdfViewerFragment : ChildViewerFragment() {
@@ -33,8 +32,7 @@ class PdfViewerFragment : ChildViewerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.viewer_pdf, container, false)
-        return view
+        return inflater.inflate(R.layout.viewer_pdf, container, false)
     }
 
     @SuppressLint("SetJavaScriptEnabled")

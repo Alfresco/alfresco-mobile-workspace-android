@@ -103,8 +103,4 @@ class ActionBarFragment : BaseMvRxFragment() {
         binding.container.removeAllViews()
         addButtons(binding.container, it.topActions)
     }
-
-    private companion object {
-        const val MAX_ITEMS = 3
-    }
 }

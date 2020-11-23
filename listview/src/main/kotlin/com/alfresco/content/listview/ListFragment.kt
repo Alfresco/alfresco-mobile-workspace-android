@@ -139,7 +139,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                 message(args.third)
             }
         } else if (state.entries.isNotEmpty()) {
-            state.entries.forEach() {
+            state.entries.forEach {
                 if (it.type == Entry.Type.Group) {
                     listViewGroupHeader {
                         id(it.title)

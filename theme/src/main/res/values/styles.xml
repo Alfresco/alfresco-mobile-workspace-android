@@ -73,19 +73,4 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
     </style>
-
-    <!-- SnackBar -->
-    <style name="Widget.Alfresco.Snackbar" />
-
-    <style name="Widget.Alfresco.Snackbar.Title">
-        <item name="android:fontFamily">@font/base_bold</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="Widget.Alfresco.Snackbar.Message">
-        <item name="android:fontFamily">@font/base_regular</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:textSize">14sp</item>
-    </style>
 </resources>

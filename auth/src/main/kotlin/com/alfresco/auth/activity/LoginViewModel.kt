@@ -34,8 +34,8 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     val onShowHelp: LiveEvent<Int> = _onShowHelp
     val onShowSettings: LiveEvent<Int> = _onShowSettings
     val isLoading = MutableLiveData<Boolean>()
-    val identityUrl = MutableLiveData<String>("")
-    val applicationUrl = MutableLiveData<String>("")
+    val identityUrl = MutableLiveData("")
+    val applicationUrl = MutableLiveData("")
 
     val connectEnabled: LiveData<Boolean>
     val ssoLoginEnabled: LiveData<Boolean>
@@ -103,7 +103,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     private fun onAuthType(authType: AuthType) {
         when (authType) {
             AuthType.PKCE -> {
-                viewModelScope.launch() {
+                viewModelScope.launch {
                     val isContentServicesInstalled = withContext(Dispatchers.IO) {
                         discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
                     }
@@ -262,7 +262,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         }
     }
 
-    class AuthConfigEditor() {
+    class AuthConfigEditor {
         private lateinit var source: AuthConfig
         private val _changed = MediatorLiveData<Boolean>()
 

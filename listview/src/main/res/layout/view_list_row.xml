@@ -13,8 +13,7 @@
         android:id="@+id/icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:scaleType="fitCenter"
-        tools:src="@drawable/file_ic_other" />
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:layout_width="0dp"

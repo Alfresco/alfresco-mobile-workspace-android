@@ -12,11 +12,11 @@ import com.google.android.material.textfield.TextInputLayout
 class TextInputLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         TextInputLayout(context, attrs, defStyleAttr) {
 
-    constructor(context: Context) : this(context, null) {
-    }
+    constructor(context: Context) :
+        this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.textInputStyle) {
-    }
+    constructor(context: Context, attrs: AttributeSet?) :
+        this(context, attrs, R.attr.textInputStyle)
 
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         super.addView(child, index, params)

@@ -38,7 +38,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         }
     }
 
-    protected var ignoreStepEventOnce = false
+    private var ignoreStepEventOnce = false
 
     private lateinit var progressView: RelativeLayout
 

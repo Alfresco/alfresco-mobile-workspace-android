@@ -33,7 +33,7 @@ class MainActivityViewModel(
         // Start a new session
         val session = SessionManager.newSession(context)
 
-        session?.onSignedOut() {
+        session?.onSignedOut {
             setState { copy(requiresReLogin = true) }
         }
 

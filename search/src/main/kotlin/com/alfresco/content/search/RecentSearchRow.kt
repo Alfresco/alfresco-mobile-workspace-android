@@ -27,7 +27,7 @@ class RecentSearchRow @JvmOverloads constructor(
     }
 
     @CallbackProp
-    fun setClickListener(listener: View.OnClickListener?) {
+    fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
     }
 }

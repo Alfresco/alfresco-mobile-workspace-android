@@ -24,6 +24,8 @@ class ListViewRow @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private var isCompact: Boolean = false
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_list_row, this, true)
     }
@@ -32,7 +34,7 @@ class ListViewRow @JvmOverloads constructor(
     fun setData(entry: Entry) {
         title.text = entry.title
         subtitle.text = entry.subtitle
-        subtitle.isVisible = entry.subtitle?.isNotEmpty() ?: false
+        updateSubtitleVisibility()
 
         val type = when (entry.type) {
             Entry.Type.Site -> MimeType.LIBRARY
@@ -45,12 +47,19 @@ class ListViewRow @JvmOverloads constructor(
 
     @ModelProp
     fun setCompact(compact: Boolean) {
-        val heightResId = if (compact) R.dimen.list_row_compact_height else R.dimen.list_row_height
+        this.isCompact = compact
 
+        val heightResId = if (compact) R.dimen.list_row_compact_height else R.dimen.list_row_height
         layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             resources.getDimension(heightResId).toInt()
         )
+
+        updateSubtitleVisibility()
+    }
+
+    private fun updateSubtitleVisibility() {
+        subtitle.isVisible = subtitle.text.isNotEmpty() && !isCompact
     }
 
     @CallbackProp

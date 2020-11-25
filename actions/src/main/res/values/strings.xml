@@ -27,4 +27,11 @@
     <string name="action_open_with_downloading">Downloading&#8230;</string>
     <string name="action_open_with_cancel">Cancel</string>
     <string name="action_open_with_error_no_viewer">No installed app can view this file.</string>
+
+    <string name="action_create_document_title">Word document</string>
+    <string name="action_create_spreadsheet_title">Excel spreadsheet</string>
+    <string name="action_create_presentation_title">PowerPoint Presentation</string>
+
+    <string name="action_create_document_negative">Cancel</string>
+    <string name="action_create_document_positive">Create</string>
 </resources>

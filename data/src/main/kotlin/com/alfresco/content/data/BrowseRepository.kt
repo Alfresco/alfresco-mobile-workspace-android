@@ -5,6 +5,10 @@ import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import java.io.File
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
@@ -45,6 +49,24 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
+
+    suspend fun uploadFile(parentId: String, file: File, name: String, contentType: String): Entry {
+        val filePart = MultipartBody.Part.createFormData(
+            "filedata",
+            name,
+            file.asRequestBody(contentType.toMediaTypeOrNull())
+        )
+
+        return Entry.with(
+            service.createNode(
+                parentId,
+                filePart,
+                autoRename = true,
+                name = name,
+                nodeType = "cm:content"
+            ).entry
+        )
+    }
 
     fun contentUri(id: String): String {
         val baseUrl = SessionManager.currentSession?.baseUrl

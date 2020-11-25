@@ -2,8 +2,10 @@ package com.alfresco.content.browse
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDeleteForever
@@ -23,6 +25,8 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 class BrowseViewModel(
@@ -83,14 +87,25 @@ class BrowseViewModel(
                 nodeId,
                 skipCount,
                 ITEMS_PER_PAGE
-            ).execute {
-                if (it is Loading) {
-                    copy(request = it)
-                } else {
-                    update(it()).copy(request = it)
+            ).zip(fetchNode(nodeId)) { paging, parent ->
+                Pair(paging, parent)
+            }.execute {
+                when (it) {
+                    is Loading -> copy(request = Loading())
+                    is Fail -> copy(request = Fail(it.error))
+                    is Success -> {
+                        update(it().first).copy(parent = it().second, request = Success(it().first))
+                    }
+                    else -> { copy() }
                 }
             }
         }
+    }
+
+    private suspend fun fetchNode(item: String?): Flow<Entry?> = if (item == null) {
+        flowOf(null)
+    } else {
+        BrowseRepository()::fetchEntry.asFlow(item)
     }
 
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
@@ -133,6 +148,13 @@ class BrowseViewModel(
                 Triple(R.drawable.ic_empty_favorites, R.string.favorite_sites_empty_title, R.string.favorites_empty_message)
             else ->
                 Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
+        }
+
+    fun canAddItems(state: BrowseViewState): Boolean =
+        when (state.path) {
+            context.getString(R.string.nav_path_folder) -> state.parent?.canCreate ?: false
+            context.getString(R.string.nav_path_site) -> state.parent?.canCreate ?: false
+            else -> false
         }
 
     companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {

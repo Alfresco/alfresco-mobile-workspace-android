@@ -30,6 +30,7 @@ data class Entry(
     val isPartial: Boolean = false,
     val isFavorite: Boolean = false,
     val canDelete: Boolean = false,
+    val canCreate: Boolean = false,
     val isTrashed: Boolean = false,
     val otherId: String? = null
 ) : Parcelable {
@@ -75,7 +76,8 @@ data class Entry(
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
-                node.allowableOperations?.contains("delete") ?: false
+                canDelete(node.allowableOperations),
+                canCreate(node.allowableOperations)
             )
         }
 
@@ -89,7 +91,7 @@ data class Entry(
                 result.modifiedAt,
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
-                result.allowableOperations?.contains("delete") ?: false
+                canDelete(result.allowableOperations)
             )
         }
 
@@ -103,7 +105,7 @@ data class Entry(
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
-                node.allowableOperations?.contains("delete") ?: false
+                canDelete(node.allowableOperations)
             )
         }
 
@@ -120,7 +122,7 @@ data class Entry(
                     file.modifiedAt,
                     file.allowableOperations == null,
                     true,
-                    file.allowableOperations?.contains("delete") ?: false
+                    canDelete(file.allowableOperations)
                 )
             }
             if (map.folder != null) {
@@ -134,7 +136,7 @@ data class Entry(
                     folder.modifiedAt,
                     folder.allowableOperations == null,
                     true,
-                    folder.allowableOperations?.contains("delete") ?: false
+                    canDelete(folder.allowableOperations)
                 )
             }
             if (map.site != null) {
@@ -175,12 +177,12 @@ data class Entry(
                 link.nodeId ?: "",
                 Type.File,
                 link.name ?: "",
-                null,
+                link.path?.formattedString(),
                 link.content?.mimeType,
                 link.modifiedAt,
                 link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
-                link.allowableOperations?.contains("delete") ?: false
+                canDelete(link.allowableOperations)
             )
         }
 
@@ -203,6 +205,12 @@ data class Entry(
             return elements?.map { it.name }
                 ?.reduce { out, el -> "$out \u203A $el" }
         }
+
+        private fun canDelete(operations: List<String>?) =
+            operations?.contains("delete") ?: false
+
+        private fun canCreate(operations: List<String>?) =
+            operations?.contains("create") ?: false
     }
 }
 

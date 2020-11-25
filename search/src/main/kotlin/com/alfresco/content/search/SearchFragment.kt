@@ -75,6 +75,7 @@ class SearchFragment : BaseMvRxFragment() {
 
         setupChips()
 
+        resultsFragment.topLoadingIndicator = view.findViewById(R.id.loading)
         recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
     }
 

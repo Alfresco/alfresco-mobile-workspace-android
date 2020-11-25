@@ -73,4 +73,18 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
     </style>
+
+    <!-- Progress Indicators -->
+    <style name="Widget.Alfresco.LinearProgressIndicator"
+        parent="@style/Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="trackThickness">2dp</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="Widget.Alfresco.CircularProgressIndicator"
+        parent="@style/Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorSize">16dp</item>
+        <item name="trackThickness">2dp</item>
+        <item name="android:indeterminate">true</item>
+    </style>
 </resources>

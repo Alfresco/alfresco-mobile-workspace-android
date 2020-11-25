@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
@@ -92,6 +93,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
     lateinit var loadingAnimation: View
     lateinit var recyclerView: EpoxyRecyclerView
     lateinit var refreshLayout: SwipeRefreshLayout
+    lateinit var loadingMessage: TextView
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
 
@@ -101,6 +103,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
         loadingAnimation = view.findViewById(R.id.loading_animation)
         recyclerView = view.findViewById(R.id.recycler_view)
         refreshLayout = view.findViewById(R.id.refresh_layout)
+        loadingMessage = view.findViewById(R.id.loading_message)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()

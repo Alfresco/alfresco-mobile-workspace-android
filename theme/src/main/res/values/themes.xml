@@ -24,6 +24,8 @@
         <item name="tabStyle">@style/Widget.Alfresco.TabLayout</item>
         <item name="textInputStyle">@style/Widget.Alfresco.TextInputLayout</item>
         <item name="editTextStyle">@style/Widget.Alfresco.TextInputEditText</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.Alfresco.LinearProgressIndicator</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.Alfresco.CircularProgressIndicator</item>
 
         <!-- Type Style -->
         <item name="textAppearanceHeadline1">@style/TextAppearance.Alfresco.Headline1</item>

@@ -87,7 +87,7 @@ object Libs {
     }
 
     object Google {
-        const val material = "com.google.android.material:material:1.3.0-alpha02"
+        const val material = "com.google.android.material:material:1.3.0-alpha04"
 
         const val servicesPlugin = "com.google.gms:google-services:4.3.3"
 

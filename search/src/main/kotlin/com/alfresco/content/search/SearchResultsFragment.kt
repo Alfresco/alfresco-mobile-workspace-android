@@ -21,6 +21,8 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingMessage.setText(R.string.search_loading_message)
+
         recyclerView.addOnScrollListener(HideSoftInputOnScrollListener())
     }
 

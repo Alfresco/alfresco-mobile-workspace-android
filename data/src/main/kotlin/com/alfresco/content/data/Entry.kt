@@ -41,7 +41,8 @@ data class Entry(
         File,
         Folder,
         Site,
-        Link,
+        FileLink,
+        FolderLink,
         Group,
         Unknown;
 
@@ -52,7 +53,8 @@ data class Entry(
                     "cm:folder" -> return Folder
                     "st:sites" -> return Folder // Special folder for admins
                     "st:site" -> return Site
-                    "cm:link" -> return Link
+                    "app:filelink" -> return FileLink
+                    "app:folderlink" -> return FolderLink
                 }
                 return Unknown
             }
@@ -95,7 +97,7 @@ data class Entry(
 
         fun with(node: NodeChildAssociation): Entry {
             return Entry(
-                node.id,
+                node.properties?.get("cm:destination") as String? ?: node.id,
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),

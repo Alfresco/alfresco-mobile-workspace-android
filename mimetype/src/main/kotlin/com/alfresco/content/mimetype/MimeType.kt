@@ -23,6 +23,8 @@ enum class MimeType(val icon: Int) {
 
     OTHER(R.drawable.file_ic_generic),
     FOLDER(R.drawable.file_ic_folder),
+    FILE_LINK(R.drawable.file_ic_link),
+    FOLDER_LINK(R.drawable.file_ic_folder_link),
     LIBRARY(R.drawable.file_ic_library);
 
     companion object {

@@ -39,6 +39,8 @@ class ListViewRow @JvmOverloads constructor(
         val type = when (entry.type) {
             Entry.Type.Site -> MimeType.LIBRARY
             Entry.Type.Folder -> MimeType.FOLDER
+            Entry.Type.FileLink -> MimeType.FILE_LINK
+            Entry.Type.FolderLink -> MimeType.FOLDER_LINK
             else -> MimeType.with(entry.mimeType)
         }
 

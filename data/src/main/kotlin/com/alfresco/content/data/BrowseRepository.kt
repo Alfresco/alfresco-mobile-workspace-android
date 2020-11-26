@@ -35,7 +35,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         ))
 
     private fun extraFieldsFolder() =
-        AlfrescoApi.csvQueryParam("isFavorite", "allowableOperations")
+        AlfrescoApi.csvQueryParam("isFavorite", "allowableOperations", "properties")
 
     suspend fun fetchEntry(entryId: String) =
         Entry.with(service.getNode(

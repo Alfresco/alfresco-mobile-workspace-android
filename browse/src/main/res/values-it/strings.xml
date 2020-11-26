@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="nav_title_home">Home</string>
 
@@ -19,4 +18,12 @@
     <string name="modified_group_older">Meno recenti</string>
 
     <string name="contextual_search_title">Ricerca</string>
+
+    <string name="recent_empty_title">Nessun file recente</string>
+    <string name="recent_empty_message">I file che visualizzi e\nmodifichi verranno mostrati qui.</string>
+    <string name="favorite_files_empty_title">Nessun file o cartella preferiti</string>
+    <string name="favorite_sites_empty_title">Nessuna libreria preferita</string>
+    <string name="favorites_empty_message">Sembra che tu non abbia\naggiunto nulla.</string>
+    <string name="folder_empty_title">La cartella è vuota</string>
+    <string name="folder_empty_message">Sembra che qui non ci\nsia ancora nulla.</string>
 </resources>

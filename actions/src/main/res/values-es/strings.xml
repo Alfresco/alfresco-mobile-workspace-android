@@ -1,15 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_add_favorite_title">Favorito</string>
-    <string name="action_remove_favorite_title">Quitar favorito</string>
+    <string name="action_add_favorite_title">Añadir a favoritos</string>
+    <string name="action_remove_favorite_title">Quitar de favoritos</string>
+    <string name="action_delete_title">Mover a la papelera</string>
+    <string name="action_restore_title">Restaurar</string>
+    <string name="action_delete_forever_title">Eliminar permanentemente</string>
     <string name="action_download_title">Descargar</string>
+    <string name="action_open_with_title">Abrir con</string>
 
     <string name="action_add_favorite_toast">Añadido a favoritos</string>
     <string name="action_remove_favorite_toast">Quitado de favoritos</string>
-    <string name="action_delete_toast">Movido a papelera</string>
+    <string name="action_delete_toast">%s movido a papelera</string>
+    <string name="action_restored_toast">%s restaurado</string>
+    <string name="action_delete_forever_toast">%s eliminado</string>
+    <string name="action_timeout_error">Estamos tardando más de lo previsto. Por favor, espere un momento.</string>
     <string name="action_generic_error">Error desconocido</string>
 
     <string name="action_delete_confirmation_title">Eliminar</string>
+    <string name="action_delete_confirmation_message">%s se eliminará permanentemente.</string>
     <string name="action_delete_confirmation_negative">Cancelar</string>
     <string name="action_delete_confirmation_positive">Eliminar</string>
+
+    <string name="action_download_toast">Se descargará el fichero. Vea las notificaciones para más detalles</string>
+    <string name="action_download_failed_permissions">Fallo al descargar. Desactivó los permisos de acceso al almacenamiento.</string>
+
+    <string name="action_open_with_downloading">Descargando&#8230;</string>
+    <string name="action_open_with_cancel">Cancelar</string>
+    <string name="action_open_with_error_no_viewer">El fichero no puede verse con ninguna de las aplicaciones instaladas.</string>
 </resources>

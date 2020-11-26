@@ -18,4 +18,12 @@
     <string name="modified_group_older">Anterior</string>
 
     <string name="contextual_search_title">Buscar</string>
+
+    <string name="recent_empty_title">No hay ficheros recientes</string>
+    <string name="recent_empty_message">Los ficheros que ve y \nedita se mostrarán aquí.</string>
+    <string name="favorite_files_empty_title">No hay carpetas o ficheros favoritos</string>
+    <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
+    <string name="favorites_empty_message">Parece que no ha\nañadido nada.</string>
+    <string name="folder_empty_title">La carpeta está vacía</string>
+    <string name="folder_empty_message">Parece que todavía \nno hay contenido.</string>
 </resources>

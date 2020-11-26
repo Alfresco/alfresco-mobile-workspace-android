@@ -20,16 +20,16 @@
     </string>
 
     <string name="auth_help_sso_body">
-      <![CDATA[<h6>Speicherort des Inhaltsrepositorys</h6>
-      <p>Alfresco Content Services-URL:</p>
-      <p>Dies ist die URL Ihrer Alfresco Content Services-Instanz.</p>
-      <p>Wenden Sie sich an Ihren Alfresco-Administrator, falls Sie Hilfe benötigen.</p>]]>
+      	<![CDATA[<h6>Speicherort des Inhaltsrepositorys</h6>
+      	<p>Alfresco Content Services-URL:</p>
+      	<p>Dies ist die URL Ihrer Alfresco Content Services-Instanz.</p>
+      	<p>Wenden Sie sich an Ihren Alfresco-Administrator, falls Sie Hilfe benötigen.</p>]]>
     </string>
 
     <string name="auth_help_settings_body">
-      <![CDATA[<h1>Authentifizierung mit Alfresco</h1>
-      <p>Falls Sie nicht die standardmäßigen SSO-Einstellungen nutzen, können Ihre Werte hier festgelegt werden.</p>
-      <p>Falls Sie Hilfe benötigen, wenden Sie sich an Ihren Alfresco-Administrator.</p>]]>
+      	<![CDATA[<h1>Authentifizierung mit Alfresco</h1>
+      	<p>Falls Sie nicht die standardmäßigen SSO-Einstellungen nutzen, können Ihre Werte hier festgelegt werden.</p>
+      	<p>Falls Sie Hilfe benötigen, wenden Sie sich an Ihren Alfresco-Administrator.</p>]]>
     </string>
 
     <!-- Errors -->
@@ -44,7 +44,7 @@
     <string name="auth_settings_transport_section">Transportprotokoll</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Port</string>
-    <string name="auth_settings_service_section">Einstellungen der Alfresco Content Services</string>
+    <string name="auth_settings_service_section">Einstellungen für Alfresco Content Services</string>
     <string name="auth_settings_service_path">Pfad</string>
     <string name="auth_settings_auth_section">Authentifizierung</string>
     <string name="auth_settings_auth_realm">Bereich</string>

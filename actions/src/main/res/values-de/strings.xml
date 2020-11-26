@@ -1,15 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_add_favorite_title">Favorit</string>
-    <string name="action_remove_favorite_title">Favorit entfernen</string>
-    <string name="action_download_title">Download</string>
+    <string name="action_add_favorite_title">Zu Favoriten hinzufügen</string>
+    <string name="action_remove_favorite_title">Aus Favoriten entfernen</string>
+    <string name="action_delete_title">In Papierkorb verschieben</string>
+    <string name="action_restore_title">Wiederherstellen</string>
+    <string name="action_delete_forever_title">Dauerhaft löschen</string>
+    <string name="action_download_title">Herunterladen</string>
+    <string name="action_open_with_title">Öffnen mit</string>
 
     <string name="action_add_favorite_toast">Zu Favoriten hinzugefügt</string>
     <string name="action_remove_favorite_toast">Aus Favoriten entfernt</string>
-    <string name="action_delete_toast">In Papierkorb verschoben</string>
+    <string name="action_delete_toast">%s in Papierkorb verschoben</string>
+    <string name="action_restored_toast">%s wiederhergestellt</string>
+    <string name="action_delete_forever_toast">%s gelöscht</string>
+    <string name="action_timeout_error">Das dauert länger als erwartet. Haben Sie noch etwas Geduld.</string>
     <string name="action_generic_error">Unbekannter Fehler aufgetreten</string>
 
     <string name="action_delete_confirmation_title">Löschen</string>
+    <string name="action_delete_confirmation_message">%s wird dauerhaft gelöscht.</string>
     <string name="action_delete_confirmation_negative">Abbrechen</string>
     <string name="action_delete_confirmation_positive">Löschen</string>
+
+    <string name="action_download_toast">Datei wird heruntergeladen. Siehe Benachrichtigungen für Details.</string>
+    <string name="action_download_failed_permissions">Herunterladen fehlgeschlagen. Sie haben Berechtigungen für den Speicherzugriff deaktiviert.</string>
+
+    <string name="action_open_with_downloading">Wird heruntergeladen&#8230;</string>
+    <string name="action_open_with_cancel">Abbrechen</string>
+    <string name="action_open_with_error_no_viewer">Keine installierte App kann diese Datei anzeigen.</string>
 </resources>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_downloads">Downloads</string>
+    <string name="notification_download_content">Heruntergeladen, %s</string>
+    <string name="notification_download_content_error">Ein unbekannter Fehler ist aufgetreten. Versuchen Sie es erneut.</string>
+</resources>

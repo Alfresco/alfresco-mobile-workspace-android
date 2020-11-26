@@ -18,4 +18,12 @@
     <string name="modified_group_older">Plus ancien</string>
 
     <string name="contextual_search_title">Rechercher</string>
+
+    <string name="recent_empty_title">Aucun fichier récent</string>
+    <string name="recent_empty_message">Les fichiers consultés et\nmodifiés apparaîtront ici.</string>
+    <string name="favorite_files_empty_title">Aucun fichier ou dossier favori</string>
+    <string name="favorite_sites_empty_title">Aucune bibliothèque favorite</string>
+    <string name="favorites_empty_message">Il semble que vous n\'ayez\nrien ajouté.</string>
+    <string name="folder_empty_title">Le dossier est vide</string>
+    <string name="folder_empty_message">Il semble que cet emplacement\nne contienne aucun élément.</string>
 </resources>

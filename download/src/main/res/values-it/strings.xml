@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_downloads">Download</string>
+    <string name="notification_download_content">Scaricato, %s</string>
+    <string name="notification_download_content_error">Si è verificato un errore sconosciuto. Riprovare.</string>
+</resources>

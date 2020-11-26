@@ -1,16 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-    <string name="action_add_favorite_title">Preferito</string>
-    <string name="action_remove_favorite_title">Rimuovi preferito</string>
+    <string name="action_add_favorite_title">Aggiungi a Preferiti</string>
+    <string name="action_remove_favorite_title">Rimuovi da Preferiti</string>
+    <string name="action_delete_title">Sposta nel cestino</string>
+    <string name="action_restore_title">Ripristina</string>
+    <string name="action_delete_forever_title">Elimina definitivamente</string>
     <string name="action_download_title">Scarica</string>
+    <string name="action_open_with_title">Apri con</string>
 
     <string name="action_add_favorite_toast">Aggiunto a preferiti</string>
     <string name="action_remove_favorite_toast">Rimosso da preferiti</string>
-    <string name="action_delete_toast">Spostato nel cestino</string>
+    <string name="action_delete_toast">%s spostato nel cestino</string>
+    <string name="action_restored_toast">%s ripristinato</string>
+    <string name="action_delete_forever_toast">%s eliminato</string>
+    <string name="action_timeout_error">L\'operazione sta richiedendo più tempo del previsto. Attendi qualche istante.</string>
     <string name="action_generic_error">Si è verificato un errore sconosciuto</string>
 
     <string name="action_delete_confirmation_title">Elimina</string>
+    <string name="action_delete_confirmation_message">%s verrà eliminato definitivamente.</string>
     <string name="action_delete_confirmation_negative">Annulla</string>
     <string name="action_delete_confirmation_positive">Elimina</string>
+
+    <string name="action_download_toast">Il file verrà scaricato. Guarda le notifiche per maggiori dettagli</string>
+    <string name="action_download_failed_permissions">Download non riuscito. Sono state disattivate le autorizzazioni per accedere allo spazio di archiviazione.</string>
+
+    <string name="action_open_with_downloading">Download in corso&#8230;</string>
+    <string name="action_open_with_cancel">Annulla</string>
+    <string name="action_open_with_error_no_viewer">Nessuna app installata può visualizzare questo file.</string>
 </resources>

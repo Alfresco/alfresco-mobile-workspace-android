@@ -9,4 +9,7 @@
     <string name="search_chip_files">Bestanden</string>
     <string name="search_chip_folders">Mappen</string>
     <string name="search_chip_libraries">Bibliotheken</string>
+
+    <string name="search_empty_title">Oeps!</string>
+    <string name="search_empty_message">Het bestand dat u zoekt\nis niet gevonden.</string>
 </resources>

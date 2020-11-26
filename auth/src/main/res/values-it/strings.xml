@@ -40,7 +40,7 @@
 
     <!-- Settings -->
     <string name="auth_settings_title">Impostazioni avanzate</string>
-    <string name="auth_settings_prompt_success">Le modifiche alla configurazione sono state salvate</string>
+    <string name="auth_settings_prompt_success">Le modifiche apportate alla configurazione sono state salvate</string>
     <string name="auth_settings_transport_section">Protocollo di trasporto</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Porta</string>

@@ -1,15 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_add_favorite_title">Favori</string>
-    <string name="action_remove_favorite_title">Supprimer le favori</string>
+    <string name="action_add_favorite_title">Ajouter aux favoris</string>
+    <string name="action_remove_favorite_title">Supprimer des favoris</string>
+    <string name="action_delete_title">Placer dans la corbeille</string>
+    <string name="action_restore_title">Restaurer</string>
+    <string name="action_delete_forever_title">Supprimer définitivement</string>
     <string name="action_download_title">Télécharger</string>
+    <string name="action_open_with_title">Ouvrir avec</string>
 
     <string name="action_add_favorite_toast">Ajouté aux favoris</string>
     <string name="action_remove_favorite_toast">Supprimé des favoris</string>
-    <string name="action_delete_toast">Placé dans la corbeille</string>
+    <string name="action_delete_toast">%s a été placé dans la corbeille</string>
+    <string name="action_restored_toast">%s a été restauré</string>
+    <string name="action_delete_forever_toast">%s a été supprimé</string>
+    <string name="action_timeout_error">Cette opération est plus longue que prévu. Veuillez patienter quelques instants.</string>
     <string name="action_generic_error">Une erreur inconnue s\'est produite</string>
 
     <string name="action_delete_confirmation_title">Supprimer</string>
+    <string name="action_delete_confirmation_message">%s sera supprimé définitivement.</string>
     <string name="action_delete_confirmation_negative">Annuler</string>
     <string name="action_delete_confirmation_positive">Supprimer</string>
+
+    <string name="action_download_toast">Le fichier sera téléchargé. Voir les notifications pour plus de détails</string>
+    <string name="action_download_failed_permissions">Le téléchargement a échoué. Les autorisations d\'accès au stockage ont été désactivées.</string>
+
+    <string name="action_open_with_downloading">Téléchargement en cours&#8230;</string>
+    <string name="action_open_with_cancel">Annuler</string>
+    <string name="action_open_with_error_no_viewer">Aucune application installée ne permet de consulter ce fichier.</string>
 </resources>

@@ -18,4 +18,12 @@
     <string name="modified_group_older">Ouder</string>
 
     <string name="contextual_search_title">Zoeken</string>
+
+    <string name="recent_empty_title">Geen recente bestanden</string>
+    <string name="recent_empty_message">Bestanden die u weergeeft en\nbewerkt worden hier weergegeven.</string>
+    <string name="favorite_files_empty_title">Geen favoriete bestanden of mappen</string>
+    <string name="favorite_sites_empty_title">Geen favoriete bibliotheken</string>
+    <string name="favorites_empty_message">Het lijkt erop dat u\nniets hebt toegevoegd.</string>
+    <string name="folder_empty_title">Map is leeg</string>
+    <string name="folder_empty_message">Het lijkt erop dat hier\nnog niets is.</string>
 </resources>

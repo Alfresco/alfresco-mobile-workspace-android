@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="search_title">Ricerca</string>
     <string name="search_hint">Ricerca</string>
@@ -10,4 +9,7 @@
     <string name="search_chip_files">File</string>
     <string name="search_chip_folders">Cartelle</string>
     <string name="search_chip_libraries">Librerie</string>
+
+    <string name="search_empty_title">Ops!</string>
+    <string name="search_empty_message">Non riusciamo a trovare il file\nche stai cercando.</string>
 </resources>

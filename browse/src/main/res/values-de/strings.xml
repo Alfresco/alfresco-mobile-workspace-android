@@ -18,4 +18,12 @@
     <string name="modified_group_older">Älter</string>
 
     <string name="contextual_search_title">Suche</string>
+
+    <string name="recent_empty_title">Keine aktuellen Dateien</string>
+    <string name="recent_empty_message">Hier werden Dateien\naufgeführt, die Sie anzeigen und bearbeiten.</string>
+    <string name="favorite_files_empty_title">Keine Dateien oder Ordner als Favoriten markiert</string>
+    <string name="favorite_sites_empty_title">Keine Bibliotheken als Favoriten</string>
+    <string name="favorites_empty_message">Sie haben scheinbar noch\nnichts hinzugefügt.</string>
+    <string name="folder_empty_title">Ordner ist leer</string>
+    <string name="folder_empty_message">Dieser Ordner ist\nnoch leer.</string>
 </resources>

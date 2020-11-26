@@ -27,10 +27,10 @@
     </string>
 
     <string name="auth_help_settings_body">
-        <![CDATA[<h1>Autenticación con Alfresco</h1>
-        <p>Si no utiliza la configuración de SSO predeterminada, puede establecer sus valores aquí.</p>
-        <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
-      </string>
+      <![CDATA[<h1>Autenticación con Alfresco</h1>
+      <p>Si no utiliza la configuración de SSO predeterminada, puede establecer sus valores aquí.</p>
+      <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+    </string>
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">No se ha encontrado un servicio de autenticación en la URL de Alfresco indicada.</string>
@@ -40,7 +40,7 @@
 
     <!-- Settings -->
     <string name="auth_settings_title">Config. avanzada</string>
-    <string name="auth_settings_prompt_success">Los cambios de configuración se han guardado</string>
+    <string name="auth_settings_prompt_success">Se han guardado los cambios de la configuración</string>
     <string name="auth_settings_transport_section">Protocolo de transporte</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Puerto</string>

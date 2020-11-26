@@ -1,15 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_add_favorite_title">Favoriet</string>
-    <string name="action_remove_favorite_title">Favoriet verwijderen</string>
+    <string name="action_add_favorite_title">Toevoegen aan favorieten</string>
+    <string name="action_remove_favorite_title">Verwijderen uit favorieten</string>
+    <string name="action_delete_title">Verplaatsen naar Prullenbak</string>
+    <string name="action_restore_title">Herstellen</string>
+    <string name="action_delete_forever_title">Definitief verwijderen</string>
     <string name="action_download_title">Downloaden</string>
+    <string name="action_open_with_title">Openen met</string>
 
     <string name="action_add_favorite_toast">Toegevoegd aan favorieten</string>
-    <string name="action_remove_favorite_toast">Verwijderd uit Favorieten</string>
-    <string name="action_delete_toast">Verplaatst naar Prullenbak</string>
+    <string name="action_remove_favorite_toast">Verwijderd uit favorieten</string>
+    <string name="action_delete_toast">%s verplaatst naar Prullenbak</string>
+    <string name="action_restored_toast">%s hersteld</string>
+    <string name="action_delete_forever_toast">%s verwijderd</string>
+    <string name="action_timeout_error">Dit duurt langer dan verwacht. Een ogenblik geduld.</string>
     <string name="action_generic_error">Onbekende fout opgetreden</string>
 
     <string name="action_delete_confirmation_title">Verwijderen</string>
+    <string name="action_delete_confirmation_message">%s wordt definitief verwijderd.</string>
     <string name="action_delete_confirmation_negative">Annuleren</string>
     <string name="action_delete_confirmation_positive">Verwijderen</string>
+
+    <string name="action_download_toast">Bestand wordt gedownload. Zie meldingen voor details</string>
+    <string name="action_download_failed_permissions">Downloaden mislukt. U hebt rechten voor toegang tot opslag uitgeschakeld.</string>
+
+    <string name="action_open_with_downloading">Downloaden&#8230;</string>
+    <string name="action_open_with_cancel">Annuleren</string>
+    <string name="action_open_with_error_no_viewer">Geen geïnstalleeerde app kan dit bestand weergeven.</string>
 </resources>

@@ -40,12 +40,12 @@
 
     <!-- Settings -->
     <string name="auth_settings_title">Paramètres avancés</string>
-    <string name="auth_settings_prompt_success">Les modifications apportées à la configuration ont été enregistrées</string>
+    <string name="auth_settings_prompt_success">Les changements apportés à la configuration ont été enregistrés</string>
     <string name="auth_settings_transport_section">Protocole de transport</string>
     <string name="auth_settings_transport_https">HTTPS</string>
     <string name="auth_settings_transport_port">Port</string>
     <string name="auth_settings_service_section">Paramètres Alfresco Content Services</string>
-    <string name="auth_settings_service_document">Documents du service</string>
+    <string name="auth_settings_service_path">Chemin</string>
     <string name="auth_settings_auth_section">Authentification</string>
     <string name="auth_settings_auth_realm">Domaine</string>
     <string name="auth_settings_auth_client_id">ID client</string>
@@ -71,7 +71,7 @@
     <string name="auth_account_details_server">URL %1$s</string>
     <string name="auth_account_details_protocol">Protocole</string>
     <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
-    <string name="auth_account_details_service_docs">@string/auth_settings_service_document</string>
+    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
     <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
     <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
 

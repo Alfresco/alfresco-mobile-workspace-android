@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_downloads">Downloadens</string>
+    <string name="notification_download_content">Gedownload, %s</string>
+    <string name="notification_download_content_error">Onbekende fout opgetreden. Probeer het opnieuw.</string>
+</resources>

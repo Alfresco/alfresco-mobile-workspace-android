@@ -45,6 +45,10 @@ class ListViewRow @JvmOverloads constructor(
         }
 
         icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
+
+        // Disable actions on links
+        more_icon_frame.isVisible =
+            entry.type != Entry.Type.FileLink && entry.type != Entry.Type.FolderLink
     }
 
     @ModelProp

@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import coil.api.load
+import coil.load
 import coil.transform.CircleCropTransformation
 import com.alfresco.content.app.R
 import com.alfresco.content.data.PeopleRepository

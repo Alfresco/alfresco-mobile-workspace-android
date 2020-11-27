@@ -3,12 +3,11 @@ package com.alfresco.content.search
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import kotlinx.android.synthetic.main.view_recent_search_row.view.title
+import com.alfresco.content.search.databinding.ViewRecentSearchRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class RecentSearchRow @JvmOverloads constructor(
@@ -17,13 +16,11 @@ class RecentSearchRow @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    init {
-        LayoutInflater.from(context).inflate(R.layout.view_recent_search_row, this, true)
-    }
+    private val binding = ViewRecentSearchRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp
     fun setTitle(text: String) {
-        title.text = text
+        binding.title.text = text
     }
 
     @CallbackProp

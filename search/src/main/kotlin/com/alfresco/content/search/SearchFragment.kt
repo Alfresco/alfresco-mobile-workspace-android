@@ -17,9 +17,8 @@ import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_search.recents_fragment
-import kotlinx.android.synthetic.main.fragment_search.results_fragment
+import com.alfresco.content.search.databinding.FragmentSearchBinding
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ContextualSearchArgs(
@@ -46,6 +45,8 @@ class SearchFragment : BaseMvRxFragment() {
         ContextualSearchArgs.with(arguments)
     }
 
+    private lateinit var binding: FragmentSearchBinding
+
     private lateinit var searchView: SearchView
 
     private val recentsFragment by lazy {
@@ -64,10 +65,10 @@ class SearchFragment : BaseMvRxFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -135,11 +136,11 @@ class SearchFragment : BaseMvRxFragment() {
 
     private fun updateFragmentVisibility(terms: String) {
         if (terms.length >= SearchViewModel.MIN_QUERY_LENGTH) {
-            recents_fragment.visibility = View.GONE
-            results_fragment.visibility = View.VISIBLE
+            binding.recentsFragment.visibility = View.GONE
+            binding.resultsFragment.visibility = View.VISIBLE
         } else {
-            recents_fragment.visibility = View.VISIBLE
-            results_fragment.visibility = View.GONE
+            binding.recentsFragment.visibility = View.VISIBLE
+            binding.resultsFragment.visibility = View.GONE
             recentsFragment.scrollToTop()
         }
     }

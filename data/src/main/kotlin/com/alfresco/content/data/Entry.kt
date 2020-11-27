@@ -14,9 +14,9 @@ import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
 import java.time.Instant
 import java.time.ZonedDateTime
-import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 
 @Parcelize
 @TypeParceler<ZonedDateTime, DateParceler>

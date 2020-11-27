@@ -11,11 +11,8 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.Entry
+import com.alfresco.content.listview.databinding.ViewListRowBinding
 import com.alfresco.content.mimetype.MimeType
-import kotlinx.android.synthetic.main.view_list_row.view.icon
-import kotlinx.android.synthetic.main.view_list_row.view.more_icon_frame
-import kotlinx.android.synthetic.main.view_list_row.view.subtitle
-import kotlinx.android.synthetic.main.view_list_row.view.title
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewRow @JvmOverloads constructor(
@@ -24,16 +21,13 @@ class ListViewRow @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val binding = ViewListRowBinding.inflate(LayoutInflater.from(context), this, true)
     private var isCompact: Boolean = false
-
-    init {
-        LayoutInflater.from(context).inflate(R.layout.view_list_row, this, true)
-    }
 
     @ModelProp
     fun setData(entry: Entry) {
-        title.text = entry.title
-        subtitle.text = entry.subtitle
+        binding.title.text = entry.title
+        binding.subtitle.text = entry.subtitle
         updateSubtitleVisibility()
 
         val type = when (entry.type) {
@@ -44,10 +38,10 @@ class ListViewRow @JvmOverloads constructor(
             else -> MimeType.with(entry.mimeType)
         }
 
-        icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
+        binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
         // Disable actions on links
-        more_icon_frame.isVisible =
+        binding.moreIconFrame.isVisible =
             entry.type != Entry.Type.FileLink && entry.type != Entry.Type.FolderLink
     }
 
@@ -65,7 +59,7 @@ class ListViewRow @JvmOverloads constructor(
     }
 
     private fun updateSubtitleVisibility() {
-        subtitle.isVisible = subtitle.text.isNotEmpty() && !isCompact
+        binding.subtitle.isVisible = binding.subtitle.text.isNotEmpty() && !isCompact
     }
 
     @CallbackProp
@@ -75,6 +69,6 @@ class ListViewRow @JvmOverloads constructor(
 
     @CallbackProp
     fun setMoreClickListener(listener: OnClickListener?) {
-        more_icon_frame.setOnClickListener(listener)
+        binding.moreIconFrame.setOnClickListener(listener)
     }
 }

@@ -9,22 +9,24 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import kotlinx.android.synthetic.main.fragment_browse_menu.recycler_view
+import com.alfresco.content.browse.databinding.FragmentBrowseMenuBinding
 
 class BrowseMenuFragment : BaseMvRxFragment() {
 
     private val viewModel: BrowseMenuViewModel by fragmentViewModel()
+    private lateinit var binding: FragmentBrowseMenuBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_browse_menu, container, false)
+    ): View {
+        binding = FragmentBrowseMenuBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun invalidate() = withState(viewModel) {
-        recycler_view.withModels {
+        binding.recyclerView.withModels {
             it.entries.forEach {
                 if (it.path.isNotEmpty()) {
                     browseMenuRow {

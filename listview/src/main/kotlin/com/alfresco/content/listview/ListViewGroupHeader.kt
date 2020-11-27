@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
-import kotlinx.android.synthetic.main.view_list_group_header.view.title
+import com.alfresco.content.listview.databinding.ViewListGroupHeaderBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewGroupHeader @JvmOverloads constructor(
@@ -15,12 +15,10 @@ class ListViewGroupHeader @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    init {
-        LayoutInflater.from(context).inflate(R.layout.view_list_group_header, this, true)
-    }
+    private val binding = ViewListGroupHeaderBinding.inflate(LayoutInflater.from(context), this, true)
 
     @TextProp
     fun setTitle(text: CharSequence) {
-        title.text = text
+        binding.title.text = text
     }
 }

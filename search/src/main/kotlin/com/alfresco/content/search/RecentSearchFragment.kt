@@ -7,29 +7,31 @@ import android.view.ViewGroup
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import kotlinx.android.synthetic.main.fragment_recent_search.recycler_view
+import com.alfresco.content.search.databinding.FragmentRecentSearchBinding
 
 class RecentSearchFragment : BaseMvRxFragment() {
 
     private val viewModel: RecentSearchViewModel by fragmentViewModel()
+    private lateinit var binding: FragmentRecentSearchBinding
     var onEntrySelected: ((String) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_recent_search, container, false)
+    ): View {
+        binding = FragmentRecentSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     fun scrollToTop() {
         if (isResumed) {
-            recycler_view.layoutManager?.scrollToPosition(0)
+            binding.recyclerView.layoutManager?.scrollToPosition(0)
         }
     }
 
     override fun invalidate() = withState(viewModel) {
-        recycler_view.withModels {
+        binding.recyclerView.withModels {
             it.entries.forEach {
                 recentSearchRow {
                     id(it)

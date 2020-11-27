@@ -22,7 +22,7 @@ import com.alfresco.content.viewer.media.MediaViewerFragment
 import com.alfresco.content.viewer.pdf.PdfViewerFragment
 import com.alfresco.content.viewer.text.TextViewerFragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ViewerArgs(

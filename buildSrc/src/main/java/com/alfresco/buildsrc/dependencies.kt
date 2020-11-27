@@ -4,17 +4,17 @@ package com.alfresco.buildsrc
 object Libs {
 
     object AndroidTools {
-        const val gradlePlugin = "com.android.tools.build:gradle:4.0.1"
+        const val gradlePlugin = "com.android.tools.build:gradle:4.1.1"
         const val desugar = "com.android.tools:desugar_jdk_libs:1.0.10"
     }
 
-    const val junit = "junit:junit:4.13"
+    const val junit = "junit:junit:4.13.1"
 
-    const val spotless = "com.diffplug.spotless:spotless-plugin-gradle:5.6.1"
+    const val spotless = "com.diffplug.spotless:spotless-plugin-gradle:5.8.2"
 
-    const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.33.0"
+    const val gradleVersions = "com.github.ben-manes:gradle-versions-plugin:0.36.0"
 
-    const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.4"
+    const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.5"
 
     object Alfresco {
         const val auth = "com.alfresco.android:auth:0.7-SNAPSHOT"
@@ -23,7 +23,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.4.10"
+        private const val version = "1.4.20"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
@@ -31,7 +31,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.3.9"
+        private const val version = "1.4.2"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
@@ -39,7 +39,7 @@ object Libs {
 
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.2.0"
-        const val coreKtx = "androidx.core:core-ktx:1.3.1"
+        const val coreKtx = "androidx.core:core-ktx:1.3.2"
 
         object Activity {
             private const val version = "1.1.0"
@@ -62,7 +62,7 @@ object Libs {
 
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0"
 
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
         const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
 
@@ -71,7 +71,7 @@ object Libs {
         const val preference = "androidx.preference:preference:1.1.1"
 
         object Navigation {
-            private const val version = "2.3.0"
+            private const val version = "2.3.1"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
         }
@@ -89,12 +89,12 @@ object Libs {
     object Google {
         const val material = "com.google.android.material:material:1.3.0-alpha04"
 
-        const val servicesPlugin = "com.google.gms:google-services:4.3.3"
+        const val servicesPlugin = "com.google.gms:google-services:4.3.4"
 
         object Firebase {
-            const val analytics = "com.google.firebase:firebase-analytics-ktx:17.5.0"
-            const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:17.2.1"
-            const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.3.0"
+            const val analytics = "com.google.firebase:firebase-analytics-ktx:18.0.0"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:17.3.0"
+            const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
         }
     }
 
@@ -120,7 +120,7 @@ object Libs {
     }
 
     object ExoPlayer {
-        private const val version = "2.12.0"
+        private const val version = "2.12.1"
         const val core = "com.google.android.exoplayer:exoplayer-core:$version"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:$version"
     }

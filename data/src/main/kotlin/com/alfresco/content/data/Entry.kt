@@ -97,7 +97,7 @@ data class Entry(
 
         fun with(node: NodeChildAssociation): Entry {
             return Entry(
-                node.properties?.get("cm:destination") as String? ?: node.id,
+                node.id,
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
@@ -105,7 +105,8 @@ data class Entry(
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
-                node.allowableOperations?.contains("delete") ?: false
+                node.allowableOperations?.contains("delete") ?: false,
+                otherId = node.properties?.get("cm:destination") as String?
             )
         }
 

@@ -8,4 +8,6 @@
         <attr name="strokeColor" />
         <attr name="shapeAppearance" />
     </declare-styleable>
+
+    <bool name="isTablet">false</bool>
 </resources>

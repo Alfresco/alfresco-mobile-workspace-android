@@ -27,7 +27,6 @@ dependencies {
     implementation project(':data')
     implementation project(':actions')
     implementation project(':mimetype')
-    implementation project(':theme')
     implementation project(':listview')
     implementation project(':session')
 

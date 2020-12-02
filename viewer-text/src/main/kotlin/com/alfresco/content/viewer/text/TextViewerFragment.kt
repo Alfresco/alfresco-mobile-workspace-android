@@ -29,6 +29,7 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
         return webView
     }
 
+    @Suppress("DEPRECATION")
     private fun createWebView(context: Context): WebView {
         return WebView(context).apply {
             settings.setSupportZoom(true)

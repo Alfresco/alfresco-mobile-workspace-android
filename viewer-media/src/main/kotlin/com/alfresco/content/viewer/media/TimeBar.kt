@@ -40,13 +40,11 @@ class TimeBar(
         this(context, attrs, defStyleAttr, attrs)
 
     private fun getColorWithAlpha(color: Int, ratio: Float): Int {
-        var newColor = 0
         val alpha = (Color.alpha(color) * ratio).roundToInt()
         val r: Int = Color.red(color)
         val g: Int = Color.green(color)
         val b: Int = Color.blue(color)
-        newColor = Color.argb(alpha, r, g, b)
-        return newColor
+        return Color.argb(alpha, r, g, b)
     }
 
     private companion object {

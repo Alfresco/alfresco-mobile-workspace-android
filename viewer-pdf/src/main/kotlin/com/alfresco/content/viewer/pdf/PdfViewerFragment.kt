@@ -161,7 +161,7 @@ class PdfViewerFragment : ChildViewerFragment() {
             .setTitle(title)
             .setView(view)
             .setMessage(message)
-            .setPositiveButton(getString(R.string.password_prompt_positive)) { dialog, _ ->
+            .setPositiveButton(getString(R.string.password_prompt_positive)) { _, _ ->
                 webView.evaluateJavascript(
                     "PDFViewerApplication.onPassword(\"${input.text}\")",
                     null
@@ -170,7 +170,7 @@ class PdfViewerFragment : ChildViewerFragment() {
             .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
                 dialog.cancel()
             }
-            .setOnCancelListener { dialog ->
+            .setOnCancelListener { _ ->
                 requireActivity().onBackPressed()
             }.create()
 

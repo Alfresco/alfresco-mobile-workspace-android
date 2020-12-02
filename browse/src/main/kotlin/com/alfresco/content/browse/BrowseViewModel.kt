@@ -63,6 +63,7 @@ class BrowseViewModel(
         block: (entry: Entry) -> Unit
     ) = if (types.contains(type)) { block(this) } else { }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun refresh(ignored: Entry) = refresh()
 
     private fun removeEntry(entry: Entry) =

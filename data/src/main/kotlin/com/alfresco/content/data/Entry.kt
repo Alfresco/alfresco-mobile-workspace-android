@@ -178,7 +178,7 @@ data class Entry(
                 link.nodeId ?: "",
                 Type.File,
                 link.name ?: "",
-                null,
+                link.path?.formattedString(),
                 link.content?.mimeType,
                 link.modifiedAt,
                 link.isFavorite == null || link.allowableOperations == null,

@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.alfresco.ui.MaterialShapeView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="?attr/bottomNavigationStyle"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:orientation="horizontal">
+    android:elevation="@dimen/design_bottom_navigation_elevation"
+    app:backgroundColor="?attr/colorSurface">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    </LinearLayout>
+</com.alfresco.ui.MaterialShapeView>

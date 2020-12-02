@@ -17,6 +17,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white"
+        android:backgroundTint="?attr/separatorColor" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/action_list_bar"
         android:layout_width="match_parent"

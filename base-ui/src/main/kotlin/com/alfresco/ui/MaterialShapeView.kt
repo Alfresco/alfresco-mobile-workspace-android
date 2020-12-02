@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 
-class RoundedView(
+class MaterialShapeView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
@@ -20,6 +20,7 @@ class RoundedView(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val background = MaterialShapeDrawable(context, attrs, defStyleAttr, defStyleRes)
+    private var onElevation: ((Float) -> Unit)? = null
 
     var backgroundColor: ColorStateList? = background.fillColor
         set(value) {
@@ -52,13 +53,18 @@ class RoundedView(
             updateStroke()
         }
 
+    override fun setElevation(elevation: Float) {
+        super.setElevation(elevation)
+        onElevation?.invoke(elevation)
+    }
+
     init {
         ViewCompat.setBackground(this, background)
 
         // Load attributes
         val attributes = context.obtainStyledAttributes(
             attrs,
-            R.styleable.RoundedView,
+            R.styleable.MaterialShapeView,
             defStyleAttr,
             defStyleRes
         )
@@ -72,6 +78,13 @@ class RoundedView(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             foreground = ColorDrawable()
         }
+
+        // Deferred elevation as this is called during base class init and would otherwise crash
+        onElevation = { elevation ->
+            background.elevation = elevation
+        }
+        background.initializeElevationOverlay(context)
+        onElevation?.invoke(elevation)
     }
 
     constructor(context: Context) :
@@ -84,9 +97,9 @@ class RoundedView(
         this(context, attrs, defStyleAttr, 0)
 
     private fun loadFromAttributes(attrs: TypedArray) {
-        strokeColor = attrs.getColorStateList(R.styleable.RoundedView_strokeColor)
-        strokeWidth = attrs.getDimensionPixelSize(R.styleable.RoundedView_strokeWidth, 0)
-        val backgroundColor = attrs.getColorStateList(R.styleable.RoundedView_backgroundColor)
+        strokeColor = attrs.getColorStateList(R.styleable.MaterialShapeView_strokeColor)
+        strokeWidth = attrs.getDimensionPixelSize(R.styleable.MaterialShapeView_strokeWidth, 0)
+        val backgroundColor = attrs.getColorStateList(R.styleable.MaterialShapeView_backgroundColor)
         background.fillColor = backgroundColor
         updateStroke()
     }

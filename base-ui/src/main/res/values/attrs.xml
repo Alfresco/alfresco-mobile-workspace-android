@@ -2,7 +2,7 @@
 <resources>
     <attr name="separatorColor" format="reference|color"/>
 
-    <declare-styleable name="RoundedView">
+    <declare-styleable name="MaterialShapeView">
         <attr name="backgroundColor" />
         <attr name="strokeWidth" />
         <attr name="strokeColor" />

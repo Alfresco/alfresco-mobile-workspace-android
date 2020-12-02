@@ -11,13 +11,13 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alfresco.content.app.R
-import com.alfresco.ui.RoundedView
+import com.alfresco.ui.MaterialShapeView
 
 class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     FrameLayout(context, attrs) {
 
     lateinit var toolbar: Toolbar
-    lateinit var background: RoundedView
+    lateinit var background: MaterialShapeView
     lateinit var profileIcon: ImageView
     lateinit var profileView: View
 

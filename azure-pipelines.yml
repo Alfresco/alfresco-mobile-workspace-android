@@ -19,8 +19,8 @@ variables:
 steps:
   - task: Cache@2
     inputs:
-      key: 'gradle | "$(Agent.OS)" | $(deps_def_path)'
-      restoreKeys: gradle
+      key: 'gradle_0 | "$(Agent.OS)" | $(deps_def_path)'
+      restoreKeys: gradle_0
       path: $(GRADLE_USER_HOME)
     displayName: Cache Gradle Files
   - task: DownloadSecureFile@1

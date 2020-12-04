@@ -28,11 +28,13 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     private val _step = MutableLiveData<Step>()
     private val _onShowHelp = MutableLiveEvent<Int>()
     private val _onShowSettings = MutableLiveEvent<Int>()
+    private val _onSaveSettings = MutableLiveEvent<Int>()
 
     val hasNavigation: LiveData<Boolean> get() = _hasNavigation
     val step: LiveData<Step> get() = _step
     val onShowHelp: LiveEvent<Int> = _onShowHelp
     val onShowSettings: LiveEvent<Int> = _onShowSettings
+    val onSaveSettings: LiveEvent<Int> = _onSaveSettings
     val isLoading = MutableLiveData<Boolean>()
     val identityUrl = MutableLiveData("")
     val applicationUrl = MutableLiveData("")
@@ -180,6 +182,8 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
 
         // Reset the editor (will update changed state)
         authConfigEditor.reset(config)
+
+        _onSaveSettings.value = 0
     }
 
     private fun moveToStep(step: Step) {

@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/auth_settings_save"
-        android:title="@string/auth_settings_save"
-        app:actionLayout="@layout/view_auth_settings_save_action"
-        app:showAsAction="always" />
+        android:id="@+id/reset"
+        android:icon="@drawable/ic_reset"
+        android:title="@string/auth_settings_reset"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="ifRoom" />
 </menu>

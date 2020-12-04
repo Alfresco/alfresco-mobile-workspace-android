@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -48,29 +49,28 @@ class AdvancedSettingsFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         activity?.title = resources.getString(R.string.auth_settings_title)
+
+        observe(viewModel.onSaveSettings, ::onSave)
+    }
+
+    private fun onSave(@Suppress("UNUSED_PARAMETER") value: Int) {
+        Snackbar.make(rootView,
+                R.string.auth_settings_prompt_success,
+                Snackbar.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.options_auth_settings, menu)
-
-        val item = menu.findItem(R.id.auth_settings_save)
-        val action = item.actionView.findViewById<TextView>(R.id.tvSaveSettingsAction)
-        saveTextView = action
-
-        observe(viewModel.authConfigEditor.changed, this::onChanges)
-
-        action.setOnClickListener {
-            Snackbar.make(rootView,
-                    R.string.auth_settings_prompt_success,
-                    Snackbar.LENGTH_LONG).show()
-            viewModel.saveConfigChanges()
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private fun onChanges(changed: Boolean) {
-        saveTextView.isEnabled = changed
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.reset -> {
+                viewModel.authConfigEditor.resetToDefaultConfig()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

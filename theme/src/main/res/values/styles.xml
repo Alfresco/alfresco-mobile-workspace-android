@@ -53,7 +53,7 @@
     </style>
 
     <!-- Buttons -->
-    <style name="Widget.Alfresco.Button.Primary" parent="@style/Widget.MaterialComponents.Button">
+    <style name="Widget.Alfresco.Button.Primary" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:minHeight">44dp</item>
         <item name="android:insetTop">0dp</item>

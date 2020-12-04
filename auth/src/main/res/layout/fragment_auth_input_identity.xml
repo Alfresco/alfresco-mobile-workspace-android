@@ -30,7 +30,7 @@
                 android:id="@+id/tilConnectUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="32dp"
                 android:hint="@string/auth_connect_field_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -57,10 +57,21 @@
                 style="@style/Widget.Alfresco.Action.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:minHeight="20dp"
                 android:onClick="@{() -> viewModel.showSettings()}"
                 android:text="@string/auth_settings_button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHelp"
+                style="@style/Widget.Alfresco.Action.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="20dp"
+                android:onClick="@{() -> viewModel.showWelcomeHelp()}"
+                android:text="@string/auth_help_button_connect" />
 
             <View
                 android:layout_width="match_parent"
@@ -73,14 +84,6 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnHelp"
-                    style="@style/Widget.Alfresco.Action.Secondary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewModel.showWelcomeHelp()}"
-                    android:text="@string/auth_help_button" />
 
                 <include
                     layout="@layout/view_alfresco_copyright"

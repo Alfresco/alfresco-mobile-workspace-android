@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,6 +20,7 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.download.DownloadMonitor
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 class MainActivity : BaseMvRxActivity() {
 
@@ -26,6 +28,7 @@ class MainActivity : BaseMvRxActivity() {
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
     private lateinit var actionBarController: ActionBarController
+    private var signedOutDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +62,11 @@ class MainActivity : BaseMvRxActivity() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        checkInvalidLogin(state)
-        actionBarController.refreshData()
+        if (state.requiresReLogin) {
+            showSignedOutPrompt()
+        } else {
+            actionBarController.refreshData()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
@@ -72,7 +78,9 @@ class MainActivity : BaseMvRxActivity() {
     }
 
     private fun showSignedOutPrompt() {
-        MaterialAlertDialogBuilder(this)
+        val oldDialog = signedOutDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.auth_signed_out_title))
             .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
             .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
@@ -80,6 +88,7 @@ class MainActivity : BaseMvRxActivity() {
                 navigateToReLogin()
             }
             .show()
+        signedOutDialog = WeakReference(dialog)
     }
 
     private fun navigateToReLogin() {

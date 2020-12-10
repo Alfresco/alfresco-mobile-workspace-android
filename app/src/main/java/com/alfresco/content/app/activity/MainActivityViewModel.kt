@@ -18,6 +18,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MainActivityState(
+    val reLoginCount: Int = 0, // new state on each invalid auth
     val requiresReLogin: Boolean = false
 ) : MvRxState
 
@@ -34,7 +35,7 @@ class MainActivityViewModel(
         val session = SessionManager.newSession(context)
 
         session?.onSignedOut {
-            setState { copy(requiresReLogin = true) }
+            setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
 
         // Receives current state on observe

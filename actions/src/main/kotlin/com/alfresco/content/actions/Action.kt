@@ -56,6 +56,8 @@ interface Action {
             scope.on<ActionRestore> (block = showToast(view, anchorView))
             scope.on<ActionDeleteForever> (block = showToast(view, anchorView))
             scope.on<ActionDownload> (block = showToast(view, anchorView))
+            scope.on<ActionAddOffline> (block = showToast(view, anchorView))
+            scope.on<ActionRemoveOffline> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)

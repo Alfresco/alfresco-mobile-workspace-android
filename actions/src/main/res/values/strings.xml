@@ -27,4 +27,9 @@
     <string name="action_open_with_downloading">Downloading&#8230;</string>
     <string name="action_open_with_cancel">Cancel</string>
     <string name="action_open_with_error_no_viewer">No installed app can view this file.</string>
+
+    <string name="action_add_offline_title">Make available offline</string>
+    <string name="action_remove_offline_title">Remove offline</string>
+    <string name="action_add_offline_toast">%s will be made available offline.</string>
+    <string name="action_remove_offline_toast">%s will no longer be available offline.</string>
 </resources>

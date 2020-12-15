@@ -81,6 +81,10 @@ class ActionListViewModel(
             return actions
         }
 
+        if (BuildConfig.DEBUG) {
+            actions.add(ActionRemoveOffline(entry))
+        }
+
         actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
         if (entry.type == Entry.Type.File) {
             actions.add(ActionOpenWith(entry))

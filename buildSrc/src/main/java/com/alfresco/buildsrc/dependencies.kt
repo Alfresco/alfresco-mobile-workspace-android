@@ -16,6 +16,8 @@ object Libs {
 
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.5"
 
+    const val objectBox = "io.objectbox:objectbox-gradle-plugin:2.8.1"
+
     object Alfresco {
         const val auth = "com.alfresco.android:auth:0.7-SNAPSHOT"
         const val content = "com.alfresco.android:content:0.2-SNAPSHOT"

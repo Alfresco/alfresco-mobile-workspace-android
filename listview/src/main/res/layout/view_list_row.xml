@@ -7,7 +7,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:paddingStart="24dp"
-    android:paddingEnd="12dp">
+    android:paddingEnd="0dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -47,9 +47,17 @@
         android:id="@+id/more_icon_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="48dp"
+        android:minWidth="72dp"
         android:minHeight="48dp"
         android:background="?android:attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/offline_icon"
+            android:layout_marginStart="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:src="@drawable/ic_offline_small" />
 
         <ImageView
             android:id="@+id/more_icon"

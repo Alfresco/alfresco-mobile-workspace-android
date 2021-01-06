@@ -12,6 +12,10 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
+import io.objectbox.annotation.Convert
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
+import io.objectbox.converter.PropertyConverter
 import java.time.Instant
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
@@ -20,20 +24,34 @@ import kotlinx.parcelize.TypeParceler
 
 @Parcelize
 @TypeParceler<ZonedDateTime, DateParceler>
+@Entity
 data class Entry(
     val id: String,
+    @Convert(converter = Type.Converter::class, dbType = String::class)
     val type: Type,
     val title: String,
     val subtitle: String?,
     val mimeType: String?,
+    @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val modified: ZonedDateTime? = null,
     val isPartial: Boolean = false,
     val isFavorite: Boolean = false,
     val canDelete: Boolean = false,
     val isTrashed: Boolean = false,
-    val otherId: String? = null
+    val otherId: String? = null,
+    @Id var boxId: Long = 0,
+    var isOffline: Boolean = false
 ) : Parcelable {
 
+    // TODO: move to repository level
+    fun updateOffline(): Entry {
+        val offline = OfflineRepository().fetchOfflineEntry(this)
+        if (offline != null) {
+            isOffline = offline.isOffline
+            boxId = offline.boxId
+        }
+        return this
+    }
 
     enum class Type {
         File,
@@ -43,6 +61,15 @@ data class Entry(
         FolderLink,
         Group,
         Unknown;
+
+        fun value() = when (this) {
+            File -> "cm:content"
+            Folder -> "cm:folder"
+            Site -> "st:site"
+            FileLink -> "app:filelink"
+            FolderLink -> "app:folderlink"
+            else -> ""
+        }
 
         companion object {
             fun from(value: String): Type {
@@ -56,6 +83,14 @@ data class Entry(
                 }
                 return Unknown
             }
+        }
+
+        class Converter : PropertyConverter<Type, String> {
+            override fun convertToEntityProperty(databaseValue: String?) =
+                from(databaseValue ?: "")
+
+            override fun convertToDatabaseValue(entityProperty: Type?) =
+                entityProperty?.value()
         }
     }
 
@@ -76,7 +111,7 @@ data class Entry(
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false
-            )
+            ).updateOffline()
         }
 
         fun with(result: ResultNode): Entry {
@@ -90,7 +125,7 @@ data class Entry(
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
                 result.allowableOperations?.contains("delete") ?: false
-            )
+            ).updateOffline()
         }
 
         fun with(node: NodeChildAssociation): Entry {
@@ -105,7 +140,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false,
                 otherId = node.properties?.get("cm:destination") as String?
-            )
+            ).updateOffline()
         }
 
         fun with(favorite: Favorite): Entry {
@@ -122,7 +157,7 @@ data class Entry(
                     file.allowableOperations == null,
                     true,
                     file.allowableOperations?.contains("delete") ?: false
-                )
+                ).updateOffline()
             }
             if (map.folder != null) {
                 val folder: FavoriteTargetNode = map.folder!!
@@ -136,7 +171,7 @@ data class Entry(
                     folder.allowableOperations == null,
                     true,
                     folder.allowableOperations?.contains("delete") ?: false
-                )
+                ).updateOffline()
             }
             if (map.site != null) {
                 val site = map.site!!
@@ -155,7 +190,7 @@ data class Entry(
                 isPartial = true,
                 canDelete = site.role == Site.RoleEnum.SITEMANAGER,
                 otherId = site.id
-            )
+            ).updateOffline()
         }
 
         fun with(role: SiteRole): Entry {
@@ -168,7 +203,7 @@ data class Entry(
                 isPartial = true,
                 canDelete = role.role == SiteRole.RoleEnum.SITEMANAGER,
                 otherId = role.site.id
-            )
+            ).updateOffline()
         }
 
         fun with(link: SharedLink): Entry {
@@ -182,7 +217,7 @@ data class Entry(
                 link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
                 link.allowableOperations?.contains("delete") ?: false
-            )
+            ).updateOffline()
         }
 
         fun with(node: DeletedNode): Entry {
@@ -197,7 +232,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete = false,
                 isTrashed = true
-            )
+            ).updateOffline()
         }
 
         private fun PathInfo.formattedString(): String? {
@@ -217,4 +252,18 @@ object DateParceler : Parceler<ZonedDateTime> {
     override fun ZonedDateTime.write(parcel: Parcel, flags: Int) {
         parcel.writeLong(this.toInstant().epochSecond)
     }
+}
+
+class BoxDateConverter : PropertyConverter<ZonedDateTime, Long> {
+    private val zone = ZonedDateTime.now().zone
+
+    override fun convertToEntityProperty(databaseValue: Long?): ZonedDateTime? =
+        if (databaseValue != null) {
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(databaseValue), zone)
+        } else {
+            null
+        }
+
+    override fun convertToDatabaseValue(entityProperty: ZonedDateTime?) =
+        entityProperty?.toInstant()?.epochSecond
 }

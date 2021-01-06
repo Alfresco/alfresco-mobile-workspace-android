@@ -40,6 +40,8 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
+        binding.offlineIcon.isVisible = entry.isOffline
+
         // Disable actions on links
         binding.moreIconFrame.isVisible =
             entry.type != Entry.Type.FileLink && entry.type != Entry.Type.FolderLink

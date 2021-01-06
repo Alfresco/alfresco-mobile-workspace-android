@@ -1,0 +1,100 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7754457436648882865",
+      "lastPropertyId": "14:6025709696559276984",
+      "name": "Entry",
+      "properties": [
+        {
+          "id": "2:4780436562638073958",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "3:1466717300834943669",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "4:3297398107969773257",
+          "name": "subtitle",
+          "type": 9
+        },
+        {
+          "id": "5:5402297515967513094",
+          "name": "mimeType",
+          "type": 9
+        },
+        {
+          "id": "6:8027101327983148586",
+          "name": "isPartial",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "7:7294771933846921060",
+          "name": "isFavorite",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "8:1861314631746903577",
+          "name": "canDelete",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "9:577437215951196979",
+          "name": "isTrashed",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "10:929961630975703359",
+          "name": "otherId",
+          "type": 9
+        },
+        {
+          "id": "11:4515940980824041384",
+          "name": "boxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "12:8445486805526693842",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "13:1029382335782415091",
+          "name": "modified",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "14:6025709696559276984",
+          "name": "isOffline",
+          "type": 1,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:7754457436648882865",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    5041187028345635295
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

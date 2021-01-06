@@ -19,9 +19,11 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.actions.ActionAddFavorite
+import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionListSheet
 import com.alfresco.content.actions.ActionRemoveFavorite
+import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
@@ -55,6 +57,8 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
+        viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
+        viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
     }
 
     private fun onDelete(entry: Entry) = entry.run {

@@ -9,6 +9,8 @@ buildscript {
         classpath Libs.AndroidTools.gradlePlugin
         classpath Libs.Kotlin.gradlePlugin
 
+        classpath Libs.objectBox
+
         classpath Libs.Google.servicesPlugin
         classpath Libs.Google.Firebase.crashlyticsPlugin
 

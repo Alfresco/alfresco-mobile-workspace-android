@@ -150,11 +150,11 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
                     }
                 } else {
                     listViewRow {
-                        id(it.stableId)
+                        id(it.id)
                         data(it)
                         compact(state.isCompact)
-                        clickListener { _ -> onItemClicked(it) }
-                        moreClickListener { _ -> onItemMoreClicked(it) }
+                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                        moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
                     }
                 }
             }

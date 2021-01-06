@@ -34,8 +34,6 @@ data class Entry(
     val otherId: String? = null
 ) : Parcelable {
 
-    val stableId: String
-        get() = id + if (isFavorite) 1 else 0
 
     enum class Type {
         File,

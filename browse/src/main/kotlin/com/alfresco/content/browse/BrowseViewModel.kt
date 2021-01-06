@@ -66,9 +66,6 @@ class BrowseViewModel(
     @Suppress("UNUSED_PARAMETER")
     private fun refresh(ignored: Entry) = refresh()
 
-    private fun removeEntry(entry: Entry) =
-        setState { copyRemoving(entry) as BrowseViewState }
-
     override fun refresh() = fetch()
 
     override fun fetchNextPage() = fetch(true)

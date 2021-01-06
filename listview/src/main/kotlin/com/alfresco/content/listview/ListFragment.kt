@@ -65,7 +65,7 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun removeEntry(entry: Entry) =
+    fun removeEntry(entry: Entry) =
         setState { copyRemoving(entry) as S }
 
     @Suppress("UNCHECKED_CAST")

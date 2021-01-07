@@ -23,10 +23,10 @@ class Session(
     private var onSignedOut: (() -> Unit)? = null
 
     init {
-        val appContext = context.applicationContext
+        require(context == context.applicationContext)
 
         authInterceptor = AuthInterceptor(
-            appContext,
+            context,
             account.id,
             account.authType,
             account.authState,

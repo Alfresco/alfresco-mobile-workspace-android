@@ -1,6 +1,6 @@
 package com.alfresco.content.account
 
-import android.accounts.Account
+import android.accounts.Account as AndroidAccount
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Build
@@ -42,7 +42,7 @@ data class Account(
             b.putString(displayNameKey, displayName)
             b.putString(emailKey, email)
             b.putString(myFilesKey, myFiles)
-            val acc = Account(id, context.getString(R.string.android_auth_account_type))
+            val acc = AndroidAccount(id, context.getString(R.string.android_auth_account_type))
             AccountManager.get(context).addAccountExplicitly(acc, authState, b)
         }
 
@@ -87,7 +87,7 @@ data class Account(
             }
         }
 
-        fun getAccount(context: Context): com.alfresco.content.account.Account? {
+        fun getAccount(context: Context): Account? {
             val am = AccountManager.get(context)
             val accountList = am.getAccountsByType(context.getString(R.string.android_auth_account_type))
             if (accountList.isNotEmpty()) {
@@ -106,7 +106,7 @@ data class Account(
             return null
         }
 
-        private fun getAndroidAccount(context: Context): Account? {
+        private fun getAndroidAccount(context: Context): AndroidAccount? {
             val am = AccountManager.get(context)
             val accountList = am.getAccountsByType(context.getString(R.string.android_auth_account_type))
             return accountList.first()

@@ -16,6 +16,7 @@ dependencies {
     implementation project(':session')
 
     implementation Libs.AndroidX.appcompat
+    implementation Libs.AndroidX.webkit
     implementation Libs.Google.material
 
     implementation Libs.mvRx

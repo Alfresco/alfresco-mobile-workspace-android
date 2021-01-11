@@ -13,14 +13,12 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.webkit.WebViewAssetLoader
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.session.SessionManager
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import java.io.IOException
-import java.util.HashMap
 
 class PdfViewerFragment : ChildViewerFragment() {
 
@@ -52,13 +50,19 @@ class PdfViewerFragment : ChildViewerFragment() {
             }
         }
 
-        val settings = webView.settings
-        settings.allowContentAccess = false
-        settings.allowFileAccess = false
-        settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        settings.javaScriptEnabled = true
-        @Suppress("DEPRECATION")
-        settings.saveFormData = false
+        webView.settings.apply {
+            allowContentAccess = false
+            allowFileAccess = false
+            allowContentAccess = false
+            allowFileAccessFromFileURLs = false
+            allowUniversalAccessFromFileURLs = false
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            javaScriptEnabled = true
+            @Suppress("DEPRECATION")
+            saveFormData = false
+        }
+
+        val assetLoader = makeAssetLoader()
 
         webView.addJavascriptInterface(jsBridge, "bridge")
 
@@ -81,41 +85,23 @@ class PdfViewerFragment : ChildViewerFragment() {
                     return null
                 }
 
-                if (request.url.path?.contains("$LOCAL_PATH_PREFIX/") != true) {
-                    return null
-                }
-
-                val path = request.url.path?.removePrefix("/$LOCAL_PATH_PREFIX/")
-
-                if (path == "viewer.html") {
-                    val response = fromAsset("text/html", path)
-                    val headers = HashMap<String, String>()
-                    response?.responseHeaders = headers
-                    return response
-                }
-
-                if (path?.endsWith(".css") == true) {
-                    return fromAsset("text/css", path)
-                }
-
-                if (path?.endsWith(".js") == true) {
-                    return fromAsset("application/javascript", path)
-                }
-
-                return null
-            }
-
-            private fun fromAsset(mime: String, path: String): WebResourceResponse? {
-                return try {
-                    context?.let { WebResourceResponse(mime, "utf-8", it.assets.open(path)) }
-                } catch (e: IOException) {
-                    null
-                }
+                return assetLoader.shouldInterceptRequest(request.url)
             }
         }
 
         // Loading state is handled by pdf viewer
         loadingListener.get()?.onContentLoaded()
+    }
+
+    private fun makeAssetLoader() = withState(viewModel) {
+        WebViewAssetLoader.Builder()
+            .setDomain(Uri.parse(it.uri).authority ?: "")
+            .setHttpAllowed(true)
+            .addPathHandler(
+                "/$RESERVED_ASSETS_PATH/",
+                WebViewAssetLoader.AssetsPathHandler(requireContext())
+            )
+            .build()
     }
 
     class NativeBridge(
@@ -136,15 +122,16 @@ class PdfViewerFragment : ChildViewerFragment() {
     /**
      * Loads the current content unless it's already loaded
      */
-    private fun loadContent() {
-        val sessionUri = Uri.parse(SessionManager.requireSession.baseUrl)
-        val baseUrl = "${sessionUri.scheme}://${sessionUri.authority}"
-        val targetUrl = "$baseUrl/$LOCAL_PATH_PREFIX/viewer.html"
+    private fun loadContent() =
+        withState(viewModel) {
+            val docUri = Uri.parse(it.uri)
+            val baseUrl = "${docUri.scheme}://${docUri.authority}"
+            val targetUrl = "$baseUrl/$RESERVED_ASSETS_PATH/viewer.html"
 
-        if (webView.url != targetUrl) {
-            webView.loadUrl(targetUrl)
+            if (webView.url != targetUrl) {
+                webView.loadUrl(targetUrl)
+            }
         }
-    }
 
     /**
      * Displays the password prompt, with [reason] equals 1 if it's the first time.
@@ -177,7 +164,7 @@ class PdfViewerFragment : ChildViewerFragment() {
         alert.show()
     }
 
-    companion object {
-        const val LOCAL_PATH_PREFIX = "fakepath"
+    private companion object {
+        const val RESERVED_ASSETS_PATH = "--assets--"
     }
 }

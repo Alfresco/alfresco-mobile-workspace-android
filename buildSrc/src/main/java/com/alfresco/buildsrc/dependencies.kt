@@ -71,6 +71,8 @@ object Libs {
 
         const val preference = "androidx.preference:preference:1.1.1"
 
+        const val webkit = "androidx.webkit:webkit:1.4.0"
+
         object Navigation {
             private const val version = "2.3.1"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"

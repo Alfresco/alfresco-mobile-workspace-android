@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.download.ContentDownloader
+import com.alfresco.kotlin.isLocalPath
 import java.io.File
 import kotlinx.coroutines.launch
 
@@ -32,13 +34,15 @@ class ImageViewerViewModel(
 ) : MvRxViewModel<ImageViewerState>(state) {
 
     init {
-        if (state.largeScale) {
+        if (state.largeScale && !state.uri.isLocalPath()) {
             val output = File(context.cacheDir, TMP_FILE_NAME)
             viewModelScope.launch {
                 ContentDownloader
                     .downloadFile(state.uri, output.path)
                     .execute { copy(path = it) }
             }
+        } else {
+            setState { copy(path = Success(uri)) }
         }
     }
 

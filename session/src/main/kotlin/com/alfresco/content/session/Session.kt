@@ -8,6 +8,8 @@ import coil.util.CoilUtils
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
+import com.alfresco.kotlin.sha1
+import java.io.File
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -89,4 +91,18 @@ class Session(
     fun finish() {
         authInterceptor.finish()
     }
+
+    val filesDir: File =
+        File(context.filesDir, account.id.sha1()).also {
+            if (!it.exists()) {
+                it.mkdir()
+            }
+        }
+
+    val cacheDir: File =
+        File(context.cacheDir, account.id.sha1()).also {
+            if (!it.exists()) {
+                it.mkdir()
+            }
+        }
 }

@@ -2,7 +2,6 @@ package com.alfresco.content.viewer.pdf
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +42,7 @@ class PdfViewerFragment : ChildViewerFragment() {
         }
 
         val jsBridge = withState(viewModel) {
-            NativeBridge(EglExt.maxTextureSize, it.uri) { reason ->
+            NativeBridge(EglExt.maxTextureSize, viewModel.assetUrl(it)) { reason ->
                 activity?.runOnUiThread {
                     showPasswordPrompt(reason)
                 }
@@ -53,8 +52,9 @@ class PdfViewerFragment : ChildViewerFragment() {
         webView.settings.apply {
             allowContentAccess = false
             allowFileAccess = false
-            allowContentAccess = false
+            @Suppress("DEPRECATION")
             allowFileAccessFromFileURLs = false
+            @Suppress("DEPRECATION")
             allowUniversalAccessFromFileURLs = false
             cacheMode = WebSettings.LOAD_NO_CACHE
             javaScriptEnabled = true
@@ -94,14 +94,22 @@ class PdfViewerFragment : ChildViewerFragment() {
     }
 
     private fun makeAssetLoader() = withState(viewModel) {
-        WebViewAssetLoader.Builder()
-            .setDomain(Uri.parse(it.uri).authority ?: "")
+        val ctx = requireContext()
+        val builder = WebViewAssetLoader.Builder()
+            .setDomain(viewModel.assetDomain(it))
             .setHttpAllowed(true)
             .addPathHandler(
-                "/$RESERVED_ASSETS_PATH/",
-                WebViewAssetLoader.AssetsPathHandler(requireContext())
+                "/${PdfViewerViewModel.RESERVED_ASSETS_PATH}/",
+                WebViewAssetLoader.AssetsPathHandler(ctx)
             )
-            .build()
+        val docPath = viewModel.localDir(it)
+        if (docPath != null) {
+            builder.addPathHandler(
+                "/${PdfViewerViewModel.RESERVED_FILES_PATH}/",
+                WebViewAssetLoader.InternalStoragePathHandler(ctx, docPath)
+            )
+        }
+        builder.build()
     }
 
     class NativeBridge(
@@ -124,9 +132,7 @@ class PdfViewerFragment : ChildViewerFragment() {
      */
     private fun loadContent() =
         withState(viewModel) {
-            val docUri = Uri.parse(it.uri)
-            val baseUrl = "${docUri.scheme}://${docUri.authority}"
-            val targetUrl = "$baseUrl/$RESERVED_ASSETS_PATH/viewer.html"
+            val targetUrl = viewModel.viewerUrl(it)
 
             if (webView.url != targetUrl) {
                 webView.loadUrl(targetUrl)
@@ -162,9 +168,5 @@ class PdfViewerFragment : ChildViewerFragment() {
             }.create()
 
         alert.show()
-    }
-
-    private companion object {
-        const val RESERVED_ASSETS_PATH = "--assets--"
     }
 }

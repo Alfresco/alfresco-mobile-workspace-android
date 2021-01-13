@@ -17,7 +17,7 @@ variables:
     value: buildSrc/src/main/java/com/alfresco/buildsrc/dependencies.kt
 
 steps:
-  - task: Cache@2
+  - task: CacheBeta@1
     inputs:
       key: 'gradle_0 | "$(Agent.OS)" | $(deps_def_path)'
       restoreKeys: gradle_0

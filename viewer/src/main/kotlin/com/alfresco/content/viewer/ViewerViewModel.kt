@@ -5,6 +5,8 @@ import com.airbnb.mvrx.MvRxState
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.RenditionRepository
 import kotlinx.coroutines.launch
 
@@ -29,14 +31,24 @@ class ViewerViewModel(
     state: ViewerState
 ) : MvRxViewModel<ViewerState>(state) {
 
+    private val offlineRepository = OfflineRepository()
+    private val browseRepository = BrowseRepository()
+
     init {
         viewModelScope.launch {
             try {
-                val entry = BrowseRepository().fetchEntry(state.id)
+                val entry = with(offlineRepository.entry(state.id)) {
+                    if (this == null || this.offlineStatus != OfflineStatus.Synced) {
+                        browseRepository.fetchEntry(state.id)
+                    } else {
+                        this
+                    }
+                }
+
                 setState { copy(entry = entry) }
 
-                val result = getContentUri(state.id, entry.mimeType)
-                if (result != null) {
+                val result = makeViewerConfig(entry)
+                if (result.first != null) {
                     setState {
                         copy(
                             ready = true,
@@ -63,20 +75,27 @@ class ViewerViewModel(
         }
     }
 
-    private fun getContentUri(id: String, mimeType: String?): Pair<ViewerType, String>? {
-        when {
-            mimeType == "application/pdf" ->
-                return Pair(ViewerType.Pdf, BrowseRepository().contentUri(id))
-            imageFormats.contains(mimeType) ->
-                return Pair(ViewerType.Image, BrowseRepository().contentUri(id))
-            mimeType?.startsWith("text/") == true ->
-                return Pair(ViewerType.Text, BrowseRepository().contentUri(id))
-            mimeType?.startsWith("audio/") == true || mimeType?.startsWith("video/") == true ->
-                return Pair(ViewerType.Media, BrowseRepository().contentUri(id))
-        }
+    private fun makeViewerConfig(entry: Entry): Pair<ViewerType?, String> =
+        Pair(when {
+            entry.mimeType == "application/pdf" ->
+                ViewerType.Pdf
+            imageFormats.contains(entry.mimeType) ->
+                ViewerType.Image
+            entry.mimeType?.startsWith("text/") == true ->
+                ViewerType.Text
+            entry.mimeType?.startsWith("audio/") == true ||
+                entry.mimeType?.startsWith("video/") == true ->
+                ViewerType.Media
+            else ->
+                null
+        }, getContentUri(entry))
 
-        return null
-    }
+    private fun getContentUri(entry: Entry) =
+        if (entry.offlineStatus == OfflineStatus.Synced) {
+            offlineRepository.contentUri(entry.id)
+        } else {
+            browseRepository.contentUri(entry.id)
+        }
 
     companion object {
         private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")

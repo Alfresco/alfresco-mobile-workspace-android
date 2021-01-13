@@ -6,6 +6,11 @@ import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
+import java.io.File
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
@@ -26,12 +31,16 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         ObjectBox.init(session.context)
     }
 
-    fun markOffline(entry: Entry): Entry =
-        entry.copy(isOffline = true)
-            .also {
-                val box: Box<Entry> = ObjectBox.boxStore.boxFor()
-                box.put(it)
-            }
+    fun entry(id: String): Entry? {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query()
+            .equal(Entry_.id, id)
+            .build()
+        return query.findFirst()
+    }
+
+    fun markOffline(entry: Entry) =
+        updateEntry(entry.copy(isOffline = true, offlineStatus = OfflineStatus.Pending))
 
     fun removeOffline(entry: Entry) =
         entry.copy(isOffline = false)
@@ -40,19 +49,41 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 box.remove(it)
             }
 
-    suspend fun fetchOfflineEntries(skipCount: Int, maxItems: Int): ResponsePaging {
+    fun updateEntry(entry: Entry) =
+        entry.also {
+            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+            box.put(it)
+        }
+
+    fun observeOfflineEntries(): Flow<ResponsePaging> = callbackFlow {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .order(Entry_.title)
             .build()
-        val results = query.find(skipCount.toLong(), maxItems.toLong())
-        return ResponsePaging(results, Pagination(
-            results.count().toLong(),
-            results.count() > 0, //  && results.count() + skipCount < query.count()
-            skipCount.toLong(),
-            maxItems.toLong(),
-            query.count()
-        ))
+        val subscription = query.subscribe()
+            .observer { data ->
+                val count = data.count().toLong()
+                sendBlocking(
+                    ResponsePaging(
+                        data,
+                        Pagination(
+                            count,
+                            false,
+                            0,
+                            count,
+                            count
+                        )
+                    )
+                )
+            }
+        awaitClose { subscription.cancel() }
+    }
+
+    fun fetchAllOfflineEntries(): List<Entry> {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query()
+            .build()
+        return query.find()
     }
 
     fun fetchOfflineEntry(target: Entry): Entry? {
@@ -62,4 +93,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
         return query.findFirst()
     }
+
+    fun contentUri(id: String): String =
+        "file://${File(SessionManager.requireSession.filesDir, id).absolutePath}"
 }

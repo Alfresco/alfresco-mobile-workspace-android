@@ -20,12 +20,14 @@ android {
 
 dependencies {
     api project(':session')
+    implementation project(':download')
 
     implementation Libs.Alfresco.auth
     implementation Libs.Alfresco.content
     implementation Libs.Alfresco.contentKtx
 
     implementation Libs.AndroidX.preference
+    implementation Libs.AndroidX.work
 
     implementation Libs.OkHttp.loggingInterceptor
 

@@ -73,6 +73,8 @@ object Libs {
 
         const val webkit = "androidx.webkit:webkit:1.4.0"
 
+        const val work = "androidx.work:work-runtime-ktx:2.4.0"
+
         object Navigation {
             private const val version = "2.3.1"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"

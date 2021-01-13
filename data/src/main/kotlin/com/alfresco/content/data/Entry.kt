@@ -40,17 +40,23 @@ data class Entry(
     val isTrashed: Boolean = false,
     val otherId: String? = null,
     @Id var boxId: Long = 0,
-    var isOffline: Boolean = false
+    val isOffline: Boolean = false,
+    @Convert(converter = OfflineStatusConverter::class, dbType = String::class)
+    val offlineStatus: OfflineStatus = OfflineStatus.Undefined
 ) : Parcelable {
 
     // TODO: move to repository level
-    fun updateOffline(): Entry {
+    fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)
-        if (offline != null) {
-            isOffline = offline.isOffline
-            boxId = offline.boxId
+        return if (offline != null) {
+            copy(
+                boxId = offline.boxId,
+                isOffline = offline.isOffline,
+                offlineStatus = offline.offlineStatus
+            )
+        } else {
+            this
         }
-        return this
     }
 
     enum class Type {
@@ -111,7 +117,7 @@ data class Entry(
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(result: ResultNode): Entry {
@@ -125,7 +131,7 @@ data class Entry(
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
                 result.allowableOperations?.contains("delete") ?: false
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(node: NodeChildAssociation): Entry {
@@ -140,7 +146,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 node.allowableOperations?.contains("delete") ?: false,
                 otherId = node.properties?.get("cm:destination") as String?
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(favorite: Favorite): Entry {
@@ -157,7 +163,7 @@ data class Entry(
                     file.allowableOperations == null,
                     true,
                     file.allowableOperations?.contains("delete") ?: false
-                ).updateOffline()
+                ).withOfflineStatus()
             }
             if (map.folder != null) {
                 val folder: FavoriteTargetNode = map.folder!!
@@ -171,7 +177,7 @@ data class Entry(
                     folder.allowableOperations == null,
                     true,
                     folder.allowableOperations?.contains("delete") ?: false
-                ).updateOffline()
+                ).withOfflineStatus()
             }
             if (map.site != null) {
                 val site = map.site!!
@@ -190,7 +196,7 @@ data class Entry(
                 isPartial = true,
                 canDelete = site.role == Site.RoleEnum.SITEMANAGER,
                 otherId = site.id
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(role: SiteRole): Entry {
@@ -203,7 +209,7 @@ data class Entry(
                 isPartial = true,
                 canDelete = role.role == SiteRole.RoleEnum.SITEMANAGER,
                 otherId = role.site.id
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(link: SharedLink): Entry {
@@ -217,7 +223,7 @@ data class Entry(
                 link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
                 link.allowableOperations?.contains("delete") ?: false
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         fun with(node: DeletedNode): Entry {
@@ -232,7 +238,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete = false,
                 isTrashed = true
-            ).updateOffline()
+            ).withOfflineStatus()
         }
 
         private fun PathInfo.formattedString(): String? {
@@ -240,6 +246,42 @@ data class Entry(
                 ?.reduce { out, el -> "$out \u203A $el" }
         }
     }
+}
+
+enum class OfflineStatus {
+    Pending,
+    InProgress,
+    Synced,
+    Error,
+    Undefined;
+
+    fun value() = when (this) {
+        Pending -> "pending"
+        InProgress -> "inProgress"
+        Synced -> "synced"
+        Error -> "error"
+        else -> "undefined"
+    }
+
+    companion object {
+        fun from(value: String): OfflineStatus {
+            when (value) {
+                "pending" -> return Pending
+                "inProgress" -> return InProgress
+                "synced" -> return Synced
+                "error" -> return Error
+            }
+            return Undefined
+        }
+    }
+}
+
+class OfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
+    override fun convertToEntityProperty(databaseValue: String?) =
+        OfflineStatus.from(databaseValue ?: "")
+
+    override fun convertToDatabaseValue(entityProperty: OfflineStatus?) =
+        entityProperty?.value()
 }
 
 object DateParceler : Parceler<ZonedDateTime> {

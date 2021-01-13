@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:7754457436648882865",
-      "lastPropertyId": "14:6025709696559276984",
+      "lastPropertyId": "15:4725464977551328928",
       "name": "Entry",
       "properties": [
         {
@@ -79,6 +79,11 @@
           "name": "isOffline",
           "type": 1,
           "flags": 4
+        },
+        {
+          "id": "15:4725464977551328928",
+          "name": "offlineStatus",
+          "type": 9
         }
       ],
       "relations": []

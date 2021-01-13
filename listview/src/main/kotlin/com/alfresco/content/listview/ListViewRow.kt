@@ -11,6 +11,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.listview.databinding.ViewListRowBinding
 import com.alfresco.content.mimetype.MimeType
 
@@ -40,7 +41,21 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
-        binding.offlineIcon.isVisible = entry.isOffline
+        if (entry.isOffline) {
+            binding.offlineIcon.isVisible = true
+            val icon = when (entry.offlineStatus) {
+                OfflineStatus.Pending -> R.drawable.ic_offline_status_pending
+                OfflineStatus.InProgress -> R.drawable.ic_offline_status_in_progress
+                OfflineStatus.Synced -> R.drawable.ic_offline_status_synced
+                OfflineStatus.Error -> R.drawable.ic_offline_status_error
+                else -> R.drawable.ic_offline_status_synced
+            }
+            binding.offlineIcon.setImageDrawable(
+                ResourcesCompat.getDrawable(resources, icon, context.theme)
+            )
+        } else {
+            binding.offlineIcon.isVisible = false
+        }
 
         // Disable actions on links
         binding.moreIconFrame.isVisible =

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="offline_sync_button_title">Sync all</string>
+
     <string name="offline_empty_title">No offline content</string>
     <string name="offline_empty_message">Content that you make available offline\nwill show up here.</string>
 </resources>

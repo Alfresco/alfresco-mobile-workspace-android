@@ -33,10 +33,14 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         val items = repository.fetchAllOfflineEntries()
         val toSync = mutableListOf<Entry>()
         for (local in items) {
-            val remote = BrowseRepository().fetchEntry(local.id) // TODO: parallel fetch
-            if (dateCompare(remote.modified, local.modified) > 0L ||
-                local.offlineStatus != OfflineStatus.Synced) {
-                toSync.add(remote)
+             try {
+                val remote = BrowseRepository().fetchEntry(local.id) // TODO: parallel fetch
+                if (dateCompare(remote.modified, local.modified) > 0L ||
+                    local.offlineStatus != OfflineStatus.Synced) {
+                    toSync.add(remote)
+                }
+            } catch (ex: Exception) {
+                repository.updateEntry(local.copy(offlineStatus = OfflineStatus.Error))
             }
         }
         return toSync

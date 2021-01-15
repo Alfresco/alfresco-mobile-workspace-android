@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference
 
 interface LoadingListener {
     fun onContentLoaded()
+    fun onContentError()
 }
 
 abstract class ChildViewerFragment(@LayoutRes contentLayoutId: Int = 0) :

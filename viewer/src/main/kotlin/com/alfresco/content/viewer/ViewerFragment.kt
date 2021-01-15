@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionBarFragment
@@ -45,7 +47,7 @@ data class ViewerArgs(
     }
 }
 
-class ViewerFragment : BaseMvRxFragment(), LoadingListener {
+class ViewerFragment : BaseMvRxFragment() {
 
     private lateinit var args: ViewerArgs
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
@@ -72,18 +74,18 @@ class ViewerFragment : BaseMvRxFragment(), LoadingListener {
 
         if (childFragment is ChildViewerFragment) {
             this.childFragment = childFragment
-            this.childFragment?.setLoadingListener(this)
-        }
-    }
+                .apply {
+                    setLoadingListener(object : LoadingListener {
+                        override fun onContentLoaded() {
+                            show(Status.Loaded)
+                        }
 
-    override fun onContentLoaded() {
-        binding.loading.visibility = View.GONE
-        if (this.childFragment?.showInfoWhenLoaded() == true) {
-            binding.info.visibility = View.VISIBLE
-        } else {
-            binding.info.visibility = View.GONE
+                        override fun onContentError() {
+                            show(Status.NotSupported)
+                        }
+                    })
+                }
         }
-        binding.status.text = ""
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -109,13 +111,42 @@ class ViewerFragment : BaseMvRxFragment(), LoadingListener {
                         .replace(R.id.fragmentContainerView, fragment, state.viewerType.toString())
                         .commit()
                 }
-                binding.status.text = getString(R.string.info_fetching_content)
+                show(Status.Loading)
             } else {
-                binding.loading.visibility = View.GONE
-                binding.status.text = getString(R.string.error_preview_not_available)
+                show(Status.NotSupported)
             }
         } else {
-            binding.status.text = getString(R.string.info_creating_rendition)
+            show(Status.Preparing)
+        }
+    }
+
+    private fun show(s: Status) {
+        binding.apply {
+            when (s) {
+                Status.Loading -> {
+                    info.isVisible = true
+                    loading.isVisible = true
+                    status.text = getString(R.string.info_fetching_content)
+                }
+
+                Status.Preparing -> {
+                    info.isVisible = true
+                    loading.isVisible = true
+                    status.text = getString(R.string.info_creating_rendition)
+                }
+
+                Status.Loaded -> {
+                    info.isVisible = childFragment?.showInfoWhenLoaded() == true
+                    loading.isVisible = false
+                    status.text = ""
+                }
+
+                Status.NotSupported -> {
+                    info.isVisible = true
+                    loading.isVisible = false
+                    status.text = getString(R.string.error_preview_not_available)
+                }
+            }
         }
     }
 
@@ -134,5 +165,12 @@ class ViewerFragment : BaseMvRxFragment(), LoadingListener {
 
     private fun showError(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
+    }
+
+    private enum class Status {
+        Loading,
+        Preparing,
+        Loaded,
+        NotSupported
     }
 }

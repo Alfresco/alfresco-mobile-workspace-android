@@ -117,13 +117,17 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image) {
             }
             .build()
 
-        // TODO: bypass download on configuration change
         val request = ImageRequest.Builder(context)
             .data(uri)
             .target(object : ImageViewTarget(this) {
                 override fun onSuccess(result: Drawable) {
                     super.onSuccess(result)
                     loadingListener.get()?.onContentLoaded()
+                }
+
+                override fun onError(error: Drawable?) {
+                    super.onError(error)
+                    loadingListener.get()?.onContentError()
                 }
             })
             .build()

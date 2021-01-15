@@ -8,6 +8,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.alfresco.coroutines.asyncMap
+import com.alfresco.coroutines.asyncMapNotNull
 import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
@@ -21,30 +23,34 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     override suspend fun doWork(): Result {
 
         val toSync = buildDownloadList()
-        for (entry in toSync) {
-            downloadItem(entry)
-            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Synced))
-        }
+        downloadPending(toSync)
 
         return Result.success()
     }
 
-    private suspend fun buildDownloadList(): List<Entry> {
-        val items = repository.fetchAllOfflineEntries()
-        val toSync = mutableListOf<Entry>()
-        for (local in items) {
-             try {
-                val remote = BrowseRepository().fetchEntry(local.id) // TODO: parallel fetch
-                if (dateCompare(remote.modified, local.modified) > 0L ||
-                    local.offlineStatus != OfflineStatus.Synced) {
-                    toSync.add(remote)
+    private suspend fun buildDownloadList(): List<Entry> =
+        repository
+            .fetchAllOfflineEntries()
+            .asyncMapNotNull(MAX_CONCURRENT_FETCHES) { local ->
+                try {
+                    val remote = BrowseRepository().fetchEntry(local.id)
+                    if (dateCompare(remote.modified, local.modified) > 0L ||
+                        local.offlineStatus != OfflineStatus.Synced) {
+                        remote
+                    } else {
+                        null
+                    }
+                } catch (ex: Exception) {
+                    repository.updateEntry(local.copy(offlineStatus = OfflineStatus.Error))
+                    null
                 }
-            } catch (ex: Exception) {
-                repository.updateEntry(local.copy(offlineStatus = OfflineStatus.Error))
             }
+
+    private suspend fun downloadPending(entries: List<Entry>) =
+        entries.asyncMap(MAX_CONCURRENT_DOWNLOADS) {
+            downloadItem(it)
+            repository.updateEntry(it.copy(offlineStatus = OfflineStatus.Synced))
         }
-        return toSync
-    }
 
     private fun dateCompare(d1: ZonedDateTime?, d2: ZonedDateTime?): Long {
         return (d1?.toInstant()?.epochSecond ?: 0) - (d2?.toInstant()?.epochSecond ?: 0)
@@ -63,6 +69,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     companion object {
         private const val UNIQUE_WORK_NAME = "sync"
+        private const val MAX_CONCURRENT_DOWNLOADS = 3
+        private const val MAX_CONCURRENT_FETCHES = 5
 
         fun syncNow(context: Context) {
             val constraints = Constraints.Builder()

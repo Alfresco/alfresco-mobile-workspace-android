@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+    implementation project(':base')
     api project(':session')
     implementation project(':download')
 

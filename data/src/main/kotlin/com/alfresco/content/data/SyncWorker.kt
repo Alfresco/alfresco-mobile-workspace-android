@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.net.Uri
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -53,6 +54,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     private suspend fun downloadPending(entries: List<Entry>) =
         entries.asyncMap(MAX_CONCURRENT_DOWNLOADS) {
             downloadItem(it)
+            downloadRendition(it)
             repository.updateEntry(it.copy(offlineStatus = OfflineStatus.Synced))
         }
 
@@ -71,10 +73,41 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }
     }
 
+    private suspend fun downloadRendition(entry: Entry) {
+        if (!typeSupported(entry)) {
+            val uri = RenditionRepository().fetchRenditionUri(entry.id)
+            if (uri != null) {
+                try {
+                    val typeSuffix = renditionTypeSuffix(uri)
+                    val output = File(repository.session.filesDir, "${entry.id}$RENDITION_FILE_SUFFIX$typeSuffix")
+                    ContentDownloader.downloadFileTo(uri, output.path)
+                } catch (ex: Exception) {
+                    repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
+                }
+            }
+        }
+    }
+
+    private fun renditionTypeSuffix(uri: String) =
+        if (Uri.parse(uri).pathSegments.contains("pdf")) {
+            "_pdf"
+        } else {
+            "_img"
+        }
+
+    private fun typeSupported(entry: Entry) =
+        entry.mimeType == "application/pdf" ||
+            supportedImageFormats.contains(entry.mimeType) ||
+            entry.mimeType?.startsWith("text/") == true ||
+            entry.mimeType?.startsWith("audio/") == true ||
+            entry.mimeType?.startsWith("video/") == true
+
     companion object {
         private const val UNIQUE_WORK_NAME = "sync"
         private const val MAX_CONCURRENT_DOWNLOADS = 3
         private const val MAX_CONCURRENT_FETCHES = 5
+        private const val RENDITION_FILE_SUFFIX = "_pv"
+        private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
         fun syncNow(context: Context) {
             val constraints = Constraints.Builder()

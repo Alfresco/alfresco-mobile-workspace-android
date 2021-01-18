@@ -1,5 +1,6 @@
 package com.alfresco.content.viewer
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.MvRxState
 import com.alfresco.content.MvRxViewModel
@@ -8,6 +9,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.RenditionRepository
+import java.io.File
+import java.lang.UnsupportedOperationException
 import kotlinx.coroutines.launch
 
 enum class ViewerType {
@@ -37,46 +40,54 @@ class ViewerViewModel(
     init {
         viewModelScope.launch {
             try {
-                val entry = with(offlineRepository.entry(state.id)) {
-                    if (this == null || this.offlineStatus != OfflineStatus.Synced) {
-                        browseRepository.fetchEntry(state.id)
-                    } else {
-                        this
-                    }
-                }
-
+                val entry = fetchEntry(state.id)
                 setState { copy(entry = entry) }
 
-                val result = makeViewerConfig(entry)
-                if (result.first != null) {
-                    setState {
-                        copy(
-                            ready = true,
-                            viewerType = result.first,
-                            viewerUri = result.second
-                        )
-                    }
+                val type = supportedViewerType(entry)
+                if (type != null) {
+                    setState { copy(
+                        ready = true,
+                        viewerType = type,
+                        viewerUri = getContentUri(entry)
+                    ) }
                 } else {
-                    val renditionUri = RenditionRepository().fetchRenditionUri(state.id)
-                    val renditionType = if (renditionUri != null) {
-                        if (renditionUri.contains("pdf")) ViewerType.Pdf else ViewerType.Image
-                    } else null
-                    setState {
-                        copy(
+                    if (entry.offlineStatus == OfflineStatus.Synced) {
+                        val renditionUri = offlineRenditionUri(entry)
+                        val type = if (renditionUri.contains("pdf")) ViewerType.Pdf else ViewerType.Image
+                        setState { copy(
                             ready = true,
-                            viewerType = renditionType,
+                            viewerType = type,
                             viewerUri = renditionUri
-                        )
+                        ) }
+                    } else {
+                        val renditionUri = RenditionRepository().fetchRenditionUri(state.id)
+                        setState { copy(
+                            ready = true,
+                            viewerType = renditionViewerType(renditionUri),
+                            viewerUri = renditionUri
+                        ) }
                     }
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
                 setState { copy(ready = true) }
             }
         }
     }
 
-    private fun makeViewerConfig(entry: Entry): Pair<ViewerType?, String> =
-        Pair(when {
+    private suspend fun fetchEntry(id: String): Entry {
+        val offline = offlineRepository.entry(id)
+        return if (
+            offline != null &&
+            offline.offlineStatus == OfflineStatus.Synced
+        ) {
+            offline
+        } else {
+            browseRepository.fetchEntry(id)
+        }
+    }
+
+    private fun supportedViewerType(entry: Entry): ViewerType? =
+        when {
             entry.mimeType == "application/pdf" ->
                 ViewerType.Pdf
             imageFormats.contains(entry.mimeType) ->
@@ -88,7 +99,7 @@ class ViewerViewModel(
                 ViewerType.Media
             else ->
                 null
-        }, getContentUri(entry))
+        }
 
     private fun getContentUri(entry: Entry) =
         if (entry.offlineStatus == OfflineStatus.Synced) {
@@ -97,7 +108,34 @@ class ViewerViewModel(
             browseRepository.contentUri(entry.id)
         }
 
+    private fun renditionViewerType(uri: String?) =
+        if (uri != null) {
+            if (Uri.parse(uri).pathSegments.contains("pdf")) {
+                ViewerType.Pdf
+            } else {
+                ViewerType.Image
+            }
+        } else null
+
+    private fun offlineRenditionUri(entry: Entry): String {
+        val baseUri = Uri.parse(getContentUri(entry)).path
+        val path = "$baseUri$RENDITION_FILE_SUFFIX"
+
+        val pdfPath = "${path}_pdf"
+        if (File(pdfPath).exists()) {
+            return pdfPath
+        }
+
+        val imgPath = "${path}_img"
+        if (File(imgPath).exists()) {
+            return imgPath
+        }
+
+        throw UnsupportedOperationException()
+    }
+
     companion object {
+        private const val RENDITION_FILE_SUFFIX = "_pv"
         private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
     }
 }

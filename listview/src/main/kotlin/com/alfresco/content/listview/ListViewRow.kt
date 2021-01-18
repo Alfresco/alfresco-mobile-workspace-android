@@ -41,27 +41,42 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
-        if (entry.isOffline) {
-            binding.offlineIcon.isVisible = true
-            val icon = when (entry.offlineStatus) {
-                OfflineStatus.Pending -> R.drawable.ic_offline_status_pending
-                OfflineStatus.InProgress -> R.drawable.ic_offline_status_in_progress
-                OfflineStatus.Synced -> R.drawable.ic_offline_status_synced
-                OfflineStatus.Error -> R.drawable.ic_offline_status_error
-                else -> R.drawable.ic_offline_status_synced
-            }
-            binding.offlineIcon.setImageDrawable(
-                ResourcesCompat.getDrawable(resources, icon, context.theme)
-            )
-        } else {
-            binding.offlineIcon.isVisible = false
-        }
+        configureOfflineStatus(entry)
 
         // Disable actions on links
         binding.moreIconFrame.isVisible =
             entry.type != Entry.Type.FileLink && entry.type != Entry.Type.FolderLink
     }
 
+    private fun configureOfflineStatus(entry: Entry) {
+        if (entry.isOffline) {
+            binding.offlineIcon.isVisible = true
+            val config = makeOfflineStatusConfig(entry)
+            val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)
+            binding.offlineIcon.setImageDrawable(drawable)
+
+            val stringRes = config.second
+            if (stringRes != null) {
+                binding.subtitle.text = context.getString(stringRes)
+            }
+        } else {
+            binding.offlineIcon.isVisible = false
+        }
+    }
+
+    private fun makeOfflineStatusConfig(entry: Entry): Pair<Int, Int?> =
+        when (entry.offlineStatus) {
+            OfflineStatus.Pending ->
+                Pair(R.drawable.ic_offline_status_pending, null)
+            OfflineStatus.InProgress ->
+                Pair(R.drawable.ic_offline_status_in_progress, R.string.offline_status_in_progress)
+            OfflineStatus.Synced ->
+                Pair(R.drawable.ic_offline_status_synced, null)
+            OfflineStatus.Error ->
+                Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
+            else ->
+                Pair(R.drawable.ic_offline_status_synced, null)
+        }
     @ModelProp
     fun setCompact(compact: Boolean) {
         this.isCompact = compact

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="list_loading_message">Loading\u2026</string>
+
+    <string name="offline_status_in_progress">Syncing\u2026</string>
+    <string name="offline_status_error">Sync failed</string>
 </resources>

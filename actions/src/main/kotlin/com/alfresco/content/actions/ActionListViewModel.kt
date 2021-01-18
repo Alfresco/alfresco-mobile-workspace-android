@@ -26,6 +26,8 @@ class ActionListViewModel(
         // Update the model if necessary
         viewModelScope.on<ActionAddFavorite> (block = ::updateState)
         viewModelScope.on<ActionRemoveFavorite> (block = ::updateState)
+        viewModelScope.on<ActionAddOffline> (block = ::updateState)
+        viewModelScope.on<ActionRemoveOffline> (block = ::updateState)
     }
 
     private fun buildModel() = withState { state ->

@@ -12,4 +12,5 @@ android {
 
 dependencies {
     implementation Libs.Coroutines.core
+    implementation Libs.AndroidX.Lifecycle.viewModelKtx
 }

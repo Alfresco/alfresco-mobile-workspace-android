@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import androidx.work.WorkInfo
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
@@ -34,7 +35,8 @@ data class OfflineViewState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-    override val isCompact: Boolean = false
+    override val isCompact: Boolean = false,
+    val status: WorkInfo.State? = null
 ) : ListViewState {
 
     fun update(response: ResponsePaging?): OfflineViewState {
@@ -59,6 +61,14 @@ class OfflineViewModel(
         refresh()
 
         viewModelScope.on<ActionRemoveOffline> { removeEntry(it.entry) }
+
+        viewModelScope.launch {
+            SyncWorker
+                .observe(context)
+                .execute {
+                    copy(status = it())
+                }
+        }
     }
 
     override fun refresh() = fetch()
@@ -113,6 +123,9 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
             } else {
                 fab.hide()
             }
+
+            fab.isEnabled = state.status != WorkInfo.State.RUNNING &&
+                state.status != WorkInfo.State.BLOCKED
         }
     }
 

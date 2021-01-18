@@ -6,14 +6,18 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.alfresco.coroutines.asFlow
 import com.alfresco.coroutines.asyncMap
 import com.alfresco.coroutines.asyncMapNotNull
 import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
 import java.time.ZonedDateTime
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
@@ -86,5 +90,14 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 .beginUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, request)
                 .enqueue()
         }
+
+        fun observe(context: Context): Flow<WorkInfo.State?> =
+            WorkManager
+                .getInstance(context)
+                .getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_NAME)
+                .asFlow()
+                .map {
+                    with(it?.first()) { this?.state }
+                }
     }
 }

@@ -123,12 +123,12 @@ class ViewerViewModel(
 
         val pdfPath = "${path}_pdf"
         if (File(pdfPath).exists()) {
-            return pdfPath
+            return "file://$pdfPath"
         }
 
         val imgPath = "${path}_img"
         if (File(imgPath).exists()) {
-            return imgPath
+            return "file://$imgPath"
         }
 
         throw UnsupportedOperationException()

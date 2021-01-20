@@ -1,12 +1,14 @@
 package com.alfresco.content.offline
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.getSystemService
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
@@ -28,6 +30,7 @@ import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.navigateTo
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import kotlinx.coroutines.launch
 
@@ -146,8 +149,19 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
 
     private fun onSyncButtonClick() {
-        SyncWorker.syncNow(requireContext())
+        val cm = requireContext().getSystemService<ConnectivityManager>()
+        if (cm?.isActiveNetworkMetered != true) {
+            SyncWorker.syncNow(requireContext())
+        } else {
+            makeSyncUnavailablePrompt().show()
+        }
     }
+
+    private fun makeSyncUnavailablePrompt() =
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.offline_sync_unavailable_title))
+            .setMessage(resources.getString(R.string.offline_sync_unavailable_message))
+            .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_button), null)
 
     override fun onItemClicked(entry: Entry) {
         if (entry.offlineStatus == OfflineStatus.Synced) {

@@ -17,6 +17,7 @@ dependencies {
     implementation project(':actions')
     implementation project(':data')
 
+    implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.Fragment.fragment
     implementation Libs.AndroidX.Navigation.fragment
 

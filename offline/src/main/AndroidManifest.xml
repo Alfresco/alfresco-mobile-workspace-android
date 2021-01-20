@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.alfresco.content.offline">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.alfresco.content.offline">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

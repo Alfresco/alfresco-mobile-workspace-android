@@ -35,7 +35,7 @@ data class ActionDownload(
     }
 
     private fun enqueueDownload(context: Context) {
-        val uri = BrowseRepository().contentUri(entry.id)
+        val uri = BrowseRepository().contentUri(entry)
 
         val dm = ContextCompat.getSystemService(context, DownloadManager::class.java)
         val request = DownloadManager.Request(Uri.parse(uri))

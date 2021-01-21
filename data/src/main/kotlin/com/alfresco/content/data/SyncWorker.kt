@@ -67,7 +67,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         val outputDir = repository.contentDir(entry)
         outputDir.mkdir()
         val output = File(outputDir, entry.title)
-        val uri = BrowseRepository().contentUri(entry.id)
+        val uri = BrowseRepository().contentUri(entry)
         try {
             ContentDownloader.downloadFileTo(uri, output.path)
         } catch (ex: Exception) {

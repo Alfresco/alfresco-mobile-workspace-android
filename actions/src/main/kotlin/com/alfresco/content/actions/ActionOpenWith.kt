@@ -31,7 +31,7 @@ data class ActionOpenWith(
 
         val deferredDialog = showProgressDialogAsync(context)
 
-        val uri = BrowseRepository().contentUri(entry.id)
+        val uri = BrowseRepository().contentUri(entry)
         val output = File(context.cacheDir, entry.title)
         val deferredDownload = GlobalScope.async(Dispatchers.IO) {
             ContentDownloader.downloadFileTo(uri, output.path)

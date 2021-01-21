@@ -46,8 +46,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
 
-    fun contentUri(id: String): String {
+    fun contentUri(entry: Entry): String {
         val baseUrl = SessionManager.currentSession?.baseUrl
-        return "${baseUrl}alfresco/versions/1/nodes/$id/content?attachment=false&alf_ticket=${session.ticket}"
+        return "${baseUrl}alfresco/versions/1/nodes/${entry.id}/content?attachment=false&alf_ticket=${session.ticket}"
     }
 }

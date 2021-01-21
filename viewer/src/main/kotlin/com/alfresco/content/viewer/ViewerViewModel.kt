@@ -105,7 +105,7 @@ class ViewerViewModel(
         if (entry.offlineStatus == OfflineStatus.Synced) {
             offlineRepository.contentUri(entry)
         } else {
-            browseRepository.contentUri(entry.id)
+            browseRepository.contentUri(entry)
         }
 
     private fun renditionViewerType(uri: String?) =

@@ -103,7 +103,7 @@ class ViewerViewModel(
 
     private fun getContentUri(entry: Entry) =
         if (entry.offlineStatus == OfflineStatus.Synced) {
-            offlineRepository.contentUri(entry.id)
+            offlineRepository.contentUri(entry)
         } else {
             browseRepository.contentUri(entry.id)
         }
@@ -118,15 +118,14 @@ class ViewerViewModel(
         } else null
 
     private fun offlineRenditionUri(entry: Entry): String {
-        val baseUri = Uri.parse(getContentUri(entry)).path
-        val path = "$baseUri$RENDITION_FILE_SUFFIX"
+        val dir = offlineRepository.contentDir(entry)
 
-        val pdfPath = "${path}_pdf"
+        val pdfPath = "${dir.path}/.preview_pdf"
         if (File(pdfPath).exists()) {
             return "file://$pdfPath"
         }
 
-        val imgPath = "${path}_img"
+        val imgPath = "${dir.path}/.preview_img"
         if (File(imgPath).exists()) {
             return "file://$imgPath"
         }
@@ -135,7 +134,6 @@ class ViewerViewModel(
     }
 
     companion object {
-        private const val RENDITION_FILE_SUFFIX = "_pv"
         private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
     }
 }

@@ -64,7 +64,9 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun downloadItem(entry: Entry) {
         repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.InProgress))
-        val output = File(repository.session.filesDir, entry.id)
+        val outputDir = repository.contentDir(entry)
+        outputDir.mkdir()
+        val output = File(outputDir, entry.title)
         val uri = BrowseRepository().contentUri(entry.id)
         try {
             ContentDownloader.downloadFileTo(uri, output.path)
@@ -79,7 +81,9 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             if (uri != null) {
                 try {
                     val typeSuffix = renditionTypeSuffix(uri)
-                    val output = File(repository.session.filesDir, "${entry.id}$RENDITION_FILE_SUFFIX$typeSuffix")
+                    val outputDir = repository.contentDir(entry)
+                    outputDir.mkdir()
+                    val output = File(outputDir, ".preview$typeSuffix")
                     ContentDownloader.downloadFileTo(uri, output.path)
                 } catch (ex: Exception) {
                     repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
@@ -106,7 +110,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         private const val UNIQUE_WORK_NAME = "sync"
         private const val MAX_CONCURRENT_DOWNLOADS = 3
         private const val MAX_CONCURRENT_FETCHES = 5
-        private const val RENDITION_FILE_SUFFIX = "_pv"
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
         fun syncNow(context: Context) {

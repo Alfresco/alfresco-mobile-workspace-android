@@ -94,6 +94,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         return query.findFirst()
     }
 
-    fun contentUri(id: String): String =
-        "file://${File(SessionManager.requireSession.filesDir, id).absolutePath}"
+    fun contentUri(entry: Entry): String =
+        "file://${contentFile(entry).absolutePath}"
+
+    fun contentFile(entry: Entry): File =
+        File(contentDir(entry), entry.title)
+
+    fun contentDir(entry: Entry): File =
+        File(SessionManager.requireSession.filesDir, entry.id)
 }

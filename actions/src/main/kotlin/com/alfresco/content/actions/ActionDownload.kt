@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
+import java.io.File
 import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionDownload(
@@ -26,12 +28,25 @@ data class ActionDownload(
                 context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )) {
-            enqueueDownload(context)
+            if (entry.isSynced) {
+                exportFile()
+            } else {
+                enqueueDownload(context)
+            }
         } else {
             throw Action.Exception(context.resources.getString(R.string.action_download_failed_permissions))
         }
 
         return entry
+    }
+
+    private fun exportFile() {
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (dir != null) {
+            val src = OfflineRepository().contentFile(entry)
+            val target = File(dir, entry.title)
+            src.copyTo(target, true)
+        }
     }
 
     private fun enqueueDownload(context: Context) {
@@ -49,5 +64,11 @@ data class ActionDownload(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_download_toast)
+        toastMessage.let { Action.showToast(view, anchorView, it) }
+
+    private val toastMessage = if (entry.isSynced) {
+        R.string.action_export_toast
+    } else {
+        R.string.action_download_toast
+    }
 }

@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.download.ContentDownloader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,7 +29,18 @@ data class ActionOpenWith(
     private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)
 
     override suspend fun execute(context: Context): Entry {
+        val target = if (entry.isSynced) {
+            OfflineRepository().contentFile(entry)
+        } else {
+            fetchRemoteFile(context)
+        }
 
+        showFileChooserDialog(context, target)
+
+        return entry
+    }
+
+    private suspend fun fetchRemoteFile(context: Context): File {
         val deferredDialog = showProgressDialogAsync(context)
 
         val uri = BrowseRepository().contentUri(entry)
@@ -46,7 +58,11 @@ data class ActionOpenWith(
         }
         deferredDialog.cancelAndJoin()
 
-        val contentUri = FileProvider.getUriForFile(context, ContentDownloader.FILE_PROVIDER_AUTHORITY, output)
+        return output
+    }
+
+    private fun showFileChooserDialog(context: Context, file: File) {
+        val contentUri = FileProvider.getUriForFile(context, ContentDownloader.FILE_PROVIDER_AUTHORITY, file)
         val intent = Intent(Intent.ACTION_VIEW)
             .setData(contentUri)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -57,8 +73,6 @@ data class ActionOpenWith(
         } else {
             throw Action.Exception(context.resources.getString(R.string.action_open_with_error_no_viewer))
         }
-
-        return entry
     }
 
     private suspend fun showProgressDialogAsync(context: Context) =

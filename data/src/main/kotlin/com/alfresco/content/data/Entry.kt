@@ -45,6 +45,9 @@ data class Entry(
     val offlineStatus: OfflineStatus = OfflineStatus.Undefined
 ) : Parcelable {
 
+    val isSynced: Boolean
+        get() = offlineStatus == OfflineStatus.Synced
+
     // TODO: move to repository level
     fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Widget" />
 
@@ -72,6 +72,12 @@
     <style name="Widget.Alfresco.Action.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+    </style>
+
+    <style name="Widget.Alfresco.ExtendedFloatingActionButton" parent="@style/Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:textColor">@color/mtrl_btn_text_color_selector</item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/mtrl_btn_unelevated_state_list_anim</item>
+        <item name="elevation">0dp</item>
     </style>
 
     <!-- Progress Indicators -->

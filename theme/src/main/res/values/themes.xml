@@ -42,7 +42,9 @@
         <item name="textAppearanceButton">@style/TextAppearance.Alfresco.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.Alfresco.Overline</item>
 
+        <!-- Other Styles -->
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Alfresco.BottomSheetDialog</item>
+        <item name="extendedFloatingActionButtonStyle">@style/Widget.Alfresco.ExtendedFloatingActionButton</item>
 
         <!-- Shape styles -->
         <item name="shapeAppearanceSmallComponent">

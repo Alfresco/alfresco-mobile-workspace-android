@@ -156,5 +156,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 .map {
                     with(it?.first()) { this?.state }
                 }
+
+        fun cancel(context: Context) {
+            WorkManager
+                .getInstance(context)
+                .cancelUniqueWork(UNIQUE_WORK_NAME)
+        }
     }
 }

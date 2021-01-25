@@ -113,4 +113,23 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     fun contentDir(entry: Entry): File =
         File(SessionManager.requireSession.filesDir, entry.id)
+
+    fun cleanup() {
+        SyncWorker.cancel(session.context)
+        removeAllEntries()
+        removeAllFiles()
+    }
+
+    private fun removeAllEntries() {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query().build()
+        query.remove()
+    }
+
+    private fun removeAllFiles() {
+        SessionManager
+            .requireSession
+            .filesDir
+            .deleteRecursively()
+    }
 }

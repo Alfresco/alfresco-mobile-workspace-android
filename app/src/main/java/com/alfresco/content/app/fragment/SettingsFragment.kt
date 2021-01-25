@@ -15,6 +15,7 @@ import com.alfresco.content.app.R
 import com.alfresco.content.app.activity.MainActivity
 import com.alfresco.content.app.loadAny
 import com.alfresco.content.app.widget.AccountPreference
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.session.SessionManager
@@ -89,6 +90,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun deleteAccount() {
         // Extra cleanup before removing the account
         SearchRepository().clearRecentSearch()
+        OfflineRepository().cleanup()
 
         // Actual account removal
         val weakRef = WeakReference(requireActivity())

@@ -42,12 +42,14 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun markOffline(entry: Entry) =
         updateEntry(entry.copy(isOffline = true, offlineStatus = OfflineStatus.Pending))
 
-    fun removeOffline(entry: Entry) =
-        entry.copy(isOffline = false)
-            .also {
-                val box: Box<Entry> = ObjectBox.boxStore.boxFor()
-                box.remove(it)
-            }
+    fun markForRemoval(entry: Entry) =
+        updateEntry(entry.copy(isOffline = false, isTrashed = true))
+
+    fun remove(entry: Entry) =
+        entry.let {
+            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+            box.remove(it)
+        }
 
     fun updateEntry(entry: Entry) =
         entry.also {
@@ -58,6 +60,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun observeOfflineEntries(): Flow<ResponsePaging> = callbackFlow {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
+            .equal(Entry_.isTrashed, false)
             .order(Entry_.title)
             .build()
         val subscription = query.subscribe()
@@ -82,6 +85,14 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun fetchAllOfflineEntries(): List<Entry> {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
+            .build()
+        return query.find()
+    }
+
+    fun fetchAllTrashedEntries(): List<Entry> {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query()
+            .equal(Entry_.isTrashed, true)
             .build()
         return query.find()
     }

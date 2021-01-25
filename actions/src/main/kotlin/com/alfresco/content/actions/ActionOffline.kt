@@ -35,7 +35,7 @@ data class ActionRemoveOffline(
     private val repository: OfflineRepository = OfflineRepository()
 
     override suspend fun execute(context: Context) =
-        repository.removeOffline(entry)
+        repository.markForRemoval(entry)
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 

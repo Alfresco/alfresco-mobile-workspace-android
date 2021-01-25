@@ -27,10 +27,30 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
 
+        val toDelete = buildDeleteList()
+        removeEntries(toDelete)
         val toSync = buildDownloadList()
         downloadPending(toSync)
 
         return Result.success()
+    }
+
+    private fun buildDeleteList(): List<Entry> =
+        repository.fetchAllTrashedEntries()
+
+    private suspend fun removeEntries(entries: List<Entry>) =
+        entries.asyncMap(MAX_CONCURRENT_DELETE, this::removeEntry)
+
+    private fun removeEntry(entry: Entry): Boolean {
+        val dir = repository.contentDir(entry)
+        var deleted = true
+        if (dir.exists()) {
+            deleted = dir.deleteRecursively()
+        }
+        if (deleted) {
+            deleted = repository.remove(entry)
+        }
+        return deleted
     }
 
     private suspend fun buildDownloadList(): List<Entry> =
@@ -110,6 +130,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         private const val UNIQUE_WORK_NAME = "sync"
         private const val MAX_CONCURRENT_DOWNLOADS = 3
         private const val MAX_CONCURRENT_FETCHES = 5
+        private const val MAX_CONCURRENT_DELETE = 5
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
         fun syncNow(context: Context) {

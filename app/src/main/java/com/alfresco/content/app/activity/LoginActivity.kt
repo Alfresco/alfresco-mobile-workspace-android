@@ -7,7 +7,9 @@ import com.alfresco.auth.Credentials
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
 import com.alfresco.content.data.BrowseRepository
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.models.Person
 import com.alfresco.content.session.Session
 import kotlinx.coroutines.launch
@@ -45,6 +47,13 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 myFiles
             )
         } else {
+            val current = Account.getAccount(applicationContext)
+            if (current?.id != person.id) {
+                // Remove associated data if user changed
+                SearchRepository().clearRecentSearch()
+                OfflineRepository().cleanup()
+            }
+
             Account.update(
                 this,
                 person.id,

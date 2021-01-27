@@ -32,6 +32,8 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.navigateTo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 data class OfflineViewState(
@@ -39,7 +41,7 @@ data class OfflineViewState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     override val isCompact: Boolean = false,
-    val status: WorkInfo.State? = null
+    val syncNowEnabled: Boolean = false
 ) : ListViewState {
 
     fun update(response: ResponsePaging?): OfflineViewState {
@@ -65,11 +67,16 @@ class OfflineViewModel(
 
         viewModelScope.on<ActionRemoveOffline> { removeEntry(it.entry) }
 
+        NetworkConnectivityTracker.startTracking(context)
         viewModelScope.launch {
             SyncWorker
                 .observe(context)
+                .map { it == WorkInfo.State.RUNNING }
+                .combine(NetworkConnectivityTracker.networkAvailable) { running, connected ->
+                    !running && connected
+                }
                 .execute {
-                    copy(status = it())
+                    copy(syncNowEnabled = it() ?: false)
                 }
         }
     }
@@ -127,8 +134,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
                 fab.hide()
             }
 
-            fab.isEnabled = state.status != WorkInfo.State.RUNNING &&
-                state.status != WorkInfo.State.BLOCKED
+            fab.isEnabled = state.syncNowEnabled
         }
     }
 

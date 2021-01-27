@@ -154,7 +154,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 .getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_NAME)
                 .asFlow()
                 .map {
-                    with(it?.first()) { this?.state }
+                    with(it?.firstOrNull()) { this?.state }
                 }
 
         fun cancel(context: Context) {

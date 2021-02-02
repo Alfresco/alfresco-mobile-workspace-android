@@ -2,6 +2,7 @@ package com.alfresco.content.data
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -12,13 +13,13 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.alfresco.coroutines.asFlow
 import com.alfresco.coroutines.asyncMap
-import com.alfresco.coroutines.asyncMapNotNull
 import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
 import java.time.ZonedDateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
@@ -27,19 +28,148 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
 
-        val toDelete = buildDeleteList()
-        removeEntries(toDelete)
-        val toSync = buildDownloadList()
-        downloadPending(toSync)
+        val localEntries = buildLocalList().also { debugPrintEntries(it) }
+        val remoteEntries = buildRemoteList().also { debugPrintEntries(it) }
+        val ops = calculateDiff(localEntries, remoteEntries).also { debugPrintOperations(it) }
+        processOperations(ops)
 
         return Result.success()
     }
 
-    private fun buildDeleteList(): List<Entry> =
-        repository.fetchAllTrashedEntries()
+    private fun debugPrintEntries(list: List<Entry>) {
+        val out = if (list.count() > 0) {
+            list.map { "${it.id}: ${it.title}" }.reduce { acc, string -> "$acc\n$string" }
+        } else {
+            "empty"
+        }
+        Log.d("SyncWorker", out)
+    }
 
-    private suspend fun removeEntries(entries: List<Entry>) =
-        entries.asyncMap(MAX_CONCURRENT_DELETE, this::removeEntry)
+    private fun debugPrintOperations(list: List<Operation>) {
+        val out = if (list.count() > 0) {
+            list.map { "${it.javaClass}" }.reduce { acc, string -> "$acc\n$string" }
+        } else {
+            "empty"
+        }
+        Log.d("SyncWorker", out)
+    }
+
+    private fun buildLocalList(): List<Entry> =
+        repository.fetchAllOfflineEntries()
+
+    private suspend fun buildRemoteList(): List<Entry> =
+        continuousMap(repository.fetchTopLevelOfflineEntries()) { entry, produce ->
+            val remote = if (entry.isLocal) {
+                try {
+                    BrowseRepository().fetchEntry(entry.id)
+                } catch (ex: HttpException) {
+                    if (ex.code() == 404) {
+                        null
+                    } else {
+                        throw ex
+                    }
+                }
+            } else {
+                entry
+            }
+            if (remote?.isFolder == true) {
+                // TODO: parallel fetch after the first page
+                var page: ResponsePaging? = null
+                var skip = 0L
+                do {
+                    page = BrowseRepository()
+                        .fetchFolderItems(remote.id, skip.toInt(), MAX_PAGE_SIZE)
+                    page.entries.map { produce(it) }
+                    skip = page.pagination.skipCount + page.pagination.count
+                } while (page?.pagination?.hasMoreItems == true)
+            }
+            remote
+        }
+
+    private suspend fun <T, R> continuousMap(initial: Collection<T>, f: suspend (T, suspend(T) -> Unit) -> R?): List<R> {
+        val queue = ArrayDeque<T>(initial)
+        val result = mutableListOf<R>()
+
+        val produce: suspend (T) -> Unit = {
+            queue.addLast(it)
+        }
+
+        while (!queue.isEmpty()) {
+            val peek = queue.first()
+            val res = f(peek, produce)
+            if (res != null) {
+                result.add(res)
+            }
+            queue.removeFirst()
+        }
+        return result
+    }
+
+    private fun calculateDiff(localList: List<Entry>, remoteList: List<Entry>): List<Operation> {
+        val localMap = localList.associateBy({ it.id }, { it })
+        val remoteMap = remoteList.associateBy({ it.id }, { it })
+        val operations = arrayListOf<Operation>()
+
+        operations.addAll(localList.mapNotNull { local ->
+            val remote = remoteMap[local.id]
+            if (remote != null) {
+                if (contentHasChanged(local, remote)) {
+                    Operation.UpdateContent(local, remote)
+                } else if (!local.metadataEquals(remote)) {
+                    Operation.UpdateMetadata(local, remote)
+                } else {
+                    null
+                }
+            } else {
+                Operation.Delete(local)
+            }
+        })
+
+        operations.addAll(remoteList.mapNotNull { remote ->
+            val local = localMap[remote.id]
+            if (local == null) {
+                Operation.Create(remote)
+            } else {
+                null
+            }
+        })
+
+        return operations
+    }
+
+    private fun contentHasChanged(local: Entry, remote: Entry) =
+        remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
+            (local.isFile && local.offlineStatus != OfflineStatus.Synced)
+
+    private fun dateCompare(d1: ZonedDateTime?, d2: ZonedDateTime?) =
+        (d1?.toInstant()?.epochSecond ?: 0) - (d2?.toInstant()?.epochSecond ?: 0)
+
+    private suspend fun processOperations(operations: List<Operation>) =
+        operations.asyncMap(MAX_CONCURRENT_OPERATIONS) {
+            when (it) {
+                is Operation.Create -> {
+                    val local = createEntry(it.remote)
+                    downloadContent(local)
+                }
+                is Operation.UpdateMetadata -> {
+                    updateEntryMetadata(it.local, it.remote)
+                }
+                is Operation.UpdateContent -> {
+                    val local = updateEntryMetadata(it.local, it.remote)
+                    // TODO: fix file rename use-case
+                    downloadContent(local)
+                }
+                is Operation.Delete -> {
+                    removeEntry(it.local)
+                }
+            }
+        }
+
+    private fun createEntry(entry: Entry) =
+        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Pending))
+
+    private fun updateEntryMetadata(local: Entry, remote: Entry) =
+        repository.updateEntry(local.copyWithMetadata(remote))
 
     private fun removeEntry(entry: Entry): Boolean {
         val dir = repository.contentDir(entry)
@@ -47,39 +177,19 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         if (dir.exists()) {
             deleted = dir.deleteRecursively()
         }
+        Log.d("SyncWorker", "Deleted: ${entry.id}: ${entry.title}")
         if (deleted) {
             deleted = repository.remove(entry)
         }
         return deleted
     }
 
-    private suspend fun buildDownloadList(): List<Entry> =
-        repository
-            .fetchAllOfflineEntries()
-            .asyncMapNotNull(MAX_CONCURRENT_FETCHES) { local ->
-                try {
-                    val remote = BrowseRepository().fetchEntry(local.id)
-                    if (dateCompare(remote.modified, local.modified) > 0L ||
-                        local.offlineStatus != OfflineStatus.Synced) {
-                        remote
-                    } else {
-                        null
-                    }
-                } catch (ex: Exception) {
-                    repository.updateEntry(local.copy(offlineStatus = OfflineStatus.Error))
-                    null
-                }
-            }
-
-    private suspend fun downloadPending(entries: List<Entry>) =
-        entries.asyncMap(MAX_CONCURRENT_DOWNLOADS) {
-            downloadItem(it)
-            downloadRendition(it)
-            repository.updateEntry(it.copy(offlineStatus = OfflineStatus.Synced))
+    private suspend fun downloadContent(entry: Entry) {
+        if (entry.type == Entry.Type.File) {
+            downloadItem(entry)
+            downloadRendition(entry)
+            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Synced))
         }
-
-    private fun dateCompare(d1: ZonedDateTime?, d2: ZonedDateTime?): Long {
-        return (d1?.toInstant()?.epochSecond ?: 0) - (d2?.toInstant()?.epochSecond ?: 0)
     }
 
     private suspend fun downloadItem(entry: Entry) {
@@ -88,6 +198,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         outputDir.mkdir()
         val output = File(outputDir, entry.title)
         val uri = BrowseRepository().contentUri(entry)
+        Log.d("SyncWorker", "Downloaded: ${entry.id}: ${entry.title}")
         try {
             ContentDownloader.downloadFileTo(uri, output.path)
         } catch (ex: Exception) {
@@ -128,9 +239,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     companion object {
         private const val UNIQUE_WORK_NAME = "sync"
-        private const val MAX_CONCURRENT_DOWNLOADS = 3
-        private const val MAX_CONCURRENT_FETCHES = 5
-        private const val MAX_CONCURRENT_DELETE = 5
+        private const val MAX_CONCURRENT_OPERATIONS = 3
+        private const val MAX_PAGE_SIZE = 100
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
         fun syncNow(context: Context) {
@@ -162,5 +272,12 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 .getInstance(context)
                 .cancelUniqueWork(UNIQUE_WORK_NAME)
         }
+    }
+
+    sealed class Operation() {
+        class Create(val remote: Entry) : Operation()
+        class UpdateMetadata(val local: Entry, val remote: Entry) : Operation()
+        class UpdateContent(val local: Entry, val remote: Entry) : Operation()
+        class Delete(val local: Entry) : Operation()
     }
 }

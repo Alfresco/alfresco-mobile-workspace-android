@@ -83,7 +83,8 @@ class ActionListViewModel(
             return actions
         }
 
-        if (entry.type == Entry.Type.File) {
+        if (entry.type == Entry.Type.File ||
+            entry.type == Entry.Type.Folder) {
             if (entry.isOffline) {
                 actions.add(ActionRemoveOffline(entry))
             } else {

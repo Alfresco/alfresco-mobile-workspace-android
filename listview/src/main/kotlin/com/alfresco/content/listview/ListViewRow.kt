@@ -49,18 +49,25 @@ class ListViewRow @JvmOverloads constructor(
     }
 
     private fun configureOfflineStatus(entry: Entry) {
-        if (entry.isOffline) {
+        // Outside offline screen
+        if (entry.isOffline && entry.offlineStatus == OfflineStatus.Undefined) {
             binding.offlineIcon.isVisible = true
-            val config = makeOfflineStatusConfig(entry)
-            val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)
-            binding.offlineIcon.setImageDrawable(drawable)
-
-            val stringRes = config.second
-            if (stringRes != null) {
-                binding.subtitle.text = context.getString(stringRes)
-            }
+            binding.offlineIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_offline_status_synced, context.theme))
         } else {
-            binding.offlineIcon.isVisible = false
+            // Offline screen items
+            if (entry.type == Entry.Type.File && entry.offlineStatus != OfflineStatus.Undefined) {
+                binding.offlineIcon.isVisible = true
+                val config = makeOfflineStatusConfig(entry)
+                val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)
+                binding.offlineIcon.setImageDrawable(drawable)
+
+                val stringRes = config.second
+                if (stringRes != null) {
+                    binding.subtitle.text = context.getString(stringRes)
+                }
+            } else {
+                binding.offlineIcon.isVisible = false
+            }
         }
     }
 
@@ -77,6 +84,7 @@ class ListViewRow @JvmOverloads constructor(
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)
         }
+
     @ModelProp
     fun setCompact(compact: Boolean) {
         this.isCompact = compact

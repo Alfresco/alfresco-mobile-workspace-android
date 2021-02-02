@@ -27,6 +27,7 @@ import kotlinx.parcelize.TypeParceler
 @Entity
 data class Entry(
     val id: String,
+    val parentId: String? = null,
     @Convert(converter = Type.Converter::class, dbType = String::class)
     val type: Type,
     val title: String,
@@ -48,19 +49,49 @@ data class Entry(
     val isSynced: Boolean
         get() = offlineStatus == OfflineStatus.Synced
 
+    val isLocal: Boolean
+        get() = boxId != 0L
+
+    val isFile: Boolean
+        get() = type == Type.File
+
+    val isFolder: Boolean
+        get() = type == Type.Folder
+
     // TODO: move to repository level
     fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)
         return if (offline != null) {
-            copy(
-                boxId = offline.boxId,
-                isOffline = offline.isOffline,
-                offlineStatus = offline.offlineStatus
-            )
+            copy(isOffline = offline.isOffline)
         } else {
             this
         }
     }
+
+    fun metadataEquals(other: Entry): Boolean =
+        id == other.id &&
+            parentId == other.parentId &&
+            type == other.type &&
+            title == other.title &&
+            subtitle == other.subtitle &&
+            mimeType == other.mimeType &&
+            modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
+            isFavorite == other.isFavorite &&
+            canDelete == other.canDelete &&
+            otherId == other.otherId
+
+    fun copyWithMetadata(other: Entry) =
+        copy(
+            parentId = other.parentId,
+            type = other.type,
+            title = other.title,
+            subtitle = other.subtitle,
+            mimeType = other.mimeType,
+            modified = other.modified,
+            isFavorite = other.isFavorite,
+            canDelete = other.canDelete,
+            otherId = other.otherId
+        )
 
     enum class Type {
         File,
@@ -112,6 +143,7 @@ data class Entry(
         fun with(node: Node): Entry {
             return Entry(
                 node.id,
+                node.parentId,
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
@@ -126,6 +158,7 @@ data class Entry(
         fun with(result: ResultNode): Entry {
             return Entry(
                 result.id,
+                result.parentId,
                 Type.from(result.nodeType),
                 result.name,
                 result.path?.formattedString(),
@@ -140,6 +173,7 @@ data class Entry(
         fun with(node: NodeChildAssociation): Entry {
             return Entry(
                 node.id,
+                node.parentId,
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),
@@ -158,6 +192,7 @@ data class Entry(
                 val file: FavoriteTargetNode = map.file!!
                 return Entry(
                     file.id,
+                    file.parentId,
                     Type.File,
                     file.name,
                     file.path?.formattedString(),
@@ -172,6 +207,7 @@ data class Entry(
                 val folder: FavoriteTargetNode = map.folder!!
                 return Entry(
                     folder.id,
+                    folder.parentId,
                     Type.Folder,
                     folder.name,
                     folder.path?.formattedString(),
@@ -192,6 +228,7 @@ data class Entry(
         fun with(site: Site): Entry {
             return Entry(
                 site.guid,
+                null,
                 Type.Site,
                 site.title,
                 null,
@@ -205,6 +242,7 @@ data class Entry(
         fun with(role: SiteRole): Entry {
             return Entry(
                 role.site.guid,
+                null,
                 Type.Site,
                 role.site.title,
                 null,
@@ -218,6 +256,7 @@ data class Entry(
         fun with(link: SharedLink): Entry {
             return Entry(
                 link.nodeId ?: "",
+                null,
                 Type.File,
                 link.name ?: "",
                 link.path?.formattedString(),
@@ -232,6 +271,7 @@ data class Entry(
         fun with(node: DeletedNode): Entry {
             return Entry(
                 node.id,
+                node.parentId,
                 Type.from(node.nodeType),
                 node.name,
                 node.path?.formattedString(),

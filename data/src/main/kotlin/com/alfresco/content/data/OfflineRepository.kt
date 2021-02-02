@@ -43,7 +43,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         updateEntry(entry.copy(isOffline = true, offlineStatus = OfflineStatus.Pending))
 
     fun markForRemoval(entry: Entry) =
-        updateEntry(entry.copy(isOffline = false, isTrashed = true))
+        updateEntry(entry.copy(isOffline = false))
 
     fun remove(entry: Entry) =
         entry.let {
@@ -57,13 +57,18 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             box.put(it)
         }
 
-    fun observeOfflineEntries(): Flow<ResponsePaging> = callbackFlow {
+    fun observeOfflineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
-        val query = box.query()
-            .equal(Entry_.isTrashed, false)
+        var query = box.query()
+        query = if (parentId != null) {
+            query.equal(Entry_.parentId, parentId)
+        } else {
+            query.equal(Entry_.isOffline, true)
+        }
+        query = query
             .order(Entry_.title)
-            .build()
-        val subscription = query.subscribe()
+        val subscription = query.build()
+            .subscribe()
             .observer { data ->
                 val count = data.count().toLong()
                 sendBlocking(
@@ -82,17 +87,18 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         awaitClose { subscription.cancel() }
     }
 
-    fun fetchAllOfflineEntries(): List<Entry> {
+    fun fetchTopLevelOfflineEntries(): List<Entry> {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
+            .equal(Entry_.isOffline, true)
             .build()
         return query.find()
     }
 
-    fun fetchAllTrashedEntries(): List<Entry> {
+    fun fetchAllOfflineEntries(): List<Entry> {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
-            .equal(Entry_.isTrashed, true)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.Undefined.value())
             .build()
         return query.find()
     }

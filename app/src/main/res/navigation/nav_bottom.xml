@@ -27,6 +27,20 @@
         android:label="@string/nav_title_offline" />
 
     <fragment
+        android:id="@+id/nav_offline_browse"
+        android:name="com.alfresco.content.offline.OfflineFragment"
+        android:label="{title}">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+        <deepLink app:uri="alfresco://offline/folder/{id}?title={title}" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_browse"
         android:name="com.alfresco.content.browse.BrowseMenuFragment"
         android:label="@string/nav_title_browse" />

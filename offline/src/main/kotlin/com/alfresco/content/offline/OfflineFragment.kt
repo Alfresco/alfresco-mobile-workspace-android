@@ -3,6 +3,7 @@ package com.alfresco.content.offline
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -17,7 +18,6 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.on
@@ -26,6 +26,7 @@ import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SyncWorker
+import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
@@ -35,14 +36,20 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 data class OfflineViewState(
+    val parentId: String? = null,
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-    override val isCompact: Boolean = false,
     val syncNowEnabled: Boolean = false
 ) : ListViewState {
+
+    constructor(args: OfflineBrowseArgs) : this(parentId = args.id)
+
+    override val isCompact: Boolean
+        get() = parentId != null
 
     fun update(response: ResponsePaging?): OfflineViewState {
         if (response == null) return this
@@ -90,7 +97,7 @@ class OfflineViewModel(
 
         viewModelScope.launch {
             OfflineRepository()
-                .observeOfflineEntries()
+                .observeOfflineEntries(state.parentId)
                 .execute {
                     if (it is Loading) {
                         copy(request = it)
@@ -112,9 +119,29 @@ class OfflineViewModel(
     }
 }
 
+@Parcelize
+data class OfflineBrowseArgs(
+    val id: String?,
+    val title: String?
+) : Parcelable {
+    companion object {
+        private const val ID_KEY = "id"
+        private const val TITLE_KEY = "title"
+
+        fun with(args: Bundle?): OfflineBrowseArgs? {
+            if (args == null) return null
+
+            return OfflineBrowseArgs(
+                args.getString(ID_KEY, null),
+                args.getString(TITLE_KEY, null)
+            )
+        }
+    }
+}
+
 class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
-    override val viewModel: OfflineViewModel by fragmentViewModel()
+    override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     lateinit var fab: ExtendedFloatingActionButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -170,7 +197,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
             .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_button), null)
 
     override fun onItemClicked(entry: Entry) {
-        if (entry.offlineStatus == OfflineStatus.Synced) {
+        if (entry.isFolder || entry.offlineStatus == OfflineStatus.Synced) {
             findNavController().navigateTo(entry)
         }
     }

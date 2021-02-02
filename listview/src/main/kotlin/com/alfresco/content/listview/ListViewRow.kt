@@ -52,7 +52,13 @@ class ListViewRow @JvmOverloads constructor(
         // Outside offline screen
         if (entry.isOffline && entry.offlineStatus == OfflineStatus.Undefined) {
             binding.offlineIcon.isVisible = true
-            binding.offlineIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_offline_status_synced, context.theme))
+            binding.offlineIcon.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_offline_marked,
+                    context.theme
+                )
+            )
         } else {
             // Offline screen items
             if (entry.type == Entry.Type.File && entry.offlineStatus != OfflineStatus.Undefined) {

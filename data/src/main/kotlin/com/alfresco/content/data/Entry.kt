@@ -65,7 +65,9 @@ data class Entry(
     fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)
         return if (offline != null) {
-            copy(isOffline = offline.isOffline)
+            copy(
+                boxId = offline.boxId,
+                isOffline = offline.isOffline)
         } else {
             this
         }

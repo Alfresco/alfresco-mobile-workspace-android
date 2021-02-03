@@ -58,6 +58,9 @@ data class Entry(
     val isFolder: Boolean
         get() = type == Type.Folder
 
+    val hasOfflineStatus: Boolean
+        get() = offlineStatus != OfflineStatus.Undefined
+
     // TODO: move to repository level
     fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)

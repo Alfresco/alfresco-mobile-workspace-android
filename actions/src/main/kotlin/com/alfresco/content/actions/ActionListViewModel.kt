@@ -74,32 +74,52 @@ class ActionListViewModel(
     fun execute(action: Action) =
         action.execute(context, GlobalScope)
 
-    private fun makeActions(entry: Entry): List<Action> {
-        val actions = mutableListOf<Action>()
-
-        if (entry.isTrashed) {
-            actions.add(ActionRestore(entry))
-            actions.add(ActionDeleteForever(entry))
-            return actions
-        }
-
-        if (entry.type == Entry.Type.File ||
-            entry.type == Entry.Type.Folder) {
-            if (entry.isOffline) {
-                actions.add(ActionRemoveOffline(entry))
-            } else {
-                actions.add(ActionAddOffline(entry))
+    private fun makeActions(entry: Entry): List<Action> =
+        when {
+            entry.isTrashed -> {
+                actionsForTrashed(entry)
+            }
+            entry.hasOfflineStatus -> {
+                actionsForOffline(entry)
+            }
+            else -> {
+                defaultActionsFor(entry)
             }
         }
 
-        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
+    private fun defaultActionsFor(entry: Entry) =
+        listOf(
+            offlineActionFor(entry),
+            favoriteActionFor(entry),
+            externalActionsFor(entry),
+            deleteActionFor(entry)
+        ).flatten()
+
+    private fun actionsForTrashed(entry: Entry): List<Action> =
+        listOf(ActionRestore(entry), ActionDeleteForever(entry))
+
+    private fun actionsForOffline(entry: Entry): List<Action> =
+        listOf(
+            offlineActionFor(entry),
+            favoriteActionFor(entry),
+            externalActionsFor(entry)
+        ).flatten()
+
+    private fun offlineActionFor(entry: Entry) =
+        listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))
+
+    private fun favoriteActionFor(entry: Entry) =
+        listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
+
+    private fun externalActionsFor(entry: Entry) =
         if (entry.type == Entry.Type.File) {
-            actions.add(ActionOpenWith(entry))
-            actions.add(ActionDownload(entry))
+            listOf(ActionOpenWith(entry), ActionDownload(entry))
+        } else {
+            listOf()
         }
-        if (entry.canDelete) actions.add(ActionDelete(entry))
-        return actions
-    }
+
+    private fun deleteActionFor(entry: Entry) =
+        if (entry.canDelete) listOf(ActionDelete(entry)) else listOf()
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()

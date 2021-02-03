@@ -3,7 +3,6 @@ package com.alfresco.content
 import android.net.Uri
 import androidx.navigation.NavController
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.OfflineStatus
 
 fun NavController.navigateTo(entry: Entry) {
     when (entry.type) {
@@ -18,7 +17,7 @@ fun NavController.navigateTo(entry: Entry) {
 
 private fun NavController.navigateToFolder(entry: Entry) {
     val domain =
-        if (entry.offlineStatus != OfflineStatus.Undefined) {
+        if (entry.hasOfflineStatus) {
             "offline"
         } else {
             "content"

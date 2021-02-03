@@ -51,7 +51,7 @@ class ViewerViewModel(
                         viewerUri = getContentUri(entry)
                     ) }
                 } else {
-                    if (entry.offlineStatus == OfflineStatus.Synced) {
+                    if (entry.isSynced) {
                         val renditionUri = offlineRenditionUri(entry)
                         val type = if (renditionUri.contains("pdf")) ViewerType.Pdf else ViewerType.Image
                         setState { copy(
@@ -76,10 +76,7 @@ class ViewerViewModel(
 
     private suspend fun fetchEntry(id: String): Entry {
         val offline = offlineRepository.entry(id)
-        return if (
-            offline != null &&
-            offline.offlineStatus == OfflineStatus.Synced
-        ) {
+        return if (offline?.isSynced == true) {
             offline
         } else {
             browseRepository.fetchEntry(id)

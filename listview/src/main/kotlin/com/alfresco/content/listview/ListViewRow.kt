@@ -50,7 +50,7 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun configureOfflineStatus(entry: Entry) {
         // Outside offline screen
-        if (entry.isOffline && entry.offlineStatus == OfflineStatus.Undefined) {
+        if (entry.isOffline && !entry.hasOfflineStatus) {
             binding.offlineIcon.isVisible = true
             binding.offlineIcon.setImageDrawable(
                 ResourcesCompat.getDrawable(
@@ -61,7 +61,7 @@ class ListViewRow @JvmOverloads constructor(
             )
         } else {
             // Offline screen items
-            if (entry.type == Entry.Type.File && entry.offlineStatus != OfflineStatus.Undefined) {
+            if (entry.type == Entry.Type.File && entry.hasOfflineStatus) {
                 binding.offlineIcon.isVisible = true
                 val config = makeOfflineStatusConfig(entry)
                 val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)

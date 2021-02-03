@@ -23,7 +23,6 @@ import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
-import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.fragmentViewModelWithArgs
@@ -197,7 +196,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
             .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_button), null)
 
     override fun onItemClicked(entry: Entry) {
-        if (entry.isFolder || entry.offlineStatus == OfflineStatus.Synced) {
+        if (entry.isFolder || entry.isSynced) {
             findNavController().navigateTo(entry)
         }
     }

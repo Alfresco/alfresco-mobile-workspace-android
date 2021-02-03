@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.kotlin.ellipsize
 
 data class ActionAddOffline(
@@ -13,8 +14,11 @@ data class ActionAddOffline(
 ) : Action {
     private val repository: OfflineRepository = OfflineRepository()
 
-    override suspend fun execute(context: Context) =
-        repository.markOffline(entry)
+    override suspend fun execute(context: Context): Entry {
+        val res = repository.markOffline(entry)
+        // return item without status
+        return res.copy(offlineStatus = OfflineStatus.Undefined)
+    }
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 

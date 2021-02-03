@@ -2,12 +2,15 @@ package com.alfresco.content.actions
 
 import android.Manifest
 import android.app.DownloadManager
+import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.documentfile.provider.DocumentFile
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
@@ -29,7 +32,7 @@ data class ActionDownload(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )) {
             if (entry.isSynced) {
-                exportFile()
+                exportFile(context)
             } else {
                 enqueueDownload(context)
             }
@@ -40,11 +43,35 @@ data class ActionDownload(
         return entry
     }
 
-    private fun exportFile() {
-        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        if (dir != null) {
-            val src = OfflineRepository().contentFile(entry)
-            val target = File(dir, entry.title)
+    private fun exportFile(context: Context) {
+        val src = OfflineRepository().contentFile(entry)
+        val filename = entry.title
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val resolver = context.contentResolver
+            val mimeType = DocumentFile.fromFile(src).type
+
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            }
+            resolver.insert(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                contentValues
+            )?.also {
+                resolver.openOutputStream(it).use { output ->
+                    requireNotNull(output)
+
+                    src.inputStream().use { input ->
+                        input.copyTo(output)
+                    }
+                }
+            }
+        } else {
+            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            requireNotNull(dir)
+
+            val target = File(dir, filename)
             src.copyTo(target, true)
         }
     }

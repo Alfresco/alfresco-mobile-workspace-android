@@ -106,7 +106,11 @@ class ActionListViewModel(
         ).flatten()
 
     private fun offlineActionFor(entry: Entry) =
-        listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))
+        if (entry.hasOfflineStatus && !entry.isOffline) {
+            listOf()
+        } else {
+            listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))
+        }
 
     private fun favoriteActionFor(entry: Entry) =
         listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))

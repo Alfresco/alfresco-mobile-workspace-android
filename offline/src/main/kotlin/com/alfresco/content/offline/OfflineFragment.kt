@@ -154,7 +154,9 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         super.invalidate()
 
         withState(viewModel) { state ->
-            if (state.entries.count() > 0) {
+            if (state.parentId != null) {
+                fab.hide()
+            } else if (state.entries.count() > 0) {
                 fab.show()
             } else {
                 fab.hide()

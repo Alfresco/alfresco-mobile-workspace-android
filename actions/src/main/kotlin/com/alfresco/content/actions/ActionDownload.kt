@@ -53,11 +53,10 @@ data class ActionDownload(
         val filename = entry.title
         val mimeType = DocumentFile.fromFile(src).type
 
-        val legacyPath = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS
-            ), filename
-        ).absolutePath
+        val legacyPath = uniqueFilePath(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            filename
+        )
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
@@ -75,11 +74,6 @@ data class ActionDownload(
             MediaStore.Downloads.EXTERNAL_CONTENT_URI
         } else {
             MediaStore.Files.getContentUri("external")
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            // Delete old file before exporting the new one
-            resolver.delete(target, "${MediaStore.MediaColumns.DATA} = ?", arrayOf(legacyPath))
         }
 
         val dest = resolver.insert(
@@ -106,6 +100,21 @@ data class ActionDownload(
             resolver.delete(dest, null, null)
             throw ex
         }
+    }
+
+    private fun uniqueFilePath(directory: File, fileName: String): String {
+        val fileExtension = fileName.substringAfterLast(".")
+        val baseFileName = fileName.replace(".$fileExtension", "")
+
+        var potentialFileName = File(directory, fileName)
+        var copyVersionNumber = 1
+
+        while (potentialFileName.exists()) {
+            potentialFileName = File(directory, "$baseFileName ($copyVersionNumber).$fileExtension")
+            copyVersionNumber += 1
+        }
+
+        return potentialFileName.absolutePath
     }
 
     private fun enqueueDownload(context: Context) {

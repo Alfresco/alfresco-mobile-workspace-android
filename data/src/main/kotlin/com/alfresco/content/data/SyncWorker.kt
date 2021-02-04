@@ -84,7 +84,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 } while (page?.pagination?.hasMoreItems == true)
             }
             remote
-        }
+        }.distinctBy { it.id }
 
     private suspend fun <T, R> continuousMap(initial: Collection<T>, f: suspend (T, suspend(T) -> Unit) -> R?): List<R> {
         val queue = ArrayDeque<T>(initial)

@@ -16,6 +16,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import java.io.File
+import java.io.FileNotFoundException
 import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionDownload(
@@ -45,34 +46,59 @@ data class ActionDownload(
 
     private fun exportFile(context: Context) {
         val src = OfflineRepository().contentFile(entry)
+        val resolver = context.contentResolver
+
         val filename = entry.title
+        val mimeType = DocumentFile.fromFile(src).type
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val resolver = context.contentResolver
-            val mimeType = DocumentFile.fromFile(src).type
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
 
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            } else {
+                @Suppress("DEPRECATION")
+                put(
+                    MediaStore.MediaColumns.DATA, File(
+                        Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS
+                        ), filename
+                    ).absolutePath
+                )
             }
-            resolver.insert(
-                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
-                contentValues
-            )?.also {
-                resolver.openOutputStream(it).use { output ->
-                    requireNotNull(output)
+        }
 
-                    src.inputStream().use { input ->
-                        input.copyTo(output)
-                    }
+        val target = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI
+        } else {
+            MediaStore.Files.getContentUri("external")
+        }
+
+        val dest = resolver.insert(
+            target,
+            contentValues
+        ) ?: throw FileNotFoundException("Could not create destination file.")
+
+        try {
+            resolver.openOutputStream(dest).use { output ->
+                requireNotNull(output)
+
+                src.inputStream().use { input ->
+                    input.copyTo(output)
                 }
             }
-        } else {
-            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            requireNotNull(dir)
 
-            val target = File(dir, filename)
-            src.copyTo(target, true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val updatedValues = ContentValues().apply {
+                    put(MediaStore.Images.ImageColumns.IS_PENDING, 0)
+                }
+                resolver.update(dest, updatedValues, null, null)
+            }
+        } catch (ex: Exception) {
+            resolver.delete(dest, null, null)
+            throw ex
         }
     }
 

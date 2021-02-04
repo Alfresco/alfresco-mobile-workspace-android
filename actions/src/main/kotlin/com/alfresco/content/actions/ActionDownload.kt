@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -44,12 +45,19 @@ data class ActionDownload(
         return entry
     }
 
+    @Suppress("DEPRECATION")
     private fun exportFile(context: Context) {
         val src = OfflineRepository().contentFile(entry)
         val resolver = context.contentResolver
 
         val filename = entry.title
         val mimeType = DocumentFile.fromFile(src).type
+
+        val legacyPath = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS
+            ), filename
+        ).absolutePath
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
@@ -59,14 +67,7 @@ data class ActionDownload(
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                 put(MediaStore.MediaColumns.IS_PENDING, 1)
             } else {
-                @Suppress("DEPRECATION")
-                put(
-                    MediaStore.MediaColumns.DATA, File(
-                        Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS
-                        ), filename
-                    ).absolutePath
-                )
+                put(MediaStore.MediaColumns.DATA, legacyPath)
             }
         }
 
@@ -74,6 +75,11 @@ data class ActionDownload(
             MediaStore.Downloads.EXTERNAL_CONTENT_URI
         } else {
             MediaStore.Files.getContentUri("external")
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            // Delete old file before exporting the new one
+            resolver.delete(target, "${MediaStore.MediaColumns.DATA} = ?", arrayOf(legacyPath))
         }
 
         val dest = resolver.insert(

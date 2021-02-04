@@ -141,28 +141,35 @@ data class OfflineBrowseArgs(
 class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
-    lateinit var fab: ExtendedFloatingActionButton
+    private var fab: ExtendedFloatingActionButton? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fab = makeFab(view.context)
-        fab.visibility = View.INVISIBLE // required for animation
-        (view as ViewGroup).addView(fab)
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        fab = null
     }
 
     override fun invalidate() {
         super.invalidate()
 
         withState(viewModel) { state ->
-            if (state.parentId != null) {
-                fab.hide()
-            } else if (state.entries.count() > 0) {
-                fab.show()
-            } else {
-                fab.hide()
+            // Add fab only to root folder
+            if (state.parentId == null && fab == null) {
+                fab = makeFab(requireContext()).apply {
+                    visibility = View.INVISIBLE // required for animation
+                }
+                (view as ViewGroup).addView(fab)
             }
 
-            fab.isEnabled = state.syncNowEnabled
+            fab?.apply {
+                if (state.entries.count() > 0) {
+                    show()
+                } else {
+                    hide()
+                }
+
+                isEnabled = state.syncNowEnabled
+            }
         }
     }
 

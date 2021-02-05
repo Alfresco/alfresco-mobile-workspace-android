@@ -1,7 +1,6 @@
 package com.alfresco.content.offline
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.TypedValue
@@ -9,7 +8,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.getSystemService
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
@@ -30,6 +28,7 @@ import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.navigateTo
+import com.alfresco.content.network.ConnectivityTracker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import kotlinx.coroutines.flow.combine
@@ -73,12 +72,12 @@ class OfflineViewModel(
 
         viewModelScope.on<ActionRemoveOffline> { removeEntry(it.entry) }
 
-        NetworkConnectivityTracker.startTracking(context)
+        ConnectivityTracker.startTracking(context)
         viewModelScope.launch {
             SyncWorker
                 .observe(context)
                 .map { it == WorkInfo.State.RUNNING }
-                .combine(NetworkConnectivityTracker.networkAvailable) { running, connected ->
+                .combine(ConnectivityTracker.networkAvailable) { running, connected ->
                     !running && connected
                 }
                 .execute {
@@ -109,6 +108,8 @@ class OfflineViewModel(
 
     override fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int> =
         Triple(R.drawable.ic_empty_offline, R.string.offline_empty_title, R.string.offline_empty_message)
+
+    fun canSyncOverCurrentNetwork() = !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MvRxViewModelFactory<OfflineViewModel, OfflineViewState> {
 
@@ -190,8 +191,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
 
     private fun onSyncButtonClick() {
-        val cm = requireContext().getSystemService<ConnectivityManager>()
-        if (cm?.isActiveNetworkMetered != true) {
+        if (viewModel.canSyncOverCurrentNetwork()) {
             SyncWorker.syncNow(requireContext())
         } else {
             makeSyncUnavailablePrompt().show()

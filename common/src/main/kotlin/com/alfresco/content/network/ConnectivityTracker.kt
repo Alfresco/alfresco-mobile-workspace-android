@@ -1,4 +1,4 @@
-package com.alfresco.content.offline
+package com.alfresco.content.network
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -8,7 +8,7 @@ import androidx.core.content.getSystemService
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 
-object NetworkConnectivityTracker {
+object ConnectivityTracker {
     private var isTracking = false
     private val availableChannel = ConflatedBroadcastChannel<Boolean>()
 
@@ -29,6 +29,9 @@ object NetworkConnectivityTracker {
         cm?.registerDefaultNetworkCallback(networkCallback)
         isTracking = true
     }
+
+    fun isActiveNetworkMetered(context: Context): Boolean =
+        context.getSystemService<ConnectivityManager>()?.isActiveNetworkMetered == true
 
     val networkAvailable = availableChannel.asFlow()
 }

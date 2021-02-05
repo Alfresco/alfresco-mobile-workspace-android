@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.alfresco.ui.MaterialShapeView
+        android:id="@+id/status"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:translationX="2dp"
+        android:translationY="2dp"
+        app:backgroundColor="?colorSurface"
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+        android:elevation="2dp"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toEndOf="@id/icon">
+
+        <ImageView
+            android:id="@+id/status_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.alfresco.ui.MaterialShapeView>
+</merge>

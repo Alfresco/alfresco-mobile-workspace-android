@@ -65,8 +65,11 @@ class MainActivity : BaseMvRxActivity() {
         if (state.requiresReLogin) {
             showSignedOutPrompt()
         } else {
-            actionBarController.refreshData()
+            // Only when logged in otherwise triggers re-login prompts
+            actionBarController.setProfileIcon(viewModel.profileIcon)
         }
+
+        actionBarController.setOnline(state.isOnline)
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()

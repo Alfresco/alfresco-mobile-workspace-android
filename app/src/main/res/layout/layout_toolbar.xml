@@ -49,20 +49,11 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <FrameLayout
-            android:id="@+id/profile_icon_frame"
+        <com.alfresco.content.app.widget.ProfileIconView
+            android:id="@+id/profile_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:minWidth="44dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless">
-
-            <ImageView
-                android:id="@+id/profile_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_account" />
-        </FrameLayout>
+            android:minWidth="44dp"/>
     </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar

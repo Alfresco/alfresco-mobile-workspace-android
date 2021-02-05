@@ -1,6 +1,7 @@
 package com.alfresco.content.app.activity
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -11,6 +12,8 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.AuthenticationRepository
+import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +22,8 @@ import kotlinx.coroutines.launch
 
 data class MainActivityState(
     val reLoginCount: Int = 0, // new state on each invalid auth
-    val requiresReLogin: Boolean = false
+    val requiresReLogin: Boolean = false,
+    val isOnline: Boolean = true
 ) : MvRxState
 
 class MainActivityViewModel(
@@ -40,10 +44,23 @@ class MainActivityViewModel(
 
         // Receives current state on observe
         processLifecycleOwner.lifecycle.addObserver(this)
+
+        // Update connectivity status
+        ConnectivityTracker.startTracking(context)
+        viewModelScope.launch {
+            ConnectivityTracker
+                .networkAvailable
+                .execute {
+                    copy(isOnline = it() == true)
+                }
+        }
     }
 
     val requiresLogin: Boolean
         get() = SessionManager.currentSession == null
+
+    val profileIcon: Uri =
+        PeopleRepository.myPicture()
 
     override fun onCleared() {
         super.onCleared()

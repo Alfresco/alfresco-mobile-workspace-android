@@ -1,15 +1,13 @@
 package com.alfresco.content.app.widget
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import coil.load
-import coil.transform.CircleCropTransformation
 import com.alfresco.content.app.R
-import com.alfresco.content.data.PeopleRepository
 
 class ActionBarController(private val layout: ActionBarLayout) {
 
@@ -40,7 +38,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
                     appBarConfiguration.topLevelDestinations
                 )
                 if (isTopLevelDestination) {
-                    layout.collapse(false)
+                    layout.collapse(false) // TODO: animated if we fix title
                 } else {
                     layout.expand(false)
                 }
@@ -48,13 +46,9 @@ class ActionBarController(private val layout: ActionBarLayout) {
         })
     }
 
-    fun refreshData() {
-        layout.profileIcon.load(PeopleRepository.myPicture()) {
-            placeholder(R.drawable.ic_account)
-            error(R.drawable.ic_account)
-            transformations(CircleCropTransformation())
-        }
-    }
+    fun setProfileIcon(uri: Uri) = layout.loadProfileIcon(uri)
+
+    fun setOnline(value: Boolean) = layout.setOnline(value)
 
     private fun enterSearchUi() {
         layout.expand(true)

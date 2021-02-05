@@ -1,10 +1,10 @@
 package com.alfresco.content.app.widget
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -18,8 +18,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
 
     lateinit var toolbar: Toolbar
     lateinit var background: MaterialShapeView
-    lateinit var profileIcon: ImageView
-    lateinit var profileView: View
+    lateinit var profileView: ProfileIconView
 
     private lateinit var expandedView: View
     private lateinit var collapsedView: View
@@ -35,8 +34,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         background = findViewById(R.id.toolbar_back)
         expandedView = findViewById(R.id.expanded_toolbar)
         collapsedView = findViewById(R.id.collapsed_toolbar)
-        profileIcon = findViewById(R.id.profile_icon)
-        profileView = findViewById(R.id.profile_icon_frame)
+        profileView = findViewById(R.id.profile_icon)
 
         originalRadius = background.radius
         originalTopMargin = (background.layoutParams as MarginLayoutParams).topMargin
@@ -79,4 +77,11 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     private fun makeTransition() = TransitionSet()
         .addTransition(Fade())
         .addTransition(ChangeBounds())
+
+    fun loadProfileIcon(uri: Uri) {
+        profileView.loadIcon(uri)
+    }
+
+    fun setOnline(value: Boolean) =
+        profileView.setOffline(!value)
 }

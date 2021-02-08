@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:7754457436648882865",
-      "lastPropertyId": "17:4857811164838897457",
+      "lastPropertyId": "18:6921776742908422846",
       "name": "Entry",
       "properties": [
         {
@@ -16,11 +16,6 @@
         {
           "id": "3:1466717300834943669",
           "name": "title",
-          "type": 9
-        },
-        {
-          "id": "4:3297398107969773257",
-          "name": "subtitle",
           "type": 9
         },
         {
@@ -89,6 +84,11 @@
           "id": "17:4857811164838897457",
           "name": "parentId",
           "type": 9
+        },
+        {
+          "id": "18:6921776742908422846",
+          "name": "path",
+          "type": 9
         }
       ],
       "relations": []
@@ -104,7 +104,8 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     5041187028345635295,
-    8130013476497593202
+    8130013476497593202,
+    3297398107969773257
   ],
   "retiredRelationUids": [],
   "version": 1

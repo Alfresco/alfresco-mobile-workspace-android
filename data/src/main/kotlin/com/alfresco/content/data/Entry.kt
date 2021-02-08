@@ -31,7 +31,7 @@ data class Entry(
     @Convert(converter = Type.Converter::class, dbType = String::class)
     val type: Type,
     val title: String,
-    val subtitle: String?,
+    val path: String?,
     val mimeType: String?,
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val modified: ZonedDateTime? = null,
@@ -78,7 +78,7 @@ data class Entry(
             parentId == other.parentId &&
             type == other.type &&
             title == other.title &&
-            subtitle == other.subtitle &&
+            path == other.path &&
             mimeType == other.mimeType &&
             modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
             isFavorite == other.isFavorite &&
@@ -90,7 +90,7 @@ data class Entry(
             parentId = other.parentId,
             type = other.type,
             title = other.title,
-            subtitle = other.subtitle,
+            path = other.path,
             mimeType = other.mimeType,
             modified = other.modified,
             isFavorite = other.isFavorite,

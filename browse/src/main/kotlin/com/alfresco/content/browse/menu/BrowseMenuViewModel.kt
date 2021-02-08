@@ -19,7 +19,7 @@ class BrowseMenuViewModel(
         val tiles = context.resources.getStringArray(R.array.browse_menu_titles)
         val icons = context.resources.getResourceList(R.array.browse_menu_icons)
         val paths = context.resources.getStringArray(R.array.browse_menu_paths)
-        val entries = tiles.zip(icons).zip(paths) { (t, i), p -> FileEntry(p, t, i) }
+        val entries = tiles.zip(icons).zip(paths) { (t, i), p -> MenuEntry(p, t, i) }
 
         setState { copy(entries = entries) }
     }

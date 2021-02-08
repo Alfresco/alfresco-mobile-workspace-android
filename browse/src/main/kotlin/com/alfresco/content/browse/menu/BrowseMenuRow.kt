@@ -19,7 +19,7 @@ class BrowseMenuRow @JvmOverloads constructor(
     private val binding = ViewBrowseMenuRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp
-    fun setEntry(entry: FileEntry) {
+    fun setEntry(entry: MenuEntry) {
         binding.title.text = entry.title
         binding.icon.setImageDrawable(resources.getDrawable(entry.icon, context.theme))
     }

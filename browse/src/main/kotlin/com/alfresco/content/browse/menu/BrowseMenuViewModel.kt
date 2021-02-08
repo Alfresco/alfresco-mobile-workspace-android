@@ -1,4 +1,4 @@
-package com.alfresco.content.browse
+package com.alfresco.content.browse.menu
 
 import android.content.Context
 import android.content.res.Resources
@@ -7,6 +7,7 @@ import androidx.annotation.ArrayRes
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.browse.R
 import com.alfresco.content.data.BrowseRepository
 
 class BrowseMenuViewModel(

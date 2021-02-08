@@ -1,4 +1,4 @@
-package com.alfresco.content.browse
+package com.alfresco.content.browse.menu
 
 import com.airbnb.mvrx.MvRxState
 

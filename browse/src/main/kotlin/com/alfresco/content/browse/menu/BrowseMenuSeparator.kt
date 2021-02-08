@@ -1,10 +1,11 @@
-package com.alfresco.content.browse
+package com.alfresco.content.browse.menu
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.airbnb.epoxy.ModelView
+import com.alfresco.content.browse.R
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class BrowseMenuSeparator @JvmOverloads constructor(

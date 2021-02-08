@@ -1,4 +1,4 @@
-package com.alfresco.content.browse
+package com.alfresco.content.browse.menu
 
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentBrowseMenuBinding
 
 class BrowseMenuFragment : BaseMvRxFragment() {

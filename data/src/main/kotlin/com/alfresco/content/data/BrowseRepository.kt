@@ -22,7 +22,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             folderId,
             skipCount,
             maxItems,
-            include = extraFieldsFolder()
+            include = extraFields()
         ))
 
     suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
@@ -30,17 +30,17 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             siteId,
             skipCount,
             maxItems,
-            include = extraFieldsFolder(),
+            include = extraFields(),
             relativePath = "documentLibrary"
         ))
 
-    private fun extraFieldsFolder() =
-        AlfrescoApi.csvQueryParam("isFavorite", "allowableOperations", "properties")
+    private fun extraFields() =
+        AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations", "properties")
 
     suspend fun fetchEntry(entryId: String) =
         Entry.with(service.getNode(
             entryId,
-            AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations")
+            extraFields()
         ).entry)
 
     suspend fun deleteEntry(entry: Entry) =

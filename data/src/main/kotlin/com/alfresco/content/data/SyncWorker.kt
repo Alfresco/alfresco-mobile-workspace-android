@@ -187,9 +187,13 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun downloadContent(entry: Entry) {
         if (entry.type == Entry.Type.File) {
-            downloadItem(entry)
-            downloadRendition(entry)
-            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Synced))
+            try {
+                downloadItem(entry)
+                downloadRendition(entry)
+                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Synced))
+            } catch (_: Exception) {
+                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
+            }
         }
     }
 
@@ -200,26 +204,18 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         val output = File(outputDir, entry.title)
         val uri = BrowseRepository().contentUri(entry)
         Log.d("SyncWorker", "Downloaded: ${entry.id}: ${entry.title}")
-        try {
-            ContentDownloader.downloadFileTo(uri, output.path)
-        } catch (ex: Exception) {
-            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
-        }
+        ContentDownloader.downloadFileTo(uri, output.path)
     }
 
     private suspend fun downloadRendition(entry: Entry) {
         if (!typeSupported(entry)) {
             val uri = RenditionRepository().fetchRenditionUri(entry.id)
             if (uri != null) {
-                try {
-                    val typeSuffix = renditionTypeSuffix(uri)
-                    val outputDir = repository.contentDir(entry)
-                    outputDir.mkdir()
-                    val output = File(outputDir, ".preview$typeSuffix")
-                    ContentDownloader.downloadFileTo(uri, output.path)
-                } catch (ex: Exception) {
-                    repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
-                }
+                val typeSuffix = renditionTypeSuffix(uri)
+                val outputDir = repository.contentDir(entry)
+                outputDir.mkdir()
+                val output = File(outputDir, ".preview$typeSuffix")
+                ContentDownloader.downloadFileTo(uri, output.path)
             }
         }
     }

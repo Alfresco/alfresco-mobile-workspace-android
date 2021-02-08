@@ -23,12 +23,12 @@
 
     <fragment
         android:id="@+id/nav_offline"
-        android:name="com.alfresco.content.offline.OfflineFragment"
+        android:name="com.alfresco.content.browse.offline.OfflineFragment"
         android:label="@string/nav_title_offline" />
 
     <fragment
         android:id="@+id/nav_offline_browse"
-        android:name="com.alfresco.content.offline.OfflineFragment"
+        android:name="com.alfresco.content.browse.offline.OfflineFragment"
         android:label="{title}">
         <argument
             android:name="id"

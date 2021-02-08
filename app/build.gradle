@@ -83,7 +83,6 @@ dependencies {
     implementation project(':listview')
     implementation project(':browse')
     implementation project(':search')
-    implementation project(':offline')
     implementation project(':viewer')
 
     implementation project(':data')

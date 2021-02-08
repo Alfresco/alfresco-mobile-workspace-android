@@ -26,4 +26,14 @@
     <string name="favorites_empty_message">Looks like you haven’t\nadded anything.</string>
     <string name="folder_empty_title">Folder is empty</string>
     <string name="folder_empty_message">Looks like there is\nnothing here yet.</string>
+
+    <!-- Offline -->
+    <string name="offline_sync_button_title">Sync all</string>
+
+    <string name="offline_empty_title">No offline content</string>
+    <string name="offline_empty_message">Content that you make available offline\nwill show up here.</string>
+
+    <string name="offline_sync_unavailable_title">Sync unavailable</string>
+    <string name="offline_sync_unavailable_message">You cannot sync content over cellular data.</string>
+    <string name="offline_sync_unavailable_button">Ok</string>
 </resources>

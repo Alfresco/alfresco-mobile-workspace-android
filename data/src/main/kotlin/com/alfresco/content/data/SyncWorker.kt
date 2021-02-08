@@ -59,7 +59,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun buildRemoteList(): List<Entry> =
         continuousMap(repository.fetchTopLevelOfflineEntries()) { entry, produce ->
-            val remote = if (entry.isLocal) {
+            // need updated metadata only for local items
+            val remote = if (entry.hasOfflineStatus) {
                 try {
                     BrowseRepository().fetchEntry(entry.id)
                 } catch (ex: HttpException) {

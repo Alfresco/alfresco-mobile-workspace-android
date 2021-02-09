@@ -7,13 +7,13 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionRemoveOffline
-import com.alfresco.content.actions.on
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.network.ConnectivityTracker
+import com.alfresco.events.on
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

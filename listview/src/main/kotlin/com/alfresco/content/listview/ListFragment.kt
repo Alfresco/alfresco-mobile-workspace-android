@@ -24,10 +24,10 @@ import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionListSheet
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
-import com.alfresco.content.actions.on
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
+import com.alfresco.events.on
 import com.alfresco.list.replace
 
 interface ListViewState : MvRxState {

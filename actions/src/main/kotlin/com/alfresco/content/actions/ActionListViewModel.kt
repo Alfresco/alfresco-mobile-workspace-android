@@ -11,6 +11,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

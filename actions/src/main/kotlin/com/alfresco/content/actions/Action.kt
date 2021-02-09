@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.content.data.Entry
+import com.alfresco.events.EventBus
+import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
 import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException

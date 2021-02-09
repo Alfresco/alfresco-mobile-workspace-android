@@ -1,4 +1,4 @@
-package com.alfresco.content.actions
+package com.alfresco.events
 
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

@@ -9,7 +9,6 @@ import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDeleteForever
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRestore
-import com.alfresco.content.actions.on
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -21,6 +20,7 @@ import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.on
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

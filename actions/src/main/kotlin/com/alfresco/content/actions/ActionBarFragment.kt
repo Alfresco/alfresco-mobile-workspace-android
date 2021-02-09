@@ -14,6 +14,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.FragmentActionBarBinding
+import com.alfresco.events.on
 import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {

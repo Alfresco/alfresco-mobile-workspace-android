@@ -42,7 +42,7 @@ class SyncService(
         cancelScheduledSync()
         scheduledSync = scope.launch {
             delay(FOREGROUND_DELAY)
-            sync()
+            syncOrWait()
         }
     }
 
@@ -52,7 +52,18 @@ class SyncService(
     fun syncIfNeeded() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastSyncTime > FOREGROUND_DELAY) {
-            sync()
+            syncOrWait()
+        }
+    }
+
+    /**
+     * Executes sync if there's no pending sync job.
+     */
+    private fun syncOrWait() {
+        pendingSync.let {
+            if (it == null || it.isCompleted) {
+                execute()
+            }
         }
     }
 

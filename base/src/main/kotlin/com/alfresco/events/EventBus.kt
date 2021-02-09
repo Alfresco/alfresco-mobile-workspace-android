@@ -30,3 +30,11 @@ inline fun <reified T> CoroutineScope.on(
 ) = launch(context) {
     bus.on<T>().collect(block)
 }
+
+fun <T : Any> CoroutineScope.emit(
+    value: T,
+    bus: EventBus = EventBus.default,
+    context: CoroutineContext = EmptyCoroutineContext
+) = launch(context) {
+    bus.send(value)
+}

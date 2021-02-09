@@ -51,3 +51,6 @@ data class ActionRemoveOffline(
             entry.title.ellipsize(maxFileNameInToast(view))
         )
 }
+
+// Not a typical action - used as an event.
+data class ActionSyncNow(val placeholder: String = "")

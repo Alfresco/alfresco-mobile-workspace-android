@@ -6,14 +6,16 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
+import com.alfresco.events.emit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
@@ -70,7 +72,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
     private fun onSyncButtonClick() {
         if (viewModel.canSyncOverCurrentNetwork()) {
-            SyncWorker.syncNow(requireContext())
+            lifecycleScope.emit(ActionSyncNow())
         } else {
             makeSyncUnavailablePrompt().show()
         }

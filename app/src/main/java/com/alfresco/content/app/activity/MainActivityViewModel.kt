@@ -11,10 +11,16 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.MvRxViewModel
+import com.alfresco.content.actions.ActionAddOffline
+import com.alfresco.content.actions.ActionRemoveOffline
+import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.data.SyncService
 import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.session.SessionManager
+import com.alfresco.events.on
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -33,6 +39,7 @@ class MainActivityViewModel(
 
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
     private var refreshTicketJob: Job? = null
+    private val syncService: SyncService
 
     init {
         // Start a new session
@@ -54,7 +61,16 @@ class MainActivityViewModel(
                     copy(isOnline = it() == true)
                 }
         }
+
+        syncService = configureSync(context, viewModelScope)
     }
+
+    private fun configureSync(context: Context, coroutineScope: CoroutineScope) =
+        SyncService(context, coroutineScope).also { service ->
+            coroutineScope.on<ActionAddOffline> { service.sync() }
+            coroutineScope.on<ActionRemoveOffline> { service.sync() }
+            coroutineScope.on<ActionSyncNow> { service.syncNow() }
+        }
 
     val requiresLogin: Boolean
         get() = SessionManager.currentSession == null
@@ -83,6 +99,7 @@ class MainActivityViewModel(
                     delay(60 * 1000L)
                 }
             }
+            syncService.syncIfNeeded()
         }
     }
 

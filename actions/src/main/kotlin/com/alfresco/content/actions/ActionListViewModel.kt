@@ -32,7 +32,8 @@ class ActionListViewModel(
     }
 
     private fun buildModel() = withState { state ->
-        if (state.entry.isPartial) {
+        // If entry is partial and not in the offline tab
+        if (state.entry.isPartial && !state.entry.hasOfflineStatus) {
             viewModelScope.launch {
                 fetchEntry(state.entry).execute {
                     when (it) {

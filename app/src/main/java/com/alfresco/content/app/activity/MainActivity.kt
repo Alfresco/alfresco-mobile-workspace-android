@@ -63,7 +63,9 @@ class MainActivity : BaseMvRxActivity() {
 
     override fun invalidate() = withState(viewModel) { state ->
         if (state.requiresReLogin) {
-            showSignedOutPrompt()
+            if (state.isOnline) {
+                showSignedOutPrompt()
+            }
         } else {
             // Only when logged in otherwise triggers re-login prompts
             actionBarController.setProfileIcon(viewModel.profileIcon)

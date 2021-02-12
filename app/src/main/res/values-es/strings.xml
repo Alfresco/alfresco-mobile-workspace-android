@@ -15,7 +15,7 @@
     <string name="settings_sign_out">Cerrar sesión</string>
     <string name="settings_version">Versión de aplicación %1$s</string>
 
-    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_title">Tema</string>
     <string-array name="settings_theme_labels">
         <item>Claro</item>
         <item>Oscuro</item>

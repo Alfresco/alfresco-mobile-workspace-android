@@ -15,7 +15,7 @@
     <string name="settings_sign_out">Afmelden</string>
     <string name="settings_version">Appversie %1$s</string>
 
-    <string name="settings_theme">Thema</string>
+    <string name="settings_theme_title">Thema</string>
     <string-array name="settings_theme_labels">
         <item>Licht</item>
         <item>Donker</item>

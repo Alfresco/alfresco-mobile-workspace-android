@@ -15,7 +15,7 @@
     <string name="settings_sign_out">Déconnexion</string>
     <string name="settings_version">Version de l\'application %1$s</string>
 
-    <string name="settings_theme">Thème</string>
+    <string name="settings_theme_title">Thème</string>
     <string-array name="settings_theme_labels">
         <item>Claire</item>
         <item>Sombre</item>

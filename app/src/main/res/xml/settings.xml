@@ -17,7 +17,7 @@
         android:entryValues="@array/settings_theme_values"
         android:icon="@drawable/ic_theme"
         android:key="@string/pref_theme_key"
-        android:title="@string/settings_theme"
+        android:title="@string/settings_theme_title"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true"

@@ -15,7 +15,7 @@
     <string name="settings_sign_out">Disconnetti</string>
     <string name="settings_version">App versione %1$s</string>
 
-    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_title">Tema</string>
     <string-array name="settings_theme_labels">
         <item>Chiaro</item>
         <item>Scuro</item>

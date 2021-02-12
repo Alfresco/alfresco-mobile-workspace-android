@@ -33,7 +33,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
         val acc = SessionManager.requireSession.account
-        preferenceScreen.findPreference<AccountPreference>(resources.getString(R.string.settings_account_key))?.apply {
+        preferenceScreen.findPreference<AccountPreference>(resources.getString(R.string.pref_account_key))?.apply {
             title = acc.displayName
             summary = acc.email
             loadAny(PeopleRepository.myPicture()) {
@@ -46,7 +46,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        preferenceScreen.findPreference<Preference>(resources.getString(R.string.settings_version_key))?.apply {
+        preferenceScreen.findPreference<Preference>(resources.getString(R.string.pref_version_key))?.apply {
             val pkg = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
             val version = "${pkg.versionName}-${PackageInfoCompat.getLongVersionCode(pkg)}"
             summary = resources.getString(R.string.settings_version, version)

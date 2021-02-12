@@ -5,18 +5,18 @@
 
     <com.alfresco.content.app.widget.AccountPreference
         android:icon="@drawable/ic_account"
-        android:key="@string/settings_account_key"
+        android:key="@string/pref_account_key"
         android:layout="@layout/layout_pref_account"
         android:summary=""
         android:title=""
         app:allowDividerBelow="true" />
 
     <ListPreference
-        android:defaultValue="@string/settings_theme_system"
+        android:defaultValue="@string/pref_theme_default_value"
         android:entries="@array/settings_theme_labels"
         android:entryValues="@array/settings_theme_values"
         android:icon="@drawable/ic_theme"
-        android:key="@string/settings_theme_key"
+        android:key="@string/pref_theme_key"
         android:title="@string/settings_theme"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
@@ -25,7 +25,7 @@
 
     <Preference
         app:allowDividerAbove="true"
-        android:key="@string/settings_version_key"
+        android:key="@string/pref_version_key"
         android:summary="App Version: 1.00"
         android:layout="@layout/layout_pref_text"/>
 

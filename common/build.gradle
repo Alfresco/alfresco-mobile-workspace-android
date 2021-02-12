@@ -20,6 +20,7 @@ dependencies {
     implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.recyclerview
     implementation Libs.AndroidX.Navigation.fragment
+    implementation Libs.AndroidX.preference
 
     implementation Libs.mvRx
     implementation Libs.Epoxy.epoxy

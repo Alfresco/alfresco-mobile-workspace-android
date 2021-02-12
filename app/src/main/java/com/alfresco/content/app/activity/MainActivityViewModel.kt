@@ -69,7 +69,7 @@ class MainActivityViewModel(
         SyncService(context, coroutineScope).also { service ->
             coroutineScope.on<ActionAddOffline> { service.sync() }
             coroutineScope.on<ActionRemoveOffline> { service.sync() }
-            coroutineScope.on<ActionSyncNow> { service.syncNow() }
+            coroutineScope.on<ActionSyncNow> { service.syncNow(it.overrideNetwork) }
         }
 
     val requiresLogin: Boolean

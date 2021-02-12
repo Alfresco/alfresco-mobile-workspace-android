@@ -240,8 +240,12 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         private const val MAX_PAGE_SIZE = 100
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
-        fun syncNow(context: Context) {
-            val networkType = if (Settings(context).canSyncOverMeteredNetwork) NetworkType.CONNECTED else NetworkType.UNMETERED
+        fun schedule(context: Context, overrideNetwork: Boolean) {
+            val networkType = if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {
+                NetworkType.CONNECTED
+            } else {
+                NetworkType.UNMETERED
+            }
 
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(networkType)

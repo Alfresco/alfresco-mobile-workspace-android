@@ -29,10 +29,10 @@ class SyncService(
     /**
      * Executes sync without delay.
      */
-    fun syncNow() {
+    fun syncNow(overrideNetwork: Boolean) {
         cancelPendingSync()
         cancelScheduledSync()
-        execute()
+        execute(overrideNetwork)
     }
 
     /**
@@ -67,9 +67,9 @@ class SyncService(
         }
     }
 
-    private fun execute() {
+    private fun execute(overrideNetwork: Boolean = false) {
         lastSyncTime = System.currentTimeMillis()
-        SyncWorker.syncNow(context)
+        SyncWorker.schedule(context, overrideNetwork)
 
         // Reschedule a timed sync
         scheduleForegroundSync()

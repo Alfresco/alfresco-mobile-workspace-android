@@ -53,4 +53,4 @@ data class ActionRemoveOffline(
 }
 
 // Not a typical action - used as an event.
-data class ActionSyncNow(val placeholder: String = "")
+data class ActionSyncNow(val overrideNetwork: Boolean)

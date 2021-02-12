@@ -103,7 +103,6 @@ class ActionListViewModel(
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
             offlineActionFor(entry),
-            favoriteActionFor(entry),
             externalActionsFor(entry)
         ).flatten()
 
@@ -129,7 +128,13 @@ class ActionListViewModel(
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
-        actions.add(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
+        if (!entry.hasOfflineStatus) {
+            if (entry.isFavorite) {
+                actions.add(ActionRemoveFavorite(entry))
+            } else {
+                actions.add(ActionAddFavorite(entry))
+            }
+        }
         if (entry.type == Entry.Type.File) {
             actions.add(ActionDownload(entry))
         }

@@ -43,9 +43,7 @@ class ListViewRow @JvmOverloads constructor(
 
         configureOfflineStatus(entry)
 
-        // Disable actions on links
-        binding.moreIconFrame.isVisible =
-            entry.type != Entry.Type.FileLink && entry.type != Entry.Type.FolderLink
+        binding.moreIconFrame.isVisible = actionButtonVisibility(entry)
     }
 
     private fun configureOfflineStatus(entry: Entry) {
@@ -90,6 +88,11 @@ class ListViewRow @JvmOverloads constructor(
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)
         }
+
+    private fun actionButtonVisibility(entry: Entry) =
+        !entry.isLink &&
+            // Child folder in offline tab
+            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
 
     @ModelProp
     fun setCompact(compact: Boolean) {

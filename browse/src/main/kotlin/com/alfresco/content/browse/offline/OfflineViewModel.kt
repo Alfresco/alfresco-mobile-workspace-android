@@ -9,6 +9,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
@@ -26,6 +27,7 @@ class OfflineViewModel(
     init {
         refresh()
 
+        // TODO: is this required? since list is monitored?
         viewModelScope.on<ActionRemoveOffline> { removeEntry(it.entry) }
 
         ConnectivityTracker.startTracking(context)
@@ -65,7 +67,9 @@ class OfflineViewModel(
     override fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int> =
         Triple(R.drawable.ic_empty_offline, R.string.offline_empty_title, R.string.offline_empty_message)
 
-    fun canSyncOverCurrentNetwork() = !ConnectivityTracker.isActiveNetworkMetered(context)
+    fun canSyncOverCurrentNetwork() =
+        Settings(context).canSyncOverMeteredNetwork ||
+            !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MvRxViewModelFactory<OfflineViewModel, OfflineViewState> {
 

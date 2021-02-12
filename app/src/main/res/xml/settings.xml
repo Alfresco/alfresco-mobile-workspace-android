@@ -15,10 +15,20 @@
         android:defaultValue="@string/pref_theme_default_value"
         android:entries="@array/settings_theme_labels"
         android:entryValues="@array/settings_theme_values"
-        android:icon="@drawable/ic_theme"
+        android:icon="@drawable/ic_settings_theme"
         android:key="@string/pref_theme_key"
         android:title="@string/settings_theme_title"
         app:allowDividerAbove="true"
+        app:useSimpleSummaryProvider="true"
+        android:layout="@layout/layout_pref"/>
+
+    <ListPreference
+        android:defaultValue="@string/pref_sync_network_default_value"
+        android:entries="@array/settings_sync_network_value_labels"
+        android:entryValues="@array/settings_sync_network_values"
+        android:icon="@drawable/ic_settings_sync_network"
+        android:key="@string/pref_sync_network_key"
+        android:title="@string/settings_sync_network_title"
         app:allowDividerBelow="true"
         app:useSimpleSummaryProvider="true"
         android:layout="@layout/layout_pref"/>

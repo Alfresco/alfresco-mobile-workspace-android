@@ -33,7 +33,8 @@
     <string name="offline_empty_title">No offline content</string>
     <string name="offline_empty_message">Content that you make available offline\nwill show up here.</string>
 
-    <string name="offline_sync_unavailable_title">Sync unavailable</string>
-    <string name="offline_sync_unavailable_message">You cannot sync content over cellular data.</string>
-    <string name="offline_sync_unavailable_button">Ok</string>
+    <string name="offline_sync_unavailable_title">Use mobile data?</string>
+    <string name="offline_sync_unavailable_message">This will override your settings and download using mobile data this time. Otherwise download will begin later after connecting to Wi-Fi.</string>
+    <string name="offline_sync_unavailable_positive">Yes</string>
+    <string name="offline_sync_unavailable_negative">Later</string>
 </resources>

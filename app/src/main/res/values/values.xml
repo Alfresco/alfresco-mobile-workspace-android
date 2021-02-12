@@ -13,4 +13,9 @@
         <item>@string/pref_theme_dark_value</item>
         <item>@string/pref_theme_system_value</item>
     </string-array>
+
+    <string-array name="settings_sync_network_values">
+        <item>@string/pref_sync_network_wifi_value</item>
+        <item>@string/pref_sync_network_mobile_value</item>
+    </string-array>
 </resources>

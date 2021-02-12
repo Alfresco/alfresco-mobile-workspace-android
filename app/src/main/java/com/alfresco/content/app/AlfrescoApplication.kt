@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import com.alfresco.content.settings.Settings
+import com.alfresco.content.data.Settings
 
 class AlfrescoApplication : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreate() {

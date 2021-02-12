@@ -241,8 +241,10 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
 
         fun syncNow(context: Context) {
+            val networkType = if (Settings(context).canSyncOverMeteredNetwork) NetworkType.CONNECTED else NetworkType.UNMETERED
+
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiredNetworkType(networkType)
                 .build()
 
             val request = OneTimeWorkRequestBuilder<SyncWorker>()

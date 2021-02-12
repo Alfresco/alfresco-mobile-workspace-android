@@ -24,5 +24,10 @@
     </string-array>
 
     <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>
+    <string name="settings_sync_network_title">Update offline files using</string>
+    <string-array name="settings_sync_network_value_labels">
+        <item>Wi-Fi only</item>
+        <item>Wi-Fi and mobile data</item>
+    </string-array>
 
 </resources>

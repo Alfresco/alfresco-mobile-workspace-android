@@ -72,7 +72,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
     private fun onSyncButtonClick() {
         if (viewModel.canSyncOverCurrentNetwork()) {
-            lifecycleScope.emit(ActionSyncNow())
+            startSync()
         } else {
             makeSyncUnavailablePrompt().show()
         }
@@ -82,7 +82,12 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.offline_sync_unavailable_title))
             .setMessage(resources.getString(R.string.offline_sync_unavailable_message))
-            .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_button), null)
+            .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_positive)) { _, _ ->
+                startSync()
+            }
+            .setNegativeButton(resources.getString(R.string.offline_sync_unavailable_negative), null)
+
+    private fun startSync() = lifecycleScope.emit(ActionSyncNow())
 
     override fun onItemClicked(entry: Entry) {
         if (entry.isFolder || entry.isSynced) {

@@ -58,6 +58,9 @@ data class Entry(
     val isFolder: Boolean
         get() = type == Type.Folder
 
+    val isLink: Boolean
+        get() = type == Type.FileLink || type == Type.FolderLink
+
     val hasOfflineStatus: Boolean
         get() = offlineStatus != OfflineStatus.Undefined
 

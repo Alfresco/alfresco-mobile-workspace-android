@@ -52,14 +52,7 @@ interface Action {
 
     companion object {
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
-            scope.on<ActionAddFavorite> (block = showToast(view, anchorView))
-            scope.on<ActionRemoveFavorite> (block = showToast(view, anchorView))
-            scope.on<ActionDelete> (block = showToast(view, anchorView))
-            scope.on<ActionRestore> (block = showToast(view, anchorView))
-            scope.on<ActionDeleteForever> (block = showToast(view, anchorView))
-            scope.on<ActionDownload> (block = showToast(view, anchorView))
-            scope.on<ActionAddOffline> (block = showToast(view, anchorView))
-            scope.on<ActionRemoveOffline> (block = showToast(view, anchorView))
+            scope.on<Action> (block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)

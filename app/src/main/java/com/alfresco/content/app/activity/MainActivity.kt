@@ -48,8 +48,10 @@ class MainActivity : BaseMvRxActivity() {
         }
     }
 
-    private fun configure() {
-        navController.setGraph(R.navigation.nav_bottom)
+    private fun configure() = withState(viewModel) { state ->
+        val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
+        graph.startDestination = if (state.isOnline) R.id.nav_recents else R.id.nav_offline
+        navController.graph = graph
 
         val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
         actionBarController = ActionBarController(findViewById(R.id.toolbar))

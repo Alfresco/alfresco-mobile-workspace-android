@@ -64,7 +64,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 try {
                     BrowseRepository().fetchEntry(entry.id)
                 } catch (ex: HttpException) {
-                    if (ex.code() == 404) {
+                    if (ex.code() == HTTP_STATUS_FORBIDDEN ||
+                        ex.code() == HTTP_STATUS_NOT_FOUND) {
                         null
                     } else {
                         throw ex
@@ -239,6 +240,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_PAGE_SIZE = 100
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
+        private const val HTTP_STATUS_FORBIDDEN = 403
+        private const val HTTP_STATUS_NOT_FOUND = 404
 
         fun schedule(context: Context, overrideNetwork: Boolean) {
             val networkType = if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {

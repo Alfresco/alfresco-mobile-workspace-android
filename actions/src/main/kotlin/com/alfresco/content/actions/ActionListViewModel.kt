@@ -107,7 +107,9 @@ class ActionListViewModel(
         ).flatten()
 
     private fun offlineActionFor(entry: Entry) =
-        if (entry.hasOfflineStatus && !entry.isOffline) {
+        if (!entry.isFile && !entry.isFolder) {
+            listOf()
+        } else if (entry.hasOfflineStatus && !entry.isOffline) {
             listOf()
         } else {
             listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))

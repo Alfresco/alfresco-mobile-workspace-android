@@ -4,6 +4,7 @@
 
     <string name="auth_connect_field_hint">Verbinden met</string>
     <string name="auth_connect_button">Verbinden</string>
+    <string name="auth_help_button_connect">Verbinding maken met Alfresco?</string>
     <string name="auth_help_button">Hulp nodig?</string>
     <string name="auth_settings_button">@string/auth_settings_title</string>
     <string name="auth_progress_bar_message">Verbinding wordt gemaakt</string>

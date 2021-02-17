@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="offline_sync_button_title">Synchroniser tout</string>
+
+    <string name="offline_empty_title">Aucun contenu hors connexion</string>
+    <string name="offline_empty_message">Le contenu disponible hors connexion\ns\'affichera ici.</string>
+
+    <string name="offline_sync_unavailable_title">Synchronisation non disponible</string>
+    <string name="offline_sync_unavailable_message">Impossible de synchroniser du contenu sur des données cellulaires.</string>
+    <string name="offline_sync_unavailable_button">Ok</string>
+</resources>

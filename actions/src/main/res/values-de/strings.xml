@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="action_add_favorite_title">Zu Favoriten hinzufügen</string>
     <string name="action_remove_favorite_title">Aus Favoriten entfernen</string>
@@ -27,4 +28,9 @@
     <string name="action_open_with_downloading">Wird heruntergeladen&#8230;</string>
     <string name="action_open_with_cancel">Abbrechen</string>
     <string name="action_open_with_error_no_viewer">Keine installierte App kann diese Datei anzeigen.</string>
+
+    <string name="action_add_offline_title">Offline zur Verfügung stellen</string>
+    <string name="action_remove_offline_title">Offline entfernen</string>
+    <string name="action_add_offline_toast">%s wird offline zur Verfügung gestellt.</string>
+    <string name="action_remove_offline_toast">%s ist offline nicht mehr verfügbar.</string>
 </resources>

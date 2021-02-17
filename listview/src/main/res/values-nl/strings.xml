@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="list_loading_message">Laden&#8230;</string>
+
+    <string name="offline_status_in_progress">Synchroniseren&#8230;</string>
+    <string name="offline_status_error">Synchroniseren mislukt</string>
+</resources>

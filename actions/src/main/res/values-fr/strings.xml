@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="action_add_favorite_title">Ajouter aux favoris</string>
     <string name="action_remove_favorite_title">Supprimer des favoris</string>
@@ -27,4 +28,9 @@
     <string name="action_open_with_downloading">Téléchargement en cours&#8230;</string>
     <string name="action_open_with_cancel">Annuler</string>
     <string name="action_open_with_error_no_viewer">Aucune application installée ne permet de consulter ce fichier.</string>
+
+    <string name="action_add_offline_title">Rendre disponible hors connexion</string>
+    <string name="action_remove_offline_title">Supprimer hors connexion</string>
+    <string name="action_add_offline_toast">%s sera disponible hors connexion.</string>
+    <string name="action_remove_offline_toast">%s ne sera plus disponible hors connexion.</string>
 </resources>

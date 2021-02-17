@@ -11,6 +11,6 @@ android {
 }
 
 dependencies {
-    api Libs.AndroidX.Lifecycle.viewmodelKtx
+    api Libs.AndroidX.Lifecycle.viewModelKtx
     api Libs.Google.material
 }

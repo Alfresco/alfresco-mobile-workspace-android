@@ -31,7 +31,7 @@ dependencies {
 
     implementation Libs.Coroutines.core
     implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.Lifecycle.viewmodelKtx
+    implementation Libs.AndroidX.Lifecycle.viewModelKtx
     implementation Libs.AndroidX.Navigation.fragment
     implementation Libs.AndroidX.swipeRefreshLayout
 

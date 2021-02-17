@@ -34,7 +34,7 @@ dependencies {
 
     implementation Libs.Kotlin.reflect
     implementation Libs.AndroidX.coreKtx
-    implementation Libs.AndroidX.Lifecycle.viewmodelKtx
+    implementation Libs.AndroidX.Lifecycle.viewModelKtx
     implementation Libs.AndroidX.recyclerview
     implementation Libs.AndroidX.coordinatorLayout
     implementation Libs.AndroidX.swipeRefreshLayout

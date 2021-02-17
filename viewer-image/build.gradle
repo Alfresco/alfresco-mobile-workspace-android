@@ -19,7 +19,7 @@ dependencies {
     implementation Libs.Kotlin.stdlib
     implementation Libs.AndroidX.appcompat
     implementation Libs.AndroidX.Lifecycle.runtime
-    implementation Libs.AndroidX.Lifecycle.viewmodelKtx
+    implementation Libs.AndroidX.Lifecycle.viewModelKtx
 
     implementation Libs.subsamplingImageView
     implementation Libs.photoView

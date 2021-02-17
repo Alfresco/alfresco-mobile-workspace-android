@@ -1,6 +1,5 @@
 package com.alfresco.content.browse
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Menu
@@ -12,6 +11,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
+import com.alfresco.content.navigateToContextualSearch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -60,7 +60,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigate(Uri.parse("alfresco://content/${args.path}/${args.id}/search?title=${Uri.encode(args.title)}"))
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "")
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -69,7 +69,7 @@
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
-        <deepLink app:uri="alfresco://content/{path}/{id}/search?title={title}" />
+        <deepLink app:uri="alfresco://content/search/folder/{id}?title={title}" />
     </fragment>
 
     <fragment

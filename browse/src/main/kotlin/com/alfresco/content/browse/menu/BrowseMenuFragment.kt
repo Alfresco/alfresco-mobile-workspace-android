@@ -1,6 +1,5 @@
 package com.alfresco.content.browse.menu
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentBrowseMenuBinding
+import com.alfresco.content.navigateToFolder
+import com.alfresco.content.navigateToKnownPath
 
 class BrowseMenuFragment : BaseMvRxFragment() {
 
@@ -47,13 +48,9 @@ class BrowseMenuFragment : BaseMvRxFragment() {
     private fun navigateTo(path: String, title: String) {
         if (path == getString(R.string.nav_path_my_files)) {
             val nodeId = viewModel.getMyFilesNodeId()
-            navigateTo(Uri.parse("alfresco://content/folder/$nodeId?title=${Uri.encode(title)}"))
+            findNavController().navigateToFolder(nodeId, title)
         } else {
-            navigateTo(Uri.parse("alfresco://content/$path?title=${Uri.encode(title)}"))
+            findNavController().navigateToKnownPath(path, title)
         }
-    }
-
-    private fun navigateTo(uri: Uri) {
-        findNavController().navigate(uri)
     }
 }

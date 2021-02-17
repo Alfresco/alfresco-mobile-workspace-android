@@ -37,7 +37,7 @@
             android:name="title"
             android:defaultValue=""
             app:argType="string" />
-        <deepLink app:uri="alfresco://offline/folder/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse/folder/local/{id}?title={title}" />
     </fragment>
 
     <fragment
@@ -86,8 +86,8 @@
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
-        <deepLink app:uri="alfresco://content/{path}/{id}?title={title}" />
-        <deepLink app:uri="alfresco://content/{path}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse/{path}/remote/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse/{path}/remote?title={title}" />
     </fragment>
 
     <activity
@@ -101,8 +101,8 @@
             android:name="title"
             app:argType="string" />
         <argument
-            android:name="type"
+            android:name="mode"
             app:argType="string" />
-        <deepLink app:uri="alfresco://content/{path}/{id}/preview?title={title}&amp;type={type}" />
+        <deepLink app:uri="alfresco://content/view/{mode}/{id}/preview?title={title}" />
     </activity>
 </navigation>

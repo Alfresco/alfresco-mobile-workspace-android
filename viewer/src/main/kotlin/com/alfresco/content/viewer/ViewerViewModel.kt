@@ -7,7 +7,6 @@ import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
-import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.RenditionRepository
 import java.io.File
 import java.lang.UnsupportedOperationException
@@ -22,12 +21,13 @@ enum class ViewerType {
 
 data class ViewerState(
     val id: String,
+    val mode: String,
     val entry: Entry? = null,
     val ready: Boolean = false,
     val viewerType: ViewerType? = null,
     val viewerUri: String? = null
 ) : MvRxState {
-    constructor(args: ViewerArgs) : this(args.id)
+    constructor(args: ViewerArgs) : this(args.id, args.mode)
 }
 
 class ViewerViewModel(
@@ -36,37 +36,15 @@ class ViewerViewModel(
 
     private val offlineRepository = OfflineRepository()
     private val browseRepository = BrowseRepository()
+    private val renditionRepository = RenditionRepository()
 
     init {
         viewModelScope.launch {
             try {
-                val entry = fetchEntry(state.id)
-                setState { copy(entry = entry) }
-
-                val type = supportedViewerType(entry)
-                if (type != null) {
-                    setState { copy(
-                        ready = true,
-                        viewerType = type,
-                        viewerUri = getContentUri(entry)
-                    ) }
+                if (state.mode == "local") {
+                    loadContent(state.id, OfflineContentLoader(offlineRepository))
                 } else {
-                    if (entry.isSynced) {
-                        val renditionUri = offlineRenditionUri(entry)
-                        val type = if (renditionUri.contains("pdf")) ViewerType.Pdf else ViewerType.Image
-                        setState { copy(
-                            ready = true,
-                            viewerType = type,
-                            viewerUri = renditionUri
-                        ) }
-                    } else {
-                        val renditionUri = RenditionRepository().fetchRenditionUri(state.id)
-                        setState { copy(
-                            ready = true,
-                            viewerType = renditionViewerType(renditionUri),
-                            viewerUri = renditionUri
-                        ) }
-                    }
+                    loadContent(state.id, RemoteContentLoader(browseRepository, renditionRepository))
                 }
             } catch (ex: Exception) {
                 setState { copy(ready = true) }
@@ -74,12 +52,26 @@ class ViewerViewModel(
         }
     }
 
-    private suspend fun fetchEntry(id: String): Entry {
-        val offline = offlineRepository.entry(id)
-        return if (offline?.isSynced == true) {
-            offline
+    private suspend fun loadContent(id: String, loader: ContentLoader) {
+        val entry = loader.fetchEntry(id)
+        requireNotNull(entry)
+
+        setState { copy(entry = entry) }
+
+        val type = supportedViewerType(entry)
+        if (type != null) {
+            setState { copy(
+                ready = true,
+                viewerType = type,
+                viewerUri = loader.contentUri(entry)
+            ) }
         } else {
-            browseRepository.fetchEntry(id)
+            val rendition = loader.rendition(entry)
+            setState { copy(
+                ready = true,
+                viewerType = rendition.second,
+                viewerUri = rendition.first
+            ) }
         }
     }
 
@@ -98,39 +90,68 @@ class ViewerViewModel(
                 null
         }
 
-    private fun getContentUri(entry: Entry) =
-        if (entry.offlineStatus == OfflineStatus.Synced) {
-            offlineRepository.contentUri(entry)
-        } else {
+    companion object {
+        private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
+    }
+
+    private interface ContentLoader {
+
+        suspend fun fetchEntry(id: String): Entry?
+
+        fun contentUri(entry: Entry): String
+
+        suspend fun rendition(entry: Entry): Pair<String, ViewerType>
+    }
+
+    private class RemoteContentLoader(
+        val browseRepository: BrowseRepository,
+        val renditionRepository: RenditionRepository
+    ) : ContentLoader {
+
+        override suspend fun fetchEntry(id: String) =
+            browseRepository.fetchEntry(id)
+
+        override fun contentUri(entry: Entry) =
             browseRepository.contentUri(entry)
+
+        override suspend fun rendition(entry: Entry): Pair<String, ViewerType> {
+            val uri = renditionRepository.fetchRenditionUri(entry.id)
+            requireNotNull(uri)
+            return Pair(uri, renditionViewerType(uri))
         }
 
-    private fun renditionViewerType(uri: String?) =
-        if (uri != null) {
+        private fun renditionViewerType(uri: String) =
             if (Uri.parse(uri).pathSegments.contains("pdf")) {
                 ViewerType.Pdf
             } else {
                 ViewerType.Image
             }
-        } else null
-
-    private fun offlineRenditionUri(entry: Entry): String {
-        val dir = offlineRepository.contentDir(entry)
-
-        val pdfPath = "${dir.path}/.preview_pdf"
-        if (File(pdfPath).exists()) {
-            return "file://$pdfPath"
-        }
-
-        val imgPath = "${dir.path}/.preview_img"
-        if (File(imgPath).exists()) {
-            return "file://$imgPath"
-        }
-
-        throw UnsupportedOperationException()
     }
 
-    companion object {
-        private val imageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
+    private class OfflineContentLoader(
+        val offlineRepository: OfflineRepository
+    ) : ContentLoader {
+
+        override suspend fun fetchEntry(id: String) =
+            offlineRepository.entry(id)
+
+        override fun contentUri(entry: Entry) =
+            offlineRepository.contentUri(entry)
+
+        override suspend fun rendition(entry: Entry): Pair<String, ViewerType> {
+            val dir = offlineRepository.contentDir(entry)
+
+            val pdfPath = "${dir.path}/.preview_pdf"
+            if (File(pdfPath).exists()) {
+                return Pair("file://$pdfPath", ViewerType.Pdf)
+            }
+
+            val imgPath = "${dir.path}/.preview_img"
+            if (File(imgPath).exists()) {
+                return Pair("file://$imgPath", ViewerType.Image)
+            }
+
+            throw UnsupportedOperationException()
+        }
     }
 }

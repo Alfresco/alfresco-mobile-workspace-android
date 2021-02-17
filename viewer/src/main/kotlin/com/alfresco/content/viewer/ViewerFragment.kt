@@ -30,18 +30,18 @@ import kotlinx.parcelize.Parcelize
 data class ViewerArgs(
     val id: String,
     val title: String,
-    val type: String
+    val mode: String
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
-        private const val TYPE_KEY = "type"
+        private const val MODE_KEY = "mode"
 
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(
                 args.getString(ID_KEY, ""),
                 args.getString(TITLE_KEY, ""),
-                args.getString(TYPE_KEY, "")
+                args.getString(MODE_KEY, "")
             )
         }
     }
@@ -106,7 +106,11 @@ class ViewerFragment : BaseMvRxFragment() {
         if (state.ready) {
             if (state.viewerType != null) {
                 if (childFragmentManager.findFragmentByTag(state.viewerType.toString()) == null) {
-                    val fragment = viewerFragment(state.viewerType, typeArgs(state.viewerUri ?: ""))
+                    val args = typeArgs(
+                        state.viewerUri ?: "",
+                        state.entry?.mimeType ?: ""
+                    )
+                    val fragment = viewerFragment(state.viewerType, args)
                     childFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerView, fragment, state.viewerType.toString())
                         .commit()
@@ -150,8 +154,8 @@ class ViewerFragment : BaseMvRxFragment() {
         }
     }
 
-    private fun typeArgs(uri: String): ChildViewerArgs {
-        return ChildViewerArgs(args.id, uri, args.type)
+    private fun typeArgs(uri: String, mimeType: String): ChildViewerArgs {
+        return ChildViewerArgs(args.id, uri, mimeType)
     }
 
     private fun viewerFragment(type: ViewerType, args: ChildViewerArgs): Fragment {

@@ -4,6 +4,7 @@
 
     <string name="nav_title_recents">Recientes</string>
     <string name="nav_title_favorites">Favoritos</string>
+    <string name="nav_title_offline">Sin conexión</string>
     <string name="nav_title_browse">Explorar</string>
     <string name="nav_title_settings">Cuenta</string>
 
@@ -19,7 +20,7 @@
     <string-array name="settings_theme_labels">
         <item>Claro</item>
         <item>Oscuro</item>
-        <item>Predeterm. del sistema</item>
+        <item>Predeterminado del sistema</item>
     </string-array>
 
     <string name="auth_error_wrong_credentials">Nombre de usuario o contraseña indicados incorrectos.</string>

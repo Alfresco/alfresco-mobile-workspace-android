@@ -4,6 +4,7 @@
 
     <string name="auth_connect_field_hint">Conectar a</string>
     <string name="auth_connect_button">Conectar</string>
+    <string name="auth_help_button_connect">¿Cómo conectarse a Alfresco?</string>
     <string name="auth_help_button">¿Necesita ayuda?</string>
     <string name="auth_settings_button">@string/auth_settings_title</string>
     <string name="auth_progress_bar_message">Conectando</string>
@@ -27,9 +28,9 @@
     </string>
 
     <string name="auth_help_settings_body">
-      <![CDATA[<h1>Autenticación con Alfresco</h1>
-      <p>Si no utiliza la configuración de SSO predeterminada, puede establecer sus valores aquí.</p>
-      <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+        <![CDATA[<h1>Autenticación con Alfresco</h1>
+        <p>Si no utiliza la configuración de SSO predeterminada, puede establecer sus valores aquí.</p>
+        <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
     </string>
 
     <!-- Errors -->

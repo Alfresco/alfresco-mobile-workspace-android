@@ -4,6 +4,7 @@
 
     <string name="nav_title_recents">Récents</string>
     <string name="nav_title_favorites">Favoris</string>
+    <string name="nav_title_offline">Hors connexion</string>
     <string name="nav_title_browse">Parcourir</string>
     <string name="nav_title_settings">Compte</string>
 

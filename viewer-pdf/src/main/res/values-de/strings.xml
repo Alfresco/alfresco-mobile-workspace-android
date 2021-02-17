@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="password_prompt_title">Datei gesperrt</string>
     <string name="password_prompt_message">Geben Sie das Passwort ein, um die Datei freizugeben.</string>

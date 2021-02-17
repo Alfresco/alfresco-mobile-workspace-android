@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="offline_sync_button_title">Alles synchroniseren</string>
+
+    <string name="offline_empty_title">Geen offlinecontent</string>
+    <string name="offline_empty_message">Content die u offline beschikbaar maakt,\nwordt hier weergegeven.</string>
+
+    <string name="offline_sync_unavailable_title">Synchroniseren niet beschikbaar</string>
+    <string name="offline_sync_unavailable_message">U kunt geen content synchroniseren via een mobiele dataverbinding.</string>
+    <string name="offline_sync_unavailable_button">OK</string>
+</resources>

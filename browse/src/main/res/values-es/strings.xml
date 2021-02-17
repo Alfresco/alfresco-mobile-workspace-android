@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="nav_title_home">Inicio</string>
 
@@ -25,5 +26,5 @@
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
     <string name="favorites_empty_message">Parece que no ha\nañadido nada.</string>
     <string name="folder_empty_title">La carpeta está vacía</string>
-    <string name="folder_empty_message">Parece que todavía \nno hay contenido.</string>
+    <string name="folder_empty_message">Parece que todavía\nno hay contenido.</string>
 </resources>

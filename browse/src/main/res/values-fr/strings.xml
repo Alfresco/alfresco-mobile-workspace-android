@@ -27,4 +27,14 @@
     <string name="favorites_empty_message">Il semble que vous n\'ayez\nrien ajouté.</string>
     <string name="folder_empty_title">Le dossier est vide</string>
     <string name="folder_empty_message">Il semble que cet emplacement\nne contienne aucun élément.</string>
+
+    <!-- Offline -->
+    <string name="offline_sync_button_title">Synchroniser tout</string>
+
+    <string name="offline_empty_title">Aucun contenu hors connexion</string>
+    <string name="offline_empty_message">Le contenu disponible hors connexion\ns\'affichera ici.</string>
+
+    <string name="offline_sync_unavailable_title">Synchronisation non disponible</string>
+    <string name="offline_sync_unavailable_message">Impossible de synchroniser du contenu sur des données cellulaires.</string>
+    <string name="offline_sync_unavailable_positive">Oui</string>
 </resources>

@@ -27,4 +27,14 @@
     <string name="favorites_empty_message">Sembra che tu non abbia\naggiunto nulla.</string>
     <string name="folder_empty_title">La cartella è vuota</string>
     <string name="folder_empty_message">Sembra che qui non ci\nsia ancora nulla.</string>
+
+    <!-- Offline -->
+    <string name="offline_sync_button_title">Sincronizza tutto</string>
+
+    <string name="offline_empty_title">Nessun contenuto offline</string>
+    <string name="offline_empty_message">Il contenuto reso disponibile offline\nverrà visualizzato qui.</string>
+
+    <string name="offline_sync_unavailable_title">Sincronizzazione non disponibile</string>
+    <string name="offline_sync_unavailable_message">Non è possibile sincronizzare il contenuto sulla rete dati.</string>
+    <string name="offline_sync_unavailable_positive">Sì</string>
 </resources>

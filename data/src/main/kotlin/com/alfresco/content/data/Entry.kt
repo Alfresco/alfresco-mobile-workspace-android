@@ -120,7 +120,7 @@ data class Entry(
         }
 
         companion object {
-            fun from(value: String): Type {
+            fun from(value: String, isFile: Boolean = false, isFolder: Boolean = false): Type {
                 when (value) {
                     "cm:content" -> return File
                     "cm:folder" -> return Folder
@@ -129,6 +129,8 @@ data class Entry(
                     "app:filelink" -> return FileLink
                     "app:folderlink" -> return FolderLink
                 }
+                if (isFile) return File
+                if (isFolder) return Folder
                 return Unknown
             }
         }
@@ -152,7 +154,7 @@ data class Entry(
             return Entry(
                 node.id,
                 node.parentId,
-                Type.from(node.nodeType),
+                Type.from(node.nodeType, node.isFile, node.isFolder),
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,
@@ -167,7 +169,7 @@ data class Entry(
             return Entry(
                 result.id,
                 result.parentId,
-                Type.from(result.nodeType),
+                Type.from(result.nodeType, result.isFile, result.isFolder),
                 result.name,
                 result.path?.formattedString(),
                 result.content?.mimeType,
@@ -182,7 +184,7 @@ data class Entry(
             return Entry(
                 node.id,
                 node.parentId,
-                Type.from(node.nodeType),
+                Type.from(node.nodeType, node.isFile, node.isFolder),
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,
@@ -280,7 +282,7 @@ data class Entry(
             return Entry(
                 node.id,
                 node.parentId,
-                Type.from(node.nodeType),
+                Type.from(node.nodeType, node.isFile, node.isFolder),
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,

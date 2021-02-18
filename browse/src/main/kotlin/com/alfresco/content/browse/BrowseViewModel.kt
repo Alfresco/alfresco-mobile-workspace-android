@@ -34,7 +34,7 @@ class BrowseViewModel(
         refresh()
 
         withState {
-            if (it.sortOrder == Entry.SortOrder.ByModifiedDate) {
+            if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
             }
         }

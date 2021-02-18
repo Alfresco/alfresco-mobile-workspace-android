@@ -41,14 +41,14 @@ data class BrowseViewState(
 
     private fun copyUpdatingBase(newEntries: List<Entry>) =
         when (sortOrder) {
-            Entry.SortOrder.ByModifiedDate -> groupByModifiedDateReducer(newEntries)
+            SortOrder.ByModifiedDate -> groupByModifiedDateReducer(newEntries)
             else -> baseReducer(newEntries)
         }
 
-    val sortOrder: Entry.SortOrder
+    val sortOrder: SortOrder
         get() = when (path) {
-            "recents" -> Entry.SortOrder.ByModifiedDate // TODO:
-            else -> Entry.SortOrder.Default
+            "recents" -> SortOrder.ByModifiedDate // TODO:
+            else -> SortOrder.Default
         }
 
     private fun baseReducer(newEntries: List<Entry>): BrowseViewState =
@@ -134,5 +134,10 @@ data class BrowseViewState(
                 valueMap[Older] = context.getString(R.string.modified_group_older)
             }
         }
+    }
+
+    enum class SortOrder {
+        ByModifiedDate,
+        Default
     }
 }

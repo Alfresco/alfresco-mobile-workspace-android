@@ -144,11 +144,6 @@ data class Entry(
         }
     }
 
-    enum class SortOrder {
-        ByModifiedDate,
-        Default
-    }
-
     companion object {
         fun with(node: Node): Entry {
             return Entry(

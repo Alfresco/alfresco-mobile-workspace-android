@@ -42,7 +42,7 @@ private fun NavController.navigateFileLink(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/view/remote/${entry.otherId}?title=${Uri.encode(entry.title)}"))
 
 private fun NavController.navigateFolderLink(entry: Entry) =
-    navigate(Uri.parse("$BASE_URI/browse/folder/${entry.otherId}?title=${Uri.encode(entry.title)}"))
+    navigate(Uri.parse("$BASE_URI/browse/folder/remote/${entry.otherId}?title=${Uri.encode(entry.title)}"))
 
 fun NavController.navigateToContextualSearch(id: String, title: String) =
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))

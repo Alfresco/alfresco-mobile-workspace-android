@@ -2,7 +2,6 @@ package com.alfresco.content.browse.offline
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkInfo
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -10,7 +9,7 @@ import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.Settings
-import com.alfresco.content.data.SyncWorker
+import com.alfresco.content.data.SyncService
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.network.ConnectivityTracker
@@ -32,9 +31,9 @@ class OfflineViewModel(
 
         ConnectivityTracker.startTracking(context)
         viewModelScope.launch {
-            SyncWorker
+            SyncService
                 .observe(context)
-                .map { it == WorkInfo.State.RUNNING }
+                .map { it == SyncService.SyncState.Running }
                 .combine(ConnectivityTracker.networkAvailable) { running, connected ->
                     !running && connected
                 }

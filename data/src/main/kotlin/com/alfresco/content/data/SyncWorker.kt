@@ -3,21 +3,13 @@ package com.alfresco.content.data
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.alfresco.coroutines.asFlow
 import com.alfresco.coroutines.asyncMap
 import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
 import java.time.ZonedDateTime
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 
@@ -27,13 +19,15 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     private val repository = OfflineRepository()
 
     override suspend fun doWork(): Result {
-
-        val localEntries = buildLocalList().also { debugPrintEntries(it) }
-        val remoteEntries = buildRemoteList().also { debugPrintEntries(it) }
-        val ops = calculateDiff(localEntries, remoteEntries).also { debugPrintOperations(it) }
-        processOperations(ops)
-
-        return Result.success()
+        try {
+            val localEntries = buildLocalList().also { debugPrintEntries(it) }
+            val remoteEntries = buildRemoteList().also { debugPrintEntries(it) }
+            val ops = calculateDiff(localEntries, remoteEntries).also { debugPrintOperations(it) }
+            processOperations(ops)
+        } finally {
+            // Always return success so we don't cancel APPEND work
+            return Result.success()
+        }
     }
 
     private fun debugPrintEntries(list: List<Entry>) {
@@ -236,48 +230,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             entry.mimeType?.startsWith("video/") == true
 
     companion object {
-        private const val UNIQUE_WORK_NAME = "sync"
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_PAGE_SIZE = 100
         private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
         private const val HTTP_STATUS_FORBIDDEN = 403
         private const val HTTP_STATUS_NOT_FOUND = 404
-
-        fun schedule(context: Context, overrideNetwork: Boolean) {
-            val networkType = if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {
-                NetworkType.CONNECTED
-            } else {
-                NetworkType.UNMETERED
-            }
-
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(networkType)
-                .build()
-
-            val request = OneTimeWorkRequestBuilder<SyncWorker>()
-                .setConstraints(constraints)
-                .build()
-
-            WorkManager
-                .getInstance(context)
-                .beginUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, request)
-                .enqueue()
-        }
-
-        fun observe(context: Context): Flow<WorkInfo.State?> =
-            WorkManager
-                .getInstance(context)
-                .getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_NAME)
-                .asFlow()
-                .map {
-                    with(it?.firstOrNull()) { this?.state }
-                }
-
-        fun cancel(context: Context) {
-            WorkManager
-                .getInstance(context)
-                .cancelUniqueWork(UNIQUE_WORK_NAME)
-        }
     }
 
     sealed class Operation() {

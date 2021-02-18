@@ -121,7 +121,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         File(SessionManager.requireSession.filesDir, entry.id)
 
     fun cleanup() {
-        SyncWorker.cancel(session.context)
+        SyncService.cancel(session.context)
         removeAllEntries()
         removeAllFiles()
     }

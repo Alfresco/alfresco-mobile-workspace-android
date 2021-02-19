@@ -30,7 +30,7 @@ data class Entry(
     val parentId: String? = null,
     @Convert(converter = Type.Converter::class, dbType = String::class)
     val type: Type,
-    val title: String,
+    val name: String,
     val path: String?,
     val mimeType: String?,
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)

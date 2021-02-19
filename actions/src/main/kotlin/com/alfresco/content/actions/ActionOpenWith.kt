@@ -44,7 +44,7 @@ data class ActionOpenWith(
         val deferredDialog = showProgressDialogAsync(context)
 
         val uri = BrowseRepository().contentUri(entry)
-        val output = File(context.cacheDir, entry.title)
+        val output = File(context.cacheDir, entry.name)
         val deferredDownload = GlobalScope.async(Dispatchers.IO) {
             ContentDownloader.downloadFileTo(uri, output.path)
         }
@@ -79,7 +79,7 @@ data class ActionOpenWith(
         GlobalScope.async(Dispatchers.Main) {
             suspendCancellableCoroutine<Boolean> {
                 val dialog = MaterialAlertDialogBuilder(context)
-                    .setTitle(entry.title)
+                    .setTitle(entry.name)
                     .setMessage(
                         context.getString(R.string.action_open_with_downloading)
                     )

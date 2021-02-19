@@ -32,7 +32,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private fun debugPrintEntries(list: List<Entry>) {
         val out = if (list.count() > 0) {
-            list.map { "${it.id}: ${it.title}" }.reduce { acc, string -> "$acc\n$string" }
+            list.map { "${it.id}: ${it.name}" }.reduce { acc, string -> "$acc\n$string" }
         } else {
             "empty"
         }
@@ -173,7 +173,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         if (dir.exists()) {
             deleted = dir.deleteRecursively()
         }
-        Log.d("SyncWorker", "Deleted: ${entry.id}: ${entry.title}")
+        Log.d("SyncWorker", "Deleted: ${entry.id}: ${entry.name}")
         if (deleted) {
             deleted = repository.remove(entry)
         }
@@ -196,9 +196,9 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.InProgress))
         val outputDir = repository.contentDir(entry)
         outputDir.mkdir()
-        val output = File(outputDir, entry.title)
+        val output = File(outputDir, entry.name)
         val uri = BrowseRepository().contentUri(entry)
-        Log.d("SyncWorker", "Downloaded: ${entry.id}: ${entry.title}")
+        Log.d("SyncWorker", "Downloaded: ${entry.id}: ${entry.name}")
         ContentDownloader.downloadFileTo(uri, output.path)
     }
 

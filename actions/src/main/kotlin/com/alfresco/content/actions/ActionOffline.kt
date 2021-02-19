@@ -27,7 +27,7 @@ data class ActionAddOffline(
             view,
             anchorView,
             R.string.action_add_offline_toast,
-            entry.title.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view))
         )
 }
 
@@ -48,7 +48,7 @@ data class ActionRemoveOffline(
             view,
             anchorView,
             R.string.action_remove_offline_toast,
-            entry.title.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view))
         )
 }
 

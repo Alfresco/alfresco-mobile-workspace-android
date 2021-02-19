@@ -44,7 +44,7 @@ data class ActionDelete(
             view,
             anchorView,
             R.string.action_delete_toast,
-            entry.title.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view))
         )
 }
 
@@ -65,7 +65,7 @@ data class ActionRestore(
             view,
             anchorView,
             R.string.action_restored_toast,
-            entry.title.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view))
         )
 }
 
@@ -92,7 +92,7 @@ data class ActionDeleteForever(
         suspendCoroutine<Boolean> {
             MaterialAlertDialogBuilder(context)
                 .setTitle(context.getString(R.string.action_delete_confirmation_title))
-                .setMessage(context.getString(R.string.action_delete_confirmation_message, entry.title))
+                .setMessage(context.getString(R.string.action_delete_confirmation_message, entry.name))
                 .setNegativeButton(context.getString(R.string.action_delete_confirmation_negative)) { _, _ ->
                     it.resume(false)
                 }
@@ -112,6 +112,6 @@ data class ActionDeleteForever(
             view,
             anchorView,
             R.string.action_delete_forever_toast,
-            entry.title.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view))
         )
 }

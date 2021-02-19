@@ -50,7 +50,7 @@ data class ActionDownload(
         val src = OfflineRepository().contentFile(entry)
         val resolver = context.contentResolver
 
-        val filename = entry.title
+        val filename = entry.name
         val mimeType = DocumentFile.fromFile(src).type
 
         val legacyPath = uniqueFilePath(
@@ -123,8 +123,8 @@ data class ActionDownload(
         val dm = ContextCompat.getSystemService(context, DownloadManager::class.java)
         val request = DownloadManager.Request(Uri.parse(uri))
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        request.setTitle(entry.title)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, entry.title)
+        request.setTitle(entry.name)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, entry.name)
 
         dm?.enqueue(request) ?: throw CancellationException("Missing DownloadManager service.")
     }

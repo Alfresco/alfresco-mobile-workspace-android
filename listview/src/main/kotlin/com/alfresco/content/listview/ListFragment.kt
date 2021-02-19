@@ -149,8 +149,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
             state.entries.forEach {
                 if (it.type == Entry.Type.Group) {
                     listViewGroupHeader {
-                        id(it.title)
-                        title(it.title)
+                        id(it.name)
+                        title(it.name)
                     }
                 } else {
                     listViewRow {

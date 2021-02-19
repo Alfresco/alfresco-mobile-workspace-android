@@ -103,7 +103,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         } else {
             query.equal(Entry_.isOffline, true)
         }
-        return query.order(Entry_.title).build()
+        return query.order(Entry_.name).build()
     }
 
     fun fetchTopLevelOfflineEntries(): List<Entry> {
@@ -134,7 +134,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         "file://${contentFile(entry).absolutePath}"
 
     fun contentFile(entry: Entry): File =
-        File(contentDir(entry), entry.title)
+        File(contentDir(entry), entry.name)
 
     fun contentDir(entry: Entry): File =
         File(SessionManager.requireSession.filesDir, entry.id)

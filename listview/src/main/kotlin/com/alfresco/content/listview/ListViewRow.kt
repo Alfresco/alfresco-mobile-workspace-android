@@ -27,7 +27,7 @@ class ListViewRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(entry: Entry) {
-        binding.title.text = entry.title
+        binding.title.text = entry.name
         binding.subtitle.text = entry.path
         updateSubtitleVisibility()
 

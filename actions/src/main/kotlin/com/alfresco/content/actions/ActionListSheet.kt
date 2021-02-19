@@ -36,7 +36,7 @@ class ActionListSheet : BaseMvRxBottomSheet() {
 
         binding.header.apply {
             icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context?.theme))
-            title.text = state.entry.title
+            title.text = state.entry.name
         }
 
         binding.recyclerView.withModels {

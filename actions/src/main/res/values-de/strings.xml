@@ -23,6 +23,7 @@
     <string name="action_delete_confirmation_positive">Löschen</string>
 
     <string name="action_download_toast">Datei wird heruntergeladen. Siehe Benachrichtigungen für Details.</string>
+    <string name="action_export_toast">Datei in lokalen Speicherort exportiert.</string>
     <string name="action_download_failed_permissions">Herunterladen fehlgeschlagen. Sie haben Berechtigungen für den Speicherzugriff deaktiviert.</string>
 
     <string name="action_open_with_downloading">Wird heruntergeladen&#8230;</string>

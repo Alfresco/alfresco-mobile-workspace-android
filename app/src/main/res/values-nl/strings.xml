@@ -24,5 +24,10 @@
     </string-array>
 
     <string name="auth_error_wrong_credentials">Onjuiste gebruikersnaam of wachtwoord opgegeven.</string>
+    <string name="settings_sync_network_title">Offlinebestanden bijwerken met</string>
+    <string-array name="settings_sync_network_value_labels">
+        <item>Alleen Wi-Fi</item>
+        <item>Wi-Fi en mobiele gegevens</item>
+    </string-array>
 
 </resources>

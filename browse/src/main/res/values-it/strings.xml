@@ -34,7 +34,8 @@
     <string name="offline_empty_title">Nessun contenuto offline</string>
     <string name="offline_empty_message">Il contenuto reso disponibile offline\nverrà visualizzato qui.</string>
 
-    <string name="offline_sync_unavailable_title">Sincronizzazione non disponibile</string>
-    <string name="offline_sync_unavailable_message">Non è possibile sincronizzare il contenuto sulla rete dati.</string>
+    <string name="offline_sync_unavailable_title">Vuoi utilizzare i dati mobili?</string>
+    <string name="offline_sync_unavailable_message">Le tue impostazioni saranno sostituite e questa volta il download verrà eseguito usando i dati mobili. Altrimenti, il download inizierà dopo la connessione alla rete Wi-Fi.</string>
     <string name="offline_sync_unavailable_positive">Sì</string>
+    <string name="offline_sync_unavailable_negative">Dopo</string>
 </resources>

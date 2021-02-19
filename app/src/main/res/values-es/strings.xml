@@ -24,5 +24,10 @@
     </string-array>
 
     <string name="auth_error_wrong_credentials">Nombre de usuario o contraseña indicados incorrectos.</string>
+    <string name="settings_sync_network_title">Actualizar ficheros sin conexión usando</string>
+    <string-array name="settings_sync_network_value_labels">
+        <item>Sólo wifi</item>
+        <item>Wifi y datos móviles</item>
+    </string-array>
 
 </resources>

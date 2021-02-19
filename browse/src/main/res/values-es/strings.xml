@@ -34,7 +34,8 @@
     <string name="offline_empty_title">Contenido sin conexión</string>
     <string name="offline_empty_message">Contenido disponible\n sin conexión se mostrará aquí.</string>
 
-    <string name="offline_sync_unavailable_title">No hay sincronización disponible</string>
-    <string name="offline_sync_unavailable_message">No se puede sincronizar contenido a través de datos móviles.</string>
+    <string name="offline_sync_unavailable_title">¿Utilizar los datos móviles?</string>
+    <string name="offline_sync_unavailable_message">Esto anulará su configuración y se descargará a través de datos móviles esta vez. De lo contrario, la descarga comenzará más tarde después de conectarse a Wifi.</string>
     <string name="offline_sync_unavailable_positive">Sí</string>
+    <string name="offline_sync_unavailable_negative">Más tarde</string>
 </resources>

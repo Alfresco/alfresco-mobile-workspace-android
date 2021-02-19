@@ -23,6 +23,7 @@
     <string name="action_delete_confirmation_positive">Eliminar</string>
 
     <string name="action_download_toast">Se descargará el fichero. Vea las notificaciones para más detalles</string>
+    <string name="action_export_toast">Fichero exportado a almacenamiento local.</string>
     <string name="action_download_failed_permissions">Fallo al descargar. Desactivó los permisos de acceso al almacenamiento.</string>
 
     <string name="action_open_with_downloading">Descargando&#8230;</string>

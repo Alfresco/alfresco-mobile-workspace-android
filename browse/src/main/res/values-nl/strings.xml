@@ -34,7 +34,8 @@
     <string name="offline_empty_title">Geen offlinecontent</string>
     <string name="offline_empty_message">Content die u offline beschikbaar maakt,\nwordt hier weergegeven.</string>
 
-    <string name="offline_sync_unavailable_title">Synchroniseren niet beschikbaar</string>
-    <string name="offline_sync_unavailable_message">U kunt geen content synchroniseren via een mobiele dataverbinding.</string>
+    <string name="offline_sync_unavailable_title">Mobiele gegevens gebruiken?</string>
+    <string name="offline_sync_unavailable_message">Hiermee worden uw instellingen overschreven en vindt het downloaden deze keer plaats via een mobiele gegevens. Anders begint het downloaden later nadat verbinding is gemaakt met Wi-Fi.</string>
     <string name="offline_sync_unavailable_positive">Ja</string>
+    <string name="offline_sync_unavailable_negative">Later</string>
 </resources>

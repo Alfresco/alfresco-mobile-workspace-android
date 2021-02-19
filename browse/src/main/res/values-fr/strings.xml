@@ -31,10 +31,11 @@
     <!-- Offline -->
     <string name="offline_sync_button_title">Synchroniser tout</string>
 
-    <string name="offline_empty_title">Aucun contenu hors connexion</string>
-    <string name="offline_empty_message">Le contenu disponible hors connexion\ns\'affichera ici.</string>
+    <string name="offline_empty_title">Aucun contenu hors ligne</string>
+    <string name="offline_empty_message">Le contenu disponible hors ligne\ns\'affichera ici.</string>
 
-    <string name="offline_sync_unavailable_title">Synchronisation non disponible</string>
-    <string name="offline_sync_unavailable_message">Impossible de synchroniser du contenu sur des données cellulaires.</string>
+    <string name="offline_sync_unavailable_title">Utiliser les données mobiles?</string>
+    <string name="offline_sync_unavailable_message">Vos réglages seront remplacés et des données mobiles seront utilisées pour le téléchargement. Sinon, le téléchargement aura lieu plus tard lorsque la connexion Wi-Fi sera disponible.</string>
     <string name="offline_sync_unavailable_positive">Oui</string>
+    <string name="offline_sync_unavailable_negative">Plus tard</string>
 </resources>

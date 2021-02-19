@@ -2,7 +2,7 @@
     <string name="app_name">Workspace</string>
     <string name="auth_app_name">Alfresco\nMobile Workspace</string>
 
-    <string name="nav_title_recents">Kürzlich geöffnet</string>
+    <string name="nav_title_recents">Verlauf</string>
     <string name="nav_title_favorites">Favoriten</string>
     <string name="nav_title_offline">Offline</string>
     <string name="nav_title_browse">Durchsuchen</string>
@@ -24,5 +24,10 @@
     </string-array>
 
     <string name="auth_error_wrong_credentials">Benutzername oder Passwort falsch.</string>
+    <string name="settings_sync_network_title">Offlinedateien aktualisieren mithilfe von</string>
+    <string-array name="settings_sync_network_value_labels">
+        <item>Nur WLAN</item>
+        <item>WLAN und Mobile Daten</item>
+    </string-array>
 
 </resources>

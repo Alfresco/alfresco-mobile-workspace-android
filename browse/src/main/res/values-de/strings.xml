@@ -34,7 +34,8 @@
     <string name="offline_empty_title">Keine Offlineinhalte</string>
     <string name="offline_empty_message">Offline zur Verfügung gestellte Inhalte\nwerden hier zu sehen sein.</string>
 
-    <string name="offline_sync_unavailable_title">Synchronisierung nicht verfügbar</string>
-    <string name="offline_sync_unavailable_message">Sie können über Mobilfunk keine Inhalte synchronisieren.</string>
+    <string name="offline_sync_unavailable_title">Mobile Daten verwenden?</string>
+    <string name="offline_sync_unavailable_message">Dadurch werden Ihre Einstellungen überschrieben und der Download erfolgt in diesem Fall über Mobile Daten. Andernfalls beginnt der Download später nach dem Herstellen einer WLAN-Verbindung.</string>
     <string name="offline_sync_unavailable_positive">Ja</string>
+    <string name="offline_sync_unavailable_negative">Später</string>
 </resources>

@@ -23,6 +23,7 @@
     <string name="action_delete_confirmation_positive">Verwijderen</string>
 
     <string name="action_download_toast">Bestand wordt gedownload. Zie meldingen voor details</string>
+    <string name="action_export_toast">Bestand geëxporteerd naar lokale opslag.</string>
     <string name="action_download_failed_permissions">Downloaden mislukt. U hebt rechten voor toegang tot opslag uitgeschakeld.</string>
 
     <string name="action_open_with_downloading">Downloaden&#8230;</string>

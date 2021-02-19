@@ -4,7 +4,7 @@
 
     <string name="nav_title_recents">Récents</string>
     <string name="nav_title_favorites">Favoris</string>
-    <string name="nav_title_offline">Hors connexion</string>
+    <string name="nav_title_offline">Hors ligne</string>
     <string name="nav_title_browse">Parcourir</string>
     <string name="nav_title_settings">Compte</string>
 
@@ -24,5 +24,10 @@
     </string-array>
 
     <string name="auth_error_wrong_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
+    <string name="settings_sync_network_title">Mettre à jour les fichiers hors ligne en utilisant</string>
+    <string-array name="settings_sync_network_value_labels">
+        <item>une connexion Wi-Fi uniquement</item>
+        <item>une connexion Wi-Fi et données mobiles</item>
+    </string-array>
 
 </resources>

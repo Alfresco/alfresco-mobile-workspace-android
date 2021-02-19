@@ -80,7 +80,7 @@ data class Entry(
         id == other.id &&
             parentId == other.parentId &&
             type == other.type &&
-            title == other.title &&
+            name == other.name &&
             path == other.path &&
             mimeType == other.mimeType &&
             modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
@@ -92,7 +92,7 @@ data class Entry(
         copy(
             parentId = other.parentId,
             type = other.type,
-            title = other.title,
+            name = other.name,
             path = other.path,
             mimeType = other.mimeType,
             modified = other.modified,

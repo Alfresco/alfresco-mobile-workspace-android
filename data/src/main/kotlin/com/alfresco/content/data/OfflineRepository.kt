@@ -6,6 +6,7 @@ import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
+import io.objectbox.query.Query
 import java.io.File
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
@@ -57,18 +58,25 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             box.put(it)
         }
 
+    fun fetchOfflineEntries(parentId: String?): ResponsePaging {
+        val query = offlineEntriesQuery(parentId)
+        val data = query.find()
+        val count = data.count().toLong()
+        return ResponsePaging(
+            data,
+            Pagination(
+                count,
+                false,
+                0,
+                count,
+                count
+            )
+        )
+    }
+
     fun observeOfflineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
-        var query = box.query()
-        query = if (parentId != null) {
-            query.equal(Entry_.parentId, parentId)
-        } else {
-            query.equal(Entry_.isOffline, true)
-        }
-        query = query
-            .order(Entry_.title)
-        val subscription = query.build()
-            .subscribe()
+        val query = offlineEntriesQuery(parentId)
+        val subscription = query.subscribe()
             .observer { data ->
                 val count = data.count().toLong()
                 sendBlocking(
@@ -85,6 +93,17 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 )
             }
         awaitClose { subscription.cancel() }
+    }
+
+    private fun offlineEntriesQuery(parentId: String?): Query<Entry> {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        var query = box.query()
+        query = if (parentId != null) {
+            query.equal(Entry_.parentId, parentId)
+        } else {
+            query.equal(Entry_.isOffline, true)
+        }
+        return query.order(Entry_.title).build()
     }
 
     fun fetchTopLevelOfflineEntries(): List<Entry> {

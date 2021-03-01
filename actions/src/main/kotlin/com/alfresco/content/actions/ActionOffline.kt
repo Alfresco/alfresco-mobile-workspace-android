@@ -17,7 +17,7 @@ data class ActionAddOffline(
     override suspend fun execute(context: Context): Entry {
         val res = repository.markOffline(entry)
         // return item without status
-        return res.copy(offlineStatus = OfflineStatus.Undefined)
+        return res.copy(offlineStatus = OfflineStatus.UNDEFINED)
     }
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)

@@ -41,7 +41,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun markOffline(entry: Entry) =
-        updateEntry(entry.copy(isOffline = true, offlineStatus = OfflineStatus.Pending))
+        updateEntry(entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING))
 
     fun markForRemoval(entry: Entry) =
         updateEntry(entry.copy(isOffline = false))
@@ -117,7 +117,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun fetchAllOfflineEntries(): List<Entry> {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
-            .notEqual(Entry_.offlineStatus, OfflineStatus.Undefined.value())
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
             .build()
         return query.find()
     }

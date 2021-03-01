@@ -16,6 +16,7 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
+import java.lang.Exception
 import java.time.Instant
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
@@ -42,12 +43,12 @@ data class Entry(
     val otherId: String? = null,
     @Id var boxId: Long = 0,
     val isOffline: Boolean = false,
-    @Convert(converter = OfflineStatusConverter::class, dbType = String::class)
-    val offlineStatus: OfflineStatus = OfflineStatus.Undefined
+    @Convert(converter = BoxOfflineStatusConverter::class, dbType = String::class)
+    val offlineStatus: OfflineStatus = OfflineStatus.UNDEFINED,
 ) : Parcelable {
 
     val isSynced: Boolean
-        get() = offlineStatus == OfflineStatus.Synced
+        get() = offlineStatus == OfflineStatus.SYNCED
 
     val isLocal: Boolean
         get() = boxId != 0L
@@ -62,7 +63,7 @@ data class Entry(
         get() = type == Type.FileLink || type == Type.FolderLink
 
     val hasOfflineStatus: Boolean
-        get() = offlineStatus != OfflineStatus.Undefined
+        get() = offlineStatus != OfflineStatus.UNDEFINED
 
     // TODO: move to repository level
     fun withOfflineStatus(): Entry {
@@ -297,36 +298,20 @@ data class Entry(
 }
 
 enum class OfflineStatus {
-    Pending,
-    InProgress,
-    Synced,
-    Error,
-    Undefined;
+    PENDING,
+    SYNCING,
+    SYNCED,
+    ERROR,
+    UNDEFINED;
 
-    fun value() = when (this) {
-        Pending -> "pending"
-        InProgress -> "inProgress"
-        Synced -> "synced"
-        Error -> "error"
-        else -> "undefined"
-    }
-
-    companion object {
-        fun from(value: String): OfflineStatus {
-            when (value) {
-                "pending" -> return Pending
-                "inProgress" -> return InProgress
-                "synced" -> return Synced
-                "error" -> return Error
-            }
-            return Undefined
-        }
-    }
+    @OptIn(ExperimentalStdlibApi::class)
+    fun value() = name.lowercase()
 }
 
-class OfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
+@ExperimentalStdlibApi
+class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
-        OfflineStatus.from(databaseValue ?: "")
+        try { OfflineStatus.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { OfflineStatus.UNDEFINED }
 
     override fun convertToDatabaseValue(entityProperty: OfflineStatus?) =
         entityProperty?.value()

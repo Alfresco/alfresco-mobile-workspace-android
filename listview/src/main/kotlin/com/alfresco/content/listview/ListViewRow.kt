@@ -77,13 +77,13 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun makeOfflineStatusConfig(entry: Entry): Pair<Int, Int?> =
         when (entry.offlineStatus) {
-            OfflineStatus.Pending ->
+            OfflineStatus.PENDING ->
                 Pair(R.drawable.ic_offline_status_pending, null)
-            OfflineStatus.InProgress ->
+            OfflineStatus.SYNCING ->
                 Pair(R.drawable.ic_offline_status_in_progress, R.string.offline_status_in_progress)
-            OfflineStatus.Synced ->
+            OfflineStatus.SYNCED ->
                 Pair(R.drawable.ic_offline_status_synced, null)
-            OfflineStatus.Error ->
+            OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)

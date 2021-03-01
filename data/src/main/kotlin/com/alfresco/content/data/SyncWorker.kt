@@ -135,7 +135,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private fun contentHasChanged(local: Entry, remote: Entry) =
         remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
-            (local.isFile && local.offlineStatus != OfflineStatus.Synced)
+            (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
 
     private fun dateCompare(d1: ZonedDateTime?, d2: ZonedDateTime?) =
         (d1?.toInstant()?.epochSecond ?: 0) - (d2?.toInstant()?.epochSecond ?: 0)
@@ -162,7 +162,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }
 
     private fun createEntry(entry: Entry) =
-        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Pending))
+        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.PENDING))
 
     private fun updateEntryMetadata(local: Entry, remote: Entry) =
         repository.updateEntry(local.copyWithMetadata(remote))
@@ -185,15 +185,15 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             try {
                 downloadItem(entry)
                 downloadRendition(entry)
-                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Synced))
+                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCED))
             } catch (_: Exception) {
-                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.Error))
+                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.ERROR))
             }
         }
     }
 
     private suspend fun downloadItem(entry: Entry) {
-        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.InProgress))
+        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCING))
         val outputDir = repository.contentDir(entry)
         outputDir.mkdir()
         val output = File(outputDir, entry.name)

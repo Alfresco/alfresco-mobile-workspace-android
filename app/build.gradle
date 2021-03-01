@@ -108,8 +108,6 @@ dependencies {
 
     coreLibraryDesugaring Libs.AndroidTools.desugar
 
-    debugImplementation Libs.leakCanary
-
     playStoreImplementation Libs.Google.Firebase.analytics
     playStoreImplementation Libs.Google.Firebase.crashlytics
 

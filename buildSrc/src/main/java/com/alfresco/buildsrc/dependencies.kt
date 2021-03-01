@@ -115,7 +115,7 @@ object Libs {
     const val mvRx = "com.airbnb.android:mvrx:1.5.1"
 
     object Epoxy {
-        private const val version = "4.3.1"
+        private const val version = "4.4.1"
         const val epoxy = "com.airbnb.android:epoxy:$version"
         const val processor = "com.airbnb.android:epoxy-processor:$version"
     }
@@ -128,7 +128,7 @@ object Libs {
     }
 
     object ExoPlayer {
-        private const val version = "2.13.1"
+        private const val version = "2.13.2"
         const val core = "com.google.android.exoplayer:exoplayer-core:$version"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:$version"
     }

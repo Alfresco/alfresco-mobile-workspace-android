@@ -46,10 +46,12 @@ subprojects {
                 }
                 sourceSets['main'].java.srcDir('src/main/kotlin')
 
-                // Force kotlin-reflect version until Moshi is updated
                 configurations.all {
                     resolutionStrategy {
+                        // Force kotlin-reflect version until Moshi is updated
                         force Libs.Kotlin.reflect
+                        // Force Guava version until ExoPlayer is updated
+                        force Libs.Google.guava
                     }
                 }
             }

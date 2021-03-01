@@ -102,6 +102,8 @@ object Libs {
             const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:17.3.1"
             const val crashlyticsPlugin = "com.google.firebase:firebase-crashlytics-gradle:2.5.0"
         }
+
+        const val guava = "com.google.guava:guava:30.0-android"
     }
 
     object OkHttp {

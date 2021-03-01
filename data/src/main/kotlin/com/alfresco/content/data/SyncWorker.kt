@@ -2,7 +2,6 @@ package com.alfresco.content.data
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.coroutines.asyncMap
@@ -10,7 +9,6 @@ import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
 import java.time.ZonedDateTime
-import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
@@ -20,32 +18,14 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         try {
-            val localEntries = buildLocalList().also { debugPrintEntries(it) }
-            val remoteEntries = buildRemoteList().also { debugPrintEntries(it) }
-            val ops = calculateDiff(localEntries, remoteEntries).also { debugPrintOperations(it) }
+            val localEntries = buildLocalList()
+            val remoteEntries = buildRemoteList()
+            val ops = calculateDiff(localEntries, remoteEntries)
             processOperations(ops)
         } finally {
             // Always return success so we don't cancel APPEND work
             return Result.success()
         }
-    }
-
-    private fun debugPrintEntries(list: List<Entry>) {
-        val out = if (list.count() > 0) {
-            list.map { "${it.id}: ${it.name}" }.reduce { acc, string -> "$acc\n$string" }
-        } else {
-            "empty"
-        }
-        Log.d("SyncWorker", out)
-    }
-
-    private fun debugPrintOperations(list: List<Operation>) {
-        val out = if (list.count() > 0) {
-            list.map { "${it.javaClass}" }.reduce { acc, string -> "$acc\n$string" }
-        } else {
-            "empty"
-        }
-        Log.d("SyncWorker", out)
     }
 
     private fun buildLocalList(): List<Entry> =
@@ -173,7 +153,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         if (dir.exists()) {
             deleted = dir.deleteRecursively()
         }
-        Log.d("SyncWorker", "Deleted: ${entry.id}: ${entry.name}")
         if (deleted) {
             deleted = repository.remove(entry)
         }
@@ -198,7 +177,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         outputDir.mkdir()
         val output = File(outputDir, entry.name)
         val uri = BrowseRepository().contentUri(entry)
-        Log.d("SyncWorker", "Downloaded: ${entry.id}: ${entry.name}")
         ContentDownloader.downloadFileTo(uri, output.path)
     }
 

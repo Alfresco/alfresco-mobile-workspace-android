@@ -63,7 +63,7 @@ class ActionListViewModel(
 
     private fun fetchEntry(entry: Entry): Flow<Entry> =
         when (entry.type) {
-            Entry.Type.Site -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
+            Entry.Type.SITE -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
@@ -119,7 +119,7 @@ class ActionListViewModel(
         listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
 
     private fun externalActionsFor(entry: Entry) =
-        if (entry.type == Entry.Type.File) {
+        if (entry.type == Entry.Type.FILE) {
             listOf(ActionOpenWith(entry), ActionDownload(entry))
         } else {
             listOf()
@@ -137,7 +137,7 @@ class ActionListViewModel(
                 actions.add(ActionAddFavorite(entry))
             }
         }
-        if (entry.type == Entry.Type.File) {
+        if (entry.type == Entry.Type.FILE) {
             actions.add(ActionDownload(entry))
         }
         return actions

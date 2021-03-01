@@ -83,7 +83,7 @@ data class BrowseViewState(
                 groupedList.add(Entry(
                     currentGroup.title(),
                     null,
-                    Entry.Type.Group,
+                    Entry.Type.GROUP,
                     currentGroup.title(),
                     null,
                     null

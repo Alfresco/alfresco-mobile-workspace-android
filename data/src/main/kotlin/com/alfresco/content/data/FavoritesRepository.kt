@@ -40,9 +40,9 @@ class FavoritesRepository(val session: Session = SessionManager.requireSession) 
 
     suspend fun addFavorite(entry: Entry) {
         val key = when (entry.type) {
-            Entry.Type.File -> "file"
-            Entry.Type.Folder -> "folder"
-            Entry.Type.Site -> "site"
+            Entry.Type.FILE -> "file"
+            Entry.Type.FOLDER -> "folder"
+            Entry.Type.SITE -> "site"
             else -> ""
         }
 

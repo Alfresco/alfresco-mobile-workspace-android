@@ -29,7 +29,7 @@ import kotlinx.parcelize.TypeParceler
 data class Entry(
     val id: String,
     val parentId: String? = null,
-    @Convert(converter = Type.Converter::class, dbType = String::class)
+    @Convert(converter = BoxEntryTypeConverter::class, dbType = String::class)
     val type: Type,
     val name: String,
     val path: String?,
@@ -54,13 +54,13 @@ data class Entry(
         get() = boxId != 0L
 
     val isFile: Boolean
-        get() = type == Type.File
+        get() = type == Type.FILE
 
     val isFolder: Boolean
-        get() = type == Type.Folder
+        get() = type == Type.FOLDER
 
     val isLink: Boolean
-        get() = type == Type.FileLink || type == Type.FolderLink
+        get() = type == Type.FILE_LINK || type == Type.FOLDER_LINK
 
     val hasOfflineStatus: Boolean
         get() = offlineStatus != OfflineStatus.UNDEFINED
@@ -103,45 +103,28 @@ data class Entry(
         )
 
     enum class Type {
-        File,
-        Folder,
-        Site,
-        FileLink,
-        FolderLink,
-        Group,
-        Unknown;
-
-        fun value() = when (this) {
-            File -> "cm:content"
-            Folder -> "cm:folder"
-            Site -> "st:site"
-            FileLink -> "app:filelink"
-            FolderLink -> "app:folderlink"
-            else -> ""
-        }
+        FILE,
+        FOLDER,
+        SITE,
+        FILE_LINK,
+        FOLDER_LINK,
+        GROUP,
+        UNKNOWN;
 
         companion object {
             fun from(value: String, isFile: Boolean = false, isFolder: Boolean = false): Type {
                 when (value) {
-                    "cm:content" -> return File
-                    "cm:folder" -> return Folder
-                    "st:sites" -> return Folder // Special folder for admins
-                    "st:site" -> return Site
-                    "app:filelink" -> return FileLink
-                    "app:folderlink" -> return FolderLink
+                    "cm:content" -> return FILE
+                    "cm:folder" -> return FOLDER
+                    "st:sites" -> return FOLDER // Special folder for admins
+                    "st:site" -> return SITE
+                    "app:filelink" -> return FILE_LINK
+                    "app:folderlink" -> return FOLDER_LINK
                 }
-                if (isFile) return File
-                if (isFolder) return Folder
-                return Unknown
+                if (isFile) return FILE
+                if (isFolder) return FOLDER
+                return UNKNOWN
             }
-        }
-
-        class Converter : PropertyConverter<Type, String> {
-            override fun convertToEntityProperty(databaseValue: String?) =
-                from(databaseValue ?: "")
-
-            override fun convertToDatabaseValue(entityProperty: Type?) =
-                entityProperty?.value()
         }
     }
 
@@ -199,7 +182,7 @@ data class Entry(
                 return Entry(
                     file.id,
                     file.parentId,
-                    Type.File,
+                    Type.FILE,
                     file.name,
                     file.path?.formattedString(),
                     file.content?.mimeType,
@@ -214,7 +197,7 @@ data class Entry(
                 return Entry(
                     folder.id,
                     folder.parentId,
-                    Type.Folder,
+                    Type.FOLDER,
                     folder.name,
                     folder.path?.formattedString(),
                     null,
@@ -235,7 +218,7 @@ data class Entry(
             return Entry(
                 site.guid,
                 null,
-                Type.Site,
+                Type.SITE,
                 site.title,
                 null,
                 null,
@@ -249,7 +232,7 @@ data class Entry(
             return Entry(
                 role.site.guid,
                 null,
-                Type.Site,
+                Type.SITE,
                 role.site.title,
                 null,
                 null,
@@ -263,7 +246,7 @@ data class Entry(
             return Entry(
                 link.nodeId ?: "",
                 null,
-                Type.File,
+                Type.FILE,
                 link.name ?: "",
                 link.path?.formattedString(),
                 link.content?.mimeType,
@@ -315,6 +298,15 @@ class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
 
     override fun convertToDatabaseValue(entityProperty: OfflineStatus?) =
         entityProperty?.value()
+}
+
+@ExperimentalStdlibApi
+class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
+    override fun convertToEntityProperty(databaseValue: String?) =
+        try { Entry.Type.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { Entry.Type.UNKNOWN }
+
+    override fun convertToDatabaseValue(entityProperty: Entry.Type?) =
+        entityProperty?.name?.lowercase()
 }
 
 object DateParceler : Parceler<ZonedDateTime> {

@@ -63,7 +63,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     private fun onDelete(entry: Entry) = entry.run {
         when (type) {
-            Entry.Type.File -> removeEntry(entry)
+            Entry.Type.FILE -> removeEntry(entry)
             else -> refresh()
         }
     }
@@ -147,7 +147,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRx
             }
         } else if (state.entries.isNotEmpty()) {
             state.entries.forEach {
-                if (it.type == Entry.Type.Group) {
+                if (it.type == Entry.Type.GROUP) {
                     listViewGroupHeader {
                         id(it.name)
                         title(it.name)

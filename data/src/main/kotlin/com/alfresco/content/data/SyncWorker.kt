@@ -181,7 +181,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun downloadContent(entry: Entry) {
-        if (entry.type == Entry.Type.File) {
+        if (entry.type == Entry.Type.FILE) {
             try {
                 downloadItem(entry)
                 downloadRendition(entry)

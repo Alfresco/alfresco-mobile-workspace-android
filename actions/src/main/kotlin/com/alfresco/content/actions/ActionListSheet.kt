@@ -29,8 +29,8 @@ class ActionListSheet : BaseMvRxBottomSheet() {
 
     override fun invalidate() = withState(viewModel) { state ->
         val type = when (state.entry.type) {
-            Entry.Type.Site -> MimeType.LIBRARY
-            Entry.Type.Folder -> MimeType.FOLDER
+            Entry.Type.SITE -> MimeType.LIBRARY
+            Entry.Type.FOLDER -> MimeType.FOLDER
             else -> MimeType.with(state.entry.mimeType)
         }
 

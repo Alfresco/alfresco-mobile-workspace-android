@@ -38,7 +38,7 @@ data class SearchResultsState(
         get() { return contextId != null }
 
     override val isCompact: Boolean
-        get() { return entries.firstOrNull()?.type == Entry.Type.Site }
+        get() { return entries.firstOrNull()?.type == Entry.Type.SITE }
 
     fun updateEntries(response: ResponsePaging?): SearchResultsState {
         if (response == null) return this

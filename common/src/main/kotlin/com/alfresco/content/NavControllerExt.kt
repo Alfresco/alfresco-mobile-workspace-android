@@ -6,11 +6,11 @@ import com.alfresco.content.data.Entry
 
 fun NavController.navigateTo(entry: Entry) {
     when (entry.type) {
-        Entry.Type.File -> navigateToFile(entry)
-        Entry.Type.Folder -> navigateToFolder(entry)
-        Entry.Type.Site -> navigateToSite(entry)
-        Entry.Type.FileLink -> navigateFileLink(entry)
-        Entry.Type.FolderLink -> navigateFolderLink(entry)
+        Entry.Type.FILE -> navigateToFile(entry)
+        Entry.Type.FOLDER -> navigateToFolder(entry)
+        Entry.Type.SITE -> navigateToSite(entry)
+        Entry.Type.FILE_LINK -> navigateFileLink(entry)
+        Entry.Type.FOLDER_LINK -> navigateFolderLink(entry)
         else -> { } // no-op for now
     }
 }

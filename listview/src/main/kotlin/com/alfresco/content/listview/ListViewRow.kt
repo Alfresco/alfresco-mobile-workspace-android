@@ -32,10 +32,10 @@ class ListViewRow @JvmOverloads constructor(
         updateSubtitleVisibility()
 
         val type = when (entry.type) {
-            Entry.Type.Site -> MimeType.LIBRARY
-            Entry.Type.Folder -> MimeType.FOLDER
-            Entry.Type.FileLink -> MimeType.FILE_LINK
-            Entry.Type.FolderLink -> MimeType.FOLDER_LINK
+            Entry.Type.SITE -> MimeType.LIBRARY
+            Entry.Type.FOLDER -> MimeType.FOLDER
+            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
+            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
             else -> MimeType.with(entry.mimeType)
         }
 
@@ -59,7 +59,7 @@ class ListViewRow @JvmOverloads constructor(
             )
         } else {
             // Offline screen items
-            if (entry.type == Entry.Type.File && entry.hasOfflineStatus) {
+            if (entry.type == Entry.Type.FILE && entry.hasOfflineStatus) {
                 binding.offlineIcon.isVisible = true
                 val config = makeOfflineStatusConfig(entry)
                 val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)

@@ -31,8 +31,8 @@ data class ActionDelete(
     }
     private suspend inline fun delete(entry: Entry) {
         when (entry.type) {
-            Entry.Type.File, Entry.Type.Folder -> BrowseRepository().deleteEntry(entry)
-            Entry.Type.Site -> SitesRepository().deleteSite(entry)
+            Entry.Type.FILE, Entry.Type.FOLDER -> BrowseRepository().deleteEntry(entry)
+            Entry.Type.SITE -> SitesRepository().deleteSite(entry)
             else -> { }
         }
     }

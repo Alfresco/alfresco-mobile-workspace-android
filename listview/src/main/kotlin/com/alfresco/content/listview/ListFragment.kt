@@ -62,9 +62,10 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     private fun onDelete(entry: Entry) = entry.run {
-        when (type) {
-            Entry.Type.FILE -> removeEntry(entry)
-            else -> refresh()
+        if (isFile) {
+            removeEntry(entry)
+        } else {
+            refresh()
         }
     }
 

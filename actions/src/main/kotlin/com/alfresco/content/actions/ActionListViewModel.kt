@@ -119,7 +119,7 @@ class ActionListViewModel(
         listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
 
     private fun externalActionsFor(entry: Entry) =
-        if (entry.type == Entry.Type.FILE) {
+        if (entry.isFile) {
             listOf(ActionOpenWith(entry), ActionDownload(entry))
         } else {
             listOf()
@@ -137,7 +137,7 @@ class ActionListViewModel(
                 actions.add(ActionAddFavorite(entry))
             }
         }
-        if (entry.type == Entry.Type.FILE) {
+        if (entry.isFile) {
             actions.add(ActionDownload(entry))
         }
         return actions

@@ -36,15 +36,20 @@ data class Entry(
     val mimeType: String?,
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val modified: ZonedDateTime? = null,
+    @Transient
     val isPartial: Boolean = false,
+    @Transient
     val isFavorite: Boolean = false,
+    @Transient
     val canDelete: Boolean = false,
+    @Transient
     val isTrashed: Boolean = false,
+    @Transient
     val otherId: String? = null,
-    @Id var boxId: Long = 0,
     val isOffline: Boolean = false,
     @Convert(converter = BoxOfflineStatusConverter::class, dbType = String::class)
     val offlineStatus: OfflineStatus = OfflineStatus.UNDEFINED,
+    @Id var boxId: Long = 0,
 ) : Parcelable {
 
     val isSynced: Boolean

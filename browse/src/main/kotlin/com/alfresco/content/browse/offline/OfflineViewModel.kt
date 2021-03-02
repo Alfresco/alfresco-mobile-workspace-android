@@ -23,7 +23,6 @@ class OfflineViewModel(
 ) : ListViewModel<OfflineViewState>(state) {
 
     init {
-        ConnectivityTracker.startTracking(context)
         viewModelScope.launch {
             SyncService
                 .observe(context)

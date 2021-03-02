@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.Settings
+import com.alfresco.content.network.ConnectivityTracker
 
 class AlfrescoApplication : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreate() {
@@ -15,6 +16,8 @@ class AlfrescoApplication : Application(), SharedPreferences.OnSharedPreferenceC
         PreferenceManager
             .getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
+
+        ConnectivityTracker.startTracking(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

@@ -53,7 +53,6 @@ class MainActivityViewModel(
         processLifecycleOwner.lifecycle.addObserver(this)
 
         // Update connectivity status
-        ConnectivityTracker.startTracking(context)
         viewModelScope.launch {
             ConnectivityTracker
                 .networkAvailable

@@ -5,12 +5,13 @@ import android.net.ConnectivityManager
 import android.net.Network
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object ConnectivityTracker {
     private var isTracking = false
-    private val availableChannel = ConflatedBroadcastChannel<Boolean>()
+    private val _networkAvailable = MutableStateFlow(false)
+    val networkAvailable: StateFlow<Boolean> = _networkAvailable
 
     @RequiresApi(24)
     fun startTracking(context: Context) {
@@ -19,11 +20,11 @@ object ConnectivityTracker {
         val cm = context.getSystemService<ConnectivityManager>()
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                availableChannel.offer(true)
+                _networkAvailable.value = true
             }
 
             override fun onLost(network: Network) {
-                availableChannel.offer(false)
+                _networkAvailable.value = false
             }
         }
         cm?.registerDefaultNetworkCallback(networkCallback)
@@ -32,6 +33,4 @@ object ConnectivityTracker {
 
     fun isActiveNetworkMetered(context: Context): Boolean =
         context.getSystemService<ConnectivityManager>()?.isActiveNetworkMetered == true
-
-    val networkAvailable = availableChannel.asFlow()
 }

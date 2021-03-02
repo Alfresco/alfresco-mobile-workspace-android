@@ -13,6 +13,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionBarFragment
+import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.viewer.common.ChildViewerArgs
@@ -94,33 +95,50 @@ class ViewerFragment : BaseMvRxFragment() {
         binding.icon.setImageDrawable(resources.getDrawable(type.icon, requireContext().theme))
 
         if (state.entry != null) {
-            val fragment = ActionBarFragment().apply {
-                arguments = bundleOf(MvRx.KEY_ARG to state.entry)
-            }
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.action_list_bar, fragment)
-                .commit()
+            configureActionBar(state.entry)
         }
 
         if (state.ready) {
             if (state.viewerType != null) {
-                if (childFragmentManager.findFragmentByTag(state.viewerType.toString()) == null) {
-                    val args = typeArgs(
-                        state.viewerUri ?: "",
-                        state.entry?.mimeType ?: ""
-                    )
-                    val fragment = viewerFragment(state.viewerType, args)
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment, state.viewerType.toString())
-                        .commit()
-                }
+                configureViewer(
+                    state.viewerUri ?: "",
+                    state.viewerType,
+                    state.entry?.mimeType ?: ""
+                )
                 show(Status.Loading)
             } else {
                 show(Status.NotSupported)
             }
         } else {
             show(Status.Preparing)
+        }
+    }
+
+    private fun configureActionBar(entry: Entry) {
+        val fragment = ActionBarFragment().apply {
+            arguments = bundleOf(MvRx.KEY_ARG to entry)
+        }
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.action_list_bar, fragment)
+            .commit()
+    }
+
+    private fun configureViewer(
+        viewerUri: String,
+        viewerType: ViewerType,
+        mimeType: String
+    ) {
+        val tag = viewerType.toString()
+        if (childFragmentManager.findFragmentByTag(tag) == null) {
+            val args = typeArgs(
+                viewerUri,
+                mimeType
+            )
+            val fragment = viewerFragment(viewerType, args)
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment, tag)
+                .commit()
         }
     }
 

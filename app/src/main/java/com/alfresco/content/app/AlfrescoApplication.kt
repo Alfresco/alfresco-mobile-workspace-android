@@ -1,34 +1,38 @@
 package com.alfresco.content.app
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
 import com.alfresco.content.data.Settings
 import com.alfresco.content.network.ConnectivityTracker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class AlfrescoApplication : Application(), SharedPreferences.OnSharedPreferenceChangeListener {
+class AlfrescoApplication : Application() {
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private lateinit var settings: Settings
+
     override fun onCreate() {
         super.onCreate()
 
-        updateAppTheme()
+        settings = Settings(this)
+        settings.observeChanges()
 
-        PreferenceManager
-            .getDefaultSharedPreferences(this)
-            .registerOnSharedPreferenceChangeListener(this)
+        applicationScope.launch {
+            settings.observeTheme().collect {
+                updateAppTheme(it)
+            }
+        }
 
         ConnectivityTracker.startTracking(this)
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when (key) {
-            getString(R.string.pref_theme_key) -> updateAppTheme()
-        }
-    }
-
-    private fun updateAppTheme() {
+    private fun updateAppTheme(theme: Settings.Theme) {
         AppCompatDelegate.setDefaultNightMode(
-            when (Settings(this).theme) {
+            when (theme) {
                 Settings.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
                 Settings.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
                 Settings.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

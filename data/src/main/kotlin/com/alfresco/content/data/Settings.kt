@@ -1,7 +1,14 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 class Settings(
     val context: Context
@@ -9,9 +16,26 @@ class Settings(
     private val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
     private val themeKey = context.getString(R.string.pref_theme_key)
     private val syncNetworkKey = context.getString(R.string.pref_sync_network_key)
+    private val preferenceChangedFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
+
+    private val listener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            preferenceChangedFlow.tryEmit(key)
+        }
+
+    fun observeChanges() {
+        sharedPref.registerOnSharedPreferenceChangeListener(listener)
+    }
 
     val theme: Theme
         get() = themeFromStoredValue(sharedPref.getString(themeKey, null))
+
+    fun observeTheme(): Flow<Theme> =
+        preferenceChangedFlow
+            .onStart { emit(themeKey) }
+            .filter { it == themeKey }
+            .map { theme }
+            .distinctUntilChanged()
 
     private fun themeFromStoredValue(value: String?) =
         when (value) {

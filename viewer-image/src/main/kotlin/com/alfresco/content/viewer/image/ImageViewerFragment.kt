@@ -66,7 +66,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image) {
     }
 
     private fun SubsamplingScaleImageView.loadImage(path: String) {
-        loadingListener.get()?.onContentLoaded()
+        loadingListener?.onContentLoaded()
         setImage(ImageSource.uri(path))
     }
 
@@ -122,12 +122,12 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image) {
             .target(object : ImageViewTarget(this) {
                 override fun onSuccess(result: Drawable) {
                     super.onSuccess(result)
-                    loadingListener.get()?.onContentLoaded()
+                    loadingListener?.onContentLoaded()
                 }
 
                 override fun onError(error: Drawable?) {
                     super.onError(error)
-                    loadingListener.get()?.onContentError()
+                    loadingListener?.onContentError()
                 }
             })
             .build()

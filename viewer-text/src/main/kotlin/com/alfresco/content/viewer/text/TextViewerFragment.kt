@@ -84,7 +84,7 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
             webView.visibility = View.VISIBLE
             val filename = state.path()?.filename()
             webView.loadUrl("https://${WebViewAssetLoader.DEFAULT_DOMAIN}/$filename")
-            loadingListener.get()?.onContentLoaded()
+            loadingListener?.onContentLoaded()
         }
     }
 }

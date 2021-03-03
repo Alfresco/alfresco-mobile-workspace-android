@@ -90,7 +90,7 @@ class PdfViewerFragment : ChildViewerFragment() {
         }
 
         // Loading state is handled by pdf viewer
-        loadingListener.get()?.onContentLoaded()
+        loadingListener?.onContentLoaded()
     }
 
     private fun makeAssetLoader() = withState(viewModel) {

@@ -55,6 +55,16 @@ class ViewerFragment : BaseMvRxFragment() {
     private lateinit var binding: ViewerBinding
     private var childFragment: ChildViewerFragment? = null
 
+    private val viewerLoadingListener = object : LoadingListener {
+        override fun onContentLoaded() {
+            show(Status.Loaded)
+        }
+
+        override fun onContentError() {
+            show(Status.NotSupported)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,17 +86,15 @@ class ViewerFragment : BaseMvRxFragment() {
         if (childFragment is ChildViewerFragment) {
             this.childFragment = childFragment
                 .apply {
-                    setLoadingListener(object : LoadingListener {
-                        override fun onContentLoaded() {
-                            show(Status.Loaded)
-                        }
-
-                        override fun onContentError() {
-                            show(Status.NotSupported)
-                        }
-                    })
+                    loadingListener = viewerLoadingListener
                 }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        childFragment?.loadingListener = null
     }
 
     override fun invalidate() = withState(viewModel) { state ->

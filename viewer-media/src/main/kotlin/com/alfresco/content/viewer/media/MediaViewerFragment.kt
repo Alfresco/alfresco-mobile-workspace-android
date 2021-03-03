@@ -242,7 +242,7 @@ class MediaViewerFragment : ChildViewerFragment() {
             if (state == PlaybackState.STATE_PLAYING ||
                 state == PlaybackState.STATE_STOPPED) {
                 playerView.videoSurfaceView?.isVisible = hasVideoTracks()
-                loadingListener.get()?.onContentLoaded()
+                loadingListener?.onContentLoaded()
             }
         }
 

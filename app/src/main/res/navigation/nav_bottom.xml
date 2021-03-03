@@ -103,6 +103,9 @@
         <argument
             android:name="mode"
             app:argType="string" />
-        <deepLink app:uri="alfresco://content/view/{mode}/{id}/preview?title={title}" />
+        <deepLink app:uri="alfresco://content/view/{mode}/{id}/preview?title={title}&amp;mimeType={mimeType}" />
+        <argument
+            android:name="mimeType"
+            app:argType="string" />
     </activity>
 </navigation>

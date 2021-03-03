@@ -36,10 +36,10 @@ private fun NavController.navigateToSite(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/site/remote/${entry.id}?title=${Uri.encode(entry.name)}"))
 
 private fun NavController.navigateToFile(entry: Entry) =
-    navigate(Uri.parse("$BASE_URI/view/${modeFor(entry)}/${entry.id}/preview?title=${Uri.encode(entry.name)}"))
+    navigate(Uri.parse("$BASE_URI/view/${modeFor(entry)}/${entry.id}/preview?title=${Uri.encode(entry.name)}&mimeType=${Uri.encode(entry.mimeType)}"))
 
 private fun NavController.navigateFileLink(entry: Entry) =
-    navigate(Uri.parse("$BASE_URI/view/remote/${entry.otherId}/preview?title=${Uri.encode(entry.name)}"))
+    navigate(Uri.parse("$BASE_URI/view/remote/${entry.otherId}/preview?title=${Uri.encode(entry.name)}&mimeType=${Uri.encode(entry.mimeType)}"))
 
 private fun NavController.navigateFolderLink(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/folder/remote/${entry.otherId}?title=${Uri.encode(entry.name)}"))

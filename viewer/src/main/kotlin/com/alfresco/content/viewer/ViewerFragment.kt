@@ -31,18 +31,21 @@ import kotlinx.parcelize.Parcelize
 data class ViewerArgs(
     val id: String,
     val title: String,
-    val mode: String
+    val mode: String,
+    val mimeType: String
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
         private const val MODE_KEY = "mode"
+        private const val MIMETYPE_KEY = "mimeType"
 
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(
-                args.getString(ID_KEY, ""),
-                args.getString(TITLE_KEY, ""),
-                args.getString(MODE_KEY, "")
+                    args.getString(ID_KEY, ""),
+                    args.getString(TITLE_KEY, ""),
+                    args.getString(MODE_KEY, ""),
+                    args.getString(MIMETYPE_KEY, "OTHER")
             )
         }
     }
@@ -99,7 +102,7 @@ class ViewerFragment : BaseMvRxFragment() {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.title.text = args.title
-        val type = MimeType.with(state.entry?.mimeType)
+        val type = MimeType.with(args.mimeType)
         binding.icon.setImageDrawable(resources.getDrawable(type.icon, requireContext().theme))
 
         if (state.entry != null) {

@@ -291,12 +291,10 @@ enum class OfflineStatus {
     SYNCED,
     ERROR,
     UNDEFINED;
-
-    @OptIn(ExperimentalStdlibApi::class)
+    
     fun value() = name.lowercase()
 }
 
-@ExperimentalStdlibApi
 class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
         try { OfflineStatus.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { OfflineStatus.UNDEFINED }
@@ -305,7 +303,6 @@ class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
         entityProperty?.value()
 }
 
-@ExperimentalStdlibApi
 class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
         try { Entry.Type.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { Entry.Type.UNKNOWN }

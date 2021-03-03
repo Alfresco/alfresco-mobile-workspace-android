@@ -69,6 +69,9 @@ subprojects {
             freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
             freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
 
+            // Enable experimental Stdlib
+            freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalStdlibApi"
+
             // Set JVM target to 1.8
             jvmTarget = "1.8"
         }

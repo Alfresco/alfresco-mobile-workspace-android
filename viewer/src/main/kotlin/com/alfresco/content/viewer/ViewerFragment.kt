@@ -9,7 +9,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.BaseMvRxFragment
-import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionBarFragment
@@ -57,7 +56,7 @@ class ViewerFragment : BaseMvRxFragment() {
 
     private val viewerLoadingListener = object : LoadingListener {
         override fun onContentLoaded() {
-            show(Status.Loaded)
+            show(Status.PreviewLoaded)
         }
 
         override fun onContentError() {
@@ -113,12 +112,16 @@ class ViewerFragment : BaseMvRxFragment() {
                     state.viewerType,
                     state.entry?.mimeType ?: ""
                 )
-                show(Status.Loading)
+                show(Status.LoadingPreview)
             } else {
                 show(Status.NotSupported)
             }
         } else {
-            show(Status.Preparing)
+            if (state.entry == null) {
+                show(Status.LoadingMetadata)
+            } else {
+                show(Status.PreparingPreview)
+            }
         }
     }
 
@@ -153,19 +156,25 @@ class ViewerFragment : BaseMvRxFragment() {
     private fun show(s: Status) {
         binding.apply {
             when (s) {
-                Status.Loading -> {
-                    info.isVisible = true
+                Status.LoadingMetadata -> {
+                    info.isVisible = false
                     loading.isVisible = true
-                    status.text = getString(R.string.info_fetching_content)
+                    status.text = ""
                 }
 
-                Status.Preparing -> {
+                Status.PreparingPreview -> {
                     info.isVisible = true
                     loading.isVisible = true
                     status.text = getString(R.string.info_creating_rendition)
                 }
 
-                Status.Loaded -> {
+                Status.LoadingPreview -> {
+                    info.isVisible = true
+                    loading.isVisible = true
+                    status.text = getString(R.string.info_fetching_content)
+                }
+
+                Status.PreviewLoaded -> {
                     info.isVisible = childFragment?.showInfoWhenLoaded() == true
                     loading.isVisible = false
                     status.text = ""
@@ -198,9 +207,10 @@ class ViewerFragment : BaseMvRxFragment() {
     }
 
     private enum class Status {
-        Loading,
-        Preparing,
-        Loaded,
+        LoadingMetadata,
+        PreparingPreview,
+        LoadingPreview,
+        PreviewLoaded,
         NotSupported
     }
 }

@@ -13,21 +13,22 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.databinding.FragmentActionBarBinding
 import com.alfresco.events.on
 import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {
     private val viewModel: ActionListViewModel by fragmentViewModel()
-    private lateinit var binding: FragmentActionBarBinding
+    private lateinit var view: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentActionBarBinding.inflate(inflater, container, false)
-        return binding.root
+        view = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +39,11 @@ class ActionBarFragment : BaseMvRxFragment() {
             delay(1000)
             requireActivity().onBackPressed()
         }
+    }
+
+    override fun invalidate() = withState(viewModel) {
+        view.removeAllViews()
+        addButtons(view, it.topActions)
     }
 
     private fun addButtons(container: LinearLayout, actions: List<Action>) {
@@ -98,10 +104,5 @@ class ActionBarFragment : BaseMvRxFragment() {
         val result = attributes.getDrawable(0)
         attributes.recycle()
         return result
-    }
-
-    override fun invalidate() = withState(viewModel) {
-        binding.container.removeAllViews()
-        addButtons(binding.container, it.topActions)
     }
 }

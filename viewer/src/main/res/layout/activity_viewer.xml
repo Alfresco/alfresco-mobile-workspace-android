@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -24,9 +25,17 @@
         android:background="@android:color/white"
         android:backgroundTint="?attr/separatorColor" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/action_list_bar"
+    <com.alfresco.ui.MaterialShapeView
+        style="?attr/bottomNavigationStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="@dimen/design_bottom_navigation_elevation"
+        app:backgroundColor="?attr/colorSurface">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/action_list_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.alfresco.ui.MaterialShapeView>
 
 </LinearLayout>

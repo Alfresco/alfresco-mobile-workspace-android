@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.core.content.res.ResourcesCompat
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -21,7 +22,9 @@ class BrowseMenuRow @JvmOverloads constructor(
     @ModelProp
     fun setEntry(entry: MenuEntry) {
         binding.title.text = entry.title
-        binding.icon.setImageDrawable(resources.getDrawable(entry.icon, context.theme))
+        binding.icon.setImageDrawable(
+            ResourcesCompat.getDrawable(resources, entry.icon, context.theme)
+        )
     }
 
     @CallbackProp

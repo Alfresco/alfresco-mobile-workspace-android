@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -94,7 +95,9 @@ class ViewerFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel) { state ->
         binding.title.text = args.title
         val type = MimeType.with(state.entry?.mimeType)
-        binding.icon.setImageDrawable(resources.getDrawable(type.icon, requireContext().theme))
+        binding.icon.setImageDrawable(
+            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
+        )
 
         if (state.entry != null) {
             configureActionBar(state.entry)

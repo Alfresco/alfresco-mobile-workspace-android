@@ -149,8 +149,6 @@ class SearchViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchResultsState
-        ): SearchViewModel? {
-            return SearchViewModel(state, SearchRepository())
-        }
+        ) = SearchViewModel(state, SearchRepository())
     }
 }

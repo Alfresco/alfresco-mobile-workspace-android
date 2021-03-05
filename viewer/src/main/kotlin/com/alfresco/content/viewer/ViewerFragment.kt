@@ -64,7 +64,7 @@ class ViewerFragment : BaseMvRxFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ViewerBinding.inflate(inflater, container, false)
         return binding.root
     }

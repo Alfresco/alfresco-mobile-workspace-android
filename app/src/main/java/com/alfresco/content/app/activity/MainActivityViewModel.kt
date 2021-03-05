@@ -104,8 +104,9 @@ class MainActivityViewModel(
 
     companion object : MvRxViewModelFactory<MainActivityViewModel, MainActivityState> {
 
-        override fun create(viewModelContext: ViewModelContext, state: MainActivityState): MainActivityViewModel? {
-            return MainActivityViewModel(state, viewModelContext.app())
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: MainActivityState
+        ) = MainActivityViewModel(state, viewModelContext.app())
     }
 }

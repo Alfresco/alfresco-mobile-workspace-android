@@ -135,8 +135,9 @@ class BrowseViewModel(
 
     companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {
 
-        override fun create(viewModelContext: ViewModelContext, state: BrowseViewState): BrowseViewModel? {
-            return BrowseViewModel(state, viewModelContext.app())
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: BrowseViewState
+        ) = BrowseViewModel(state, viewModelContext.app())
     }
 }

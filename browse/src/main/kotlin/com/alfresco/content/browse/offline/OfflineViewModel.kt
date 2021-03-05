@@ -75,8 +75,9 @@ class OfflineViewModel(
 
     companion object : MvRxViewModelFactory<OfflineViewModel, OfflineViewState> {
 
-        override fun create(viewModelContext: ViewModelContext, state: OfflineViewState): OfflineViewModel? {
-            return OfflineViewModel(state, viewModelContext.app())
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: OfflineViewState
+        ) = OfflineViewModel(state, viewModelContext.app())
     }
 }

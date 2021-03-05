@@ -54,8 +54,9 @@ class TextViewerViewModel(
     companion object : MvRxViewModelFactory<TextViewerViewModel, TextViewerState> {
         private const val TMP_FILE_NAME = "content.tmp"
 
-        override fun create(viewModelContext: ViewModelContext, state: TextViewerState): TextViewerViewModel? {
-            return TextViewerViewModel(state, viewModelContext.app())
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: TextViewerState
+        ) = TextViewerViewModel(state, viewModelContext.app())
     }
 }

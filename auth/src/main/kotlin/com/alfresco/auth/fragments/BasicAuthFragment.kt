@@ -22,7 +22,11 @@ class BasicAuthFragment : DialogFragment() {
 
     private val rootView: View get() = requireView()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val binding = DataBindingUtil.inflate<ContainerAuthBasicBinding>(inflater, R.layout.container_auth_basic, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

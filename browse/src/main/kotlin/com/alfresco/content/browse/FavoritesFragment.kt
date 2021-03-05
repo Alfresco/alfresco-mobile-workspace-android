@@ -37,11 +37,10 @@ class FavoritesFragment : Fragment() {
             return 2
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return when (position) {
+        override fun getPageTitle(position: Int) =
+            when (position) {
                 0 -> context.getString(R.string.favorites_tab_files)
                 else -> context.getString(R.string.favorites_tab_libraries)
             }
-        }
     }
 }

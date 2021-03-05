@@ -27,8 +27,9 @@ class RecentSearchViewModel(
     }
 
     companion object : MvRxViewModelFactory<RecentSearchViewModel, RecentSearchViewState> {
-        override fun create(viewModelContext: ViewModelContext, state: RecentSearchViewState): RecentSearchViewModel? {
-            return RecentSearchViewModel(state, viewModelContext.app())
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: RecentSearchViewState
+        ) = RecentSearchViewModel(state, viewModelContext.app())
     }
 }

@@ -22,7 +22,7 @@ class ActionListSheet : BaseMvRxBottomSheet() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
     }

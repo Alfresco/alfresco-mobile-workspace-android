@@ -24,7 +24,7 @@ class ActionBarFragment : BaseMvRxFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         view = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }

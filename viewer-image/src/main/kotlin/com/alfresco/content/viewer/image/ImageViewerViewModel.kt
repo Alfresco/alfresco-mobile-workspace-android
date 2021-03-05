@@ -29,8 +29,8 @@ data class ImageViewerState(
 }
 
 class ImageViewerViewModel(
-    context: Context,
-    state: ImageViewerState
+    state: ImageViewerState,
+    context: Context
 ) : MvRxViewModel<ImageViewerState>(state) {
 
     init {
@@ -49,8 +49,9 @@ class ImageViewerViewModel(
     companion object : MvRxViewModelFactory<ImageViewerViewModel, ImageViewerState> {
         private const val TMP_FILE_NAME = "content.tmp"
 
-        override fun create(viewModelContext: ViewModelContext, state: ImageViewerState): ImageViewerViewModel? {
-            return ImageViewerViewModel(viewModelContext.app(), state)
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: ImageViewerState
+        ) = ImageViewerViewModel(state, viewModelContext.app())
     }
 }

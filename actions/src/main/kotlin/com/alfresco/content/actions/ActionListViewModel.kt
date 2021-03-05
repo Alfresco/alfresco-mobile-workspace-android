@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class ActionListViewModel(
-    val context: Context,
-    state: ActionListState
+    state: ActionListState,
+    val context: Context
 ) : MvRxViewModel<ActionListState>(state) {
 
     init {
@@ -147,8 +147,6 @@ class ActionListViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: ActionListState
-        ): ActionListViewModel? {
-            return ActionListViewModel(viewModelContext.activity(), state)
-        }
+        ) = ActionListViewModel(state, viewModelContext.app())
     }
 }

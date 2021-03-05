@@ -13,6 +13,6 @@
     <string name="search_chip_folders">Cartelle</string>
     <string name="search_chip_libraries">Librerie</string>
 
-    <string name="search_empty_title">Ops!</string>
+    <string name="search_empty_title">Oops!</string>
     <string name="search_empty_message">Non riusciamo a trovare il file\nche stai cercando.</string>
 </resources>

@@ -21,12 +21,12 @@
     <string name="contextual_search_title">Buscar</string>
 
     <string name="recent_empty_title">No hay ficheros recientes</string>
-    <string name="recent_empty_message">Los ficheros que ve y \nedita se mostrarán aquí.</string>
-    <string name="favorite_files_empty_title">No hay carpetas o ficheros favoritos</string>
+    <string name="recent_empty_message">Los ficheros que vea y edite se mostrarán aquí.</string>
+    <string name="favorite_files_empty_title">No hay ficheros ni carpetas favoritos</string>
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
-    <string name="favorites_empty_message">Parece que no ha\nañadido nada.</string>
+    <string name="favorites_empty_message">Parece que no ha añadido nada.</string>
     <string name="folder_empty_title">La carpeta está vacía</string>
-    <string name="folder_empty_message">Parece que todavía\nno hay contenido.</string>
+    <string name="folder_empty_message">Parece que todavía no hay contenido.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizar todo</string>

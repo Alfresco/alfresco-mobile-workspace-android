@@ -4,7 +4,7 @@
 
     <string name="auth_connect_field_hint">Connetti a</string>
     <string name="auth_connect_button">Connetti</string>
-    <string name="auth_help_button_connect">Come connettersi ad Alfresco?</string>
+	<string name="auth_help_button_connect">Come connettersi ad Alfresco?</string>
     <string name="auth_help_button">Serve aiuto?</string>
     <string name="auth_settings_button">@string/auth_settings_title</string>
     <string name="auth_progress_bar_message">Connessione in corso</string>

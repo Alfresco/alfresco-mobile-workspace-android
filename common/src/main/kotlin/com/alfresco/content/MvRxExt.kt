@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  * Gets or creates a ViewModel scoped to this Fragment. You will get the same instance every time for this Fragment, even
  * through rotation, or other configuration changes.
  *
- * This is based on [fragmentViewModel] solution provided by MvRxExtensions.kt
+ * This is based on [com.airbnb.mvrx.fragmentViewModel] solution provided by MvRxExtensions.kt
  */
 inline fun <T, reified VM : BaseMvRxViewModel<S>, reified S : MvRxState> T.fragmentViewModelWithArgs(
     viewModelClass: KClass<VM> = VM::class,

@@ -78,12 +78,6 @@ class MainActivity : BaseMvRxActivity() {
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
 
-    private fun checkInvalidLogin(state: MainActivityState) {
-        if (state.requiresReLogin) {
-            showSignedOutPrompt()
-        }
-    }
-
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return

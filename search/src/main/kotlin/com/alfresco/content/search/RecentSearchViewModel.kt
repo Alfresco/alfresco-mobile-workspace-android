@@ -16,6 +16,7 @@ class RecentSearchViewModel(
     val context: Context
 ) : MvRxViewModel<RecentSearchViewState>(viewState) {
 
+    @Suppress("unused")
     val changeListener = SearchRepository.RecentSearchesChangeListener(context) { refresh() }
 
     init {

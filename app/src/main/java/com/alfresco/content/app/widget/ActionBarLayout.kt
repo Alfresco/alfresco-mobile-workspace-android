@@ -32,7 +32,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
 
         toolbar = findViewById(R.id.expanded_toolbar)
         background = findViewById(R.id.toolbar_back)
-        expandedView = findViewById(R.id.expanded_toolbar)
+        expandedView = toolbar
         collapsedView = findViewById(R.id.collapsed_toolbar)
         profileView = findViewById(R.id.profile_icon)
 

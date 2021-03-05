@@ -7,7 +7,6 @@ import com.alfresco.coroutines.asyncMap
 import com.alfresco.download.ContentDownloader
 import java.io.File
 import java.lang.Exception
-import java.time.ZonedDateTime
 import retrofit2.HttpException
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
@@ -62,7 +61,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }.distinctBy { it.id }
 
     private suspend fun <T, R> continuousMap(initial: Collection<T>, f: suspend (T, suspend(T) -> Unit) -> R?): List<R> {
-        val queue = ArrayDeque<T>(initial)
+        val queue = ArrayDeque(initial)
         val result = mutableListOf<R>()
 
         val produce: suspend (T) -> Unit = {
@@ -115,9 +114,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     private fun contentHasChanged(local: Entry, remote: Entry) =
         remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
             (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
-
-    private fun dateCompare(d1: ZonedDateTime?, d2: ZonedDateTime?) =
-        (d1?.toInstant()?.epochSecond ?: 0) - (d2?.toInstant()?.epochSecond ?: 0)
 
     private suspend fun processOperations(operations: List<Operation>) =
         operations.asyncMap(MAX_CONCURRENT_OPERATIONS) {
@@ -206,7 +202,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }
     }
 
-    sealed class Operation() {
+    sealed class Operation {
         class Create(val remote: Entry) : Operation()
         class UpdateMetadata(val local: Entry, val remote: Entry) : Operation()
         class UpdateContent(val local: Entry, val remote: Entry) : Operation()

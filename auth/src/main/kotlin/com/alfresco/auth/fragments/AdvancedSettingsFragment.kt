@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -24,7 +23,6 @@ class AdvancedSettingsFragment : DialogFragment() {
 
     private val viewModel: LoginViewModel by activityViewModels()
     private val rootView: View get() = requireView()
-    private lateinit var saveTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +87,7 @@ class AdvancedSettingsFragment : DialogFragment() {
     }
 
     companion object {
-
-        val TAG = AdvancedSettingsFragment::class.java.name
+        val TAG: String = AdvancedSettingsFragment::class.java.name
 
         fun with(activity: FragmentActivity): Builder = Builder(activity)
     }

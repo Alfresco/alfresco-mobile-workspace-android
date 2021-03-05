@@ -73,8 +73,7 @@ class BasicAuthFragment : DialogFragment() {
     }
 
     companion object {
-
-        val TAG = BasicAuthFragment::class.java.name
+        val TAG: String = BasicAuthFragment::class.java.name
 
         fun with(activity: FragmentActivity): Builder = Builder(activity)
     }

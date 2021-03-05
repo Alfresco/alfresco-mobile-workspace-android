@@ -28,6 +28,7 @@ object EglExt {
         )
         if (numConfig[0] == 0) {
             // TROUBLE! No config found.
+            return@lazy 0
         }
         val config: EGLConfig? = configs[0]
 

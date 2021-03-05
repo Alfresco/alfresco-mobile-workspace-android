@@ -54,8 +54,7 @@ class InputIdentityFragment : DialogFragment() {
     }
 
     companion object {
-
-        val TAG = InputIdentityFragment::class.java.name
+        val TAG: String = InputIdentityFragment::class.java.name
 
         fun with(activity: FragmentActivity): Builder = Builder(activity)
     }

@@ -275,7 +275,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         val contentServicePath = MutableLiveData<String>()
         val realm = MutableLiveData<String>()
         val clientId = MutableLiveData<String>()
-        val redirectUrl = MutableLiveData<String>()
+        private var redirectUrl: String = ""
 
         val changed: LiveData<Boolean> get() = _changed
 
@@ -327,7 +327,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             contentServicePath.value = config.contentServicePath
             realm.value = config.realm
             clientId.value = config.clientId
-            redirectUrl.value = config.redirectUrl
+            redirectUrl = config.redirectUrl
             onChange()
         }
 
@@ -338,7 +338,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
                     contentServicePath = contentServicePath.value ?: "",
                     realm = realm.value ?: "",
                     clientId = clientId.value ?: "",
-                    redirectUrl = redirectUrl.value ?: ""
+                    redirectUrl = redirectUrl
             )
         }
 

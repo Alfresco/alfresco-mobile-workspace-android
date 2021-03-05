@@ -19,7 +19,6 @@ import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.alfresco.content.viewer.common.LoadingListener
 import com.alfresco.content.viewer.databinding.ViewerBinding
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -188,10 +187,6 @@ class ViewerFragment : BaseMvRxFragment() {
 
     private fun typeArgs(uri: String, mimeType: String): ChildViewerArgs {
         return ChildViewerArgs(args.id, uri, mimeType)
-    }
-
-    private fun showError(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
     }
 
     private enum class Status {

@@ -57,7 +57,7 @@ class HelpFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        private val TAG = AdvancedSettingsFragment::class.java.name
+        private val TAG: String = AdvancedSettingsFragment::class.java.name
         private const val ARG_MESSAGE_RES_ID = "message_res_id"
 
         fun with(activity: FragmentActivity): Builder = Builder(activity)

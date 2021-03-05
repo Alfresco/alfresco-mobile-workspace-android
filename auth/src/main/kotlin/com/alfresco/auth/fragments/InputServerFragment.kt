@@ -53,8 +53,7 @@ class InputServerFragment : DialogFragment() {
     }
 
     companion object {
-
-        val TAG = InputServerFragment::class.java.name
+        val TAG: String = InputServerFragment::class.java.name
 
         fun with(activity: FragmentActivity): Builder = Builder(activity)
     }

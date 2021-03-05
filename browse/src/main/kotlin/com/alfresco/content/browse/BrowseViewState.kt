@@ -108,9 +108,6 @@ data class BrowseViewState(
             it.id == entry.id
         })
 
-    fun copyPrepending(entry: Entry): BrowseViewState =
-        copyUpdatingBase(listOf(entry) + baseEntries)
-
     enum class ModifiedGroup {
         Today,
         Yesterday,

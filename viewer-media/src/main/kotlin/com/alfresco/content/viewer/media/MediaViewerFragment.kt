@@ -277,18 +277,22 @@ class MediaViewerFragment : ChildViewerFragment() {
                 if (cause is DecoderInitializationException) {
                     // Special case for decoder initialization failures.
                     errorString = if (cause.codecInfo == null) {
-                        if (cause.cause is DecoderQueryException) {
-                            getString(R.string.error_querying_decoders)
-                        } else if (cause.secureDecoderRequired) {
-                            getString(
-                                R.string.error_no_secure_decoder,
-                                cause.mimeType
-                            )
-                        } else {
-                            getString(
-                                R.string.error_no_decoder,
-                                cause.mimeType
-                            )
+                        when {
+                            cause.cause is DecoderQueryException -> {
+                                getString(R.string.error_querying_decoders)
+                            }
+                            cause.secureDecoderRequired -> {
+                                getString(
+                                    R.string.error_no_secure_decoder,
+                                    cause.mimeType
+                                )
+                            }
+                            else -> {
+                                getString(
+                                    R.string.error_no_decoder,
+                                    cause.mimeType
+                                )
+                            }
                         }
                     } else {
                         getString(

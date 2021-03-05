@@ -55,9 +55,6 @@ data class Entry(
     val isSynced: Boolean
         get() = offlineStatus == OfflineStatus.SYNCED
 
-    val isLocal: Boolean
-        get() = boxId != 0L
-
     val isFile: Boolean
         get() = type == Type.FILE
 
@@ -291,7 +288,7 @@ enum class OfflineStatus {
     SYNCED,
     ERROR,
     UNDEFINED;
-    
+
     fun value() = name.lowercase()
 }
 

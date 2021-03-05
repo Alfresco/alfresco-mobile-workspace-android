@@ -22,6 +22,7 @@ import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
 
+@Suppress("unused")
 class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onStart() {

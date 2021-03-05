@@ -31,7 +31,7 @@ abstract class FragmentBuilder(protected val parent: FragmentActivity) {
                 .commit()
     }
 
-    fun replace() {
+    private fun replace() {
         parent.supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_placeholder, build(extraConfiguration), fragmentTag)
                 .commit()

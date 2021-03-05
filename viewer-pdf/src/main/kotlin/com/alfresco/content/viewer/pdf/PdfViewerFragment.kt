@@ -163,7 +163,7 @@ class PdfViewerFragment : ChildViewerFragment() {
             .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
                 dialog.cancel()
             }
-            .setOnCancelListener { _ ->
+            .setOnCancelListener {
                 requireActivity().onBackPressed()
             }.create()
 

@@ -1,7 +1,6 @@
 package com.alfresco.content.app.widget
 
 import android.net.Uri
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -27,23 +26,17 @@ class ActionBarController(private val layout: ActionBarLayout) {
             enterSearchUi()
         }
 
-        navController.addOnDestinationChangedListener(object : NavController.OnDestinationChangedListener {
-            override fun onDestinationChanged(
-                controller: NavController,
-                destination: NavDestination,
-                arguments: Bundle?
-            ) {
-                val isTopLevelDestination = matchDestinations(
-                    destination,
-                    appBarConfiguration.topLevelDestinations
-                )
-                if (isTopLevelDestination) {
-                    layout.collapse(false) // TODO: animated if we fix title
-                } else {
-                    layout.expand(false)
-                }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isTopLevelDestination = matchDestinations(
+                destination,
+                appBarConfiguration.topLevelDestinations
+            )
+            if (isTopLevelDestination) {
+                layout.collapse(false)
+            } else {
+                layout.expand(false)
             }
-        })
+        }
     }
 
     fun setProfileIcon(uri: Uri) = layout.loadProfileIcon(uri)

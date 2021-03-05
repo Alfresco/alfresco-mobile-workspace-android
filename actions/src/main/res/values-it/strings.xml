@@ -2,7 +2,7 @@
 
 <resources>
     <string name="action_add_favorite_title">Aggiungi a Preferiti</string>
-    <string name="action_remove_favorite_title">Rimuovi da Preferiti</string>
+    <string name="action_remove_favorite_title">Rimuovi dai Preferiti</string>
     <string name="action_delete_title">Sposta nel cestino</string>
     <string name="action_restore_title">Ripristina</string>
     <string name="action_delete_forever_title">Elimina definitivamente</string>

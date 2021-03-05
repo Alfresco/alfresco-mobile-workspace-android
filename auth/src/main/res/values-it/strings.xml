@@ -18,7 +18,7 @@
         <p>Puoi immettere l\'URL di Alfresco Identity Management Service per autenticarti con il provider di identità della tua organizzazione.</p>
         <p>*Dovrai quindi fornire l\'URL della tua istanza di Alfresco Content Services</p>
         <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Percorso repository dei contenuti</h6>

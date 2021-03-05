@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="search_title">Suche</string>
+    <string name="search_title">Suchen</string>
     <string name="search_hint">Suche</string>
 
     <string name="recent_search_title">Letzte Suchaufträge</string>

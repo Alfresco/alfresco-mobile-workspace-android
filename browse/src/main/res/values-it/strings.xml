@@ -15,7 +15,7 @@
     <string name="modified_group_today">Oggi</string>
     <string name="modified_group_yesterday">Ieri</string>
     <string name="modified_group_this_week">Questa settimana</string>
-    <string name="modified_group_last_week">Settimana scorsa</string>
+    <string name="modified_group_last_week">Scorsa settimana</string>
     <string name="modified_group_older">Meno recenti</string>
 
     <string name="contextual_search_title">Ricerca</string>
@@ -24,15 +24,15 @@
     <string name="recent_empty_message">I file che visualizzi e\nmodifichi verranno mostrati qui.</string>
     <string name="favorite_files_empty_title">Nessun file o cartella preferiti</string>
     <string name="favorite_sites_empty_title">Nessuna libreria preferita</string>
-    <string name="favorites_empty_message">Sembra che tu non abbia\naggiunto nulla.</string>
+    <string name="favorites_empty_message">A quanto pare non hai aggiunto nulla.</string>
     <string name="folder_empty_title">La cartella è vuota</string>
-    <string name="folder_empty_message">Sembra che qui non ci\nsia ancora nulla.</string>
+    <string name="folder_empty_message">A quanto pare qui non c\'è nulla.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizza tutto</string>
 
     <string name="offline_empty_title">Nessun contenuto offline</string>
-    <string name="offline_empty_message">Il contenuto reso disponibile offline\nverrà visualizzato qui.</string>
+    <string name="offline_empty_message">Il contenuto che hai reso disponibile offline verrà visualizzato qui.</string>
 
     <string name="offline_sync_unavailable_title">Vuoi utilizzare i dati mobili?</string>
     <string name="offline_sync_unavailable_message">Le tue impostazioni saranno sostituite e questa volta il download verrà eseguito usando i dati mobili. Altrimenti, il download inizierà dopo la connessione alla rete Wi-Fi.</string>

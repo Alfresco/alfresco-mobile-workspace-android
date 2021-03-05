@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources translatable="false">
+    <!-- Android Account Authenticator Config -->
+    <string name="android_auth_account_type">com.alfresco.content.app-debug</string>
+    <string name="android_auth_label">Alfresco Content Services Debug</string>
+</resources>

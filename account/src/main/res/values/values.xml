@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources translatable="false">
     <string name="android_auth_account_type">{{com.alfresco.account}}</string>
     <string name="android_auth_label">{{auth-module}}</string>
 </resources>

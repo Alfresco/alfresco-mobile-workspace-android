@@ -1,8 +1,6 @@
 
 package com.alfresco.content.actions
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +12,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.events.on
+import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
 
 class ActionBarFragment : BaseMvRxFragment() {
@@ -66,7 +65,7 @@ class ActionBarFragment : BaseMvRxFragment() {
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
-            background = context.drawableFromAttribute(android.R.attr.actionBarItemBackground)
+            background = context.getDrawableForAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(action.icon)
             setOnClickListener {
                 viewModel.execute(action)
@@ -90,7 +89,7 @@ class ActionBarFragment : BaseMvRxFragment() {
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
-            background = context.drawableFromAttribute(android.R.attr.actionBarItemBackground)
+            background = context.getDrawableForAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
                 withState(viewModel) {
@@ -98,11 +97,4 @@ class ActionBarFragment : BaseMvRxFragment() {
                 }
             }
         }
-
-    private fun Context.drawableFromAttribute(attribute: Int): Drawable? {
-        val attributes = obtainStyledAttributes(intArrayOf(attribute))
-        val result = attributes.getDrawable(0)
-        attributes.recycle()
-        return result
-    }
 }

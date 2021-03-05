@@ -1,7 +1,6 @@
 package com.alfresco.content.app.widget
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -12,6 +11,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.alfresco.content.app.R
 import com.alfresco.content.app.databinding.ViewProfileIconBinding
+import com.alfresco.ui.getDrawableForAttribute
 
 class ProfileIconView(
     context: Context,
@@ -24,7 +24,7 @@ class ProfileIconView(
 
     init {
         binding.status.isVisible = false
-        background = context.drawableFromAttribute(android.R.attr.selectableItemBackgroundBorderless)
+        background = context.getDrawableForAttribute(android.R.attr.selectableItemBackgroundBorderless)
     }
 
     constructor(context: Context) :
@@ -56,12 +56,5 @@ class ProfileIconView(
             }
             status.isVisible = value
         }
-    }
-
-    private fun Context.drawableFromAttribute(attribute: Int): Drawable? {
-        val attributes = obtainStyledAttributes(intArrayOf(attribute))
-        val result = attributes.getDrawable(0)
-        attributes.recycle()
-        return result
     }
 }

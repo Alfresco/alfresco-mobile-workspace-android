@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.TypedValue
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -18,6 +17,7 @@ import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
 import com.alfresco.download.DownloadMonitor
+import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
@@ -115,14 +115,6 @@ class MainActivity : BaseMvRxActivity() {
             .tint(primaryColor(this))
             .observe(this)
 
-    private fun primaryColor(context: Context): Int {
-        val typedValue = TypedValue()
-        val arr = context.obtainStyledAttributes(
-            typedValue.data,
-            intArrayOf(R.attr.colorPrimary)
-        )
-        val color = arr.getColor(0, 0)
-        arr.recycle()
-        return color
-    }
+    private fun primaryColor(context: Context) =
+        context.getColorForAttribute(R.attr.colorPrimary)
 }

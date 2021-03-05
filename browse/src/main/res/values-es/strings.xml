@@ -26,7 +26,7 @@
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
     <string name="favorites_empty_message">Parece que no ha añadido nada.</string>
     <string name="folder_empty_title">La carpeta está vacía</string>
-    <string name="folder_empty_message">Parece que todavía no hay contenido.</string>
+    <string name="folder_empty_message">Parece que todavía \nno hay contenido.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizar todo</string>

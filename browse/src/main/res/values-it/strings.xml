@@ -15,7 +15,7 @@
     <string name="modified_group_today">Oggi</string>
     <string name="modified_group_yesterday">Ieri</string>
     <string name="modified_group_this_week">Questa settimana</string>
-    <string name="modified_group_last_week">Settimana scorsa</string>
+    <string name="modified_group_last_week">Scorsa settimana</string>
     <string name="modified_group_older">Meno recenti</string>
 
     <string name="contextual_search_title">Ricerca</string>

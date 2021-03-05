@@ -42,15 +42,11 @@ class AdvancedSettingsFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel.setHasNavigation(true)
-    }
-
     override fun onStart() {
         super.onStart()
+
         activity?.title = resources.getString(R.string.auth_settings_title)
+        viewModel.setHasNavigation(true)
 
         observe(viewModel.onSaveSettings, ::onSave)
     }

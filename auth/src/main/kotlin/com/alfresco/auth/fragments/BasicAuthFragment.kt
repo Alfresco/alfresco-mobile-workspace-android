@@ -33,9 +33,11 @@ class BasicAuthFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
 
+        // Reset action bar title
+        activity?.title = ""
         viewModel.setHasNavigation(true)
 
         updateUi()
@@ -53,13 +55,6 @@ class BasicAuthFragment : DialogFragment() {
 
             rootView.findViewById<View>(R.id.tvBasicAuthInfoCloud).visibility = View.GONE
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        // Reset action bar title
-        activity?.title = ""
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

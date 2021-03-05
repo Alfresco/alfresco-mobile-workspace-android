@@ -29,17 +29,12 @@ class InputServerFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel.setHasNavigation(true)
-    }
-
     override fun onStart() {
         super.onStart()
 
         // Reset action bar title
         activity?.title = ""
+        viewModel.setHasNavigation(true)
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

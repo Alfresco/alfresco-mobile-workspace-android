@@ -29,17 +29,12 @@ class InputIdentityFragment : DialogFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel.setHasNavigation(false)
-    }
-
     override fun onStart() {
         super.onStart()
 
         // Reset action bar title
         activity?.title = ""
+        viewModel.setHasNavigation(false)
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

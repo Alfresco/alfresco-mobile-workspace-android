@@ -48,7 +48,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             }
             if (remote?.isFolder == true) {
                 // TODO: parallel fetch after the first page
-                var page: ResponsePaging? = null
+                var page: ResponsePaging?
                 var skip = 0L
                 do {
                     page = BrowseRepository()

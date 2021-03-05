@@ -3,7 +3,6 @@ package com.alfresco.content.account
 import android.accounts.Account as AndroidAccount
 import android.accounts.AccountManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 
 data class Account(

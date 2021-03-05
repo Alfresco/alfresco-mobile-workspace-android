@@ -75,16 +75,10 @@ data class Account(
         }
 
         fun delete(context: Context, callback: () -> Unit) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                AccountManager.get(context).removeAccount(getAndroidAccount(context), null, {
+            AccountManager.get(context)
+                .removeAccount(getAndroidAccount(context), null, {
                     callback()
                 }, null)
-            } else {
-                @Suppress("DEPRECATION")
-                AccountManager.get(context).removeAccount(getAndroidAccount(context), {
-                    callback()
-                }, null)
-            }
         }
 
         fun getAccount(context: Context): Account? {

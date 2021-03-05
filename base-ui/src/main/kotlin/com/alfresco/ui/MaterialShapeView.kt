@@ -75,9 +75,7 @@ class MaterialShapeView(
             attributes.recycle()
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            foreground = ColorDrawable()
-        }
+        foreground = ColorDrawable()
 
         // Deferred elevation as this is called during base class init and would otherwise crash
         onElevation = { elevation ->

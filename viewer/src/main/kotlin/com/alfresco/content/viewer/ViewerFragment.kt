@@ -19,10 +19,6 @@ import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.alfresco.content.viewer.common.LoadingListener
 import com.alfresco.content.viewer.databinding.ViewerBinding
-import com.alfresco.content.viewer.image.ImageViewerFragment
-import com.alfresco.content.viewer.media.MediaViewerFragment
-import com.alfresco.content.viewer.pdf.PdfViewerFragment
-import com.alfresco.content.viewer.text.TextViewerFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.parcelize.Parcelize
 
@@ -106,11 +102,10 @@ class ViewerFragment : BaseMvRxFragment() {
         }
 
         if (state.ready) {
-            if (state.viewerType != null) {
+            if (state.viewerMimeType != null && state.viewerUri != null) {
                 configureViewer(
-                    state.viewerUri ?: "",
-                    state.viewerType,
-                    state.entry?.mimeType ?: ""
+                    state.viewerUri,
+                    state.viewerMimeType
                 )
                 show(Status.LoadingPreview)
             } else {
@@ -137,16 +132,18 @@ class ViewerFragment : BaseMvRxFragment() {
 
     private fun configureViewer(
         viewerUri: String,
-        viewerType: ViewerType,
         mimeType: String
     ) {
-        val tag = viewerType.toString()
+        val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
             val args = typeArgs(
                 viewerUri,
                 mimeType
             )
-            val fragment = viewerFragment(viewerType, args)
+            val fragment = ViewerRegistry.previewProvider(mimeType)?.createViewer()
+            requireNotNull(fragment)
+            fragment.arguments = bundleOf(MvRx.KEY_ARG to args)
+
             childFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, fragment, tag)
                 .commit()
@@ -191,15 +188,6 @@ class ViewerFragment : BaseMvRxFragment() {
 
     private fun typeArgs(uri: String, mimeType: String): ChildViewerArgs {
         return ChildViewerArgs(args.id, uri, mimeType)
-    }
-
-    private fun viewerFragment(type: ViewerType, args: ChildViewerArgs): Fragment {
-        return when (type) {
-            ViewerType.Pdf -> PdfViewerFragment()
-            ViewerType.Image -> ImageViewerFragment()
-            ViewerType.Text -> TextViewerFragment()
-            ViewerType.Media -> MediaViewerFragment()
-        }.apply { arguments = bundleOf(MvRx.KEY_ARG to args) }
     }
 
     private fun showError(message: String) {

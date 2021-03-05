@@ -1,7 +1,6 @@
 package com.alfresco.content.data
 
 import android.content.Context
-import android.net.Uri
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.coroutines.asyncMap
@@ -182,37 +181,29 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun downloadRendition(entry: Entry) {
         if (!typeSupported(entry)) {
-            val uri = RenditionRepository().fetchRenditionUri(entry.id)
-            if (uri != null) {
-                val typeSuffix = renditionTypeSuffix(uri)
+            val rendition = RenditionRepository().fetchRendition(entry.id)
+            if (rendition != null) {
                 val outputDir = repository.contentDir(entry)
                 outputDir.mkdir()
-                val output = File(outputDir, ".preview$typeSuffix")
-                ContentDownloader.downloadFileTo(uri, output.path)
+                val output = File(outputDir, rendition.offlineFileName)
+                ContentDownloader.downloadFileTo(rendition.uri, output.path)
             }
         }
     }
 
-    private fun renditionTypeSuffix(uri: String) =
-        if (Uri.parse(uri).pathSegments.contains("pdf")) {
-            "_pdf"
-        } else {
-            "_img"
-        }
-
     private fun typeSupported(entry: Entry) =
-        entry.mimeType == "application/pdf" ||
-            supportedImageFormats.contains(entry.mimeType) ||
-            entry.mimeType?.startsWith("text/") == true ||
-            entry.mimeType?.startsWith("audio/") == true ||
-            entry.mimeType?.startsWith("video/") == true
+        previewRegistry?.isPreviewSupported(entry.mimeType) ?: false
 
     companion object {
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_PAGE_SIZE = 100
-        private val supportedImageFormats = setOf("image/bmp", "image/jpeg", "image/png", "image/gif", "image/webp", "image/gif", "image/svg+xml")
         private const val HTTP_STATUS_FORBIDDEN = 403
         private const val HTTP_STATUS_NOT_FOUND = 404
+        private var previewRegistry: PreviewRegistry? = null
+
+        fun use(previewRegistry: PreviewRegistry) {
+            this.previewRegistry = previewRegistry
+        }
     }
 
     sealed class Operation() {

@@ -2,4 +2,6 @@
 <account-authenticator
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountType="@string/android_auth_account_type"
+    android:icon="@drawable/ic_android_auth"
+    android:smallIcon="@drawable/ic_android_auth"
     android:label="@string/android_auth_label"/>

@@ -147,6 +147,8 @@ class ActionListViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: ActionListState
-        ) = ActionListViewModel(state, viewModelContext.app())
+        ) =
+            // Requires activity context in order to present other fragments
+            ActionListViewModel(state, viewModelContext.activity())
     }
 }

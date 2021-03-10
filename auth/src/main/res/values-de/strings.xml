@@ -64,14 +64,6 @@
     <string name="auth_sso_repo_hint">Content Services-URL</string>
     <string name="auth_sso_sign_in_button">Mit SSO anmelden</string>
 
-    <string name="auth_account_details_identity">Mit URL verbinden</string>
-    <string name="auth_account_details_server">%1$s-URL</string>
-    <string name="auth_account_details_protocol">Protokoll</string>
-    <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
-    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
-    <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
-    <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
-
     <!-- Signed out dialog -->
     <string name="auth_signed_out_title">Sitzung abgelaufen.</string>
     <string name="auth_signed_out_subtitle">Sie wurden abgemeldet. Melden Sie sich zum Fortfahren wieder an.</string>

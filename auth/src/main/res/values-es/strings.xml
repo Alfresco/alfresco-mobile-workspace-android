@@ -64,14 +64,6 @@
     <string name="auth_sso_repo_hint">URL de servicios de contenido</string>
     <string name="auth_sso_sign_in_button">Iniciar sesión con SSO</string>
 
-    <string name="auth_account_details_identity">Conectar a URL</string>
-    <string name="auth_account_details_server">URL de %1$s</string>
-    <string name="auth_account_details_protocol">Protocolo</string>
-    <string name="auth_account_details_port">@string/auth_settings_transport_port</string>
-    <string name="auth_account_details_service_path">@string/auth_settings_service_path</string>
-    <string name="auth_account_details_client_id">@string/auth_settings_auth_client_id</string>
-    <string name="auth_account_details_realm">@string/auth_settings_auth_realm</string>
-
     <!-- Signed out dialog -->
     <string name="auth_signed_out_title">Sesión caducada.</string>
     <string name="auth_signed_out_subtitle">Su sesión ya no está activa. Vuelva a iniciar sesión para continuar.</string>

@@ -1,11 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="nav_title_home">Startseite</string>
-
     <string name="browse_menu_personal">Persönliche Dateien</string>
     <string name="browse_menu_my_libraries">Meine Bibliotheken</string>
-    <string name="browse_menu_fav_libraries">Als Favoriten markierte Bibliotheken</string>
     <string name="browse_menu_shared">Freigegeben</string>
     <string name="browse_menu_trash">Papierkorb</string>
 

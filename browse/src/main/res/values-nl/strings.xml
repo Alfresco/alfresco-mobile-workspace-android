@@ -1,11 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="nav_title_home">Home</string>
-
     <string name="browse_menu_personal">Persoonlijke bestanden</string>
     <string name="browse_menu_my_libraries">Mijn bibliotheken</string>
-    <string name="browse_menu_fav_libraries">Favoriete bibliotheken</string>
     <string name="browse_menu_shared">Gedeeld</string>
     <string name="browse_menu_trash">Prullenbak</string>
 

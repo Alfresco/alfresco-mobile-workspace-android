@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="auth_visibility_phone_only">0</integer><!-- VISIBLE -->
-    <integer name="auth_visibility_tablet_only">2</integer><!-- GONE -->
+    <!-- GONE -->
     <dimen name="auth_box_elevation">32dp</dimen>
 
     <!-- LOGIN SETTINGS -->

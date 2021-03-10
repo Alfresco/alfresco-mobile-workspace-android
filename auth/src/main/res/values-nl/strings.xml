@@ -35,9 +35,6 @@
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Kan geen verificatieservice vinden op de opgegeven Alfresco-URL.</string>
-    <string name="auth_error_wrong_credentials">Onjuiste gebruikersnaam of wachtwoord opgegeven.</string>
-    <string name="auth_error_app_unreachable">Verificatieservice is momenteel onbereikbaar.</string>
-    <string name="auth_error_app_incorrect">Service is onjuist geconfigureerd.</string>
 
     <!-- Settings -->
     <string name="auth_settings_title">Geavanceerde instellingen</string>
@@ -50,7 +47,6 @@
     <string name="auth_settings_auth_section">Verificatie</string>
     <string name="auth_settings_auth_realm">Realm</string>
     <string name="auth_settings_auth_client_id">Client-id</string>
-    <string name="auth_settings_auth_redirect_url">Omleidings-URL</string>
     <string name="auth_settings_reset">Standaardinstellingen herstellen</string>
     <string name="auth_settings_help">@string/auth_help_button</string>
     <string name="auth_settings_save">Opslaan</string>

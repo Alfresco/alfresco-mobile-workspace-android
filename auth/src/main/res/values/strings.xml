@@ -35,9 +35,6 @@
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">No authentication service can be found at the provided Alfresco URL.</string>
-    <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>
-    <string name="auth_error_app_unreachable">Authentication service is currently unreachable.</string>
-    <string name="auth_error_app_incorrect">Service incorrectly configured.</string>
 
     <!-- Settings -->
     <string name="auth_settings_title">Advanced settings</string>
@@ -50,7 +47,6 @@
     <string name="auth_settings_auth_section">Authentication</string>
     <string name="auth_settings_auth_realm">Realm</string>
     <string name="auth_settings_auth_client_id">Client ID</string>
-    <string name="auth_settings_auth_redirect_url">Redirect URL</string>
     <string name="auth_settings_reset">Reset to default</string>
     <string name="auth_settings_help">@string/auth_help_button</string>
     <string name="auth_settings_save">Save</string>

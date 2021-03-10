@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="error_cleartext_not_permitted">Klartextverkehr nicht zulässig</string>
     <string name="error_generic">Wiedergabefehler</string>
     <string name="error_no_decoder">Dieses Gerät bietet keinen Decoder für &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g>.</string>
     <string name="error_no_secure_decoder">Dieses Gerät bietet keinen sicheren Decoder für &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g>.</string>

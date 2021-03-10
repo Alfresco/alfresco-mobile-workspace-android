@@ -35,9 +35,6 @@
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Aucun service d\'authentification trouvé à l\'URL Alfresco spécifiée.</string>
-    <string name="auth_error_wrong_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
-    <string name="auth_error_app_unreachable">Le service d\'authentification est actuellement inaccessible.</string>
-    <string name="auth_error_app_incorrect">Configuration du service incorrecte.</string>
 
     <!-- Settings -->
     <string name="auth_settings_title">Paramètres avancés</string>
@@ -50,7 +47,6 @@
     <string name="auth_settings_auth_section">Authentification</string>
     <string name="auth_settings_auth_realm">Domaine</string>
     <string name="auth_settings_auth_client_id">ID client</string>
-    <string name="auth_settings_auth_redirect_url">URL de redirection</string>
     <string name="auth_settings_reset">Rétablir les valeurs par défaut</string>
     <string name="auth_settings_help">@string/auth_help_button</string>
     <string name="auth_settings_save">Enregistrer</string>

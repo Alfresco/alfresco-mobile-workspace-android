@@ -27,13 +27,13 @@ import kotlinx.parcelize.TypeParceler
 @TypeParceler<ZonedDateTime, DateParceler>
 @Entity
 data class Entry(
-    val id: String,
+    val id: String = "",
     val parentId: String? = null,
     @Convert(converter = BoxEntryTypeConverter::class, dbType = String::class)
-    val type: Type,
-    val name: String,
-    val path: String?,
-    val mimeType: String?,
+    val type: Type = Type.UNKNOWN,
+    val name: String = "",
+    val path: String? = null,
+    val mimeType: String? = null,
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val modified: ZonedDateTime? = null,
     @Transient

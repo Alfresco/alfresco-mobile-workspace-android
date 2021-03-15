@@ -1,4 +1,9 @@
-# <img title="Alfresco" alt='Alfresco' src='docs/logo.svg' height="32px" /> Mobile Workspace Android
+[<img title="Alfresco" alt='Alfresco' src='docs/logo.svg' align="right" height="32px" />](https://alfresco.com/)
+
+# Alfresco Mobile Workspace Android
+
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Alfresco/alfresco-mobile-workspace-android?label=release)
+![License](https://img.shields.io/github/license/Alfresco/alfresco-mobile-workspace-android)
 
 ## What Is Alfresco Mobile Workspace?
 Alfresco Mobile Workspace enables users to work away from their workstation without compromising on the way content is accessed. Keep productivity high by transporting technical documents into the field without having to worry about a data connection.

@@ -10,7 +10,7 @@ variables:
   - group: source-clear-credentials
   - group: android-signing
   - name: version_code
-    value: $[counter('versionCode', 0)]
+    value: $[counter('versionCode', 410)]
   - name: GRADLE_USER_HOME
     value: $(Pipeline.Workspace)/.gradle
   - name: deps_def_path

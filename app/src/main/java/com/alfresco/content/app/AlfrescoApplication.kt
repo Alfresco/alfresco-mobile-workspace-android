@@ -2,6 +2,7 @@ package com.alfresco.content.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.airbnb.mvrx.Mavericks
 import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.network.ConnectivityTracker
@@ -34,6 +35,8 @@ class AlfrescoApplication : Application() {
         }
 
         ConnectivityTracker.startTracking(this)
+
+        Mavericks.initialize(this)
     }
 
     private fun updateAppTheme(theme: Settings.Theme) {

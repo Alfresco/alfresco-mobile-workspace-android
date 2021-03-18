@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 
 open class MvRxViewModel<S : MvRxState>(
     initialState: S
-) : BaseMvRxViewModel<S>(initialState, debugMode = BuildConfig.DEBUG) {
+) : BaseMvRxViewModel<S>(initialState) {
 
     protected suspend fun <T> Flow<T>.execute(
         stateReducer: S.(Async<T>) -> S

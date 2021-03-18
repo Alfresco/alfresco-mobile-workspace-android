@@ -13,6 +13,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.target.ImageViewTarget
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -21,7 +22,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.chrisbanes.photoview.PhotoView
 
-class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image) {
+class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), MavericksView {
 
     private val viewModel: ImageViewerViewModel by fragmentViewModel()
 

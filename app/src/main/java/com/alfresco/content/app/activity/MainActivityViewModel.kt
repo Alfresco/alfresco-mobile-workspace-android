@@ -6,11 +6,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.viewModelScope
-import com.airbnb.mvrx.MvRxState
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionSyncNow
@@ -30,12 +29,12 @@ data class MainActivityState(
     val reLoginCount: Int = 0, // new state on each invalid auth
     val requiresReLogin: Boolean = false,
     val isOnline: Boolean = true
-) : MvRxState
+) : MavericksState
 
 class MainActivityViewModel(
     state: MainActivityState,
     context: Context
-) : MvRxViewModel<MainActivityState>(state), LifecycleObserver {
+) : MavericksViewModel<MainActivityState>(state), LifecycleObserver {
 
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
     private var refreshTicketJob: Job? = null
@@ -102,7 +101,7 @@ class MainActivityViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<MainActivityViewModel, MainActivityState> {
+    companion object : MavericksViewModelFactory<MainActivityViewModel, MainActivityState> {
 
         override fun create(
             viewModelContext: ViewModelContext,

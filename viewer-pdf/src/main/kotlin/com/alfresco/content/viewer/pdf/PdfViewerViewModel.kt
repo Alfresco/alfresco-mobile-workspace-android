@@ -2,8 +2,8 @@ package com.alfresco.content.viewer.pdf
 
 import android.net.Uri
 import androidx.webkit.WebViewAssetLoader
-import com.airbnb.mvrx.MvRxState
-import com.alfresco.content.MvRxViewModel
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.kotlin.filename
 import com.alfresco.kotlin.isLocalPath
@@ -11,11 +11,11 @@ import com.alfresco.kotlin.parentFile
 
 data class PdfViewerState(
     val uri: String
-) : MvRxState {
+) : MavericksState {
     constructor(args: ChildViewerArgs) : this(args.uri)
 }
 
-class PdfViewerViewModel(state: PdfViewerState) : MvRxViewModel<PdfViewerState>(state) {
+class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerState>(state) {
 
     fun assetDomain(state: PdfViewerState): String =
         if (state.uri.isLocalPath()) {

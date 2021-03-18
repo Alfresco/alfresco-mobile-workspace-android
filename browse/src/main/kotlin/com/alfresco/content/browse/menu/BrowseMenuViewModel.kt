@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
 import androidx.annotation.ArrayRes
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.BrowseRepository
 
 class BrowseMenuViewModel(
     viewState: BrowseMenuViewState,
     context: Context
-) : MvRxViewModel<BrowseMenuViewState>(viewState) {
+) : MavericksViewModel<BrowseMenuViewState>(viewState) {
 
     init {
         val tiles = context.resources.getStringArray(R.array.browse_menu_titles)
@@ -26,7 +26,7 @@ class BrowseMenuViewModel(
 
     fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
 
-    companion object : MvRxViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
+    companion object : MavericksViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: BrowseMenuViewState

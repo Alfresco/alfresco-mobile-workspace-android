@@ -10,6 +10,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.webkit.WebViewAssetLoader
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -19,7 +20,7 @@ import com.alfresco.kotlin.filename
 /**
  * Viewer for displaying plain text backed by a [WebView]
  */
-class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text) {
+class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text), MavericksView {
 
     private val viewModel: TextViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView

@@ -13,13 +13,14 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.webkit.WebViewAssetLoader
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 
-class PdfViewerFragment : ChildViewerFragment() {
+class PdfViewerFragment : ChildViewerFragment(), MavericksView {
 
     private val viewModel: PdfViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView

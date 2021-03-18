@@ -3,16 +3,17 @@ package com.alfresco.content
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.ActivityViewModelContext
-import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelProvider
-import com.airbnb.mvrx.MvRxState
-import com.airbnb.mvrx.MvRxView
 import com.airbnb.mvrx.RealMavericksStateFactory
 import com.airbnb.mvrx._internal
 import com.airbnb.mvrx.lifecycleAwareLazy
 import kotlin.reflect.KClass
+import kotlinx.coroutines.plus
 
 /**
  * Gets or creates a ViewModel scoped to this Fragment. You will get the same instance every time
@@ -21,11 +22,11 @@ import kotlin.reflect.KClass
  * This is based on [com.airbnb.mvrx.fragmentViewModel] solution provided by MvRxExtensions.kt
  */
 @OptIn(InternalMavericksApi::class)
-inline fun <T, reified VM : BaseMvRxViewModel<S>, reified S : MvRxState> T.fragmentViewModelWithArgs(
+inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T.fragmentViewModelWithArgs(
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name },
     crossinline argsProvider: () -> Any?
-) where T : Fragment, T : MvRxView = lifecycleAwareLazy(this) {
+) where T : Fragment, T : MavericksView = lifecycleAwareLazy(this) {
     MavericksViewModelProvider.get(
         viewModelClass = viewModelClass.java,
         stateClass = S::class.java,
@@ -45,10 +46,10 @@ inline fun <T, reified VM : BaseMvRxViewModel<S>, reified S : MvRxState> T.fragm
  * This is based on [com.airbnb.mvrx.fragmentViewModel] solution provided by MvRxExtensions.kt
  */
 @OptIn(InternalMavericksApi::class)
-inline fun <T, reified VM : BaseMvRxViewModel<S>, reified S : MvRxState> T.activityViewModel(
+inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T.activityViewModel(
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name }
-) where T : AppCompatActivity, T : MvRxView = lifecycleAwareLazy(this) {
+) where T : AppCompatActivity, T : MavericksView = lifecycleAwareLazy(this) {
     MavericksViewModelProvider.get(
         viewModelClass = viewModelClass.java,
         stateClass = S::class.java,

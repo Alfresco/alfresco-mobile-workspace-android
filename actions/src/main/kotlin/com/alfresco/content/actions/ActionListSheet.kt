@@ -6,15 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.BaseMvRxBottomSheet
 import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
+import com.alfresco.ui.BottomSheetDialogFragment
 
-class ActionListSheet : BaseMvRxBottomSheet() {
+class ActionListSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ActionListViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionListBinding
 
@@ -58,7 +59,7 @@ class ActionListSheet : BaseMvRxBottomSheet() {
 
     companion object {
         fun with(entry: Entry) = ActionListSheet().apply {
-            arguments = bundleOf(MvRx.KEY_ARG to entry)
+            arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
     }
 }

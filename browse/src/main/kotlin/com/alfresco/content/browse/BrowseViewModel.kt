@@ -1,9 +1,8 @@
 package com.alfresco.content.browse
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDeleteForever
@@ -133,7 +132,7 @@ class BrowseViewModel(
                 Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
         }
 
-    companion object : MvRxViewModelFactory<BrowseViewModel, BrowseViewState> {
+    companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
 
         override fun create(
             viewModelContext: ViewModelContext,

@@ -1,14 +1,13 @@
 package com.alfresco.content.viewer.text
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Async
-import com.airbnb.mvrx.MvRxState
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.download.ContentDownloader
@@ -21,14 +20,14 @@ import kotlinx.coroutines.launch
 data class TextViewerState(
     val uri: String,
     val path: Async<String> = Uninitialized
-) : MvRxState {
+) : MavericksState {
     constructor(args: ChildViewerArgs) : this(args.uri)
 }
 
 class TextViewerViewModel(
     state: TextViewerState,
     context: Context
-) : MvRxViewModel<TextViewerState>(state) {
+) : MavericksViewModel<TextViewerState>(state) {
 
     val docPath: File
 
@@ -51,7 +50,7 @@ class TextViewerViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<TextViewerViewModel, TextViewerState> {
+    companion object : MavericksViewModelFactory<TextViewerViewModel, TextViewerState> {
         private const val TMP_FILE_NAME = "content.tmp"
 
         override fun create(

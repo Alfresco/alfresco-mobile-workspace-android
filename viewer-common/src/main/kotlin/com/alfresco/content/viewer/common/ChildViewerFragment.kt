@@ -1,7 +1,7 @@
 package com.alfresco.content.viewer.common
 
 import androidx.annotation.LayoutRes
-import com.airbnb.mvrx.BaseMvRxFragment
+import androidx.fragment.app.Fragment
 
 interface LoadingListener {
     fun onContentLoaded()
@@ -9,7 +9,7 @@ interface LoadingListener {
 }
 
 abstract class ChildViewerFragment(@LayoutRes contentLayoutId: Int = 0) :
-    BaseMvRxFragment(contentLayoutId) {
+    Fragment(contentLayoutId) {
     var loadingListener: LoadingListener? = null
 
     open fun showInfoWhenLoaded(): Boolean = false

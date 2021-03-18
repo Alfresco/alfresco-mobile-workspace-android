@@ -6,18 +6,18 @@ import android.os.Looper
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.lifecycle.viewModelScope
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.Async
-import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionDelete
@@ -30,7 +30,7 @@ import com.alfresco.content.simpleController
 import com.alfresco.events.on
 import com.alfresco.list.replace
 
-interface ListViewState : MvRxState {
+interface ListViewState : MavericksState {
     val entries: List<Entry>
     val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
@@ -51,7 +51,7 @@ interface ListViewState : MvRxState {
 
 abstract class ListViewModel<S : ListViewState>(
     initialState: S
-) : MvRxViewModel<S>(initialState) {
+) : MavericksViewModel<S>(initialState) {
 
     init {
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
@@ -92,7 +92,8 @@ abstract class ListViewModel<S : ListViewState>(
     }
 }
 
-abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> : BaseMvRxFragment(R.layout.fragment_list) {
+abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
+    Fragment(R.layout.fragment_list), MavericksView {
     abstract val viewModel: VM
 
     lateinit var loadingAnimation: View

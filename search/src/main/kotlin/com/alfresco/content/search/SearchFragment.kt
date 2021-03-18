@@ -9,8 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
@@ -39,7 +40,7 @@ data class ContextualSearchArgs(
     }
 }
 
-class SearchFragment : BaseMvRxFragment() {
+class SearchFragment : Fragment(), MavericksView {
 
     private val viewModel: SearchViewModel by fragmentViewModelWithArgs {
         ContextualSearchArgs.with(arguments)

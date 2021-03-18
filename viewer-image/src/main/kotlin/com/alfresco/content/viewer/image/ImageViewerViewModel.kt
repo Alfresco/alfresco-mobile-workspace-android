@@ -1,14 +1,13 @@
 package com.alfresco.content.viewer.image
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Async
-import com.airbnb.mvrx.MvRxState
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.download.ContentDownloader
 import com.alfresco.kotlin.isLocalPath
@@ -20,7 +19,7 @@ data class ImageViewerState(
     val mimeType: String,
     val largeScale: Boolean = largeScaleFormats.contains(mimeType),
     val path: Async<String> = Uninitialized
-) : MvRxState {
+) : MavericksState {
     constructor(args: ChildViewerArgs) : this(args.uri, args.type)
 
     companion object {
@@ -31,7 +30,7 @@ data class ImageViewerState(
 class ImageViewerViewModel(
     state: ImageViewerState,
     context: Context
-) : MvRxViewModel<ImageViewerState>(state) {
+) : MavericksViewModel<ImageViewerState>(state) {
 
     init {
         if (state.largeScale && !state.uri.isLocalPath()) {
@@ -46,7 +45,7 @@ class ImageViewerViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<ImageViewerViewModel, ImageViewerState> {
+    companion object : MavericksViewModelFactory<ImageViewerViewModel, ImageViewerState> {
         private const val TMP_FILE_NAME = "content.tmp"
 
         override fun create(

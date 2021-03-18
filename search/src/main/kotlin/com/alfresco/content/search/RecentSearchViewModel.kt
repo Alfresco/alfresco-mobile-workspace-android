@@ -1,20 +1,20 @@
 package com.alfresco.content.search
 
 import android.content.Context
-import com.airbnb.mvrx.MvRxState
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.SearchRepository
 
 data class RecentSearchViewState(
     val entries: List<String> = emptyList()
-) : MvRxState
+) : MavericksState
 
 class RecentSearchViewModel(
     viewState: RecentSearchViewState,
     val context: Context
-) : MvRxViewModel<RecentSearchViewState>(viewState) {
+) : MavericksViewModel<RecentSearchViewState>(viewState) {
 
     @Suppress("unused")
     val changeListener = SearchRepository.RecentSearchesChangeListener(context) { refresh() }
@@ -27,7 +27,7 @@ class RecentSearchViewModel(
         setState { copy(entries = SearchRepository().getRecentSearches()) }
     }
 
-    companion object : MvRxViewModelFactory<RecentSearchViewModel, RecentSearchViewState> {
+    companion object : MavericksViewModelFactory<RecentSearchViewModel, RecentSearchViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: RecentSearchViewState

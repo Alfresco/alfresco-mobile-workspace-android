@@ -5,13 +5,14 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
-import com.alfresco.content.BaseMvRxActivity
 import com.alfresco.content.actions.Action
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
@@ -23,7 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
 
-class MainActivity : BaseMvRxActivity() {
+class MainActivity : AppCompatActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }

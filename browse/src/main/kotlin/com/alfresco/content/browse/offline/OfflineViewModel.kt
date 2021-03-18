@@ -1,9 +1,8 @@
 package com.alfresco.content.browse.offline
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
@@ -73,7 +72,7 @@ class OfflineViewModel(
         Settings(context).canSyncOverMeteredNetwork ||
             !ConnectivityTracker.isActiveNetworkMetered(context)
 
-    companion object : MvRxViewModelFactory<OfflineViewModel, OfflineViewState> {
+    companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
 
         override fun create(
             viewModelContext: ViewModelContext,

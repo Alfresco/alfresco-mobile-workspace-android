@@ -7,15 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.events.on
 import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
 
-class ActionBarFragment : BaseMvRxFragment() {
+class ActionBarFragment : Fragment(), MavericksView {
     private val viewModel: ActionListViewModel by fragmentViewModel()
     private lateinit var view: LinearLayout
 

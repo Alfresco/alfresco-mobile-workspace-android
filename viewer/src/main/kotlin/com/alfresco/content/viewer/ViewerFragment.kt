@@ -9,8 +9,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.airbnb.mvrx.BaseMvRxFragment
-import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionBarFragment
 import com.alfresco.content.data.Entry
@@ -43,7 +43,7 @@ data class ViewerArgs(
     }
 }
 
-class ViewerFragment : BaseMvRxFragment() {
+class ViewerFragment : Fragment(), MavericksView {
 
     private lateinit var args: ViewerArgs
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
@@ -124,7 +124,7 @@ class ViewerFragment : BaseMvRxFragment() {
 
     private fun configureActionBar(entry: Entry) {
         val fragment = ActionBarFragment().apply {
-            arguments = bundleOf(MvRx.KEY_ARG to entry)
+            arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
         parentFragmentManager
             .beginTransaction()
@@ -144,7 +144,7 @@ class ViewerFragment : BaseMvRxFragment() {
             )
             val fragment = ViewerRegistry.previewProvider(mimeType)?.createViewer()
             requireNotNull(fragment)
-            fragment.arguments = bundleOf(MvRx.KEY_ARG to args)
+            fragment.arguments = bundleOf(Mavericks.KEY_ARG to args)
 
             childFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, fragment, tag)

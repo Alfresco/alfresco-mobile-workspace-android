@@ -1,9 +1,10 @@
 package com.alfresco.content.search
 
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.Entry
@@ -14,9 +15,12 @@ import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import java.util.concurrent.CancellationException
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
@@ -91,6 +95,23 @@ class SearchViewModel(
         }
     }
 
+    private suspend fun <T, V> Flow<T>.executeOnLatest(
+        action: suspend (value: T) -> V,
+        stateReducer: SearchResultsState.(Async<V>) -> SearchResultsState
+    ) {
+        collectLatest {
+            setState { stateReducer(Loading()) }
+            try {
+                val result = action(it)
+                setState { stateReducer(Success(result)) }
+            } catch (e: CancellationException) {
+                // No-op
+            } catch (e: Throwable) {
+                setState { stateReducer(Fail(e)) }
+            }
+        }
+    }
+
     private fun defaultFilters(state: SearchResultsState): SearchFilters {
         return if (state.isContextual) {
             SearchFilters.of(
@@ -142,7 +163,7 @@ class SearchViewModel(
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)
 
-    companion object : MvRxViewModelFactory<SearchViewModel, SearchResultsState> {
+    companion object : MavericksViewModelFactory<SearchViewModel, SearchResultsState> {
         const val MIN_QUERY_LENGTH = 3
         const val DEFAULT_DEBOUNCE_TIME = 300L
 

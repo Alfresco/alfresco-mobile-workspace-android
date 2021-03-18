@@ -112,7 +112,7 @@ object Libs {
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
 
-    const val mvRx = "com.airbnb.android:mavericks-rxjava2:2.1.0"
+    const val mvRx = "com.airbnb.android:mavericks:2.1.0"
 
     object Epoxy {
         private const val version = "4.4.1"

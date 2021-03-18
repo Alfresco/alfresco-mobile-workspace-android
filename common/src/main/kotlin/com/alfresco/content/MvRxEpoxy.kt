@@ -1,9 +1,10 @@
 package com.alfresco.content
 
+import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyController
-import com.airbnb.mvrx.BaseMvRxFragment
-import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.withState
 
 /*
@@ -21,7 +22,7 @@ open class MvRxEpoxyController(
 /**
  * Create a [MvRxEpoxyController] that builds models with the given callback.
  */
-fun BaseMvRxFragment.simpleController(
+fun Fragment.simpleController(
     buildModels: EpoxyController.() -> Unit
 ) = MvRxEpoxyController {
     // Models are built asynchronously, so it is possible that this is called after the fragment
@@ -34,7 +35,7 @@ fun BaseMvRxFragment.simpleController(
  * Create a [MvRxEpoxyController] that builds models with the given callback.
  * When models are built the current state of the viewModel will be provided.
  */
-fun <S : MvRxState, A : MvRxViewModel<S>> BaseMvRxFragment.simpleController(
+fun <S : MavericksState, A : MavericksViewModel<S>> Fragment.simpleController(
     viewModel: A,
     buildModels: EpoxyController.(state: S) -> Unit
 ) = MvRxEpoxyController {

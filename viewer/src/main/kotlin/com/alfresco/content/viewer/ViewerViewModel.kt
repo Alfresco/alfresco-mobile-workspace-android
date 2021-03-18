@@ -1,8 +1,7 @@
 package com.alfresco.content.viewer
 
-import androidx.lifecycle.viewModelScope
-import com.airbnb.mvrx.MvRxState
-import com.alfresco.content.MvRxViewModel
+import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.MavericksViewModel
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
@@ -17,13 +16,13 @@ data class ViewerState(
     val ready: Boolean = false,
     val viewerUri: String? = null,
     val viewerMimeType: String? = null
-) : MvRxState {
+) : MavericksState {
     constructor(args: ViewerArgs) : this(args.id, args.mode)
 }
 
 class ViewerViewModel(
     state: ViewerState
-) : MvRxViewModel<ViewerState>(state) {
+) : MavericksViewModel<ViewerState>(state) {
 
     private val offlineRepository = OfflineRepository()
     private val browseRepository = BrowseRepository()

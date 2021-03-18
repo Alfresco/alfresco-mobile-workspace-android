@@ -8,7 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.viewer.common.ChildViewerArgs
@@ -38,7 +39,7 @@ import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 import kotlin.math.max
 
-class MediaViewerFragment : ChildViewerFragment() {
+class MediaViewerFragment : ChildViewerFragment(), MavericksView {
 
     private lateinit var args: ChildViewerArgs
     private val viewModel: MediaViewerViewModel by fragmentViewModel()
@@ -59,7 +60,7 @@ class MediaViewerFragment : ChildViewerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        args = requireNotNull(arguments?.getParcelable(MvRx.KEY_ARG))
+        args = requireNotNull(arguments?.getParcelable(Mavericks.KEY_ARG))
         val layout = if (args.type.startsWith("audio/")) {
             R.layout.fragment_viewer_audio
         } else {

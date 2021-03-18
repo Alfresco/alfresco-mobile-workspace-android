@@ -1,12 +1,11 @@
 package com.alfresco.content.actions
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Fail
-import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.MvRxViewModel
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -19,7 +18,7 @@ import kotlinx.coroutines.launch
 class ActionListViewModel(
     state: ActionListState,
     val context: Context
-) : MvRxViewModel<ActionListState>(state) {
+) : MavericksViewModel<ActionListState>(state) {
 
     init {
         buildModel()
@@ -143,7 +142,7 @@ class ActionListViewModel(
         return actions
     }
 
-    companion object : MvRxViewModelFactory<ActionListViewModel, ActionListState> {
+    companion object : MavericksViewModelFactory<ActionListViewModel, ActionListState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: ActionListState

@@ -3,6 +3,7 @@ package com.alfresco.content
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.ActivityViewModelContext
+import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksState
@@ -30,9 +31,10 @@ inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T
     MavericksViewModelProvider.get(
         viewModelClass = viewModelClass.java,
         stateClass = S::class.java,
-        viewModelContext = ActivityViewModelContext(
+        viewModelContext = FragmentViewModelContext(
             activity = requireActivity(),
-            args = argsProvider()
+            args = argsProvider(),
+            fragment = this
         ),
         key = keyFactory(),
         initialStateFactory = RealMavericksStateFactory()

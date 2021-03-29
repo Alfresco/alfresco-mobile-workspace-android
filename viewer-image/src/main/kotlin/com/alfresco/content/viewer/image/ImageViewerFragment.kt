@@ -7,6 +7,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
@@ -61,6 +63,18 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         )
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        view.setOnClickListener(onClickListener)
 
         container.addView(view)
         return view

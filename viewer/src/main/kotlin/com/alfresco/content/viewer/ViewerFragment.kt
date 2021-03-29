@@ -78,10 +78,23 @@ class ViewerFragment : Fragment(), MavericksView {
     override fun onAttachFragment(childFragment: Fragment) {
         super.onAttachFragment(childFragment)
 
+        val viewerActivity: ViewerActivity = activity as ViewerActivity
+
         if (childFragment is ChildViewerFragment) {
             this.childFragment = childFragment
                 .apply {
                     loadingListener = viewerLoadingListener
+                    onClickListener = View.OnClickListener {
+                        viewerActivity.toggleFullscreen()
+                    }
+                    onControlsVisibilityChange = { visibility ->
+                        if (visibility == View.GONE && !viewerActivity.fullscreen) {
+                            viewerActivity.toggleFullscreen()
+                        }
+                        if (visibility == View.VISIBLE && viewerActivity.fullscreen) {
+                            viewerActivity.toggleFullscreen()
+                        }
+                    }
                 }
         }
     }

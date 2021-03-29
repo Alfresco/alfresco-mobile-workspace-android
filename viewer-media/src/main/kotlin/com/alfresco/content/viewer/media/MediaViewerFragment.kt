@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
@@ -74,23 +76,29 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
 
         dataSourceFactory = DefaultDataSourceFactory(requireContext().applicationContext)
         playerView = view.findViewById(R.id.player_view)
+
         // Apply window insets to controls
         val controls = playerView.findViewById<View>(R.id.exo_controller)
-        controls.setOnApplyWindowInsetsListener { view, insets ->
-            view.setPadding(
-                insets.systemWindowInsetLeft,
-                insets.systemWindowInsetTop,
-                insets.systemWindowInsetRight,
-                insets.systemWindowInsetBottom
+        ViewCompat.setOnApplyWindowInsetsListener(controls) { v, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
             )
-            // Don't consume the insets as it may disrupt the hidden action bar
             insets
         }
+
         playerView.setErrorMessageProvider(PlayerErrorMessageProvider())
         playerView.requestFocus()
         playerView.setControlDispatcher(DefaultControlDispatcher(FAST_FORWARD_MS, REWIND_MS))
         playerView.videoSurfaceView?.visibility = View.GONE
 
+        playerView.setOnClickListener(onClickListener)
+        playerView.setControllerVisibilityListener {
+            onControlsVisibilityChange?.invoke(it)
+        }
         if (savedInstanceState != null) {
             trackSelectorParameters =
                 savedInstanceState.getParcelable(KEY_TRACK_SELECTOR_PARAMETERS)

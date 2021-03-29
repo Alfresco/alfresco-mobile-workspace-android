@@ -12,10 +12,14 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.webkit.WebViewAssetLoader
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.WebViewClickSupportListener
 import com.alfresco.content.viewer.common.ChildViewerFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -33,11 +37,21 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
         return inflater.inflate(R.layout.viewer_pdf, container, false)
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    private var savedInsets: Insets = Insets.NONE
+
+    @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         webView = view.findViewById(R.id.webview)
+        webView.setOnTouchListener(WebViewClickSupportListener)
+        webView.setOnClickListener(onClickListener)
+
+        ViewCompat.setOnApplyWindowInsetsListener(webView) { v, insets ->
+            savedInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            WindowInsetsCompat.CONSUMED
+        }
+
         if (BuildConfig.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
@@ -68,6 +82,12 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
         webView.addJavascriptInterface(jsBridge, "bridge")
 
         webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                val density = resources.displayMetrics.density
+                val top = savedInsets.top / density // + 52
+                val bottom = savedInsets.bottom / density // + 52
+                webView.loadUrl("javascript:document.getElementById(\"viewer\").style.margin=\"${top}px 8px ${bottom}px 8px\"; void 0")
+            }
 
             override fun shouldOverrideUrlLoading(
                 view: WebView?,

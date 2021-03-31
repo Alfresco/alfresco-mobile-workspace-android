@@ -1,17 +1,26 @@
 package com.alfresco.content.browse
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
+import androidx.core.view.setMargins
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.create.ActionSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -53,6 +62,16 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
+    override fun invalidate() {
+        super.invalidate()
+
+        withState(viewModel) { state ->
+            if (viewModel.canAddItems(state)) {
+                (view as ViewGroup).addView(makeFab(requireContext()))
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_browse, menu)
     }
@@ -72,6 +91,27 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         if (entry.isTrashed) return
 
         findNavController().navigateTo(entry)
+    }
+
+    private fun makeFab(context: Context) =
+        FloatingActionButton(context).apply {
+            layoutParams = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.BOTTOM or Gravity.END
+                // TODO: define margins
+                setMargins(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                    .toInt())
+            }
+            setImageResource(R.drawable.ic_plus)
+            setOnClickListener {
+                showCreateSheet()
+            }
+        }
+
+    private fun showCreateSheet() = withState(viewModel) {
+        ActionSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
     }
 
     companion object {

@@ -13,6 +13,7 @@ import java.time.temporal.ChronoField
 data class BrowseViewState(
     val path: String,
     val nodeId: String?,
+    val parent: Entry? = null,
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,

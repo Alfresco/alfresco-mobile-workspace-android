@@ -33,4 +33,7 @@
     <string name="action_remove_offline_title">Remove offline</string>
     <string name="action_add_offline_toast">%s will be made available offline.</string>
     <string name="action_remove_offline_toast">%s will no longer be available offline.</string>
+
+    <string name="action_upload_photo_title">Upload photos or videos</string>
+    <string name="action_capture_photo_title">Take a photo or video</string>
 </resources>

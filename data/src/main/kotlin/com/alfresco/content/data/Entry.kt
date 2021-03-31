@@ -43,6 +43,8 @@ data class Entry(
     @Transient
     val canDelete: Boolean = false,
     @Transient
+    val canCreate: Boolean = false,
+    @Transient
     val isTrashed: Boolean = false,
     @Transient
     val otherId: String? = null,
@@ -142,7 +144,8 @@ data class Entry(
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
-                node.allowableOperations?.contains("delete") ?: false
+                canDelete(node.allowableOperations),
+                canCreate(node.allowableOperations)
             ).withOfflineStatus()
         }
 
@@ -157,7 +160,8 @@ data class Entry(
                 result.modifiedAt,
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
-                result.allowableOperations?.contains("delete") ?: false
+                canDelete(result.allowableOperations),
+                canCreate(result.allowableOperations)
             ).withOfflineStatus()
         }
 
@@ -172,7 +176,8 @@ data class Entry(
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
-                node.allowableOperations?.contains("delete") ?: false,
+                canDelete(node.allowableOperations),
+                canCreate(node.allowableOperations),
                 otherId = node.properties?.get("cm:destination") as String?
             ).withOfflineStatus()
         }
@@ -191,7 +196,7 @@ data class Entry(
                     file.modifiedAt,
                     file.allowableOperations == null,
                     true,
-                    file.allowableOperations?.contains("delete") ?: false
+                    canDelete(file.allowableOperations)
                 ).withOfflineStatus()
             }
             if (map.folder != null) {
@@ -206,7 +211,8 @@ data class Entry(
                     folder.modifiedAt,
                     folder.allowableOperations == null,
                     true,
-                    folder.allowableOperations?.contains("delete") ?: false
+                    canDelete(folder.allowableOperations),
+                    canCreate(folder.allowableOperations)
                 ).withOfflineStatus()
             }
             if (map.site != null) {
@@ -279,6 +285,12 @@ data class Entry(
             return elements?.map { it.name }
                 ?.reduce { out, el -> "$out \u203A $el" }
         }
+
+        private fun canDelete(operations: List<String>?) =
+            operations?.contains("delete") ?: false
+
+        private fun canCreate(operations: List<String>?) =
+            operations?.contains("create") ?: false
     }
 }
 

@@ -17,6 +17,8 @@ variables:
     value: buildSrc/src/main/java/com/alfresco/buildsrc/dependencies.kt
   - name: bundle_path
     value: 'app/build/outputs/bundle/playStore/*.aab'
+  - name: apks_path
+    value: 'app/build/outputs/apk/**/*.apk'
 
 steps:
   - task: CacheBeta@1
@@ -40,7 +42,7 @@ steps:
       options: '--no-daemon'
       publishJUnitResults: false
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'bundlePlayStore'
+      tasks: 'assembleDebug bundlePlayStore'
     env:
       KEYSTORE_FILE: $(keystore.secureFilePath)
       KEYSTORE_PASSWORD: $(keystore_password)
@@ -54,8 +56,11 @@ steps:
       SRCCLR_API_TOKEN: $(source_clear_token)
   - task: CopyFiles@2
     inputs:
-      contents: $(bundle_path)
+      contents: |
+        $(bundle_path)
+        $(apks_path)
       targetFolder: '$(build.artifactStagingDirectory)'
+      flattenFolders: true
   - task: PublishBuildArtifacts@1
   - task: GooglePlayReleaseBundle@3
     inputs:

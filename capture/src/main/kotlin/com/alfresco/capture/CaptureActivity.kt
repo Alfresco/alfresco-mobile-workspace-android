@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.capture.databinding.ActivityCameraBinding
 import com.alfresco.ui.KeyHandler
 
-class CameraActivity : AppCompatActivity() {
+class CaptureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

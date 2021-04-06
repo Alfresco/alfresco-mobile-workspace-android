@@ -8,6 +8,6 @@
     <uses-feature android:name="android.hardware.camera.any" />
 
     <application>
-        <activity android:name=".CameraActivity"/>
+        <activity android:name=".CaptureActivity"/>
     </application>
 </manifest>

@@ -111,16 +111,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     ): View? =
         inflater.inflate(R.layout.fragment_camera, container, false)
 
-    private fun setGalleryThumbnail(uri: Uri) {
-        // Reference of the view that holds the gallery thumbnail
-        val thumbnail = container.findViewById<ImageButton>(R.id.photo_view_button)
-
-        // Run the operations in the view's thread
-        thumbnail.post {
-            // TODO: Load thumbnail into circular button
-        }
-    }
-
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -318,9 +308,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                             val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                             Log.d(TAG, "Photo capture succeeded: $savedUri")
 
-                            // Update the gallery thumbnail with latest picture taken
-                            setGalleryThumbnail(savedUri)
-
                             // If the folder selected is an external media directory, this is
                             // unnecessary but otherwise other apps will not be able to access our
                             // images unless we scan them using [MediaScannerConnection]
@@ -364,14 +351,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 }
                 // Re-bind use cases to update selected camera
                 bindCameraUseCases()
-            }
-        }
-
-        // Listener for button used to view the most recent photo
-        controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
-            // Only navigate when the gallery has photos
-            if (true == outputDirectory.listFiles()?.isNotEmpty()) {
-                findNavController().navigate(R.id.action_cameraFragment_to_saveFragment)
             }
         }
     }

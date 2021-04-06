@@ -8,39 +8,25 @@
     android:layoutDirection="ltr">
 
     <ImageButton
-        android:id="@+id/photo_view_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="24dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/gallery_button_alt"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@id/camera_capture_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/camera_capture_button"
-        app:srcCompat="@drawable/ic_photo" />
-
-    <ImageButton
         android:id="@+id/camera_capture_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/ic_shutter"
         android:contentDescription="@string/capture_button_alt"
         android:scaleType="fitCenter"
+        android:elevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <ImageButton
         android:id="@+id/camera_switch_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="12dp"
-        android:background="@android:color/transparent"
+        style="@style/Widget.Alfresco.Camera.Button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
         android:contentDescription="@string/switch_camera_button_alt"
-        android:padding="12dp"
-        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@id/camera_capture_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/camera_capture_button"

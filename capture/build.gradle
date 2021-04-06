@@ -2,6 +2,7 @@ import com.alfresco.buildsrc.Libs
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
 
 android {
     defaultConfig {
@@ -15,12 +16,21 @@ android {
 }
 
 dependencies {
+    implementation project(':data')
+
     implementation Libs.Coroutines.core
 
     implementation Libs.AndroidX.appcompat
     implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.Fragment.fragment
     implementation Libs.AndroidX.Lifecycle.runtime
+
+    implementation Libs.AndroidX.Navigation.fragment
+    implementation Libs.AndroidX.Navigation.ui
+
+    implementation Libs.Google.material
+
+    implementation Libs.Coil.core
 
     // CameraX core library
     def camerax_version = '1.0.0-rc04'
@@ -36,4 +46,6 @@ dependencies {
     implementation 'androidx.camera:camera-view:1.0.0-alpha20'
 
     implementation Libs.AndroidX.constraintLayout
+
+    implementation Libs.mvRx
 }

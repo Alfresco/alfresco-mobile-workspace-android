@@ -28,7 +28,7 @@ data class ActionCapturePhoto(
 
         context.startActivity(
             Intent(context, CaptureActivity::class.java).apply {
-                putExtras(CaptureArgs.bundle(entry.id))
+                putExtras(CaptureArgs.makeArguments(entry.id))
             }
         )
 

@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -32,6 +31,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.activityViewModel
 import com.alfresco.ui.KeyHandler
 import java.io.File
 import java.text.SimpleDateFormat
@@ -42,7 +44,9 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class CameraFragment : Fragment(), KeyHandler {
+class CameraFragment : Fragment(), KeyHandler, MavericksView {
+
+    private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var container: FrameLayout
     private lateinit var viewFinder: PreviewView
@@ -322,13 +326,16 @@ class CameraFragment : Fragment(), KeyHandler {
                             // images unless we scan them using [MediaScannerConnection]
                             val mimeType = MimeTypeMap.getSingleton()
                                 .getMimeTypeFromExtension(savedUri.toFile().extension)
-                            MediaScannerConnection.scanFile(
-                                context,
-                                arrayOf(savedUri.toFile().absolutePath),
-                                arrayOf(mimeType)
-                            ) { _, uri ->
-                                Log.d(TAG, "Image capture scanned into media store: $uri")
-                            }
+                            // MediaScannerConnection.scanFile(
+                            //     context,
+                            //     arrayOf(savedUri.toFile().absolutePath),
+                            //     arrayOf(mimeType)
+                            // ) { _, uri ->
+                            //     Log.d(TAG, "Image capture scanned into media store: $uri")
+                            //     navigateToSave(uri.toString())
+                            // }
+                            viewModel.capturePhoto(photoFile.toString())
+                            navigateToSave()
                         }
                     })
 
@@ -364,11 +371,14 @@ class CameraFragment : Fragment(), KeyHandler {
         controls.findViewById<ImageButton>(R.id.photo_view_button).setOnClickListener {
             // Only navigate when the gallery has photos
             if (true == outputDirectory.listFiles()?.isNotEmpty()) {
-                // Navigation.findNavController(
-                //     requireActivity(), R.id.fragment_container
-                // ).navigate(CameraFragmentDirections
-                //     .actionCameraToGallery(outputDirectory.absolutePath))
+                findNavController().navigate(R.id.action_cameraFragment_to_saveFragment)
             }
+        }
+    }
+
+    private fun navigateToSave() {
+        view?.post {
+            findNavController().navigate(R.id.action_cameraFragment_to_saveFragment)
         }
     }
 
@@ -407,12 +417,11 @@ class CameraFragment : Fragment(), KeyHandler {
 
         /** Use external media if it is available, our app's file directory otherwise */
         // TODO: Figure out a proper output directory
-        private fun getOutputDirectory(context: Context): File {
-            val appContext = context.applicationContext
-            val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
-                File(it, "Workspace").apply { mkdirs() } }
-            return if (mediaDir != null && mediaDir.exists())
-                mediaDir else appContext.filesDir
-        }
+        private fun getOutputDirectory(context: Context): File =
+            context.applicationContext.cacheDir
+    }
+
+    override fun invalidate() {
+        // no-op
     }
 }

@@ -2,14 +2,22 @@ package com.alfresco.content.data
 
 import com.alfresco.content.apis.AlfrescoApi
 import com.alfresco.content.apis.NodesApi
+import com.alfresco.content.apis.NodesApiExt
 import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import java.io.File
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     private val service: NodesApi by lazy {
         session.createService(NodesApi::class.java)
+    }
+
+    private val serviceExt: NodesApiExt by lazy {
+        session.createService(NodesApiExt::class.java)
     }
 
     val myFilesNodeId: String get() = SessionManager.requireSession.account.myFiles ?: ""
@@ -45,6 +53,20 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
+
+    suspend fun uploadFile(parentId: String, file: File, name: String, mimeType: String): Entry {
+        val filePart = file.asRequestBody(mimeType.toMediaTypeOrNull())
+
+        return Entry.with(
+            serviceExt.createNode(
+                parentId,
+                filePart,
+                autoRename = true,
+                name = name,
+                nodeType = "cm:content"
+            ).entry
+        )
+    }
 
     fun contentUri(entry: Entry): String {
         val baseUrl = SessionManager.currentSession?.baseUrl

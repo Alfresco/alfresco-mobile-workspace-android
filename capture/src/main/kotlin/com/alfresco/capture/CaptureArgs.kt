@@ -3,6 +3,7 @@ package com.alfresco.capture
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.os.bundleOf
+import com.airbnb.mvrx.Mavericks
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,6 +19,7 @@ data class CaptureArgs(
             )
         }
 
-        fun bundle(parentId: String) = bundleOf(PARENT_ID_KEY to parentId)
+        fun makeArguments(parentId: String) =
+            bundleOf(Mavericks.KEY_ARG to CaptureArgs(parentId))
     }
 }

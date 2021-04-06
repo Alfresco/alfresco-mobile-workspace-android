@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import com.alfresco.capture.CameraActivity
+import com.alfresco.capture.CaptureArgs
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.R
@@ -25,7 +26,11 @@ data class ActionCapturePhoto(
         } catch (_: Exception) {
         }
 
-        context.startActivity(Intent(context, CameraActivity::class.java))
+        context.startActivity(
+            Intent(context, CameraActivity::class.java).apply {
+                putExtras(CaptureArgs.bundle(entry.id))
+            }
+        )
 
         return entry
     }

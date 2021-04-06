@@ -32,6 +32,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
+import com.alfresco.ui.KeyHandler
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -41,7 +42,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(), KeyHandler {
 
     private lateinit var container: FrameLayout
     private lateinit var viewFinder: PreviewView
@@ -238,7 +239,7 @@ class CameraFragment : Fragment() {
         }
     }
 
-    fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 // When the volume down button is pressed, simulate a shutter button click

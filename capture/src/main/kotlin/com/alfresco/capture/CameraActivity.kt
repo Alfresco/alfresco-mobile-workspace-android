@@ -5,10 +5,10 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.capture.databinding.ActivityCameraBinding
+import com.alfresco.ui.KeyHandler
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
-    private lateinit var fragment: CameraFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,12 @@ class CameraActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return if (fragment.onKeyDown(keyCode, event)) {
+        val fragment =
+            supportFragmentManager
+                .primaryNavigationFragment
+                ?.childFragmentManager
+                ?.primaryNavigationFragment
+        return if (fragment is KeyHandler && fragment.onKeyDown(keyCode, event)) {
             true
         } else {
             super.onKeyDown(keyCode, event)

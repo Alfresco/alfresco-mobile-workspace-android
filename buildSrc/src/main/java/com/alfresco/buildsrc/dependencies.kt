@@ -39,8 +39,8 @@ object Libs {
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.2.0"
-        const val coreKtx = "androidx.core:core-ktx:1.3.2"
+        const val appcompat = "androidx.appcompat:appcompat:1.3.0-rc01"
+        const val coreKtx = "androidx.core:core-ktx:1.5.0-rc01"
 
         object Activity {
             private const val version = "1.2.0"

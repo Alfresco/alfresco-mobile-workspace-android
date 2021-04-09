@@ -19,9 +19,9 @@ object Libs {
     const val objectBox = "io.objectbox:objectbox-gradle-plugin:2.9.0"
 
     object Alfresco {
-        const val auth = "com.alfresco.android:auth:0.7-SNAPSHOT"
-        const val content = "com.alfresco.android:content:0.2-SNAPSHOT"
-        const val contentKtx = "com.alfresco.android:content-ktx:0.2-SNAPSHOT"
+        const val auth = "com.alfresco.android:auth:0.8.0-SNAPSHOT"
+        const val content = "com.alfresco.android:content:0.3.0-SNAPSHOT"
+        const val contentKtx = "com.alfresco.android:content-ktx:0.3.0-SNAPSHOT"
     }
 
     object Kotlin {

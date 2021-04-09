@@ -19,6 +19,7 @@ class CameraLayout(
     lateinit var viewFinder: PreviewView
     lateinit var shutterButton: ImageButton
     lateinit var cameraSwitchButton: ImageButton
+    lateinit var closeButton: ImageButton
     lateinit var flashButton: ImageButton
 
     var aspectRatio: Float = 4 / 3f
@@ -46,6 +47,7 @@ class CameraLayout(
 
         shutterButton = findViewById(R.id.shutter_button)
         cameraSwitchButton = findViewById(R.id.camera_switch_button)
+        closeButton = findViewById(R.id.close_button)
         flashButton = findViewById(R.id.flash_button)
     }
 

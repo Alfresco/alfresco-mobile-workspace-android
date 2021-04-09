@@ -323,6 +323,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             showFlashMenu(it)
         }
 
+        layout.closeButton.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     private fun navigateToSave() {

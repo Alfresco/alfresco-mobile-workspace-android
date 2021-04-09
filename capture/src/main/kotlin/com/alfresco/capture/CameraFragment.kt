@@ -1,6 +1,5 @@
 package com.alfresco.capture
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -8,15 +7,12 @@ import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.FrameLayout
-import android.widget.ImageButton
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfoUnavailableException
@@ -26,8 +22,6 @@ import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
@@ -40,16 +34,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
 
-    private lateinit var container: FrameLayout
-    private lateinit var viewFinder: PreviewView
+    private lateinit var layout: CameraLayout
     private lateinit var outputDirectory: File
 
     private var displayId: Int = -1
@@ -78,6 +68,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             if (displayId == this@CameraFragment.displayId) {
                 Log.d(TAG, "Rotation changed: ${view.display.rotation}")
                 imageCapture?.targetRotation = view.display.rotation
+                preview?.targetRotation = view.display.rotation
             }
         } ?: Unit
     }
@@ -111,11 +102,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     ): View? =
         inflater.inflate(R.layout.fragment_camera, container, false)
 
-    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        container = view as FrameLayout
-        viewFinder = container.findViewById(R.id.view_finder)
+
+        layout = view as CameraLayout
 
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -127,13 +117,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         outputDirectory = getOutputDirectory(requireContext())
 
         // Wait for the views to be properly laid out
-        viewFinder.post {
+        layout.viewFinder.post {
 
             // Keep track of the display in which this view is attached
-            displayId = viewFinder.display.displayId
+            displayId = layout.viewFinder.display.displayId
 
             // Build UI controls
-            updateCameraUi()
+            setUpCameraUi()
 
             // Set up the camera and its use cases
             setUpCamera()
@@ -152,7 +142,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         super.onConfigurationChanged(newConfig)
 
         // Redraw the camera UI controls
-        updateCameraUi()
+        // updateCameraUi()
 
         // Enable or disable switching between cameras
         updateCameraSwitchButton()
@@ -183,15 +173,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Declare and bind preview, capture and analysis use cases */
     private fun bindCameraUseCases() {
-
-        // Get screen metrics used to setup camera for full screen resolution
-        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
-        Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
-
-        val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
-        Log.d(TAG, "Preview aspect ratio: $screenAspectRatio")
-
-        val rotation = viewFinder.display.rotation
+        val targetAspectRatio = AspectRatio.RATIO_4_3
+        val rotation = layout.display.rotation
+        layout.aspectRatio = 4 / 3f
 
         // CameraProvider
         val cameraProvider = cameraProvider
@@ -203,7 +187,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Preview
         preview = Preview.Builder()
             // We request aspect ratio but no resolution
-            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetAspectRatio(targetAspectRatio)
             // Set initial target rotation
             .setTargetRotation(rotation)
             .build()
@@ -213,7 +197,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             // We request aspect ratio but no resolution to match preview config, but letting
             // CameraX optimize for whatever specific resolution best fits our use cases
-            .setTargetAspectRatio(screenAspectRatio)
+            .setTargetAspectRatio(targetAspectRatio)
             // Set initial target rotation, we will have to call this again if rotation changes
             // during the lifecycle of this use case
             .setTargetRotation(rotation)
@@ -227,7 +211,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 this, cameraSelector, preview, imageCapture)
 
             // Attach the viewfinder's surface provider to preview use case
-            preview?.setSurfaceProvider(viewFinder.surfaceProvider)
+            preview?.setSurfaceProvider(layout.viewFinder.surfaceProvider)
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
@@ -237,47 +221,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         return when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 // When the volume down button is pressed, simulate a shutter button click
-                val shutter = container
-                    .findViewById<ImageButton>(R.id.camera_capture_button)
-                shutter.simulateClick()
+                layout.shutterButton.simulateClick()
                 true
             }
             else -> false
         }
     }
 
-    /**
-     *  [androidx.camera.core.ImageAnalysisConfig] requires enum value of
-     *  [androidx.camera.core.AspectRatio]. Currently it has values of 4:3 & 16:9.
-     *
-     *  Detecting the most suitable ratio for dimensions provided in @params by counting absolute
-     *  of preview ratio to one of the provided values.
-     *
-     *  @param width - preview width
-     *  @param height - preview height
-     *  @return suitable aspect ratio
-     */
-    private fun aspectRatio(width: Int, height: Int): Int {
-        val previewRatio = max(width, height).toDouble() / min(width, height)
-        if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
-            return AspectRatio.RATIO_4_3
-        }
-        return AspectRatio.RATIO_16_9
-    }
-
     /** Method used to re-draw the camera UI controls, called every time configuration changes. */
-    private fun updateCameraUi() {
-
-        // Remove previous UI if any
-        container.findViewById<ConstraintLayout>(R.id.camera_ui_container)?.let {
-            container.removeView(it)
-        }
-
-        // Inflate a new view containing all UI for controlling the camera
-        val controls = View.inflate(requireContext(), R.layout.camera_ui_container, container)
-
+    private fun setUpCameraUi() {
         // Listener for button used to capture photo
-        controls.findViewById<ImageButton>(R.id.camera_capture_button).setOnClickListener {
+        layout.shutterButton.setOnClickListener {
 
             // Get a stable reference of the modifiable image capture use case
             imageCapture?.let { imageCapture ->
@@ -327,17 +281,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     })
 
                 // Display flash animation to indicate that photo was captured
-                container.postDelayed({
-                    container.foreground = ColorDrawable(Color.WHITE)
-                    container.postDelayed(
-                        { container.foreground = null }, ANIMATION_FAST_MILLIS
+                layout.postDelayed({
+                    layout.foreground = ColorDrawable(Color.WHITE)
+                    layout.postDelayed(
+                        { layout.foreground = null }, ANIMATION_FAST_MILLIS
                     )
                 }, ANIMATION_SLOW_MILLIS)
             }
         }
 
         // Setup for button used to switch cameras
-        controls.findViewById<ImageButton>(R.id.camera_switch_button).let {
+        layout.cameraSwitchButton.let {
 
             // Disable the button until the camera is set up
             it.isEnabled = false
@@ -363,11 +317,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Enabled or disabled a button to switch cameras depending on the available cameras */
     private fun updateCameraSwitchButton() {
-        val switchCamerasButton = container.findViewById<ImageButton>(R.id.camera_switch_button)
-        try {
-            switchCamerasButton.isEnabled = hasBackCamera() && hasFrontCamera()
-        } catch (exception: CameraInfoUnavailableException) {
-            switchCamerasButton.isEnabled = false
+        layout.cameraSwitchButton.let {
+            try {
+                it.isEnabled = hasBackCamera() && hasFrontCamera()
+            } catch (exception: CameraInfoUnavailableException) {
+                it.isEnabled = false
+            }
         }
     }
 
@@ -386,8 +341,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         private const val TAG = "CameraX"
         private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val PHOTO_EXTENSION = ".jpg"
-        private const val RATIO_4_3_VALUE = 4.0 / 3.0
-        private const val RATIO_16_9_VALUE = 16.0 / 9.0
 
         /** Helper function used to create a timestamped file */
         private fun createFile(baseFolder: File, format: String, extension: String) =

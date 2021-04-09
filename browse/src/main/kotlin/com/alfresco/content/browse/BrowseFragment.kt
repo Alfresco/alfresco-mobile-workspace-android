@@ -104,7 +104,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 setMargins(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
                     .toInt())
             }
-            setImageResource(R.drawable.ic_plus)
+            setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
                 showCreateSheet()
             }

@@ -3,8 +3,13 @@
     <string name="capture_button_alt">Capture</string>
     <string name="switch_camera_button_alt">Switch camera</string>
     <string name="gallery_button_alt">Gallery</string>
+    <string name="flash_button_alt">Flash mode</string>
 
     <string name="capture_file_name_hint">File name</string>
     <string name="capture_description_hint">Add description</string>
     <string name="capture_done_button">Done</string>
+
+    <string name="camera_flash_auto">Auto</string>
+    <string name="camera_flash_on">On</string>
+    <string name="camera_flash_off">Off</string>
 </resources>

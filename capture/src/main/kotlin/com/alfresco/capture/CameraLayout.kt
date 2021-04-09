@@ -19,6 +19,7 @@ class CameraLayout(
     lateinit var viewFinder: PreviewView
     lateinit var shutterButton: ImageButton
     lateinit var cameraSwitchButton: ImageButton
+    lateinit var flashButton: ImageButton
 
     var aspectRatio: Float = 4 / 3f
         set(value) {
@@ -45,6 +46,7 @@ class CameraLayout(
 
         shutterButton = findViewById(R.id.shutter_button)
         cameraSwitchButton = findViewById(R.id.camera_switch_button)
+        flashButton = findViewById(R.id.flash_button)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

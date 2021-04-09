@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.display.DisplayManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -13,17 +14,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.PopupMenu
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCapture.FlashMode
 import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
@@ -48,6 +52,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private var imageCapture: ImageCapture? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+
+    @FlashMode
+    private var flashMode: Int = ImageCapture.FLASH_MODE_AUTO
 
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -200,6 +207,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             .setTargetAspectRatio(targetAspectRatio)
             // Set initial target rotation, we will have to call this again if rotation changes
             // during the lifecycle of this use case
+            .setFlashMode(flashMode)
             .setTargetRotation(rotation)
             .build()
 
@@ -212,6 +220,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
             // Attach the viewfinder's surface provider to preview use case
             preview?.setSurfaceProvider(layout.viewFinder.surfaceProvider)
+
+            // Update flash availability
+            updateFlashSwitchButton()
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
@@ -307,12 +318,40 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 bindCameraUseCases()
             }
         }
+
+        layout.flashButton.setOnClickListener {
+            showFlashMenu(it)
+        }
+
     }
 
     private fun navigateToSave() {
         view?.post {
             findNavController().navigate(R.id.action_cameraFragment_to_saveFragment)
         }
+    }
+
+    private fun showFlashMenu(v: View) {
+        val popup = PopupMenu(requireContext(), v)
+        popup.inflate(R.menu.flash_mode)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popup.setForceShowIcon(true)
+        }
+
+        popup.setOnMenuItemClickListener {
+            camera?.cameraControl?.enableTorch(true)
+            flashMode = when (it.itemId) {
+                R.id.flash_mode_on -> ImageCapture.FLASH_MODE_ON
+                R.id.flash_mode_off -> ImageCapture.FLASH_MODE_OFF
+                R.id.flash_mode_auto -> ImageCapture.FLASH_MODE_AUTO
+                else -> ImageCapture.FLASH_MODE_AUTO
+            }
+            bindCameraUseCases()
+            true
+        }
+
+        popup.show()
     }
 
     /** Enabled or disabled a button to switch cameras depending on the available cameras */
@@ -324,6 +363,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 it.isEnabled = false
             }
         }
+    }
+
+    private fun updateFlashSwitchButton() {
+        layout.flashButton.isVisible = camera?.cameraInfo?.hasFlashUnit() == true
+
+        val iconRes = when (flashMode) {
+            ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on
+            ImageCapture.FLASH_MODE_OFF -> R.drawable.ic_flash_off
+            else -> R.drawable.ic_flash_auto
+        }
+        layout.flashButton.setImageResource(iconRes)
     }
 
     /** Returns true if the device has an available back camera. False otherwise */

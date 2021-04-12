@@ -1,10 +1,8 @@
 package com.alfresco.capture
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,16 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.PopupMenu
-import androidx.camera.core.AspectRatio
-import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.FlashMode
-import androidx.camera.core.ImageCapture.Metadata
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.AlfrescoCameraController
+import androidx.camera.view.CameraController
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.isVisible
@@ -48,40 +45,25 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private var displayId: Int = -1
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+    private val cameraSelector get() =
+        CameraSelector.Builder().requireLensFacing(lensFacing).build()
     private var preview: Preview? = null
-    private var imageCapture: ImageCapture? = null
-    private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+    private var cameraController: AlfrescoCameraController? = null
 
     @FlashMode
     private var flashMode: Int = ImageCapture.FLASH_MODE_AUTO
 
-    private val displayManager by lazy {
-        requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-    }
-
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
 
-    /**
-     * We need a display listener for orientation changes that do not trigger a configuration
-     * change, for example if we choose to override config change in manifest or for 180-degree
-     * orientation changes.
-     */
-    private val displayListener = object : DisplayManager.DisplayListener {
-        override fun onDisplayAdded(displayId: Int) = Unit
-        override fun onDisplayRemoved(displayId: Int) = Unit
-        override fun onDisplayChanged(displayId: Int) = view?.let { view ->
-            if (displayId == this@CameraFragment.displayId) {
-                Log.d(TAG, "Rotation changed: ${view.display.rotation}")
-                imageCapture?.targetRotation = view.display.rotation
-                preview?.targetRotation = view.display.rotation
-            }
-        } ?: Unit
-    }
-
     override fun onResume() {
         super.onResume()
+        //        if (!ApiHelper.isMOrHigher()) {
+        //             Log.v(TAG, "not running on M, skipping permission checks");
+        //             mHasCriticalPermissions = true;
+        //             return;
+        //         }
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
         // if (!PermissionsFragment.hasPermissions(requireContext())) {
@@ -96,10 +78,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Shut down our background executor
         cameraExecutor.shutdown()
-
-        // Unregister the broadcast receivers and listeners
-        // broadcastManager.unregisterReceiver(volumeDownReceiver)
-        displayManager.unregisterDisplayListener(displayListener)
     }
 
     override fun onCreateView(
@@ -117,9 +95,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        // Every time the orientation of device changes, update rotation for use cases
-        displayManager.registerDisplayListener(displayListener, null)
-
         // Determine the output directory
         outputDirectory = getOutputDirectory(requireContext())
 
@@ -135,24 +110,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             // Set up the camera and its use cases
             setUpCamera()
         }
-    }
-
-    /**
-     * Inflate camera controls and update the UI manually upon config changes to avoid removing
-     * and re-adding the view finder from the view hierarchy; this provides a seamless rotation
-     * transition on devices that support it.
-     *
-     * NOTE: The flag is supported starting in Android 8 but there still is a small flash on the
-     * screen for devices that run Android 9 or below.
-     */
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        // Redraw the camera UI controls
-        // updateCameraUi()
-
-        // Enable or disable switching between cameras
-        updateCameraSwitchButton()
     }
 
     /** Initialize CameraX, and prepare to bind the camera use cases  */
@@ -173,59 +130,22 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             // Enable or disable switching between cameras
             updateCameraSwitchButton()
 
-            // Build and bind the camera use cases
-            bindCameraUseCases()
+            prepareCamera()
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    /** Declare and bind preview, capture and analysis use cases */
-    private fun bindCameraUseCases() {
-        val targetAspectRatio = AspectRatio.RATIO_4_3
-        val rotation = layout.display.rotation
+    private fun prepareCamera() {
+        // TODO: figure out preview aspect ratio
         layout.aspectRatio = 4 / 3f
 
-        // CameraProvider
-        val cameraProvider = cameraProvider
-            ?: throw IllegalStateException("Camera initialization failed.")
+        val cameraController = AlfrescoCameraController(requireContext())
+        cameraController.setEnabledUseCases(CameraController.IMAGE_CAPTURE)
+        cameraController.cameraSelector = cameraSelector
+        cameraController.bindToLifecycle(this)
 
-        // CameraSelector
-        val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        layout.viewFinder.controller = cameraController
 
-        // Preview
-        preview = Preview.Builder()
-            // We request aspect ratio but no resolution
-            .setTargetAspectRatio(targetAspectRatio)
-            // Set initial target rotation
-            .setTargetRotation(rotation)
-            .build()
-
-        // ImageCapture
-        imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-            // We request aspect ratio but no resolution to match preview config, but letting
-            // CameraX optimize for whatever specific resolution best fits our use cases
-            .setTargetAspectRatio(targetAspectRatio)
-            // Set initial target rotation, we will have to call this again if rotation changes
-            // during the lifecycle of this use case
-            .setFlashMode(flashMode)
-            .setTargetRotation(rotation)
-            .build()
-
-        // Must unbind the use-cases before rebinding them
-        cameraProvider.unbindAll()
-
-        try {
-            camera = cameraProvider.bindToLifecycle(
-                this, cameraSelector, preview, imageCapture)
-
-            // Attach the viewfinder's surface provider to preview use case
-            preview?.setSurfaceProvider(layout.viewFinder.surfaceProvider)
-
-            // Update flash availability
-            updateFlashSwitchButton()
-        } catch (exc: Exception) {
-            Log.e(TAG, "Use case binding failed", exc)
-        }
+        this.cameraController = cameraController
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -243,80 +163,59 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun setUpCameraUi() {
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
+            // Create output file to hold the image
+            val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
 
-            // Get a stable reference of the modifiable image capture use case
-            imageCapture?.let { imageCapture ->
+            // Create output options object which contains file + metadata
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+                .build()
 
-                // Create output file to hold the image
-                val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
+            // Setup image capture listener which is triggered after photo has been taken
+            cameraController?.takePicture(
+                outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+                    override fun onError(exc: ImageCaptureException) {
+                        Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+                    }
 
-                // Setup image capture metadata
-                val metadata = Metadata().apply {
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
+                        Log.d(TAG, "Photo capture succeeded: $savedUri")
 
-                    // Mirror image when using the front camera
-                    isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
-                }
+                        // If the folder selected is an external media directory, this is
+                        // unnecessary but otherwise other apps will not be able to access our
+                        // images unless we scan them using [MediaScannerConnection]
+                        val mimeType = MimeTypeMap.getSingleton()
+                            .getMimeTypeFromExtension(savedUri.toFile().extension)
+                        // MediaScannerConnection.scanFile(
+                        //     context,
+                        //     arrayOf(savedUri.toFile().absolutePath),
+                        //     arrayOf(mimeType)
+                        // ) { _, uri ->
+                        //     Log.d(TAG, "Image capture scanned into media store: $uri")
+                        //     navigateToSave(uri.toString())
+                        // }
+                        viewModel.capturePhoto(photoFile.toString())
+                        navigateToSave()
+                    }
+                })
 
-                // Create output options object which contains file + metadata
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
-                    .setMetadata(metadata)
-                    .build()
-
-                // Setup image capture listener which is triggered after photo has been taken
-                imageCapture.takePicture(
-                    outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
-                        override fun onError(exc: ImageCaptureException) {
-                            Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                        }
-
-                        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                            val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-                            Log.d(TAG, "Photo capture succeeded: $savedUri")
-
-                            // If the folder selected is an external media directory, this is
-                            // unnecessary but otherwise other apps will not be able to access our
-                            // images unless we scan them using [MediaScannerConnection]
-                            val mimeType = MimeTypeMap.getSingleton()
-                                .getMimeTypeFromExtension(savedUri.toFile().extension)
-                            // MediaScannerConnection.scanFile(
-                            //     context,
-                            //     arrayOf(savedUri.toFile().absolutePath),
-                            //     arrayOf(mimeType)
-                            // ) { _, uri ->
-                            //     Log.d(TAG, "Image capture scanned into media store: $uri")
-                            //     navigateToSave(uri.toString())
-                            // }
-                            viewModel.capturePhoto(photoFile.toString())
-                            navigateToSave()
-                        }
-                    })
-
-                // Display flash animation to indicate that photo was captured
-                layout.postDelayed({
-                    layout.foreground = ColorDrawable(Color.WHITE)
-                    layout.postDelayed(
-                        { layout.foreground = null }, ANIMATION_FAST_MILLIS
-                    )
-                }, ANIMATION_SLOW_MILLIS)
-            }
+            // Display flash animation to indicate that photo was captured
+            layout.postDelayed({
+                layout.foreground = ColorDrawable(Color.WHITE)
+                layout.postDelayed(
+                    { layout.foreground = null }, ANIMATION_FAST_MILLIS
+                )
+            }, ANIMATION_SLOW_MILLIS)
         }
 
         // Setup for button used to switch cameras
-        layout.cameraSwitchButton.let {
-
-            // Disable the button until the camera is set up
-            it.isEnabled = false
-
-            // Listener for button used to switch cameras. Only called if the button is enabled
-            it.setOnClickListener {
-                lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
-                    CameraSelector.LENS_FACING_BACK
-                } else {
-                    CameraSelector.LENS_FACING_FRONT
-                }
-                // Re-bind use cases to update selected camera
-                bindCameraUseCases()
+        layout.cameraSwitchButton.setOnClickListener {
+            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+                CameraSelector.LENS_FACING_BACK
+            } else {
+                CameraSelector.LENS_FACING_FRONT
             }
+            cameraController?.cameraSelector = cameraSelector
         }
 
         layout.flashButton.setOnClickListener {
@@ -343,14 +242,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         popup.setOnMenuItemClickListener {
-            camera?.cameraControl?.enableTorch(true)
             flashMode = when (it.itemId) {
                 R.id.flash_mode_on -> ImageCapture.FLASH_MODE_ON
                 R.id.flash_mode_off -> ImageCapture.FLASH_MODE_OFF
                 R.id.flash_mode_auto -> ImageCapture.FLASH_MODE_AUTO
                 else -> ImageCapture.FLASH_MODE_AUTO
             }
-            bindCameraUseCases()
+            cameraController?.imageCaptureFlashMode = flashMode
+            updateFlashSwitchButton()
             true
         }
 
@@ -369,7 +268,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun updateFlashSwitchButton() {
-        layout.flashButton.isVisible = camera?.cameraInfo?.hasFlashUnit() == true
+        layout.flashButton.isVisible = cameraController?.hasFlashUnit() ?: false
 
         val iconRes = when (flashMode) {
             ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on

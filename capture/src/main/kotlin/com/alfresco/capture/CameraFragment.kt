@@ -1,5 +1,6 @@
 package com.alfresco.capture
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
@@ -99,7 +101,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         outputDirectory = getOutputDirectory(requireContext())
 
         // Wait for the views to be properly laid out
-        layout.viewFinder.post {
+        layout.post {
 
             // Keep track of the display in which this view is attached
             displayId = layout.viewFinder.display.displayId
@@ -160,7 +162,22 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     /** Method used to re-draw the camera UI controls, called every time configuration changes. */
+    @SuppressLint("ClickableViewAccessibility")
     private fun setUpCameraUi() {
+        // Show focus overlay on tap
+        layout.viewFinder.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_UP -> {
+                    val f = layout.focusView
+                    f.alpha = 1f
+                    f.x = event.x - f.width / 2
+                    f.y = event.y - f.height / 2
+                    f.postDelayed({ f.alpha = 0f }, 2000)
+                }
+            }
+            false
+        }
+
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
             // Create output file to hold the image

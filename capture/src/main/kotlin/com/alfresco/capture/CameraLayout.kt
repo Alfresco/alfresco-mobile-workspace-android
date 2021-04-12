@@ -2,9 +2,11 @@ package com.alfresco.capture
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.camera.view.PreviewView
+import kotlin.math.min
 
 class CameraLayout(
     context: Context,
@@ -14,9 +16,11 @@ class CameraLayout(
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     private lateinit var topBar: ViewGroup
+    private lateinit var previewHolder: ViewGroup
     private lateinit var shutterBar: ViewGroup
     private lateinit var modeBar: ViewGroup
     lateinit var viewFinder: PreviewView
+    lateinit var focusView: View
     lateinit var shutterButton: ImageButton
     lateinit var cameraSwitchButton: ImageButton
     lateinit var closeButton: ImageButton
@@ -41,25 +45,36 @@ class CameraLayout(
         super.onFinishInflate()
 
         topBar = findViewById(R.id.top_bar)
-        viewFinder = findViewById(R.id.view_finder)
+        previewHolder = findViewById(R.id.preview_holder)
         shutterBar = findViewById(R.id.shutter_bar)
         modeBar = findViewById(R.id.bottom_bar)
 
+        viewFinder = findViewById(R.id.view_finder)
+        focusView = findViewById(R.id.focus_view)
         shutterButton = findViewById(R.id.shutter_button)
         cameraSwitchButton = findViewById(R.id.camera_switch_button)
         closeButton = findViewById(R.id.close_button)
         flashButton = findViewById(R.id.flash_button)
+
+        focusView.alpha = 0f
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
-        val childMeasureHeightSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.AT_MOST)
+        val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val parentHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        val childMeasureHeightSpec = MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.AT_MOST)
         measureChildren(widthMeasureSpec, childMeasureHeightSpec)
+
+        val finderHeight = min(parentHeight, (parentWidth * aspectRatio).toInt())
+        previewHolder.measure(
+            widthMeasureSpec,
+            MeasureSpec.makeMeasureSpec(finderHeight, MeasureSpec.EXACTLY)
+        )
 
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = topBar.measuredHeight +
-            viewFinder.measuredHeight +
+            previewHolder.measuredHeight +
             shutterBar.measuredHeight +
             modeBar.measuredHeight
 
@@ -74,7 +89,7 @@ class CameraLayout(
         val height = bottom - top
 
         val topHeight = topBar.measuredHeight
-        val finderHeight = (width * aspectRatio).toInt()
+        val finderHeight = previewHolder.measuredHeight
         val shutterHeight = shutterBar.measuredHeight
         val modeHeight = modeBar.measuredHeight
 
@@ -122,7 +137,7 @@ class CameraLayout(
         }
 
         topBar.layout(0, topGuide, width, topGuide + topHeight)
-        viewFinder.layout(0, finderGuide, width, finderGuide + finderHeight)
+        previewHolder.layout(0, finderGuide, width, finderGuide + finderHeight)
         shutterBar.layout(0, shutterGuide, width, shutterGuide + shutterHeight)
         modeBar.layout(0, modeGuide, width, modeGuide + modeHeight)
     }

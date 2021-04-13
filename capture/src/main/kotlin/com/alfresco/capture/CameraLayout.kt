@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.camera.view.PreviewView
+import androidx.core.view.isVisible
 import kotlin.math.min
 
 class CameraLayout(
@@ -56,7 +57,13 @@ class CameraLayout(
         closeButton = findViewById(R.id.close_button)
         flashButton = findViewById(R.id.flash_button)
 
+        initControls()
+    }
+
+    private fun initControls() {
         focusView.alpha = 0f
+        cameraSwitchButton.isVisible = false
+        flashButton.isVisible = false
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

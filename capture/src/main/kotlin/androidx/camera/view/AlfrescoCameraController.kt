@@ -9,9 +9,12 @@ import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.annotation.experimental.UseExperimental
 import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.CameraSelector.LensFacing
 import androidx.camera.core.impl.utils.Threads
 import androidx.camera.lifecycle.ExperimentalUseCaseGroupLifecycle
 import androidx.lifecycle.LifecycleOwner
+import java.lang.IllegalStateException
 
 @SuppressLint("RestrictedApi")
 class AlfrescoCameraController(context: Context) :
@@ -74,6 +77,12 @@ class AlfrescoCameraController(context: Context) :
         val useCaseGroup = createUseCaseGroup() // Use cases can't be created.
             ?: return null
         return mCameraProvider!!.bindToLifecycle(mLifecycleOwner!!, mCameraSelector, useCaseGroup)
+    }
+
+    fun setCameraSelector(@LensFacing lensFacing: Int) {
+        this.cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(lensFacing)
+            .build()
     }
 
     fun hasFlashUnit() =

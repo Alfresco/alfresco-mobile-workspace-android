@@ -82,6 +82,14 @@ object Libs {
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
         }
 
+        object Camera {
+            private const val version = "1.0.0-rc04"
+            const val core = "androidx.camera:camera-core:$version"
+            const val camera2 = "androidx.camera:camera-camera2:$version"
+            const val lifecycle = "androidx.camera:camera-lifecycle:$version"
+            const val view = "androidx.camera:camera-view:1.0.0-alpha20"
+        }
+
         object Test {
             private const val version = "1.3.0"
             const val core = "androidx.test:core:$version"

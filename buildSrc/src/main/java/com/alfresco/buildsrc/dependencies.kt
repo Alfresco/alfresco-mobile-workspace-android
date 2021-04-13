@@ -83,11 +83,11 @@ object Libs {
         }
 
         object Camera {
-            private const val version = "1.0.0-rc04"
+            private const val version = "1.1.0-alpha03"
             const val core = "androidx.camera:camera-core:$version"
             const val camera2 = "androidx.camera:camera-camera2:$version"
             const val lifecycle = "androidx.camera:camera-lifecycle:$version"
-            const val view = "androidx.camera:camera-view:1.0.0-alpha20"
+            const val view = "androidx.camera:camera-view:1.0.0-alpha23"
         }
 
         object Test {

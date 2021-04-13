@@ -18,19 +18,18 @@ data class ActionCapturePhoto(
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
-        try {
-            PermissionFragment.requestPermissions(
+        if (PermissionFragment.requestPermission(
                 context,
                 Manifest.permission.CAMERA
+            )) {
+            context.startActivity(
+                Intent(context, CaptureActivity::class.java).apply {
+                    putExtras(CaptureArgs.makeArguments(entry.id))
+                }
             )
-        } catch (_: Exception) {
+        } else {
+            throw Action.Exception(context.resources.getString(R.string.action_capture_failed_permissions))
         }
-
-        context.startActivity(
-            Intent(context, CaptureActivity::class.java).apply {
-                putExtras(CaptureArgs.makeArguments(entry.id))
-            }
-        )
 
         return entry
     }

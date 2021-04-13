@@ -36,4 +36,5 @@
 
     <string name="action_upload_photo_title">Upload photos or videos</string>
     <string name="action_capture_photo_title">Take a photo or video</string>
+    <string name="action_capture_failed_permissions">To capture photos, turn on Camera permission.</string>
 </resources>

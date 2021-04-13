@@ -2,6 +2,9 @@ package com.alfresco.content
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -12,70 +15,82 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 open class PermissionFragment : Fragment() {
-    private var continuation: CancellableContinuation<Boolean>? = null
 
-    private fun requestPermissions(
-        vararg permissions: String,
+    private lateinit var requestLauncher: ActivityResultLauncher<String>
+    private var requestCallback: ((Boolean) -> Unit)? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Register for result is not allowed after onCreate
+        requestLauncher = registerForActivityResult(
+            RequestPermission()) { isGranted: Boolean ->
+            requestCallback?.invoke(isGranted)
+        }
+    }
+
+    private fun requestPermission(
+        permission: String,
         continuation: CancellableContinuation<Boolean>
     ) {
-        val isRequestRequired =
-            permissions
-                .map { ContextCompat.checkSelfPermission(requireContext(), it) }
-                .any { result -> result == PackageManager.PERMISSION_DENIED }
+        when {
+            hasPermission(requireContext(), permission) -> {
+                continuation.resume(true, null)
+            }
 
-        if (isRequestRequired) {
-            this.continuation = continuation
-            requestPermissions(permissions, REQUEST_ID)
-        } else {
-            continuation.resume(true) {
-                // no-op
+            shouldShowRequestPermissionRationale(permission) -> {
+                continuation.resume(false, null)
+            }
+
+            else -> {
+                launchPermissionRequest(permission) { isGranted: Boolean ->
+                        continuation.resume(isGranted, null)
+                    }
             }
         }
     }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        val isGranted = grantResults.all { result -> result == PackageManager.PERMISSION_GRANTED }
-        continuation?.resume(isGranted) {
-            // no-op
-        }
+    private fun launchPermissionRequest(permission: String, callback: (Boolean) -> Unit) {
+        requestCallback = callback
+        requestLauncher.launch(permission)
     }
 
-    suspend fun requestPermissions(vararg permissions: String): Boolean =
-        suspendCancellableCoroutine {
-                continuation -> requestPermissions(*permissions, continuation = continuation)
+    private suspend fun requestPermission(permission: String): Boolean =
+        suspendCancellableCoroutine { continuation ->
+            requestPermission(permission, continuation)
         }
 
     companion object {
         private val TAG = PermissionFragment::class.java.simpleName
-        private const val REQUEST_ID = 1
 
-        suspend fun requestPermissions(
+        suspend fun requestPermission(
             context: Context,
-            vararg permissions: String
+            permission: String
         ): Boolean =
             withContext(Dispatchers.Main) {
-                val fragmentManager = when (context) {
-                    is AppCompatActivity -> context.supportFragmentManager
-                    is Fragment -> context.childFragmentManager
-                    else -> throw CancellationException("Context needs to be either AppCompatActivity or Fragment", ClassCastException())
-                }
-
-                var fragment = fragmentManager.findFragmentByTag(TAG)
-                return@withContext if (fragment != null) {
-                    (fragment as PermissionFragment).requestPermissions(*permissions)
-                } else {
-                    fragment = PermissionFragment()
-                    fragmentManager.beginTransaction().add(
-                        fragment,
-                        TAG
-                    ).commitNow()
-                    fragment.requestPermissions(*permissions)
-                }
+                findPermissionFragment(context).requestPermission(permission)
             }
+
+        private fun findPermissionFragment(context: Context): PermissionFragment {
+            val fragmentManager = when (context) {
+                is AppCompatActivity -> context.supportFragmentManager
+                is Fragment -> context.childFragmentManager
+                else -> throw CancellationException("Context needs to be either AppCompatActivity or Fragment", ClassCastException())
+            }
+
+            var fragment = fragmentManager.findFragmentByTag(TAG)
+            if (fragment != null) {
+                (fragment as PermissionFragment)
+            } else {
+                fragment = PermissionFragment()
+                fragmentManager.beginTransaction().add(
+                    fragment,
+                    TAG
+                ).commitNow()
+            }
+            return fragment
+        }
+
+        fun hasPermission(context: Context, permission: String) =
+            ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
     }
 }

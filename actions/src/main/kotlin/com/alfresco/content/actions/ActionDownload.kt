@@ -28,7 +28,7 @@ data class ActionDownload(
     override suspend fun execute(context: Context): Entry {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-            PermissionFragment.requestPermissions(
+            PermissionFragment.requestPermission(
                 context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )) {

@@ -19,9 +19,9 @@ object Libs {
     const val objectBox = "io.objectbox:objectbox-gradle-plugin:2.9.0"
 
     object Alfresco {
-        const val auth = "com.alfresco.android:auth:0.7-SNAPSHOT"
-        const val content = "com.alfresco.android:content:0.2-SNAPSHOT"
-        const val contentKtx = "com.alfresco.android:content-ktx:0.2-SNAPSHOT"
+        const val auth = "com.alfresco.android:auth:0.8.0-SNAPSHOT"
+        const val content = "com.alfresco.android:content:0.3.0-SNAPSHOT"
+        const val contentKtx = "com.alfresco.android:content-ktx:0.3.0-SNAPSHOT"
     }
 
     object Kotlin {
@@ -39,8 +39,8 @@ object Libs {
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.2.0"
-        const val coreKtx = "androidx.core:core-ktx:1.3.2"
+        const val appcompat = "androidx.appcompat:appcompat:1.3.0-rc01"
+        const val coreKtx = "androidx.core:core-ktx:1.5.0-rc01"
 
         object Activity {
             private const val version = "1.2.0"
@@ -80,6 +80,14 @@ object Libs {
             private const val version = "2.3.3"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
+        }
+
+        object Camera {
+            private const val version = "1.1.0-alpha03"
+            const val core = "androidx.camera:camera-core:$version"
+            const val camera2 = "androidx.camera:camera-camera2:$version"
+            const val lifecycle = "androidx.camera:camera-lifecycle:$version"
+            const val view = "androidx.camera:camera-view:1.0.0-alpha23"
         }
 
         object Test {

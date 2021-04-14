@@ -74,6 +74,13 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
     </style>
 
+    <style name="Widget.Alfresco.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:textColor">@color/mtrl_btn_text_color_selector</item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/mtrl_btn_unelevated_state_list_anim</item>
+        <item name="elevation">0dp</item>
+        <item name="tint">@color/mtrl_btn_text_color_selector</item>
+    </style>
+
     <style name="Widget.Alfresco.ExtendedFloatingActionButton" parent="@style/Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:textColor">@color/mtrl_btn_text_color_selector</item>
         <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/mtrl_btn_unelevated_state_list_anim</item>

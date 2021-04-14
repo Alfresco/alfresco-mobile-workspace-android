@@ -44,6 +44,7 @@
 
         <!-- Other Styles -->
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Alfresco.BottomSheetDialog</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Alfresco.FloatingActionButton</item>
         <item name="extendedFloatingActionButtonStyle">@style/Widget.Alfresco.ExtendedFloatingActionButton</item>
 
         <!-- Shape styles -->

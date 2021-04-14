@@ -1,0 +1,44 @@
+import com.alfresco.buildsrc.Libs
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation project(':data')
+    implementation project(':common')
+
+    implementation Libs.Coroutines.core
+
+    implementation Libs.AndroidX.appcompat
+    implementation Libs.AndroidX.coreKtx
+    implementation Libs.AndroidX.Fragment.fragment
+    implementation Libs.AndroidX.Lifecycle.runtime
+
+    implementation Libs.AndroidX.Navigation.fragment
+    implementation Libs.AndroidX.Navigation.ui
+
+    implementation Libs.Google.material
+
+    implementation Libs.Coil.core
+
+    implementation Libs.AndroidX.Camera.core
+    implementation Libs.AndroidX.Camera.camera2
+    implementation Libs.AndroidX.Camera.lifecycle
+    implementation Libs.AndroidX.Camera.view
+
+    implementation Libs.AndroidX.constraintLayout
+
+    implementation Libs.mvRx
+}

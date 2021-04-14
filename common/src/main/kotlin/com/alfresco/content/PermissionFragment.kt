@@ -10,9 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 
 open class PermissionFragment : Fragment() {
 
@@ -66,11 +64,22 @@ open class PermissionFragment : Fragment() {
             context: Context,
             permission: String
         ): Boolean =
-            withContext(Dispatchers.Main) {
-                findPermissionFragment(context).requestPermission(permission)
+            withFragment(context) { fragment ->
+                fragment.requestPermission(permission)
             }
 
-        private fun findPermissionFragment(context: Context): PermissionFragment {
+        private suspend fun withFragment(
+            context: Context,
+            lambda: suspend (PermissionFragment) -> Boolean
+        ): Boolean =
+            lambda(suspendCancellableCoroutine { continuation ->
+                findPermissionFragment(context, continuation)
+            })
+
+        private fun findPermissionFragment(
+            context: Context,
+            continuation: CancellableContinuation<PermissionFragment>
+        ) {
             val fragmentManager = when (context) {
                 is AppCompatActivity -> context.supportFragmentManager
                 is Fragment -> context.childFragmentManager
@@ -79,15 +88,16 @@ open class PermissionFragment : Fragment() {
 
             var fragment = fragmentManager.findFragmentByTag(TAG)
             if (fragment != null) {
-                (fragment as PermissionFragment)
+                continuation.resume((fragment as PermissionFragment), null)
             } else {
                 fragment = PermissionFragment()
                 fragmentManager.beginTransaction().add(
                     fragment,
                     TAG
-                ).commitNow()
+                ).runOnCommit {
+                    continuation.resume(fragment, null)
+                }.commit()
             }
-            return fragment
         }
 
         fun hasPermission(context: Context, permission: String) =

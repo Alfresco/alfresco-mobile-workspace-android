@@ -2,6 +2,7 @@ package com.alfresco.capture
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -28,6 +29,14 @@ class CameraLayout(
     lateinit var closeButton: ImageButton
     lateinit var flashButton: ImageButton
     lateinit var messageView: TextView
+
+    private val orientationAwareControls get() =
+        listOf(
+            cameraSwitchButton,
+            flashButton,
+            closeButton,
+            messageView
+        )
 
     var aspectRatio: Float = 4 / 3f
         set(value) {
@@ -151,5 +160,34 @@ class CameraLayout(
         previewHolder.layout(0, finderGuide, width, finderGuide + finderHeight)
         shutterBar.layout(0, shutterGuide, width, shutterGuide + shutterHeight)
         modeBar.layout(0, modeGuide, width, modeGuide + modeHeight)
+    }
+
+    private val orientationEventListener = object : OrientationEventListener(context) {
+        override fun onOrientationChanged(orientation: Int) {
+            // Doesn't support upside down orientation
+            if (orientation == 180) return
+
+            val rotation = when (orientation) {
+                90 -> -90
+                270 -> 90
+                else -> 0
+            }.toFloat()
+
+            if (orientation != 180) {
+                orientationAwareControls.map {
+                    it.animate().rotation(rotation).start()
+                }
+            }
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        orientationEventListener.enable()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        orientationEventListener.disable()
     }
 }

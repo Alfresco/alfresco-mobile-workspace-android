@@ -12,4 +12,6 @@
     <string name="camera_flash_auto">Auto</string>
     <string name="camera_flash_on">On</string>
     <string name="camera_flash_off">Off</string>
+
+    <string name="capture_failure_permissions">To capture photos, turn on Camera permission.</string>
 </resources>

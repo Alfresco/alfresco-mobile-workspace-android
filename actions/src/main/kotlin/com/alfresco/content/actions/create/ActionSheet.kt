@@ -15,6 +15,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.BuildConfig
 import com.alfresco.content.actions.actionListRow
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
 import com.alfresco.content.data.Entry
@@ -51,7 +52,9 @@ class ActionCreateViewModel(
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
 
-        actions.add(ActionUploadPhoto(parent))
+        if (BuildConfig.DEBUG) {
+            actions.add(ActionUploadPhoto(parent))
+        }
         actions.add(ActionCapturePhoto(parent))
 
         return actions

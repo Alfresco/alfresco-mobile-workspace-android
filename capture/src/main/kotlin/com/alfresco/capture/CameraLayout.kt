@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
 import kotlin.math.min
@@ -26,6 +27,7 @@ class CameraLayout(
     lateinit var cameraSwitchButton: ImageButton
     lateinit var closeButton: ImageButton
     lateinit var flashButton: ImageButton
+    lateinit var messageView: TextView
 
     var aspectRatio: Float = 4 / 3f
         set(value) {
@@ -56,6 +58,7 @@ class CameraLayout(
         cameraSwitchButton = findViewById(R.id.camera_switch_button)
         closeButton = findViewById(R.id.close_button)
         flashButton = findViewById(R.id.flash_button)
+        messageView = findViewById(R.id.message_view)
 
         initControls()
     }
@@ -64,6 +67,7 @@ class CameraLayout(
         focusView.alpha = 0f
         cameraSwitchButton.isVisible = false
         flashButton.isVisible = false
+        messageView.isVisible = false
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

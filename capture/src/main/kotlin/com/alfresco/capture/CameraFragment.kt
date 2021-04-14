@@ -1,5 +1,6 @@
 package com.alfresco.capture
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -25,15 +26,18 @@ import androidx.camera.view.CameraController
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
+import com.alfresco.content.PermissionFragment
 import com.alfresco.ui.KeyHandler
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlinx.coroutines.launch
 
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
@@ -54,18 +58,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun onResume() {
         super.onResume()
-        //        if (!ApiHelper.isMOrHigher()) {
-        //             Log.v(TAG, "not running on M, skipping permission checks");
-        //             mHasCriticalPermissions = true;
-        //             return;
-        //         }
+
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
-        // if (!PermissionsFragment.hasPermissions(requireContext())) {
-        //     Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
-        //         CameraFragmentDirections.actionCameraToPermissions()
-        //     )
-        // }
+        lifecycleScope.launch {
+            updateCameraState()
+        }
     }
 
     override fun onDestroyView() {
@@ -93,13 +91,25 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Determine the output directory
         outputDirectory = getOutputDirectory(requireContext())
 
-        // Wait for the views to be properly laid out
-        layout.post {
-            // Build UI controls
-            setUpCameraUi()
+        // Prepare UI controls
+        setUpCameraUi()
+    }
 
-            // Set up the camera and its use cases
-            setUpCamera()
+    private suspend fun updateCameraState() {
+        if (PermissionFragment.requestPermission(requireContext(), Manifest.permission.CAMERA)) {
+            if (cameraController == null) {
+                setUpCamera()
+            }
+            layout.messageView.isVisible = false
+            layout.viewFinder.isVisible = true
+        } else {
+            if (cameraController != null) {
+                layout.viewFinder.controller = null
+                cameraController = null
+            }
+            layout.messageView.text = resources.getString(R.string.capture_failure_permissions)
+            layout.messageView.isVisible = true
+            layout.viewFinder.isVisible = false
         }
     }
 

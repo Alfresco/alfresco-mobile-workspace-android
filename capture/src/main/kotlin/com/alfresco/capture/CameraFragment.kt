@@ -1,6 +1,7 @@
 package com.alfresco.capture
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -221,6 +222,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             }
             cameraController?.setCameraSelector(lensFacing)
             updateFlashModeButton()
+            animateCameraSwitchClick()
         }
 
         layout.flashButton.setOnClickListener {
@@ -229,6 +231,16 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         layout.closeButton.setOnClickListener {
             requireActivity().finish()
+        }
+    }
+
+    private fun animateCameraSwitchClick() {
+        layout.cameraSwitchButton.let {
+            val fromValue = it.rotation
+            it.animate()
+                .rotationBy(-360f)
+                .withEndAction { it.rotation = fromValue }
+                .start()
         }
     }
 

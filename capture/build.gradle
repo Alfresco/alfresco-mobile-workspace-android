@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementation project(':data')
+    implementation project(':common')
 
     implementation Libs.Coroutines.core
 

@@ -242,9 +242,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
             // Display flash animation to indicate that photo was captured
             layout.postDelayed({
-                layout.foreground = ColorDrawable(Color.WHITE)
+                layout.viewFinder.foreground = ColorDrawable(Color.BLACK)
                 layout.postDelayed(
-                    { layout.foreground = null }, ANIMATION_FAST_MILLIS
+                    { layout.viewFinder.foreground = null }, ANIMATION_FAST_MILLIS
                 )
             }, ANIMATION_SLOW_MILLIS)
         }

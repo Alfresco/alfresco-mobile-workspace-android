@@ -71,6 +71,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Shut down our background executor
         cameraExecutor.shutdown()
+
+        // Invalidate controller
+        cameraController = null
     }
 
     override fun onCreateView(

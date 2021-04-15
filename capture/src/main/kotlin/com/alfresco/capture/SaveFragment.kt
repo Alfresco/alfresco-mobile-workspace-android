@@ -11,6 +11,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.capture.databinding.FragmentSaveBinding
+import com.alfresco.ui.getDrawableForAttribute
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -39,6 +40,12 @@ class SaveFragment : Fragment(), MavericksView {
 
         viewModel.onUploadComplete = {
             requireActivity().finish()
+        }
+
+        binding.toolbar.apply {
+            navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
+            setNavigationOnClickListener { requireActivity().onBackPressed() }
+            title = resources.getString(R.string.capture_nav_save_title)
         }
     }
 

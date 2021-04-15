@@ -9,6 +9,8 @@
     <string name="capture_description_hint">Add description</string>
     <string name="capture_done_button">Done</string>
 
+    <string name="capture_nav_save_title">Preview</string>
+
     <string name="camera_flash_auto">Auto</string>
     <string name="camera_flash_on">On</string>
     <string name="camera_flash_off">Off</string>

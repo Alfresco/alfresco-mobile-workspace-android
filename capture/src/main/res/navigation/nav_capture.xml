@@ -7,8 +7,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.alfresco.capture.CameraFragment"
-        android:label="CameraFragment" >
+        android:name="com.alfresco.capture.CameraFragment">
         <argument
             android:name="parentId"
             app:argType="string" />
@@ -18,6 +17,5 @@
     </fragment>
     <fragment
         android:id="@+id/saveFragment"
-        android:name="com.alfresco.capture.SaveFragment"
-        android:label="SaveFragment" />
+        android:name="com.alfresco.capture.SaveFragment" />
 </navigation>

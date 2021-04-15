@@ -24,6 +24,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.AlfrescoCameraController
 import androidx.camera.view.CameraController
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -59,10 +62,35 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     override fun onResume() {
         super.onResume()
 
+        // Enter fullscreen
+        setFullscreen(true)
+
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
         lifecycleScope.launch {
             updateCameraState()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // Exit fullscreen
+        setFullscreen(false)
+    }
+
+    private fun setFullscreen(fullscreen: Boolean) {
+        activity?.let {
+            WindowCompat.setDecorFitsSystemWindows(it.window, !fullscreen)
+            WindowInsetsControllerCompat(it.window, layout).let { controller ->
+                if (fullscreen) {
+                    controller.hide(WindowInsetsCompat.Type.systemBars())
+                } else {
+                    controller.show(WindowInsetsCompat.Type.systemBars())
+                }
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
         }
     }
 

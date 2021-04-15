@@ -133,9 +133,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
             // Setup camera controller
             configureCamera()
-
-            // Show/hide flash if available
-            updateFlashModeButton()
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
@@ -148,6 +145,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             setCameraSelector(lensFacing)
         }.also {
             it.bindToLifecycle(this)
+            it.initializationFuture.addListener({
+                // Update flash button when ready
+                updateFlashModeButton()
+            }, ContextCompat.getMainExecutor(requireContext()))
         }
 
         layout.viewFinder.controller = cameraController

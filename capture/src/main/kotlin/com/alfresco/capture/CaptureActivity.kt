@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import com.alfresco.capture.databinding.ActivityCameraBinding
+import com.alfresco.capture.databinding.ActivityCaptureBinding
 import com.alfresco.ui.KeyHandler
 
 class CaptureActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCameraBinding
+    private lateinit var binding: ActivityCaptureBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityCameraBinding.inflate(layoutInflater)
+        binding = ActivityCaptureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureNav()
     }

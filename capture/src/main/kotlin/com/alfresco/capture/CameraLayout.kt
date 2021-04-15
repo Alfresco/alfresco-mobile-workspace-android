@@ -37,6 +37,7 @@ class CameraLayout(
             closeButton,
             messageView
         )
+    private var controlRotation = 0
 
     var aspectRatio: Float = 4 / 3f
         set(value) {
@@ -165,17 +166,17 @@ class CameraLayout(
     private val orientationEventListener = object : OrientationEventListener(context) {
         override fun onOrientationChanged(orientation: Int) {
             // Doesn't support upside down orientation
-            if (orientation == 180) return
-
             val rotation = when (orientation) {
-                90 -> -90
-                270 -> 90
+                in 45 until 135 -> -90
+                in 135 until 225 -> controlRotation
+                in 225 until 315 -> 90
                 else -> 0
-            }.toFloat()
+            }
 
-            if (orientation != 180) {
+            if (controlRotation != rotation) {
+                controlRotation = rotation
                 orientationAwareControls.map {
-                    it.animate().rotation(rotation).start()
+                    it.animate().rotation(rotation.toFloat()).start()
                 }
             }
         }
@@ -189,5 +190,14 @@ class CameraLayout(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         orientationEventListener.disable()
+    }
+
+    fun animateCameraSwitchClick() {
+        cameraSwitchButton.let {
+            it.animate()
+                .rotation(controlRotation - 360f)
+                .withEndAction { it.rotation = controlRotation.toFloat() }
+                .start()
+        }
     }
 }

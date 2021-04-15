@@ -182,6 +182,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.viewFinder.controller = cameraController
+
+        // Observe zoom changes
+        cameraController?.zoomState?.observe(this) {
+            layout.zoomTextView.text = String.format("%.1f\u00D7", it.zoomRatio)
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

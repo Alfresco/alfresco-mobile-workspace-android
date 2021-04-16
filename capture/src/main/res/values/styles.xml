@@ -4,4 +4,9 @@
         <item name="android:background">@drawable/bg_camera_btn</item>
         <item name="tint">?attr/colorControlNormal</item>
     </style>
+
+    <style name="Widget.Alfresco.Camera.Menu.Button" parent="Widget.Alfresco.Action.Primary">
+        <item name="android:textAlignment">textStart</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+    </style>
 </resources>

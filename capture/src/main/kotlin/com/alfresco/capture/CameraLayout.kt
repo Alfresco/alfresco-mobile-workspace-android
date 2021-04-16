@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
+import kotlin.math.max
 import kotlin.math.min
 
 class CameraLayout(
@@ -30,6 +31,7 @@ class CameraLayout(
     lateinit var cameraSwitchButton: ImageButton
     lateinit var closeButton: ImageButton
     lateinit var flashButton: ImageButton
+    lateinit var flashMenu: FlashMenu
     lateinit var messageView: TextView
 
     private val orientationAwareControls get() =
@@ -37,7 +39,8 @@ class CameraLayout(
             cameraSwitchButton,
             flashButton,
             closeButton,
-            messageView
+            messageView,
+            flashMenu
         )
     private var controlRotation = 0
 
@@ -72,6 +75,7 @@ class CameraLayout(
         cameraSwitchButton = findViewById(R.id.camera_switch_button)
         closeButton = findViewById(R.id.close_button)
         flashButton = findViewById(R.id.flash_button)
+        flashMenu = findViewById(R.id.flash_menu)
         messageView = findViewById(R.id.message_view)
 
         initControls()
@@ -81,6 +85,7 @@ class CameraLayout(
         focusView.alpha = 0f
         cameraSwitchButton.isVisible = false
         flashButton.isVisible = false
+        flashMenu.isVisible = false
         messageView.isVisible = false
     }
 
@@ -107,6 +112,11 @@ class CameraLayout(
             resolveSize(width, widthMeasureSpec),
             resolveSize(height, heightMeasureSpec)
         )
+
+        // Re-measure flashMenu at 1:1 ratio
+        val flashMenuSize = max(flashMenu.measuredHeight, flashMenu.measuredWidth)
+        val flashMenuMeasureSpec = MeasureSpec.makeMeasureSpec(flashMenuSize, MeasureSpec.EXACTLY)
+        flashMenu.measure(flashMenuMeasureSpec, flashMenuMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

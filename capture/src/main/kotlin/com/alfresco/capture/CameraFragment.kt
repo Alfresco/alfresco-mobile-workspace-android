@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -14,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -52,9 +50,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
-
-    @FlashMode
-    private var flashMode: Int = ImageCapture.FLASH_MODE_AUTO
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
@@ -177,7 +172,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             it.bindToLifecycle(this)
             it.initializationFuture.addListener({
                 // Update flash button when ready
-                updateFlashModeButton()
+                updateFlashControlState()
             }, ContextCompat.getMainExecutor(requireContext()))
         }
 
@@ -257,12 +252,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 CameraSelector.LENS_FACING_FRONT
             }
             cameraController?.setCameraSelector(lensFacing)
-            updateFlashModeButton()
+            updateFlashControlState()
             layout.animateCameraSwitchClick()
         }
 
         layout.flashButton.setOnClickListener {
-            showFlashMenu(it)
+            showFlashMenu()
         }
 
         layout.closeButton.setOnClickListener {
@@ -276,28 +271,21 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
     }
 
-    private fun showFlashMenu(v: View) {
-        val popup = PopupMenu(requireContext(), v)
-        popup.inflate(R.menu.flash_mode)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            popup.setForceShowIcon(true)
-        }
-
-        popup.setOnMenuItemClickListener {
-            flashMode = when (it.itemId) {
-                R.id.flash_mode_on -> ImageCapture.FLASH_MODE_ON
-                R.id.flash_mode_off -> ImageCapture.FLASH_MODE_OFF
-                R.id.flash_mode_auto -> ImageCapture.FLASH_MODE_AUTO
-                else -> ImageCapture.FLASH_MODE_AUTO
+    private fun showFlashMenu() {
+        layout.flashMenu.isVisible = true
+        layout.flashMenu.onMenuItemClick = { mode ->
+            val flashMode = when (mode) {
+                FlashMenuItem.On -> ImageCapture.FLASH_MODE_ON
+                FlashMenuItem.Off -> ImageCapture.FLASH_MODE_OFF
+                FlashMenuItem.Auto -> ImageCapture.FLASH_MODE_AUTO
             }
 
             cameraController?.imageCaptureFlashMode = flashMode
-            updateFlashModeButton()
-            true
-        }
+            layout.flashButton.setImageResource(flashModeIcon(flashMode))
 
-        popup.show()
+            // Hide menu
+            layout.flashMenu.isVisible = false
+        }
     }
 
     private fun updateCameraSwitchButton() {
@@ -309,16 +297,21 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             }
     }
 
-    private fun updateFlashModeButton() {
+    /** Called when camera changes. */
+    private fun updateFlashControlState() {
         layout.flashButton.isVisible = cameraController?.hasFlashUnit() ?: false
+        layout.flashMenu.isVisible = false
 
-        val iconRes = when (flashMode) {
+        val flashMode = cameraController?.imageCaptureFlashMode ?: ImageCapture.FLASH_MODE_AUTO
+        layout.flashButton.setImageResource(flashModeIcon(flashMode))
+    }
+
+    private fun flashModeIcon(@FlashMode flashMode: Int) =
+        when (flashMode) {
             ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on
             ImageCapture.FLASH_MODE_OFF -> R.drawable.ic_flash_off
             else -> R.drawable.ic_flash_auto
         }
-        layout.flashButton.setImageResource(iconRes)
-    }
 
     private fun hasBackCamera(): Boolean =
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false

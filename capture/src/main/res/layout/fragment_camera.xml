@@ -37,14 +37,15 @@
         android:padding="8dp"
         android:id="@+id/top_bar">
 
+        <!-- Can't use Widget.AppCompat.ImageButton style because icon is already tinted. -->
         <ImageButton
             android:id="@+id/close_button"
-            style="@style/Widget.Alfresco.Camera.Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/bg_camera_btn"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_close" />
 

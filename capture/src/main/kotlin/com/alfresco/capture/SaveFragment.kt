@@ -54,13 +54,14 @@ class SaveFragment : Fragment(), MavericksView {
         val fileNameInput = binding.fileNameInputLayout.editText
         requireNotNull(fileNameInput)
 
+        // TODO: empty on rotation?
         if (fileNameInput.text.isEmpty()) {
             val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
             val time: Date = Calendar.getInstance().time
             fileNameInput.setText("IMG_${formatter.format(time)}")
         }
 
-        val path = "file://" + state.files.first()
+        val path = "file://" + state.file
         binding.preview.load(path) {
             // TODO: proper transformation
             transformations(RoundedCornersTransformation(8f))

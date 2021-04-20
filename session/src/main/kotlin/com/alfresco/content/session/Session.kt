@@ -105,4 +105,11 @@ class Session(
                 it.mkdir()
             }
         }
+
+    val uploadDir: File =
+        File(filesDir, "upload").also {
+            if (!it.exists()) {
+                it.mkdir()
+            }
+        }
 }

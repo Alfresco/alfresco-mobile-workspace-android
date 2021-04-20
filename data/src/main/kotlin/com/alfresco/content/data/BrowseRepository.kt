@@ -54,15 +54,19 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
 
-    suspend fun uploadFile(parentId: String, file: File, name: String, mimeType: String): Entry {
-        val filePart = file.asRequestBody(mimeType.toMediaTypeOrNull())
+    suspend fun createEntry(local: Entry, file: File): Entry {
+        // TODO: Support creating empty entries and folders
+        requireNotNull(local.parentId)
+        requireNotNull(local.mimeType)
+
+        val filePart = file.asRequestBody(local.mimeType.toMediaTypeOrNull())
 
         return Entry.with(
             serviceExt.createNode(
-                parentId,
+                local.parentId,
                 filePart,
                 autoRename = true,
-                name = name,
+                name = local.name,
                 nodeType = "cm:content"
             ).entry
         )

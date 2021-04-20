@@ -5,13 +5,12 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.BrowseRepository
-import java.io.File
+import com.alfresco.content.data.OfflineRepository
 import kotlinx.coroutines.launch
 
 data class CaptureState(
     val parentId: String,
-    val files: List<String> = arrayListOf()
+    val file: String? = null
 ) : MavericksState {
     constructor(args: CaptureArgs) : this(args.parentId)
 }
@@ -26,22 +25,20 @@ class CaptureViewModel(
     fun save(filename: String) = withState {
         val extension = ".jpg"
         viewModelScope.launch {
-            for (path in it.files) {
-                val file = File(path)
-                BrowseRepository().uploadFile(
-                    it.parentId,
-                    file,
-                    filename + extension,
-                    "image/jpeg"
-                )
-                onUploadComplete?.invoke()
-            }
+            requireNotNull(it.file)
+            OfflineRepository().scheduleForUpload(
+                it.file,
+                it.parentId,
+                filename + extension,
+                "",
+                "image/jpeg"
+            )
+            onUploadComplete?.invoke()
         }
     }
 
-    fun capturePhoto(path: String) {
-        setState { copy(files = files + path) }
-    }
+    fun capturePhoto(path: String) =
+        setState { copy(file = path) }
 
     companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
 

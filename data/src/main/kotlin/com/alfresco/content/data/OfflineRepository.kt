@@ -130,11 +130,42 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         return query.findFirst()
     }
 
+    fun scheduleForUpload(
+        path: String,
+        parentId: String,
+        name: String,
+        description: String,
+        mimeType: String
+    ) {
+        // TODO: This process may fail resulting in an orphan file? or node?
+        // TODO: Add Description
+        val entry = Entry(
+            parentId = parentId,
+            name = name,
+            type = Entry.Type.FILE,
+            mimeType = mimeType
+        )
+        updateEntry(entry)
+        File(path).renameTo(File(session.uploadDir, entry.boxId.toString()))
+    }
+
+    fun fetchPendingUploads(): List<Entry> {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query()
+            .equal(Entry_.id, "")
+            .build()
+        return query.find()
+    }
+
     fun contentUri(entry: Entry): String =
         "file://${contentFile(entry).absolutePath}"
 
     fun contentFile(entry: Entry): File =
-        File(contentDir(entry), entry.name)
+        if (entry.id.isEmpty()) {
+            File(session.uploadDir, entry.boxId.toString())
+        } else {
+            File(contentDir(entry), entry.name)
+        }
 
     fun contentDir(entry: Entry): File =
         File(SessionManager.requireSession.filesDir, entry.id)

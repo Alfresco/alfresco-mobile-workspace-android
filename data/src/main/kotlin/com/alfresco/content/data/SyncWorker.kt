@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.coroutines.asyncMap
@@ -19,11 +20,14 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             val localEntries = buildLocalList()
             val remoteEntries = buildRemoteList()
             val ops = calculateDiff(localEntries, remoteEntries)
-            processOperations(ops)
-        } finally {
-            // Always return success so we don't cancel APPEND work
-            return Result.success()
+            val uploadOps = pendingUploads()
+            Log.d("SyncWorker", uploadOps.toString())
+            processOperations(ops + uploadOps)
+        } catch (_: Exception) {
         }
+
+        // Always return success so we don't cancel APPEND work
+        return Result.success()
     }
 
     private fun buildLocalList(): List<Entry> =
@@ -115,6 +119,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
             (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
 
+    private fun pendingUploads(): List<Operation> =
+        repository.fetchPendingUploads().map {
+            Operation.CreateRemote(it)
+        }
+
     private suspend fun processOperations(operations: List<Operation>) =
         operations.asyncMap(MAX_CONCURRENT_OPERATIONS) {
             when (it) {
@@ -129,6 +138,9 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                     val local = updateEntryMetadata(it.local, it.remote)
                     // TODO: fix file rename use-case
                     downloadContent(local)
+                }
+                is Operation.CreateRemote -> {
+                    createItem(it.local)
                 }
                 is Operation.Delete -> {
                     removeEntry(it.local)
@@ -190,6 +202,17 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     private fun typeSupported(entry: Entry) =
         previewRegistry?.isPreviewSupported(entry.mimeType) ?: false
 
+    private suspend fun createItem(entry: Entry) {
+        try {
+            val file = repository.contentFile(entry)
+            BrowseRepository().createEntry(entry, file)
+            file.delete() // TODO: what if delete fails?
+            repository.remove(entry)
+        } catch (ex: Exception) {
+            Log.e("SyncWorker", ex.toString())
+        }
+    }
+
     companion object {
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_PAGE_SIZE = 100
@@ -204,6 +227,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     sealed class Operation {
         class Create(val remote: Entry) : Operation()
+        class CreateRemote(val local: Entry) : Operation()
         class UpdateMetadata(val local: Entry, val remote: Entry) : Operation()
         class UpdateContent(val local: Entry, val remote: Entry) : Operation()
         class Delete(val local: Entry) : Operation()

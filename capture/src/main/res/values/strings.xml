@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="close_button_alt">Close</string>
     <string name="capture_button_alt">Capture</string>
     <string name="switch_camera_button_alt">Switch camera</string>
     <string name="gallery_button_alt">Gallery</string>

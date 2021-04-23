@@ -22,9 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.AlfrescoCameraController
 import androidx.camera.view.CameraController
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +30,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.alfresco.content.PermissionFragment
 import com.alfresco.ui.KeyHandler
+import com.alfresco.ui.WindowCompat
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -75,16 +73,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun setFullscreen(fullscreen: Boolean) {
-        activity?.let {
-            WindowCompat.setDecorFitsSystemWindows(it.window, !fullscreen)
-            WindowInsetsControllerCompat(it.window, layout).let { controller ->
-                if (fullscreen) {
-                    controller.hide(WindowInsetsCompat.Type.systemBars())
-                } else {
-                    controller.show(WindowInsetsCompat.Type.systemBars())
-                }
-                controller.systemBarsBehavior =
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        activity?.window?.let {
+            if (fullscreen) {
+                WindowCompat.enterImmersiveMode(it)
+            } else {
+                WindowCompat.restoreSystemUi(it)
             }
         }
     }

@@ -40,6 +40,7 @@ class CameraLayout(
             cameraSwitchButton,
             flashButton,
             closeButton,
+            zoomTextView,
             messageView,
             flashMenu
         )

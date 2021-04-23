@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -43,6 +44,7 @@ class CameraLayout(
             flashMenu
         )
     private var controlRotation = 0
+    private var deviceOrientation = 0
 
     var aspectRatio: Float = 4 / 3f
         set(value) {
@@ -189,8 +191,10 @@ class CameraLayout(
                 else -> 0
             }
 
-            if (controlRotation != rotation) {
+            if (controlRotation != rotation &&
+                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS) {
                 controlRotation = rotation
+                deviceOrientation = orientation
                 orientationAwareControls.map {
                     it.animate().rotation(rotation.toFloat()).start()
                 }
@@ -215,5 +219,9 @@ class CameraLayout(
                 .withEndAction { it.rotation = controlRotation.toFloat() }
                 .start()
         }
+    }
+
+    private companion object {
+        const val ORIENTATION_HYSTERESIS = 10
     }
 }

@@ -22,7 +22,7 @@ class CameraLayout(
 
     private lateinit var topBar: ViewGroup
     private lateinit var previewHolder: ViewGroup
-    private lateinit var zoomBar: ViewGroup
+    private lateinit var onFrameControls: ViewGroup
     private lateinit var shutterBar: ViewGroup
     private lateinit var modeBar: ViewGroup
     lateinit var viewFinder: PreviewView
@@ -67,7 +67,7 @@ class CameraLayout(
 
         topBar = findViewById(R.id.top_bar)
         previewHolder = findViewById(R.id.preview_holder)
-        zoomBar = findViewById(R.id.zoom_bar)
+        onFrameControls = findViewById(R.id.on_frame_controls)
         shutterBar = findViewById(R.id.shutter_bar)
         modeBar = findViewById(R.id.bottom_bar)
 
@@ -128,7 +128,6 @@ class CameraLayout(
 
         val topHeight = topBar.measuredHeight
         val finderHeight = previewHolder.measuredHeight
-        val zoomHeight = zoomBar.measuredHeight
         val shutterHeight = shutterBar.measuredHeight
         val modeHeight = modeBar.measuredHeight
 
@@ -178,7 +177,7 @@ class CameraLayout(
         topBar.layout(0, topGuide, width, topGuide + topHeight)
         previewHolder.layout(0, finderGuide, width, finderGuide + finderHeight)
         shutterBar.layout(0, shutterGuide, width, shutterGuide + shutterHeight)
-        zoomBar.layout(0, shutterGuide - zoomHeight, width, shutterGuide)
+        onFrameControls.layout(0, topGuide + topHeight, width, shutterGuide)
         modeBar.layout(0, modeGuide, width, modeGuide + modeHeight)
     }
 

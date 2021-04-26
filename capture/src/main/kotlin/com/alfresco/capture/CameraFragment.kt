@@ -161,6 +161,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         cameraController = AlfrescoCameraController(requireContext()).apply {
             setEnabledUseCases(CameraController.IMAGE_CAPTURE)
             setCameraSelector(lensFacing)
+            imageCaptureFlashMode = DEFAULT_FLASH_MODE
         }.also {
             it.bindToLifecycle(this)
             it.initializationFuture.addListener({
@@ -245,6 +246,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 CameraSelector.LENS_FACING_FRONT
             }
             cameraController?.setCameraSelector(lensFacing)
+            cameraController?.imageCaptureFlashMode = DEFAULT_FLASH_MODE
             updateFlashControlState()
             layout.animateCameraSwitchClick()
         }
@@ -313,6 +315,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
     companion object {
+        private const val DEFAULT_FLASH_MODE = ImageCapture.FLASH_MODE_AUTO
 
         private const val TAG = "CameraX"
         private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"

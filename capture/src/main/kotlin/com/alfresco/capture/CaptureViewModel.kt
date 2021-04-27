@@ -6,6 +6,10 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.OfflineRepository
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.launch
 
 data class CaptureState(
@@ -20,7 +24,7 @@ class CaptureViewModel(
     context: Context
 ) : MavericksViewModel<CaptureState>(state) {
 
-    var onUploadComplete: (() -> Unit)? = null
+    var onSaveComplete: (() -> Unit)? = null
 
     fun save(filename: String) = withState {
         val extension = ".jpg"
@@ -33,12 +37,23 @@ class CaptureViewModel(
                 "",
                 "image/jpeg"
             )
-            onUploadComplete?.invoke()
+            onSaveComplete?.invoke()
         }
     }
 
     fun capturePhoto(path: String) =
         setState { copy(file = path) }
+
+    fun defaultFilename(): String {
+        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+        val time: Date = Calendar.getInstance().time
+        return "IMG_${formatter.format(time)}"
+    }
+
+    fun isFilenameValid(filename: String): Boolean {
+        val reservedChars = "?:\"*|/\\<>\u0000"
+        return filename.all { c -> reservedChars.indexOf(c) == -1 }
+    }
 
     companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
 

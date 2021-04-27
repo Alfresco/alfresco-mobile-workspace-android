@@ -6,9 +6,13 @@
     <string name="gallery_button_alt">Gallery</string>
     <string name="flash_button_alt">Flash mode</string>
 
+    <string name="capture_photo_preview_alt">Photo preview</string>
     <string name="capture_file_name_hint">File name</string>
     <string name="capture_description_hint">Add description</string>
-    <string name="capture_done_button">Done</string>
+    <string name="capture_delete_photo_alt">Delete photo</string>
+    <string name="capture_save_button">Save</string>
+    <string name="capture_file_name_invalid_chars">File name can\'t contain any of the following characters: ?:"*|/\\&lt;&gt;</string>
+    <string name="capture_file_name_empty">File name can\'t be empty.</string>
 
     <string name="capture_nav_save_title">Preview</string>
 

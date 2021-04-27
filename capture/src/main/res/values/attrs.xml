@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="capture_layout_margin">24dp</dimen>
+    <dimen name="capture_layout_small_margin">16dp</dimen>
+    <dimen name="capture_button_size">40dp</dimen>
+</resources>

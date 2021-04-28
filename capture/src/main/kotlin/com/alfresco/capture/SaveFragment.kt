@@ -34,7 +34,7 @@ class SaveFragment : Fragment(), MavericksView {
 
         binding.toolbar.apply {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
-            setNavigationOnClickListener { requireActivity().onBackPressed() }
+            setNavigationOnClickListener { goBack() }
             title = resources.getString(R.string.capture_nav_save_title)
         }
 
@@ -68,13 +68,16 @@ class SaveFragment : Fragment(), MavericksView {
             viewModel.save(binding.fileNameInputLayout.text.toString())
         }
 
-        binding.deletePhotoButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        binding.deletePhotoButton.setOnClickListener { goBack() }
 
         viewModel.onSaveComplete = {
             requireActivity().finish()
         }
+    }
+
+    private fun goBack() {
+        viewModel.clearCaptures()
+        requireActivity().onBackPressed()
     }
 
     override fun invalidate(): Unit = withState(viewModel) { state ->

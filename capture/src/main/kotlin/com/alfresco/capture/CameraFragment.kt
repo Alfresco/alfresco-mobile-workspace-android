@@ -2,7 +2,6 @@ package com.alfresco.capture
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -32,8 +31,6 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
@@ -108,7 +105,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         // Determine the output directory
-        outputDirectory = getOutputDirectory(requireContext())
+        outputDirectory = viewModel.captureDir
 
         // Prepare UI controls
         setUpCameraUi()
@@ -208,7 +205,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
             // Create output file to hold the image
-            val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
+            val photoFile = viewModel.prepareCaptureFile(outputDirectory, CaptureViewModel.PHOTO_EXTENSION)
 
             // Create output options object which contains file + metadata
             val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
@@ -314,25 +311,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun hasFrontCamera(): Boolean =
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
-    companion object {
-        private const val DEFAULT_FLASH_MODE = ImageCapture.FLASH_MODE_AUTO
-
-        private const val TAG = "CameraX"
-        private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val PHOTO_EXTENSION = ".jpg"
-
-        /** Helper function used to create a timestamped file */
-        private fun createFile(baseFolder: File, format: String, extension: String) =
-            File(baseFolder, SimpleDateFormat(format, Locale.US)
-                .format(System.currentTimeMillis()) + extension)
-
-        /** Use external media if it is available, our app's file directory otherwise */
-        // TODO: Figure out a proper output directory
-        private fun getOutputDirectory(context: Context): File =
-            context.applicationContext.cacheDir
-    }
-
     override fun invalidate() {
         // no-op
+    }
+
+    companion object {
+        private val TAG: String = CameraFragment::class.java.simpleName
+        private const val DEFAULT_FLASH_MODE = ImageCapture.FLASH_MODE_AUTO
     }
 }

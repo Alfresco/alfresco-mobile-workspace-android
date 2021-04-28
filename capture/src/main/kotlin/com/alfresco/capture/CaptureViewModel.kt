@@ -6,6 +6,8 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.session.SessionManager
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -24,18 +26,30 @@ class CaptureViewModel(
     context: Context
 ) : MavericksViewModel<CaptureState>(state) {
 
+    init {
+        // Clear any pending captures from a previous session
+        clearCaptures()
+    }
+
     var onSaveComplete: (() -> Unit)? = null
+    val captureDir = SessionManager.requireSession.captureDir
+
+    fun clearCaptures() {
+        captureDir.listFiles()?.forEach { it.delete() }
+    }
+
+    fun prepareCaptureFile(outputDir: File, extension: String) =
+        File(outputDir, "${System.currentTimeMillis() / 1000}$extension")
 
     fun save(filename: String) = withState {
-        val extension = ".jpg"
         viewModelScope.launch {
             requireNotNull(it.file)
             OfflineRepository().scheduleForUpload(
                 it.file,
                 it.parentId,
-                filename + extension,
+                filename + PHOTO_EXTENSION,
                 "",
-                "image/jpeg"
+                PHOTO_MIMETYPE
             )
             onSaveComplete?.invoke()
         }
@@ -56,6 +70,8 @@ class CaptureViewModel(
     }
 
     companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
+        const val PHOTO_EXTENSION = ".jpg"
+        const val PHOTO_MIMETYPE = "image/jpeg"
 
         override fun create(
             viewModelContext: ViewModelContext,

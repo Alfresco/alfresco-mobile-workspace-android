@@ -93,23 +93,26 @@ class Session(
     }
 
     val filesDir: File =
-        File(context.filesDir, account.id.sha1()).also {
-            if (!it.exists()) {
-                it.mkdir()
-            }
-        }
+        createIfMissing(File(context.filesDir, account.id.sha1()))
 
     val cacheDir: File =
-        File(context.cacheDir, account.id.sha1()).also {
-            if (!it.exists()) {
-                it.mkdir()
-            }
-        }
+        createIfMissing(File(context.cacheDir, account.id.sha1()))
+
+    val captureDir: File =
+        createIfMissing(File(filesDir, CAPTURE_DIR))
 
     val uploadDir: File =
-        File(filesDir, "upload").also {
-            if (!it.exists()) {
-                it.mkdir()
-            }
+        createIfMissing(File(filesDir, UPLOAD_DIR))
+
+    private fun createIfMissing(dir: File): File {
+        if (!dir.exists()) {
+            dir.mkdir()
         }
+        return dir
+    }
+
+    private companion object {
+        const val CAPTURE_DIR = "capture"
+        const val UPLOAD_DIR = "upload"
+    }
 }

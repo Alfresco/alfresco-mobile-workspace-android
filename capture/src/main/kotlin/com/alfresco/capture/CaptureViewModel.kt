@@ -26,13 +26,13 @@ class CaptureViewModel(
     context: Context
 ) : MavericksViewModel<CaptureState>(state) {
 
+    var onSaveComplete: (() -> Unit)? = null
+    val captureDir = SessionManager.requireSession.captureDir
+
     init {
         // Clear any pending captures from a previous session
         clearCaptures()
     }
-
-    var onSaveComplete: (() -> Unit)? = null
-    val captureDir = SessionManager.requireSession.captureDir
 
     fun clearCaptures() {
         captureDir.listFiles()?.forEach { it.delete() }

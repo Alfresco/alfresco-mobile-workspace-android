@@ -84,10 +84,6 @@
     </style>
 
     <!-- Overlays -->
-    <style name="ThemeOverlay" />
-
-    <style name="ThemeOverlay.Alfresco" />
-
     <style name="ThemeOverlay.Alfresco.Dark" parent="">
         <item name="colorPrimaryVariant">@color/alfresco_blue_300</item>
         <item name="colorSurface">@color/design_dark_default_color_surface</item>

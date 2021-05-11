@@ -3,7 +3,7 @@
 
     <style name="Theme.Alfresco" parent="Base.Theme.Alfresco.Dark" />
 
-    <style name="ThemeOverlay.Alfresco.Dark">
+    <style name="ThemeOverlay.Alfresco.Grayscale" parent="">
         <item name="colorPrimary">@android:color/white</item>
     </style>
 </resources>

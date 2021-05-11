@@ -88,6 +88,15 @@
 
     <style name="ThemeOverlay.Alfresco" />
 
+    <style name="ThemeOverlay.Alfresco.Dark" parent="">
+        <item name="colorPrimaryVariant">@color/alfresco_blue_300</item>
+        <item name="colorSurface">@color/design_dark_default_color_surface</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="separatorColor">@color/white_15</item>
+        <item name="colorControlNormal">@color/white_60</item>
+        <item name="android:colorBackground">@color/design_dark_default_color_background</item>
+    </style>
+
     <style name="ThemeOverlay.Alfresco.Grayscale" parent="">
         <item name="colorPrimary">@color/alfresco_gray_900</item>
     </style>

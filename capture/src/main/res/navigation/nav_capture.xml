@@ -17,5 +17,16 @@
     </fragment>
     <fragment
         android:id="@+id/saveFragment"
-        android:name="com.alfresco.capture.SaveFragment" />
+        android:name="com.alfresco.capture.SaveFragment">
+        <action
+            android:id="@+id/action_saveFragment_to_previewFragment"
+            app:destination="@id/previewFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/previewFragment"
+        android:name="com.alfresco.capture.PreviewFragment">
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
 </navigation>

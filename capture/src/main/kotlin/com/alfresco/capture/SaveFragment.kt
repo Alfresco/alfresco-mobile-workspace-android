@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
@@ -68,6 +69,8 @@ class SaveFragment : Fragment(), MavericksView {
             viewModel.save(binding.fileNameInputLayout.text.toString())
         }
 
+        binding.preview.setOnClickListener { showPreview() }
+
         binding.deletePhotoButton.setOnClickListener { goBack() }
 
         viewModel.onSaveComplete = {
@@ -83,5 +86,13 @@ class SaveFragment : Fragment(), MavericksView {
     override fun invalidate(): Unit = withState(viewModel) { state ->
         val path = "file://" + state.file
         binding.preview.load(path)
+    }
+
+    private fun showPreview() = withState(viewModel) {
+        val path = "file://" + it.file
+        findNavController().navigate(
+            R.id.action_saveFragment_to_previewFragment,
+            PreviewArgs.bundle(path)
+        )
     }
 }

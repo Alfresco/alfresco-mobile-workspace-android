@@ -42,4 +42,6 @@ dependencies {
     implementation Libs.AndroidX.constraintLayout
 
     implementation Libs.mvRx
+
+    implementation Libs.subsamplingImageView
 }

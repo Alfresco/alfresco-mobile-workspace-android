@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.Alfresco.Dark"
+    android:background="?android:attr/colorBackground">
+
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp">
+
+        <!-- Can't use Widget.AppCompat.ImageButton style because icon is already tinted. -->
+        <ImageButton
+            android:id="@+id/close_button"
+            android:layout_width="@dimen/capture_button_size"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_marginStart="@dimen/capture_layout_small_margin"
+            android:background="@drawable/bg_camera_btn"
+            android:contentDescription="@string/close_button_alt"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="start" />
+    </FrameLayout>
+
+</FrameLayout>

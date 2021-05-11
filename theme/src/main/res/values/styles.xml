@@ -16,11 +16,11 @@
     </style>
 
     <style name="Widget.Alfresco.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
     </style>
 
     <style name="Widget.Alfresco.TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
         <item name="tabTextAppearance">?attr/textAppearanceButton</item>
         <item name="android:background">@drawable/bottom_separator</item>
     </style>
@@ -71,7 +71,7 @@
 
     <style name="Widget.Alfresco.Action.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
     </style>
 
     <style name="Widget.Alfresco.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">

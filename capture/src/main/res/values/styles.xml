@@ -7,6 +7,6 @@
 
     <style name="Widget.Alfresco.Camera.Menu.Button" parent="Widget.Alfresco.Action.Primary">
         <item name="android:textAlignment">textStart</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Dark</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
     </style>
 </resources>

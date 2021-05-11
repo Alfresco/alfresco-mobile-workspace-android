@@ -88,7 +88,7 @@
 
     <style name="ThemeOverlay.Alfresco" />
 
-    <style name="ThemeOverlay.Alfresco.Dark">
+    <style name="ThemeOverlay.Alfresco.Grayscale" parent="">
         <item name="colorPrimary">@color/alfresco_gray_900</item>
     </style>
 

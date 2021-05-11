@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.net.Uri
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
@@ -12,6 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import android.provider.MediaStore
 
 class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
@@ -128,6 +130,46 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .equal(Entry_.id, target.id)
             .build()
         return query.findFirst()
+    }
+
+    fun scheduleContentForUpload(
+        context: Context,
+        contentUri: Uri,
+        parentId: String
+    ) {
+        val resolver = context.contentResolver
+        var name: String? = null
+        val projection = arrayOf(MediaStore.Files.FileColumns.DISPLAY_NAME)
+        val cursor = resolver.query(contentUri, projection, null, null, null)
+
+        if (cursor != null) {
+            cursor.moveToFirst()
+            name = cursor.getString(0)
+            cursor.close()
+        }
+
+        val mimeType = resolver.getType(contentUri)
+
+        requireNotNull(name)
+        requireNotNull(mimeType)
+
+        val entry = Entry(
+            parentId = parentId,
+            name = name,
+            type = Entry.Type.FILE,
+            mimeType = mimeType
+        )
+        updateEntry(entry)
+
+        val dest = File(session.uploadDir, entry.boxId.toString())
+
+        resolver.openInputStream(contentUri).use { input ->
+            requireNotNull(input)
+
+            dest.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
     }
 
     fun scheduleForUpload(

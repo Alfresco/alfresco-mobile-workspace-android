@@ -64,41 +64,12 @@ open class PermissionFragment : Fragment() {
             context: Context,
             permission: String
         ): Boolean =
-            withFragment(context) { fragment ->
-                fragment.requestPermission(permission)
-            }
-
-        private suspend fun withFragment(
-            context: Context,
-            lambda: suspend (PermissionFragment) -> Boolean
-        ): Boolean =
-            lambda(suspendCancellableCoroutine { continuation ->
-                findPermissionFragment(context, continuation)
-            })
-
-        private fun findPermissionFragment(
-            context: Context,
-            continuation: CancellableContinuation<PermissionFragment>
-        ) {
-            val fragmentManager = when (context) {
-                is AppCompatActivity -> context.supportFragmentManager
-                is Fragment -> context.childFragmentManager
-                else -> throw CancellationException("Context needs to be either AppCompatActivity or Fragment", ClassCastException())
-            }
-
-            var fragment = fragmentManager.findFragmentByTag(TAG)
-            if (fragment != null) {
-                continuation.resume((fragment as PermissionFragment), null)
-            } else {
-                fragment = PermissionFragment()
-                fragmentManager.beginTransaction().add(
-                    fragment,
-                    TAG
-                ).runOnCommit {
-                    continuation.resume(fragment, null)
-                }.commit()
-            }
-        }
+            withFragment(
+                context,
+                TAG,
+                { it.requestPermission(permission) },
+                { PermissionFragment() }
+            )
 
         fun hasPermission(context: Context, permission: String) =
             ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED

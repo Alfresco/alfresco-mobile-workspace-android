@@ -1,6 +1,7 @@
 package com.alfresco.content.listview
 
 import android.content.Context
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -58,12 +59,21 @@ class ListViewRow @JvmOverloads constructor(
                 )
             )
         } else {
-            // Offline screen items
+            // Offline screen items and uploads
             if (entry.isFile && entry.hasOfflineStatus) {
-                binding.offlineIcon.isVisible = true
                 val config = makeOfflineStatusConfig(entry)
-                val drawable = ResourcesCompat.getDrawable(resources, config.first, context.theme)
-                binding.offlineIcon.setImageDrawable(drawable)
+                val drawableRes = config.first
+                if (drawableRes != null) {
+                    val drawable =
+                        ResourcesCompat.getDrawable(resources, drawableRes, context.theme)
+                    if (drawable is AnimatedVectorDrawable) {
+                        drawable.start()
+                    }
+                    binding.offlineIcon.setImageDrawable(drawable)
+                    binding.offlineIcon.isVisible = true
+                } else {
+                    binding.offlineIcon.isVisible = false
+                }
 
                 val stringRes = config.second
                 if (stringRes != null) {
@@ -75,14 +85,22 @@ class ListViewRow @JvmOverloads constructor(
         }
     }
 
-    private fun makeOfflineStatusConfig(entry: Entry): Pair<Int, Int?> =
+    private fun makeOfflineStatusConfig(entry: Entry): Pair<Int?, Int?> =
         when (entry.offlineStatus) {
             OfflineStatus.PENDING ->
-                Pair(R.drawable.ic_offline_status_pending, null)
+                if (entry.isUpload) {
+                    Pair(R.drawable.ic_offline_upload, null)
+                } else {
+                    Pair(R.drawable.ic_offline_status_pending, null)
+                }
             OfflineStatus.SYNCING ->
-                Pair(R.drawable.ic_offline_status_in_progress, R.string.offline_status_in_progress)
+                Pair(R.drawable.ic_offline_status_in_progress_anim, R.string.offline_status_in_progress)
             OfflineStatus.SYNCED ->
-                Pair(R.drawable.ic_offline_status_synced, null)
+                if (entry.isUpload) {
+                    Pair(null, null)
+                } else {
+                    Pair(R.drawable.ic_offline_status_synced, null)
+                }
             OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
             else ->

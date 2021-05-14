@@ -204,11 +204,16 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun createItem(entry: Entry) {
         try {
+            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCING))
             val file = repository.contentFile(entry)
-            BrowseRepository().createEntry(entry, file)
+            val res = BrowseRepository().createEntry(entry, file)
             file.delete() // TODO: what if delete fails?
-            repository.remove(entry)
+            repository.updateEntry(
+                entry.copyWithMetadata(res)
+                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
+            )
         } catch (ex: Exception) {
+            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.ERROR))
             Log.e("SyncWorker", ex.toString())
         }
     }

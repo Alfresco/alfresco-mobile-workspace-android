@@ -2,6 +2,7 @@ package com.alfresco.content.data
 
 import android.content.Context
 import android.net.Uri
+import android.provider.MediaStore
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
@@ -13,7 +14,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import android.provider.MediaStore
 
 class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
@@ -105,6 +105,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         } else {
             query.equal(Entry_.isOffline, true)
         }
+        query.notEqual(Entry_.isUpload, true)
         return query.order(Entry_.name).build()
     }
 
@@ -120,6 +121,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+            .equal(Entry_.isUpload, false)
             .build()
         return query.find()
     }
@@ -157,7 +159,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             parentId = parentId,
             name = name,
             type = Entry.Type.FILE,
-            mimeType = mimeType
+            mimeType = mimeType,
+            isUpload = true,
+            offlineStatus = OfflineStatus.PENDING
         )
         updateEntry(entry)
 
@@ -185,7 +189,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             parentId = parentId,
             name = name,
             type = Entry.Type.FILE,
-            mimeType = mimeType
+            mimeType = mimeType,
+            isUpload = true,
+            offlineStatus = OfflineStatus.PENDING
         )
         updateEntry(entry)
         File(path).renameTo(File(session.uploadDir, entry.boxId.toString()))
@@ -194,16 +200,42 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun fetchPendingUploads(): List<Entry> {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
-            .equal(Entry_.id, "")
+            .equal(Entry_.isUpload, true)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value())
             .build()
         return query.find()
+    }
+
+    fun observeUploads(parentId: String): Flow<List<Entry>> =
+        callbackFlow {
+            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+            val query = box.query()
+                .equal(Entry_.parentId, parentId)
+                .equal(Entry_.isUpload, true)
+                .order(Entry_.name)
+                .build()
+            val subscription = query.subscribe()
+                .observer {
+                    sendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
+        }
+
+    fun removeCompletedUploads(parentId: String) {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        val query = box.query()
+            .equal(Entry_.parentId, parentId)
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value())
+            .build()
+        query.remove()
     }
 
     fun contentUri(entry: Entry): String =
         "file://${contentFile(entry).absolutePath}"
 
     fun contentFile(entry: Entry): File =
-        if (entry.id.isEmpty()) {
+        if (entry.isUpload) {
             File(session.uploadDir, entry.boxId.toString())
         } else {
             File(contentDir(entry), entry.name)

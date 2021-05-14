@@ -156,7 +156,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
                     }
                 } else {
                     listViewRow {
-                        id(it.id)
+                        id(stableId(it))
                         data(it)
                         compact(state.isCompact)
                         clickListener { model, _, _, _ -> onItemClicked(model.data()) }
@@ -190,6 +190,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
             }
         }
     }
+
+    private fun stableId(entry: Entry): String =
+        if (entry.isUpload) entry.boxId.toString()
+        else entry.id
 
     abstract fun onItemClicked(entry: Entry)
 

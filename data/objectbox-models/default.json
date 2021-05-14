@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "10:5614290258979964827",
+      "lastPropertyId": "11:2931623948301518676",
       "name": "Entry",
       "properties": [
         {
@@ -60,6 +60,12 @@
           "name": "boxId",
           "type": 6,
           "flags": 1
+        },
+        {
+          "id": "11:2931623948301518676",
+          "name": "isUpload",
+          "type": 1,
+          "flags": 4
         }
       ],
       "relations": []

@@ -49,6 +49,7 @@ data class Entry(
     @Transient
     val otherId: String? = null,
     val isOffline: Boolean = false,
+    val isUpload: Boolean = false,
     @Convert(converter = BoxOfflineStatusConverter::class, dbType = String::class)
     val offlineStatus: OfflineStatus = OfflineStatus.UNDEFINED,
     @Id var boxId: Long = 0

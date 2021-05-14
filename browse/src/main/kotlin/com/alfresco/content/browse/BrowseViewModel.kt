@@ -1,7 +1,6 @@
 package com.alfresco.content.browse
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
@@ -14,6 +13,7 @@ import com.alfresco.content.actions.ActionRestore
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SharedLinksRepository
@@ -35,7 +35,7 @@ class BrowseViewModel(
 ) : ListViewModel<BrowseViewState>(state) {
 
     init {
-        refresh()
+        fetchInitial()
 
         withState {
             if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
@@ -68,16 +68,14 @@ class BrowseViewModel(
     ) = if (types.contains(type)) { block(this) } else { }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun refresh(ignored: Entry) = refresh()
+    private fun refresh(ignored: Entry) = refresh() // TODO: why?
 
-    override fun refresh() = fetch()
+    override fun refresh() = fetchInitial()
 
-    override fun fetchNextPage() = fetch(true)
-
-    private fun fetch(nextPage: Boolean = false) = withState { state ->
+    override fun fetchNextPage() = withState { state ->
         val path = state.path
         val nodeId = state.nodeId
-        val skipCount = if (nextPage) state.baseEntries.count() else 0
+        val skipCount = state.baseEntries.count()
 
         viewModelScope.launch {
             loadResults(
@@ -85,7 +83,30 @@ class BrowseViewModel(
                 nodeId,
                 skipCount,
                 ITEMS_PER_PAGE
-            ).zip(fetchNode(nodeId)) { paging, parent ->
+            ).execute {
+                when (it) {
+                    is Loading -> copy(request = Loading())
+                    is Fail -> copy(request = Fail(it.error))
+                    is Success -> {
+                        update(it()).copy(request = Success(it()))
+                    }
+                    else -> { this }
+                }
+            }
+        }
+    }
+
+    private fun fetchInitial() = withState { state ->
+        viewModelScope.launch {
+            // Fetch children and folder information
+            loadResults(
+                state.path,
+                state.nodeId,
+                0,
+                ITEMS_PER_PAGE
+            ).zip(
+                fetchNode(state.nodeId)
+            ) { paging, parent ->
                 Pair(paging, parent)
             }.execute {
                 when (it) {
@@ -94,8 +115,24 @@ class BrowseViewModel(
                     is Success -> {
                         update(it().first).copy(parent = it().second, request = Success(it().first))
                     }
-                    else -> { copy() }
+                    else -> { this }
                 }
+            }
+
+            // Fetch uploads from local datasource
+            if (state.nodeId != null) {
+                val repo = OfflineRepository()
+
+                // On refresh clean completed uploads
+                repo.removeCompletedUploads(state.nodeId)
+                setState { state.copy(uploads = emptyList()) }
+
+                repo.observeUploads(state.nodeId)
+                    .execute {
+                        if (it is Success) {
+                            updateUploads(it())
+                        } else { this }
+                    }
             }
         }
     }

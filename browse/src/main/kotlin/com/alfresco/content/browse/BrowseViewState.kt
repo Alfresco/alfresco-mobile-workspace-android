@@ -6,6 +6,8 @@ import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.kotlin.FilenameComparator
+import com.alfresco.list.merge
 import com.alfresco.list.replace
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
@@ -17,7 +19,8 @@ data class BrowseViewState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-    val baseEntries: List<Entry> = emptyList()
+    val baseEntries: List<Entry> = emptyList(),
+    val uploads: List<Entry> = emptyList()
 ) : ListViewState {
 
     constructor(args: BrowseArgs) : this(args.path, args.id)
@@ -36,8 +39,30 @@ data class BrowseViewState(
         val nextPage = response.pagination.skipCount > 0
         val pageEntries = response.entries
         val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
+        val mergedEntries = mergeInUploads(newEntries, uploads, !response.pagination.hasMoreItems)
 
-        return copyUpdatingBase(newEntries).copy(hasMoreItems = response.pagination.hasMoreItems)
+        return copyUpdatingBase(mergedEntries).copy(baseEntries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
+    }
+
+    fun updateUploads(entries: List<Entry>): BrowseViewState {
+        // Merge data only after at least the first page loaded
+        // [parent] is a good enough flag for the initial load.
+        return if (parent != null) {
+            val mergedEntries = mergeInUploads(baseEntries, entries, !hasMoreItems)
+            copyUpdatingBase(mergedEntries)
+        } else {
+            this
+        }.copy(uploads = entries)
+    }
+
+    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
+        return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
+            if (left.isFolder) {
+                -1
+            } else {
+                FilenameComparator.compare(left.name, right.name)
+            }
+        }
     }
 
     private fun copyUpdatingBase(newEntries: List<Entry>) =
@@ -54,8 +79,7 @@ data class BrowseViewState(
 
     private fun baseReducer(newEntries: List<Entry>): BrowseViewState =
         copy(
-            entries = newEntries,
-            baseEntries = newEntries
+            entries = newEntries
         )
 
     private fun groupByModifiedDateReducer(newEntries: List<Entry>): BrowseViewState {
@@ -94,8 +118,7 @@ data class BrowseViewState(
         }
 
         return copy(
-            entries = groupedList,
-            baseEntries = newEntries
+            entries = groupedList
         )
     }
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 
-internal suspend fun <F: Fragment, R> withFragment(
+suspend fun <F : Fragment, R> withFragment(
     context: Context,
     tag: String,
     lambda: suspend (F) -> R,
@@ -17,7 +17,7 @@ internal suspend fun <F: Fragment, R> withFragment(
         findPermissionFragment(context, tag, continuation, factory)
     })
 
-private fun <F: Fragment> findPermissionFragment(
+private fun <F : Fragment> findPermissionFragment(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,

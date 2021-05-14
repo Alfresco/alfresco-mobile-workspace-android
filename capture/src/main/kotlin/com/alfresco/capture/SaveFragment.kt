@@ -1,5 +1,7 @@
 package com.alfresco.capture
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -74,7 +76,10 @@ class SaveFragment : Fragment(), MavericksView {
         binding.deletePhotoButton.setOnClickListener { goBack() }
 
         viewModel.onSaveComplete = {
-            requireActivity().finish()
+            val activity = requireActivity()
+            val intent = Intent().apply { putExtra(CapturePhotoResultContract.OUTPUT_KEY, it) }
+            activity.setResult(Activity.RESULT_OK, intent)
+            activity.finish()
         }
     }
 

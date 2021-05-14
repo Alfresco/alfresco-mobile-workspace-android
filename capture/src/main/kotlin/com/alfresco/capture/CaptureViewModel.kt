@@ -1,11 +1,11 @@
 package com.alfresco.capture
 
 import android.content.Context
+import android.net.Uri
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.session.SessionManager
 import java.io.File
 import java.text.SimpleDateFormat
@@ -15,18 +15,15 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 
 data class CaptureState(
-    val parentId: String,
     val file: String? = null
-) : MavericksState {
-    constructor(args: CaptureArgs) : this(args.parentId)
-}
+) : MavericksState
 
 class CaptureViewModel(
     state: CaptureState,
     context: Context
 ) : MavericksViewModel<CaptureState>(state) {
 
-    var onSaveComplete: (() -> Unit)? = null
+    var onSaveComplete: ((CaptureItem) -> Unit)? = null
     val captureDir = SessionManager.requireSession.captureDir
 
     init {
@@ -42,17 +39,14 @@ class CaptureViewModel(
         File(outputDir, "${System.currentTimeMillis() / 1000}$extension")
 
     fun save(filename: String) = withState {
-        viewModelScope.launch {
-            requireNotNull(it.file)
-            OfflineRepository().scheduleForUpload(
-                it.file,
-                it.parentId,
-                filename + PHOTO_EXTENSION,
-                "",
-                PHOTO_MIMETYPE
-            )
-            onSaveComplete?.invoke()
-        }
+        requireNotNull(it.file)
+
+        onSaveComplete?.invoke(CaptureItem(
+            Uri.parse(it.file),
+            filename + PHOTO_EXTENSION,
+            "",
+            PHOTO_MIMETYPE
+        ))
     }
 
     fun capturePhoto(path: String) =

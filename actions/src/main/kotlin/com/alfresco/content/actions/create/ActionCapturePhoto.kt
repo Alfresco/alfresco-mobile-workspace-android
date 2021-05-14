@@ -2,14 +2,13 @@ package com.alfresco.content.actions.create
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.view.View
-import com.alfresco.capture.CaptureActivity
-import com.alfresco.capture.CaptureArgs
+import com.alfresco.capture.CaptureHelperFragment
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.R
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
 
 data class ActionCapturePhoto(
     override var entry: Entry,
@@ -17,16 +16,23 @@ data class ActionCapturePhoto(
     override val title: Int = R.string.action_capture_photo_title
 ) : Action {
 
+    private val repository = OfflineRepository()
+
     override suspend fun execute(context: Context): Entry {
         if (PermissionFragment.requestPermission(
                 context,
                 Manifest.permission.CAMERA
             )) {
-            context.startActivity(
-                Intent(context, CaptureActivity::class.java).apply {
-                    putExtras(CaptureArgs.makeArguments(entry.id))
-                }
-            )
+            val item = CaptureHelperFragment.capturePhoto(context)
+            if (item != null) {
+                repository.scheduleForUpload(
+                    item.uri.toString(),
+                    entry.id,
+                    item.name,
+                    item.description,
+                    item.mimeType
+                )
+            }
         } else {
             throw Action.Exception(context.resources.getString(R.string.action_capture_failed_permissions))
         }

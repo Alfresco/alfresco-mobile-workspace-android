@@ -9,6 +9,7 @@ import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionCapturePhoto(
     override var entry: Entry,
@@ -32,6 +33,8 @@ data class ActionCapturePhoto(
                     item.description,
                     item.mimeType
                 )
+            } else {
+                throw CancellationException("User Cancellation")
             }
         } else {
             throw Action.Exception(context.resources.getString(R.string.action_capture_failed_permissions))
@@ -42,5 +45,6 @@ data class ActionCapturePhoto(
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
-    override fun showToast(view: View, anchorView: View?) = Unit
+    override fun showToast(view: View, anchorView: View?) =
+        Action.showToast(view, anchorView, R.string.action_capture_photo_toast)
 }

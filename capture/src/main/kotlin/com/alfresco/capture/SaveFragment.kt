@@ -68,7 +68,10 @@ class SaveFragment : Fragment(), MavericksView {
         })
 
         binding.saveButton.setOnClickListener {
-            viewModel.save(binding.fileNameInputLayout.text.toString())
+            viewModel.save(
+                binding.fileNameInput.text.toString(),
+                binding.descriptionInput.text.toString()
+            )
         }
 
         binding.preview.setOnClickListener { showPreview() }

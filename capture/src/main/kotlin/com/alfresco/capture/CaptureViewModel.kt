@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlinx.coroutines.launch
 
 data class CaptureState(
     val file: String? = null
@@ -38,13 +37,16 @@ class CaptureViewModel(
     fun prepareCaptureFile(outputDir: File, extension: String) =
         File(outputDir, "${System.currentTimeMillis() / 1000}$extension")
 
-    fun save(filename: String) = withState {
+    fun save(
+        filename: String,
+        description: String
+    ) = withState {
         requireNotNull(it.file)
 
         onSaveComplete?.invoke(CaptureItem(
             Uri.parse(it.file),
             filename + PHOTO_EXTENSION,
-            "",
+            description,
             PHOTO_MIMETYPE
         ))
     }

@@ -8,7 +8,10 @@ import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import java.io.File
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
@@ -60,14 +63,21 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         requireNotNull(local.mimeType)
 
         val filePart = file.asRequestBody(local.mimeType.toMediaTypeOrNull())
+        val properties = mutableMapOf<String, RequestBody>()
+        for ((k, v) in local.properties) {
+            if (v.isNotEmpty()) {
+                properties[k] = v.toRequestBody(MultipartBody.FORM)
+            }
+        }
 
         return Entry.with(
             serviceExt.createNode(
                 local.parentId,
                 filePart,
-                autoRename = true,
-                name = local.name,
-                nodeType = "cm:content"
+                local.name,
+                "cm:content",
+                properties,
+                autoRename = true
             ).entry
         )
     }

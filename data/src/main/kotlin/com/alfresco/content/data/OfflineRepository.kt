@@ -184,12 +184,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         mimeType: String
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
-        // TODO: Add Description
         val entry = Entry(
             parentId = parentId,
             name = name,
             type = Entry.Type.FILE,
             mimeType = mimeType,
+            properties = mapOf("cm:description" to description),
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING
         )

@@ -12,6 +12,9 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -34,6 +37,8 @@ data class Entry(
     val name: String = "",
     val path: String? = null,
     val mimeType: String? = null,
+    @Convert(converter = PropertiesConverter::class, dbType = String::class)
+    val properties: Map<String, String> = mapOf(),
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val modified: ZonedDateTime? = null,
     @Transient
@@ -142,6 +147,7 @@ data class Entry(
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,
+                propertiesCompat(node.properties),
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
@@ -158,6 +164,7 @@ data class Entry(
                 result.name,
                 result.path?.formattedString(),
                 result.content?.mimeType,
+                propertiesCompat(result.properties),
                 result.modifiedAt,
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
@@ -174,6 +181,7 @@ data class Entry(
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,
+                propertiesCompat(node.properties),
                 node.modifiedAt,
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
@@ -194,6 +202,7 @@ data class Entry(
                     file.name,
                     file.path?.formattedString(),
                     file.content?.mimeType,
+                    propertiesCompat(file.properties),
                     file.modifiedAt,
                     file.allowableOperations == null,
                     true,
@@ -209,6 +218,7 @@ data class Entry(
                     folder.name,
                     folder.path?.formattedString(),
                     null,
+                    propertiesCompat(folder.properties),
                     folder.modifiedAt,
                     folder.allowableOperations == null,
                     true,
@@ -259,6 +269,7 @@ data class Entry(
                 link.name ?: "",
                 link.path?.formattedString(),
                 link.content?.mimeType,
+                propertiesCompat(link.properties),
                 link.modifiedAt,
                 link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
@@ -274,6 +285,7 @@ data class Entry(
                 node.name,
                 node.path?.formattedString(),
                 node.content?.mimeType,
+                propertiesCompat(node.properties),
                 node.modifiedAt,
                 isPartial = false,
                 node.isFavorite ?: false,
@@ -292,6 +304,28 @@ data class Entry(
 
         private fun canCreate(operations: List<String>?) =
             operations?.contains("create") ?: false
+
+        private fun propertiesCompat(src: Map<String, Any?>?): MutableMap<String, String> {
+            val map = mutableMapOf<String, String>()
+
+            if (src != null) {
+                for ((k, v) in src) {
+                    when (v) {
+                        is String -> {
+                            map[k] = v
+                        }
+                        is List<*> -> {
+                            map[k] = v.joinToString { ", " }
+                        }
+                        else -> {
+                            // Ignored
+                        }
+                    }
+                }
+            }
+
+            return map
+        }
     }
 }
 
@@ -345,4 +379,25 @@ class BoxDateConverter : PropertyConverter<ZonedDateTime, Long> {
 
     override fun convertToDatabaseValue(entityProperty: ZonedDateTime?) =
         entityProperty?.toInstant()?.epochSecond
+}
+
+class PropertiesConverter : PropertyConverter<Map<String, String>, String> {
+    private var moshi = Moshi.Builder().build()
+    private var type = Types.newParameterizedType(
+        Map::class.java,
+        String::class.java,
+        String::class.java
+    )
+    private var jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
+    override fun convertToEntityProperty(databaseValue: String?): Map<String, String> {
+        return if (databaseValue == null) {
+            mapOf()
+        } else {
+            jsonAdapter.fromJson(databaseValue) ?: mapOf()
+        }
+    }
+
+    override fun convertToDatabaseValue(entityProperty: Map<String, String>): String? {
+        return jsonAdapter.toJson(entityProperty)
+    }
 }

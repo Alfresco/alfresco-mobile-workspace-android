@@ -23,7 +23,7 @@
 
     <string name="action_download_toast">File will be downloaded. See notifications for details</string>
     <string name="action_export_toast">File exported to local storage.</string>
-    <string name="action_download_failed_permissions">Download Failed. You turned off permissions to access storage.</string>
+    <string name="action_download_failed_permissions">Download failed. You turned off permissions to access storage.</string>
 
     <string name="action_open_with_downloading">Downloading&#8230;</string>
     <string name="action_open_with_cancel">Cancel</string>

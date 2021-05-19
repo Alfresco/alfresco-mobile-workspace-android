@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'
@@ -23,14 +21,14 @@ dependencies {
     api project(':session')
     implementation project(':download')
 
-    implementation Libs.Alfresco.auth
-    implementation Libs.Alfresco.content
-    implementation Libs.Alfresco.contentKtx
+    implementation libs.alfresco.auth
+    implementation libs.alfresco.content
+    implementation libs.alfresco.contentKtx
 
-    implementation Libs.AndroidX.preference
-    api Libs.AndroidX.work
+    implementation libs.androidx.preference
+    api libs.androidx.work
 
-    implementation Libs.OkHttp.loggingInterceptor
+    implementation libs.okhttp.logginginterceptor
 
-    coreLibraryDesugaring Libs.AndroidTools.desugar
+    coreLibraryDesugaring libs.android.desugar
 }

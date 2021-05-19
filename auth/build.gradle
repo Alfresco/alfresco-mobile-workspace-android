@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'
@@ -20,19 +18,19 @@ dependencies {
     implementation project(':base-ui')
     implementation project(':theme')
 
-    implementation Libs.Kotlin.stdlib
+    implementation libs.kotlin.stdlib
 
-    api Libs.Alfresco.auth
+    api libs.alfresco.auth
 
-    implementation Libs.Google.material
+    implementation libs.google.material
 
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.coreKtx
-    implementation Libs.AndroidX.constraintLayout
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core
+    implementation libs.androidx.constraintlayout
 
-    implementation Libs.AndroidX.Lifecycle.viewModelKtx
-    implementation Libs.AndroidX.Lifecycle.runtime
+    implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.lifecycle.runtime
 
-    implementation Libs.AndroidX.Activity.activityKtx
-    implementation Libs.AndroidX.Fragment.fragmentKtx
+    implementation libs.androidx.activity
+    implementation libs.androidx.fragment
 }

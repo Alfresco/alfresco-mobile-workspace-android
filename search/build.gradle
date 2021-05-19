@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
@@ -27,18 +25,18 @@ dependencies {
     implementation project(':theme')
     implementation project(':listview')
 
-    implementation Libs.Alfresco.content
+    implementation libs.alfresco.content
 
-    implementation Libs.Coroutines.core
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.Lifecycle.viewModelKtx
-    implementation Libs.AndroidX.Navigation.fragment
-    implementation Libs.AndroidX.swipeRefreshLayout
+    implementation libs.coroutines.core
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.swiperefreshlayout
 
-    implementation Libs.Google.material
+    implementation libs.google.material
 
-    implementation Libs.mvRx
+    implementation libs.mavericks
 
-    implementation Libs.Epoxy.epoxy
-    kapt Libs.Epoxy.processor
+    implementation libs.epoxy.core
+    kapt libs.epoxy.processor
 }

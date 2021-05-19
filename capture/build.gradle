@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
@@ -20,28 +18,28 @@ dependencies {
     implementation project(':common')
     implementation project(':theme')
 
-    implementation Libs.Coroutines.core
+    implementation libs.coroutines.core
 
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.coreKtx
-    implementation Libs.AndroidX.Fragment.fragment
-    implementation Libs.AndroidX.Lifecycle.runtime
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core
+    implementation libs.androidx.fragment
+    implementation libs.androidx.lifecycle.runtime
 
-    implementation Libs.AndroidX.Navigation.fragment
-    implementation Libs.AndroidX.Navigation.ui
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
 
-    implementation Libs.Google.material
+    implementation libs.google.material
 
-    implementation Libs.Coil.core
+    implementation libs.coil.core
 
-    implementation Libs.AndroidX.Camera.core
-    implementation Libs.AndroidX.Camera.camera2
-    implementation Libs.AndroidX.Camera.lifecycle
-    implementation Libs.AndroidX.Camera.view
+    implementation libs.androidx.camera.core
+    implementation libs.androidx.camera.camera2
+    implementation libs.androidx.camera.lifecycle
+    implementation libs.androidx.camera.view
 
-    implementation Libs.AndroidX.constraintLayout
+    implementation libs.androidx.constraintlayout
 
-    implementation Libs.mvRx
+    implementation libs.mavericks
 
-    implementation Libs.subsamplingImageView
+    implementation libs.subsamplingimageview
 }

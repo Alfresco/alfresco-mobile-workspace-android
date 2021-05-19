@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -15,12 +13,12 @@ dependencies {
     implementation project(':common')
     implementation project(':viewer-common')
 
-    implementation Libs.AndroidX.coreKtx
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.Google.material
+    implementation libs.androidx.core
+    implementation libs.androidx.appcompat
+    implementation libs.google.material
 
-    implementation Libs.ExoPlayer.core
-    implementation Libs.ExoPlayer.ui
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
 
-    implementation Libs.mvRx
+    implementation libs.mavericks
 }

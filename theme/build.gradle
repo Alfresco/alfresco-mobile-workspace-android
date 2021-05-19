@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -13,6 +11,6 @@ android {
 dependencies {
     implementation project(':base-ui')
 
-    implementation Libs.Kotlin.stdlib
-    implementation Libs.Google.material
+    implementation libs.kotlin.stdlib
+    implementation libs.google.material
 }

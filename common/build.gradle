@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -14,14 +12,14 @@ dependencies {
     api project(':base-ui')
     implementation project(':data')
 
-    implementation Libs.Coroutines.core
+    implementation libs.coroutines.core
 
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.coreKtx
-    implementation Libs.AndroidX.recyclerview
-    implementation Libs.AndroidX.Navigation.fragment
-    implementation Libs.AndroidX.preference
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.preference
 
-    implementation Libs.mvRx
-    implementation Libs.Epoxy.epoxy
+    implementation libs.mavericks
+    implementation libs.epoxy.core
 }

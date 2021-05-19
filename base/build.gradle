@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -11,6 +9,6 @@ android {
 }
 
 dependencies {
-    implementation Libs.Coroutines.core
-    implementation Libs.AndroidX.Lifecycle.liveDataKtx
+    implementation libs.coroutines.core
+    implementation libs.androidx.lifecycle.livedata
 }

@@ -14,7 +14,7 @@ variables:
   - name: GRADLE_USER_HOME
     value: $(Pipeline.Workspace)/.gradle
   - name: deps_def_path
-    value: buildSrc/src/main/java/com/alfresco/buildsrc/dependencies.kt
+    value: gradle/libs.versions.toml
   - name: bundle_path
     value: 'app/build/outputs/bundle/playStore/*.aab'
   - name: apks_path

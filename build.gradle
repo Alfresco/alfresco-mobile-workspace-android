@@ -1,21 +1,21 @@
-import com.alfresco.buildsrc.Libs
-
 buildscript {
     repositories {
         google()
+        gradlePluginPortal()
         jcenter()
     }
     dependencies {
-        classpath Libs.AndroidTools.gradlePlugin
-        classpath Libs.Kotlin.gradlePlugin
+        classpath libs.android.gradle
+        classpath libs.kotlin.gradle
 
-        classpath Libs.objectBox
+        classpath libs.objectbox
 
-        classpath Libs.Google.servicesPlugin
-        classpath Libs.Google.Firebase.crashlyticsPlugin
+        classpath libs.google.services.gradle
+        classpath libs.firebase.crashlytics.gradle
 
-        classpath Libs.spotless
-        classpath Libs.gradleVersions
+        classpath libs.spotless
+        classpath libs.gradleVersionsPlugin
+
     }
 }
 
@@ -28,6 +28,10 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+}
+
+def dependencyToString(dependency) {
+    return "${dependency.module}:${dependency.versionConstraint.requiredVersion}"
 }
 
 subprojects {
@@ -49,9 +53,9 @@ subprojects {
                 configurations.all {
                     resolutionStrategy {
                         // Force kotlin-reflect version until Moshi is updated
-                        force Libs.Kotlin.reflect
+                        force dependencyToString(libs.kotlin.reflect.get())
                         // Force Guava version until ExoPlayer is updated
-                        force Libs.Google.guava
+                        force dependencyToString(libs.guava.get())
                     }
                 }
             }

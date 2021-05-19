@@ -1,5 +1,3 @@
-import com.alfresco.buildsrc.Libs
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -16,17 +14,17 @@ dependencies {
     implementation project(':download')
     implementation project(':viewer-common')
 
-    implementation Libs.Kotlin.stdlib
-    implementation Libs.AndroidX.appcompat
-    implementation Libs.AndroidX.Lifecycle.runtime
-    implementation Libs.AndroidX.Lifecycle.viewModelKtx
+    implementation libs.kotlin.stdlib
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.viewmodel
 
-    implementation Libs.subsamplingImageView
-    implementation Libs.photoView
+    implementation libs.subsamplingimageview
+    implementation libs.photoview
 
-    implementation Libs.Coil.core
-    implementation Libs.Coil.gifExt
-    implementation Libs.Coil.svgExt
+    implementation libs.coil.core
+    implementation libs.coil.gif
+    implementation libs.coil.svg
 
-    implementation Libs.mvRx
+    implementation libs.mavericks
 }

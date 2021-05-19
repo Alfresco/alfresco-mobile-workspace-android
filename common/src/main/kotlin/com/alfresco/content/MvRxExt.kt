@@ -14,7 +14,6 @@ import com.airbnb.mvrx.RealMavericksStateFactory
 import com.airbnb.mvrx._internal
 import com.airbnb.mvrx.lifecycleAwareLazy
 import kotlin.reflect.KClass
-import kotlinx.coroutines.plus
 
 /**
  * Gets or creates a ViewModel scoped to this Fragment. You will get the same instance every time

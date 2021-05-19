@@ -389,6 +389,7 @@ class PropertiesConverter : PropertyConverter<Map<String, String>, String> {
         String::class.java
     )
     private var jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
+
     override fun convertToEntityProperty(databaseValue: String?): Map<String, String> {
         return if (databaseValue == null) {
             mapOf()

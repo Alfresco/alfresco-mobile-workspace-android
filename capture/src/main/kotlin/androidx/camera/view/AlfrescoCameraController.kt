@@ -5,16 +5,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.annotation.MainThread
+import androidx.annotation.OptIn
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
-import androidx.annotation.experimental.UseExperimental
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LensFacing
 import androidx.camera.core.impl.utils.Threads
 import androidx.camera.lifecycle.ExperimentalUseCaseGroupLifecycle
 import androidx.lifecycle.LifecycleOwner
-import java.lang.IllegalStateException
 
 @SuppressLint("RestrictedApi")
 class AlfrescoCameraController(context: Context) :
@@ -61,10 +60,8 @@ class AlfrescoCameraController(context: Context) :
      *
      * @return null if failed to start camera.
      */
-    @UseExperimental(markerClass = ExperimentalUseCaseGroupLifecycle::class)
-    @RequiresPermission(
-        Manifest.permission.CAMERA
-    )
+    @OptIn(ExperimentalUseCaseGroupLifecycle::class)
+    @RequiresPermission(Manifest.permission.CAMERA)
     override fun startCamera(): Camera? {
         if (mLifecycleOwner == null) {
             Log.d(TAG, "Lifecycle is not set.")

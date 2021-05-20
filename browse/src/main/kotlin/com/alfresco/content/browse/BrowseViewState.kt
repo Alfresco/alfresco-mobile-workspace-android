@@ -57,8 +57,13 @@ data class BrowseViewState(
 
     private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
         return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
-            if (left.isFolder) {
-                -1
+            if (left.isFolder || right.isFolder) {
+                val cmp = right.isFolder.compareTo(left.isFolder)
+                if (cmp == 0) {
+                    FilenameComparator.compare(left.name, right.name)
+                } else {
+                    cmp
+                }
             } else {
                 FilenameComparator.compare(left.name, right.name)
             }

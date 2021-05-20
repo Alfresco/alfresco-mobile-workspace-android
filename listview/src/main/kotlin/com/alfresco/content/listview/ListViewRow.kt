@@ -44,7 +44,7 @@ class ListViewRow @JvmOverloads constructor(
 
         configureOfflineStatus(entry)
 
-        binding.moreIconFrame.isVisible = actionButtonVisibility(entry)
+        binding.moreButton.isVisible = actionButtonVisibility(entry)
     }
 
     private fun configureOfflineStatus(entry: Entry) {
@@ -136,6 +136,6 @@ class ListViewRow @JvmOverloads constructor(
 
     @CallbackProp
     fun setMoreClickListener(listener: OnClickListener?) {
-        binding.moreIconFrame.setOnClickListener(listener)
+        binding.moreButton.setOnClickListener(listener)
     }
 }

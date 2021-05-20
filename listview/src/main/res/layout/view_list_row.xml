@@ -44,12 +44,9 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/more_icon_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="72dp"
-        android:minHeight="48dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless">
+        android:minWidth="72dp">
 
         <ImageView
             android:id="@+id/offline_icon"
@@ -59,11 +56,14 @@
             android:layout_gravity="start|center_vertical"
             android:src="@drawable/ic_offline_status_synced" />
 
-        <ImageView
-            android:id="@+id/more_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/more_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_more_vert" />
     </FrameLayout>
 

@@ -68,7 +68,12 @@ data class BrowseViewState(
                 FilenameComparator.compare(left.name, right.name)
             }
         }.dedupe { left: Entry, right: Entry ->
-            left.id.compareTo(right.id)
+            val same = left.id.compareTo(right.id)
+            if (same == 0) {
+                (left.boxId - right.boxId).toInt()
+            } else {
+                same
+            }
         }
     }
 

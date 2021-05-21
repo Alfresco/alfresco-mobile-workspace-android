@@ -77,7 +77,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 local.name,
                 "cm:content",
                 properties,
-                autoRename = true
+                autoRename = true,
+                include = extraFields()
             ).entry
         )
     }

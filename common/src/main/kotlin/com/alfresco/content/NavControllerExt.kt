@@ -19,7 +19,7 @@ private fun NavController.navigateToFolder(entry: Entry) =
     navigateToFolder(entry.id, entry.name, modeFor(entry))
 
 private fun modeFor(entry: Entry) =
-    if (entry.hasOfflineStatus) {
+    if (entry.hasOfflineStatus && !entry.isUpload) {
         "local"
     } else {
         "remote"

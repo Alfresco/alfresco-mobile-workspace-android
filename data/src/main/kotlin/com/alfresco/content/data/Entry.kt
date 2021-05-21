@@ -26,6 +26,15 @@ import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 
+/**
+ * Generic data model representing all types of objects.
+ *
+ * Currently representing the following:
+ * * entries marked for offline sync: [isOffline]
+ * * entries marked for upload: [isUpload]
+ * * children of entries marked for offline sync [hasOfflineStatus] but ![isUpload] and ![isOffline]
+ * * network results: ![hasOfflineStatus] which assumes ![isOffline] and ![isUpload]
+ */
 @Parcelize
 @TypeParceler<ZonedDateTime, DateParceler>
 @Entity
@@ -45,7 +54,6 @@ data class Entry(
     val isPartial: Boolean = false,
     @Transient
     val isFavorite: Boolean = false,
-    @Transient
     val canDelete: Boolean = false,
     @Transient
     val canCreate: Boolean = false,

@@ -109,6 +109,8 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink &&
+            // Incomplete uploads
+            !(entry.isUpload && !entry.isSynced) &&
             // Child folder in offline tab
             !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
 

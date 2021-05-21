@@ -87,8 +87,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onItemClicked(entry: Entry) {
-        // Disable interaction on Trash items
-        if (entry.isTrashed) return
+        // Disable interaction on Trash or Upload items
+        if (entry.isTrashed || !(entry.isUpload && entry.isSynced)) return
 
         findNavController().navigateTo(entry)
     }

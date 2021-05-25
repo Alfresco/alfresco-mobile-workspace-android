@@ -14,7 +14,7 @@
                 android:pivotY="6">
                 <path
                     android:name="path"
-                    android:pathData="M 9.5 4 L 7.5 6 L 9 6 C 9 7.655 7.655 9 6 9 C 5.495 9 5.015 8.875 4.6 8.65 L 3.87 9.38 C 4.485 9.77 5.215 10 6 10 C 8.21 10 10 8.21 10 6 L 11.5 6 L 9.5 4 Z M 3 6 C 3 4.345 4.345 3 6 3 C 6.505 3 6.985 3.125 7.4 3.35 L 8.13 2.62 C 7.515 2.23 6.785 2 6 2 C 3.79 2 2 3.79 2 6 L 0.5 6 L 2.5 8 L 4.5 6 L 3 6 Z"
+                    android:pathData="M8.1818,2.1818L6,4.3636V2.7273C4.1946,2.7273 2.7273,4.1946 2.7273,6C2.7273,6.5509 2.8636,7.0746 3.1091,7.5273L2.3127,8.3236C1.8873,7.6527 1.6364,6.8564 1.6364,6C1.6364,3.5891 3.5891,1.6364 6,1.6364V0L8.1818,2.1818ZM6,9.2727C7.8054,9.2727 9.2727,7.8054 9.2727,6C9.2727,5.4491 9.1364,4.9254 8.8909,4.4727L9.6873,3.6764C10.1127,4.3473 10.3636,5.1436 10.3636,6C10.3636,8.4109 8.4109,10.3636 6,10.3636V12L3.8182,9.8182L6,7.6364V9.2727Z"
                     android:fillColor="?attr/colorPrimary"
                     android:strokeWidth="1"/>
             </group>
@@ -26,7 +26,7 @@
                 android:propertyName="rotation"
                 android:duration="900"
                 android:valueFrom="0"
-                android:valueTo="-360"
+                android:valueTo="360"
                 android:valueType="floatType"
                 android:repeatCount="-1"
                 android:interpolator="@android:interpolator/fast_out_slow_in"/>

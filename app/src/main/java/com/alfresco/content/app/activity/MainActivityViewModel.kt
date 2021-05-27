@@ -20,6 +20,7 @@ import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.network.ConnectivityTracker
+import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.events.on
 import kotlinx.coroutines.CoroutineScope
@@ -41,13 +42,18 @@ class MainActivityViewModel(
 
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
     private var refreshTicketJob: Job? = null
-    private val syncService: SyncService
+    private var syncService: SyncService? = null
 
     init {
         // Start a new session
         val session = SessionManager.newSession(context)
+        if (session != null) {
+            init(context, session)
+        }
+    }
 
-        session?.onSignedOut {
+    private fun init(context: Context, session: Session) {
+        session.onSignedOut {
             setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
 
@@ -64,13 +70,13 @@ class MainActivityViewModel(
         }
 
         // Cleanup unused db entries
-        cleanupStorage()
+        cleanupStorage(session)
 
         syncService = configureSync(context, viewModelScope)
     }
 
-    private fun cleanupStorage() {
-        OfflineRepository().removeCompletedUploads()
+    private fun cleanupStorage(session: Session) {
+        OfflineRepository(session).removeCompletedUploads()
     }
 
     private fun configureSync(context: Context, coroutineScope: CoroutineScope) =
@@ -109,7 +115,7 @@ class MainActivityViewModel(
                     delay(60 * 1000L)
                 }
             }
-            syncService.syncIfNeeded()
+            syncService?.syncIfNeeded()
         }
     }
 

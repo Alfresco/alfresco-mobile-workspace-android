@@ -125,7 +125,6 @@ class BrowseViewModel(
 
                 // On refresh clean completed uploads
                 repo.removeCompletedUploads(state.nodeId)
-                setState { state.copy(uploads = emptyList()) }
 
                 repo.observeUploads(state.nodeId)
                     .execute {

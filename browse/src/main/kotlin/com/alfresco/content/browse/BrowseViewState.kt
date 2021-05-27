@@ -4,6 +4,7 @@ import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.kotlin.FilenameComparator
@@ -40,8 +41,9 @@ data class BrowseViewState(
         val pageEntries = response.entries
         val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
         val mergedEntries = mergeInUploads(newEntries, uploads, !response.pagination.hasMoreItems)
+        val baseEntries = mergedEntries.filter { !it.isUpload }
 
-        return copyUpdatingBase(mergedEntries).copy(baseEntries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
+        return copyUpdatingEntries(mergedEntries).copy(baseEntries = baseEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 
     fun updateUploads(entries: List<Entry>): BrowseViewState {
@@ -49,14 +51,16 @@ data class BrowseViewState(
         // [parent] is a good enough flag for the initial load.
         return if (parent != null) {
             val mergedEntries = mergeInUploads(baseEntries, entries, !hasMoreItems)
-            copyUpdatingBase(mergedEntries)
+            val base = mergedEntries.filter { !it.isUpload }
+            copyUpdatingEntries(mergedEntries).copy(baseEntries = base)
         } else {
             this
         }.copy(uploads = entries)
     }
 
     private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
-        return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
+        val newUploads = uploads.transformCompletedUploads()
+        return merge(base, newUploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
             if (left.isFolder || right.isFolder) {
                 val cmp = right.isFolder.compareTo(left.isFolder)
                 if (cmp == 0) {
@@ -85,7 +89,7 @@ data class BrowseViewState(
         var indexDst = -1
         val dst = mutableListOf<T>()
         while (indexSrc < this.count()) {
-            if (indexDst ==  -1 || comparator.compare(this[indexSrc], dst[indexDst]) != 0) {
+            if (indexDst == -1 || comparator.compare(this[indexSrc], dst[indexDst]) != 0) {
                 dst.add(this[indexSrc])
                 indexDst++
             }
@@ -94,10 +98,19 @@ data class BrowseViewState(
         return dst
     }
 
-    private fun copyUpdatingBase(newEntries: List<Entry>) =
+    private fun List<Entry>.transformCompletedUploads(): List<Entry> =
+        map {
+            if (it.isUpload && it.isSynced) {
+                it.copy(isUpload = false, offlineStatus = OfflineStatus.UNDEFINED)
+            } else {
+                it
+            }
+        }
+
+    private fun copyUpdatingEntries(newEntries: List<Entry>) =
         when (sortOrder) {
             SortOrder.ByModifiedDate -> groupByModifiedDateReducer(newEntries)
-            else -> baseReducer(newEntries)
+            else -> defaultReducer(newEntries)
         }
 
     val sortOrder: SortOrder
@@ -106,7 +119,7 @@ data class BrowseViewState(
             else -> SortOrder.Default
         }
 
-    private fun baseReducer(newEntries: List<Entry>): BrowseViewState =
+    private fun defaultReducer(newEntries: List<Entry>): BrowseViewState =
         copy(
             entries = newEntries
         )
@@ -153,13 +166,15 @@ data class BrowseViewState(
 
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 
-    override fun copyRemoving(entry: Entry): ListViewState =
-        copyUpdatingBase(baseEntries.filter { it.id != entry.id })
+    override fun copyRemoving(entry: Entry): ListViewState {
+        val newEntries = baseEntries.filter { it.id != entry.id }
+        return copyUpdatingEntries(newEntries).copy(baseEntries = newEntries)
+    }
 
-    override fun copyUpdating(entry: Entry): ListViewState =
-        copyUpdatingBase(baseEntries.replace(entry) {
-            it.id == entry.id
-        })
+    override fun copyUpdating(entry: Entry): ListViewState {
+        val newEntries = baseEntries.replace(entry) { it.id == entry.id }
+        return copyUpdatingEntries(newEntries).copy(baseEntries = newEntries)
+    }
 
     enum class ModifiedGroup {
         Today,

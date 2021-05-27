@@ -80,7 +80,7 @@ class ActionListViewModel(
             entry.isTrashed -> {
                 actionsForTrashed(entry)
             }
-            entry.hasOfflineStatus && !entry.isUpload -> {
+            entry.hasOfflineStatus -> {
                 actionsForOffline(entry)
             }
             else -> {
@@ -108,7 +108,7 @@ class ActionListViewModel(
     private fun offlineActionFor(entry: Entry) =
         if (!entry.isFile && !entry.isFolder) {
             listOf()
-        } else if (entry.hasOfflineStatus && !entry.isOffline && !entry.isUpload) {
+        } else if (entry.hasOfflineStatus && !entry.isOffline) {
             listOf()
         } else {
             listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))

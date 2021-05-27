@@ -221,12 +221,25 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             awaitClose { subscription.cancel() }
         }
 
-    fun removeCompletedUploads(parentId: String) {
+    fun removeUpload(id: String) {
+        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
+        box.query()
+            .equal(Entry_.id, id)
+            .equal(Entry_.isUpload, true)
+            .build()
+            .remove()
+    }
+
+    fun removeCompletedUploads(parentId: String? = null) {
         val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
-            .equal(Entry_.parentId, parentId)
             .equal(Entry_.isUpload, true)
             .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value())
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId)
+                }
+            }
             .build()
         query.remove()
     }

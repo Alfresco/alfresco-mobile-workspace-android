@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.kotlin.ellipsize
@@ -27,8 +28,14 @@ data class ActionDelete(
             // no-op. expected for 204
         }
 
+        // Cleanup associated upload if any
+        if (entry.type == Entry.Type.FILE) {
+            OfflineRepository().removeUpload(entry.id)
+        }
+
         return entry
     }
+
     private suspend inline fun delete(entry: Entry) {
         when (entry.type) {
             Entry.Type.FILE, Entry.Type.FOLDER -> BrowseRepository().deleteEntry(entry)

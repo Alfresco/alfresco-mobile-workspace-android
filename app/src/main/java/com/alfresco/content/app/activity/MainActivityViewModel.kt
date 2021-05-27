@@ -16,6 +16,7 @@ import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.create.ActionCapturePhoto
 import com.alfresco.content.actions.create.ActionUploadPhoto
 import com.alfresco.content.data.AuthenticationRepository
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.network.ConnectivityTracker
@@ -62,7 +63,14 @@ class MainActivityViewModel(
                 }
         }
 
+        // Cleanup unused db entries
+        cleanupStorage()
+
         syncService = configureSync(context, viewModelScope)
+    }
+
+    private fun cleanupStorage() {
+        OfflineRepository().removeCompletedUploads()
     }
 
     private fun configureSync(context: Context, coroutineScope: CoroutineScope) =

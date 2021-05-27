@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
@@ -8,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.alfresco.coroutines.asFlow
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,11 +28,16 @@ class SyncService(
 
     private val workManager = WorkManager.getInstance(context)
     private var latestWorkInfo: WorkInfo? = null
+    private var latestUploadWorkInfo: WorkInfo? = null
 
     init {
         scope.launch {
-            observeWork().collect {
+            observeWork(UNIQUE_SYNC_WORK_NAME).collect {
                 latestWorkInfo = it
+            }
+
+            observeWork(UNIQUE_UPLOAD_WORK_NAME).collect {
+                latestUploadWorkInfo = it
             }
         }
     }
@@ -90,7 +97,7 @@ class SyncService(
 
     private fun execute(overrideNetwork: Boolean = false) {
         lastSyncTime = System.currentTimeMillis()
-        scheduleWork(overrideNetwork)
+        scheduleSyncWork(overrideNetwork)
 
         // Reschedule a timed sync
         scheduleForegroundSync()
@@ -106,7 +113,7 @@ class SyncService(
         pendingSync = null
     }
 
-    private fun scheduleWork(overrideNetwork: Boolean) {
+    private fun scheduleSyncWork(overrideNetwork: Boolean) {
         val networkType = if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {
             NetworkType.CONNECTED
         } else {
@@ -129,13 +136,49 @@ class SyncService(
             .build()
 
         workManager
-            .beginUniqueWork(UNIQUE_WORK_NAME, policy, request)
+            .beginUniqueWork(UNIQUE_SYNC_WORK_NAME, policy, request)
             .enqueue()
     }
 
-    private fun observeWork(): Flow<WorkInfo?> =
+    /**
+     * Executes upload without delay.
+     */
+    fun upload() {
+        scheduleUploadWork()
+    }
+
+    /**
+     * Similar to [syncIfNeeded] but just calls [upload] directly.
+     */
+    fun uploadIfNeeded() = upload()
+
+    private fun scheduleUploadWork() {
+        val networkType = NetworkType.CONNECTED
+
+        val policy = if (latestUploadWorkInfo?.state == WorkInfo.State.RUNNING) {
+            ExistingWorkPolicy.APPEND
+        } else {
+            // Existing work may start before scheduling new work causing a cancellation
+            ExistingWorkPolicy.REPLACE
+        }
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(networkType)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<UploadWorker>()
+            .setConstraints(constraints)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, UPLOAD_BACKOFF_DELAY, TimeUnit.SECONDS)
+            .build()
+
         workManager
-            .getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_NAME)
+            .beginUniqueWork(UNIQUE_UPLOAD_WORK_NAME, policy, request)
+            .enqueue()
+    }
+
+    private fun observeWork(uniqueWorkName: String): Flow<WorkInfo?> =
+        workManager
+            .getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
             .asFlow()
             .map { list ->
                 list?.find { it.state == WorkInfo.State.RUNNING }
@@ -146,12 +189,14 @@ class SyncService(
     companion object {
         private const val TRIGGER_DELAY = 10_000L
         private const val FOREGROUND_DELAY = 900_000L // 15 * 60
-        private const val UNIQUE_WORK_NAME = "sync"
+        private const val UPLOAD_BACKOFF_DELAY = 60L
+        private const val UNIQUE_SYNC_WORK_NAME = "sync"
+        private const val UNIQUE_UPLOAD_WORK_NAME = "upload"
 
         fun observe(context: Context): Flow<SyncState?> =
             WorkManager
                 .getInstance(context)
-                .getWorkInfosForUniqueWorkLiveData(UNIQUE_WORK_NAME)
+                .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
                 .asFlow()
                 .map { list ->
                     list?.find { it.state == WorkInfo.State.RUNNING }
@@ -166,7 +211,7 @@ class SyncService(
         fun cancel(context: Context) {
             WorkManager
                 .getInstance(context)
-                .cancelUniqueWork(UNIQUE_WORK_NAME)
+                .cancelUniqueWork(UNIQUE_SYNC_WORK_NAME)
         }
     }
 

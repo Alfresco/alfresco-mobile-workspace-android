@@ -1,7 +1,6 @@
 package com.alfresco.content.data
 
 import android.content.Context
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.coroutines.asyncMap
@@ -20,9 +19,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             val localEntries = buildLocalList()
             val remoteEntries = buildRemoteList()
             val ops = calculateDiff(localEntries, remoteEntries)
-            val uploadOps = pendingUploads()
-            Log.d("SyncWorker", uploadOps.toString())
-            processOperations(ops + uploadOps)
+            processOperations(ops)
         } catch (_: Exception) {
         }
 
@@ -119,11 +116,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
             (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
 
-    private fun pendingUploads(): List<Operation> =
-        repository.fetchPendingUploads().map {
-            Operation.CreateRemote(it)
-        }
-
     private suspend fun processOperations(operations: List<Operation>) =
         operations.asyncMap(MAX_CONCURRENT_OPERATIONS) {
             when (it) {
@@ -138,9 +130,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                     val local = updateEntryMetadata(it.local, it.remote)
                     // TODO: fix file rename use-case
                     downloadContent(local)
-                }
-                is Operation.CreateRemote -> {
-                    createItem(it.local)
                 }
                 is Operation.Delete -> {
                     removeEntry(it.local)
@@ -202,22 +191,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     private fun typeSupported(entry: Entry) =
         previewRegistry?.isPreviewSupported(entry.mimeType) ?: false
 
-    private suspend fun createItem(entry: Entry) {
-        try {
-            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCING))
-            val file = repository.contentFile(entry)
-            val res = BrowseRepository().createEntry(entry, file)
-            file.delete() // TODO: what if delete fails?
-            repository.updateEntry(
-                entry.copyWithMetadata(res)
-                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
-            )
-        } catch (ex: Exception) {
-            repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.ERROR))
-            Log.e("SyncWorker", ex.toString())
-        }
-    }
-
     companion object {
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_PAGE_SIZE = 100
@@ -232,7 +205,6 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     sealed class Operation {
         class Create(val remote: Entry) : Operation()
-        class CreateRemote(val local: Entry) : Operation()
         class UpdateMetadata(val local: Entry, val remote: Entry) : Operation()
         class UpdateContent(val local: Entry, val remote: Entry) : Operation()
         class Delete(val local: Entry) : Operation()

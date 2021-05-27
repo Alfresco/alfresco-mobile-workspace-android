@@ -83,8 +83,8 @@ class MainActivityViewModel(
         SyncService(context, coroutineScope).also { service ->
             coroutineScope.on<ActionAddOffline> { service.sync() }
             coroutineScope.on<ActionRemoveOffline> { service.sync() }
-            coroutineScope.on<ActionCapturePhoto> { service.sync() }
-            coroutineScope.on<ActionUploadPhoto> { service.sync() }
+            coroutineScope.on<ActionCapturePhoto> { service.upload() }
+            coroutineScope.on<ActionUploadPhoto> { service.upload() }
             coroutineScope.on<ActionSyncNow> { service.syncNow(it.overrideNetwork) }
         }
 
@@ -115,6 +115,7 @@ class MainActivityViewModel(
                     delay(60 * 1000L)
                 }
             }
+            syncService?.uploadIfNeeded()
             syncService?.syncIfNeeded()
         }
     }

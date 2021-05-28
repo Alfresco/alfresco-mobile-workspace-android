@@ -86,6 +86,10 @@ data class BrowseViewState(
         }.distinctBy { if (it.id.isEmpty()) it.boxId else it.id }
     }
 
+    /*
+     * Transforms completed uploads into network items, so further interaction with them
+     * doesn't require special logic.
+     */
     private fun List<Entry>.transformCompletedUploads(): List<Entry> =
         map {
             if (it.isUpload && it.isSynced) {

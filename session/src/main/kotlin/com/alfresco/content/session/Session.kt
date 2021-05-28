@@ -52,6 +52,7 @@ class Session(
 
         if (BuildConfig.DEBUG) {
             loggingInterceptor = HttpLoggingInterceptor().apply {
+                redactHeader("Authorization")
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             }
         }

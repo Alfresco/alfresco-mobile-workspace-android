@@ -22,10 +22,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             private set
 
         fun init(context: Context) {
-            if (!this::boxStore.isInitialized) {
-                boxStore = MyObjectBox.builder()
-                    .androidContext(context)
-                    .build()
+            synchronized(this) {
+                if (!this::boxStore.isInitialized) {
+                    boxStore = MyObjectBox.builder()
+                        .androidContext(context)
+                        .build()
+                }
             }
         }
     }

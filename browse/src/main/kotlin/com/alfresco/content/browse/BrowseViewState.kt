@@ -83,31 +83,7 @@ data class BrowseViewState(
             } else {
                 FilenameComparator.compare(left.name, right.name)
             }
-        }.dedupe { left: Entry, right: Entry ->
-            val same = left.id.compareTo(right.id)
-            if (same == 0) {
-                (left.boxId - right.boxId).toInt()
-            } else {
-                same
-            }
-        }
-    }
-
-    /**
-     * Deduplicate sorted list by comparing neighbors.
-     */
-    private fun <T> List<T>.dedupe(comparator: Comparator<T>): List<T> {
-        var indexSrc = 0
-        var indexDst = -1
-        val dst = mutableListOf<T>()
-        while (indexSrc < this.count()) {
-            if (indexDst == -1 || comparator.compare(this[indexSrc], dst[indexDst]) != 0) {
-                dst.add(this[indexSrc])
-                indexDst++
-            }
-            indexSrc++
-        }
-        return dst
+        }.distinctBy { if (it.id.isEmpty()) it.boxId else it.id }
     }
 
     private fun List<Entry>.transformCompletedUploads(): List<Entry> =

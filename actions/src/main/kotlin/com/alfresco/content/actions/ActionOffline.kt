@@ -15,7 +15,7 @@ data class ActionAddOffline(
     private val repository: OfflineRepository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val res = repository.markOffline(entry)
+        val res = repository.markForSync(entry)
         // return item without status
         return res.copy(offlineStatus = OfflineStatus.UNDEFINED)
     }
@@ -39,7 +39,7 @@ data class ActionRemoveOffline(
     private val repository: OfflineRepository = OfflineRepository()
 
     override suspend fun execute(context: Context) =
-        repository.markForRemoval(entry)
+        repository.removeFromSync(entry)
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 

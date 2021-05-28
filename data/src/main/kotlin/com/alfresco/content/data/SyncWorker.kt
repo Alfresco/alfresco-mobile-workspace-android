@@ -138,10 +138,10 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }
 
     private fun createEntry(entry: Entry) =
-        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.PENDING))
+        repository.update(entry.copy(offlineStatus = OfflineStatus.PENDING))
 
     private fun updateEntryMetadata(local: Entry, remote: Entry) =
-        repository.updateEntry(local.copyWithMetadata(remote))
+        repository.update(local.copyWithMetadata(remote))
 
     private fun removeEntry(entry: Entry): Boolean {
         val dir = repository.contentDir(entry)
@@ -160,15 +160,15 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             try {
                 downloadItem(entry)
                 downloadRendition(entry)
-                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCED))
+                repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCED))
             } catch (_: Exception) {
-                repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.ERROR))
+                repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR))
             }
         }
     }
 
     private suspend fun downloadItem(entry: Entry) {
-        repository.updateEntry(entry.copy(offlineStatus = OfflineStatus.SYNCING))
+        repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
         val outputDir = repository.contentDir(entry)
         outputDir.mkdir()
         val output = File(outputDir, entry.name)

@@ -40,7 +40,7 @@ class OfflineViewModel(
     private fun observeDataChanges(state: OfflineViewState) {
         viewModelScope.launch {
             OfflineRepository()
-                .observeOfflineEntries(state.parentId)
+                .offlineEntries(state.parentId)
                 .execute {
                     if (it is Loading) {
                         copy(request = it)

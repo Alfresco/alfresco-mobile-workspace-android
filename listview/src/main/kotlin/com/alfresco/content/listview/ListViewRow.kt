@@ -96,11 +96,7 @@ class ListViewRow @JvmOverloads constructor(
             OfflineStatus.SYNCING ->
                 Pair(R.drawable.ic_offline_status_in_progress_anim, R.string.offline_status_in_progress)
             OfflineStatus.SYNCED ->
-                if (entry.isUpload) {
-                    Pair(null, null)
-                } else {
-                    Pair(R.drawable.ic_offline_status_synced, null)
-                }
+                Pair(R.drawable.ic_offline_status_synced, null)
             OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
             else ->

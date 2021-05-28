@@ -51,19 +51,13 @@ class OfflineViewModel(
         }
     }
 
-    override fun refresh() = fetch()
-
-    override fun fetchNextPage() = fetch(true)
-
-    private fun fetch(nextPage: Boolean = false) {
-        setState {
-            copy(request = Loading())
-        }
-        setState {
-            val result = OfflineRepository().fetchOfflineEntries(parentId)
-            update(result).copy(request = Success(result))
-        }
+    override fun refresh() = withState {
+        // Faking a refresh since changes are updated via [observeDataChanges]
+        setState { copy(request = Loading()) }
+        setState { copy(request = it.request) }
     }
+
+    override fun fetchNextPage() = Unit
 
     override fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int> =
         Triple(R.drawable.ic_empty_offline, R.string.offline_empty_title, R.string.offline_empty_message)

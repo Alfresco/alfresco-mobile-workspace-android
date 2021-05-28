@@ -32,12 +32,14 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         }
     }
 
+    private val box: Box<Entry>
+
     init {
         ObjectBox.init(session.context)
+        box = ObjectBox.boxStore.boxFor()
     }
 
     fun entry(id: String): Entry? {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .equal(Entry_.id, id)
             .build()
@@ -52,13 +54,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     fun remove(entry: Entry) =
         entry.let {
-            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
             box.remove(it)
         }
 
     fun updateEntry(entry: Entry) =
         entry.also {
-            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
             box.put(it)
         }
 
@@ -100,7 +100,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private fun offlineEntriesQuery(parentId: String?): Query<Entry> {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         var query = box.query()
         query = if (parentId != null) {
             query.equal(Entry_.parentId, parentId)
@@ -112,7 +111,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun fetchTopLevelOfflineEntries(): List<Entry> {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .equal(Entry_.isOffline, true)
             .build()
@@ -120,7 +118,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun fetchAllOfflineEntries(): List<Entry> {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
             .equal(Entry_.isUpload, false)
@@ -129,7 +126,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun fetchOfflineEntry(target: Entry): Entry? {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .equal(Entry_.id, target.id)
             .build()
@@ -200,7 +196,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun fetchPendingUploads(): List<Entry> {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .equal(Entry_.isUpload, true)
             .notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value())
@@ -210,7 +205,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     fun observeUploads(parentId: String): Flow<List<Entry>> =
         callbackFlow {
-            val box: Box<Entry> = ObjectBox.boxStore.boxFor()
             val query = box.query()
                 .equal(Entry_.parentId, parentId)
                 .equal(Entry_.isUpload, true)
@@ -224,7 +218,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         }
 
     fun removeUpload(id: String) {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         box.query()
             .equal(Entry_.id, id)
             .equal(Entry_.isUpload, true)
@@ -233,7 +226,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     fun removeCompletedUploads(parentId: String? = null) {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query()
             .equal(Entry_.isUpload, true)
             .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value())
@@ -266,7 +258,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private fun removeAllEntries() {
-        val box: Box<Entry> = ObjectBox.boxStore.boxFor()
         val query = box.query().build()
         query.remove()
     }

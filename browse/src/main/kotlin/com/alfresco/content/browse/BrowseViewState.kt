@@ -40,27 +40,39 @@ data class BrowseViewState(
         val nextPage = response.pagination.skipCount > 0
         val pageEntries = response.entries
         val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
-        val mergedEntries = mergeInUploads(newEntries, uploads, !response.pagination.hasMoreItems)
-        val baseEntries = mergedEntries.filter { !it.isUpload }
 
-        return copyUpdatingEntries(mergedEntries).copy(baseEntries = baseEntries, hasMoreItems = response.pagination.hasMoreItems)
+        return copyIncludingUploads(newEntries, uploads, response.pagination.hasMoreItems)
     }
 
-    fun updateUploads(entries: List<Entry>): BrowseViewState {
+    fun updateUploads(uploads: List<Entry>): BrowseViewState {
         // Merge data only after at least the first page loaded
         // [parent] is a good enough flag for the initial load.
         return if (parent != null) {
-            val mergedEntries = mergeInUploads(baseEntries, entries, !hasMoreItems)
-            val base = mergedEntries.filter { !it.isUpload }
-            copyUpdatingEntries(mergedEntries).copy(baseEntries = base)
+            copyIncludingUploads(baseEntries, uploads, hasMoreItems)
         } else {
-            this
-        }.copy(uploads = entries)
+            copy(uploads = uploads)
+        }
+    }
+
+    private fun copyIncludingUploads(
+        entries: List<Entry>,
+        uploads: List<Entry>,
+        hasMoreItems: Boolean
+    ): BrowseViewState {
+        val mixedUploads = uploads.transformCompletedUploads()
+        val mergedEntries = mergeInUploads(entries, mixedUploads, !hasMoreItems)
+        val baseEntries = mergedEntries.filter { !it.isUpload }
+
+        return copyUpdatingEntries(mergedEntries)
+            .copy(
+                baseEntries = baseEntries,
+                uploads = uploads,
+                hasMoreItems = hasMoreItems
+            )
     }
 
     private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
-        val newUploads = uploads.transformCompletedUploads()
-        return merge(base, newUploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
+        return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
             if (left.isFolder || right.isFolder) {
                 val cmp = right.isFolder.compareTo(left.isFolder)
                 if (cmp == 0) {
@@ -166,15 +178,19 @@ data class BrowseViewState(
 
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 
-    override fun copyRemoving(entry: Entry): ListViewState {
-        val newEntries = baseEntries.filter { it.id != entry.id }
-        return copyUpdatingEntries(newEntries).copy(baseEntries = newEntries)
-    }
+    override fun copyRemoving(entry: Entry): ListViewState =
+        copyIncludingUploads(
+            baseEntries.filter { it.id != entry.id },
+            uploads,
+            hasMoreItems
+        )
 
-    override fun copyUpdating(entry: Entry): ListViewState {
-        val newEntries = baseEntries.replace(entry) { it.id == entry.id }
-        return copyUpdatingEntries(newEntries).copy(baseEntries = newEntries)
-    }
+    override fun copyUpdating(entry: Entry): ListViewState =
+        copyIncludingUploads(
+            baseEntries.replace(entry) { it.id == entry.id },
+            uploads,
+            hasMoreItems
+        )
 
     enum class ModifiedGroup {
         Today,

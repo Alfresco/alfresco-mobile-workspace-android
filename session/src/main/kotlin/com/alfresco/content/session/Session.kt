@@ -10,6 +10,7 @@ import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
 import java.io.File
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
@@ -20,7 +21,7 @@ class Session(
     var ticket: String? = null
 
     private var authInterceptor: AuthInterceptor
-    private var loggingInterceptor: HttpLoggingInterceptor
+    private var loggingInterceptor: HttpLoggingInterceptor? = null
     private var onSignedOut: (() -> Unit)? = null
 
     init {
@@ -49,16 +50,18 @@ class Session(
             }
         })
 
-        loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level =
-            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        if (BuildConfig.DEBUG) {
+            loggingInterceptor = HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
+        }
 
         val imageLoader = ImageLoader.Builder(context)
             .crossfade(true)
             .okHttpClient {
                 OkHttpClient.Builder()
                     .addInterceptor(authInterceptor)
-                    .addInterceptor(loggingInterceptor)
+                    .addOptionalInterceptor(loggingInterceptor)
                     .cache(CoilUtils.createDefaultCache(context))
                     .build()
             }
@@ -72,7 +75,7 @@ class Session(
         val okHttpClient: OkHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(authInterceptor)
-            .addInterceptor(loggingInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
             .build()
 
         val retrofit = Retrofit.Builder()
@@ -82,6 +85,9 @@ class Session(
             .build()
         return retrofit.create(service)
     }
+
+    private fun OkHttpClient.Builder.addOptionalInterceptor(interceptor: Interceptor?) =
+        if (interceptor != null) addInterceptor(interceptor) else this
 
     fun onSignedOut(callback: () -> Unit) {
         onSignedOut = callback

@@ -11,7 +11,6 @@ import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
 import java.io.File
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 class Session(

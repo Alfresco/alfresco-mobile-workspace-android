@@ -1,5 +1,6 @@
 package com.alfresco.download
 
+import com.alfresco.Logger
 import java.io.File
 import java.io.IOException
 import kotlin.coroutines.resumeWithException
@@ -22,6 +23,7 @@ object ContentDownloader {
     const val FILE_PROVIDER_AUTHORITY = "com.alfresco.content.fileprovider"
 
     suspend fun downloadFileTo(uri: String, outputPath: String) {
+        Logger.d("Downloading: $uri to: $outputPath")
         val req = Request.Builder().get().url(uri).build()
         val client = OkHttpClient()
         client.newCall(req).downloadAndSaveTo(File(outputPath))

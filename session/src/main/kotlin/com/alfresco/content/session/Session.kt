@@ -1,10 +1,10 @@
 package com.alfresco.content.session
 
 import android.content.Context
-import android.util.Log
 import coil.Coil
 import coil.ImageLoader
 import coil.util.CoilUtils
+import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
@@ -37,14 +37,14 @@ class Session(
 
         authInterceptor.setListener(object : AuthInterceptor.Listener {
             override fun onAuthFailure(accountId: String) {
-                Log.d("Session", "onAuthFailure")
+                Logger.d("onAuthFailure")
                 if (onSignedOut != null) {
                     onSignedOut?.invoke()
                 }
             }
 
             override fun onAuthStateChange(accountId: String, authState: String) {
-                Log.d("Session", "onAuthStateChange")
+                Logger.d("onAuthStateChange")
                 Account.update(context, accountId, authState)
                 this@Session.account = Account.getAccount(context)!!
             }

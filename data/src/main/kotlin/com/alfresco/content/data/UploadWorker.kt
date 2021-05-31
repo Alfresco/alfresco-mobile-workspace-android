@@ -1,9 +1,9 @@
 package com.alfresco.content.data
 
 import android.content.Context
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
 import java.lang.Exception
 
@@ -39,7 +39,7 @@ class UploadWorker(
             true
         } catch (ex: Exception) {
             repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR))
-            Log.e("SyncWorker", ex.toString())
+            Logger.e(ex)
             false
         }
     }

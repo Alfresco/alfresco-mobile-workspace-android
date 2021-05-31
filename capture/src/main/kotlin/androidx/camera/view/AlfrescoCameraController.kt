@@ -3,7 +3,6 @@ package androidx.camera.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.OptIn
 import androidx.annotation.RequiresPermission
@@ -14,6 +13,7 @@ import androidx.camera.core.CameraSelector.LensFacing
 import androidx.camera.core.impl.utils.Threads
 import androidx.camera.lifecycle.ExperimentalUseCaseGroupLifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.alfresco.Logger
 
 @SuppressLint("RestrictedApi")
 class AlfrescoCameraController(context: Context) :
@@ -64,11 +64,11 @@ class AlfrescoCameraController(context: Context) :
     @RequiresPermission(Manifest.permission.CAMERA)
     override fun startCamera(): Camera? {
         if (mLifecycleOwner == null) {
-            Log.d(TAG, "Lifecycle is not set.")
+            Logger.d("Lifecycle is not set.")
             return null
         }
         if (mCameraProvider == null) {
-            Log.d(TAG, "CameraProvider is not ready.")
+            Logger.d("CameraProvider is not ready.")
             return null
         }
         val useCaseGroup = createUseCaseGroup() // Use cases can't be created.

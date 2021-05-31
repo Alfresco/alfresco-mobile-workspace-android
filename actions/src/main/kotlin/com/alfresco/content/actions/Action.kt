@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
+import com.alfresco.Logger
 import com.alfresco.content.data.Entry
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
@@ -37,6 +38,7 @@ interface Action {
         } catch (ex: SocketTimeoutException) {
             bus.send(Error(context.getString(R.string.action_timeout_error)))
         } catch (ex: kotlin.Exception) {
+            Logger.e(ex)
             bus.send(Error(context.getString(R.string.action_generic_error)))
         }
     }

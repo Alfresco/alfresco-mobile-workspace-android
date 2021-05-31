@@ -3,6 +3,7 @@ package com.alfresco.content.data
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
 import com.alfresco.download.ContentDownloader
 import java.io.File
@@ -20,7 +21,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             val remoteEntries = buildRemoteList()
             val ops = calculateDiff(localEntries, remoteEntries)
             processOperations(ops)
-        } catch (_: Exception) {
+        } catch (ex: Exception) {
+            Logger.e(ex)
         }
 
         // Always return success so we don't cancel APPEND work

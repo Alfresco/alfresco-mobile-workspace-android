@@ -3,6 +3,7 @@ package com.alfresco.content.app
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.airbnb.mvrx.Mavericks
+import com.alfresco.Logger
 import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.network.ConnectivityTracker
@@ -21,6 +22,8 @@ class AlfrescoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Logger.init(BuildConfig.DEBUG)
 
         ViewerRegistry.setup()
         SyncWorker.use(ViewerRegistry)

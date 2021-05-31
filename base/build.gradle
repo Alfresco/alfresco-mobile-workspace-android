@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation libs.coroutines.core
     implementation libs.androidx.lifecycle.livedata
+    implementation libs.timber
 }

@@ -110,7 +110,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
         val imageLoader = ImageLoader.Builder(requireContext())
             .componentRegistry {
                 if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder())
+                    add(ImageDecoderDecoder(context))
                 } else {
                     add(GifDecoder())
                 }

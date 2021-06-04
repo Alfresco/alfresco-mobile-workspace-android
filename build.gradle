@@ -33,7 +33,7 @@ allprojects {
     }
 }
 
-def dependencyToString(dependency) {
+static def dependencyToString(dependency) {
     return "${dependency.module}:${dependency.versionConstraint.requiredVersion}"
 }
 

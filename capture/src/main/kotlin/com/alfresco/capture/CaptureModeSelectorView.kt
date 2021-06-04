@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.alfresco.Logger
 
 class CaptureModeSelectorView(
     context: Context,
@@ -34,7 +33,6 @@ class CaptureModeSelectorView(
         }
     var onMode: ((CaptureMode) -> Unit)? = null
     private val recyclerView = createRecyclerView()
-
 
     init {
         addView(recyclerView)
@@ -122,7 +120,7 @@ class CaptureModeSelectorView(
         init {
             gravity = Gravity.CENTER
             val pad = resources.getDimension(R.dimen.capture_button_padding).toInt()
-            setPadding(pad, 0 ,pad, 0)
+            setPadding(pad, 0, pad, 0)
         }
     }
 
@@ -174,7 +172,7 @@ class CaptureModeSelectorView(
     private inner class OnSnapScrollListener(
         private val snapHelper: SnapHelper,
         val onSnap: (Int) -> Unit
-    ): RecyclerView.OnScrollListener() {
+    ) : RecyclerView.OnScrollListener() {
         private var snapPosition = RecyclerView.NO_POSITION
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -186,7 +184,6 @@ class CaptureModeSelectorView(
                     this.snapPosition = snapPosition
                 }
             }
-
         }
     }
 

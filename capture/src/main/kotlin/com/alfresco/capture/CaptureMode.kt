@@ -7,7 +7,7 @@ enum class CaptureMode {
     Video;
 
     fun title(context: Context) =
-        when(this) {
+        when (this) {
             Photo -> context.getString(R.string.capture_mode_photo)
             Video -> context.getString(R.string.capture_mode_video)
         }

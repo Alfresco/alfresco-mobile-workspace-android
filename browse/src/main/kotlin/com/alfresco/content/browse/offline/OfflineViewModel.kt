@@ -3,7 +3,6 @@ package com.alfresco.content.browse.offline
 import android.content.Context
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
-import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.OfflineRepository

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.channelFlow
 fun <T> LiveData<T>.asFlow() =
     channelFlow {
         send(this@asFlow.value)
-        val observer = Observer<T> { t -> offer(t) }
+        val observer = Observer<T> { t -> trySend(t) }
         observeForever(observer)
         awaitClose {
             removeObserver(observer)

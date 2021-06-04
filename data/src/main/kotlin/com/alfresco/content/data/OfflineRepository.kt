@@ -10,7 +10,7 @@ import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import java.io.File
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -61,7 +61,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         val subscription = query.subscribe()
             .observer { data ->
                 val count = data.count().toLong()
-                sendBlocking(
+                trySendBlocking(
                     ResponsePaging(
                         data,
                         Pagination(
@@ -185,7 +185,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 .build()
             val subscription = query.subscribe()
                 .observer {
-                    sendBlocking(it)
+                    trySendBlocking(it)
                 }
             awaitClose { subscription.cancel() }
         }

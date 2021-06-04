@@ -123,33 +123,16 @@
             app:srcCompat="@drawable/ic_switch" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_bar"
+    <FrameLayout
+        android:id="@+id/mode_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:visibility="gone">
+        android:paddingVertical="12dp">
 
-        <Button
-            style="@style/Widget.Alfresco.Camera.Button"
-            android:id="@+id/photo_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/capture_button_size"
-            android:text="Photo"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <com.alfresco.capture.CaptureModeSelectorView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <Button
-            style="@style/Widget.Alfresco.Camera.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/capture_button_size"
-            android:layout_marginStart="8dp"
-            android:text="Video"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/photo_mode"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
 </com.alfresco.capture.CameraLayout>

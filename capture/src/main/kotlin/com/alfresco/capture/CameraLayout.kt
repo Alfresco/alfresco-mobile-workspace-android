@@ -69,7 +69,7 @@ class CameraLayout(
         previewHolder = findViewById(R.id.preview_holder)
         onFrameControls = findViewById(R.id.on_frame_controls)
         shutterBar = findViewById(R.id.shutter_bar)
-        modeBar = findViewById(R.id.bottom_bar)
+        modeBar = findViewById(R.id.mode_bar)
 
         viewFinder = findViewById(R.id.view_finder)
         focusView = findViewById(R.id.focus_view)
@@ -90,6 +90,7 @@ class CameraLayout(
         flashButton.isVisible = false
         flashMenu.isVisible = false
         messageView.isVisible = false
+        modeBar.isVisible = BuildConfig.DEBUG
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

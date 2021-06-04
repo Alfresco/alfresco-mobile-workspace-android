@@ -6,6 +6,9 @@
     <string name="gallery_button_alt">Gallery</string>
     <string name="flash_button_alt">Flash mode</string>
 
+    <string name="capture_mode_photo">Photo</string>
+    <string name="capture_mode_video">Video</string>
+
     <string name="capture_photo_preview_alt">Photo preview</string>
     <string name="capture_file_name_hint">File name</string>
     <string name="capture_description_hint">Add description</string>

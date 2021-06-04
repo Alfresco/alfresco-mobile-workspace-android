@@ -54,6 +54,7 @@ data class Entry(
     val isPartial: Boolean = false,
     @Transient
     val isFavorite: Boolean = false,
+    @Transient
     val canDelete: Boolean = false,
     @Transient
     val canCreate: Boolean = false,

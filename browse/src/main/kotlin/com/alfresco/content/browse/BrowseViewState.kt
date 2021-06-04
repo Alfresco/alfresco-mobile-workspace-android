@@ -93,7 +93,8 @@ data class BrowseViewState(
     private fun List<Entry>.transformCompletedUploads(): List<Entry> =
         map {
             if (it.isUpload && it.isSynced) {
-                it.copy(isUpload = false, offlineStatus = OfflineStatus.UNDEFINED)
+                // Marking as partial avoids needing to store allowableOperations
+                it.copy(isUpload = false, offlineStatus = OfflineStatus.UNDEFINED, isPartial = true)
             } else {
                 it
             }

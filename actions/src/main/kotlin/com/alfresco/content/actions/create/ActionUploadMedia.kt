@@ -11,7 +11,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-data class ActionUploadPhoto(
+data class ActionUploadMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload_photo,
     override val title: Int = R.string.action_upload_photo_title

@@ -52,8 +52,8 @@ class ActionCreateViewModel(
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
 
-        actions.add(ActionUploadPhoto(parent))
-        actions.add(ActionCapturePhoto(parent))
+        actions.add(ActionUploadMedia(parent))
+        actions.add(ActionCaptureMedia(parent))
 
         return actions
     }

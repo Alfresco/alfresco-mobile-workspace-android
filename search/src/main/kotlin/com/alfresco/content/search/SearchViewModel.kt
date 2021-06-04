@@ -16,10 +16,8 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import java.util.concurrent.CancellationException
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -69,8 +67,8 @@ class SearchViewModel(
     state: SearchResultsState,
     private val repository: SearchRepository
 ) : ListViewModel<SearchResultsState>(state) {
-    private val liveSearchEvents = ConflatedBroadcastChannel<SearchParams>()
-    private val searchEvents = ConflatedBroadcastChannel<SearchParams>()
+    private val liveSearchEvents: MutableStateFlow<SearchParams>
+    private val searchEvents: MutableStateFlow<SearchParams>
     private var params: SearchParams
 
     init {
@@ -78,11 +76,13 @@ class SearchViewModel(
 
         // TODO: move search params to state object
         params = SearchParams("", state.contextId, defaultFilters(state), 0)
+        liveSearchEvents = MutableStateFlow(params)
+        searchEvents = MutableStateFlow(params)
 
         viewModelScope.launch {
             merge(
-                liveSearchEvents.asFlow().debounce(DEFAULT_DEBOUNCE_TIME),
-                searchEvents.asFlow()
+                liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
+                searchEvents
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({ repository.search(it.terms, it.contextId, it.filters, it.skipCount, it.maxItems) }) {
@@ -129,7 +129,7 @@ class SearchViewModel(
 
     fun setSearchQuery(query: String) {
         params = params.copy(terms = query, skipCount = 0)
-        liveSearchEvents.sendBlocking(params)
+        liveSearchEvents.value = params
     }
 
     fun getSearchQuery(): String {
@@ -150,13 +150,13 @@ class SearchViewModel(
 
     override fun refresh() {
         params = params.copy(skipCount = 0)
-        searchEvents.sendBlocking(params)
+        searchEvents.value = params
     }
 
     override fun fetchNextPage() {
         withState {
             params = params.copy(skipCount = it.entries.count())
-            searchEvents.sendBlocking(params)
+            searchEvents.value = params
         }
     }
 

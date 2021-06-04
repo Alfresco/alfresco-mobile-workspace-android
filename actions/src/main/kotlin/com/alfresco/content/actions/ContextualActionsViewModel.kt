@@ -15,10 +15,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class ActionListViewModel(
-    state: ActionListState,
+internal class ContextualActionsViewModel(
+    state: ContextualActionsState,
     val context: Context
-) : MavericksViewModel<ActionListState>(state) {
+) : MavericksViewModel<ContextualActionsState>(state) {
 
     init {
         buildModel()
@@ -37,9 +37,9 @@ class ActionListViewModel(
                 fetchEntry(state.entry).execute {
                     when (it) {
                         is Success ->
-                            ActionListState(it(), makeActions(it()), makeTopActions(it()), it)
+                            ContextualActionsState(it(), makeActions(it()), makeTopActions(it()), it)
                         is Fail ->
-                            ActionListState(state.entry, makeActions(entry), makeTopActions(entry), it)
+                            ContextualActionsState(state.entry, makeActions(entry), makeTopActions(entry), it)
                         else ->
                             copy(fetch = it)
                     }
@@ -52,7 +52,7 @@ class ActionListViewModel(
 
     private fun updateState(action: Action) {
         setState {
-            ActionListState(
+            ContextualActionsState(
                 action.entry,
                 makeActions(action.entry),
                 makeTopActions(action.entry)
@@ -142,12 +142,12 @@ class ActionListViewModel(
         return actions
     }
 
-    companion object : MavericksViewModelFactory<ActionListViewModel, ActionListState> {
+    companion object : MavericksViewModelFactory<ContextualActionsViewModel, ContextualActionsState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ActionListState
+            state: ContextualActionsState
         ) =
             // Requires activity context in order to present other fragments
-            ActionListViewModel(state, viewModelContext.activity())
+            ContextualActionsViewModel(state, viewModelContext.activity())
     }
 }

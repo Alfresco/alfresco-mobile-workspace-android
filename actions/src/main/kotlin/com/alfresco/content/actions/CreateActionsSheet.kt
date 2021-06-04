@@ -1,4 +1,4 @@
-package com.alfresco.content.actions.create
+package com.alfresco.content.actions
 
 import android.content.Context
 import android.os.Bundle
@@ -14,22 +14,19 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.BuildConfig
-import com.alfresco.content.actions.actionListRow
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.ui.BottomSheetDialogFragment
 import kotlinx.coroutines.GlobalScope
 
-data class ActionCreateState(
+internal data class ActionCreateState(
     val parent: Entry,
     val actions: List<Action> = emptyList()
 ) : MavericksState {
     constructor(target: Entry) : this(parent = target)
 }
 
-class ActionCreateViewModel(
+internal class ActionCreateViewModel(
     val context: Context,
     state: ActionCreateState
 ) : MavericksViewModel<ActionCreateState>(state) {
@@ -51,7 +48,7 @@ class ActionCreateViewModel(
 
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
-
+        
         actions.add(ActionUploadMedia(parent))
         actions.add(ActionCaptureMedia(parent))
 
@@ -66,7 +63,7 @@ class ActionCreateViewModel(
     }
 }
 
-class ActionSheet : BottomSheetDialogFragment(), MavericksView {
+class CreateActionsSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ActionCreateViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionCreateBinding
 
@@ -96,7 +93,7 @@ class ActionSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     companion object {
-        fun with(entry: Entry) = ActionSheet().apply {
+        fun with(entry: Entry) = CreateActionsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
     }

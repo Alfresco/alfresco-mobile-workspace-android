@@ -1,12 +1,10 @@
-package com.alfresco.content.actions.create
+package com.alfresco.content.actions
 
 import android.Manifest
 import android.content.Context
 import android.view.View
 import com.alfresco.capture.CaptureHelperFragment
 import com.alfresco.content.PermissionFragment
-import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import kotlin.coroutines.cancellation.CancellationException

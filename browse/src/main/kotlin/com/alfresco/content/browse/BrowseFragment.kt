@@ -14,7 +14,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.create.ActionSheet
+import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
@@ -111,7 +111,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
 
     private fun showCreateSheet() = withState(viewModel) {
-        ActionSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
+        CreateActionsSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
     }
 
     companion object {

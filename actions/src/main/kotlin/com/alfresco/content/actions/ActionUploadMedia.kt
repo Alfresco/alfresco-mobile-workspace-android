@@ -1,10 +1,8 @@
-package com.alfresco.content.actions.create
+package com.alfresco.content.actions
 
 import android.content.Context
 import android.view.View
 import com.alfresco.content.ContentPickerFragment
-import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import kotlinx.coroutines.CancellationException

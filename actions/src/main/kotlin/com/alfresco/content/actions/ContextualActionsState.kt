@@ -5,7 +5,7 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 
-data class ActionListState(
+data class ContextualActionsState(
     val entry: Entry,
     val actions: List<Action> = emptyList(),
     val topActions: List<Action> = emptyList(),

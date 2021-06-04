@@ -15,8 +15,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.ui.BottomSheetDialogFragment
 
-class ActionListSheet : BottomSheetDialogFragment(), MavericksView {
-    private val viewModel: ActionListViewModel by fragmentViewModel()
+class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
+    private val viewModel: ContextualActionsViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionListBinding
 
     override fun onCreateView(
@@ -58,7 +58,7 @@ class ActionListSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     companion object {
-        fun with(entry: Entry) = ActionListSheet().apply {
+        fun with(entry: Entry) = ContextualActionsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
     }

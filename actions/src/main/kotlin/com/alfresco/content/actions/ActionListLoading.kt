@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.ModelView
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
-class ActionListLoading @JvmOverloads constructor(
+internal class ActionListLoading @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

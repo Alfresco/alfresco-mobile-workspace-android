@@ -21,9 +21,9 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionDelete
-import com.alfresco.content.actions.ActionListSheet
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
+import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
@@ -198,6 +198,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
     abstract fun onItemClicked(entry: Entry)
 
     open fun onItemMoreClicked(entry: Entry) {
-        ActionListSheet.with(entry).show(childFragmentManager, null)
+        ContextualActionsSheet.with(entry).show(childFragmentManager, null)
     }
 }

@@ -1,4 +1,3 @@
-
 package com.alfresco.content.actions
 
 import android.os.Bundle
@@ -16,8 +15,8 @@ import com.alfresco.events.on
 import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
 
-class ActionBarFragment : Fragment(), MavericksView {
-    private val viewModel: ActionListViewModel by fragmentViewModel()
+class ContextualActionsBarFragment : Fragment(), MavericksView {
+    private val viewModel: ContextualActionsViewModel by fragmentViewModel()
     private lateinit var view: LinearLayout
 
     override fun onCreateView(
@@ -94,7 +93,7 @@ class ActionBarFragment : Fragment(), MavericksView {
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
                 withState(viewModel) {
-                    ActionListSheet.with(it.entry).show(childFragmentManager, null)
+                    ContextualActionsSheet.with(it.entry).show(childFragmentManager, null)
                 }
             }
         }

@@ -11,10 +11,10 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddOffline
+import com.alfresco.content.actions.ActionCaptureMedia
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionSyncNow
-import com.alfresco.content.actions.create.ActionCaptureMedia
-import com.alfresco.content.actions.create.ActionUploadMedia
+import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository

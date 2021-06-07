@@ -1,5 +1,6 @@
 package com.alfresco.capture
 
+import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
@@ -38,5 +39,22 @@ class CaptureHelperFragment : Fragment() {
                 { it.capturePhoto() },
                 { CaptureHelperFragment() }
             )
+
+        fun requiredPermissions() =
+            if (BuildConfig.DEBUG) {
+                listOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                )
+            } else {
+                listOf(Manifest.permission.CAMERA)
+            }
+
+        fun permissionRationale(context: Context) =
+            context.getString(if (BuildConfig.DEBUG) {
+                R.string.capture_permissions_rationale
+            } else {
+                R.string.deprecated_capture_permissions_rationale
+            })
     }
 }

@@ -30,7 +30,8 @@ data class ActionDownload(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
             PermissionFragment.requestPermission(
                 context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                context.resources.getString(R.string.action_download_storage_permission_rationale)
             )) {
             if (entry.isSynced) {
                 exportFile(context)

@@ -1,6 +1,5 @@
 package com.alfresco.content.actions
 
-import android.Manifest
 import android.content.Context
 import android.view.View
 import com.alfresco.capture.CaptureHelperFragment
@@ -12,15 +11,16 @@ import kotlin.coroutines.cancellation.CancellationException
 data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
-    override val title: Int = R.string.action_capture_photo_title
+    override val title: Int = if (BuildConfig.DEBUG) R.string.action_capture_media_title else R.string.deprecated_action_capture_photo_title
 ) : Action {
 
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        if (PermissionFragment.requestPermission(
+        if (PermissionFragment.requestPermissions(
                 context,
-                Manifest.permission.CAMERA
+                CaptureHelperFragment.requiredPermissions(),
+                CaptureHelperFragment.permissionRationale(context)
             )) {
             val item = CaptureHelperFragment.capturePhoto(context)
             if (item != null) {
@@ -35,7 +35,11 @@ data class ActionCaptureMedia(
                 throw CancellationException("User Cancellation")
             }
         } else {
-            throw Action.Exception(context.resources.getString(R.string.action_capture_failed_permissions))
+            throw Action.Exception(context.resources.getString(if (BuildConfig.DEBUG) {
+                R.string.action_capture_failed_permissions
+            } else {
+                R.string.deprecated_action_capture_failed_permissions
+            }))
         }
 
         return entry

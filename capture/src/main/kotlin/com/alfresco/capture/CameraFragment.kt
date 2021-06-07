@@ -1,6 +1,5 @@
 package com.alfresco.capture
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -112,7 +111,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private suspend fun updateCameraState() {
-        if (PermissionFragment.requestPermission(requireContext(), Manifest.permission.CAMERA)) {
+        if (PermissionFragment.requestPermissions(
+                requireContext(),
+                CaptureHelperFragment.requiredPermissions(),
+                CaptureHelperFragment.permissionRationale(requireContext())
+            )
+        ) {
             if (cameraController == null) {
                 setUpCamera()
             }
@@ -123,7 +127,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 layout.viewFinder.controller = null
                 cameraController = null
             }
-            layout.messageView.text = resources.getString(R.string.capture_failure_permissions)
+            layout.messageView.text = resources.getString(if (BuildConfig.DEBUG) R.string.capture_failure_permissions else R.string.deprecated_capture_failure_permissions)
             layout.messageView.isVisible = true
             layout.viewFinder.isVisible = false
         }

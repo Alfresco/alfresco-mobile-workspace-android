@@ -23,5 +23,8 @@
     <string name="camera_flash_on">On</string>
     <string name="camera_flash_off">Off</string>
 
-    <string name="capture_failure_permissions">To capture photos, turn on Camera permission.</string>
+    <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
+    <string name="deprecated_capture_permissions_rationale">@string/deprecated_capture_failure_permissions</string>
+    <string name="capture_failure_permissions">To capture media, turn on Camera and Microphone permissions.</string>
+    <string name="deprecated_capture_failure_permissions">To capture photos, turn on Camera permission.</string>
 </resources>

@@ -3,10 +3,14 @@ package com.alfresco.content
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import java.lang.ClassCastException
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 
+/**
+ * Calls the specified [lambda] with the a [F] fragment as the receiver and returns its result.
+ * Uses [F] fragment from the current fragment manager if available or creates one using [factory].
+ */
 suspend fun <F : Fragment, R> withFragment(
     context: Context,
     tag: String,
@@ -14,10 +18,10 @@ suspend fun <F : Fragment, R> withFragment(
     factory: () -> F
 ): R =
     lambda(suspendCancellableCoroutine { continuation ->
-        findPermissionFragment(context, tag, continuation, factory)
+        findFragmentAndResume(context, tag, continuation, factory)
     })
 
-private fun <F : Fragment> findPermissionFragment(
+private fun <F : Fragment> findFragmentAndResume(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,
@@ -26,7 +30,12 @@ private fun <F : Fragment> findPermissionFragment(
     val fragmentManager = when (context) {
         is AppCompatActivity -> context.supportFragmentManager
         is Fragment -> context.childFragmentManager
-        else -> throw CancellationException("Context needs to be either AppCompatActivity or Fragment", ClassCastException())
+        else -> null
+    }
+
+    if (fragmentManager == null) {
+        continuation.cancel(ClassCastException())
+        return
     }
 
     var fragment = fragmentManager.findFragmentByTag(tag)

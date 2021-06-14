@@ -128,55 +128,47 @@ class CameraLayout(
         val height = bottom - top
 
         val topHeight = topBar.measuredHeight
-        val finderHeight = previewHolder.measuredHeight
         val shutterHeight = shutterBar.measuredHeight
-        val modeHeight = modeBar.measuredHeight
+        var modeHeight = modeBar.measuredHeight
 
         val topGuide: Int
         val finderGuide: Int
         val shutterGuide: Int
         val modeGuide: Int
 
+        val expandedFinder = min(height, (width * CaptureMode.RATIO_16_9).toInt())
+        val compactFinder = min(height, (width * CaptureMode.RATIO_4_3).toInt())
+        val currentFinder = min(height, (width * aspectRatio).toInt())
+        val finderDiff = expandedFinder - compactFinder
+
+        // Calculate layout in expanded viewfinder size, and then redistribute elements
+        // to avoid moving them when switching between modes.
         when {
-            // All elements fit vertically
-            topHeight + finderHeight + shutterHeight + modeHeight <= height -> {
-                val offset = (height - (topHeight + finderHeight + shutterHeight + modeHeight)) / 2
-                topGuide = offset
-                finderGuide = topGuide + topHeight
-                shutterGuide = finderGuide + finderHeight
-                modeGuide = shutterGuide + shutterHeight
-            }
+            // The top bar fits vertically outside the viewfinder
+            topHeight + expandedFinder <= height -> {
+                modeHeight += max(0, finderDiff - (shutterHeight + modeHeight))
 
-            // All elements except the shutter fit vertically
-            topHeight + finderHeight + modeHeight <= height -> {
-                val offset = (height - (topHeight + finderHeight + modeHeight)) / 2
+                val offset = (height - (topHeight + expandedFinder)) / 2
                 topGuide = offset
                 finderGuide = topGuide + topHeight
-                shutterGuide = finderGuide + finderHeight - shutterHeight
-                modeGuide = finderGuide + finderHeight
-            }
-
-            // Only the top bar and finder fit vertically
-            topHeight + finderHeight <= height -> {
-                val offset = (height - (topHeight + finderHeight)) / 2
-                topGuide = offset
-                finderGuide = topGuide + topHeight
-                modeGuide = finderGuide + finderHeight - modeHeight
+                modeGuide = finderGuide + expandedFinder - modeHeight
                 shutterGuide = modeGuide - shutterHeight
             }
 
-            // Overlay everything on top of the finder
+            // The top bar overlays the viewfinder
             else -> {
-                val offset = (height - finderHeight) / 2
+                modeHeight += max(0, finderDiff - shutterHeight - modeHeight)
+
+                val offset = (height - expandedFinder) / 2
                 topGuide = offset
                 finderGuide = offset
-                modeGuide = finderGuide + finderHeight - modeHeight
+                modeGuide = finderGuide + expandedFinder - modeHeight
                 shutterGuide = modeGuide - shutterHeight
             }
         }
 
         topBar.layout(0, topGuide, width, topGuide + topHeight)
-        previewHolder.layout(0, finderGuide, width, finderGuide + finderHeight)
+        previewHolder.layout(0, finderGuide, width, finderGuide + currentFinder)
         shutterBar.layout(0, shutterGuide, width, shutterGuide + shutterHeight)
         onFrameControls.layout(0, topGuide + topHeight, width, shutterGuide)
         modeBar.layout(0, modeGuide, width, modeGuide + modeHeight)

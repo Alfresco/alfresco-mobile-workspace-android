@@ -48,5 +48,5 @@ data class ActionCaptureMedia(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_capture_photo_toast)
+        Action.showToast(view, anchorView, R.string.action_upload_media_toast)
 }

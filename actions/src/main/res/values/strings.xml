@@ -40,7 +40,7 @@
     <string name="deprecated_action_capture_photo_title">Take a photo</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
     <string name="deprecated_action_capture_failed_permissions">@string/deprecated_capture_failure_permissions</string>
+    
+    <string name="action_upload_media_toast">Media scheduled for upload.</string>
 
-    <string name="action_capture_photo_toast">Photo scheduled for upload.</string>
-    <string name="action_upload_photo_toast">Media scheduled for upload.</string>
 </resources>

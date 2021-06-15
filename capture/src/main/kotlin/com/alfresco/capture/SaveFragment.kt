@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.fetch.VideoFrameFileFetcher
 import coil.load
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
@@ -94,7 +96,14 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate(): Unit = withState(viewModel) {
-        binding.preview.load(it.capture?.uri)
+        val context = requireContext()
+        val imageLoader = ImageLoader.Builder(context)
+            .componentRegistry {
+                add(VideoFrameFileFetcher(context))
+            }
+            .build()
+
+        binding.preview.load(it.capture?.uri, imageLoader)
     }
 
     private fun showPreview() = withState(viewModel) {

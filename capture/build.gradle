@@ -32,6 +32,7 @@ dependencies {
     implementation libs.google.material
 
     implementation libs.coil.core
+    implementation libs.coil.video
 
     implementation libs.androidx.camera.core
     implementation libs.androidx.camera.camera2

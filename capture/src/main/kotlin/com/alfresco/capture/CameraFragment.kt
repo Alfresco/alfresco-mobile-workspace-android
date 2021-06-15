@@ -288,9 +288,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun onTakeVideoButtonClick(controller: CameraController) {
         if (controller.isRecording) {
             layout.shutterButton.state = ShutterButton.State.Video
+            layout.modeSelectorView.isVisible = true
+            layout.captureDurationView.isVisible = false
+
             controller.stopRecording()
         } else {
             layout.shutterButton.state = ShutterButton.State.Recording
+            layout.modeSelectorView.isVisible = false
+            layout.captureDurationView.isVisible = true
 
             val videoFile = viewModel.prepareCaptureFile(mode)
             val outputOptions = OutputFileOptions.builder(videoFile).build()

@@ -35,6 +35,7 @@ class CameraLayout(
     lateinit var flashMenu: FlashMenu
     lateinit var messageView: TextView
     lateinit var modeSelectorView: CaptureModeSelectorView
+    lateinit var captureDurationView: CaptureDurationView
 
     private val orientationAwareControls get() =
         listOf(
@@ -82,6 +83,7 @@ class CameraLayout(
         flashMenu = findViewById(R.id.flash_menu)
         messageView = findViewById(R.id.message_view)
         modeSelectorView = findViewById(R.id.mode_selector)
+        captureDurationView = findViewById(R.id.capture_duration)
 
         initControls()
     }

@@ -129,6 +129,7 @@
         android:paddingVertical="12dp">
 
         <com.alfresco.capture.CaptureModeSelectorView
+            android:id="@+id/mode_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

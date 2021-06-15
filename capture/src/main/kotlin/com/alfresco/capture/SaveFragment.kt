@@ -42,7 +42,9 @@ class SaveFragment : Fragment(), MavericksView {
         }
 
         if (savedInstanceState == null) {
-            binding.fileNameInputLayout.text = viewModel.defaultFilename()
+            withState(viewModel) {
+                binding.fileNameInputLayout.text = it.capture?.name ?: ""
+            }
         }
 
         binding.fileNameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -91,13 +93,12 @@ class SaveFragment : Fragment(), MavericksView {
         requireActivity().onBackPressed()
     }
 
-    override fun invalidate(): Unit = withState(viewModel) { state ->
-        val path = "file://" + state.file
-        binding.preview.load(path)
+    override fun invalidate(): Unit = withState(viewModel) {
+        binding.preview.load(it.capture?.uri)
     }
 
     private fun showPreview() = withState(viewModel) {
-        val path = "file://" + it.file
+        val path: String = it.capture?.uri.toString()
         findNavController().navigate(
             R.id.action_saveFragment_to_previewFragment,
             PreviewArgs.bundle(path)

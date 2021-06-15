@@ -27,7 +27,7 @@ data class ActionCaptureMedia(
                 repository.scheduleForUpload(
                     item.uri.toString(),
                     entry.id,
-                    item.name,
+                    item.filename,
                     item.description,
                     item.mimeType
                 )

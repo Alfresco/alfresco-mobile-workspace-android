@@ -34,6 +34,7 @@ class CameraLayout(
     lateinit var flashButton: ImageButton
     lateinit var flashMenu: FlashMenu
     lateinit var messageView: TextView
+    lateinit var modeSelectorView: CaptureModeSelectorView
 
     private val orientationAwareControls get() =
         listOf(
@@ -80,6 +81,7 @@ class CameraLayout(
         flashButton = findViewById(R.id.flash_button)
         flashMenu = findViewById(R.id.flash_menu)
         messageView = findViewById(R.id.message_view)
+        modeSelectorView = findViewById(R.id.mode_selector)
 
         initControls()
     }

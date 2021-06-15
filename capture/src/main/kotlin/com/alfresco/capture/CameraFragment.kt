@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.OptIn
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -18,6 +19,10 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.AlfrescoCameraController
 import androidx.camera.view.CameraController
+import androidx.camera.view.video.ExperimentalVideo
+import androidx.camera.view.video.OnVideoSavedCallback
+import androidx.camera.view.video.OutputFileOptions
+import androidx.camera.view.video.OutputFileResults
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -29,19 +34,19 @@ import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
-    private lateinit var outputDirectory: File
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+    private var mode: CaptureMode = CaptureMode.Photo
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
 
@@ -103,9 +108,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        // Determine the output directory
-        outputDirectory = viewModel.captureDir
-
         // Prepare UI controls
         setUpCameraUi()
     }
@@ -156,11 +158,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun configureCamera() {
-        // TODO: figure out preview aspect ratio
-        layout.aspectRatio = 4 / 3f
+        layout.aspectRatio = mode.aspectRatio().toFloat()
 
         cameraController = AlfrescoCameraController(requireContext()).apply {
-            setEnabledUseCases(CameraController.IMAGE_CAPTURE)
+            setEnabledUseCases(useCaseFor(mode))
             setCameraSelector(lensFacing)
             imageCaptureFlashMode = DEFAULT_FLASH_MODE
         }.also {
@@ -178,6 +179,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.zoomTextView.text = String.format("%.1f\u00D7", it.zoomRatio)
         }
     }
+
+    private fun useCaseFor(mode: CaptureMode) =
+        when (mode) {
+            CaptureMode.Photo -> CameraController.IMAGE_CAPTURE
+            CaptureMode.Video -> CameraController.VIDEO_CAPTURE
+        }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         return when (keyCode) {
@@ -208,27 +215,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
-            // Create output file to hold the image
-            val photoFile = viewModel.prepareCaptureFile(outputDirectory, CaptureViewModel.PHOTO_EXTENSION)
+            val controller = requireNotNull(cameraController)
 
-            // Create output options object which contains file + metadata
-            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
-                .build()
-
-            // Setup image capture listener which is triggered after photo has been taken
-            cameraController?.takePicture(
-                outputOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
-                    override fun onError(exc: ImageCaptureException) {
-                        Logger.e("Photo capture failed: ${exc.message}", exc)
-                    }
-
-                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                        val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-                        Logger.d("Photo capture succeeded: $savedUri")
-                        viewModel.capturePhoto(photoFile.toString())
-                        navigateToSave()
-                    }
-                })
+            if (controller.isImageCaptureEnabled) {
+                onTakePhotoButtonClick(controller)
+            } else if (controller.isVideoCaptureEnabled) {
+                onTakeVideoButtonClick(controller)
+            }
 
             // Display flash animation to indicate that photo was captured
             layout.postDelayed({
@@ -237,6 +230,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     { layout.viewFinder.foreground = null }, ANIMATION_FAST_MILLIS
                 )
             }, ANIMATION_SLOW_MILLIS)
+        }
+
+        layout.modeSelectorView.onMode = { mode ->
+            this.mode = mode
+            configureShutterButton(mode)
+            configureCamera()
         }
 
         // Setup for button used to switch cameras
@@ -258,6 +257,70 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         layout.closeButton.setOnClickListener {
             requireActivity().finish()
+        }
+    }
+
+    private fun onTakePhotoButtonClick(controller: CameraController) {
+        // Create output file to hold the image
+        val photoFile = viewModel.prepareCaptureFile(mode)
+
+        // Create output options object which contains file + metadata
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        // Setup image capture listener which is triggered after photo has been taken
+        controller.takePicture(
+            outputOptions,
+            cameraExecutor,
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
+                    Logger.d("Photo capture succeeded: $savedUri")
+                    viewModel.onCapturePhoto(savedUri)
+                    navigateToSave()
+                }
+
+                override fun onError(exc: ImageCaptureException) {
+                    Logger.e("Photo capture failed: ${exc.message}", exc)
+                }
+            })
+    }
+
+    private fun onTakeVideoButtonClick(controller: CameraController) {
+        if (controller.isRecording) {
+            layout.shutterButton.state = ShutterButton.State.Video
+            controller.stopRecording()
+        } else {
+            layout.shutterButton.state = ShutterButton.State.Recording
+
+            val videoFile = viewModel.prepareCaptureFile(mode)
+            val outputOptions = OutputFileOptions.builder(videoFile).build()
+
+            cameraController?.startRecording(
+                outputOptions,
+                cameraExecutor,
+                object : OnVideoSavedCallback {
+                    override fun onVideoSaved(output: OutputFileResults) {
+                        val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
+                        Logger.d("Video capture succeeded: $savedUri")
+                        viewModel.onCaptureVideo(savedUri)
+                        navigateToSave()
+                    }
+
+                    override fun onError(
+                        videoCaptureError: Int,
+                        message: String,
+                        cause: Throwable?
+                    ) {
+                        Logger.e("Video capture failed: ${cause?.message}", cause)
+                    }
+                })
+        }
+    }
+
+    private fun configureShutterButton(mode: CaptureMode) {
+        layout.shutterButton.state = when (mode) {
+            CaptureMode.Photo -> ShutterButton.State.Photo
+            CaptureMode.Video -> ShutterButton.State.Video
         }
     }
 

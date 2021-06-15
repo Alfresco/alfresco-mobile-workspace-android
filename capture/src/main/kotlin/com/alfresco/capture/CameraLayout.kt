@@ -28,7 +28,7 @@ class CameraLayout(
     lateinit var viewFinder: PreviewView
     lateinit var focusView: View
     lateinit var zoomTextView: TextView
-    lateinit var shutterButton: ImageButton
+    lateinit var shutterButton: ShutterButton
     lateinit var cameraSwitchButton: ImageButton
     lateinit var closeButton: ImageButton
     lateinit var flashButton: ImageButton

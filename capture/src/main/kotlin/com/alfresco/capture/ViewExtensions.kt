@@ -16,7 +16,7 @@
 
 package com.alfresco.capture
 
-import android.widget.ImageButton
+import android.view.View
 
 /** Milliseconds used for UI animations */
 const val ANIMATION_FAST_MILLIS = 50L
@@ -26,7 +26,7 @@ const val ANIMATION_SLOW_MILLIS = 100L
  * Simulate a button click, including a small delay while it is being pressed to trigger the
  * appropriate animations.
  */
-fun ImageButton.simulateClick(delay: Long = ANIMATION_FAST_MILLIS) {
+fun View.simulateClick(delay: Long = ANIMATION_FAST_MILLIS) {
     performClick()
     isPressed = true
     invalidate()

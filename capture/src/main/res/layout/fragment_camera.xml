@@ -100,11 +100,10 @@
         android:layoutDirection="ltr"
         android:padding="12dp">
 
-        <ImageButton
+        <com.alfresco.capture.ShutterButton
             android:id="@+id/shutter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_shutter"
             android:contentDescription="@string/capture_button_alt"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

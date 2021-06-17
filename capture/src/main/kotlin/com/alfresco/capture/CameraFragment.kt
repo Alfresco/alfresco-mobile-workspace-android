@@ -120,6 +120,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             )
         ) {
             if (cameraController == null) {
+                mode = CaptureMode.Photo // always reset
                 setUpCamera()
             }
             layout.messageView.isVisible = false

@@ -12,7 +12,7 @@ class CaptureDurationView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int
-): Chronometer(
+) : Chronometer(
     ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
     attrs,
     defStyleAttr
@@ -23,7 +23,6 @@ class CaptureDurationView(
 
     constructor(context: Context, attrs: AttributeSet?) :
         this(context, attrs, 0)
-
 
     init {
         gravity = Gravity.CENTER

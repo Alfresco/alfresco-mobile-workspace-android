@@ -24,6 +24,14 @@ class SaveFragment : Fragment(), MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
     private lateinit var binding: FragmentSaveBinding
+    private val imageLoader: ImageLoader by lazy {
+        val context = requireContext()
+        ImageLoader.Builder(context)
+            .componentRegistry {
+                add(VideoFrameFileFetcher(context))
+            }
+            .build()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,13 +104,6 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate(): Unit = withState(viewModel) {
-        val context = requireContext()
-        val imageLoader = ImageLoader.Builder(context)
-            .componentRegistry {
-                add(VideoFrameFileFetcher(context))
-            }
-            .build()
-
         binding.preview.load(it.capture?.uri, imageLoader)
     }
 

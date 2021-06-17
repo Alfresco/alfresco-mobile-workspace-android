@@ -41,20 +41,12 @@ class CaptureHelperFragment : Fragment() {
             )
 
         fun requiredPermissions() =
-            if (BuildConfig.DEBUG) {
-                listOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.RECORD_AUDIO
-                )
-            } else {
-                listOf(Manifest.permission.CAMERA)
-            }
+            listOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            )
 
         fun permissionRationale(context: Context) =
-            context.getString(if (BuildConfig.DEBUG) {
-                R.string.capture_permissions_rationale
-            } else {
-                R.string.deprecated_capture_permissions_rationale
-            })
+            context.getString(R.string.capture_permissions_rationale)
     }
 }

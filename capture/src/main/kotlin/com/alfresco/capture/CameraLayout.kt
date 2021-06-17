@@ -94,7 +94,6 @@ class CameraLayout(
         flashButton.isVisible = false
         flashMenu.isVisible = false
         messageView.isVisible = false
-        modeBar.isVisible = BuildConfig.DEBUG
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

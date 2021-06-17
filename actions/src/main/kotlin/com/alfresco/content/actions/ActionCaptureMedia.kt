@@ -11,7 +11,7 @@ import kotlin.coroutines.cancellation.CancellationException
 data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
-    override val title: Int = if (BuildConfig.DEBUG) R.string.action_capture_media_title else R.string.deprecated_action_capture_photo_title
+    override val title: Int = R.string.action_capture_media_title
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -35,11 +35,9 @@ data class ActionCaptureMedia(
                 throw CancellationException("User Cancellation")
             }
         } else {
-            throw Action.Exception(context.resources.getString(if (BuildConfig.DEBUG) {
-                R.string.action_capture_failed_permissions
-            } else {
-                R.string.deprecated_action_capture_failed_permissions
-            }))
+            throw Action.Exception(
+                context.resources.getString(R.string.action_capture_failed_permissions)
+            )
         }
 
         return entry

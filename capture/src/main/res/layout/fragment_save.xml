@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -45,6 +46,18 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/capture_photo_preview_alt"
                         android:scaleType="fitCenter" />
+
+                    <ImageView
+                        android:id="@+id/play_icon"
+                        style="@style/Widget.Alfresco.Camera.Button"
+                        android:layout_width="@dimen/capture_button_size"
+                        android:layout_height="@dimen/capture_button_size"
+                        android:layout_gravity="bottom|start"
+                        android:layout_margin="@dimen/capture_layout_small_margin"
+                        android:background="@drawable/bg_camera_btn"
+                        android:src="@drawable/ic_video_play"
+                        android:clickable="false"
+                        tools:ignore="ContentDescription" />
 
                     <ImageButton
                         android:id="@+id/delete_photo_button"

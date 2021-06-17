@@ -26,6 +26,12 @@ data class CaptureItem(
             else -> throw IllegalArgumentException()
         }
 
+    internal fun isPhoto() =
+        mimeType == PHOTO_MIMETYPE
+
+    internal fun isVideo() =
+        mimeType == VIDEO_MIMETYPE
+
     internal companion object {
         const val PHOTO_EXTENSION = ".jpg"
         const val VIDEO_EXTENSION = ".mp4"

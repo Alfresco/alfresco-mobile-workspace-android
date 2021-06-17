@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import coil.ImageLoader
@@ -104,15 +105,20 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate(): Unit = withState(viewModel) {
-        binding.preview.load(it.capture?.uri, imageLoader)
+        if (it.capture != null) {
+            binding.playIcon.isVisible = it.capture.isVideo() == true
+            binding.preview.load(it.capture.uri, imageLoader)
+        }
     }
 
     private fun showPreview() = withState(viewModel) {
+        requireNotNull(it.capture)
+
         findNavController().navigate(
             R.id.action_saveFragment_to_previewFragment,
             PreviewArgs.bundle(
-                it.capture?.uri.toString(),
-                it.capture?.mimeType ?: ""
+                it.capture.uri.toString(),
+                it.capture.mimeType
             )
         )
     }

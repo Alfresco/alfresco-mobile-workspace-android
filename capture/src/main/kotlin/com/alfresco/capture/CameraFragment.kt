@@ -223,14 +223,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             } else if (controller.isVideoCaptureEnabled) {
                 onTakeVideoButtonClick(controller)
             }
-
-            // Display flash animation to indicate that photo was captured
-            layout.postDelayed({
-                layout.viewFinder.foreground = ColorDrawable(Color.BLACK)
-                layout.postDelayed(
-                    { layout.viewFinder.foreground = null }, ANIMATION_FAST_MILLIS
-                )
-            }, ANIMATION_SLOW_MILLIS)
         }
 
         layout.modeSelectorView.onMode = { mode ->
@@ -284,6 +276,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     Logger.e("Photo capture failed: ${exc.message}", exc)
                 }
             })
+
+        // Display flash animation to indicate that photo was captured
+        layout.postDelayed({
+            layout.viewFinder.foreground = ColorDrawable(Color.BLACK)
+            layout.postDelayed(
+                { layout.viewFinder.foreground = null }, ANIMATION_FAST_MILLIS
+            )
+        }, ANIMATION_SLOW_MILLIS)
     }
 
     private fun onTakeVideoButtonClick(controller: CameraController) {

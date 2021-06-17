@@ -1,32 +1,36 @@
 package com.alfresco.capture
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.Mavericks
 import com.alfresco.capture.databinding.FragmentPreviewBinding
+import com.alfresco.content.viewer.common.ChildViewerArgs
+import com.alfresco.content.viewer.image.ImagePreviewProvider
+import com.alfresco.content.viewer.media.MediaPreviewProvider
 import com.alfresco.ui.WindowCompat
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import kotlinx.parcelize.Parcelize
+import java.lang.IllegalArgumentException
 
-@Parcelize
 data class PreviewArgs(
-    val path: String
-) : Parcelable {
+    val path: String,
+    val mimeType: String
+) {
     companion object {
         private const val PATH_KEY = "path"
+        private const val MIME_TYPE_KEY = "mimeType"
 
         fun with(args: Bundle): PreviewArgs {
             return PreviewArgs(
-                args.getString(PATH_KEY, "")
+                args.getString(PATH_KEY, ""),
+                args.getString(MIME_TYPE_KEY, "")
             )
         }
 
-        fun bundle(path: String) = bundleOf(PATH_KEY to path)
+        fun bundle(path: String, mimeType: String) =
+            bundleOf(PATH_KEY to path, MIME_TYPE_KEY to mimeType)
     }
 }
 
@@ -47,16 +51,29 @@ class PreviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args = PreviewArgs.with(requireArguments())
-
-        binding.imageView.apply {
-            orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
-            setImage(ImageSource.uri(args.path))
-        }
+        configureViewer(args)
 
         binding.closeButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }
+
+    private fun configureViewer(args: PreviewArgs) {
+        val fragment = createViewer(args.mimeType)
+        val childArgs = ChildViewerArgs(args.path, args.mimeType)
+        fragment.arguments = bundleOf(Mavericks.KEY_ARG to childArgs)
+
+        childFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment, tag)
+            .commit()
+    }
+
+    private fun createViewer(mimeType: String) =
+        when {
+            MediaPreviewProvider.isMimeTypeSupported(mimeType) -> MediaPreviewProvider
+            ImagePreviewProvider.isMimeTypeSupported(mimeType) -> ImagePreviewProvider
+            else -> throw IllegalArgumentException("Unsupported MIME type")
+        }.createViewer()
 
     override fun onResume() {
         super.onResume()

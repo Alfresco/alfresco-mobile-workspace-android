@@ -107,10 +107,12 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     private fun showPreview() = withState(viewModel) {
-        val path: String = it.capture?.uri.toString()
         findNavController().navigate(
             R.id.action_saveFragment_to_previewFragment,
-            PreviewArgs.bundle(path)
+            PreviewArgs.bundle(
+                it.capture?.uri.toString(),
+                it.capture?.mimeType ?: ""
+            )
         )
     }
 }

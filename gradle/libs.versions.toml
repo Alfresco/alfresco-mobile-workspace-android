@@ -77,6 +77,7 @@ google-services-gradle = "com.google.gms:google-services:4.3.8"
 gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.38.0"
 
 guava = "com.google.guava:guava:30.0-android"
+listenablefuture = "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"
 
 junit = "junit:junit:4.13.2"
 

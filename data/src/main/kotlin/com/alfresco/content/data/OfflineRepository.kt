@@ -166,7 +166,8 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             offlineStatus = OfflineStatus.PENDING
         )
         update(entry)
-        File(path).renameTo(File(session.uploadDir, entry.boxId.toString()))
+        val srcPath = path.removePrefix("file://")
+        File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))
     }
 
     internal fun fetchPendingUploads() =
@@ -190,6 +191,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             awaitClose { subscription.cancel() }
         }
 
+    // Removes a completed upload with id
     fun removeUpload(id: String) =
         box.query()
             .equal(Entry_.id, id)

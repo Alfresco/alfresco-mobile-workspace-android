@@ -6,10 +6,10 @@
     android:theme="@style/ThemeOverlay.Alfresco.Dark"
     android:background="?android:attr/colorBackground">
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/image_view"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:layout_width="match_parent"

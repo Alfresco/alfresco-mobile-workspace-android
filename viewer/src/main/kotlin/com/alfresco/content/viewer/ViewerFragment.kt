@@ -138,7 +138,7 @@ class ViewerFragment : Fragment(), MavericksView {
     ) {
         val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
-            val args = typeArgs(
+            val args = ChildViewerArgs(
                 viewerUri,
                 mimeType
             )
@@ -186,10 +186,6 @@ class ViewerFragment : Fragment(), MavericksView {
                 }
             }
         }
-    }
-
-    private fun typeArgs(uri: String, mimeType: String): ChildViewerArgs {
-        return ChildViewerArgs(args.id, uri, mimeType)
     }
 
     private enum class Status {

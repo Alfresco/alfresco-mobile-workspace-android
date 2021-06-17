@@ -18,6 +18,13 @@ dependencies {
     implementation project(':session')
     implementation project(':common')
     implementation project(':theme')
+    implementation project(':viewer-common')
+    implementation project(':viewer-image')
+    implementation project(':viewer-media')
+
+    // Fix caused by conflicting ListenableFuture imported by ExoPlayer and CameraX
+    implementation libs.guava
+    implementation libs.listenablefuture
 
     implementation libs.coroutines.core
 
@@ -42,6 +49,4 @@ dependencies {
     implementation libs.androidx.constraintlayout
 
     implementation libs.mavericks
-
-    implementation libs.subsamplingimageview
 }

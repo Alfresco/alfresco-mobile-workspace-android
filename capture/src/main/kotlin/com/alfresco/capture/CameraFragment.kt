@@ -291,12 +291,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.shutterButton.state = ShutterButton.State.Video
             layout.modeSelectorView.isVisible = true
             layout.captureDurationView.isVisible = false
+            layout.cameraSwitchButton.isVisible = true
 
             controller.stopRecording()
         } else {
             layout.shutterButton.state = ShutterButton.State.Recording
             layout.modeSelectorView.isVisible = false
             layout.captureDurationView.isVisible = true
+            layout.cameraSwitchButton.isVisible = false
 
             val videoFile = viewModel.prepareCaptureFile(mode)
             val outputOptions = OutputFileOptions.builder(videoFile).build()
@@ -364,12 +366,18 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Called when camera changes. */
     private fun updateFlashControlState() {
-        layout.flashButton.isVisible = cameraController?.hasFlashUnit() ?: false
+        layout.flashButton.isVisible = flashControlEnabled(mode, cameraController)
         layout.flashMenu.isVisible = false
 
         val flashMode = cameraController?.imageCaptureFlashMode ?: ImageCapture.FLASH_MODE_AUTO
         layout.flashButton.setImageResource(flashModeIcon(flashMode))
     }
+
+    private fun flashControlEnabled(mode: CaptureMode, controller: AlfrescoCameraController?) =
+        when (mode) {
+            CaptureMode.Photo -> controller?.hasFlashUnit() ?: false
+            CaptureMode.Video -> false
+        }
 
     private fun flashModeIcon(@FlashMode flashMode: Int) =
         when (flashMode) {

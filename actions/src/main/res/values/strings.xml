@@ -40,5 +40,4 @@
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media scheduled for upload.</string>
-
 </resources>

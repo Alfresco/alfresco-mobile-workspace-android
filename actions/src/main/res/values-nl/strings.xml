@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Toevoegen aan favorieten</string>
     <string name="action_remove_favorite_title">Verwijderen uit favorieten</string>
@@ -24,6 +23,7 @@
 
     <string name="action_download_toast">Bestand wordt gedownload. Zie meldingen voor details</string>
     <string name="action_export_toast">Bestand geëxporteerd naar lokale opslag.</string>
+    <string name="action_download_storage_permission_rationale">Voor downloaden zijn rechten voor toegang tot opslag vereist.</string>
     <string name="action_download_failed_permissions">Downloaden mislukt. U hebt rechten voor toegang tot opslag uitgeschakeld.</string>
 
     <string name="action_open_with_downloading">Downloaden&#8230;</string>
@@ -34,4 +34,10 @@
     <string name="action_remove_offline_title">Offline verwijderen</string>
     <string name="action_add_offline_toast">%s wordt offline beschikbaar gemaakt.</string>
     <string name="action_remove_offline_toast">%s is niet langer offline beschikbaar.</string>
+
+    <string name="action_upload_photo_title">Foto\'s of video\'s uploaden</string>
+    <string name="action_capture_media_title">Een foto maken of een video opnemen</string>
+    <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
+
+    <string name="action_upload_media_toast">Media gepland om te uploaden.</string>
 </resources>

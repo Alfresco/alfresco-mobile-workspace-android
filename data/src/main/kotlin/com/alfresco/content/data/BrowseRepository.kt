@@ -36,13 +36,20 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             include = extraFields()
         ))
 
+    suspend fun fetchLibraryDocumentsFolder(siteId: String) =
+        Entry.with(service.getNode(
+            siteId,
+            extraFields(),
+            LIB_DOCUMENTS_PATH
+        ).entry)
+
     suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
         ResponsePaging.with(service.listNodeChildren(
             siteId,
             skipCount,
             maxItems,
             include = extraFields(),
-            relativePath = "documentLibrary"
+            relativePath = LIB_DOCUMENTS_PATH
         ))
 
     private fun extraFields() =
@@ -86,5 +93,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     fun contentUri(entry: Entry): String {
         val baseUrl = SessionManager.currentSession?.baseUrl
         return "${baseUrl}alfresco/versions/1/nodes/${entry.id}/content?attachment=false&alf_ticket=${session.ticket}"
+    }
+
+    private companion object {
+        const val LIB_DOCUMENTS_PATH = "documentLibrary"
     }
 }

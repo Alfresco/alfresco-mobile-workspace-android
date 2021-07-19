@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="list_loading_message">Caricamento in corso&#8230;</string>
 
-    <string name="offline_status_in_progress">Sincronizzo...</string>
+    <string name="offline_status_in_progress">Sincronizzo&#8230;</string>
     <string name="offline_status_error">Sincronizzazione non riuscita</string>
 </resources>

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-    <string name="info_creating_rendition">Vorschau wird erstellt...</string>
-    <string name="info_fetching_content">Vorschau wird geladen...</string>
+    <string name="info_creating_rendition">Vorschau wird erstellt&#8230;</string>
+    <string name="info_fetching_content">Vorschau wird geladen&#8230;</string>
     <string name="error_preview_not_available">Vorschau nicht verfügbar</string>
 </resources>

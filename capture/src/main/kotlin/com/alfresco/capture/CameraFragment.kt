@@ -38,9 +38,6 @@ import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.gms.location.*
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

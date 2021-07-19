@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.view.*
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraInfoUnavailableException
@@ -26,7 +25,6 @@ import androidx.camera.view.video.OutputFileResults
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -34,9 +32,9 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
+import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
-import com.google.android.gms.location.*
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -47,11 +45,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
 
     private val viewModel: CaptureViewModel by activityViewModel()
-    private lateinit var locationCallback: LocationCallback
     private lateinit var layout: CameraLayout
-
-    private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
-        LocationServices.getFusedLocationProviderClient(requireActivity())
+    private val locationData : LocationData by lazy {
+        LocationData(requireContext())
     }
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
@@ -271,15 +267,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         val metadata = ImageCapture.Metadata()
 
-        val location =Location("")
+        val location = Location("")
 
-        location.longitude=viewModel.longitude.toDouble()
-        location.latitude=viewModel.latitude.toDouble()
+        location.longitude = viewModel.longitude.toDouble()
+        location.latitude = viewModel.latitude.toDouble()
 
-        metadata.location= location
+        metadata.location = location
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).setMetadata(metadata).build()
-
 
 
         // Setup image capture listener which is triggered after photo has been taken
@@ -420,53 +415,23 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun onStart() {
         super.onStart()
-        when {
-            LocationUtils.isLocationEnabled(requireActivity()) -> {
-                setUpLocationListener()
-            }
-            else -> {
-                LocationUtils.showGPSNotEnabledDialog(requireActivity())
-            }
-        }
+        invokeLocation()
     }
 
-    override fun onStop() {
-        super.onStop()
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-    }
-
-    private fun setUpLocationListener() {
-
-        // for getting the current location update after every 2 seconds with high accuracy
-        val locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 1000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            maxWaitTime = 100
-        }
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-
-        locationCallback =
-            object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult) {
-                    super.onLocationResult(locationResult)
-                    for (location in locationResult.locations) {
-                        viewModel.latitude = location.latitude.toString()
-                        viewModel.longitude = location.longitude.toString()
-                        println("CameraFragment.onLocationResult location lat: ${viewModel.latitude} long: ${viewModel.longitude}")
-                    }
+    private fun invokeLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            when {
+                LocationUtils.isLocationEnabled(requireActivity()) -> {
+                    locationData.observe(this,{
+                        viewModel.longitude=it.longitude.toString()
+                        viewModel.latitude=it.latitude.toString()
+                    })
+                }
+                else -> {
+                    LocationUtils.showGPSNotEnabledDialog(requireActivity())
                 }
             }
-
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest, locationCallback,
-            Looper.myLooper()
-        )
+        }
     }
 
     companion object {

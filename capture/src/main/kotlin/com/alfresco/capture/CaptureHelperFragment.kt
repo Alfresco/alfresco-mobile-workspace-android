@@ -44,10 +44,15 @@ class CaptureHelperFragment : Fragment() {
             listOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        fun optionalPermissions() =
+            listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
 
         fun permissionRationale(context: Context) =
             context.getString(R.string.capture_permissions_rationale)
+        fun permissionRationaleLocation(context: Context) =
+            context.getString(R.string.location_permissions_rationale)
     }
 }

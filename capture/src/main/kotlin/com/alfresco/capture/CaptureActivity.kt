@@ -14,10 +14,6 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.capture.databinding.ActivityCaptureBinding
 import com.alfresco.ui.KeyHandler
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 
 class CaptureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCaptureBinding

@@ -31,7 +31,7 @@ dependencies {
     implementation libs.okhttp.logginginterceptor
     coreLibraryDesugaring libs.android.desugar
 
-    implementation libs.play.location
+    implementation libs.google.playservices.location
 
 
 }

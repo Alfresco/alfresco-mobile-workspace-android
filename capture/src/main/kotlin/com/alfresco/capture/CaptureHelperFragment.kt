@@ -43,7 +43,8 @@ class CaptureHelperFragment : Fragment() {
         fun requiredPermissions() =
             listOf(
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
 
         fun permissionRationale(context: Context) =

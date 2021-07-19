@@ -13,7 +13,8 @@ data class CaptureState(
 class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
-
+    var longitude ="0"
+    var latitude= "0"
     var onSaveComplete: ((CaptureItem) -> Unit)? = null
     private val captureDir = SessionManager.requireSession.captureDir
 
@@ -62,4 +63,6 @@ class CaptureViewModel(
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
+
+
 }

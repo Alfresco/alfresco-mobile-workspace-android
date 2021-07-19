@@ -1,11 +1,16 @@
 package com.alfresco.content.actions
 
 import android.content.Context
+import android.media.ExifInterface
 import android.view.View
 import com.alfresco.capture.CaptureHelperFragment
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import java.io.IOException
+import java.io.InputStream
+import java.lang.Exception
+import java.net.URI
 import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionCaptureMedia(
@@ -21,7 +26,8 @@ data class ActionCaptureMedia(
                 context,
                 CaptureHelperFragment.requiredPermissions(),
                 CaptureHelperFragment.permissionRationale(context)
-            )) {
+            )
+        ) {
             val item = CaptureHelperFragment.capturePhoto(context)
             if (item != null) {
                 repository.scheduleForUpload(

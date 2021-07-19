@@ -10,6 +10,7 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.kotlin.FilenameComparator
 import com.alfresco.list.merge
 import com.alfresco.list.replace
+import kotlinx.coroutines.flow.merge
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
 

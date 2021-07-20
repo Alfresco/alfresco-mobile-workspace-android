@@ -54,8 +54,6 @@ open class PermissionFragment : Fragment() {
     ) {
         val denied = deniedPermissions(requireContext(), permissions)
 
-        println("PermissionFragment.requestOptionalPermissions $denied")
-
         when {
             denied.isEmpty() -> {
                 continuation.resume(true, null)

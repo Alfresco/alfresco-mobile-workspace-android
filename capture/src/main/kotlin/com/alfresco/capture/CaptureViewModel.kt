@@ -15,8 +15,8 @@ data class CaptureState(
 class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
-    var longitude ="0"
-    var latitude= "0"
+    var longitude = "0"
+    var latitude = "0"
     var onSaveComplete: ((CaptureItem) -> Unit)? = null
     private val captureDir = SessionManager.requireSession.captureDir
 
@@ -66,7 +66,7 @@ class CaptureViewModel(
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
 
-    fun getMetaData():ImageCapture.Metadata{
+    fun getMetaData(): ImageCapture.Metadata {
         val metadata = ImageCapture.Metadata()
 
         val location = Location("")
@@ -78,6 +78,4 @@ class CaptureViewModel(
 
         return metadata
     }
-
-
 }

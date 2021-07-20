@@ -13,7 +13,7 @@ import com.google.android.gms.location.LocationServices
 
 class LocationData(context: Context) : LiveData<LocationModel>() {
 
-    private val fusedLocationClient : FusedLocationProviderClient by lazy {
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
     }
 
@@ -21,7 +21,6 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
         super.onInactive()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
-
 
     @SuppressLint("MissingPermission")
     override fun onActive() {
@@ -64,7 +63,7 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
         val locationRequest: LocationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 1000
-            priority=LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
     }
 }

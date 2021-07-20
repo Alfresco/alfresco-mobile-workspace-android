@@ -5,10 +5,13 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
@@ -46,7 +49,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
     private lateinit var layout: CameraLayout
-    private val locationData : LocationData by lazy {
+    private val locationData: LocationData by lazy {
         LocationData(requireContext())
     }
 
@@ -182,7 +185,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.viewFinder.controller = cameraController
 
         // Observe zoom changes
-        cameraController?.zoomState?.observe(viewLifecycleOwner) {
+        cameraController?.zoomState?.observe(this) {
             layout.zoomTextView.text = String.format("%.1f\u00D7", it.zoomRatio)
         }
     }
@@ -265,16 +268,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Create output options object which contains file + metadata
 
-        val metadata = ImageCapture.Metadata()
-
-        val location = Location("")
-
-        location.longitude = viewModel.longitude.toDouble()
-        location.latitude = viewModel.latitude.toDouble()
-
-        metadata.location = location
-
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).setMetadata(metadata).build()
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+            .setMetadata(viewModel.getMetaData()).build()
 
 
         // Setup image capture listener which is triggered after photo has been taken
@@ -422,9 +417,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             when {
                 LocationUtils.isLocationEnabled(requireActivity()) -> {
-                    locationData.observe(this,{
-                        viewModel.longitude=it.longitude.toString()
-                        viewModel.latitude=it.latitude.toString()
+                    locationData.observe(this, {
+                        viewModel.longitude = it.longitude.toString()
+                        viewModel.latitude = it.latitude.toString()
                     })
                 }
                 else -> {

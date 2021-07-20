@@ -1,6 +1,8 @@
 package com.alfresco.capture
 
+import android.location.Location
 import android.net.Uri
+import androidx.camera.core.ImageCapture
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.alfresco.content.session.SessionManager
@@ -62,6 +64,19 @@ class CaptureViewModel(
     fun isFilenameValid(filename: String): Boolean {
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
+    }
+
+    fun getMetaData():ImageCapture.Metadata{
+        val metadata = ImageCapture.Metadata()
+
+        val location = Location("")
+
+        location.longitude = longitude.toDouble()
+        location.latitude = latitude.toDouble()
+
+        metadata.location = location
+
+        return metadata
     }
 
 

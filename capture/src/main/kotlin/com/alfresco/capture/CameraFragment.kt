@@ -46,7 +46,9 @@ import kotlinx.coroutines.launch
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
+
     private lateinit var layout: CameraLayout
+
     private val locationData: LocationData by lazy {
         LocationData(requireContext())
     }

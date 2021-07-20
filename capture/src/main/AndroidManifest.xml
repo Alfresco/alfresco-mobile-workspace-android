@@ -9,7 +9,6 @@
 
     <uses-feature android:name="android.hardware.camera.any" />
 
-
     <application>
         <activity
             android:name=".CaptureActivity"

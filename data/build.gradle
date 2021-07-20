@@ -29,9 +29,8 @@ dependencies {
     api libs.androidx.work
 
     implementation libs.okhttp.logginginterceptor
+
     coreLibraryDesugaring libs.android.desugar
 
     implementation libs.google.playservices.location
-
-
 }

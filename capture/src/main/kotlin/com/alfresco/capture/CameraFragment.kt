@@ -38,17 +38,17 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
-import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
-
     private val viewModel: CaptureViewModel by activityViewModel()
+
     private lateinit var layout: CameraLayout
+
     private val locationData: LocationData by lazy {
         LocationData(requireContext())
     }
@@ -118,7 +118,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Prepare UI controls
         setUpCameraUi()
-
     }
 
     private suspend fun updateCameraState() {
@@ -270,7 +269,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
             .setMetadata(viewModel.getMetaData()).build()
-
 
         // Setup image capture listener which is triggered after photo has been taken
         controller.takePicture(

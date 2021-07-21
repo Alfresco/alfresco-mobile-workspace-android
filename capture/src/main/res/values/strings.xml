@@ -24,9 +24,7 @@
     <string name="camera_flash_off">Off</string>
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
-    <string name="location_permissions_rationale">@string/location_failure_permissions</string>
     <string name="capture_failure_permissions">To capture media, turn on Camera and Microphone permissions.</string>
-    <string name="location_failure_permissions">To add location on capture media, turn on Location permission.</string>
 
     <string name="enable_gps">Enable GPS</string>
     <string name="required_for_this_app">Required for this app</string>

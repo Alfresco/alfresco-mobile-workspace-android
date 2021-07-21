@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.camera.core.ImageCapture
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
-import com.alfresco.Logger
 import com.alfresco.content.session.SessionManager
 import java.io.File
 

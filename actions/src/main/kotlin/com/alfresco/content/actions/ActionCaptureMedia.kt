@@ -6,6 +6,7 @@ import com.alfresco.capture.CaptureHelperFragment
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import java.lang.Exception
 import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionCaptureMedia(

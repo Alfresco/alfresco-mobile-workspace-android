@@ -420,9 +420,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         viewModel.latitude = it.latitude.toString()
                     })
                 }
-                else -> {
-                    LocationUtils.showGPSNotEnabledDialog(requireActivity())
-                }
             }
         }
     }

@@ -25,4 +25,5 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">To capture media, turn on Camera and Microphone permissions.</string>
+
 </resources>

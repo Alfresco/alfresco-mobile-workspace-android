@@ -1,6 +1,8 @@
 package com.alfresco.capture
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -23,6 +25,7 @@ import androidx.camera.view.video.ExperimentalVideo
 import androidx.camera.view.video.OnVideoSavedCallback
 import androidx.camera.view.video.OutputFileOptions
 import androidx.camera.view.video.OutputFileResults
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -32,6 +35,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
+import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import java.util.concurrent.ExecutorService
@@ -44,6 +48,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
+
+    private val locationData: LocationData by lazy {
+        LocationData(requireContext())
+    }
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var mode: CaptureMode = CaptureMode.Photo
@@ -258,7 +266,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         val photoFile = viewModel.prepareCaptureFile(mode)
 
         // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+            .setMetadata(viewModel.getMetaData()).build()
 
         // Setup image capture listener which is triggered after photo has been taken
         controller.takePicture(
@@ -394,6 +404,24 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun invalidate() {
         // no-op
+    }
+
+    override fun onStart() {
+        super.onStart()
+        invokeLocation()
+    }
+
+    private fun invokeLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            when {
+                LocationUtils.isLocationEnabled(requireActivity()) -> {
+                    locationData.observe(this, {
+                        viewModel.longitude = it.longitude.toString()
+                        viewModel.latitude = it.latitude.toString()
+                    })
+                }
+            }
+        }
     }
 
     companion object {

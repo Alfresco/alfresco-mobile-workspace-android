@@ -21,7 +21,9 @@ data class ActionCaptureMedia(
                 context,
                 CaptureHelperFragment.requiredPermissions(),
                 CaptureHelperFragment.permissionRationale(context)
-            )) {
+            )
+        ) {
+            PermissionFragment.requestOptionalPermissions(context, CaptureHelperFragment.optionalPermissions())
             val item = CaptureHelperFragment.capturePhoto(context)
             if (item != null) {
                 repository.scheduleForUpload(

@@ -267,8 +267,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Create output options object which contains file + metadata
 
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
-            .setMetadata(viewModel.getMetaData()).build()
+
+        val outputOptions = when {
+            LocationUtils.isLocationEnabled(requireActivity()) -> {
+                ImageCapture.OutputFileOptions.Builder(photoFile)
+                    .setMetadata(viewModel.getMetaData()).build()
+            }
+            else -> {
+                ImageCapture.OutputFileOptions.Builder(photoFile).build()
+            }
+        }
+
 
         // Setup image capture listener which is triggered after photo has been taken
         controller.takePicture(

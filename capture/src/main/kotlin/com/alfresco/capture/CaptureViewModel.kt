@@ -7,14 +7,17 @@ import com.alfresco.content.session.SessionManager
 import java.io.File
 
 data class CaptureState(
-    val capture: CaptureItem? = null
+    val visibleItem: CaptureItem? = null,
+    val listCapture: List<CaptureItem?> = emptyList()
 ) : MavericksState
 
 class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
 
-    var onSaveComplete: ((CaptureItem) -> Unit)? = null
+    var mode = CaptureMode.Photo
+    var onSaveComplete: ((List<CaptureItem?>) -> Unit)? = null
+
     private val captureDir = SessionManager.requireSession.captureDir
 
     init {
@@ -26,8 +29,28 @@ class CaptureViewModel(
         captureDir.listFiles()?.forEach { it.delete() }
     }
 
+    fun clearCaptureList() = setState {
+        copy(listCapture = listOf())
+    }
+
+    fun clearSingleCaptures(captureItem: CaptureItem) {
+        captureDir.listFiles()?.forEach {
+            if (captureItem.uri.toString().contains(it.name)) {
+                it.delete()
+            }
+        }
+        deleteCapture(captureItem)
+    }
+
+    private fun deleteCapture(captureItem: CaptureItem) =
+        setState {
+            copy(listCapture = listCapture.filter {
+                it?.id != captureItem.id
+            })
+        }
+
     fun prepareCaptureFile(mode: CaptureMode) =
-        File(captureDir, "${System.currentTimeMillis() / 1000}${extensionFor(mode)}")
+        File(captureDir, "${System.currentTimeMillis()}${extensionFor(mode)}")
 
     private fun extensionFor(mode: CaptureMode) =
         when (mode) {
@@ -35,31 +58,70 @@ class CaptureViewModel(
             CaptureMode.Video -> CaptureItem.VIDEO_EXTENSION
         }
 
-    fun save(
-        filename: String,
-        description: String
-    ) = withState {
-        requireNotNull(it.capture)
+    fun save() = withState {
+        requireNotNull(it.listCapture)
 
-        onSaveComplete?.invoke(
-            it.capture.copy(
-                name = filename,
-                description = description
+        it.listCapture.let { capturedList ->
+            onSaveComplete?.invoke(
+                capturedList
             )
-        )
+        }
     }
 
     fun onCapturePhoto(uri: Uri) =
-        onCaptureMedia(CaptureItem.photoCapture(uri))
+        onCaptureMediaPhoto(CaptureItem.photoCapture(uri))
 
     fun onCaptureVideo(uri: Uri) =
-        onCaptureMedia(CaptureItem.videoCapture(uri))
+        onCaptureMediaVideo(CaptureItem.videoCapture(uri))
 
-    private fun onCaptureMedia(media: CaptureItem) =
-        setState { copy(capture = media) }
+    private fun onCaptureMediaPhoto(media: CaptureItem) =
+        setState {
+            mode = CaptureMode.Photo
+            val list = listCapture + listOf(media)
+            copy(listCapture = list)
+        }
+
+    private fun onCaptureMediaVideo(media: CaptureItem) =
+        setState {
+            mode = CaptureMode.Video
+            val list = listOf(media)
+            copy(listCapture = list)
+        }
 
     fun isFilenameValid(filename: String): Boolean {
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
+    }
+
+    fun updateName(newFileName: String) = withState {
+        val newList = it.listCapture.map { captureItem ->
+            if (captureItem == it.visibleItem) {
+                val updateCapture = captureItem?.copy(name = newFileName)
+                setState { copy(visibleItem = updateCapture) }
+                updateCapture
+            } else {
+                captureItem
+            }
+        }
+        setState { copy(listCapture = newList) }
+    }
+
+    fun updateDescription(newDescription: String) = withState {
+        val newList = it.listCapture.map { captureItem ->
+            if (captureItem == it.visibleItem) {
+                val updateCapture = captureItem?.copy(description = newDescription)
+                setState { copy(visibleItem = updateCapture) }
+                updateCapture
+            } else {
+                captureItem
+            }
+        }
+        setState { copy(listCapture = newList) }
+    }
+
+    fun copyVisibleItem(item: CaptureItem) {
+        setState {
+            copy(visibleItem = item)
+        }
     }
 }

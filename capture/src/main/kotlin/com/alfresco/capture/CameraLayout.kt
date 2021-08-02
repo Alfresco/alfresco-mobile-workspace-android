@@ -6,6 +6,8 @@ import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
@@ -36,6 +38,9 @@ class CameraLayout(
     lateinit var messageView: TextView
     lateinit var modeSelectorView: CaptureModeSelectorView
     lateinit var captureDurationView: CaptureDurationView
+    lateinit var preview: ImageView
+    lateinit var imageCount: TextView
+    lateinit var rlPreview: RelativeLayout
 
     private val orientationAwareControls get() =
         listOf(
@@ -44,7 +49,8 @@ class CameraLayout(
             closeButton,
             zoomTextView,
             messageView,
-            flashMenu
+            flashMenu,
+            rlPreview
         )
     private var controlRotation = 0
     private var deviceOrientation = 0
@@ -84,6 +90,9 @@ class CameraLayout(
         messageView = findViewById(R.id.message_view)
         modeSelectorView = findViewById(R.id.mode_selector)
         captureDurationView = findViewById(R.id.capture_duration)
+        preview = findViewById(R.id.preview)
+        imageCount = findViewById(R.id.image_count)
+        rlPreview = findViewById(R.id.rl_preview)
 
         initControls()
     }

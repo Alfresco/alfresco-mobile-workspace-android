@@ -7,6 +7,8 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 data class ActionCaptureMedia(
     override var entry: Entry,
@@ -21,16 +23,23 @@ data class ActionCaptureMedia(
                 context,
                 CaptureHelperFragment.requiredPermissions(),
                 CaptureHelperFragment.permissionRationale(context)
-            )) {
-            val item = CaptureHelperFragment.capturePhoto(context)
-            if (item != null) {
-                repository.scheduleForUpload(
-                    item.uri.toString(),
-                    entry.id,
-                    item.filename,
-                    item.description,
-                    item.mimeType
-                )
+            )
+        ) {
+            val result = CaptureHelperFragment.capturePhoto(context)
+            if (result != null) {
+                if (result.count() > 0) {
+                    withContext(Dispatchers.IO) {
+                        result.map { item ->
+                            repository.scheduleForUpload(
+                                item.uri.toString(),
+                                entry.id,
+                                item.filename,
+                                item.description,
+                                item.mimeType
+                            )
+                        }
+                    }
+                }
             } else {
                 throw CancellationException("User Cancellation")
             }

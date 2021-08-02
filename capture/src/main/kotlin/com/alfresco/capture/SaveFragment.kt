@@ -1,6 +1,7 @@
 package com.alfresco.capture
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,31 +9,29 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import coil.ImageLoader
-import coil.fetch.VideoFrameFileFetcher
-import coil.load
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.SnapHelper
+import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.epoxy.Carousel
+import com.airbnb.epoxy.EpoxyVisibilityTracker
+import com.airbnb.epoxy.VisibilityState
+import com.airbnb.epoxy.carousel
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.capture.databinding.FragmentSaveBinding
+import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.alfresco.ui.text
+import java.util.ArrayList
 
 class SaveFragment : Fragment(), MavericksView {
 
     private val viewModel: CaptureViewModel by activityViewModel()
     private lateinit var binding: FragmentSaveBinding
-    private val imageLoader: ImageLoader by lazy {
-        val context = requireContext()
-        ImageLoader.Builder(context)
-            .componentRegistry {
-                add(VideoFrameFileFetcher(context))
-            }
-            .build()
-    }
+    private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,10 +53,35 @@ class SaveFragment : Fragment(), MavericksView {
 
         if (savedInstanceState == null) {
             withState(viewModel) {
-                binding.fileNameInputLayout.text = it.capture?.name ?: ""
+                binding.fileNameInputLayout.text = it.listCapture.first()?.name ?: ""
             }
         }
 
+        setListeners()
+
+        binding.recyclerView.setController(epoxyController)
+
+        EpoxyVisibilityTracker().attach(binding.recyclerView)
+        Carousel.setDefaultGlobalSnapHelperFactory(object : Carousel.SnapHelperFactory() {
+            override fun buildSnapHelper(context: Context?): SnapHelper {
+                return PagerSnapHelper()
+            }
+        })
+
+        binding.saveButton.setOnClickListener {
+            viewModel.save()
+        }
+
+        viewModel.onSaveComplete = {
+            val activity = requireActivity()
+            val list = ArrayList<CaptureItem>(it)
+            val intent = Intent().apply { putParcelableArrayListExtra(CapturePhotoResultContract.OUTPUT_KEY, list) }
+            activity.setResult(Activity.RESULT_OK, intent)
+            activity.finish()
+        }
+    }
+
+    private fun setListeners() {
         binding.fileNameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -72,53 +96,85 @@ class SaveFragment : Fragment(), MavericksView {
                 val empty = s.toString().isEmpty()
 
                 binding.fileNameInputLayout.error = when {
-                        !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
-                        empty -> resources.getString(R.string.capture_file_name_empty)
-                        else -> null
-                    }
+                    !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
+                    empty -> resources.getString(R.string.capture_file_name_empty)
+                    else -> null
+                }
+                viewModel.updateName(s.toString())
+
                 binding.saveButton.isEnabled = valid && !empty
             }
         })
 
-        binding.saveButton.setOnClickListener {
-            viewModel.save(
-                binding.fileNameInput.text.toString(),
-                binding.descriptionInput.text.toString()
-            )
-        }
+        binding.descriptionInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
 
-        binding.preview.setOnClickListener { showPreview() }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
 
-        binding.deletePhotoButton.setOnClickListener { goBack() }
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateDescription(s.toString())
+            }
+        })
+    }
 
-        viewModel.onSaveComplete = {
-            val activity = requireActivity()
-            val intent = Intent().apply { putExtra(CapturePhotoResultContract.OUTPUT_KEY, it) }
-            activity.setResult(Activity.RESULT_OK, intent)
-            activity.finish()
+    private fun epoxyController() = simpleController(viewModel) { state ->
+        if (state.listCapture.isNotEmpty()) {
+            val viewsOnScreen = if (state.listCapture.size > 1) 1.5f else 1f
+            carousel {
+                id("This is a ViewPager.")
+                numViewsToShowOnScreen(viewsOnScreen)
+                paddingRes(R.dimen.view_pager_item_padding)
+                models(state.listCapture.mapIndexed { _, item ->
+                    item?.let {
+                        ListViewPreviewModel_()
+                            .id(it.id)
+                            .data(it)
+                            .previewClickListener { model, _, _, _ -> showPreview(model.data()) }
+                            .deletePhotoClickListener { model, _, _, _ -> delete(model.data()) }
+                            .onVisibilityStateChanged { _, _, visibilityState ->
+                                if (visibilityState == VisibilityState.FOCUSED_VISIBLE) {
+                                    viewModel.copyVisibleItem(item)
+                                    binding.fileNameInputLayout.text = item.name
+                                }
+                            }
+                    }
+                })
+            }
+        } else {
+            requireActivity().runOnUiThread {
+                goBack()
+            }
         }
     }
 
     private fun goBack() {
-        viewModel.clearCaptures()
+        if (viewModel.mode == CaptureMode.Video) {
+            viewModel.clearCaptures()
+            viewModel.clearCaptureList()
+        }
         requireActivity().onBackPressed()
     }
 
-    override fun invalidate(): Unit = withState(viewModel) {
-        if (it.capture != null) {
-            binding.playIcon.isVisible = it.capture.isVideo() == true
-            binding.preview.load(it.capture.uri, imageLoader)
-        }
+    private fun delete(captureItem: CaptureItem) {
+        viewModel.clearSingleCaptures(captureItem)
     }
 
-    private fun showPreview() = withState(viewModel) {
-        requireNotNull(it.capture)
+    override fun invalidate(): Unit = withState(viewModel) {
+        epoxyController.requestModelBuild()
+    }
+
+    private fun showPreview(captureItem: CaptureItem?) = withState(viewModel) {
+        requireNotNull(captureItem)
 
         findNavController().navigate(
             R.id.action_saveFragment_to_previewFragment,
             PreviewArgs.bundle(
-                it.capture.uri.toString(),
-                it.capture.mimeType
+                captureItem.uri.toString(),
+                captureItem.mimeType
             )
         )
     }

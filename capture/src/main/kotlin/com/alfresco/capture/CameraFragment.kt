@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
+import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -28,12 +29,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
+import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
@@ -45,6 +50,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private lateinit var layout: CameraLayout
 
+    private var modeChangeDialog = WeakReference<AlertDialog>(null)
+    private var discardPhotoDialog = WeakReference<AlertDialog>(null)
+
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var mode: CaptureMode = CaptureMode.Photo
     private var cameraProvider: ProcessCameraProvider? = null
@@ -55,7 +63,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun onResume() {
         super.onResume()
-
+        this.mode = viewModel.mode
         // Enter fullscreen
         setFullscreen(true)
 
@@ -110,6 +118,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Prepare UI controls
         setUpCameraUi()
+
+        layout.preview.setOnClickListener {
+            navigateToSave()
+        }
     }
 
     private suspend fun updateCameraState() {
@@ -226,9 +238,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.modeSelectorView.onMode = { mode ->
-            this.mode = mode
-            configureShutterButton(mode)
-            configureCamera()
+            if (mode != this.mode)
+                modeChangePrompt(mode)
         }
 
         // Setup for button used to switch cameras
@@ -249,13 +260,21 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.closeButton.setOnClickListener {
-            requireActivity().finish()
+            withState(viewModel) {
+                if (it.listCapture.isNotEmpty())
+                    discardPhotoPrompt(it.listCapture.size)
+                else
+                    requireActivity().finish()
+            }
         }
     }
 
     private fun onTakePhotoButtonClick(controller: CameraController) {
+
         // Create output file to hold the image
         val photoFile = viewModel.prepareCaptureFile(mode)
+
+        Logger.d("Photo capture succeeded before: ${photoFile.name}")
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -269,7 +288,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                     Logger.d("Photo capture succeeded: $savedUri")
                     viewModel.onCapturePhoto(savedUri)
-                    navigateToSave()
+//                    navigateToSave()
                 }
 
                 override fun onError(exc: ImageCaptureException) {
@@ -384,8 +403,56 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun hasFrontCamera(): Boolean =
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
-    override fun invalidate() {
-        // no-op
+    override fun invalidate(): Unit = withState(viewModel) {
+        if (it.listCapture.isNotEmpty()) {
+            layout.preview.load(it.listCapture.last()?.uri)
+            layout.imageCount.text = it.listCapture.size.toString()
+            layout.rlPreview.visibility = View.VISIBLE
+        } else {
+            layout.imageCount.text = ""
+            layout.rlPreview.visibility = View.GONE
+        }
+    }
+
+    private fun modeChangePrompt(mode: CaptureMode) {
+        val oldDialog = modeChangeDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.mode_change_title))
+            .setMessage(resources.getString(R.string.mode_change_subtitle))
+            .setNegativeButton(resources.getString(R.string.mode_change_confirmation_negative)) { _, _ ->
+                if (this.mode == CaptureMode.Photo)
+                    layout.modeSelectorView.updateActive(0)
+                else layout.modeSelectorView.updateActive(1)
+            }
+            .setPositiveButton(resources.getString(R.string.mode_change_confirmation_positive)) { _, _ ->
+                viewModel.clearCaptures()
+                viewModel.clearCaptureList()
+                onModeChange(mode)
+            }
+            .show()
+        modeChangeDialog = WeakReference(dialog)
+    }
+
+    private fun onModeChange(mode: CaptureMode) {
+        this.mode = mode
+        configureShutterButton(mode)
+        configureCamera()
+    }
+
+    private fun discardPhotoPrompt(count: Int) {
+        val oldDialog = discardPhotoDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.discard_title))
+            .setMessage("$count " + resources.getString(R.string.discard_subtitle))
+            .setNegativeButton(resources.getString(R.string.discard_confirmation_negative), null)
+            .setPositiveButton(resources.getString(R.string.discard_confirmation_positive)) { _, _ ->
+                viewModel.clearCaptures()
+                requireActivity().finish()
+            }
+            .show()
+        discardPhotoDialog = WeakReference(dialog)
     }
 
     companion object {

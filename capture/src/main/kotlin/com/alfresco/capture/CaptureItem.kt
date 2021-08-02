@@ -7,10 +7,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.random.Random
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CaptureItem(
+    val id: Int,
     val uri: Uri,
     val mimeType: String,
     val name: String,
@@ -18,7 +20,6 @@ data class CaptureItem(
 ) : Parcelable {
     val filename: String
         get() = "$name$extension"
-
     val extension: String
         get() = when (mimeType) {
             PHOTO_MIMETYPE -> PHOTO_EXTENSION
@@ -41,15 +42,14 @@ data class CaptureItem(
         private const val VIDEO_NAME_PREFIX = "VID_"
 
         fun photoCapture(uri: Uri) =
-            CaptureItem(uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
+            CaptureItem(Random.nextInt(), uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
 
         fun videoCapture(uri: Uri) =
-            CaptureItem(uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
+            CaptureItem(Random.nextInt(), uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
 
         private fun defaultFilename(prefix: String): String {
-            val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+            val formatter = SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US)
             val time: Date = Calendar.getInstance().time
-
             return "$prefix${formatter.format(time)}"
         }
     }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 class CaptureHelperFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
-    private var onResult: CancellableContinuation<CaptureItem?>? = null
+    private var onResult: CancellableContinuation<List<CaptureItem>?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class CaptureHelperFragment : Fragment() {
         }
     }
 
-    private suspend fun capturePhoto(): CaptureItem? =
+    private suspend fun capturePhoto(): List<CaptureItem>? =
         suspendCancellableCoroutine { continuation ->
             onResult = continuation
             requestLauncher.launch(Unit)
@@ -32,7 +32,7 @@ class CaptureHelperFragment : Fragment() {
 
         suspend fun capturePhoto(
             context: Context
-        ): CaptureItem? =
+        ): List<CaptureItem>? =
             withFragment(
                 context,
                 TAG,

@@ -52,7 +52,6 @@ class CaptureHelperFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
 
-
         fun permissionRationale(context: Context) =
             context.getString(R.string.capture_permissions_rationale)
     }

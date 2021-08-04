@@ -1,6 +1,8 @@
 package com.alfresco.capture
 
+import android.location.Location
 import android.net.Uri
+import androidx.camera.core.ImageCapture
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.alfresco.content.session.SessionManager
@@ -13,8 +15,8 @@ data class CaptureState(
 class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
-    var longitude ="0"
-    var latitude= "0"
+    var longitude = "0"
+    var latitude = "0"
     var onSaveComplete: ((CaptureItem) -> Unit)? = null
     private val captureDir = SessionManager.requireSession.captureDir
 
@@ -64,5 +66,16 @@ class CaptureViewModel(
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
 
+    fun getMetaData(): ImageCapture.Metadata {
+        val metadata = ImageCapture.Metadata()
 
+        val location = Location("")
+
+        location.longitude = longitude.toDouble()
+        location.latitude = latitude.toDouble()
+
+        metadata.location = location
+
+        return metadata
+    }
 }

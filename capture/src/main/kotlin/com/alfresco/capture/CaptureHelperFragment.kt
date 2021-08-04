@@ -47,6 +47,12 @@ class CaptureHelperFragment : Fragment() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
 
+        fun optionalPermissions() =
+            listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+
         fun permissionRationale(context: Context) =
             context.getString(R.string.capture_permissions_rationale)
     }

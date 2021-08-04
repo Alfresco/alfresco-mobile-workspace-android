@@ -29,6 +29,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.fetch.VideoFrameFileFetcher
 import coil.load
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
@@ -50,7 +52,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private lateinit var layout: CameraLayout
 
-    private var modeChangeDialog = WeakReference<AlertDialog>(null)
     private var discardPhotoDialog = WeakReference<AlertDialog>(null)
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
@@ -61,9 +62,16 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
 
+    private val imageLoader: ImageLoader by lazy {
+        ImageLoader.Builder(requireContext())
+            .componentRegistry {
+                add(VideoFrameFileFetcher(requireContext()))
+            }
+            .build()
+    }
+
     override fun onResume() {
         super.onResume()
-        this.mode = viewModel.mode
         // Enter fullscreen
         setFullscreen(true)
 
@@ -238,8 +246,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.modeSelectorView.onMode = { mode ->
-            if (mode != this.mode)
-                modeChangePrompt(mode)
+            this.mode = mode
+            onModeChange(mode)
         }
 
         // Setup for button used to switch cameras
@@ -270,7 +278,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun onTakePhotoButtonClick(controller: CameraController) {
-
         // Create output file to hold the image
         val photoFile = viewModel.prepareCaptureFile(mode)
 
@@ -288,7 +295,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                     Logger.d("Photo capture succeeded: $savedUri")
                     viewModel.onCapturePhoto(savedUri)
-//                    navigateToSave()
                 }
 
                 override fun onError(exc: ImageCaptureException) {
@@ -328,7 +334,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
                         viewModel.onCaptureVideo(savedUri)
-                        navigateToSave()
                     }
 
                     override fun onError(
@@ -405,33 +410,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun invalidate(): Unit = withState(viewModel) {
         if (it.listCapture.isNotEmpty()) {
-            layout.preview.load(it.listCapture.last()?.uri)
+            layout.preview.load(it.listCapture.last()?.uri, imageLoader)
             layout.imageCount.text = it.listCapture.size.toString()
             layout.rlPreview.visibility = View.VISIBLE
         } else {
             layout.imageCount.text = ""
             layout.rlPreview.visibility = View.GONE
         }
-    }
-
-    private fun modeChangePrompt(mode: CaptureMode) {
-        val oldDialog = modeChangeDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.mode_change_title))
-            .setMessage(resources.getString(R.string.mode_change_subtitle))
-            .setNegativeButton(resources.getString(R.string.mode_change_confirmation_negative)) { _, _ ->
-                if (this.mode == CaptureMode.Photo)
-                    layout.modeSelectorView.updateActive(0)
-                else layout.modeSelectorView.updateActive(1)
-            }
-            .setPositiveButton(resources.getString(R.string.mode_change_confirmation_positive)) { _, _ ->
-                viewModel.clearCaptures()
-                viewModel.clearCaptureList()
-                onModeChange(mode)
-            }
-            .show()
-        modeChangeDialog = WeakReference(dialog)
     }
 
     private fun onModeChange(mode: CaptureMode) {

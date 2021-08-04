@@ -15,7 +15,6 @@ class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
 
-    var mode = CaptureMode.Photo
     var onSaveComplete: ((List<CaptureItem?>) -> Unit)? = null
 
     private val captureDir = SessionManager.requireSession.captureDir
@@ -69,22 +68,14 @@ class CaptureViewModel(
     }
 
     fun onCapturePhoto(uri: Uri) =
-        onCaptureMediaPhoto(CaptureItem.photoCapture(uri))
+        onCaptureMedia(CaptureItem.photoCapture(uri))
 
     fun onCaptureVideo(uri: Uri) =
-        onCaptureMediaVideo(CaptureItem.videoCapture(uri))
+        onCaptureMedia(CaptureItem.videoCapture(uri))
 
-    private fun onCaptureMediaPhoto(media: CaptureItem) =
+    private fun onCaptureMedia(media: CaptureItem) =
         setState {
-            mode = CaptureMode.Photo
             val list = listCapture + listOf(media)
-            copy(listCapture = list)
-        }
-
-    private fun onCaptureMediaVideo(media: CaptureItem) =
-        setState {
-            mode = CaptureMode.Video
-            val list = listOf(media)
             copy(listCapture = list)
         }
 

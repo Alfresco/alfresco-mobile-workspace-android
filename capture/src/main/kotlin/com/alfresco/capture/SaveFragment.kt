@@ -152,10 +152,6 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     private fun goBack() {
-        if (viewModel.mode == CaptureMode.Video) {
-            viewModel.clearCaptures()
-            viewModel.clearCaptureList()
-        }
         requireActivity().onBackPressed()
     }
 

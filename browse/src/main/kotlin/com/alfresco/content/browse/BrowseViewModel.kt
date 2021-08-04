@@ -24,6 +24,7 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import java.lang.IllegalStateException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.zip
@@ -33,6 +34,8 @@ class BrowseViewModel(
     state: BrowseViewState,
     val context: Context
 ) : ListViewModel<BrowseViewState>(state) {
+
+    private var observeUploadsJob: Job? = null
 
     init {
         fetchInitial()
@@ -105,7 +108,7 @@ class BrowseViewModel(
                 0,
                 ITEMS_PER_PAGE
             ).zip(
-                fetchNode(state.nodeId)
+                fetchNode(state.path, state.nodeId)
             ) { paging, parent ->
                 Pair(paging, parent)
             }.execute {
@@ -113,33 +116,24 @@ class BrowseViewModel(
                     is Loading -> copy(request = Loading())
                     is Fail -> copy(request = Fail(it.error))
                     is Success -> {
+                        observeUploads(it().second?.id)
                         update(it().first).copy(parent = it().second, request = Success(it().first))
                     }
                     else -> { this }
                 }
             }
-
-            // Fetch uploads from local datasource
-            if (state.nodeId != null) {
-                val repo = OfflineRepository()
-
-                // On refresh clean completed uploads
-                repo.removeCompletedUploads(state.nodeId)
-
-                repo.observeUploads(state.nodeId)
-                    .execute {
-                        if (it is Success) {
-                            updateUploads(it())
-                        } else { this }
-                    }
-            }
         }
     }
 
-    private suspend fun fetchNode(item: String?): Flow<Entry?> = if (item == null) {
+    private suspend fun fetchNode(path: String, item: String?): Flow<Entry?> = if (item == null) {
         flowOf(null)
     } else {
-        BrowseRepository()::fetchEntry.asFlow(item)
+        when (path) {
+            context.getString(R.string.nav_path_site) ->
+                BrowseRepository()::fetchLibraryDocumentsFolder.asFlow(item)
+            else ->
+                BrowseRepository()::fetchEntry.asFlow(item)
+        }
     }
 
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
@@ -170,6 +164,23 @@ class BrowseViewModel(
 
             else -> throw IllegalStateException()
         }
+    }
+
+    private fun observeUploads(nodeId: String?) {
+        if (nodeId == null) return
+
+        val repo = OfflineRepository()
+
+        // On refresh clean completed uploads
+        repo.removeCompletedUploads(nodeId)
+
+        observeUploadsJob?.cancel()
+        observeUploadsJob = repo.observeUploads(nodeId)
+            .execute {
+                if (it is Success) {
+                    updateUploads(it())
+                } else { this }
+            }
     }
 
     override fun emptyMessageArgs(state: ListViewState) =

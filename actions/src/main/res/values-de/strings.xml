@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Zu Favoriten hinzufügen</string>
     <string name="action_remove_favorite_title">Aus Favoriten entfernen</string>
@@ -24,6 +23,7 @@
 
     <string name="action_download_toast">Datei wird heruntergeladen. Siehe Benachrichtigungen für Details.</string>
     <string name="action_export_toast">Datei in lokalen Speicherort exportiert.</string>
+    <string name="action_download_storage_permission_rationale">Zum Herunterladen sind Berechtigungen für den Speicherzugriff erforderlich.</string>
     <string name="action_download_failed_permissions">Herunterladen fehlgeschlagen. Sie haben Berechtigungen für den Speicherzugriff deaktiviert.</string>
 
     <string name="action_open_with_downloading">Wird heruntergeladen&#8230;</string>
@@ -34,4 +34,10 @@
     <string name="action_remove_offline_title">Offline entfernen</string>
     <string name="action_add_offline_toast">%s wird offline zur Verfügung gestellt.</string>
     <string name="action_remove_offline_toast">%s ist offline nicht mehr verfügbar.</string>
+
+    <string name="action_upload_photo_title">Bilder oder Videos hochladen</string>
+    <string name="action_capture_media_title">Bilder oder Videos aufnehmen</string>
+    <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
+
+    <string name="action_upload_media_toast">Zum Hochladen vorgesehene Medien.</string>
 </resources>

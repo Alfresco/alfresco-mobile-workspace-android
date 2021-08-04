@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Schließen</string>
+    <string name="capture_button_alt">Aufnehmen</string>
+    <string name="switch_camera_button_alt">Kamera wechseln</string>
+    <string name="gallery_button_alt">Galerie</string>
+    <string name="flash_button_alt">Blitzlichtmodus</string>
+
+    <string name="capture_mode_photo">Bild</string>
+    <string name="capture_mode_video">Video</string>
+
+    <string name="capture_photo_preview_alt">Bildvorschau</string>
+    <string name="capture_file_name_hint">Dateiname</string>
+    <string name="capture_description_hint">Beschreibung</string>
+    <string name="capture_delete_photo_alt">Bild löschen</string>
+    <string name="capture_save_button">Speichern</string>
+    <string name="capture_file_name_invalid_chars">Der Dateiname darf keines der folgenden Zeichen enthalten: ?:\"*|/\&lt;></string>
+    <string name="capture_file_name_empty">Der Dateiname darf nicht leer sein.</string>
+
+    <string name="capture_nav_save_title">Vorschau</string>
+
+    <string name="camera_flash_auto">Automatisch</string>
+    <string name="camera_flash_on">An</string>
+    <string name="camera_flash_off">Aus</string>
+
+    <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
+    <string name="capture_failure_permissions">Zum Aufnehmen von Medien aktivieren Sie die Berechtigungen für Kamera und Mikrofon.</string>
+</resources>

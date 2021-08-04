@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Añadir a favoritos</string>
     <string name="action_remove_favorite_title">Quitar de favoritos</string>
@@ -24,6 +23,7 @@
 
     <string name="action_download_toast">Se descargará el fichero. Vea las notificaciones para más detalles</string>
     <string name="action_export_toast">Fichero exportado a almacenamiento local.</string>
+    <string name="action_download_storage_permission_rationale">La descarga requiere permiso para acceder al almacenamiento.</string>
     <string name="action_download_failed_permissions">Fallo al descargar. Desactivó los permisos de acceso al almacenamiento.</string>
 
     <string name="action_open_with_downloading">Descargando&#8230;</string>
@@ -34,4 +34,10 @@
     <string name="action_remove_offline_title">Quitar sin conexión</string>
     <string name="action_add_offline_toast">%s estará disponible sin conexión.</string>
     <string name="action_remove_offline_toast">%s ya no estará disponible sin conexión.</string>
+
+    <string name="action_upload_photo_title">Cargar fotos o vídeos</string>
+    <string name="action_capture_media_title">Tomar una foto o un vídeo</string>
+    <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
+
+    <string name="action_upload_media_toast">Contenido multimedia programado para cargar.</string>
 </resources>

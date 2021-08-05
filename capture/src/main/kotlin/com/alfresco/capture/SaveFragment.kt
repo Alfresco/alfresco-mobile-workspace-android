@@ -139,6 +139,7 @@ class SaveFragment : Fragment(), MavericksView {
                                 if (visibilityState == VisibilityState.FOCUSED_VISIBLE) {
                                     viewModel.copyVisibleItem(item)
                                     binding.fileNameInputLayout.text = item.name
+                                    binding.descriptionInputLayout.text = item.description
                                 }
                             }
                     }

@@ -1,6 +1,8 @@
 package com.alfresco.capture
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -24,6 +26,7 @@ import androidx.camera.view.video.ExperimentalVideo
 import androidx.camera.view.video.OnVideoSavedCallback
 import androidx.camera.view.video.OutputFileOptions
 import androidx.camera.view.video.OutputFileResults
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -37,6 +40,7 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
+import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -51,8 +55,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
-
     private var discardPhotoDialog = WeakReference<AlertDialog>(null)
+    private val locationData: LocationData by lazy {
+        LocationData(requireContext())
+    }
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private var mode: CaptureMode = CaptureMode.Photo
@@ -284,7 +290,16 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         Logger.d("Photo capture succeeded before: ${photoFile.name}")
 
         // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        val outputOptions = when {
+            LocationUtils.isLocationEnabled(requireActivity()) -> {
+                ImageCapture.OutputFileOptions.Builder(photoFile)
+                    .setMetadata(viewModel.getMetaData()).build()
+            }
+            else -> {
+                ImageCapture.OutputFileOptions.Builder(photoFile).build()
+            }
+        }
 
         // Setup image capture listener which is triggered after photo has been taken
         controller.takePicture(
@@ -316,12 +331,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.shutterButton.state = ShutterButton.State.Video
             layout.modeSelectorView.isVisible = true
             layout.captureDurationView.isVisible = false
+            layout.cameraSwitchButton.isVisible = true
 
             controller.stopRecording()
         } else {
             layout.shutterButton.state = ShutterButton.State.Recording
             layout.modeSelectorView.isVisible = false
             layout.captureDurationView.isVisible = true
+            layout.cameraSwitchButton.isVisible = false
 
             val videoFile = viewModel.prepareCaptureFile(mode)
             val outputOptions = OutputFileOptions.builder(videoFile).build()
@@ -388,12 +405,18 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Called when camera changes. */
     private fun updateFlashControlState() {
-        layout.flashButton.isVisible = cameraController?.hasFlashUnit() ?: false
+        layout.flashButton.isVisible = flashControlEnabled(mode, cameraController)
         layout.flashMenu.isVisible = false
 
         val flashMode = cameraController?.imageCaptureFlashMode ?: ImageCapture.FLASH_MODE_AUTO
         layout.flashButton.setImageResource(flashModeIcon(flashMode))
     }
+
+    private fun flashControlEnabled(mode: CaptureMode, controller: AlfrescoCameraController?) =
+        when (mode) {
+            CaptureMode.Photo -> controller?.hasFlashUnit() ?: false
+            CaptureMode.Video -> false
+        }
 
     private fun flashModeIcon(@FlashMode flashMode: Int) =
         when (flashMode) {
@@ -438,6 +461,24 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             }
             .show()
         discardPhotoDialog = WeakReference(dialog)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        invokeLocation()
+    }
+
+    private fun invokeLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            when {
+                LocationUtils.isLocationEnabled(requireActivity()) -> {
+                    locationData.observe(this, {
+                        viewModel.longitude = it.longitude.toString()
+                        viewModel.latitude = it.latitude.toString()
+                    })
+                }
+            }
+        }
     }
 
     companion object {

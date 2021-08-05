@@ -48,6 +48,23 @@ open class PermissionFragment : Fragment() {
         }
     }
 
+    private fun requestOptionalPermissions(
+        permissions: List<String>,
+        continuation: CancellableContinuation<Boolean>
+    ) {
+        val denied = deniedPermissions(requireContext(), permissions)
+
+        when {
+            denied.isEmpty() -> {
+                continuation.resume(true, null)
+            }
+
+            else -> {
+                execPermissionRequest(denied, continuation)
+            }
+        }
+    }
+
     private fun shouldShowRequestRationale(permissions: List<String>) =
         permissions.any { shouldShowRequestPermissionRationale(it) }
 
@@ -83,6 +100,10 @@ open class PermissionFragment : Fragment() {
         rationale: String
     ): Boolean = suspendCancellableCoroutine { requestPermissions(permission, rationale, it) }
 
+    private suspend fun requestOptionalPermissions(
+        permission: List<String>
+    ): Boolean = suspendCancellableCoroutine { requestOptionalPermissions(permission, it) }
+
     companion object {
         private val TAG = PermissionFragment::class.java.simpleName
 
@@ -101,6 +122,17 @@ open class PermissionFragment : Fragment() {
                 context,
                 TAG,
                 { it.requestPermissions(permissions.toList(), rationale) },
+                { PermissionFragment() }
+            )
+
+        suspend fun requestOptionalPermissions(
+            context: Context,
+            permissions: List<String>
+        ): Boolean =
+            withFragment(
+                context,
+                TAG,
+                { it.requestOptionalPermissions(permissions.toList()) },
                 { PermissionFragment() }
             )
 

@@ -41,6 +41,8 @@ class ShutterButton(
                 LayoutParams.WRAP_CONTENT
             )
             setImageResource(R.drawable.ic_shutter_photo_to_video)
+            // Seems that the drawable is sometimes loaded in the end state, so reset it.
+            (drawable as? AnimatedVectorDrawable)?.reset()
         }
 
     private fun createBackground() =

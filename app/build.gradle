@@ -118,3 +118,5 @@ dependencies {
 static Object envOrDef(String varName, Object defaultValue) {
     return System.getenv(varName) ?: defaultValue
 }
+
+apply from: "$rootDir/config/licenseInventory.gradle"

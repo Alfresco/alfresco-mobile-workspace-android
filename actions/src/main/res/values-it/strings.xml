@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Aggiungi a Preferiti</string>
     <string name="action_remove_favorite_title">Rimuovi dai Preferiti</string>
@@ -24,6 +23,7 @@
 
     <string name="action_download_toast">Il file verrà scaricato. Guarda le notifiche per maggiori dettagli</string>
     <string name="action_export_toast">File esportato nell\'archivio locale.</string>
+    <string name="action_download_storage_permission_rationale">Il download richiede che siano attivate le autorizzazioni per accedere allo spazio di archiviazione.</string>
     <string name="action_download_failed_permissions">Download non riuscito. Sono state disattivate le autorizzazioni per accedere allo spazio di archiviazione.</string>
 
     <string name="action_open_with_downloading">Download in corso&#8230;</string>
@@ -34,4 +34,10 @@
     <string name="action_remove_offline_title">Rimuovi offline</string>
     <string name="action_add_offline_toast">%s sarà reso disponibile offline.</string>
     <string name="action_remove_offline_toast">%s non sarà più disponibile offline.</string>
+
+    <string name="action_upload_photo_title">Carica foto o video</string>
+    <string name="action_capture_media_title">Acquisisci una foto o un video</string>
+    <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
+
+    <string name="action_upload_media_toast">Contenuti multimediali pianificati per il caricamento.</string>
 </resources>

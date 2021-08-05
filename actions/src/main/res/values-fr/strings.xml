@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Ajouter aux favoris</string>
     <string name="action_remove_favorite_title">Supprimer des favoris</string>
@@ -24,6 +23,7 @@
 
     <string name="action_download_toast">Le fichier sera téléchargé. Voir les notifications pour plus de détails</string>
     <string name="action_export_toast">Fichier exporté vers le stockage local.</string>
+    <string name="action_download_storage_permission_rationale">Autorisation d\'accès à l\'espace de stockage nécessaire pour le téléchargement.</string>
     <string name="action_download_failed_permissions">Le téléchargement a échoué. Les autorisations d\'accès au stockage ont été désactivées.</string>
 
     <string name="action_open_with_downloading">Téléchargement en cours&#8230;</string>
@@ -34,4 +34,10 @@
     <string name="action_remove_offline_title">Supprimer hors ligne</string>
     <string name="action_add_offline_toast">%s sera disponible hors ligne.</string>
     <string name="action_remove_offline_toast">%s ne sera plus disponible hors ligne.</string>
+
+    <string name="action_upload_photo_title">Importer des photos ou des vidéos</string>
+    <string name="action_capture_media_title">Prendre une photo ou une vidéo</string>
+    <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
+
+    <string name="action_upload_media_toast">Importation du fichier multimédia prévue.</string>
 </resources>

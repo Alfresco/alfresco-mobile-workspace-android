@@ -25,6 +25,7 @@ data class ActionCaptureMedia(
                 CaptureHelperFragment.permissionRationale(context)
             )
         ) {
+            PermissionFragment.requestOptionalPermissions(context, CaptureHelperFragment.optionalPermissions())
             val result = CaptureHelperFragment.capturePhoto(context)
             if (result != null) {
                 if (result.count() > 0) {

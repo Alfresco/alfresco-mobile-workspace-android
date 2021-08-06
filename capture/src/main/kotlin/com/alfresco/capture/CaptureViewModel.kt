@@ -87,6 +87,23 @@ class CaptureViewModel(
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
 
+    fun isAllFileNameValid(listCapture: List<CaptureItem?>): Boolean {
+
+        var isValidNotEmpty = false
+
+        listCapture.forEach {
+            it?.let { capture ->
+                val valid = isFilenameValid(capture.name)
+                val empty = capture.name.isEmpty()
+                isValidNotEmpty = valid && !empty
+                if (!isValidNotEmpty)
+                    return isValidNotEmpty
+            }
+        }
+
+        return isValidNotEmpty
+    }
+
     fun updateName(newFileName: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {

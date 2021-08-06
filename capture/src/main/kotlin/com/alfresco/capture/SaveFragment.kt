@@ -92,17 +92,8 @@ class SaveFragment : Fragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isFilenameValid(s.toString())
-                val empty = s.toString().isEmpty()
-
-                binding.fileNameInputLayout.error = when {
-                    !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
-                    empty -> resources.getString(R.string.capture_file_name_empty)
-                    else -> null
-                }
+                validateName(s.toString())
                 viewModel.updateName(s.toString())
-
-                binding.saveButton.isEnabled = valid && !empty
             }
         })
 
@@ -150,6 +141,22 @@ class SaveFragment : Fragment(), MavericksView {
                 goBack()
             }
         }
+    }
+
+    private fun validateName(name: String) {
+        val valid = viewModel.isFilenameValid(name)
+        val empty = name.isEmpty()
+
+        binding.fileNameInputLayout.error = when {
+            !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
+            empty -> resources.getString(R.string.capture_file_name_empty)
+            else -> null
+        }
+        setSaveButtonState(valid && !empty)
+    }
+
+    private fun setSaveButtonState(isVisibleFieldValid: Boolean) = withState(viewModel) {
+        binding.saveButton.isEnabled = isVisibleFieldValid && viewModel.isAllFileNameValid(it.listCapture)
     }
 
     private fun goBack() {

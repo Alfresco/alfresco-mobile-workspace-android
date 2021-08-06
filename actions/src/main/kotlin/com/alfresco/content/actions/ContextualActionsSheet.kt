@@ -36,6 +36,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.header.apply {
+            title.setLines(2)
             icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context?.theme))
             title.text = state.entry.name
         }

@@ -10,13 +10,13 @@ import java.io.File
 
 data class CaptureState(
     val visibleItem: CaptureItem? = null,
-    val listCapture: List<CaptureItem?> = emptyList()
+    val listCapture: List<CaptureItem> = emptyList()
 ) : MavericksState
 
 class CaptureViewModel(
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
-    var onSaveComplete: ((List<CaptureItem?>) -> Unit)? = null
+    var onSaveComplete: ((List<CaptureItem>) -> Unit)? = null
 
     var longitude = "0"
     var latitude = "0"

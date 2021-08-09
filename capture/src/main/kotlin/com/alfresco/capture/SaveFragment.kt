@@ -17,11 +17,11 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.Carousel
 import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.airbnb.epoxy.VisibilityState
-import com.airbnb.epoxy.carousel
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.capture.databinding.FragmentSaveBinding
+import com.alfresco.content.carouselBuilder
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.alfresco.ui.text
@@ -115,26 +115,26 @@ class SaveFragment : Fragment(), MavericksView {
     private fun epoxyController() = simpleController(viewModel) { state ->
         if (state.listCapture.isNotEmpty()) {
             val viewsOnScreen = if (state.listCapture.size > 1) 1.5f else 1f
-            carousel {
-                id("This is a ViewPager.")
+            carouselBuilder {
+                id("carousel")
                 numViewsToShowOnScreen(viewsOnScreen)
                 paddingRes(R.dimen.view_pager_item_padding)
-                models(state.listCapture.mapIndexed { _, item ->
-                    item?.let {
-                        ListViewPreviewModel_()
-                            .id(it.id)
-                            .data(it)
-                            .previewClickListener { model, _, _, _ -> showPreview(model.data()) }
-                            .deletePhotoClickListener { model, _, _, _ -> delete(model.data()) }
-                            .onVisibilityStateChanged { _, _, visibilityState ->
-                                if (visibilityState == VisibilityState.FOCUSED_VISIBLE) {
-                                    viewModel.copyVisibleItem(item)
-                                    binding.fileNameInputLayout.text = item.name
-                                    binding.descriptionInputLayout.text = item.description
-                                }
+
+                for (item in state.listCapture) {
+                    this.listViewPreview {
+                        id(item.id)
+                        data(item)
+                        previewClickListener { model, _, _, _ -> showPreview(model.data()) }
+                        deletePhotoClickListener { model, _, _, _ -> delete(model.data()) }
+                        onVisibilityStateChanged { _, _, visibilityState ->
+                            if (visibilityState == VisibilityState.FOCUSED_VISIBLE) {
+                                viewModel.copyVisibleItem(item)
+                                binding.fileNameInputLayout.text = item.name
+                                binding.descriptionInputLayout.text = item.description
                             }
+                        }
                     }
-                })
+                }
             }
         } else {
             requireActivity().runOnUiThread {

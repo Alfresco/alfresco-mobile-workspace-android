@@ -47,7 +47,7 @@ class CaptureViewModel(
     private fun deleteCapture(captureItem: CaptureItem) =
         setState {
             copy(listCapture = listCapture.filter {
-                it?.id != captureItem.id
+                it.uri != captureItem.uri
             })
         }
 

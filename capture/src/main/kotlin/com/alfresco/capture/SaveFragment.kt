@@ -122,7 +122,7 @@ class SaveFragment : Fragment(), MavericksView {
 
                 for (item in state.listCapture) {
                     this.listViewPreview {
-                        id(item.id)
+                        id(item.uri.toString())
                         data(item)
                         previewClickListener { model, _, _, _ -> showPreview(model.data()) }
                         deletePhotoClickListener { model, _, _, _ -> delete(model.data()) }

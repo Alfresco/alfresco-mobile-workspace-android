@@ -7,12 +7,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.random.Random
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CaptureItem(
-    val id: Int,
     val uri: Uri,
     val mimeType: String,
     val name: String,
@@ -42,10 +40,10 @@ data class CaptureItem(
         private const val VIDEO_NAME_PREFIX = "VID_"
 
         fun photoCapture(uri: Uri) =
-            CaptureItem(Random.nextInt(), uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
+            CaptureItem(uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
 
         fun videoCapture(uri: Uri) =
-            CaptureItem(Random.nextInt(), uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
+            CaptureItem(uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
 
         private fun defaultFilename(prefix: String): String {
             val formatter = SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US)

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -12,20 +13,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.alfresco.capture.R
 import com.alfresco.content.actions.databinding.DialogCreateFolderBinding
+import kotlinx.parcelize.Parcelize
 
-data class CreateFolderDataModel(val name: String, val description: String)
+@Parcelize
+data class CreateFolderDataModel(val name: String, val description: String) : Parcelable
 
-internal data class CreateFolderState(val dataModel: CreateFolderDataModel? = null) : MavericksState {
-
-}
+internal data class CreateFolderState(val dataModel: CreateFolderDataModel? = null) : MavericksState
 
 internal class CreateFolderViewModel(
     val context: Context,
@@ -35,6 +38,11 @@ internal class CreateFolderViewModel(
     fun isFoldernameValid(filename: String): Boolean {
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
+    }
+
+    fun updateModel() = setState {
+        val data = CreateFolderDataModel("aman", "title")
+        copy(dataModel = data)
     }
 
     companion object : MavericksViewModelFactory<CreateFolderViewModel, CreateFolderState> {
@@ -57,7 +65,7 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         binding = DialogCreateFolderBinding.inflate(inflater, container, false)
 
         dialog?.window?.apply {
-            setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT),20))
+            setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 20))
             requestFeature(Window.FEATURE_NO_TITLE)
         }
 
@@ -89,7 +97,16 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
             }
         })
 
-        binding.tvCancel.setOnClickListener { dialog?.dismiss() }
+        binding.tvCancel.setOnClickListener {
+            viewModel.updateModel()
+            withState(viewModel) {
+                val result = Bundle().apply {
+                    putParcelable("folder", it.dataModel!!)
+                }
+                setFragmentResult("request_key", result)
+            }
+            dialog?.dismiss()
+        }
     }
 
     override fun onStart() {

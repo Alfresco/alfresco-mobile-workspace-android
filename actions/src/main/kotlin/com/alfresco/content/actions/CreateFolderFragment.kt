@@ -12,15 +12,16 @@ class CreateFolderFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setFragmentResultListener(""){
+                requestKey, bundle ->
+            val result = bundle.getParcelable<CreateFolderDataModel>("folder")
+        }
 
     }
 
     private suspend fun openFolderDialog(): CreateFolderDataModel =
         suspendCancellableCoroutine { continuation ->
-            setFragmentResultListener(""){
-                requestKey, bundle ->
-//                val result = bundle.getParcelable<CreateFolderDataModel>()
-            }
+            CreateFolderDialog().show(childFragmentManager, null)
         }
 
 

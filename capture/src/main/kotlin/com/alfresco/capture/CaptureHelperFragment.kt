@@ -44,7 +44,6 @@ class CaptureHelperFragment : Fragment() {
             listOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.ACCESS_FINE_LOCATION
             )
 
         fun optionalPermissions() =

@@ -3,6 +3,8 @@ package com.alfresco.content.data
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.alfresco.content.apis.NodesApi
+import com.alfresco.content.models.NodeBodyCreate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
@@ -32,6 +34,10 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private val box: Box<Entry>
+
+    private val service: NodesApi by lazy {
+        session.createService(NodesApi::class.java)
+    }
 
     init {
         ObjectBox.init(session.context)
@@ -168,6 +174,22 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         update(entry)
         val srcPath = path.removePrefix("file://")
         File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))
+    }
+
+    suspend fun createFolder(name: String, parentId: String?) {
+
+        val nodeBodyCreate = NodeBodyCreate(
+            name = name,
+            nodeType = "cm:folder"
+        )
+
+
+        service.createNode(
+            nodeId = requireNotNull(parentId),
+            nodeBodyCreate = nodeBodyCreate,
+            autoRename = true
+        )
+
     }
 
     internal fun fetchPendingUploads() =

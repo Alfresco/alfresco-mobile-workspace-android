@@ -40,4 +40,8 @@
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media scheduled for upload.</string>
+
+    <string name="action_create_folder">New Folder</string>
+    <string name="action_folder_cancel">Cancel</string>
+    <string name="action_folder_create">Create</string>
 </resources>

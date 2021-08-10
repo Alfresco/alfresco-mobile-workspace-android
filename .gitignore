@@ -17,6 +17,7 @@
 bin/
 gen/
 out/
+*.bak
 
 # Gradle files
 .gradle/

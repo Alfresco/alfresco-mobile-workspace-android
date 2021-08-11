@@ -15,9 +15,13 @@ data class ActionCreateFolder(
 
     override suspend fun execute(context: Context): Entry {
 
-        CreateFolderFragment.openFolderDialog(context)
+        val result = CreateFolderFragment.openFolderDialog(context)
 
-//        repository.createFolder("amanpal", entry.id)
+        result?.let {
+
+            repository.createFolder(it.name, entry.id)
+
+        }
 
         return entry
     }

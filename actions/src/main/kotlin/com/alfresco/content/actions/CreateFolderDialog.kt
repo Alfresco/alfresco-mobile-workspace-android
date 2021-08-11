@@ -20,7 +20,6 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
-import com.airbnb.mvrx.withState
 import com.alfresco.capture.R
 import com.alfresco.content.actions.databinding.DialogCreateFolderBinding
 import kotlinx.parcelize.Parcelize
@@ -28,21 +27,18 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CreateFolderDataModel(val name: String, val description: String) : Parcelable
 
-internal data class CreateFolderState(val dataModel: CreateFolderDataModel? = null) : MavericksState
+internal data class CreateFolderState(val dataModel: CreateFolderDataModel? = CreateFolderDataModel("", "")) : MavericksState
 
 internal class CreateFolderViewModel(
     val context: Context,
     state: CreateFolderState
 ) : MavericksViewModel<CreateFolderState>(state) {
 
-    fun isFoldernameValid(filename: String): Boolean {
+    var onCreateComplete: ((CreateFolderDataModel) -> Unit)? = null
+
+    fun isFolderNameValid(filename: String): Boolean {
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
-    }
-
-    fun updateModel() = setState {
-        val data = CreateFolderDataModel("aman", "title")
-        copy(dataModel = data)
     }
 
     companion object : MavericksViewModelFactory<CreateFolderViewModel, CreateFolderState> {
@@ -52,6 +48,17 @@ internal class CreateFolderViewModel(
         ) = CreateFolderViewModel(viewModelContext.activity(), state)
     }
 
+    fun create(folderName: String, description: String) = withState {
+
+        requireNotNull(it.dataModel)
+
+        onCreateComplete?.invoke(
+            it.dataModel.copy(
+                name = folderName,
+                description = description
+            )
+        )
+    }
 }
 
 class CreateFolderDialog : DialogFragment(), MavericksView {
@@ -84,7 +91,7 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isFoldernameValid(s.toString())
+                val valid = viewModel.isFolderNameValid(s.toString())
 
                 val empty = s.toString().isEmpty()
 
@@ -98,13 +105,17 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         })
 
         binding.tvCancel.setOnClickListener {
-            viewModel.updateModel()
-            withState(viewModel) {
-                val result = Bundle().apply {
-                    putParcelable("folder", it.dataModel!!)
-                }
-                setFragmentResult("request_key", result)
+            viewModel.create(
+                binding.folderNameInput.text.toString(),
+                binding.folderDescriptionInput.text.toString()
+            )
+        }
+
+        viewModel.onCreateComplete = {
+            val result = Bundle().apply {
+                putParcelable(CreateFolderFragment.DATA_OBJ, it)
             }
+            setFragmentResult(CreateFolderFragment.REQUEST_KEY, result)
             dialog?.dismiss()
         }
     }

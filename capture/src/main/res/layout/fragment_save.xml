@@ -57,6 +57,7 @@
                         android:background="@drawable/bg_camera_btn"
                         android:src="@drawable/ic_video_play"
                         android:clickable="false"
+                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
 
                     <ImageButton
@@ -64,6 +65,7 @@
                         style="@style/Widget.Alfresco.Camera.Button"
                         android:layout_width="@dimen/capture_button_size"
                         android:layout_height="@dimen/capture_button_size"
+                        android:visibility="gone"
                         android:layout_gravity="bottom|end"
                         android:layout_margin="@dimen/capture_layout_small_margin"
                         android:background="@drawable/bg_camera_btn"

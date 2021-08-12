@@ -1,23 +1,15 @@
 package com.alfresco.capture
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Looper
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.capture.databinding.ActivityCaptureBinding
 import com.alfresco.ui.KeyHandler
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 
 class CaptureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCaptureBinding

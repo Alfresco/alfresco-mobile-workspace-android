@@ -85,10 +85,10 @@ class SaveFragment : Fragment(), MavericksView {
                 val empty = s.toString().isEmpty()
 
                 binding.fileNameInputLayout.error = when {
-                    !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
-                    empty -> resources.getString(R.string.capture_file_name_empty)
-                    else -> null
-                }
+                        !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
+                        empty -> resources.getString(R.string.capture_file_name_empty)
+                        else -> null
+                    }
                 binding.saveButton.isEnabled = valid && !empty
             }
         })

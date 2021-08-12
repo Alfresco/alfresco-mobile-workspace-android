@@ -105,6 +105,10 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         })
 
         binding.tvCancel.setOnClickListener {
+            setResult(null)
+        }
+
+        binding.tvCreate.setOnClickListener {
             viewModel.create(
                 binding.folderNameInput.text.toString(),
                 binding.folderDescriptionInput.text.toString()
@@ -112,12 +116,16 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         }
 
         viewModel.onCreateComplete = {
-            val result = Bundle().apply {
-                putParcelable(CreateFolderFragment.DATA_OBJ, it)
-            }
-            setFragmentResult(CreateFolderFragment.REQUEST_KEY, result)
+            setResult(it)
             dialog?.dismiss()
         }
+    }
+
+    private fun setResult(obj: CreateFolderDataModel?) {
+        val result = Bundle().apply {
+            putParcelable(CreateFolderFragment.DATA_OBJ, obj)
+        }
+        setFragmentResult(CreateFolderFragment.REQUEST_KEY, result)
     }
 
     override fun onStart() {

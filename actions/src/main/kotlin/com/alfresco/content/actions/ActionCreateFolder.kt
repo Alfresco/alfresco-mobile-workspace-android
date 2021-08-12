@@ -19,7 +19,7 @@ data class ActionCreateFolder(
 
         result?.let {
 
-            repository.createFolder(it.name, entry.id)
+            repository.createFolder(it.name, it.description,entry.id)
 
         }
 

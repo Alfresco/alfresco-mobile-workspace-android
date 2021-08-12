@@ -176,11 +176,16 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))
     }
 
-    suspend fun createFolder(name: String, parentId: String?) {
+    suspend fun createFolder(name: String, description: String, parentId: String?) {
+        val list: HashMap<String, String> = HashMap()
+
+        list["cm:title"] = name
+        list["cm:description"] = description
 
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
-            nodeType = "cm:folder"
+            nodeType = "cm:folder",
+            properties = list
         )
 
 

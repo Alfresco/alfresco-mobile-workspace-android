@@ -42,13 +42,13 @@ class CaptureModeSelectorView(
     }
 
     constructor(context: Context) :
-        this(context, null)
+            this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) :
-        this(context, attrs, 0)
+            this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-        this(context, attrs, defStyleAttr, 0)
+            this(context, attrs, defStyleAttr, 0)
 
     private fun createRecyclerView() =
         RecyclerView(context).apply {
@@ -75,6 +75,13 @@ class CaptureModeSelectorView(
     private fun onItemSelected(position: Int) {
         setActive(position)
         onMode?.invoke(modes[position])
+    }
+
+    fun retainLastState(position: Int) {
+        setActive(position)
+        onMode?.invoke(modes[position])
+        recyclerView.layoutManager?.scrollToPosition(position)
+        recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.isEnabled = true
     }
 
     private fun setActive(position: Int) {

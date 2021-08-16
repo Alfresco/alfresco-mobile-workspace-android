@@ -62,11 +62,9 @@ class CaptureModeSelectorView(
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-            addItemDecoration(
-                SpacingDecoration(
+            addItemDecoration(SpacingDecoration(
                     resources.getDimension(R.dimen.capture_button_min_spacing).toInt()
-                )
-            )
+            ))
             addItemDecoration(BoundsOffsetDecoration())
         }.also {
             val snapHelper = LinearSnapHelper()

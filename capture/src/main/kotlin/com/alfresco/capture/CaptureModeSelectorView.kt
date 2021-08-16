@@ -77,7 +77,8 @@ class CaptureModeSelectorView(
         onMode?.invoke(modes[position])
     }
 
-    fun retainLastState(position: Int) {
+    fun retainLastState(mode: CaptureMode) {
+        val position = modes.indexOf(mode)
         setActive(position)
         recyclerView.layoutManager?.scrollToPosition(position)
         recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.isEnabled = true

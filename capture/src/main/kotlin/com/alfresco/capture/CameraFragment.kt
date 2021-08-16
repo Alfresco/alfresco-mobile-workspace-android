@@ -78,6 +78,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         } else {
             layout.modeSelectorView.retainLastState(1)
         }
+        setMode(viewModel.mode)
     }
 
     override fun onPause() {
@@ -240,7 +241,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         layout.modeSelectorView.onMode = { mode ->
             viewModel.mode = mode
-            configureShutterButton(mode)
+            setMode(mode)
             configureCamera()
         }
 
@@ -264,6 +265,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.closeButton.setOnClickListener {
             requireActivity().finish()
         }
+    }
+
+    private fun setMode(mode:CaptureMode){
+        configureShutterButton(mode)
     }
 
     private fun onTakePhotoButtonClick(controller: CameraController) {

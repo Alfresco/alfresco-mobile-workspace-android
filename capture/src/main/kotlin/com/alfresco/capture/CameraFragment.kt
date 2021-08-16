@@ -263,7 +263,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
     }
 
-
     private fun onTakePhotoButtonClick(controller: CameraController) {
         // Create output file to hold the image
         val photoFile = viewModel.prepareCaptureFile(viewModel.mode)

@@ -74,7 +74,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.modeSelectorView.setMode(viewModel.mode)
-        setMode(viewModel.mode)
+        configureShutterButton(viewModel.mode)
     }
 
     override fun onPause() {
@@ -237,7 +237,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         layout.modeSelectorView.onMode = { mode ->
             viewModel.mode = mode
-            setMode(mode)
+            configureShutterButton(mode)
             configureCamera()
         }
 
@@ -263,9 +263,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
     }
 
-    private fun setMode(mode: CaptureMode) {
-        configureShutterButton(mode)
-    }
 
     private fun onTakePhotoButtonClick(controller: CameraController) {
         // Create output file to hold the image

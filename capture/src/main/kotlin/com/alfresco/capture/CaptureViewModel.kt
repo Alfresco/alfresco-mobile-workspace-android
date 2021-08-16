@@ -20,6 +20,7 @@ class CaptureViewModel(
     var onSaveComplete: ((CaptureItem) -> Unit)? = null
     private val captureDir = SessionManager.requireSession.captureDir
     var mode: CaptureMode = CaptureMode.Photo
+
     init {
         // Clear any pending captures from a previous session
         clearCaptures()

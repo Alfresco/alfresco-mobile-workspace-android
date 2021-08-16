@@ -66,6 +66,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Enter fullscreen
         setFullscreen(true)
+
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
         lifecycleScope.launch {
@@ -123,7 +124,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Prepare UI controls
         setUpCameraUi()
-
     }
 
     private suspend fun updateCameraState() {
@@ -134,7 +134,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             )
         ) {
             if (cameraController == null) {
-//                viewModel.mode = CaptureMode.Photo // always reset
                 setUpCamera()
             }
             layout.messageView.isVisible = false

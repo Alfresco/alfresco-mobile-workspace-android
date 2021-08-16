@@ -54,7 +54,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
-    private var mode: CaptureMode = CaptureMode.Photo
+
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
 
@@ -72,6 +72,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         lifecycleScope.launch {
             updateCameraState()
         }
+
+        layout.modeSelectorView.setMode(viewModel.mode)
+        configureShutterButton(viewModel.mode)
     }
 
     override fun onPause() {
@@ -128,7 +131,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             )
         ) {
             if (cameraController == null) {
-                mode = CaptureMode.Photo // always reset
                 setUpCamera()
             }
             layout.messageView.isVisible = false
@@ -167,10 +169,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun configureCamera() {
-        layout.aspectRatio = mode.aspectRatio().toFloat()
+        layout.aspectRatio = viewModel.mode.aspectRatio().toFloat()
 
         cameraController = AlfrescoCameraController(requireContext()).apply {
-            setEnabledUseCases(useCaseFor(mode))
+            setEnabledUseCases(useCaseFor(viewModel.mode))
             setCameraSelector(lensFacing)
             imageCaptureFlashMode = DEFAULT_FLASH_MODE
         }.also {
@@ -234,7 +236,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.modeSelectorView.onMode = { mode ->
-            this.mode = mode
+            viewModel.mode = mode
             configureShutterButton(mode)
             configureCamera()
         }
@@ -263,7 +265,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun onTakePhotoButtonClick(controller: CameraController) {
         // Create output file to hold the image
-        val photoFile = viewModel.prepareCaptureFile(mode)
+        val photoFile = viewModel.prepareCaptureFile(viewModel.mode)
 
         // Create output options object which contains file + metadata
 
@@ -317,7 +319,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.captureDurationView.isVisible = true
             layout.cameraSwitchButton.isVisible = false
 
-            val videoFile = viewModel.prepareCaptureFile(mode)
+            val videoFile = viewModel.prepareCaptureFile(viewModel.mode)
             val outputOptions = OutputFileOptions.builder(videoFile).build()
 
             cameraController?.startRecording(
@@ -383,7 +385,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Called when camera changes. */
     private fun updateFlashControlState() {
-        layout.flashButton.isVisible = flashControlEnabled(mode, cameraController)
+        layout.flashButton.isVisible = flashControlEnabled(viewModel.mode, cameraController)
         layout.flashMenu.isVisible = false
 
         val flashMode = cameraController?.imageCaptureFlashMode ?: ImageCapture.FLASH_MODE_AUTO

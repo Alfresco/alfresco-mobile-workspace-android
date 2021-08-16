@@ -267,7 +267,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
     }
 
-    private fun setMode(mode:CaptureMode){
+    private fun setMode(mode: CaptureMode) {
         configureShutterButton(mode)
     }
 

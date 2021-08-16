@@ -13,6 +13,7 @@ import androidx.annotation.Px
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -75,6 +76,13 @@ class CaptureModeSelectorView(
     private fun onItemSelected(position: Int) {
         setActive(position)
         onMode?.invoke(modes[position])
+    }
+
+    fun retainLastState(position: Int) {
+        setActive(position)
+        onMode?.invoke(modes[position])
+        recyclerView.layoutManager?.scrollToPosition(position)
+        recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.isEnabled=true
     }
 
     private fun setActive(position: Int) {

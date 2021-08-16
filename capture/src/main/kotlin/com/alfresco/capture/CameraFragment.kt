@@ -73,7 +73,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             updateCameraState()
         }
 
-        layout.modeSelectorView.retainLastState(viewModel.mode)
+        layout.modeSelectorView.setMode(viewModel.mode)
         setMode(viewModel.mode)
     }
 

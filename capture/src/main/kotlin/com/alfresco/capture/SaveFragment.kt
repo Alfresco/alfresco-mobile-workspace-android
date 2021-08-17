@@ -122,6 +122,7 @@ class SaveFragment : Fragment(), MavericksView {
                 hasFixedSize(true)
 //                paddingRes(R.dimen.view_pager_item_padding)
 
+
                 for (item in state.listCapture) {
                     this.listViewPreview {
                         id(item.uri.toString())

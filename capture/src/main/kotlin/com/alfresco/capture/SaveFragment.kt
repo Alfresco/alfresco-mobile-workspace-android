@@ -11,9 +11,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import coil.EventListener
 import coil.ImageLoader
 import coil.fetch.VideoFrameFileFetcher
 import coil.load
+import coil.request.ImageRequest
+import coil.request.ImageResult
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -31,6 +34,16 @@ class SaveFragment : Fragment(), MavericksView {
             .componentRegistry {
                 add(VideoFrameFileFetcher(context))
             }
+            .eventListener(object : EventListener {
+                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
+                    super.onSuccess(request, metadata)
+                    withState(viewModel) {
+                        if (it.capture != null)
+                            binding.playIcon.isVisible = it.capture.isVideo() == true
+                        binding.deletePhotoButton.isVisible = true
+                    }
+                }
+            })
             .build()
     }
 
@@ -106,7 +119,6 @@ class SaveFragment : Fragment(), MavericksView {
 
     override fun invalidate(): Unit = withState(viewModel) {
         if (it.capture != null) {
-            binding.playIcon.isVisible = it.capture.isVideo() == true
             binding.preview.load(it.capture.uri, imageLoader)
         }
     }

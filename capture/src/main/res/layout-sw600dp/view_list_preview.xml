@@ -11,8 +11,6 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="320dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/alfresco_gray_900_15"
             android:layout_gravity="center_horizontal"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp">
@@ -24,7 +22,7 @@
                 android:adjustViewBounds="true"
                 android:maxWidth="480dp"
                 android:contentDescription="@string/capture_photo_preview_alt"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/play_icon"

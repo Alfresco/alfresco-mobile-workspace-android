@@ -26,8 +26,8 @@
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">To capture media, turn on Camera and Microphone permissions.</string>
 
-    <string name="discard_title">Discard photos?</string>
-    <string name="discard_subtitle">queued photos will be discarded if you exit.</string>
+    <string name="discard_title">Discard captures?</string>
+    <string name="discard_subtitle">%d media files will be discarded if you exit.</string>
     <string name="discard_confirmation_negative">Cancel</string>
     <string name="discard_confirmation_positive">Discard</string>
 

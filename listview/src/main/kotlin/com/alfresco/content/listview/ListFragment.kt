@@ -156,7 +156,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
         } else if (state.entries.isNotEmpty()) {
             state.entries.forEach {
                 if (it.type == Entry.Type.GROUP) {
-
                     listViewGroupHeader {
                         id(it.name)
                         title(it.name)

@@ -37,7 +37,6 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     val onSaveSettings: LiveEvent<Int> = _onSaveSettings
     val isLoading = MutableLiveData<Boolean>()
     val identityUrl = MutableLiveData("")
-//    val identityUrl = MutableLiveData("mobileapps.envalfresco.com")
     val applicationUrl = MutableLiveData("")
 
     val connectEnabled: LiveData<Boolean>

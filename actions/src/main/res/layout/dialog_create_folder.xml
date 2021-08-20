@@ -66,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="@string/action_folder_create"
+            android:enabled="false"
             android:textColor="@color/button_color_change"
             android:textAppearance="?attr/textAppearanceButton" />
 

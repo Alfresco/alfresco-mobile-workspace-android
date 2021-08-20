@@ -100,12 +100,18 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
                     empty -> resources.getString(R.string.capture_folder_name_empty)
                     else -> null
                 }
-                binding.tvCreate.isEnabled = valid && !empty
+
+                val isEnabled = valid && !empty
+
+                println("CreateFolderDialog.afterTextChanged $isEnabled")
+
+                binding.tvCreate.isEnabled = isEnabled
             }
         })
 
         binding.tvCancel.setOnClickListener {
             setResult(null)
+            dialog?.dismiss()
         }
 
         binding.tvCreate.setOnClickListener {
@@ -131,8 +137,6 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-
     }
 
     override fun invalidate() {

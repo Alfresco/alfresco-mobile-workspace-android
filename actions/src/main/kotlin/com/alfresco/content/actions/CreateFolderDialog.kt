@@ -66,7 +66,6 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
     private val viewModel: CreateFolderViewModel by fragmentViewModel()
     private lateinit var binding: DialogCreateFolderBinding
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         binding = DialogCreateFolderBinding.inflate(inflater, container, false)
@@ -140,8 +139,5 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
     }
 
     override fun invalidate() {
-
     }
-
-
 }

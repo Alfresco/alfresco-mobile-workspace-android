@@ -188,13 +188,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             properties = list
         )
 
-
         service.createNode(
             nodeId = requireNotNull(parentId),
             nodeBodyCreate = nodeBodyCreate,
             autoRename = true
         )
-
     }
 
     internal fun fetchPendingUploads() =

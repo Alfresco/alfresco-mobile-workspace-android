@@ -19,7 +19,7 @@ data class ActionCreateFolder(
         val result = CreateFolderFragment.openFolderDialog(context)
         val newEntry: Entry
         if (result != null) {
-            newEntry= entry.copy(name = result.name)
+            newEntry = entry.copy(name = result.name)
             repository.createFolder(result.name, result.description, entry.id)
         } else {
             throw CancellationException("User Cancellation")
@@ -31,5 +31,5 @@ data class ActionCreateFolder(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_create_folder_toast,entry.name)
+        Action.showToast(view, anchorView, R.string.action_create_folder_toast, entry.name)
 }

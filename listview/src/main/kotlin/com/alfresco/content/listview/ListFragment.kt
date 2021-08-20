@@ -20,6 +20,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
+import com.alfresco.content.actions.ActionCreateFolder
 import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
@@ -55,6 +56,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     init {
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
+        viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
@@ -67,6 +69,10 @@ abstract class ListViewModel<S : ListViewState>(
         } else {
             refresh()
         }
+    }
+
+    private fun onCreateFolder(entry: Entry) = entry.run {
+        refresh()
     }
 
     @Suppress("UNCHECKED_CAST")

@@ -118,7 +118,8 @@ class SaveFragment : Fragment(), MavericksView {
             carouselBuilder {
                 id("carousel")
                 numViewsToShowOnScreen(viewsOnScreen)
-                paddingRes(R.dimen.view_pager_item_padding)
+                padding(Carousel.Padding.dp(20, 8, 20, 8, 8))
+                hasFixedSize(true)
 
                 for (item in state.listCapture) {
                     this.listViewPreview {

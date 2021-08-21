@@ -142,7 +142,7 @@
                 android:background="@drawable/bg_image_count"
                 android:elevation="4dp"
                 android:gravity="center"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/text_badge_tint" />
 
 
         </RelativeLayout>

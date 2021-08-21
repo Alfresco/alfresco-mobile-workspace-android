@@ -450,7 +450,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.discard_title))
-            .setMessage("$count " + resources.getString(R.string.discard_subtitle))
+            .setMessage(String.format(resources.getString(R.string.discard_subtitle), count))
             .setNegativeButton(resources.getString(R.string.discard_confirmation_negative), null)
             .setPositiveButton(resources.getString(R.string.discard_confirmation_positive)) { _, _ ->
                 viewModel.clearCaptures()

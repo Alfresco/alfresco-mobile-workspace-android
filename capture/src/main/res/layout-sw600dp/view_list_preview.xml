@@ -13,16 +13,19 @@
             android:layout_height="320dp"
             android:layout_gravity="center_horizontal"
             app:cardCornerRadius="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/alfresco_gray_900_15"
             app:cardElevation="0dp">
 
             <ImageView
                 android:id="@+id/preview"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:maxWidth="480dp"
+                android:maxHeight="320dp"
                 android:contentDescription="@string/capture_photo_preview_alt"
-                android:scaleType="fitXY" />
+                android:scaleType="fitCenter" />
 
             <ImageView
                 android:id="@+id/play_icon"

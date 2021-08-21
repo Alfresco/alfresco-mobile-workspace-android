@@ -121,6 +121,7 @@ class SaveFragment : Fragment(), MavericksView {
                 padding(Carousel.Padding.dp(20, 8, 20, 8, 8))
                 hasFixedSize(true)
 
+
                 for (item in state.listCapture) {
                     this.listViewPreview {
                         id(item.uri.toString())

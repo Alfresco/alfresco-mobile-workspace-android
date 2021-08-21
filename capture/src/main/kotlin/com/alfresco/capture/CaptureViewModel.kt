@@ -21,6 +21,7 @@ class CaptureViewModel(
     var longitude = "0"
     var latitude = "0"
     private val captureDir = SessionManager.requireSession.captureDir
+    var mode: CaptureMode = CaptureMode.Photo
 
     init {
         // Clear any pending captures from a previous session

@@ -77,6 +77,13 @@ class CaptureModeSelectorView(
         onMode?.invoke(modes[position])
     }
 
+    fun setMode(mode: CaptureMode) {
+        val position = modes.indexOf(mode)
+        setActive(position)
+        recyclerView.layoutManager?.scrollToPosition(position)
+        recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.isEnabled = true
+    }
+
     private fun setActive(position: Int) {
         recyclerView.children.forEach {
             it.isActivated = false

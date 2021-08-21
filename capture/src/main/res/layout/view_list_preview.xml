@@ -33,6 +33,7 @@
                 android:layout_margin="@dimen/capture_layout_small_margin"
                 android:background="@drawable/bg_camera_btn"
                 android:clickable="false"
+                android:visibility="gone"
                 android:src="@drawable/ic_video_play"
                 tools:ignore="ContentDescription" />
 
@@ -43,6 +44,7 @@
                 android:layout_height="@dimen/capture_button_size"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="@dimen/capture_layout_small_margin"
+                android:visibility="gone"
                 android:background="@drawable/bg_camera_btn"
                 android:contentDescription="@string/capture_delete_photo_alt"
                 android:src="@drawable/ic_photo_delete" />

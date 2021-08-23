@@ -91,18 +91,19 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
-    suspend fun createFolder(name: String, description: String, parentId: String?) {
-
+    suspend fun createFolder(name: String, description: String, parentId: String?): Entry {
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
             nodeType = "cm:folder",
             properties = mapOf("cm:title" to name, "cm:description" to description)
         )
 
-        service.createNode(
-            nodeId = requireNotNull(parentId),
-            nodeBodyCreate = nodeBodyCreate,
-            autoRename = true
+        return Entry.with(
+            service.createNode(
+                nodeId = requireNotNull(parentId),
+                nodeBodyCreate = nodeBodyCreate,
+                autoRename = true
+            ).entry
         )
     }
 

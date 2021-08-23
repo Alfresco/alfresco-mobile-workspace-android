@@ -30,37 +30,45 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         service.getMyNode().entry.id
 
     suspend fun fetchFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listNodeChildren(
-            folderId,
-            skipCount,
-            maxItems,
-            include = extraFields()
-        ))
+        ResponsePaging.with(
+            service.listNodeChildren(
+                folderId,
+                skipCount,
+                maxItems,
+                include = extraFields()
+            )
+        )
 
     suspend fun fetchLibraryDocumentsFolder(siteId: String) =
-        Entry.with(service.getNode(
-            siteId,
-            extraFields(),
-            LIB_DOCUMENTS_PATH
-        ).entry)
+        Entry.with(
+            service.getNode(
+                siteId,
+                extraFields(),
+                LIB_DOCUMENTS_PATH
+            ).entry
+        )
 
     suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listNodeChildren(
-            siteId,
-            skipCount,
-            maxItems,
-            include = extraFields(),
-            relativePath = LIB_DOCUMENTS_PATH
-        ))
+        ResponsePaging.with(
+            service.listNodeChildren(
+                siteId,
+                skipCount,
+                maxItems,
+                include = extraFields(),
+                relativePath = LIB_DOCUMENTS_PATH
+            )
+        )
 
     private fun extraFields() =
         AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations", "properties")
 
     suspend fun fetchEntry(entryId: String) =
-        Entry.with(service.getNode(
-            entryId,
-            extraFields()
-        ).entry)
+        Entry.with(
+            service.getNode(
+                entryId,
+                extraFields()
+            ).entry
+        )
 
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
@@ -94,13 +102,10 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     suspend fun createFolder(name: String, description: String, parentId: String?) {
         val list: HashMap<String, String> = HashMap()
 
-        list["cm:title"] = name
-        list["cm:description"] = description
-
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
             nodeType = "cm:folder",
-            properties = list
+            properties = mapOf("cm:title" to name, "cm:description" to description)
         )
 
         service.createNode(

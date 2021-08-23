@@ -26,8 +26,4 @@
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">To capture media, turn on Camera and Microphone permissions.</string>
 
-    <string name="capture_folder_name_hint">Name</string>
-    <string name="capture_folder_name_invalid_chars">Folder name can\'t contain any of the following characters: ?:"*|/\\&lt;&gt;</string>
-    <string name="capture_folder_name_empty">Folder name can\'t be empty.</string>
-
 </resources>

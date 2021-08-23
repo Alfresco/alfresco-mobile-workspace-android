@@ -1,75 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<com.alfresco.ui.MaterialShapeView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_round_white"
-    android:orientation="vertical"
-    android:padding="20dp">
+    app:backgroundColor="?android:attr/colorBackground"
+    app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+    app:strokeColor="?attr/separatorColor"
+    app:strokeWidth="1dp">
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/action_create_folder"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textStyle="bold" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/folder_name_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="@string/capture_folder_name_hint">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/folder_name_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/folder_description_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="@string/capture_description_hint">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/folder_description_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="20dp">
 
         <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:textColor="@color/shutter_photo_tint"
-            android:layout_toStartOf="@+id/tv_create"
-            android:text="@string/action_folder_cancel"
-            android:textAppearance="?attr/textAppearanceButton" />
+            android:text="@string/action_create_folder"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_create"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/folder_name_input_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="@string/action_folder_create"
-            android:enabled="false"
-            android:textColor="@color/button_color_change"
-            android:textAppearance="?attr/textAppearanceButton" />
+            android:layout_marginTop="8dp"
+            android:hint="@string/action_folder_name_hint">
 
-    </RelativeLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/folder_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
 
-</LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/folder_description_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/capture_description_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/folder_description_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/create_button"
+                android:text="@string/action_folder_cancel"
+                android:textColor="@color/shutter_photo_tint"
+                android:theme="@style/Widget.Alfresco.Action.Primary" />
+
+            <TextView
+                android:id="@+id/create_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:enabled="false"
+                android:text="@string/action_folder_create"
+                android:textColor="@color/button_color_change"
+                android:theme="@style/Widget.Alfresco.Action.Primary" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</com.alfresco.ui.MaterialShapeView>

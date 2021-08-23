@@ -35,10 +35,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     private val box: Box<Entry>
 
-    private val service: NodesApi by lazy {
-        session.createService(NodesApi::class.java)
-    }
-
     init {
         ObjectBox.init(session.context)
         box = ObjectBox.boxStore.boxFor()
@@ -174,25 +170,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         update(entry)
         val srcPath = path.removePrefix("file://")
         File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))
-    }
-
-    suspend fun createFolder(name: String, description: String, parentId: String?) {
-        val list: HashMap<String, String> = HashMap()
-
-        list["cm:title"] = name
-        list["cm:description"] = description
-
-        val nodeBodyCreate = NodeBodyCreate(
-            name = name,
-            nodeType = "cm:folder",
-            properties = list
-        )
-
-        service.createNode(
-            nodeId = requireNotNull(parentId),
-            nodeBodyCreate = nodeBodyCreate,
-            autoRename = true
-        )
     }
 
     internal fun fetchPendingUploads() =

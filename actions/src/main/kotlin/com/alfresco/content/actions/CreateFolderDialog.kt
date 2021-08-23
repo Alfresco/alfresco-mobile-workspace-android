@@ -13,14 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
-import com.alfresco.capture.R
 import com.alfresco.content.actions.databinding.DialogCreateFolderBinding
 import kotlinx.parcelize.Parcelize
 
@@ -34,8 +32,6 @@ internal class CreateFolderViewModel(
     state: CreateFolderState
 ) : MavericksViewModel<CreateFolderState>(state) {
 
-    var onCreateComplete: ((CreateFolderDataModel) -> Unit)? = null
-
     fun isFolderNameValid(filename: String): Boolean {
         val reservedChars = "?:\"*|/\\<>\u0000"
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
@@ -47,24 +43,14 @@ internal class CreateFolderViewModel(
             state: CreateFolderState
         ) = CreateFolderViewModel(viewModelContext.activity(), state)
     }
-
-    fun create(folderName: String, description: String) = withState {
-
-        requireNotNull(it.dataModel)
-
-        onCreateComplete?.invoke(
-            it.dataModel.copy(
-                name = folderName,
-                description = description
-            )
-        )
-    }
 }
 
 class CreateFolderDialog : DialogFragment(), MavericksView {
 
     private val viewModel: CreateFolderViewModel by fragmentViewModel()
     private lateinit var binding: DialogCreateFolderBinding
+
+    var onSuccess: ((CreateFolderDataModel?) -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
@@ -95,42 +81,33 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
                 val empty = s.toString().isEmpty()
 
                 binding.folderNameInputLayout.error = when {
-                    !valid -> resources.getString(R.string.capture_folder_name_invalid_chars)
-                    empty -> resources.getString(R.string.capture_folder_name_empty)
+                    !valid -> resources.getString(R.string.action_folder_name_invalid_chars)
+                    empty -> resources.getString(R.string.action_folder_name_empty)
                     else -> null
                 }
 
                 val isEnabled = valid && !empty
 
-                println("CreateFolderDialog.afterTextChanged $isEnabled")
-
-                binding.tvCreate.isEnabled = isEnabled
+                binding.createButton.isEnabled = isEnabled
             }
         })
 
-        binding.tvCancel.setOnClickListener {
-            setResult(null)
+        binding.cancelButton.setOnClickListener {
+            onSuccess?.invoke(null)
             dialog?.dismiss()
         }
 
-        binding.tvCreate.setOnClickListener {
-            viewModel.create(
-                binding.folderNameInput.text.toString(),
-                binding.folderDescriptionInput.text.toString()
+        binding.createButton.setOnClickListener {
+            onSuccess?.invoke(
+                CreateFolderDataModel(
+                    binding.folderNameInput.text.toString(),
+                    binding.folderDescriptionInput.text.toString()
+                )
             )
-        }
 
-        viewModel.onCreateComplete = {
-            setResult(it)
             dialog?.dismiss()
-        }
-    }
 
-    private fun setResult(obj: CreateFolderDataModel?) {
-        val result = Bundle().apply {
-            putParcelable(CreateFolderFragment.DATA_OBJ, obj)
         }
-        setFragmentResult(CreateFolderFragment.REQUEST_KEY, result)
     }
 
     override fun onStart() {
@@ -140,4 +117,5 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
 
     override fun invalidate() {
     }
+
 }

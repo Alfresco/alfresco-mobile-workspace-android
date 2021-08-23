@@ -100,8 +100,6 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     }
 
     suspend fun createFolder(name: String, description: String, parentId: String?) {
-        val list: HashMap<String, String> = HashMap()
-
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
             nodeType = "cm:folder",

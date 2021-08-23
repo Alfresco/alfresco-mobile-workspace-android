@@ -1,86 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.alfresco.ui.MaterialShapeView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="32dp"
-    app:backgroundColor="?android:attr/colorBackground"
-    app:shapeAppearance="?attr/shapeAppearanceMediumComponent">
+    android:orientation="vertical"
+    android:paddingHorizontal="?attr/dialogPreferredPadding">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/folder_name_input_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="8dp"
+        android:hint="@string/action_folder_name_hint">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/folder_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+            android:inputType="text" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/action_create_folder"
-                android:textAppearance="?attr/textAppearanceSubtitle1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/folder_name_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/action_folder_name_hint">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/folder_description_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/capture_description_hint">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/folder_name_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/folder_description_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:hint="@string/capture_description_hint">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/folder_description_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <RelativeLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/folder_description_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="4dp">
+            android:inputType="text" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancel_button"
-                style="@style/Widget.Alfresco.Button.Dialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/create_button"
-                android:text="@string/action_folder_cancel" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/create_button"
-                style="@style/Widget.Alfresco.Button.Dialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:enabled="false"
-                android:text="@string/action_folder_create" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-</com.alfresco.ui.MaterialShapeView>
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

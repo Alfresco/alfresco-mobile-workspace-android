@@ -1,44 +1,53 @@
 package com.alfresco.content.actions
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.InsetDrawable
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.databinding.DialogCreateFolderBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 internal typealias CreateFolderSuccessCallback = (String, String) -> Unit
 internal typealias CreateFolderCancelCallback = () -> Unit
 
 class CreateFolderDialog : DialogFragment() {
-    private lateinit var binding: DialogCreateFolderBinding
+
+    private val binding: DialogCreateFolderBinding by lazy {
+        DialogCreateFolderBinding.inflate(LayoutInflater.from(requireContext()), null, false)
+    }
+
+    private val positiveButton by lazy {
+        (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+    }
 
     var onSuccess: CreateFolderSuccessCallback? = null
     var onCancel: CreateFolderCancelCallback? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.action_create_folder))
+            .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
+                onCancel?.invoke()
+                dialog?.dismiss()
+            }
+            .setPositiveButton(getString(R.string.action_folder_create)) { _, _ ->
+                onSuccess?.invoke(
+                    binding.folderNameInput.text.toString(),
+                    binding.folderDescriptionInput.text.toString()
+                )
+            }
+            .setView(binding.root)
+            .show()
 
-        binding = DialogCreateFolderBinding.inflate(inflater, container, false)
+    override fun onStart() {
+        super.onStart()
 
-        dialog?.window?.apply {
-            setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 20))
-            requestFeature(Window.FEATURE_NO_TITLE)
-        }
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         binding.folderNameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -49,35 +58,25 @@ class CreateFolderDialog : DialogFragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = isFolderNameValid(s.toString())
-
-                val empty = s.toString().isEmpty()
-
-                binding.folderNameInputLayout.error = when {
-                    !valid -> resources.getString(R.string.action_folder_name_invalid_chars)
-                    empty -> resources.getString(R.string.action_folder_name_empty)
-                    else -> null
-                }
-
-                val isEnabled = valid && !empty
-
-                binding.createButton.isEnabled = isEnabled
+                validateInput(s.toString())
             }
         })
 
-        binding.cancelButton.setOnClickListener {
-            onCancel?.invoke()
-            dialog?.dismiss()
+        // Default disabled
+        positiveButton.isEnabled = false
+    }
+
+    private fun validateInput(title: String) {
+        val isValid = isFolderNameValid(title)
+        val isEmpty = title.isEmpty()
+
+        binding.folderNameInputLayout.error = when {
+            !isValid -> resources.getString(R.string.action_folder_name_invalid_chars)
+            isEmpty -> resources.getString(R.string.action_folder_name_empty)
+            else -> null
         }
 
-        binding.createButton.setOnClickListener {
-            onSuccess?.invoke(
-                binding.folderNameInput.text.toString(),
-                binding.folderDescriptionInput.text.toString()
-            )
-
-            dialog?.dismiss()
-        }
+        positiveButton.isEnabled = isValid && !isEmpty
     }
 
     private companion object {

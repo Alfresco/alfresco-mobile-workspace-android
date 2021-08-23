@@ -4,10 +4,11 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
-import com.alfresco.content.withFragment
-import kotlinx.coroutines.CancellableContinuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 data class ActionCreateFolder(
     override var entry: Entry,
@@ -15,16 +16,8 @@ data class ActionCreateFolder(
     override val title: Int = R.string.action_create_folder
 ) : Action {
 
-    private var onResult: CancellableContinuation<CreateFolderDataModel?>? = null
-
     override suspend fun execute(context: Context): Entry {
-
-        val createFolderDialog = CreateFolderDialog()
-        createFolderDialog.onSuccess = { dataModel ->
-            onResult?.resume(dataModel, null)
-        }
-
-        val result = withFragment(context, TAG, { openFolderDialog() }, { createFolderDialog })
+        val result = showCreateFolderDialog(context)
 
         val newEntry: Entry
         if (result != null) {
@@ -37,17 +30,24 @@ data class ActionCreateFolder(
         return newEntry
     }
 
-    private suspend fun openFolderDialog(): CreateFolderDataModel? =
-        suspendCancellableCoroutine { continuation ->
-            onResult = continuation
+    private suspend fun showCreateFolderDialog(context: Context) = withContext(Dispatchers.Main) {
+        suspendCoroutine<CreateFolderMetadata?> {
+            CreateFolderDialog.Builder(context)
+                .onSuccess { title, description ->
+                    it.resume(CreateFolderMetadata(title, description))
+                }
+                .onCancel { it.resume(null) }
+                .show()
         }
+    }
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_create_folder_toast, entry.name)
 
-    companion object {
-        private val TAG = CreateFolderDialog::class.java.simpleName
-    }
+    private data class CreateFolderMetadata(
+        val name: String,
+        val description: String
+    )
 }

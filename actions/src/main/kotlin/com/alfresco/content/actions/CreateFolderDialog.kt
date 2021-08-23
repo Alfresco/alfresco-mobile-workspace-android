@@ -12,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
@@ -45,12 +47,16 @@ internal class CreateFolderViewModel(
     }
 }
 
+internal typealias CreateFolderSuccessCallback = (String, String) -> Unit
+internal typealias CreateFolderCancelCallback = () -> Unit
+
 class CreateFolderDialog : DialogFragment(), MavericksView {
 
     private val viewModel: CreateFolderViewModel by fragmentViewModel()
     private lateinit var binding: DialogCreateFolderBinding
 
-    var onSuccess: ((CreateFolderDataModel?) -> Unit)? = null
+    var onSuccess: CreateFolderSuccessCallback? = null
+    var onCancel: CreateFolderCancelCallback? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
@@ -93,16 +99,14 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         })
 
         binding.cancelButton.setOnClickListener {
-            onSuccess?.invoke(null)
+            onCancel?.invoke()
             dialog?.dismiss()
         }
 
         binding.createButton.setOnClickListener {
             onSuccess?.invoke(
-                CreateFolderDataModel(
-                    binding.folderNameInput.text.toString(),
-                    binding.folderDescriptionInput.text.toString()
-                )
+                binding.folderNameInput.text.toString(),
+                binding.folderDescriptionInput.text.toString()
             )
 
             dialog?.dismiss()
@@ -115,5 +119,30 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
     }
 
     override fun invalidate() {
+    }
+
+    data class Builder(
+        val context: Context,
+        var onSuccess: CreateFolderSuccessCallback? = null,
+        var onCancel: CreateFolderCancelCallback? = null
+    ) {
+
+        fun onSuccess(callback: CreateFolderSuccessCallback?) =
+            apply { this.onSuccess = callback }
+
+        fun onCancel(callback: CreateFolderCancelCallback?) =
+            apply { this.onCancel = callback }
+
+        fun show() {
+            val fragmentManager = when (context) {
+                is AppCompatActivity -> context.supportFragmentManager
+                is Fragment -> context.childFragmentManager
+                else -> throw IllegalArgumentException()
+            }
+            CreateFolderDialog().apply {
+                onSuccess = this@Builder.onSuccess
+                onCancel = this@Builder.onCancel
+            }.show(fragmentManager, CreateFolderDialog::class.java.simpleName)
+        }
     }
 }

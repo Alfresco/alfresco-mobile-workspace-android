@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -15,44 +14,12 @@ import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.airbnb.mvrx.MavericksState
-import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.MavericksViewModel
-import com.airbnb.mvrx.MavericksViewModelFactory
-import com.airbnb.mvrx.ViewModelContext
-import com.airbnb.mvrx.fragmentViewModel
 import com.alfresco.content.actions.databinding.DialogCreateFolderBinding
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data class CreateFolderDataModel(val name: String, val description: String) : Parcelable
-
-internal data class CreateFolderState(val dataModel: CreateFolderDataModel? = CreateFolderDataModel("", "")) : MavericksState
-
-internal class CreateFolderViewModel(
-    val context: Context,
-    state: CreateFolderState
-) : MavericksViewModel<CreateFolderState>(state) {
-
-    fun isFolderNameValid(filename: String): Boolean {
-        val reservedChars = "?:\"*|/\\<>\u0000"
-        return filename.all { c -> reservedChars.indexOf(c) == -1 }
-    }
-
-    companion object : MavericksViewModelFactory<CreateFolderViewModel, CreateFolderState> {
-        override fun create(
-            viewModelContext: ViewModelContext,
-            state: CreateFolderState
-        ) = CreateFolderViewModel(viewModelContext.activity(), state)
-    }
-}
 
 internal typealias CreateFolderSuccessCallback = (String, String) -> Unit
 internal typealias CreateFolderCancelCallback = () -> Unit
 
-class CreateFolderDialog : DialogFragment(), MavericksView {
-
-    private val viewModel: CreateFolderViewModel by fragmentViewModel()
+class CreateFolderDialog : DialogFragment() {
     private lateinit var binding: DialogCreateFolderBinding
 
     var onSuccess: CreateFolderSuccessCallback? = null
@@ -82,7 +49,7 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isFolderNameValid(s.toString())
+                val valid = isFolderNameValid(s.toString())
 
                 val empty = s.toString().isEmpty()
 
@@ -113,8 +80,11 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
         }
     }
 
-
-    override fun invalidate() {
+    private companion object {
+        fun isFolderNameValid(filename: String): Boolean {
+            val reservedChars = "?:\"*|/\\<>\u0000"
+            return filename.all { c -> reservedChars.indexOf(c) == -1 }
+        }
     }
 
     data class Builder(

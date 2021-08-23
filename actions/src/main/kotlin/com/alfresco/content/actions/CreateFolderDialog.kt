@@ -106,7 +106,6 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
             )
 
             dialog?.dismiss()
-
         }
     }
 
@@ -117,5 +116,4 @@ class CreateFolderDialog : DialogFragment(), MavericksView {
 
     override fun invalidate() {
     }
-
 }

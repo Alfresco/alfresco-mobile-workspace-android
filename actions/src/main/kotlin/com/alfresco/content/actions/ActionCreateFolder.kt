@@ -19,7 +19,6 @@ data class ActionCreateFolder(
 
     override suspend fun execute(context: Context): Entry {
 
-
         val createFolderDialog = CreateFolderDialog()
         createFolderDialog.onSuccess = { dataModel ->
             onResult?.resume(dataModel, null)
@@ -50,8 +49,5 @@ data class ActionCreateFolder(
 
     companion object {
         private val TAG = CreateFolderDialog::class.java.simpleName
-
     }
-
 }
-

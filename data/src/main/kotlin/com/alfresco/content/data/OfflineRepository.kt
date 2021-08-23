@@ -3,8 +3,6 @@ package com.alfresco.content.data
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.alfresco.content.apis.NodesApi
-import com.alfresco.content.models.NodeBodyCreate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import io.objectbox.Box

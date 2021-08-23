@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="shutter_photo_tint">@color/alfresco_blue_700</color>
-    <color name="action_disable_color">@color/alfresco_gray_900_15</color>
 </resources>

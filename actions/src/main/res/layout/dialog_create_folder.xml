@@ -5,23 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:backgroundColor="?android:attr/colorBackground"
-    app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
-    app:strokeColor="?attr/separatorColor"
-    app:strokeWidth="1dp">
+    app:shapeAppearance="?attr/shapeAppearanceMediumComponent"
+    android:elevation="32dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="20dp">
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/action_create_folder"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textStyle="bold" />
+            android:layout_marginTop="20dp"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/folder_name_input_layout"
@@ -52,30 +54,30 @@
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp">
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/create_button"
                 android:text="@string/action_folder_cancel"
-                android:textColor="@color/shutter_photo_tint"
-                android:theme="@style/Widget.Alfresco.Action.Primary" />
+                style="@style/Widget.Alfresco.Button.Dialog" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/create_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:enabled="false"
                 android:text="@string/action_folder_create"
-                android:textColor="@color/button_color_change"
-                android:theme="@style/Widget.Alfresco.Action.Primary" />
+                style="@style/Widget.Alfresco.Button.Dialog" />
 
         </RelativeLayout>
 

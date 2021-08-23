@@ -65,6 +65,11 @@
         <item name="android:minHeight">44dp</item>
     </style>
 
+    <style name="Widget.Alfresco.Button.Dialog" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="color">?attr/colorPrimary</item>
+    </style>
+
     <style name="Widget.Alfresco.Action.Primary" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>

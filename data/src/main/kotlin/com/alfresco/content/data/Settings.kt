@@ -58,6 +58,14 @@ class Settings(
     val canSyncOverMeteredNetwork: Boolean
         get() = syncNetwork == SyncNetwork.Mobile
 
+    val getDistributionVersion: DistributionVersion
+        get() = checkVersion(sharedPref.getString(DISTRIBUTION_VERSION, ""))
+
+    private fun checkVersion(value: String?) = when (value) {
+        Enterprise -> DistributionVersion.ENTERPRISE
+        else -> DistributionVersion.COMMUNITY
+    }
+
     enum class Theme {
         Light,
         Dark,
@@ -67,5 +75,15 @@ class Settings(
     enum class SyncNetwork {
         Wifi,
         Mobile
+    }
+
+    enum class DistributionVersion {
+        ENTERPRISE,
+        COMMUNITY
+    }
+
+    private companion object {
+        const val DISTRIBUTION_VERSION = "DISTRIBUTION_VERSION"
+        const val Enterprise = "Enterprise"
     }
 }

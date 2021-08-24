@@ -1,10 +1,14 @@
 package com.alfresco.capture
 
+import android.content.Context
 import android.location.Location
 import android.net.Uri
 import androidx.camera.core.ImageCapture
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.Settings
 import com.alfresco.content.session.SessionManager
 import java.io.File
 
@@ -14,6 +18,7 @@ data class CaptureState(
 ) : MavericksState
 
 class CaptureViewModel(
+    val context: Context,
     state: CaptureState
 ) : MavericksViewModel<CaptureState>(state) {
     var onSaveComplete: ((List<CaptureItem>) -> Unit)? = null
@@ -22,6 +27,7 @@ class CaptureViewModel(
     var latitude = "0"
     private val captureDir = SessionManager.requireSession.captureDir
     var mode: CaptureMode = CaptureMode.Photo
+    private fun distributionVersion() = Settings(context).getDistributionVersion
 
     init {
         // Clear any pending captures from a previous session
@@ -147,5 +153,14 @@ class CaptureViewModel(
         metadata.location = location
 
         return metadata
+    }
+
+    fun isEnterprise(): Boolean = distributionVersion() == Settings.DistributionVersion.ENTERPRISE
+
+    companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: CaptureState
+        ) = CaptureViewModel(viewModelContext.activity(), state)
     }
 }

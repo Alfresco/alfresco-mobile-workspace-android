@@ -3,6 +3,7 @@ package com.alfresco.content.app.activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.auth.AuthConfig
+import com.alfresco.auth.DiscoveryService
 import com.alfresco.auth.activity.LoginViewModel
+import com.alfresco.auth.activity.LoginViewModel.Companion.DISTRIBUTION_VERSION
 import com.alfresco.content.actions.Action
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
@@ -23,6 +28,9 @@ import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(), MavericksView {
 
@@ -42,11 +50,36 @@ class MainActivity : AppCompatActivity(), MavericksView {
             startActivity(i)
             finish()
         } else {
+            lifecycleScope.launch { checkDistribution() }
             configure()
         }
 
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
+    private suspend fun checkDistribution() {
+
+        val acc = SessionManager.requireSession.account
+
+        val authConfig = AuthConfig.jsonDeserialize(acc.authConfig)
+
+        authConfig?.let { config ->
+
+            val discoveryService = DiscoveryService(this, config)
+
+            val contentServiceDetailsObj = withContext(Dispatchers.IO) {
+                discoveryService.getContentServiceDetails(Uri.parse(acc.serverUrl).host ?: "")
+            }
+
+            contentServiceDetailsObj?.let { data ->
+                // Save state to persistent storage
+                val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+                val editor = sharedPrefs.edit()
+                editor.putString(DISTRIBUTION_VERSION, data.edition)
+                editor.apply()
+            }
         }
     }
 

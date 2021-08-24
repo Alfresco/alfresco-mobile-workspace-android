@@ -246,7 +246,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.shutterButton.setOnClickListener {
             val controller = requireNotNull(cameraController)
             if (controller.isImageCaptureEnabled) {
-                layout.shutterButton.isEnabled = false
+                if (viewModel.isEnterprise())
+                    enableShutterButton(false)
                 onTakePhotoButtonClick(controller)
             } else if (controller.isVideoCaptureEnabled) {
                 onTakeVideoButtonClick(controller)
@@ -314,13 +315,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                     Logger.d("Photo capture succeeded: $savedUri")
+
                     viewModel.onCapturePhoto(savedUri)
-                    enableShutterButton(true)
+                    if (viewModel.isEnterprise())
+                        enableShutterButton(true)
+                    else navigateToSave()
                 }
 
                 override fun onError(exc: ImageCaptureException) {
                     Logger.e("Photo capture failed: ${exc.message}", exc)
-                    enableShutterButton(true)
+                    if (viewModel.isEnterprise())
+                        enableShutterButton(true)
                 }
             })
 
@@ -335,7 +340,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun onTakeVideoButtonClick(controller: CameraController) {
         if (controller.isRecording) {
-            enableShutterButton(false)
+            if (viewModel.isEnterprise())
+                enableShutterButton(false)
             layout.shutterButton.state = ShutterButton.State.Video
             layout.modeSelectorView.isVisible = true
             layout.captureDurationView.isVisible = false
@@ -359,7 +365,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
                         viewModel.onCaptureVideo(savedUri)
-                        enableShutterButton(true)
+                        if (viewModel.isEnterprise())
+                            enableShutterButton(true)
+                        else
+                            navigateToSave()
                     }
 
                     override fun onError(
@@ -367,7 +376,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         message: String,
                         cause: Throwable?
                     ) {
-                        enableShutterButton(true)
+                        if (viewModel.isEnterprise())
+                            enableShutterButton(true)
                         Logger.e("Video capture failed: ${cause?.message}", cause)
                     }
                 })
@@ -448,14 +458,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
     override fun invalidate(): Unit = withState(viewModel) {
-        if (it.listCapture.isNotEmpty()) {
-            layout.preview.load(it.listCapture.last().uri, imageLoader)
-            layout.imageCount.text = it.listCapture.size.toString()
-            layout.rlPreview.visibility = View.VISIBLE
-        } else {
-            layout.imageCount.text = ""
+        if (viewModel.isEnterprise()) {
+            if (it.listCapture.isNotEmpty()) {
+                layout.preview.load(it.listCapture.last().uri, imageLoader)
+                layout.imageCount.text = it.listCapture.size.toString()
+                layout.rlPreview.visibility = View.VISIBLE
+            } else {
+                layout.imageCount.text = ""
+                layout.rlPreview.visibility = View.INVISIBLE
+            }
+        } else
             layout.rlPreview.visibility = View.INVISIBLE
-        }
     }
 
     private fun discardPhotoPrompt(count: Int) {

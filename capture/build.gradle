@@ -23,6 +23,7 @@ dependencies {
     implementation project(':viewer-common')
     implementation project(':viewer-image')
     implementation project(':viewer-media')
+    implementation project(':data')
 
     // Fix caused by conflicting ListenableFuture imported by ExoPlayer and CameraX
     implementation libs.guava

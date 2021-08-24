@@ -16,6 +16,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.Settings
 import com.alfresco.ui.BottomSheetDialogFragment
 import kotlinx.coroutines.GlobalScope
 
@@ -43,6 +44,8 @@ internal class ActionCreateViewModel(
         }
     }
 
+    private fun distributionVersion() = Settings(context).getDistributionVersion
+
     fun execute(action: Action) =
         action.execute(context, GlobalScope)
 
@@ -50,7 +53,10 @@ internal class ActionCreateViewModel(
         val actions = mutableListOf<Action>()
 
         actions.add(ActionUploadMedia(parent))
-        actions.add(ActionCaptureMedia(parent))
+
+        if (distributionVersion() == Settings.DistributionVersion.ENTERPRISE)
+            actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_enterprise))
+        else actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_community))
 
         return actions
     }

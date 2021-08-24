@@ -36,7 +36,8 @@
     <string name="action_remove_offline_toast">%s will no longer be available offline.</string>
 
     <string name="action_upload_photo_title">Upload photos or videos</string>
-    <string name="action_capture_media_title">Take photos or videos</string>
+    <string name="action_capture_media_title_enterprise">Take photos or videos</string>
+    <string name="action_capture_media_title_community">Take a photo or video</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media scheduled for upload.</string>

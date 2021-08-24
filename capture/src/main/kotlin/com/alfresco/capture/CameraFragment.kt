@@ -245,11 +245,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
             val controller = requireNotNull(cameraController)
-
             if (controller.isImageCaptureEnabled) {
+                layout.shutterButton.isEnabled = false
                 onTakePhotoButtonClick(controller)
             } else if (controller.isVideoCaptureEnabled) {
                 onTakeVideoButtonClick(controller)
+            } else {
+                Logger.d("either image or video is on processing")
             }
         }
 
@@ -313,10 +315,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                     Logger.d("Photo capture succeeded: $savedUri")
                     viewModel.onCapturePhoto(savedUri)
+                    enableShutterButton(true)
                 }
 
                 override fun onError(exc: ImageCaptureException) {
                     Logger.e("Photo capture failed: ${exc.message}", exc)
+                    enableShutterButton(true)
                 }
             })
 
@@ -331,6 +335,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun onTakeVideoButtonClick(controller: CameraController) {
         if (controller.isRecording) {
+            enableShutterButton(false)
             layout.shutterButton.state = ShutterButton.State.Video
             layout.modeSelectorView.isVisible = true
             layout.captureDurationView.isVisible = false
@@ -354,6 +359,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
                         viewModel.onCaptureVideo(savedUri)
+                        enableShutterButton(true)
                     }
 
                     override fun onError(
@@ -361,9 +367,16 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         message: String,
                         cause: Throwable?
                     ) {
+                        enableShutterButton(true)
                         Logger.e("Video capture failed: ${cause?.message}", cause)
                     }
                 })
+        }
+    }
+
+    private fun enableShutterButton(enabled: Boolean) {
+        requireActivity().runOnUiThread {
+            layout.shutterButton.isEnabled = enabled
         }
     }
 
@@ -436,12 +449,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     override fun invalidate(): Unit = withState(viewModel) {
         if (it.listCapture.isNotEmpty()) {
-            layout.preview.load(it.listCapture.last()?.uri, imageLoader)
+            layout.preview.load(it.listCapture.last().uri, imageLoader)
             layout.imageCount.text = it.listCapture.size.toString()
             layout.rlPreview.visibility = View.VISIBLE
         } else {
             layout.imageCount.text = ""
-            layout.rlPreview.visibility = View.GONE
+            layout.rlPreview.visibility = View.INVISIBLE
         }
     }
 

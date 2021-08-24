@@ -125,7 +125,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/capture_photo_preview_alt"
-                    android:scaleType="fitXY" />
+                    android:scaleType="centerCrop" />
 
             </androidx.cardview.widget.CardView>
 

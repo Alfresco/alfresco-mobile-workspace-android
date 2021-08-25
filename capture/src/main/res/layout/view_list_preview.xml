@@ -18,12 +18,10 @@
 
             <ImageView
                 android:id="@+id/preview"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:maxWidth="200dp"
-                android:contentDescription="@string/capture_photo_preview_alt"
-                android:scaleType="fitCenter" />
+                android:contentDescription="@string/capture_photo_preview_alt"/>
 
             <ImageView
                 android:id="@+id/play_icon"

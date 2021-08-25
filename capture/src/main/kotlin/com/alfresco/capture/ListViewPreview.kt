@@ -1,9 +1,11 @@
 package com.alfresco.capture
 
 import android.content.Context
+import android.media.ExifInterface
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import coil.EventListener
 import coil.ImageLoader
@@ -34,9 +36,9 @@ class ListViewPreview @JvmOverloads constructor(
             .eventListener(object : EventListener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     super.onSuccess(request, metadata)
-                        captureItem?.let {
-                            binding.playIcon.isVisible = it.isVideo() == true
-                        }
+                    captureItem?.let {
+                        binding.playIcon.isVisible = it.isVideo() == true
+                    }
                     binding.deletePhotoButton.isVisible = true
                 }
             })
@@ -46,7 +48,31 @@ class ListViewPreview @JvmOverloads constructor(
     @ModelProp
     fun setData(item: CaptureItem) {
         captureItem = item
+
+        binding.preview.scaleType = getScaleType(item)
+
         binding.preview.load(item.uri, imageLoader)
+    }
+
+    private fun getScaleType(item: CaptureItem): ImageView.ScaleType {
+        val isTablet = context.resources.getBoolean(R.bool.isTablet)
+        val exif = item.uri.path?.let { ExifInterface(it) }
+        if (exif != null) {
+            val rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+            return when {
+                isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_180 || rotation == ExifInterface.ORIENTATION_NORMAL) -> {
+                    ImageView.ScaleType.FIT_XY
+                }
+                !isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_90 || rotation == ExifInterface.ORIENTATION_ROTATE_270) -> {
+                    ImageView.ScaleType.FIT_XY
+                }
+                else -> {
+                    ImageView.ScaleType.FIT_CENTER
+                }
+            }
+        }
+        return ImageView.ScaleType.FIT_XY
     }
 
     @CallbackProp

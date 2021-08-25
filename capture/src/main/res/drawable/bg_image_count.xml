@@ -3,5 +3,5 @@
 
     <solid android:color="@color/shutter_photo_tint" />
 
-    <corners android:radius="20dp" />
+    <corners android:radius="16dp" />
 </shape>

@@ -44,6 +44,7 @@ import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
 import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -367,11 +368,20 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     override fun onVideoSaved(output: OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
-                        viewModel.onCaptureVideo(savedUri)
-                        if (viewModel.isEnterprise())
+                        savedUri.path?.let {
+                            val length = File(it).length()
+                            layout.animatePreviewHide()
                             enableShutterButton(true)
-                        else
-                            navigateToSave()
+                            if (length > 0L) {
+                                viewModel.onCaptureVideo(savedUri)
+                                if (viewModel.isEnterprise()) {
+                                    requireActivity().runOnUiThread {
+                                        layout.animatePreview()
+                                    }
+                                } else
+                                    navigateToSave()
+                            }
+                        }
                     }
 
                     override fun onError(

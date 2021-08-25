@@ -61,14 +61,14 @@ class ListViewPreview @JvmOverloads constructor(
             val rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
 
             return when {
-                isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_180 || rotation == ExifInterface.ORIENTATION_NORMAL) -> {
-                    ImageView.ScaleType.FIT_XY
+                isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_90 || rotation == ExifInterface.ORIENTATION_ROTATE_270) -> {
+                    ImageView.ScaleType.FIT_CENTER
                 }
-                !isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_90 || rotation == ExifInterface.ORIENTATION_ROTATE_270) -> {
-                    ImageView.ScaleType.FIT_XY
+                !isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_180 || rotation == ExifInterface.ORIENTATION_NORMAL) -> {
+                    ImageView.ScaleType.FIT_CENTER
                 }
                 else -> {
-                    ImageView.ScaleType.FIT_CENTER
+                    ImageView.ScaleType.FIT_XY
                 }
             }
         }

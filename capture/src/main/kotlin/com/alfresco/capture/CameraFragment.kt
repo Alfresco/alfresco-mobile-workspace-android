@@ -2,9 +2,11 @@ package com.alfresco.capture
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -48,6 +50,7 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
+import java.io.File
 
 @OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
@@ -367,16 +370,21 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     override fun onVideoSaved(output: OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
-                        viewModel.onCaptureVideo(savedUri)
-                        if (viewModel.isEnterprise()) {
+                        savedUri.path?.let {
+                            val length = File(it).length()
                             layout.animatePreviewHide()
                             enableShutterButton(true)
-                            requireActivity().runOnUiThread {
-                                layout.animatePreview()
+                            if (length > 0L) {
+                                viewModel.onCaptureVideo(savedUri)
+                                if (viewModel.isEnterprise()) {
+                                    requireActivity().runOnUiThread {
+                                        layout.animatePreview()
+                                    }
+                                } else
+                                    navigateToSave()
                             }
                         }
-                        else
-                            navigateToSave()
+
                     }
 
                     override fun onError(

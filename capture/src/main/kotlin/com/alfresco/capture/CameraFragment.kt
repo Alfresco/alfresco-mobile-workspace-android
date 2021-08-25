@@ -293,8 +293,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Create output file to hold the image
         val photoFile = viewModel.prepareCaptureFile(viewModel.mode)
 
-        Logger.d("Photo capture succeeded before: ${photoFile.name}")
-
         // Create output options object which contains file + metadata
 
         val outputOptions = when {

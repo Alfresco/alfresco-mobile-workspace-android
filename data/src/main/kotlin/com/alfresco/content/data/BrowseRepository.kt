@@ -4,6 +4,7 @@ import com.alfresco.content.apis.AlfrescoApi
 import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.NodesApiExt
 import com.alfresco.content.apis.getMyNode
+import com.alfresco.content.models.NodeBodyCreate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import java.io.File
@@ -86,6 +87,22 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 properties,
                 autoRename = true,
                 include = extraFields()
+            ).entry
+        )
+    }
+
+    suspend fun createFolder(name: String, description: String, parentId: String?): Entry {
+        val nodeBodyCreate = NodeBodyCreate(
+            name = name,
+            nodeType = "cm:folder",
+            properties = mapOf("cm:title" to name, "cm:description" to description)
+        )
+
+        return Entry.with(
+            service.createNode(
+                nodeId = requireNotNull(parentId),
+                nodeBodyCreate = nodeBodyCreate,
+                autoRename = true
             ).entry
         )
     }

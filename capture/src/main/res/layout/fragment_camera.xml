@@ -131,18 +131,20 @@
 
             <TextView
                 android:id="@+id/image_count"
-                android:layout_width="@dimen/preview_image_count_size"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/preview_image_count_size"
                 android:layout_alignTop="@id/cv"
-                android:textSize="12sp"
+                android:minWidth="@dimen/preview_image_count_size"
                 android:layout_alignEnd="@id/cv"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/image_count_margin"
                 android:layout_marginEnd="@dimen/image_count_margin"
                 android:background="@drawable/bg_image_count"
-                android:elevation="4dp"
                 android:gravity="center"
-                android:textColor="@color/text_badge_tint" />
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/text_badge_tint"
+                android:textSize="8sp" />
 
 
         </RelativeLayout>

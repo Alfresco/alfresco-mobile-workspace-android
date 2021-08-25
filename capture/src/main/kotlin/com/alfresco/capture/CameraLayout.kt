@@ -43,15 +43,15 @@ class CameraLayout(
     lateinit var rlPreview: RelativeLayout
 
     private val orientationAwareControls get() =
-        listOf(
-            cameraSwitchButton,
-            flashButton,
-            closeButton,
-            zoomTextView,
-            messageView,
-            flashMenu,
-            rlPreview
-        )
+            listOf(
+                cameraSwitchButton,
+                flashButton,
+                closeButton,
+                zoomTextView,
+                messageView,
+                flashMenu,
+                rlPreview
+            )
     private var controlRotation = 0
     private var deviceOrientation = 0
 
@@ -62,13 +62,13 @@ class CameraLayout(
         }
 
     constructor(context: Context) :
-        this(context, null)
+            this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) :
-        this(context, attrs, 0)
+            this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-        this(context, attrs, defStyleAttr, 0)
+            this(context, attrs, defStyleAttr, 0)
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -120,9 +120,9 @@ class CameraLayout(
 
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = topBar.measuredHeight +
-            previewHolder.measuredHeight +
-            shutterBar.measuredHeight +
-            modeBar.measuredHeight
+                previewHolder.measuredHeight +
+                shutterBar.measuredHeight +
+                modeBar.measuredHeight
 
         setMeasuredDimension(
             resolveSize(width, widthMeasureSpec),
@@ -197,7 +197,8 @@ class CameraLayout(
             }
 
             if (controlRotation != rotation &&
-                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS) {
+                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS
+            ) {
                 controlRotation = rotation
                 deviceOrientation = orientation
                 orientationAwareControls.map {
@@ -223,6 +224,23 @@ class CameraLayout(
                 .rotation(controlRotation - 360f)
                 .withEndAction { it.rotation = controlRotation.toFloat() }
                 .start()
+        }
+    }
+
+    fun animatePreview() {
+        preview.animate()
+            .alpha(1.0f)
+            .scaleX(1.0f)
+            .scaleY(1.0f)
+            .setDuration(200L)
+            .start()
+    }
+
+    fun animatePreviewHide() {
+        preview.let {
+            it.alpha = 0.0f
+            it.scaleX = 0.0f
+            it.scaleY = 0.0f
         }
     }
 

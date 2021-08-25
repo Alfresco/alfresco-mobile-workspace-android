@@ -315,9 +315,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     Logger.d("Photo capture succeeded: $savedUri")
 
                     viewModel.onCapturePhoto(savedUri)
-                    if (viewModel.isEnterprise())
+
+                    if (viewModel.isEnterprise()) {
+                        layout.animatePreviewHide()
                         enableShutterButton(true)
-                    else navigateToSave()
+                        requireActivity().runOnUiThread {
+                            layout.animatePreview()
+                        }
+                    } else navigateToSave()
                 }
 
                 override fun onError(exc: ImageCaptureException) {
@@ -459,7 +464,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         if (viewModel.isEnterprise()) {
             if (it.listCapture.isNotEmpty()) {
                 layout.preview.load(it.listCapture.last().uri, imageLoader)
-                layout.imageCount.text = it.listCapture.size.toString()
+                layout.imageCount.text = String.format("%,d", it.listCapture.size)
                 layout.rlPreview.visibility = View.VISIBLE
             } else {
                 layout.imageCount.text = ""

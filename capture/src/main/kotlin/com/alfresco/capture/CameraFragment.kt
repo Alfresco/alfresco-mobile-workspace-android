@@ -368,8 +368,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
                         viewModel.onCaptureVideo(savedUri)
-                        if (viewModel.isEnterprise())
+                        if (viewModel.isEnterprise()) {
+                            layout.animatePreviewHide()
                             enableShutterButton(true)
+                            requireActivity().runOnUiThread {
+                                layout.animatePreview()
+                            }
+                        }
                         else
                             navigateToSave()
                     }

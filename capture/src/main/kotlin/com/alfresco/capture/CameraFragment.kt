@@ -2,11 +2,9 @@ package com.alfresco.capture
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -46,11 +44,11 @@ import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
 import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
-import java.io.File
 
 @OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
@@ -384,7 +382,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                                     navigateToSave()
                             }
                         }
-
                     }
 
                     override fun onError(

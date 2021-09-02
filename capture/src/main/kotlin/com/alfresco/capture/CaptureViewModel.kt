@@ -28,6 +28,13 @@ class CaptureViewModel(
 
     fun clearCaptures() {
         captureDir.listFiles()?.forEach { it.delete() }
+        withState {
+            it.capture?.let {
+                setState {
+                    copy(capture = null)
+                }
+            }
+        }
     }
 
     fun prepareCaptureFile(mode: CaptureMode) =

@@ -235,7 +235,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.modeSelectorView.onMode = { mode ->
-            loadDefaultSettings()
             viewModel.mode = mode
             configureShutterButton(mode)
             configureCamera()

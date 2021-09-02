@@ -1,10 +1,10 @@
-<resources>
+﻿<resources>
     <string name="auth_app_name">Auth Library</string>
     <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Tutti i diritti riservati.</string>
 
     <string name="auth_connect_field_hint">Connetti a</string>
     <string name="auth_connect_button">Connetti</string>
-    <string name="auth_help_button_connect">Come connettersi ad Alfresco?</string>
+	<string name="auth_help_button_connect">Come connettersi ad Alfresco?</string>
     <string name="auth_help_button">Serve aiuto?</string>
     <string name="auth_settings_button">@string/auth_settings_title</string>
     <string name="auth_progress_bar_message">Connessione in corso</string>
@@ -18,7 +18,7 @@
         <p>Puoi immettere l\'URL di Alfresco Identity Management Service per autenticarti con il provider di identità della tua organizzazione.</p>
         <p>*Dovrai quindi fornire l\'URL della tua istanza di Alfresco Content Services</p>
         <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
-    </string>
+      </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Percorso repository dei contenuti</h6>

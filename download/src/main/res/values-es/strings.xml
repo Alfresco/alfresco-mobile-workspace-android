@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="notification_channel_downloads">Descargas</string>
     <string name="notification_download_content">Descargado, %s</string>

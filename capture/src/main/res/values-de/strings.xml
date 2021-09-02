@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_button_alt">Schließen</string>
     <string name="capture_button_alt">Aufnehmen</string>
@@ -25,4 +25,10 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Zum Aufnehmen von Medien aktivieren Sie die Berechtigungen für Kamera und Mikrofon.</string>
+
+    <string name="discard_title">Aufnahmen verwerfen?</string>
+    <string name="discard_subtitle">%d Mediendateien werden beim Beenden verworfen.</string>
+    <string name="discard_confirmation_negative">Abbrechen</string>
+    <string name="discard_confirmation_positive">Verwerfen</string>
+
 </resources>

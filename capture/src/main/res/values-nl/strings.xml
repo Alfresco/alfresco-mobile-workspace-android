@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_button_alt">Sluiten</string>
     <string name="capture_button_alt">Vastleggen</string>
@@ -25,4 +25,10 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Schakel de rechten voor Camera en Microfoon in om media vast te leggen.</string>
+
+    <string name="discard_title">Opnamen verwijderen?</string>
+    <string name="discard_subtitle">%d mediabestanden worden verwijderd als u afsluit.</string>
+    <string name="discard_confirmation_negative">Annuleren</string>
+    <string name="discard_confirmation_positive">Verwijderen</string>
+
 </resources>

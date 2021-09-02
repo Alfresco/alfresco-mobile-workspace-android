@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="password_prompt_title">Fichero bloqueado</string>
     <string name="password_prompt_message">Introduzca la contraseña para desbloquear el fichero.</string>

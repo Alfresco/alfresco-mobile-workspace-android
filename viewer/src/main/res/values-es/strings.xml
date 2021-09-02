@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="info_creating_rendition">Preparando vista previa&#8230;</string>
-    <string name="info_fetching_content">Cargando vista previa&#8230;</string>
+    <string name="info_fetching_content">Cargando vista previa...</string>
     <string name="error_preview_not_available">Vista previa no disponible</string>
 </resources>

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="info_creating_rendition">Preparazione anteprima in corso&#8230;</string>
-    <string name="info_fetching_content">Caricamento anteprima in corso&#8230;</string>
+    <string name="info_fetching_content">Caricamento anteprima in corso...</string>
     <string name="error_preview_not_available">Anteprima non disponibile</string>
 </resources>

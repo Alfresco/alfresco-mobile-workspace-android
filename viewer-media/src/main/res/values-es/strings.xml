@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="error_generic">Error de reproducción</string>
     <string name="error_no_decoder">Este dispositivo no cuenta con un descodificador para &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_button_alt">Chiudi</string>
     <string name="capture_button_alt">Acquisisci</string>
@@ -25,4 +25,10 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Per acquisire i contenuti multimediali, attivare le autorizzazioni per la fotocamera e il microfono.</string>
+
+    <string name="discard_title">Vuoi eliminare le acquisizioni?</string>
+    <string name="discard_subtitle">Se esci, verranno eliminati %d file multimediali.</string>
+    <string name="discard_confirmation_negative">Annulla</string>
+    <string name="discard_confirmation_positive">Elimina</string>
+
 </resources>

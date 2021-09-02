@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="search_title">Zoeken</string>
     <string name="search_hint">Zoeken</string>
 
     <string name="recent_search_title">Recente zoekopdrachten</string>
 
-    <string name="search_loading_message">Zoeken...</string>
+    <string name="search_loading_message">Zoeken&#8230;</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Bestanden</string>

@@ -28,6 +28,8 @@ class CaptureViewModel(
     private val captureDir = SessionManager.requireSession.captureDir
     var mode: CaptureMode = CaptureMode.Photo
     private fun distributionVersion() = Settings(context).getDistributionVersion
+    var flashMode = ImageCapture.FLASH_MODE_AUTO
+    var lensFacing = -1
 
     init {
         // Clear any pending captures from a previous session
@@ -36,6 +38,13 @@ class CaptureViewModel(
 
     fun clearCaptures() {
         captureDir.listFiles()?.forEach { it.delete() }
+        withState {
+            it.capture?.let {
+                setState {
+                    copy(capture = null)
+                }
+            }
+        }
     }
 
     fun clearCaptureList() = setState {

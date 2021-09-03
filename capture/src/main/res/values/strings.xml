@@ -31,4 +31,6 @@
     <string name="discard_confirmation_negative">Cancel</string>
     <string name="discard_confirmation_positive">Discard</string>
 
+    <string name="format_video_duration">%02d:%02d:%02d</string>
+
 </resources>

@@ -18,6 +18,8 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.capture.databinding.ViewListPreviewBinding
+import java.util.Locale.ENGLISH
+import java.util.concurrent.TimeUnit
 
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
 class ListViewPreview @JvmOverloads constructor(
@@ -37,10 +39,7 @@ class ListViewPreview @JvmOverloads constructor(
             .eventListener(object : EventListener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     super.onSuccess(request, metadata)
-                    captureItem?.let {
-                        binding.playIcon.isVisible = it.isVideo() == true
-                    }
-                    binding.deletePhotoButton.isVisible = true
+                        onSuccessMediaLoad()
                 }
             })
             .build()
@@ -120,8 +119,32 @@ class ListViewPreview @JvmOverloads constructor(
 
     companion object {
         const val ORIENTATION_0 = 0
-        const val ORIENTATION_90 = 0
-        const val ORIENTATION_180 = 0
-        const val ORIENTATION_270 = 0
+        const val ORIENTATION_90 = 90
+        const val ORIENTATION_180 = 180
+        const val ORIENTATION_270 = 270
+    }
+
+    private fun onSuccessMediaLoad() {
+        captureItem?.let {
+            if (it.isVideo()) {
+                val mediaMetadataRetriever = MediaMetadataRetriever()
+                mediaMetadataRetriever.setDataSource(it.uri.path)
+                val time: String? = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                val duration = time?.toLong()
+
+                duration?.let { millis ->
+                    val hms = java.lang.String.format(
+                        ENGLISH,
+                        context.getString(R.string.format_video_duration), TimeUnit.MILLISECONDS.toHours(millis),
+                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+                    )
+
+                    binding.videoDuration.isVisible = it.isVideo() == true
+                    binding.videoDuration.text = hms
+                }
+            }
+        }
+        binding.deletePhotoButton.isVisible = true
     }
 }

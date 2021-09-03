@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="password_prompt_title">Bestand vergrendeld</string>
     <string name="password_prompt_message">Voer het wachtwoord in om het bestand te ontgrendelen.</string>

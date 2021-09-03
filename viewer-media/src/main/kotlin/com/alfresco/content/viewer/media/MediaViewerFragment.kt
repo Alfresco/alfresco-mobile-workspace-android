@@ -223,6 +223,13 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
         }
     }
 
+    private fun resetToDefault() {
+        player?.let {
+            it.playWhenReady = false
+            it.seekTo(0)
+        }
+    }
+
     private fun clearStartPosition() {
         startAutoPlay = false
         startWindow = C.INDEX_UNSET
@@ -240,10 +247,16 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
     private inner class PlayerEventListener : Player.EventListener {
 
         override fun onPlaybackStateChanged(state: Int) {
+            println("PlayerEventListener.onPlaybackStateChanged $state")
             if (state == PlaybackState.STATE_PLAYING ||
-                state == PlaybackState.STATE_STOPPED) {
+                state == PlaybackState.STATE_STOPPED
+            ) {
                 playerView.videoSurfaceView?.isVisible = hasVideoTracks()
                 loadingListener?.onContentLoaded()
+            }
+            if (state == Player.STATE_ENDED) {
+                /*player?.seekTo(0)*/
+                resetToDefault()
             }
         }
 
@@ -311,7 +324,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
         val trackInfo = trackSelector?.currentMappedTrackInfo
         if (trackInfo != null) {
             return (trackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO)
-                != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS)
+                    != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS)
         }
         return false
     }

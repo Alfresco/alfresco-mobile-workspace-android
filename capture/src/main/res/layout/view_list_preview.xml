@@ -23,18 +23,16 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/capture_photo_preview_alt"/>
 
-            <ImageView
-                android:id="@+id/play_icon"
-                style="@style/Widget.Alfresco.Camera.Button"
-                android:layout_width="@dimen/capture_button_size"
+            <TextView
+                android:id="@+id/video_duration"
+                style="@style/Widget.Alfresco.Camera.Mode.Button"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/capture_button_size"
                 android:layout_gravity="bottom|start"
                 android:layout_margin="@dimen/capture_layout_small_margin"
-                android:background="@drawable/bg_camera_btn"
-                android:clickable="false"
-                android:visibility="gone"
-                android:src="@drawable/ic_video_play"
-                tools:ignore="ContentDescription" />
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/capture_button_padding"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/delete_photo_button"

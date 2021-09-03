@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Widget.Alfresco.Camera.Button" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@drawable/bg_camera_btn</item>
         <item name="tint">?attr/colorControlNormal</item>
@@ -14,5 +15,12 @@
     <style name="Widget.Alfresco.Camera.Menu.Button" parent="Widget.Alfresco.Action.Primary">
         <item name="android:textAlignment">textStart</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
+    </style>
+
+    <style name="image_count_style">
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/text_badge_tint</item>
+
     </style>
 </resources>

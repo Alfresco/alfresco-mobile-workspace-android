@@ -2,6 +2,7 @@ package com.alfresco.capture
 
 import android.content.Context
 import android.media.ExifInterface
+import android.media.MediaMetadataRetriever
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -49,30 +50,57 @@ class ListViewPreview @JvmOverloads constructor(
     fun setData(item: CaptureItem) {
         captureItem = item
 
-        binding.preview.scaleType = getScaleType(item)
+        if (item.isVideo()) {
+            setVideoScaleType(item)
+        } else {
+            setPhotoScaleType(item)
+        }
 
         binding.preview.load(item.uri, imageLoader)
     }
 
-    private fun getScaleType(item: CaptureItem): ImageView.ScaleType {
-        val isTablet = context.resources.getBoolean(R.bool.isTablet)
+    private fun setPhotoScaleType(item: CaptureItem) {
         val exif = item.uri.path?.let { ExifInterface(it) }
         if (exif != null) {
             val rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation), true)
+        }
+    }
 
-            return when {
-                isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_90 || rotation == ExifInterface.ORIENTATION_ROTATE_270) -> {
-                    ImageView.ScaleType.FIT_CENTER
-                }
-                !isTablet && (rotation == ExifInterface.ORIENTATION_ROTATE_180 || rotation == ExifInterface.ORIENTATION_NORMAL) -> {
-                    ImageView.ScaleType.FIT_CENTER
-                }
-                else -> {
-                    ImageView.ScaleType.FIT_XY
-                }
+    private fun setVideoScaleType(item: CaptureItem) {
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource(item.uri.path)
+        val rotation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+        rotation?.let {
+            binding.preview.scaleType = getScaleType(it.toInt(), false)
+        }
+    }
+
+    private fun convertOrientationToDegree(orientation: Int): Int {
+        return when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> ORIENTATION_90
+            ExifInterface.ORIENTATION_ROTATE_270 -> ORIENTATION_270
+            ExifInterface.ORIENTATION_ROTATE_180 -> ORIENTATION_180
+            else -> ORIENTATION_0
+        }
+    }
+
+    private fun getScaleType(rotation: Int, isPhoto: Boolean): ImageView.ScaleType {
+        val isTablet = context.resources.getBoolean(R.bool.isTablet)
+        return when {
+            isTablet && (rotation == ORIENTATION_0 || rotation == ORIENTATION_180) -> {
+                ImageView.ScaleType.FIT_CENTER
+            }
+            isPhoto && isTablet && (rotation == ORIENTATION_90 || rotation == ORIENTATION_270) -> {
+                ImageView.ScaleType.FIT_CENTER
+            }
+            !isTablet && (rotation == ORIENTATION_180 || rotation == ORIENTATION_0) -> {
+                ImageView.ScaleType.FIT_CENTER
+            }
+            else -> {
+                ImageView.ScaleType.FIT_XY
             }
         }
-        return ImageView.ScaleType.FIT_XY
     }
 
     @CallbackProp
@@ -88,5 +116,12 @@ class ListViewPreview @JvmOverloads constructor(
     @CallbackProp
     fun setDeletePhotoClickListener(listener: OnClickListener?) {
         binding.deletePhotoButton.setOnClickListener(listener)
+    }
+
+    companion object {
+        const val ORIENTATION_0 = 0
+        const val ORIENTATION_90 = 0
+        const val ORIENTATION_180 = 0
+        const val ORIENTATION_270 = 0
     }
 }

@@ -101,48 +101,59 @@
 
         <RelativeLayout
             android:id="@+id/rl_preview"
-            android:layout_width="@dimen/preview_image_parent_size_width"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/preview_image_parent_size"
+            android:layout_marginStart="@dimen/capture_layout_small_margin"
             app:layout_constraintBottom_toBottomOf="@id/shutter_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/shutter_button">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv"
-                android:layout_width="@dimen/preview_image_size"
-                android:layout_height="@dimen/preview_image_size"
+            <RelativeLayout
+                android:id="@+id/struct_slot"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:background="@drawable/bg_preview_thumbnail">
 
-                <ImageView
-                    android:id="@+id/preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/capture_photo_preview_alt"
-                    android:scaleType="centerCrop" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv"
+                    android:layout_width="@dimen/preview_image_size"
+                    android:layout_height="@dimen/preview_image_size"
+                    android:layout_centerInParent="true"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:id="@+id/preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/capture_photo_preview_alt"
+                        android:scaleType="centerCrop" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/image_count"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/preview_image_count_size"
-                android:layout_alignTop="@id/cv"
-                android:minWidth="@dimen/preview_image_count_size"
-                android:layout_toEndOf="@id/cv"
-                android:layout_gravity="end"
-                android:layout_marginTop="@dimen/image_count_margin"
-                android:layout_marginStart="@dimen/image_count_margin_start"
+                android:layout_alignTop="@id/struct_slot"
+                android:layout_marginStart="-8dp"
+                android:layout_marginTop="-8dp"
+                android:layout_toEndOf="@id/struct_slot"
                 android:background="@drawable/bg_image_count"
                 android:gravity="center"
+                android:lineSpacingExtra="4sp"
+                android:minWidth="@dimen/preview_image_count_size"
                 android:paddingHorizontal="4dp"
-                android:textColor="@color/text_badge_tint"
+                android:textAppearance="@style/image_count_style"
                 android:textSize="10sp" />
 
 

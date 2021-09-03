@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -40,37 +39,35 @@
 
                     <ImageView
                         android:id="@+id/preview"
-                        android:layout_width="wrap_content"
+                        android:layout_width="240dp"
                         android:layout_height="wrap_content"
-                        android:maxHeight="234dp"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/capture_photo_preview_alt"
-                        android:scaleType="fitCenter" />
+                        android:maxHeight="234dp"
+                        android:scaleType="fitXY" />
 
-                    <ImageView
-                        android:id="@+id/play_icon"
-                        style="@style/Widget.Alfresco.Camera.Button"
-                        android:layout_width="@dimen/capture_button_size"
+                    <TextView
+                        android:id="@+id/video_duration"
+                        style="@style/Widget.Alfresco.Camera.Mode.Button"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/capture_button_size"
                         android:layout_gravity="bottom|start"
                         android:layout_margin="@dimen/capture_layout_small_margin"
-                        android:background="@drawable/bg_camera_btn"
-                        android:src="@drawable/ic_video_play"
-                        android:clickable="false"
-                        android:visibility="gone"
-                        tools:ignore="ContentDescription" />
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/capture_button_padding"
+                        android:visibility="gone" />
 
                     <ImageButton
                         android:id="@+id/delete_photo_button"
                         style="@style/Widget.Alfresco.Camera.Button"
                         android:layout_width="@dimen/capture_button_size"
                         android:layout_height="@dimen/capture_button_size"
-                        android:visibility="gone"
                         android:layout_gravity="bottom|end"
                         android:layout_margin="@dimen/capture_layout_small_margin"
                         android:background="@drawable/bg_camera_btn"
                         android:contentDescription="@string/capture_delete_photo_alt"
-                        android:src="@drawable/ic_photo_delete" />
+                        android:src="@drawable/ic_photo_delete"
+                        android:visibility="gone" />
                 </androidx.cardview.widget.CardView>
             </FrameLayout>
 

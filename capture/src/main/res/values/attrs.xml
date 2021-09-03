@@ -3,6 +3,7 @@
     <dimen name="capture_layout_margin">24dp</dimen>
     <dimen name="capture_layout_small_margin">16dp</dimen>
     <dimen name="capture_button_size">40dp</dimen>
+    <dimen name="capture_view_size">60dp</dimen>
     <dimen name="capture_button_padding">16dp</dimen>
     <dimen name="capture_button_min_spacing">8dp</dimen>
 </resources>

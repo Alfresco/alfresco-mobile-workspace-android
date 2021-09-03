@@ -2,6 +2,7 @@ package com.alfresco.capture
 
 import android.app.Activity
 import android.content.Intent
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,6 +24,8 @@ import com.airbnb.mvrx.withState
 import com.alfresco.capture.databinding.FragmentSaveBinding
 import com.alfresco.ui.getDrawableForAttribute
 import com.alfresco.ui.text
+import java.util.Locale.ENGLISH
+import java.util.concurrent.TimeUnit
 
 class SaveFragment : Fragment(), MavericksView {
 
@@ -37,14 +40,34 @@ class SaveFragment : Fragment(), MavericksView {
             .eventListener(object : EventListener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     super.onSuccess(request, metadata)
-                    withState(viewModel) {
-                        if (it.capture != null)
-                            binding.playIcon.isVisible = it.capture.isVideo() == true
-                        binding.deletePhotoButton.isVisible = true
-                    }
+                    onSuccessMediaLoad()
                 }
             })
             .build()
+    }
+
+    private fun onSuccessMediaLoad() {
+        withState(viewModel) {
+            if (it.capture != null) {
+                val mediaMetadataRetriever = MediaMetadataRetriever()
+                mediaMetadataRetriever.setDataSource(it.capture.uri.path)
+                val time: String? = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                val duration = time?.toLong()
+
+                duration?.let { millis ->
+                    val hms = java.lang.String.format(
+                        ENGLISH,
+                        getString(R.string.format_video_duration), TimeUnit.MILLISECONDS.toHours(millis),
+                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+                    )
+
+                    binding.videoDuration.isVisible = it.capture.isVideo() == true
+                    binding.videoDuration.text = hms
+                }
+            }
+            binding.deletePhotoButton.isVisible = true
+        }
     }
 
     override fun onCreateView(
@@ -85,10 +108,10 @@ class SaveFragment : Fragment(), MavericksView {
                 val empty = s.toString().isEmpty()
 
                 binding.fileNameInputLayout.error = when {
-                        !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
-                        empty -> resources.getString(R.string.capture_file_name_empty)
-                        else -> null
-                    }
+                    !valid -> resources.getString(R.string.capture_file_name_invalid_chars)
+                    empty -> resources.getString(R.string.capture_file_name_empty)
+                    else -> null
+                }
                 binding.saveButton.isEnabled = valid && !empty
             }
         })

@@ -33,6 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
+import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.LocationData
@@ -411,13 +412,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun hasFrontCamera(): Boolean =
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
-    override fun invalidate() {
-        // no-op
-    }
+    override fun invalidate() {}
 
     override fun onStart() {
         super.onStart()
         invokeLocation()
+        withState(viewModel) {
+            if (it.capture != null) {
+                layout.captureDurationView.isVisible = false
+                navigateToSave()
+            }
+        }
     }
 
     private fun invokeLocation() {

@@ -38,12 +38,8 @@ class CaptureViewModel(
 
     fun clearCaptures() {
         captureDir.listFiles()?.forEach { it.delete() }
-        withState {
-            it.capture?.let {
-                setState {
-                    copy(capture = null)
-                }
-            }
+        setState {
+            copy(listCapture = emptyList())
         }
     }
 
@@ -151,6 +147,7 @@ class CaptureViewModel(
             copy(visibleItem = item)
         }
     }
+
     fun getMetaData(): ImageCapture.Metadata {
         val metadata = ImageCapture.Metadata()
 

@@ -224,6 +224,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 layout.shutterButton.simulateClick()
                 true
             }
+            KeyEvent.KEYCODE_BACK -> {
+                goBack()
+                true
+            }
             else -> false
         }
     }
@@ -283,12 +287,16 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.closeButton.setOnClickListener {
-            withState(viewModel) {
-                if (it.listCapture.isNotEmpty())
-                    discardPhotoPrompt(it.listCapture.size)
-                else
-                    requireActivity().finish()
-            }
+            goBack()
+        }
+    }
+
+    private fun goBack() {
+        withState(viewModel) {
+            if (viewModel.isEnterprise() && it.listCapture.isNotEmpty())
+                discardPhotoPrompt(it.listCapture.size)
+            else
+                requireActivity().finish()
         }
     }
 
@@ -509,9 +517,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         super.onStart()
         invokeLocation()
         withState(viewModel) {
-            if (it.capture != null) {
+            if (it.listCapture.isNotEmpty()) {
                 layout.captureDurationView.isVisible = false
-                navigateToSave()
+                if (!viewModel.isEnterprise())
+                    navigateToSave()
             }
         }
     }

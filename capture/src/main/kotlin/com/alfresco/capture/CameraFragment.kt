@@ -54,8 +54,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         LocationData(requireContext())
     }
 
-    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
-
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
 
@@ -155,11 +153,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             cameraProvider = cameraProviderFuture.get()
 
             // Select lensFacing depending on the available cameras
-            lensFacing = when {
-                hasBackCamera() -> CameraSelector.LENS_FACING_BACK
-                hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
-                else -> throw IllegalStateException("Back and front camera are unavailable")
-            }
+            if (viewModel.lensFacing == -1)
+                viewModel.lensFacing = when {
+                    hasBackCamera() -> CameraSelector.LENS_FACING_BACK
+                    hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
+                    else -> throw IllegalStateException("Back and front camera are unavailable")
+                }
 
             // Enable or disable switching between cameras
             updateCameraSwitchButton()
@@ -174,8 +173,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         cameraController = AlfrescoCameraController(requireContext()).apply {
             setEnabledUseCases(useCaseFor(viewModel.mode))
-            setCameraSelector(lensFacing)
-            imageCaptureFlashMode = DEFAULT_FLASH_MODE
+            setCameraSelector(viewModel.lensFacing)
+            imageCaptureFlashMode = viewModel.flashMode
         }.also {
             it.bindToLifecycle(this)
             it.initializationFuture.addListener({
@@ -244,13 +243,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Setup for button used to switch cameras
         layout.cameraSwitchButton.setOnClickListener {
-            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+            loadDefaultSettings()
+            viewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == viewModel.lensFacing) {
                 CameraSelector.LENS_FACING_BACK
             } else {
                 CameraSelector.LENS_FACING_FRONT
             }
-            cameraController?.setCameraSelector(lensFacing)
-            cameraController?.imageCaptureFlashMode = DEFAULT_FLASH_MODE
+            cameraController?.setCameraSelector(viewModel.lensFacing)
+            cameraController?.imageCaptureFlashMode = viewModel.flashMode
             updateFlashControlState()
             layout.animateCameraSwitchClick()
         }
@@ -262,6 +262,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.closeButton.setOnClickListener {
             requireActivity().finish()
         }
+    }
+
+    private fun loadDefaultSettings() {
+        viewModel.flashMode = DEFAULT_FLASH_MODE
     }
 
     private fun onTakePhotoButtonClick(controller: CameraController) {
@@ -361,14 +365,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun showFlashMenu() {
         layout.flashMenu.isVisible = true
         layout.flashMenu.onMenuItemClick = { mode ->
-            val flashMode = when (mode) {
+            viewModel.flashMode = when (mode) {
                 FlashMenuItem.On -> ImageCapture.FLASH_MODE_ON
                 FlashMenuItem.Off -> ImageCapture.FLASH_MODE_OFF
                 FlashMenuItem.Auto -> ImageCapture.FLASH_MODE_AUTO
             }
 
-            cameraController?.imageCaptureFlashMode = flashMode
-            layout.flashButton.setImageResource(flashModeIcon(flashMode))
+            cameraController?.imageCaptureFlashMode = viewModel.flashMode
+            layout.flashButton.setImageResource(flashModeIcon(viewModel.flashMode))
 
             // Hide menu
             layout.flashMenu.isVisible = false
@@ -389,7 +393,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.flashButton.isVisible = flashControlEnabled(viewModel.mode, cameraController)
         layout.flashMenu.isVisible = false
 
-        val flashMode = cameraController?.imageCaptureFlashMode ?: ImageCapture.FLASH_MODE_AUTO
+        val flashMode = cameraController?.imageCaptureFlashMode ?: viewModel.flashMode
+        println("CameraFragment.updateFlashControlState $flashMode ${viewModel.flashMode}")
         layout.flashButton.setImageResource(flashModeIcon(flashMode))
     }
 

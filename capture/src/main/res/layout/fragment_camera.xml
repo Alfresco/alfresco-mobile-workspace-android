@@ -139,24 +139,29 @@
 
             </RelativeLayout>
 
-
-            <TextView
-                android:id="@+id/image_count"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/preview_image_count_size"
+                android:layout_height="wrap_content"
                 android:layout_alignTop="@id/struct_slot"
                 android:layout_marginStart="-8dp"
                 android:layout_marginTop="-8dp"
                 android:layout_toEndOf="@id/struct_slot"
-                android:background="@drawable/bg_image_count"
-                android:gravity="center"
-                android:lineSpacingExtra="4sp"
-                android:minWidth="@dimen/preview_image_count_size"
-                android:paddingHorizontal="4dp"
-                android:textAppearance="@style/image_count_style"
-                android:textSize="10sp" />
+                android:background="@drawable/bg_count_stroke"
+                android:padding="4dp">
 
+                <TextView
+                    android:id="@+id/image_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/preview_image_count_size"
+                    android:background="@drawable/bg_count_solid"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4sp"
+                    android:minWidth="@dimen/preview_image_count_size"
+                    android:paddingHorizontal="4dp"
+                    android:textAppearance="@style/image_count_style"
+                    android:textSize="10sp" />
 
+            </RelativeLayout>
         </RelativeLayout>
 
         <com.alfresco.capture.ShutterButton

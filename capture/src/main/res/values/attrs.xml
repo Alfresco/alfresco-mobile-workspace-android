@@ -8,7 +8,7 @@
     <dimen name="preview_image_parent_size">80dp</dimen>
     <dimen name="capture_button_padding">16dp</dimen>
     <dimen name="capture_button_min_spacing">8dp</dimen>
-    <dimen name="preview_image_count_size">24dp</dimen>
+    <dimen name="preview_image_count_size">16dp</dimen>
     <dimen name="image_count_margin">-5dp</dimen>
     <dimen name="image_count_margin_start">-10dp</dimen>
     <dimen name="view_pager_item_padding">8dp</dimen>

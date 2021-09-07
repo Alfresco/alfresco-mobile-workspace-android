@@ -40,4 +40,15 @@
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media gepland om te uploaden.</string>
+
+    <string name="action_create_folder_toast">%s is gemaakt</string>
+
+    <string name="action_create_folder">Nieuwe map</string>
+    <string name="action_folder_cancel">Annuleren</string>
+    <string name="action_folder_create">Maken</string>
+
+    <string name="action_folder_name_hint">Naam</string>
+    <string name="action_folder_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:\"*|/\&lt;></string>
+    <string name="action_folder_name_empty">Mapnaam mag niet leeg zijn.</string>
+
 </resources>

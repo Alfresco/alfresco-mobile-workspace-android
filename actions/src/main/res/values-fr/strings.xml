@@ -40,4 +40,15 @@
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Importation du fichier multimédia prévue.</string>
+
+    <string name="action_create_folder_toast">%s a été créé</string>
+
+    <string name="action_create_folder">Nouveau dossier</string>
+    <string name="action_folder_cancel">Annuler</string>
+    <string name="action_folder_create">Créer</string>
+
+    <string name="action_folder_name_hint">Nom</string>
+    <string name="action_folder_name_invalid_chars">Le nom de dossier ne peut pas contenir les caractères suivants : ?:\"*|/\&lt;></string>
+    <string name="action_folder_name_empty">Le nom de dossier ne peut pas être vide.</string>
+
 </resources>

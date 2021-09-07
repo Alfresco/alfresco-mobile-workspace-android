@@ -56,8 +56,8 @@ internal class ActionCreateViewModel(
         actions.add(ActionUploadMedia(parent))
 
         if (distributionVersion() == Settings.DistributionVersion.ENTERPRISE)
-            actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_enterprise))
-        else actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_community))
+            actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_multiple))
+        else actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_single))
 
         return actions
     }

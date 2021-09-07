@@ -39,7 +39,7 @@ class ListViewPreview @JvmOverloads constructor(
             .eventListener(object : EventListener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     super.onSuccess(request, metadata)
-                        onSuccessMediaLoad()
+                    onSuccessMediaLoad()
                 }
             })
             .build()
@@ -61,7 +61,10 @@ class ListViewPreview @JvmOverloads constructor(
     private fun setPhotoScaleType(item: CaptureItem) {
         val exif = item.uri.path?.let { ExifInterface(it) }
         if (exif != null) {
-            val rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            val rotation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
             binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation), true)
         }
     }
@@ -69,7 +72,8 @@ class ListViewPreview @JvmOverloads constructor(
     private fun setVideoScaleType(item: CaptureItem) {
         val mediaMetadataRetriever = MediaMetadataRetriever()
         mediaMetadataRetriever.setDataSource(item.uri.path)
-        val rotation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+        val rotation =
+            mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
         rotation?.let {
             binding.preview.scaleType = getScaleType(it.toInt(), false)
         }
@@ -129,16 +133,33 @@ class ListViewPreview @JvmOverloads constructor(
             if (it.isVideo()) {
                 val mediaMetadataRetriever = MediaMetadataRetriever()
                 mediaMetadataRetriever.setDataSource(it.uri.path)
-                val time: String? = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                val time: String? =
+                    mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
                 val duration = time?.toLong()
 
                 duration?.let { millis ->
-                    val hms = java.lang.String.format(
-                        ENGLISH,
-                        context.getString(R.string.format_video_duration), TimeUnit.MILLISECONDS.toHours(millis),
-                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-                    )
+                    val hour = TimeUnit.MILLISECONDS.toHours(millis)
+                    val minutes =
+                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                            TimeUnit.MILLISECONDS.toHours(millis)
+                        )
+                    val seconds =
+                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+                            TimeUnit.MILLISECONDS.toMinutes(millis)
+                        )
+                    val hms = if (hour > 0L) {
+                        java.lang.String.format(
+                            ENGLISH,
+                            context.getString(R.string.format_video_duration_hour), hour,
+                            minutes, seconds
+                        )
+                    } else {
+                        java.lang.String.format(
+                            ENGLISH,
+                            context.getString(R.string.format_video_duration_minute),
+                            minutes, seconds
+                        )
+                    }
 
                     binding.videoDuration.isVisible = it.isVideo() == true
                     binding.videoDuration.text = hms

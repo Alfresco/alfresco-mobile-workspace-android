@@ -49,38 +49,40 @@ class SaveFragment : Fragment(), MavericksView {
     private fun onSuccessMediaLoad() {
         withState(viewModel) {
             if (it.capture != null) {
-                val mediaMetadataRetriever = MediaMetadataRetriever()
-                mediaMetadataRetriever.setDataSource(it.capture.uri.path)
-                val time: String? =
-                    mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                val duration = time?.toLong()
+                if (it.capture.isVideo()) {
+                    val mediaMetadataRetriever = MediaMetadataRetriever()
+                    mediaMetadataRetriever.setDataSource(it.capture.uri.path)
+                    val time: String? =
+                        mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    val duration = time?.toLong()
 
-                duration?.let { millis ->
-                    val hour = TimeUnit.MILLISECONDS.toHours(millis)
-                    val minutes =
-                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
-                            TimeUnit.MILLISECONDS.toHours(millis)
-                        )
-                    val seconds =
-                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                            TimeUnit.MILLISECONDS.toMinutes(millis)
-                        )
-                    val hms = if (hour > 0L) {
-                        java.lang.String.format(
-                            ENGLISH,
-                            getString(R.string.format_video_duration_hour), hour,
-                            minutes, seconds
-                        )
-                    } else {
-                        java.lang.String.format(
-                            ENGLISH,
-                            getString(R.string.format_video_duration_minute),
-                            minutes, seconds
-                        )
+                    duration?.let { millis ->
+                        val hour = TimeUnit.MILLISECONDS.toHours(millis)
+                        val minutes =
+                            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                                TimeUnit.MILLISECONDS.toHours(millis)
+                            )
+                        val seconds =
+                            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millis)
+                            )
+                        val hms = if (hour > 0L) {
+                            java.lang.String.format(
+                                ENGLISH,
+                                getString(R.string.format_video_duration_hour), hour,
+                                minutes, seconds
+                            )
+                        } else {
+                            java.lang.String.format(
+                                ENGLISH,
+                                getString(R.string.format_video_duration_minute),
+                                minutes, seconds
+                            )
+                        }
+
+                        binding.videoDuration.isVisible = it.capture.isVideo() == true
+                        binding.videoDuration.text = hms
                     }
-
-                    binding.videoDuration.isVisible = it.capture.isVideo() == true
-                    binding.videoDuration.text = hms
                 }
             }
             binding.deletePhotoButton.isVisible = true

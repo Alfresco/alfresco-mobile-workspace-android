@@ -65,7 +65,7 @@ class ListViewPreview @JvmOverloads constructor(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL
             )
-            binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation), true)
+            binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation))
         }
     }
 
@@ -75,7 +75,7 @@ class ListViewPreview @JvmOverloads constructor(
         val rotation =
             mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
         rotation?.let {
-            binding.preview.scaleType = getScaleType(it.toInt(), false)
+            binding.preview.scaleType = getScaleType(it.toInt())
         }
     }
 
@@ -88,13 +88,10 @@ class ListViewPreview @JvmOverloads constructor(
         }
     }
 
-    private fun getScaleType(rotation: Int, isPhoto: Boolean): ImageView.ScaleType {
+    private fun getScaleType(rotation: Int): ImageView.ScaleType {
         val isTablet = context.resources.getBoolean(R.bool.isTablet)
         return when {
             isTablet && (rotation == ORIENTATION_0 || rotation == ORIENTATION_180) -> {
-                ImageView.ScaleType.FIT_CENTER
-            }
-            isPhoto && isTablet && (rotation == ORIENTATION_90 || rotation == ORIENTATION_270) -> {
                 ImageView.ScaleType.FIT_CENTER
             }
             !isTablet && (rotation == ORIENTATION_180 || rotation == ORIENTATION_0) -> {

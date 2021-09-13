@@ -34,6 +34,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/capture_layout_margin"
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -70,7 +71,7 @@
                     style="@style/Widget.Alfresco.Button.Primary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/capture_layout_margin"
+                    android:layout_marginTop="@dimen/capture_layout_margin_button"
                     android:layout_marginBottom="@dimen/capture_layout_margin"
                     android:text="@string/capture_save_button" />
             </LinearLayout>

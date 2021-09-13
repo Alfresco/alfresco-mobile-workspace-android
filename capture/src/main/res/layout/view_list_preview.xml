@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             app:strokeWidth="2dp"
             app:strokeColor="@color/alfresco_gray_900_15"
-            android:layout_height="320dp"
+            android:layout_height="280dp"
             android:layout_gravity="center_horizontal"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp">

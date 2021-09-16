@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="560dp"
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/alfresco_gray_900_15"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/preview"
+                android:layout_width="480dp"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/capture_photo_preview_alt"/>
+
+            <TextView
+                android:id="@+id/video_duration"
+                style="@style/Widget.Alfresco.Camera.Mode.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/capture_button_size"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="@dimen/capture_layout_small_margin"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/capture_button_padding"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/delete_photo_button"
+                style="@style/Widget.Alfresco.Camera.Button"
+                android:layout_width="@dimen/capture_button_size"
+                android:layout_height="@dimen/capture_button_size"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/capture_layout_small_margin"
+                android:visibility="gone"
+                android:background="@drawable/bg_camera_btn"
+                android:contentDescription="@string/capture_delete_photo_alt"
+                android:src="@drawable/ic_photo_delete" />
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</merge>

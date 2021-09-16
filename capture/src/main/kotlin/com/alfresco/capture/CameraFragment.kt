@@ -13,6 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
+import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -31,6 +32,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.fetch.VideoFrameFileFetcher
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -39,6 +42,8 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
+import java.io.File
+import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
@@ -49,20 +54,29 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
-
+    private var discardPhotoDialog = WeakReference<AlertDialog>(null)
     private val locationData: LocationData by lazy {
         LocationData(requireContext())
     }
 
+    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
+    private var mode: CaptureMode = CaptureMode.Photo
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
 
+    private val imageLoader: ImageLoader by lazy {
+        ImageLoader.Builder(requireContext())
+            .componentRegistry {
+                add(VideoFrameFileFetcher(requireContext()))
+            }
+            .build()
+    }
+
     override fun onResume() {
         super.onResume()
-
         // Enter fullscreen
         setFullscreen(true)
 
@@ -204,6 +218,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 layout.shutterButton.simulateClick()
                 true
             }
+            KeyEvent.KEYCODE_BACK -> {
+                goBack()
+                true
+            }
             else -> false
         }
     }
@@ -227,11 +245,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Listener for button used to capture photo
         layout.shutterButton.setOnClickListener {
             val controller = requireNotNull(cameraController)
-
             if (controller.isImageCaptureEnabled) {
                 onTakePhotoButtonClick(controller)
             } else if (controller.isVideoCaptureEnabled) {
                 onTakeVideoButtonClick(controller)
+            } else {
+                Logger.d("either image or video is on processing")
             }
         }
 
@@ -260,6 +279,13 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         }
 
         layout.closeButton.setOnClickListener {
+            goBack()
+        }
+    }
+
+    private fun goBack() {
+        withState(viewModel) {
+            viewModel.clearCaptures()
             requireActivity().finish()
         }
     }
@@ -292,6 +318,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                     Logger.d("Photo capture succeeded: $savedUri")
+
                     viewModel.onCapturePhoto(savedUri)
                     navigateToSave()
                 }
@@ -334,8 +361,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     override fun onVideoSaved(output: OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
-                        viewModel.onCaptureVideo(savedUri)
-                        navigateToSave()
+                        savedUri.path?.let {
+                            val length = File(it).length()
+                            if (length > 0L) {
+                                viewModel.onCaptureVideo(savedUri)
+
+                                navigateToSave()
+                            }
+                        }
                     }
 
                     override fun onError(
@@ -394,7 +427,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.flashMenu.isVisible = false
 
         val flashMode = cameraController?.imageCaptureFlashMode ?: viewModel.flashMode
-        println("CameraFragment.updateFlashControlState $flashMode ${viewModel.flashMode}")
         layout.flashButton.setImageResource(flashModeIcon(flashMode))
     }
 
@@ -423,7 +455,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         super.onStart()
         invokeLocation()
         withState(viewModel) {
-            if (it.capture != null) {
+            if (it.listCapture.isNotEmpty()) {
                 layout.captureDurationView.isVisible = false
                 navigateToSave()
             }

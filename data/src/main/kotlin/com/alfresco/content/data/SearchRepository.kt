@@ -36,16 +36,14 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         skipCount: Int,
         maxItems: Int
     ) = if (filters.contains(SearchFilter.Libraries)) {
-        ResponsePaging.with(
-            queryService.findSites(
+        ResponsePaging.with(queryService.findSites(
                 terms,
                 skipCount,
                 maxItems
             )
         )
     } else {
-        ResponsePaging.with(
-            searchService.simpleSearch(
+        ResponsePaging.with(searchService.simpleSearch(
                 terms,
                 if (filters.contains(SearchFilter.Contextual)) nodeId else null,
                 skipCount,
@@ -65,8 +63,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         }
 
     suspend fun getRecents(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            searchService.recentFiles(
+        ResponsePaging.with(searchService.recentFiles(
                 SessionManager.requireSession.account.id,
                 MAX_RECENT_FILES_AGE,
                 skipCount,

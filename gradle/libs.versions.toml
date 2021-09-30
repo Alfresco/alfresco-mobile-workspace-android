@@ -10,6 +10,7 @@ navigation = "2.3.5"
 okhttp = "4.9.1"
 test = "1.3.0"
 
+
 [libraries]
 alfresco-auth = "com.alfresco.android:auth:0.8.0-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.0-SNAPSHOT"
@@ -79,6 +80,8 @@ google-services-gradle = "com.google.gms:google-services:4.3.8"
 gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.38.0"
 
 gradleLicensePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.90"
+
+gson = "com.google.code.gson:gson:2.8.5"
 
 guava = "com.google.guava:guava:30.0-android"
 listenablefuture = "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"

@@ -36,21 +36,19 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         skipCount: Int,
         maxItems: Int
     ) = if (filters.contains(SearchFilter.Libraries)) {
-        ResponsePaging.with(queryService.findSites(
-                terms,
-                skipCount,
-                maxItems
-            )
-        )
-    } else {
-        ResponsePaging.with(searchService.simpleSearch(
-                terms,
-                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
-                skipCount,
-                maxItems,
-                includeFrom(filters)
-            )
-        )
+            ResponsePaging.with(queryService.findSites(
+                    terms,
+                    skipCount,
+                    maxItems
+                ))
+        } else {
+            ResponsePaging.with(searchService.simpleSearch(
+                    terms,
+                    if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+                    skipCount,
+                    maxItems,
+                    includeFrom(filters)
+                ))
     }
 
     private fun includeFrom(filters: SearchFilters) =
@@ -68,8 +66,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 MAX_RECENT_FILES_AGE,
                 skipCount,
                 maxItems
-            )
-        )
+            ))
 
     fun getAppConfig(): AppConfigModel? = if (isAppConfigExistOnLocal(context)) {
         val jsonFileString = retrieveJSONFromInternalDirectory(context)

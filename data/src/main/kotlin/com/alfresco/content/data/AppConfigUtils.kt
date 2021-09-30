@@ -14,6 +14,10 @@ import java.lang.StringBuilder
 
 const val APP_CONFIG_JSON = "app.config.json"
 
+/**
+ * @property timeStamp
+ * This method check if the given timeStamp has passed the 24 hours or not
+ */
 fun isTimeToFetchConfig(timeStamp: Long): Boolean {
     val hours24 = (1 * 24 * 60 * 60 * 1000)
     val ago24 = System.currentTimeMillis() - hours24
@@ -21,6 +25,11 @@ fun isTimeToFetchConfig(timeStamp: Long): Boolean {
     return timeStamp < ago24
 }
 
+/**
+ * @property context
+ * @property fileName
+ * get the Json file from the asset folder
+ */
 fun getJsonDataFromAsset(context: Context, fileName: String): String? {
     val jsonString: String
     try {
@@ -37,6 +46,10 @@ fun getJsonDataFromAsset(context: Context, fileName: String): String? {
     return jsonString
 }
 
+/**
+ * @property jsonFileString
+ * Get generic model from give json string
+ */
 inline fun <reified T> getModelFromStringJSON(jsonFileString: String): T {
     val gson = Gson()
     val type = object : TypeToken<T>() {}.type
@@ -44,6 +57,11 @@ inline fun <reified T> getModelFromStringJSON(jsonFileString: String): T {
     return gson.fromJson(jsonFileString, type)
 }
 
+/**
+ * @property context
+ * @property jsonFileString
+ * Save AppConfigJSON to the internal storage
+ */
 fun saveJSONToInternalDirectory(context: Context, jsonFileString: String) {
     val fileDirectory = getAppConfigParentDirectory(context)
     if (fileDirectory != null && !fileDirectory.exists()) {
@@ -56,8 +74,16 @@ fun saveJSONToInternalDirectory(context: Context, jsonFileString: String) {
     bufferedWriter.close()
 }
 
+/**
+ * @property context
+ * Get App Config parent directory
+ */
 fun getAppConfigParentDirectory(context: Context) = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
 
+/**
+ * @property context
+ * returns true if AppConfig exists on the internal storage otherwise false
+ */
 fun isAppConfigExistOnLocal(context: Context): Boolean {
 
     val fileDirectory = getAppConfigParentDirectory(context)
@@ -69,6 +95,10 @@ fun isAppConfigExistOnLocal(context: Context): Boolean {
     return file.exists()
 }
 
+/**
+ * @property context
+ * Retrieve JSON in string form from the internal storage
+ */
 fun retrieveJSONFromInternalDirectory(context: Context): String {
     val fileDirectory = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val file = File(fileDirectory, APP_CONFIG_JSON)
@@ -84,4 +114,8 @@ fun retrieveJSONFromInternalDirectory(context: Context): String {
     return stringBuilder.toString()
 }
 
+/**
+ * @property model
+ * Convert given model to any JSON format
+ */
 inline fun <reified T> getJSONFromModel(model: T): String = Gson().toJson(model)

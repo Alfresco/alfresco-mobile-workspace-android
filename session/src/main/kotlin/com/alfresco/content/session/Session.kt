@@ -88,6 +88,10 @@ class Session(
         return retrofit.create(service)
     }
 
+    /**
+     * @property service
+     * This service is only built to fetch app config from server
+     */
     fun <T> createServiceConfig(service: Class<T>): T {
         val okHttpClient: OkHttpClient = OkHttpClient()
             .newBuilder()

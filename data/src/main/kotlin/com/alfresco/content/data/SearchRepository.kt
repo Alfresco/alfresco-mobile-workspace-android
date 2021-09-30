@@ -68,6 +68,9 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 maxItems
             ))
 
+    /**
+     * Get AppConfigModel from the internal storage or from assets
+     */
     fun getAppConfig(): AppConfigModel? = if (isAppConfigExistOnLocal(context)) {
         val jsonFileString = retrieveJSONFromInternalDirectory(context)
         getModelFromStringJSON(jsonFileString)
@@ -76,6 +79,10 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         getModelFromStringJSON(jsonFileString)
     }
 
+    /**
+     * @property launch
+     * Fetch App config from server and save to internal directory
+     */
     suspend fun fetchAndSaveAppConfig(launch: Boolean) {
         if (launch || isTimeToFetchConfig(getAppConfigLastFetchTime())) {
             saveAppConfigFetchTime()

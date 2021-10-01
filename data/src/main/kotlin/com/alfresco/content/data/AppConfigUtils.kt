@@ -11,17 +11,18 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
 import java.lang.StringBuilder
+import java.util.concurrent.TimeUnit
 
 const val APP_CONFIG_JSON = "app.config.json"
+const val INTERVAL_HOURS = 24L
 
 /**
  * @property timeStamp
  * This method check if the given timeStamp has passed the 24 hours or not
  */
 fun isTimeToFetchConfig(timeStamp: Long): Boolean {
-    val hours24 = (1 * 24 * 60 * 60 * 1000)
-    val ago24 = System.currentTimeMillis() - hours24
-    println("isTimeToFetchConfig $ago24 :: $timeStamp")
+    val hoursInMilliseconds = TimeUnit.HOURS.toMillis(INTERVAL_HOURS)
+    val ago24 = System.currentTimeMillis() - hoursInMilliseconds
     return timeStamp < ago24
 }
 

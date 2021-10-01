@@ -1,24 +1,25 @@
 package com.alfresco.content.data
 
+import java.util.concurrent.TimeUnit
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 internal class AppConfigUtilsKtTest {
 
     @Test
-    fun previous_time_passed_24_hours() {
+    fun previous_time_passed() {
 
-        val diffHours = (1 * 25 * 60 * 60 * 1000)
-        val testTime = System.currentTimeMillis() - diffHours
+        val previousFetchTime = TimeUnit.HOURS.toMillis(25)
+        val testTime = System.currentTimeMillis() - previousFetchTime
         val result = isTimeToFetchConfig(testTime)
         assertEquals(result, true)
     }
 
     @Test
-    fun previous_time_not_passed_24_hours() {
+    fun previous_time_not_passed() {
 
-        val diffHours = (1 * 22 * 60 * 60 * 1000)
-        val testTime = System.currentTimeMillis() - diffHours
+        val previousFetchTime = TimeUnit.HOURS.toMillis(22)
+        val testTime = System.currentTimeMillis() - previousFetchTime
         val result = isTimeToFetchConfig(testTime)
         assertEquals(result, false)
     }

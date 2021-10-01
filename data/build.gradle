@@ -33,4 +33,7 @@ dependencies {
     coreLibraryDesugaring libs.android.desugar
 
     implementation libs.google.playservices.location
+
+    implementation libs.gson
+    implementation libs.guava
 }

@@ -6,6 +6,7 @@ import coil.ImageLoader
 import coil.util.CoilUtils
 import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
+import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
@@ -83,6 +84,25 @@ class Session(
             .client(okHttpClient)
             .addConverterFactory(GeneratedCodeConverters.converterFactory())
             .baseUrl(baseUrl)
+            .build()
+        return retrofit.create(service)
+    }
+
+    /**
+     * @property service
+     * This service is only built to fetch app config from server
+     */
+    fun <T> createServiceConfig(service: Class<T>): T {
+        val okHttpClient: OkHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GeneratedCodeConverters.converterFactory())
+            .baseUrl("https://mobileapps.envalfresco.com/adf/")
             .build()
         return retrofit.create(service)
     }

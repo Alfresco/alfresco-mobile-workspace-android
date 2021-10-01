@@ -17,13 +17,13 @@ const val APP_CONFIG_JSON = "app.config.json"
 const val INTERVAL_HOURS = 24L
 
 /**
- * @property timeStamp
+ * @property previousFetchTime
  * This method check if the given timeStamp has passed the 24 hours or not
  */
-fun isTimeToFetchConfig(timeStamp: Long): Boolean {
+fun isTimeToFetchConfig(previousFetchTime: Long): Boolean {
     val hoursInMilliseconds = TimeUnit.HOURS.toMillis(INTERVAL_HOURS)
-    val ago24 = System.currentTimeMillis() - hoursInMilliseconds
-    return timeStamp < ago24
+    val agoIntervalHours = System.currentTimeMillis() - hoursInMilliseconds
+    return previousFetchTime < agoIntervalHours
 }
 
 /**

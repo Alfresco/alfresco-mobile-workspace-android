@@ -88,14 +88,15 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun setAdvanceSearchFiltersData() {
-
-        if (viewModel.isShowAdvanceFilterView()) {
-            binding.clDropDownSearch.visibility = View.VISIBLE
-            binding.chipFolders.visibility = View.GONE
-            setupDropDown()
-        } else {
-            binding.clDropDownSearch.visibility = View.GONE
-            binding.chipFolders.visibility = View.VISIBLE
+        withState(viewModel) {
+            if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
+                binding.clDropDownSearch.visibility = View.VISIBLE
+                binding.chipFolders.visibility = View.GONE
+                setupDropDown()
+            } else {
+                binding.clDropDownSearch.visibility = View.GONE
+                binding.chipFolders.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -188,8 +189,10 @@ class SearchFragment : Fragment(), MavericksView {
         val adapter = ArrayAdapter(requireContext(), R.layout.list_popup_window_item, items)
         searchFilterPopup.setAdapter(adapter)
 
-        viewModel.getDefaultSearchFilterName()?.let {
-            binding.dropDownAdvanceSearch.text = it
+        withState(viewModel) {
+            viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
+                binding.dropDownAdvanceSearch.text = name
+            }
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
@@ -204,8 +207,10 @@ class SearchFragment : Fragment(), MavericksView {
      * This method invokes on selection of any filter drop-down item.
      */
     private fun setSelectedFilterData(position: Int) {
-        viewModel.getSelectedFilter(position)?.let {
-            binding.dropDownAdvanceSearch.text = it.name
+        withState(viewModel) {
+            viewModel.getSelectedFilter(position, it)?.let { searchItem ->
+                binding.dropDownAdvanceSearch.text = searchItem.name
+            }
         }
     }
 

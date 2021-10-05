@@ -31,6 +31,7 @@ data class SearchResultsState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
+    val listSearchFilters: List<SearchItem>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null
@@ -91,6 +92,8 @@ class SearchViewModel(
         searchEvents = MutableStateFlow(params)
         appConfigModel = repository.getAppConfig()
 
+        setSearchFilters(appConfigModel.search)
+
         viewModelScope.launch {
             merge(
                 liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
@@ -114,11 +117,15 @@ class SearchViewModel(
         return appConfigModel.search
     }
 
+    fun setSearchFilters(list: List<SearchItem>?) {
+        setState { copy(listSearchFilters = list) }
+    }
+
     /**
      * returns the default selected name of filter from the config itself.
      */
-    fun getDefaultSearchFilterName(): String? {
-        val defaultFilter = appConfigModel.search?.find { it.default == true }
+    fun getDefaultSearchFilterName(list: List<SearchItem>?): String? {
+        val defaultFilter = list?.find { it.default == true }
         if (defaultFilter != null)
             return defaultFilter.name
         return null
@@ -127,15 +134,15 @@ class SearchViewModel(
     /**
      * returns filter data on the selection on item in filter menu
      */
-    fun getSelectedFilter(index: Int): SearchItem? {
-        return getSearchFilterList()?.get(index)
+    fun getSelectedFilter(index: Int, state: SearchResultsState): SearchItem? {
+        return state.listSearchFilters?.get(index)
     }
 
     /**
      * true if search filters available otherwise false
      */
-    fun isShowAdvanceFilterView(): Boolean {
-        return !getSearchFilterList().isNullOrEmpty()
+    fun isShowAdvanceFilterView(list: List<SearchItem>?): Boolean {
+        return !list.isNullOrEmpty()
     }
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(

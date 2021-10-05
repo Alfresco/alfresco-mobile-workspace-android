@@ -71,7 +71,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     /**
      * Get AppConfigModel from the internal storage or from assets
      */
-    fun getAppConfig(): AppConfigModel? = if (isAppConfigExistOnLocal(context)) {
+    fun getAppConfig(): AppConfigModel = if (isAppConfigExistOnLocal(context)) {
         val jsonFileString = retrieveJSONFromInternalDirectory(context)
         getModelFromStringJSON(jsonFileString)
     } else {

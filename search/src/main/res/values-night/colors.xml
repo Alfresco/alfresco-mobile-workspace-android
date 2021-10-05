@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="color_blue_30">#3D2A7DE1</color>
+    <color name="color_search_filter">@color/white</color>
+
+</resources>

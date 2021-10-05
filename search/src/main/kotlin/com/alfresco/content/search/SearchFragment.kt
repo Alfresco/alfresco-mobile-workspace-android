@@ -8,7 +8,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
@@ -75,10 +79,24 @@ class SearchFragment : Fragment(), MavericksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setAdvanceSearchFiltersData()
+
         setupChips()
 
         resultsFragment.topLoadingIndicator = view.findViewById(R.id.loading)
         recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
+    }
+
+    private fun setAdvanceSearchFiltersData() {
+
+        if (viewModel.isShowAdvanceFilterView()) {
+            binding.clDropDownSearch.visibility = View.VISIBLE
+            binding.chipFolders.visibility = View.GONE
+            setupDropDown()
+        } else {
+            binding.clDropDownSearch.visibility = View.GONE
+            binding.chipFolders.visibility = View.VISIBLE
+        }
     }
 
     override fun invalidate() {
@@ -151,6 +169,44 @@ class SearchFragment : Fragment(), MavericksView {
      */
     private fun cleanupSearchQuery(query: String): String {
         return query.replace("\\s+".toRegex(), " ").trim()
+    }
+
+    /**
+     * Setup Drop Down for Search filter
+     */
+    private fun setupDropDown() {
+        val searchFilterPopup = ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+
+        searchFilterPopup.anchorView = binding.dropDownAdvanceSearch
+        searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
+
+        val items = mutableListOf<String?>()
+        val searchFilters = viewModel.getSearchFilterList()
+        searchFilters?.forEach { item ->
+            items.add(item.name)
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_popup_window_item, items)
+        searchFilterPopup.setAdapter(adapter)
+
+        viewModel.getDefaultSearchFilterName()?.let {
+            binding.dropDownAdvanceSearch.text = it
+        }
+
+        searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+            setSelectedFilterData(position)
+            searchFilterPopup.dismiss()
+        }
+
+        binding.dropDownAdvanceSearch.setOnClickListener { v: View? -> searchFilterPopup.show() }
+    }
+
+    /**
+     * This method invokes on selection of any filter drop-down item.
+     */
+    private fun setSelectedFilterData(position: Int) {
+        viewModel.getSelectedFilter(position)?.let {
+            binding.dropDownAdvanceSearch.text = it.name
+        }
     }
 
     private fun setupChips() {

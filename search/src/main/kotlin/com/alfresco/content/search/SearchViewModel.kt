@@ -15,6 +15,8 @@ import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.content.models.AppConfigModel
+import com.alfresco.content.models.SearchItem
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,17 +39,25 @@ data class SearchResultsState(
     constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title)
 
     val isContextual: Boolean
-        get() { return contextId != null }
+        get() {
+            return contextId != null
+        }
 
     override val isCompact: Boolean
-        get() { return entries.firstOrNull()?.type == Entry.Type.SITE }
+        get() {
+            return entries.firstOrNull()?.type == Entry.Type.SITE
+        }
 
     fun updateEntries(response: ResponsePaging?): SearchResultsState {
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
         val pageEntries = response.entries
-        val newEntries = if (nextPage) { entries + pageEntries } else { pageEntries }
+        val newEntries = if (nextPage) {
+            entries + pageEntries
+        } else {
+            pageEntries
+        }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
@@ -69,6 +79,7 @@ class SearchViewModel(
 ) : ListViewModel<SearchResultsState>(state) {
     private val liveSearchEvents: MutableStateFlow<SearchParams>
     private val searchEvents: MutableStateFlow<SearchParams>
+    private val appConfigModel: AppConfigModel
     private var params: SearchParams
 
     init {
@@ -78,6 +89,7 @@ class SearchViewModel(
         params = SearchParams("", state.contextId, defaultFilters(state), 0)
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
+        appConfigModel = repository.getAppConfig()
 
         viewModelScope.launch {
             merge(
@@ -93,6 +105,37 @@ class SearchViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * returns the all available search filters
+     */
+    fun getSearchFilterList(): List<SearchItem>? {
+        return appConfigModel.search
+    }
+
+    /**
+     * returns the default selected name of filter from the config itself.
+     */
+    fun getDefaultSearchFilterName(): String? {
+        val defaultFilter = appConfigModel.search?.find { it.default == true }
+        if (defaultFilter != null)
+            return defaultFilter.name
+        return null
+    }
+
+    /**
+     * returns filter data on the selection on item in filter menu
+     */
+    fun getSelectedFilter(index: Int): SearchItem? {
+        return getSearchFilterList()?.get(index)
+    }
+
+    /**
+     * true if search filters available otherwise false
+     */
+    fun isShowAdvanceFilterView(): Boolean {
+        return !getSearchFilterList().isNullOrEmpty()
     }
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(

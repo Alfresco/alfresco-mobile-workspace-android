@@ -185,7 +185,7 @@ class SearchFragment : Fragment(), MavericksView {
 
         withState(viewModel) {
             viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
-                binding.dropDownAdvanceSearch.text = name
+                binding.textSearchFilterTitle.text = name
             }
         }
 
@@ -200,7 +200,7 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setSelectedFilterData(position: Int) {
         withState(viewModel) {
             viewModel.getSelectedFilter(position, it)?.let { searchItem ->
-                binding.dropDownAdvanceSearch.text = searchItem.name
+                binding.textSearchFilterTitle.text = searchItem.name
             }
         }
     }

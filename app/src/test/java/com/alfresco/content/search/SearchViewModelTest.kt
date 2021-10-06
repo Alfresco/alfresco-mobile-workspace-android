@@ -18,8 +18,8 @@ internal class SearchViewModelTest {
 
         /*val context = Mockito.mock(Context::class.java)
 
-        Mavericks.initialize(context)
-*/
+        Mavericks.initialize(context)*/
+
         searchRepository = Mockito.mock(SearchRepository::class.java)
 
 //        val session = Session(context.applicationContext, Account("", "", "", "", ""))

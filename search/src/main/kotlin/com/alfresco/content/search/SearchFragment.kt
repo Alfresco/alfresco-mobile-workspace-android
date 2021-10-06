@@ -90,11 +90,11 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
-                binding.clDropDownSearch.visibility = View.VISIBLE
+                binding.rlDropDownSearch.visibility = View.VISIBLE
                 binding.chipFolders.visibility = View.GONE
                 setupDropDown()
             } else {
-                binding.clDropDownSearch.visibility = View.GONE
+                binding.rlDropDownSearch.visibility = View.GONE
                 binding.chipFolders.visibility = View.VISIBLE
             }
         }
@@ -178,7 +178,7 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setupDropDown() {
         val searchFilterPopup = ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
 
-        searchFilterPopup.anchorView = binding.dropDownAdvanceSearch
+        searchFilterPopup.anchorView = binding.rlDropDownSearch
         searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
 
         val items = mutableListOf<String?>()
@@ -200,7 +200,7 @@ class SearchFragment : Fragment(), MavericksView {
             searchFilterPopup.dismiss()
         }
 
-        binding.dropDownAdvanceSearch.setOnClickListener { v: View? -> searchFilterPopup.show() }
+        binding.rlDropDownSearch.setOnClickListener { _: View? -> searchFilterPopup.show() }
     }
 
     /**

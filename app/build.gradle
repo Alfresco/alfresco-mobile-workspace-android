@@ -101,6 +101,7 @@ dependencies {
     implementation libs.google.material
 
     implementation libs.mavericks
+    implementation 'com.airbnb.android:mavericks-mocking:2.3.0'
 
     implementation libs.coil.core
 
@@ -114,7 +115,7 @@ dependencies {
     androidTestImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.runner
-    testImplementation "org.mockito:mockito-core:3.12.4"
+    testImplementation libs.mockito
 }
 
 static Object envOrDef(String varName, Object defaultValue) {

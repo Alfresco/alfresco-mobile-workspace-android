@@ -17,44 +17,45 @@
             android:layout_gravity="top" />
     </FrameLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_drop_down_search"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
-
+    <RelativeLayout
+        android:id="@+id/rl_drop_down_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/drop_down_advance_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginVertical="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="12dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
             android:text="@string/advance_search_title"
             android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textStyle="bold"
             android:textColor="@color/color_search_filter"
-            android:drawablePadding="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableEndCompat="@drawable/ic_arrow_down_24" />
+            android:textStyle="bold" />
 
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/glv"
+        <ImageView
+            android:id="@+id/action_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".55" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginStart="18dp"
+            android:layout_toEndOf="@id/drop_down_advance_search"
+            android:contentDescription="@string/advance_search_title"
+            android:src="@drawable/ic_arrow_down_24" />
+
+
+    </RelativeLayout>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:visibility="gone">
 
         <com.alfresco.content.search.FilterChip
             android:id="@+id/chip_contextual"

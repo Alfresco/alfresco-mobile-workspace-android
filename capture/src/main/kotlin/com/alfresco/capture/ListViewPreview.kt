@@ -21,6 +21,9 @@ import com.alfresco.capture.databinding.ViewListPreviewBinding
 import java.util.Locale.ENGLISH
 import java.util.concurrent.TimeUnit
 
+/**
+ * Generated Model View for the Preview Screen
+ */
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
 class ListViewPreview @JvmOverloads constructor(
     context: Context,
@@ -137,10 +140,6 @@ class ListViewPreview @JvmOverloads constructor(
         const val ORIENTATION_270 = 270
     }
 
-    /**
-     * this method handles the image,video loading and also manage the orientation to display it on the view
-     * It also contains the timer calculation for video preview
-     */
     private fun onSuccessMediaLoad() {
         captureItem?.let {
             if (it.isVideo()) {

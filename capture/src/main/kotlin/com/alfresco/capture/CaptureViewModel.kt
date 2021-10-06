@@ -41,10 +41,16 @@ class CaptureViewModel(
         }
     }
 
+    /**
+     * remove all the capture from the list
+     */
     fun clearCaptureList() = setState {
         copy(listCapture = listOf())
     }
 
+    /**
+     * remove capture object from the list and delete it's uri from capture directory
+     */
     fun clearSingleCaptures(captureItem: CaptureItem) {
         captureDir.listFiles()?.forEach {
             if (captureItem.uri.toString().contains(it.name)) {
@@ -70,6 +76,9 @@ class CaptureViewModel(
             CaptureMode.Video -> CaptureItem.VIDEO_EXTENSION
         }
 
+    /**
+     * send capture list as result to the previous controller
+     */
     fun save() = withState {
         requireNotNull(it.listCapture)
 
@@ -97,6 +106,9 @@ class CaptureViewModel(
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
 
+    /**
+     * validate the filename in the give list
+     */
     fun isAllFileNameValid(listCapture: List<CaptureItem?>): Boolean {
 
         var isValidNotEmpty = false
@@ -114,6 +126,9 @@ class CaptureViewModel(
         return isValidNotEmpty
     }
 
+    /**
+     * update the name for the current visible capture on carousel
+     */
     fun updateName(newFileName: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
@@ -127,6 +142,9 @@ class CaptureViewModel(
         setState { copy(listCapture = newList) }
     }
 
+    /**
+     * update the description for the current visible capture on carousel
+     */
     fun updateDescription(newDescription: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
@@ -140,6 +158,9 @@ class CaptureViewModel(
         setState { copy(listCapture = newList) }
     }
 
+    /**
+     * copy the visible item from the carousel as current item
+     */
     fun copyVisibleItem(item: CaptureItem) {
         setState {
             copy(visibleItem = item)

@@ -45,6 +45,9 @@ class ListViewPreview @JvmOverloads constructor(
             .build()
     }
 
+    /**
+     * Bind the capture item data to the view
+     */
     @ModelProp
     fun setData(item: CaptureItem) {
         captureItem = item
@@ -103,16 +106,25 @@ class ListViewPreview @JvmOverloads constructor(
         }
     }
 
+    /**
+     * set clickListener to the list item
+     */
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
     }
 
+    /**
+     * set clickListener to the preview button to en-large the view
+     */
     @CallbackProp
     fun setPreviewClickListener(listener: OnClickListener?) {
         binding.preview.setOnClickListener(listener)
     }
 
+    /**
+     * set clickListener to the delete button to delete the view
+     */
     @CallbackProp
     fun setDeletePhotoClickListener(listener: OnClickListener?) {
         binding.deletePhotoButton.setOnClickListener(listener)
@@ -125,6 +137,10 @@ class ListViewPreview @JvmOverloads constructor(
         const val ORIENTATION_270 = 270
     }
 
+    /**
+     * this method handles the image,video loading and also manage the orientation to display it on the view
+     * It also contains the timer calculation for video preview
+     */
     private fun onSuccessMediaLoad() {
         captureItem?.let {
             if (it.isVideo()) {

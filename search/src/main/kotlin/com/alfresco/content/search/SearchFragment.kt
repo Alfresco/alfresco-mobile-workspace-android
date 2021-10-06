@@ -165,16 +165,10 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    /**
-     * Removes consecutive whitespace and leading/trailing whitespace
-     */
     private fun cleanupSearchQuery(query: String): String {
         return query.replace("\\s+".toRegex(), " ").trim()
     }
 
-    /**
-     * Setup Drop Down for Search filter
-     */
     private fun setupDropDown() {
         val searchFilterPopup = ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
 

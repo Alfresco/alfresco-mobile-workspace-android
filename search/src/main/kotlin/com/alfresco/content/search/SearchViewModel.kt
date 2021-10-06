@@ -92,7 +92,7 @@ class SearchViewModel(
         searchEvents = MutableStateFlow(params)
         appConfigModel = repository.getAppConfig()
 
-        setSearchFilters(appConfigModel.search)
+        setState { copy(listSearchFilters = appConfigModel.search) }
 
         viewModelScope.launch {
             merge(
@@ -115,10 +115,6 @@ class SearchViewModel(
      */
     fun getSearchFilterList(): List<SearchItem>? {
         return appConfigModel.search
-    }
-
-    fun setSearchFilters(list: List<SearchItem>?) {
-        setState { copy(listSearchFilters = list) }
     }
 
     /**

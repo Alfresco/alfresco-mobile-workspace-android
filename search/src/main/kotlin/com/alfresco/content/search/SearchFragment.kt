@@ -197,9 +197,6 @@ class SearchFragment : Fragment(), MavericksView {
         binding.rlDropDownSearch.setOnClickListener { _: View? -> searchFilterPopup.show() }
     }
 
-    /**
-     * This method invokes on selection of any filter drop-down item.
-     */
     private fun setSelectedFilterData(position: Int) {
         withState(viewModel) {
             viewModel.getSelectedFilter(position, it)?.let { searchItem ->

@@ -180,7 +180,7 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilters?.forEach { item ->
             items.add(item.name)
         }
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_popup_window_item, items)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) {

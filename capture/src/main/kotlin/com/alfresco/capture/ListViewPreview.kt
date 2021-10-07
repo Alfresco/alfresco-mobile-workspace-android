@@ -21,6 +21,9 @@ import com.alfresco.capture.databinding.ViewListPreviewBinding
 import java.util.Locale.ENGLISH
 import java.util.concurrent.TimeUnit
 
+/**
+ * Generated Model View for the Preview Screen
+ */
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
 class ListViewPreview @JvmOverloads constructor(
     context: Context,
@@ -45,6 +48,9 @@ class ListViewPreview @JvmOverloads constructor(
             .build()
     }
 
+    /**
+     * Bind the capture item data to the view
+     */
     @ModelProp
     fun setData(item: CaptureItem) {
         captureItem = item
@@ -103,16 +109,25 @@ class ListViewPreview @JvmOverloads constructor(
         }
     }
 
+    /**
+     * set clickListener to the list item
+     */
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
     }
 
+    /**
+     * set clickListener to the preview button to en-large the view
+     */
     @CallbackProp
     fun setPreviewClickListener(listener: OnClickListener?) {
         binding.preview.setOnClickListener(listener)
     }
 
+    /**
+     * set clickListener to the delete button to delete the view
+     */
     @CallbackProp
     fun setDeletePhotoClickListener(listener: OnClickListener?) {
         binding.deletePhotoButton.setOnClickListener(listener)
@@ -134,35 +149,39 @@ class ListViewPreview @JvmOverloads constructor(
                     mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
                 val duration = time?.toLong()
 
-                duration?.let { millis ->
-                    val hour = TimeUnit.MILLISECONDS.toHours(millis)
-                    val minutes =
-                        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
-                            TimeUnit.MILLISECONDS.toHours(millis)
-                        )
-                    val seconds =
-                        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                            TimeUnit.MILLISECONDS.toMinutes(millis)
-                        )
-                    val hms = if (hour > 0L) {
-                        java.lang.String.format(
-                            ENGLISH,
-                            context.getString(R.string.format_video_duration_hour), hour,
-                            minutes, seconds
-                        )
-                    } else {
-                        java.lang.String.format(
-                            ENGLISH,
-                            context.getString(R.string.format_video_duration_minute),
-                            minutes, seconds
-                        )
-                    }
+                binding.videoDuration.isVisible = it.isVideo() == true
 
-                    binding.videoDuration.isVisible = it.isVideo() == true
-                    binding.videoDuration.text = hms
+                duration?.let { millis ->
+                    setVideoDuration(millis)
                 }
             }
         }
         binding.deletePhotoButton.isVisible = true
+    }
+
+    private fun setVideoDuration(millis: Long) {
+        val hour = TimeUnit.MILLISECONDS.toHours(millis)
+        val minutes =
+            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                TimeUnit.MILLISECONDS.toHours(millis)
+            )
+        val seconds =
+            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+                TimeUnit.MILLISECONDS.toMinutes(millis)
+            )
+        val hms = if (hour > 0L) {
+            java.lang.String.format(
+                ENGLISH,
+                context.getString(R.string.format_video_duration_hour), hour,
+                minutes, seconds
+            )
+        } else {
+            java.lang.String.format(
+                ENGLISH,
+                context.getString(R.string.format_video_duration_minute),
+                minutes, seconds
+            )
+        }
+        binding.videoDuration.text = hms
     }
 }

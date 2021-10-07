@@ -43,10 +43,16 @@ class CaptureViewModel(
         }
     }
 
+    /**
+     * remove all the capture from the list
+     */
     fun clearCaptureList() = setState {
         copy(listCapture = listOf())
     }
 
+    /**
+     * remove capture object from the list and delete it's uri from capture directory
+     */
     fun clearSingleCaptures(captureItem: CaptureItem) {
         captureDir.listFiles()?.forEach {
             if (captureItem.uri.toString().contains(it.name)) {
@@ -72,6 +78,9 @@ class CaptureViewModel(
             CaptureMode.Video -> CaptureItem.VIDEO_EXTENSION
         }
 
+    /**
+     * send capture list as result to the previous controller
+     */
     fun save() = withState {
         requireNotNull(it.listCapture)
 
@@ -99,6 +108,9 @@ class CaptureViewModel(
         return filename.all { c -> reservedChars.indexOf(c) == -1 }
     }
 
+    /**
+     * validate the filename in the give list
+     */
     fun isAllFileNameValid(listCapture: List<CaptureItem?>): Boolean {
 
         var isValidNotEmpty = false

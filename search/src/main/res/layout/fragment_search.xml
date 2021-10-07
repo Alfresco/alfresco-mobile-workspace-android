@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,20 +17,54 @@
             android:layout_gravity="top" />
     </FrameLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_drop_down_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_search_filter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:minWidth="140dp"
+            android:text="@string/advance_search_title"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="@color/color_search_filter"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/action_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_toEndOf="@id/text_search_filter_title"
+            android:contentDescription="@string/advance_search_title"
+            android:src="@drawable/ic_arrow_down_24" />
+
+
+    </RelativeLayout>
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:visibility="gone">
 
         <com.alfresco.content.search.FilterChip
             android:id="@+id/chip_contextual"
             style="@style/Widget.Alfresco.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="in: Folder"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:text="in: Folder" />
 
         <com.alfresco.content.search.FilterChip
             android:id="@+id/chip_files"

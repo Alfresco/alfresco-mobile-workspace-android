@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
 android {
@@ -50,4 +51,7 @@ dependencies {
     implementation libs.androidx.constraintlayout
 
     implementation libs.mavericks
+
+    implementation libs.epoxy.core
+    kapt libs.epoxy.processor
 }

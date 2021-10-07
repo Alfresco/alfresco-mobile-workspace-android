@@ -21,6 +21,7 @@
         android:id="@+id/rl_drop_down_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -28,11 +29,10 @@
         <TextView
             android:id="@+id/text_search_filter_title"
             android:layout_width="wrap_content"
-            android:minWidth="140dp"
             android:layout_height="32dp"
-            android:layout_marginStart="12dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
+            android:minWidth="140dp"
             android:text="@string/advance_search_title"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/color_search_filter"

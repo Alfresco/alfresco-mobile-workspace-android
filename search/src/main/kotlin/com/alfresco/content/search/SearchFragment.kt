@@ -185,7 +185,11 @@ class SearchFragment : Fragment(), MavericksView {
 
         withState(viewModel) {
             viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
-                binding.textSearchFilterTitle.text = name
+                val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
+                if (stringResource != 0)
+                    binding.textSearchFilterTitle.text = getString(stringResource)
+                else
+                    binding.textSearchFilterTitle.text = name
             }
         }
 

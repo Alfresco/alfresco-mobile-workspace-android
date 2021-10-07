@@ -8,7 +8,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
@@ -75,10 +79,25 @@ class SearchFragment : Fragment(), MavericksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setAdvanceSearchFiltersData()
+
         setupChips()
 
         resultsFragment.topLoadingIndicator = view.findViewById(R.id.loading)
         recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
+    }
+
+    private fun setAdvanceSearchFiltersData() {
+        withState(viewModel) {
+            if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
+                binding.rlDropDownSearch.visibility = View.VISIBLE
+                binding.chipFolders.visibility = View.GONE
+                setupDropDown()
+            } else {
+                binding.rlDropDownSearch.visibility = View.GONE
+                binding.chipFolders.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun invalidate() {
@@ -146,11 +165,48 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    /**
-     * Removes consecutive whitespace and leading/trailing whitespace
-     */
     private fun cleanupSearchQuery(query: String): String {
         return query.replace("\\s+".toRegex(), " ").trim()
+    }
+
+    private fun setupDropDown() {
+        val searchFilterPopup = ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+
+        searchFilterPopup.anchorView = binding.rlDropDownSearch
+        searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
+
+        val items = mutableListOf<String?>()
+        val searchFilters = viewModel.getSearchFilterList()
+        searchFilters?.forEach { item ->
+            items.add(item.name)
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
+        searchFilterPopup.setAdapter(adapter)
+
+        withState(viewModel) {
+            viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
+                val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
+                if (stringResource != 0)
+                    binding.textSearchFilterTitle.text = getString(stringResource)
+                else
+                    binding.textSearchFilterTitle.text = name
+            }
+        }
+
+        searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+            setSelectedFilterData(position)
+            searchFilterPopup.dismiss()
+        }
+
+        binding.rlDropDownSearch.setOnClickListener { _: View? -> searchFilterPopup.show() }
+    }
+
+    private fun setSelectedFilterData(position: Int) {
+        withState(viewModel) {
+            viewModel.getSelectedFilter(position, it)?.let { searchItem ->
+                binding.textSearchFilterTitle.text = searchItem.name
+            }
+        }
     }
 
     private fun setupChips() {

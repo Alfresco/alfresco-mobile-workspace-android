@@ -14,4 +14,8 @@
 
     <string name="search_empty_title">Oops!</string>
     <string name="search_empty_message">We can’t find the file\nyou’re looking for.</string>
+
+    <string name="advance_search_title">Advance search</string>
+    <string name="default_search">DEFAULT_SEARCH</string>
+    <string name="folder">Folder</string>
 </resources>

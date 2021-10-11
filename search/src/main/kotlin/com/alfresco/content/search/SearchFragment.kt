@@ -183,27 +183,34 @@ class SearchFragment : Fragment(), MavericksView {
         val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
         searchFilterPopup.setAdapter(adapter)
 
-        withState(viewModel) {
-            viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
-                val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
-                if (stringResource != 0)
-                    binding.textSearchFilterTitle.text = getString(stringResource)
-                else
-                    binding.textSearchFilterTitle.text = name
-            }
+        withState(viewModel) { state ->
+            if (viewModel.selectedFilterPosition == -1)
+                viewModel.selectedFilterPosition = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+            setSearchFilterLocalizedName(state)
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            setSelectedFilterData(position)
+            viewModel.selectedFilterPosition = position
+            setSelectedFilterData()
             searchFilterPopup.dismiss()
         }
 
-        binding.rlDropDownSearch.setOnClickListener { _: View? -> searchFilterPopup.show() }
+        binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
     }
 
-    private fun setSelectedFilterData(position: Int) {
+    private fun setSearchFilterLocalizedName(state: SearchResultsState) {
+        viewModel.getDefaultSearchFilterName(state)?.let { name ->
+            val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
+            if (stringResource != 0)
+                binding.textSearchFilterTitle.text = getString(stringResource)
+            else
+                binding.textSearchFilterTitle.text = name
+        }
+    }
+
+    private fun setSelectedFilterData() {
         withState(viewModel) {
-            viewModel.getSelectedFilter(position, it)?.let { searchItem ->
+            viewModel.getSelectedFilter(viewModel.selectedFilterPosition, it)?.let { searchItem ->
                 binding.textSearchFilterTitle.text = searchItem.name
             }
         }

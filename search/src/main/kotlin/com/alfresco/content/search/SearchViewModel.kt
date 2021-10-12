@@ -83,6 +83,7 @@ class SearchViewModel(
     private val searchEvents: MutableStateFlow<SearchParams>
     private val appConfigModel: AppConfigModel
     private var params: SearchParams
+    var selectedFilterPosition: Int = -1
 
     init {
         setState { copy(filters = defaultFilters(state)) }
@@ -119,13 +120,20 @@ class SearchViewModel(
     }
 
     /**
-     * returns the default selected name of filter from the config itself.
+     * returns the default selected name from the search filter list using index.
      */
-    fun getDefaultSearchFilterName(list: List<SearchItem>?): String? {
-        val defaultFilter = list?.find { it.default == true }
+    fun getDefaultSearchFilterName(state: SearchResultsState): String? {
+        val defaultFilter = state.listSearchFilters?.get(selectedFilterPosition)
         if (defaultFilter != null)
             return defaultFilter.name
         return null
+    }
+
+    /**
+     * returns the index of search filter item, or -1 if the list doesn't contain the search filter item.
+     */
+    fun getDefaultSearchFilterIndex(list: List<SearchItem>?): Int {
+        return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
     /**

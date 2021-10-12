@@ -181,15 +181,19 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
 
         val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, viewModel.getSearchFilterNames())
+        val items = mutableListOf<String?>()
+        val searchFilters = viewModel.getSearchFilterList()
+        searchFilters?.forEach { item ->
+            item.name?.let { name ->
+                items.add(getLocalizedName(name))
+            }
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) {
             viewModel.getDefaultSearchFilterName(it.listSearchFilters)?.let { name ->
-                val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
-                if (stringResource != 0)
-                    binding.textSearchFilterTitle.text = getString(stringResource)
-                else
-                    binding.textSearchFilterTitle.text = name
+                binding.textSearchFilterTitle.text = getLocalizedName(name)
             }
         }
 
@@ -199,6 +203,14 @@ class SearchFragment : Fragment(), MavericksView {
         }
 
         binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+    }
+
+    private fun getLocalizedName(name: String): String {
+        val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
+        return if (stringResource != 0)
+            getString(stringResource)
+        else
+            name
     }
 
     private fun setSelectedFilterData(position: Int) {

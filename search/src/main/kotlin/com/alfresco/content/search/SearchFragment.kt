@@ -25,6 +25,7 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
+import kotlin.random.Random
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -285,11 +286,11 @@ class SearchFragment : Fragment(), MavericksView {
         val filterIndex = state.selectedFilterPosition
 
         if (filterIndex != -1) {
-            val categoriesList = viewModel.getCategoriesByIndex(filterIndex, state)
+            val categoriesList = viewModel.getCategoriesByIndex(filterIndex)
             if (!categoriesList.isNullOrEmpty()) {
                 categoriesList.forEach { categoriesItem ->
                     listViewFilterChips {
-                        id(categoriesItem.id)
+                        id(Random.nextInt())
                         data(categoriesItem)
                     }
                 }

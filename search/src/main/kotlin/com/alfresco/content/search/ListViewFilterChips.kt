@@ -13,7 +13,7 @@ import com.alfresco.content.search.databinding.ViewListFilterChipsBinding
 /**
  * Generated Model View for the Advance Filter Chips
  */
-@ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
+@ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT, saveViewState = false)
 class ListViewFilterChips @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -27,6 +27,8 @@ class ListViewFilterChips @JvmOverloads constructor(
      */
     @ModelProp
     fun setData(item: CategoriesItem) {
+        println("ListViewFilterChips.setData  ${item.name}")
+        binding.chipContextual.uncheck(false)
         binding.chipContextual.text = item.name
     }
 

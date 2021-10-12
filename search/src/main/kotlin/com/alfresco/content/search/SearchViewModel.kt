@@ -35,6 +35,7 @@ data class SearchResultsState(
     val selectedFilterPosition: Int = -1,
     val listSearchFiltersName: List<String> = emptyList(),
     val listSearchFilters: List<SearchItem>? = emptyList(),
+    val listCategoriesItem: List<CategoriesItem>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null
@@ -143,8 +144,9 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
-    fun getCategoriesByIndex(index: Int, state: SearchResultsState): List<CategoriesItem>? {
-        return state.listSearchFilters?.get(index)?.categories
+    fun getCategoriesByIndex(index: Int): List<CategoriesItem>? {
+
+        return getSearchFilterList()?.get(index)?.categories
     }
 
     /**

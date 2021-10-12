@@ -31,6 +31,7 @@ data class SearchResultsState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
+    val listSearchFiltersName: List<String> = emptyList(),
     val listSearchFilters: List<SearchItem>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
@@ -113,7 +114,7 @@ class SearchViewModel(
     /**
      * returns the all available search filters
      */
-    fun getSearchFilterList(): List<SearchItem>? {
+    private fun getSearchFilterList(): List<SearchItem>? {
         return appConfigModel.search
     }
 
@@ -156,6 +157,15 @@ class SearchViewModel(
                 setState { stateReducer(Fail(e)) }
             }
         }
+    }
+
+    fun getSearchFilterNames():  MutableList<String?>{
+        val items = mutableListOf<String?>()
+        val searchFilters = getSearchFilterList()
+        searchFilters?.forEach { item ->
+            items.add(item.name)
+        }
+       return items
     }
 
     private fun defaultFilters(state: SearchResultsState): SearchFilters {

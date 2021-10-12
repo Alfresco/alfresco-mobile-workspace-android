@@ -15,6 +15,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.SearchFilter
@@ -22,8 +24,11 @@ import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
+import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.search.databinding.FragmentSearchBinding
+import com.alfresco.content.simpleController
 import kotlinx.parcelize.Parcelize
+import kotlin.random.Random
 
 @Parcelize
 data class ContextualSearchArgs(
@@ -53,7 +58,9 @@ class SearchFragment : Fragment(), MavericksView {
     private lateinit var binding: FragmentSearchBinding
 
     private lateinit var searchView: SearchView
+    private lateinit var recyclerView: EpoxyRecyclerView
 
+    private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private val recentsFragment by lazy {
         childFragmentManager.findFragmentById(R.id.recents_fragment) as RecentSearchFragment
     }
@@ -101,9 +108,7 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() {
-        // No-op.
-        // State is read only once on screen setup.
-        // This does not include results which are updated in their fragment.
+        epoxyController.requestModelBuild()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -175,12 +180,7 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.anchorView = binding.rlDropDownSearch
         searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
 
-        val items = mutableListOf<String?>()
-        val searchFilters = viewModel.getSearchFilterList()
-        searchFilters?.forEach { item ->
-            items.add(item.name)
-        }
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, viewModel.getSearchFilterNames())
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) {
@@ -198,7 +198,7 @@ class SearchFragment : Fragment(), MavericksView {
             searchFilterPopup.dismiss()
         }
 
-        binding.rlDropDownSearch.setOnClickListener { _: View? -> searchFilterPopup.show() }
+        binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
     }
 
     private fun setSelectedFilterData(position: Int) {
@@ -258,6 +258,18 @@ class SearchFragment : Fragment(), MavericksView {
             filterFolders.uncheck(false)
             applyFilters()
         }
+    }
+
+    private fun epoxyController() = simpleController(viewModel) { state ->
+
+        repeat(5) {
+            listViewFilterChips {
+                id(Random.nextInt())
+                data("dummy")
+            }
+        }
+
+
     }
 
     private fun applyFilters() {

@@ -16,6 +16,7 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
+import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.models.SearchItem
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +32,7 @@ data class SearchResultsState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
+    val selectedFilterPosition: Int = -1,
     val listSearchFiltersName: List<String> = emptyList(),
     val listSearchFilters: List<SearchItem>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
@@ -83,7 +85,6 @@ class SearchViewModel(
     private val searchEvents: MutableStateFlow<SearchParams>
     private val appConfigModel: AppConfigModel
     private var params: SearchParams
-    var selectedFilterPosition: Int = -1
 
     init {
         setState { copy(filters = defaultFilters(state)) }
@@ -119,11 +120,17 @@ class SearchViewModel(
         return appConfigModel.search
     }
 
+    fun copyFilterIndex(position: Int) {
+        setState {
+            copy(selectedFilterPosition = position)
+        }
+    }
+
     /**
      * returns the default selected name from the search filter list using index.
      */
     fun getDefaultSearchFilterName(state: SearchResultsState): String? {
-        val defaultFilter = state.listSearchFilters?.get(selectedFilterPosition)
+        val defaultFilter = state.listSearchFilters?.get(state.selectedFilterPosition)
         if (defaultFilter != null)
             return defaultFilter.name
         return null
@@ -134,6 +141,10 @@ class SearchViewModel(
      */
     fun getDefaultSearchFilterIndex(list: List<SearchItem>?): Int {
         return list?.indexOf(list.find { it.default == true }) ?: -1
+    }
+
+    fun getCategoriesByIndex(index: Int, state: SearchResultsState): List<CategoriesItem>? {
+        return state.listSearchFilters?.get(index)?.categories
     }
 
     /**

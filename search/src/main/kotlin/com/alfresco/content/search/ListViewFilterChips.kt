@@ -22,13 +22,12 @@ class ListViewFilterChips @JvmOverloads constructor(
 
     private val binding = ViewListFilterChipsBinding.inflate(LayoutInflater.from(context), this)
 
-
     /**
      * Bind the capture item data to the view
      */
     @ModelProp
-    fun setData(item: String) {
-        binding.chipContextual.text=item
+    fun setData(item: CategoriesItem) {
+        binding.chipContextual.text = item.name
     }
 
     /**
@@ -38,6 +37,4 @@ class ListViewFilterChips @JvmOverloads constructor(
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
     }
-
-
 }

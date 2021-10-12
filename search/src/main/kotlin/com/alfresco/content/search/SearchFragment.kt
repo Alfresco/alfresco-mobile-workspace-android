@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.SearchFilter
@@ -24,11 +23,9 @@ import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
 import kotlinx.parcelize.Parcelize
-import kotlin.random.Random
 
 @Parcelize
 data class ContextualSearchArgs(
@@ -108,7 +105,10 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun invalidate() {
+    override fun invalidate() = withState(viewModel) { state ->
+
+        setSearchFilterLocalizedName(state)
+
         epoxyController.requestModelBuild()
     }
 
@@ -192,13 +192,12 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->
-            if (viewModel.selectedFilterPosition == -1)
-                viewModel.selectedFilterPosition = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
-            setSearchFilterLocalizedName(state)
+            if (state.selectedFilterPosition == -1)
+                viewModel.copyFilterIndex(viewModel.getDefaultSearchFilterIndex(state.listSearchFilters))
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            viewModel.selectedFilterPosition = position
+            viewModel.copyFilterIndex(position)
             setSelectedFilterData()
             searchFilterPopup.dismiss()
         }
@@ -210,7 +209,6 @@ class SearchFragment : Fragment(), MavericksView {
         viewModel.getDefaultSearchFilterName(state)?.let { name ->
             binding.textSearchFilterTitle.text = getLocalizedName(name)
         }
-        binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
     }
 
     private fun getLocalizedName(name: String): String {
@@ -223,7 +221,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setSelectedFilterData() {
         withState(viewModel) {
-            viewModel.getSelectedFilter(viewModel.selectedFilterPosition, it)?.let { searchItem ->
+            viewModel.getSelectedFilter(it.selectedFilterPosition, it)?.let { searchItem ->
                 searchItem.name?.let { name ->
                     binding.textSearchFilterTitle.text = getLocalizedName(name)
                 }
@@ -284,15 +282,19 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun epoxyController() = simpleController(viewModel) { state ->
 
+        val filterIndex = state.selectedFilterPosition
 
-        repeat(5) {
-            listViewFilterChips {
-                id(Random.nextInt())
-                data("dummy")
+        if (filterIndex != -1) {
+            val categoriesList = viewModel.getCategoriesByIndex(filterIndex, state)
+            if (!categoriesList.isNullOrEmpty()) {
+                categoriesList.forEach { categoriesItem ->
+                    listViewFilterChips {
+                        id(categoriesItem.id)
+                        data(categoriesItem)
+                    }
+                }
             }
         }
-
-
     }
 
     private fun applyFilters() {

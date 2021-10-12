@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <com.alfresco.content.search.FilterChip
             android:id="@+id/chip_contextual"
             style="@style/Widget.Alfresco.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_marginStart="12dp"
             tools:text="in: Folder" />
 
     </FrameLayout>

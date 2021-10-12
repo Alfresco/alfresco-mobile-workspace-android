@@ -114,7 +114,7 @@ class SearchViewModel(
     /**
      * returns the all available search filters
      */
-    private fun getSearchFilterList(): List<SearchItem>? {
+    fun getSearchFilterList(): List<SearchItem>? {
         return appConfigModel.search
     }
 
@@ -157,15 +157,6 @@ class SearchViewModel(
                 setState { stateReducer(Fail(e)) }
             }
         }
-    }
-
-    fun getSearchFilterNames():  MutableList<String?>{
-        val items = mutableListOf<String?>()
-        val searchFilters = getSearchFilterList()
-        searchFilters?.forEach { item ->
-            items.add(item.name)
-        }
-       return items
     }
 
     private fun defaultFilters(state: SearchResultsState): SearchFilters {

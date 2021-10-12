@@ -58,7 +58,6 @@ class SearchFragment : Fragment(), MavericksView {
     private lateinit var binding: FragmentSearchBinding
 
     private lateinit var searchView: SearchView
-    private lateinit var recyclerView: EpoxyRecyclerView
 
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private val recentsFragment by lazy {
@@ -86,6 +85,8 @@ class SearchFragment : Fragment(), MavericksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.recyclerViewChips.setController(epoxyController)
+
         setAdvanceSearchFiltersData()
 
         setupChips()
@@ -98,11 +99,11 @@ class SearchFragment : Fragment(), MavericksView {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
                 binding.rlDropDownSearch.visibility = View.VISIBLE
-                binding.chipFolders.visibility = View.GONE
+                binding.chipGroup.visibility = View.GONE
                 setupDropDown()
             } else {
                 binding.rlDropDownSearch.visibility = View.GONE
-                binding.chipFolders.visibility = View.VISIBLE
+                binding.chipGroup.visibility = View.VISIBLE
             }
         }
     }
@@ -180,7 +181,6 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.anchorView = binding.rlDropDownSearch
         searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
 
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, viewModel.getSearchFilterNames())
         val items = mutableListOf<String?>()
         val searchFilters = viewModel.getSearchFilterList()
         searchFilters?.forEach { item ->
@@ -273,6 +273,7 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
+
 
         repeat(5) {
             listViewFilterChips {

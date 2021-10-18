@@ -52,16 +52,6 @@ class ListViewFilterChips @JvmOverloads constructor(
         nameBuilder.append(chipTitle)
         nameBuilder.append(dataObj.selectedName)
 
-        /*val spannable = SpannableString(nameBuilder.toString())
-        if (chipTitle != null) {
-            spannable.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(binding.chip.context, R.color.color_on_surface_60)),
-                chipTitle.length, // start
-                nameBuilder.toString().length, // end
-                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
-            )
-        }*/
-
         return nameBuilder
     }
 

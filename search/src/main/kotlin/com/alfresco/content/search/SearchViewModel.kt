@@ -7,14 +7,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.AdvanceSearchFilter
-import com.alfresco.content.data.AdvanceSearchFilters
-import com.alfresco.content.data.Entry
-import com.alfresco.content.data.ResponsePaging
-import com.alfresco.content.data.SearchFilter
-import com.alfresco.content.data.SearchFilters
-import com.alfresco.content.data.SearchRepository
-import com.alfresco.content.data.emptyFilters
+import com.alfresco.content.data.*
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
@@ -176,21 +169,6 @@ class SearchViewModel(
         return !list.isNullOrEmpty()
     }
 
-    /**
-     * returns the chip component type by using selector
-     */
-    fun getChipComponentType(selector: String?): ChipComponentType {
-        return when (selector) {
-            ChipComponentType.TEXT.component -> ChipComponentType.TEXT
-            ChipComponentType.CHECK_LIST.component -> ChipComponentType.CHECK_LIST
-            ChipComponentType.SLIDER.component -> ChipComponentType.SLIDER
-            ChipComponentType.NUMBER_RANGE.component -> ChipComponentType.NUMBER_RANGE
-            ChipComponentType.DATE_RANGE.component -> ChipComponentType.DATE_RANGE
-            ChipComponentType.RADIO.component -> ChipComponentType.RADIO
-            else -> ChipComponentType.None
-        }
-    }
-
     private suspend fun <T, V> Flow<T>.executeOnLatest(
         action: suspend (value: T) -> V,
         stateReducer: SearchResultsState.(Async<V>) -> SearchResultsState
@@ -224,16 +202,13 @@ class SearchViewModel(
     }
 
     private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
-        return if (state.isContextual) {
+        val list = emptyAdvanceFilters()
+        if (state.isContextual)
             AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name)
-            AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name)
-            AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name)
-            mutableListOf()
-        } else {
-            AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name)
-            AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name)
-            mutableListOf()
-        }
+
+        list.add(AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name))
+        list.add(AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name))
+        return list
     }
 
     fun setSearchQuery(query: String) {

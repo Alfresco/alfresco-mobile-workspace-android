@@ -50,7 +50,7 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -74,7 +74,7 @@
             android:visibility="gone">
 
             <com.alfresco.content.search.FilterChip
-                android:id="@+id/chip_contextual"
+                android:id="@+id/chip"
                 style="@style/Widget.Alfresco.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
 
         </com.google.android.material.chip.ChipGroup>
 
-    </FrameLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

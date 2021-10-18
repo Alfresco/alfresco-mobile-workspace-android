@@ -8,6 +8,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.parentFragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.HideSoftInputOnScrollListener
+import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
@@ -32,6 +33,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     }
 
     fun setFilters(filters: SearchFilters) {
+        scrollToTop()
+        viewModel.setFilters(filters)
+    }
+    fun setFilters(filters: AdvanceSearchFilters) {
         scrollToTop()
         viewModel.setFilters(filters)
     }

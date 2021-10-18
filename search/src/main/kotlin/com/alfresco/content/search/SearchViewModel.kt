@@ -7,6 +7,8 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.AdvanceSearchFilter
+import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilter
@@ -32,10 +34,9 @@ data class SearchResultsState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
-    val selectedFilterPosition: Int = -1,
-    val listSearchFiltersName: List<String> = emptyList(),
+    val selectedFilterIndex: Int = -1,
     val listSearchFilters: List<SearchItem>? = emptyList(),
-    val listCategoriesItem: List<CategoriesItem>? = emptyList(),
+    val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null
@@ -74,6 +75,7 @@ data class SearchParams(
     val terms: String,
     val contextId: String?,
     val filters: SearchFilters,
+    val advanceSearchFilter: AdvanceSearchFilters,
     val skipCount: Int,
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
 )
@@ -91,7 +93,7 @@ class SearchViewModel(
         setState { copy(filters = defaultFilters(state)) }
 
         // TODO: move search params to state object
-        params = SearchParams("", state.contextId, defaultFilters(state), 0)
+        params = SearchParams("", state.contextId, defaultFilters(state), defaultAdvanceFilters(state), 0)
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
         appConfigModel = repository.getAppConfig()
@@ -123,15 +125,16 @@ class SearchViewModel(
 
     fun copyFilterIndex(position: Int) {
         setState {
-            copy(selectedFilterPosition = position)
+            copy(selectedFilterIndex = position)
         }
+        updateSearchChipCategoryList(position)
     }
 
     /**
      * returns the default selected name from the search filter list using index.
      */
     fun getDefaultSearchFilterName(state: SearchResultsState): String? {
-        val defaultFilter = state.listSearchFilters?.get(state.selectedFilterPosition)
+        val defaultFilter = state.listSearchFilters?.get(state.selectedFilterIndex)
         if (defaultFilter != null)
             return defaultFilter.name
         return null
@@ -144,9 +147,19 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
-    fun getCategoriesByIndex(index: Int): List<CategoriesItem>? {
+    fun getCategoriesByIndex(index: Int): MutableList<CategoriesItem>? {
 
-        return getSearchFilterList()?.get(index)?.categories
+        return getSearchFilterList()?.get(index)?.categories?.toMutableList()
+    }
+
+    fun updateSearchChipCategoryList(index: Int) {
+        val list = mutableListOf<SearchChipCategory>()
+
+        getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
+            list.add(SearchChipCategory(categoryItem, false))
+        }
+
+        setState { copy(listSearchCategoryChips = list) }
     }
 
     /**
@@ -161,6 +174,32 @@ class SearchViewModel(
      */
     fun isShowAdvanceFilterView(list: List<SearchItem>?): Boolean {
         return !list.isNullOrEmpty()
+    }
+
+    fun getChipComponentType(selector: String?): ChipComponentType {
+        return when (selector) {
+            ChipComponentType.TEXT.component -> ChipComponentType.TEXT
+            ChipComponentType.CHECK_LIST.component -> ChipComponentType.CHECK_LIST
+            ChipComponentType.SLIDER.component -> ChipComponentType.SLIDER
+            ChipComponentType.NUMBER_RANGE.component -> ChipComponentType.NUMBER_RANGE
+            ChipComponentType.DATE_RANGE.component -> ChipComponentType.DATE_RANGE
+            ChipComponentType.RADIO.component -> ChipComponentType.RADIO
+            else -> ChipComponentType.None
+        }
+    }
+
+    fun copyChipName(state: SearchResultsState, model: SearchChipCategory, name: String) {
+        val list = mutableListOf<SearchChipCategory>()
+
+        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
+            if (obj == model) {
+                list.add(SearchChipCategory(obj.category,
+                    isSelected = name.isNotEmpty(), selectedName = name, selectedQuery = obj.selectedQuery))
+            } else
+                list.add(obj)
+        }
+
+        setState { copy(listSearchCategoryChips = list) }
     }
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(
@@ -195,6 +234,19 @@ class SearchViewModel(
         }
     }
 
+    private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
+        return if (state.isContextual) {
+            AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name)
+            AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name)
+            AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name)
+            mutableListOf()
+        } else {
+            AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name)
+            AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name)
+            mutableListOf()
+        }
+    }
+
     fun setSearchQuery(query: String) {
         params = params.copy(terms = query, skipCount = 0)
         liveSearchEvents.value = params
@@ -208,6 +260,14 @@ class SearchViewModel(
         // Avoid triggering refresh when filters don't change
         if (filters != params.filters) {
             params = params.copy(filters = filters)
+            refresh()
+        }
+    }
+
+    fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
+        // Avoid triggering refresh when filters don't change
+        if (advanceSearchFilter != params.advanceSearchFilter) {
+            params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()
         }
     }

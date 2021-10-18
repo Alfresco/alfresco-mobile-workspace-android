@@ -1,5 +1,8 @@
 package com.alfresco.content.search
 
+/**
+ * This is chip component of various types
+ */
 enum class ChipComponentType(val component: String) {
 
     TEXT("text"),

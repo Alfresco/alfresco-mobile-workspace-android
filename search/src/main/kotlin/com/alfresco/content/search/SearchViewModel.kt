@@ -176,6 +176,9 @@ class SearchViewModel(
         return !list.isNullOrEmpty()
     }
 
+    /**
+     * returns the chip component type by using selector
+     */
     fun getChipComponentType(selector: String?): ChipComponentType {
         return when (selector) {
             ChipComponentType.TEXT.component -> ChipComponentType.TEXT

@@ -36,6 +36,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         scrollToTop()
         viewModel.setFilters(filters)
     }
+
+    /**
+     * set the advance filters on the viewModel
+     */
     fun setFilters(filters: AdvanceSearchFilters) {
         scrollToTop()
         viewModel.setFilters(filters)

@@ -18,7 +18,6 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
-import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.models.SearchItem
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -123,6 +122,9 @@ class SearchViewModel(
         return appConfigModel.search
     }
 
+    /**
+     * It updates the selectedFilter index after tap on filter any filter dropdown item
+     */
     fun copyFilterIndex(position: Int) {
         setState {
             copy(selectedFilterIndex = position)
@@ -147,11 +149,9 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
-    fun getCategoriesByIndex(index: Int): MutableList<CategoriesItem>? {
-
-        return getSearchFilterList()?.get(index)?.categories?.toMutableList()
-    }
-
+    /**
+     * updated the search chip for relative filter by selecting it from dropdown
+     */
     fun updateSearchChipCategoryList(index: Int) {
         val list = mutableListOf<SearchChipCategory>()
 
@@ -186,20 +186,6 @@ class SearchViewModel(
             ChipComponentType.RADIO.component -> ChipComponentType.RADIO
             else -> ChipComponentType.None
         }
-    }
-
-    fun copyChipName(state: SearchResultsState, model: SearchChipCategory, name: String) {
-        val list = mutableListOf<SearchChipCategory>()
-
-        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
-            if (obj == model) {
-                list.add(SearchChipCategory(obj.category,
-                    isSelected = name.isNotEmpty(), selectedName = name, selectedQuery = obj.selectedQuery))
-            } else
-                list.add(obj)
-        }
-
-        setState { copy(listSearchCategoryChips = list) }
     }
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(
@@ -264,6 +250,9 @@ class SearchViewModel(
         }
     }
 
+    /**
+     * set advance filters to search params
+     */
     fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
         // Avoid triggering refresh when filters don't change
         if (advanceSearchFilter != params.advanceSearchFilter) {

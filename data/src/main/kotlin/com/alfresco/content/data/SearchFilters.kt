@@ -9,9 +9,18 @@ enum class SearchFilter {
     Libraries;
 }
 
+/**
+ * This class pointing the selected filter chips data.
+ * @property query
+ * @property name
+ */
 data class AdvanceSearchFilter(val query: String, val name: String)
 
 typealias SearchFilters = EnumSet<SearchFilter>
+
+/**
+ * empty mutable list of type AdvanceSearchFilter
+ */
 typealias AdvanceSearchFilters = MutableList<AdvanceSearchFilter>
 
 infix fun SearchFilter.and(other: SearchFilter): SearchFilters = SearchFilters.of(this, other)

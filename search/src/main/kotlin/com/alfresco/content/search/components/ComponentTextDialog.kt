@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.DialogTextComponentBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -31,7 +32,7 @@ class ComponentTextDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Title")
+            .setTitle(requireContext().getString(R.string.title_text_filter))
             .setNegativeButton("Cancel") { _, _ ->
                 onCancel?.invoke()
                 dialog?.dismiss()

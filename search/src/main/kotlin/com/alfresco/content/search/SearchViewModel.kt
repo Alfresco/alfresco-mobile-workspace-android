@@ -7,11 +7,14 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.AdvanceSearchFilter
+import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
@@ -31,7 +34,9 @@ data class SearchResultsState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
 
+    val selectedFilterIndex: Int = -1,
     val listSearchFilters: List<SearchItem>? = emptyList(),
+    val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null
@@ -70,6 +75,7 @@ data class SearchParams(
     val terms: String,
     val contextId: String?,
     val filters: SearchFilters,
+    val advanceSearchFilter: AdvanceSearchFilters,
     val skipCount: Int,
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
 )
@@ -87,7 +93,7 @@ class SearchViewModel(
         setState { copy(filters = defaultFilters(state)) }
 
         // TODO: move search params to state object
-        params = SearchParams("", state.contextId, defaultFilters(state), 0)
+        params = SearchParams("", state.contextId, defaultFilters(state), defaultAdvanceFilters(state), 0)
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
         appConfigModel = repository.getAppConfig()
@@ -118,13 +124,43 @@ class SearchViewModel(
     }
 
     /**
-     * returns the default selected name of filter from the config itself.
+     * It updates the selectedFilter index after tap on filter any filter dropdown item
      */
-    fun getDefaultSearchFilterName(list: List<SearchItem>?): String? {
-        val defaultFilter = list?.find { it.default == true }
+    fun copyFilterIndex(position: Int) {
+        setState {
+            copy(selectedFilterIndex = position)
+        }
+        updateSearchChipCategoryList(position)
+    }
+
+    /**
+     * returns the default selected name from the search filter list using index.
+     */
+    fun getDefaultSearchFilterName(state: SearchResultsState): String? {
+        val defaultFilter = state.listSearchFilters?.get(state.selectedFilterIndex)
         if (defaultFilter != null)
             return defaultFilter.name
         return null
+    }
+
+    /**
+     * returns the index of search filter item, or -1 if the list doesn't contain the search filter item.
+     */
+    fun getDefaultSearchFilterIndex(list: List<SearchItem>?): Int {
+        return list?.indexOf(list.find { it.default == true }) ?: -1
+    }
+
+    /**
+     * updated the search chip for relative filter by selecting it from dropdown
+     */
+    fun updateSearchChipCategoryList(index: Int) {
+        val list = mutableListOf<SearchChipCategory>()
+
+        getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
+            list.add(SearchChipCategory(categoryItem, false))
+        }
+
+        setState { copy(listSearchCategoryChips = list) }
     }
 
     /**
@@ -173,6 +209,16 @@ class SearchViewModel(
         }
     }
 
+    private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
+        val list = emptyAdvanceFilters()
+        if (state.isContextual)
+            AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name)
+
+        list.add(AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name))
+        list.add(AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name))
+        return list
+    }
+
     fun setSearchQuery(query: String) {
         params = params.copy(terms = query, skipCount = 0)
         liveSearchEvents.value = params
@@ -186,6 +232,17 @@ class SearchViewModel(
         // Avoid triggering refresh when filters don't change
         if (filters != params.filters) {
             params = params.copy(filters = filters)
+            refresh()
+        }
+    }
+
+    /**
+     * set advance filters to search params
+     */
+    fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
+        // Avoid triggering refresh when filters don't change
+        if (advanceSearchFilter != params.advanceSearchFilter) {
+            params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()
         }
     }

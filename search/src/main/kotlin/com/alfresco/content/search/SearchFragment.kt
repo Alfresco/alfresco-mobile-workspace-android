@@ -15,6 +15,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.SearchFilter
@@ -22,7 +23,9 @@ import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.hideSoftInput
+import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.search.databinding.FragmentSearchBinding
+import com.alfresco.content.simpleController
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -54,6 +57,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private lateinit var searchView: SearchView
 
+    private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private val recentsFragment by lazy {
         childFragmentManager.findFragmentById(R.id.recents_fragment) as RecentSearchFragment
     }
@@ -79,9 +83,9 @@ class SearchFragment : Fragment(), MavericksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setAdvanceSearchFiltersData()
+        binding.recyclerViewChips.setController(epoxyController)
 
-        setupChips()
+        setAdvanceSearchFiltersData()
 
         resultsFragment.topLoadingIndicator = view.findViewById(R.id.loading)
         recentsFragment.onEntrySelected = { searchView.setQuery(it, false) }
@@ -91,19 +95,21 @@ class SearchFragment : Fragment(), MavericksView {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
                 binding.rlDropDownSearch.visibility = View.VISIBLE
-                binding.chipFolders.visibility = View.GONE
+                binding.chipGroup.visibility = View.GONE
                 setupDropDown()
             } else {
                 binding.rlDropDownSearch.visibility = View.GONE
-                binding.chipFolders.visibility = View.VISIBLE
+                binding.chipGroup.visibility = View.VISIBLE
+                setupChips()
             }
         }
     }
 
-    override fun invalidate() {
-        // No-op.
-        // State is read only once on screen setup.
-        // This does not include results which are updated in their fragment.
+    override fun invalidate() = withState(viewModel) { state ->
+
+        setSearchFilterLocalizedName(state)
+
+        epoxyController.requestModelBuild()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -186,13 +192,13 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->
-            if (viewModel.selectedFilterPosition == -1)
-                viewModel.selectedFilterPosition = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
-            setSearchFilterLocalizedName(state)
+            if (state.selectedFilterIndex == -1)
+                viewModel.copyFilterIndex(viewModel.getDefaultSearchFilterIndex(state.listSearchFilters))
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            viewModel.selectedFilterPosition = position
+            viewModel.copyFilterIndex(position)
+            viewModel.updateSearchChipCategoryList(position)
             setSelectedFilterData()
             searchFilterPopup.dismiss()
         }
@@ -201,9 +207,10 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
-        viewModel.getDefaultSearchFilterName(state)?.let { name ->
-            binding.textSearchFilterTitle.text = getLocalizedName(name)
-        }
+        if (state.selectedFilterIndex != -1)
+            viewModel.getDefaultSearchFilterName(state)?.let { name ->
+                binding.textSearchFilterTitle.text = getLocalizedName(name)
+            }
     }
 
     private fun getLocalizedName(name: String): String {
@@ -216,7 +223,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setSelectedFilterData() {
         withState(viewModel) {
-            viewModel.getSelectedFilter(viewModel.selectedFilterPosition, it)?.let { searchItem ->
+            viewModel.getSelectedFilter(it.selectedFilterIndex, it)?.let { searchItem ->
                 searchItem.name?.let { name ->
                     binding.textSearchFilterTitle.text = getLocalizedName(name)
                 }
@@ -225,7 +232,7 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun setupChips() {
-        filterContextual = requireView().findViewById(R.id.chip_contextual)
+        filterContextual = requireView().findViewById(R.id.chip)
         filterFiles = requireView().findViewById(R.id.chip_files)
         filterFolders = requireView().findViewById(R.id.chip_folders)
         filterLibraries = requireView().findViewById(R.id.chip_libraries)
@@ -272,6 +279,41 @@ class SearchFragment : Fragment(), MavericksView {
             filterFiles.uncheck(false)
             filterFolders.uncheck(false)
             applyFilters()
+        }
+    }
+
+    private fun epoxyController() = simpleController(viewModel) { state ->
+
+        val filterIndex = state.selectedFilterIndex
+
+        if (filterIndex != -1) {
+            val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
+            var contextualSearchChipCategory: SearchChipCategory? = null
+            if (state.filters.contains(SearchFilter.Contextual)) {
+
+                contextualSearchChipCategory = SearchChipCategory(
+                    CategoriesItem(
+                        name = getString(R.string.search_chip_contextual, state.contextTitle), expanded = null,
+                        component = null, enabled = null, id = SearchFilter.Contextual.toString()
+                    ), true
+                )
+            }
+            if (!searchChipCategory.isNullOrEmpty()) {
+
+                contextualSearchChipCategory?.let {
+                    searchChipCategory.add(0, it)
+                }
+
+                searchChipCategory.forEach { model ->
+                    val modelID = filterIndex.toString() + model.category.id
+                    listViewFilterChips {
+                        id(modelID)
+                        data(model)
+                        checkedChangeListener { _, _ ->
+                        }
+                    }
+                }
+            }
         }
     }
 

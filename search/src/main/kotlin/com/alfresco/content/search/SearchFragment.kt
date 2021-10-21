@@ -1,5 +1,6 @@
 package com.alfresco.content.search
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -14,18 +15,28 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.Logger
 import com.alfresco.content.data.SearchFilter
-import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.models.CategoriesItem
+import com.alfresco.content.search.components.ComponentMetaData
+import com.alfresco.content.search.components.CreateComponentsSheet
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -185,7 +196,7 @@ class SearchFragment : Fragment(), MavericksView {
         val searchFilters = viewModel.getSearchFilterList()
         searchFilters?.forEach { item ->
             item.name?.let { name ->
-                items.add(getLocalizedName(name))
+                items.add(getLocalizedName(requireContext(), name))
             }
         }
         val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
@@ -209,23 +220,15 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
         if (state.selectedFilterIndex != -1)
             viewModel.getDefaultSearchFilterName(state)?.let { name ->
-                binding.textSearchFilterTitle.text = getLocalizedName(name)
+                binding.textSearchFilterTitle.text = getLocalizedName(requireContext(), name)
             }
-    }
-
-    private fun getLocalizedName(name: String): String {
-        val stringResource = requireContext().resources.getIdentifier(name.lowercase(), "string", requireActivity().packageName)
-        return if (stringResource != 0)
-            getString(stringResource)
-        else
-            name
     }
 
     private fun setSelectedFilterData() {
         withState(viewModel) {
             viewModel.getSelectedFilter(it.selectedFilterIndex, it)?.let { searchItem ->
                 searchItem.name?.let { name ->
-                    binding.textSearchFilterTitle.text = getLocalizedName(name)
+                    binding.textSearchFilterTitle.text = getLocalizedName(requireContext(), name)
                 }
             }
         }
@@ -304,17 +307,67 @@ class SearchFragment : Fragment(), MavericksView {
                     searchChipCategory.add(0, it)
                 }
 
-                searchChipCategory.forEach { model ->
-                    val modelID = filterIndex.toString() + model.category.id
+                searchChipCategory.forEach { item ->
+                    val modelID = filterIndex.toString() + item.category.id
                     listViewFilterChips {
                         id(modelID)
-                        data(model)
-                        checkedChangeListener { _, _ ->
-                        }
+                        data(item)
+                        clickListener { model, _, chipView, _ -> onChipClicked(model.data(), chipView) }
                     }
                 }
             }
         }
+    }
+
+    private fun onChipClicked(data: SearchChipCategory, chipView: View) = withState(viewModel) {
+        hideSoftInput()
+        if (chipView.isPressed) {
+            withState(viewModel) { state ->
+                viewModel.updateSelected(state, data, true)
+                if (data.selectedName.isNotEmpty()) {
+                    (chipView as FilterChip).isChecked = true
+                }
+                when (data.category.component?.selector) {
+                    ChipComponentType.TEXT.component -> {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            val result = showComponentSheetDialog(requireContext(), data)
+                            Logger.d("component result = ", result)
+                            if (result != null) {
+                                viewModel.updateChipName(state, data, result.name)
+                            } else {
+                                val isSelected = data.selectedName.isNotEmpty()
+                                viewModel.updateSelected(state, data, isSelected)
+                            }
+                        }
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun showComponentSheetDialog(
+        context: Context,
+        searchChipCategory: SearchChipCategory
+    ) = withContext(Dispatchers.Main) {
+        suspendCoroutine<ComponentMetaData?> {
+            CreateComponentsSheet.Builder(context, searchChipCategory)
+                .onApply { name, query ->
+                    executeContinuation(it, name, query)
+                }
+                .onReset { name, query ->
+                    executeContinuation(it, name, query)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
+    }
+
+    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+        continuation.resume(ComponentMetaData(name = name, query = query))
     }
 
     private fun applyFilters() {

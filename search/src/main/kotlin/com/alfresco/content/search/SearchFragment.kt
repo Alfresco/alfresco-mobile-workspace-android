@@ -22,6 +22,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.getLocalizedName

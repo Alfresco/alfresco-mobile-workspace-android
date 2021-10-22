@@ -32,7 +32,6 @@
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:minWidth="140dp"
             android:text="@string/advance_search_title"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/color_search_filter"

@@ -21,13 +21,13 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
+import com.alfresco.content.data.ChipModel
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.search.components.ComponentMetaData
 import com.alfresco.content.search.components.CreateComponentsSheet
 import com.alfresco.content.search.databinding.FragmentSearchBinding
@@ -296,7 +296,7 @@ class SearchFragment : Fragment(), MavericksView {
             if (state.filters.contains(SearchFilter.Contextual)) {
 
                 contextualSearchChipCategory = SearchChipCategory(
-                    CategoriesItem(
+                    ChipModel(
                         name = getString(R.string.search_chip_contextual, state.contextTitle), expanded = null,
                         component = null, enabled = null, id = SearchFilter.Contextual.toString()
                     ), true

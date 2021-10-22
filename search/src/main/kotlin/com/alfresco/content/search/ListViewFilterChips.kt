@@ -35,8 +35,6 @@ class ListViewFilterChips @JvmOverloads constructor(
             binding.chip.isChecked = true
         }
 
-        println("ListViewFilterChips.setData = ${dataObj.isSelected}")
-
         binding.chip.isChecked = dataObj.isSelected
     }
 

@@ -2,12 +2,12 @@ package com.alfresco.content.search
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.data.AdvanceSearchModel
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewState
-import com.alfresco.content.models.SearchItem
 
 /**
  * ResultState for Search Controller
@@ -18,7 +18,7 @@ data class SearchResultsState(
     override val request: Async<ResponsePaging> = Uninitialized,
 
     val selectedFilterIndex: Int = -1,
-    val listSearchFilters: List<SearchItem>? = emptyList(),
+    val listSearchFilters: List<AdvanceSearchModel>? = emptyList(),
     val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,

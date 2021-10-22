@@ -1,16 +1,15 @@
 package com.alfresco.content.search
 
 import android.os.Parcelable
-import com.alfresco.content.models.CategoriesItem
+import com.alfresco.content.data.ChipModel
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 
 /**
  * SearchChipCategory type is  used for listSearchChips
  */
 @Parcelize
 data class SearchChipCategory(
-    var category: @RawValue CategoriesItem,
+    var category: ChipModel,
     var isSelected: Boolean,
     var selectedName: String = "",
     var selectedQuery: String = ""

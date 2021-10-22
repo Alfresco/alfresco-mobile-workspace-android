@@ -9,10 +9,16 @@ import com.alfresco.content.models.SearchItem
 import com.alfresco.content.models.Settings
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Mark ResponseAdvanceSearchConfig
+ */
 data class ResponseAdvanceSearchConfig(
     val search: List<AdvanceSearchModel>?
 ) {
     companion object {
+        /**
+         * returns the ResponseAdvanceSearchConfig on the basis of AppConfigModel
+         */
         fun with(appConfigModel: AppConfigModel): ResponseAdvanceSearchConfig {
             return ResponseAdvanceSearchConfig(
                 appConfigModel.search?.map { AdvanceSearchModel.with(it) } ?: emptyList()
@@ -21,6 +27,9 @@ data class ResponseAdvanceSearchConfig(
     }
 }
 
+/**
+ * Mark Advance Search Model
+ */
 @Parcelize
 data class AdvanceSearchModel(
     val default: Boolean?,
@@ -30,6 +39,9 @@ data class AdvanceSearchModel(
     val resetButton: Boolean?
 ) : Parcelable {
     companion object {
+        /**
+         * returns the AdvanceSearchModel on the basis of SearchItem
+         */
         fun with(searchItem: SearchItem): AdvanceSearchModel {
             return AdvanceSearchModel(
                 name = searchItem.name,
@@ -42,6 +54,9 @@ data class AdvanceSearchModel(
     }
 }
 
+/**
+ * Mark Chip Model
+ */
 @Parcelize
 data class ChipModel(
     val expanded: Boolean? = null,
@@ -51,6 +66,9 @@ data class ChipModel(
     val enabled: Boolean? = null
 ) : Parcelable {
     companion object {
+        /**
+         * returns the ChipModel on the basis of CategoriesItem
+         */
         fun with(categoriesItem: CategoriesItem): ChipModel {
             return ChipModel(
                 id = categoriesItem.id,
@@ -63,12 +81,18 @@ data class ChipModel(
     }
 }
 
+/**
+ * Mark Chip Component Model
+ */
 @Parcelize
 data class ChipComponentModel(
     val settings: ComponentSettingModel?,
     val selector: String?
 ) : Parcelable {
     companion object {
+        /**
+         * returns the ChipComponentModel on the basis of Component
+         */
         fun with(component: Component): ChipComponentModel {
             return ChipComponentModel(
                 selector = component.selector,
@@ -78,6 +102,9 @@ data class ChipComponentModel(
     }
 }
 
+/**
+ * Mark Component Setting Model
+ */
 @Parcelize
 data class ComponentSettingModel(
     val field: String?,
@@ -85,7 +112,7 @@ data class ComponentSettingModel(
     val placeholder: String?,
     val pageSize: Int?,
     val operator: String?,
-    val options: List<SettingOptions>?,
+    val options: List<SettingOptionsModel>?,
     val min: Int?,
     val max: Int?,
     val step: Int?,
@@ -95,6 +122,9 @@ data class ComponentSettingModel(
     val maxDate: String?
 ) : Parcelable {
     companion object {
+        /**
+         * returns the ComponentSettingModel on the basis of Settings
+         */
         fun with(settings: Settings): ComponentSettingModel {
             return ComponentSettingModel(
                 field = settings.field,
@@ -102,7 +132,7 @@ data class ComponentSettingModel(
                 placeholder = settings.placeholder,
                 pageSize = settings.pageSize,
                 operator = settings.operator,
-                options = settings.options?.map { SettingOptions.with(it) } ?: emptyList(),
+                options = settings.options?.map { SettingOptionsModel.with(it) } ?: emptyList(),
                 min = settings.min,
                 max = settings.max,
                 step = settings.step,
@@ -115,15 +145,21 @@ data class ComponentSettingModel(
     }
 }
 
+/**
+ * Mark SettingOptions Model
+ */
 @Parcelize
-data class SettingOptions(
+data class SettingOptionsModel(
     val name: String?,
     val value: String?,
     val default: Boolean?
 ) : Parcelable {
     companion object {
-        fun with(options: Options): SettingOptions {
-            return SettingOptions(
+        /**
+         * returns the SettingOptionsModel on the basis of Options
+         */
+        fun with(options: Options): SettingOptionsModel {
+            return SettingOptionsModel(
                 name = options.name,
                 value = options.value,
                 default = options.default

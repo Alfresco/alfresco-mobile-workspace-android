@@ -9,6 +9,9 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.SearchItem
 
+/**
+ * ResultState for Search Controller
+ */
 data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
@@ -34,6 +37,9 @@ data class SearchResultsState(
             return entries.firstOrNull()?.type == Entry.Type.SITE
         }
 
+    /**
+     * update entries as per response from the server
+     */
     fun updateEntries(response: ResponsePaging?): SearchResultsState {
         if (response == null) return this
 

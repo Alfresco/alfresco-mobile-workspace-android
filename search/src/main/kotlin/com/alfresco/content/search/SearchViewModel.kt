@@ -203,6 +203,9 @@ class SearchViewModel(
         }
     }
 
+    /**
+     * update chip name after apply or reset the component
+     */
     fun updateChipName(state: SearchResultsState, model: SearchChipCategory, name: String) {
         val list = mutableListOf<SearchChipCategory>()
 
@@ -221,6 +224,9 @@ class SearchViewModel(
         setState { copy(listSearchCategoryChips = list) }
     }
 
+    /**
+     * update isSelected when chip is selected
+     */
     fun updateSelected(state: SearchResultsState, model: SearchChipCategory, isSelected: Boolean) {
         val list = mutableListOf<SearchChipCategory>()
 

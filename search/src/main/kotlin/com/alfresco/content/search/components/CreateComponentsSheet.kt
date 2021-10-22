@@ -41,6 +41,9 @@ internal typealias ComponentApplyCallback = (String, String) -> Unit
 internal typealias ComponentResetCallback = (String, String) -> Unit
 internal typealias ComponentCancelCallback = () -> Unit
 
+/**
+ * Component sheet for chip components
+ */
 class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ComponentCreateViewModel by fragmentViewModel()
     private lateinit var binding: SheetComponentCreateBinding
@@ -93,6 +96,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     override fun invalidate() = withState(viewModel) { state ->
     }
 
+    /**
+     * Builder for build the component sheet
+     */
     data class Builder(
         val context: Context,
         val searchChipCategory: SearchChipCategory,
@@ -101,15 +107,27 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         var onCancel: ComponentCancelCallback? = null
     ) {
 
+        /**
+         * Component sheet apply callback
+         */
         fun onApply(callback: ComponentApplyCallback?) =
             apply { this.onApply = callback }
 
+        /**
+         * Component sheet reset callback
+         */
         fun onReset(callback: ComponentResetCallback?) =
             apply { this.onReset = callback }
 
+        /**
+         * Component sheet cancel callback
+         */
         fun onCancel(callback: ComponentCancelCallback?) =
             apply { this.onCancel = callback }
 
+        /**
+         * Component sheet show method
+         */
         fun show() {
             val fragmentManager = when (context) {
                 is AppCompatActivity -> context.supportFragmentManager

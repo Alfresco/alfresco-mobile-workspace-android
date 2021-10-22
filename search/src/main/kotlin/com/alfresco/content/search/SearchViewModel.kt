@@ -7,7 +7,15 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.*
+import com.alfresco.content.data.AdvanceSearchFilter
+import com.alfresco.content.data.AdvanceSearchFilters
+import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.data.SearchFilters
+import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.emptyAdvanceFilters
+import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel

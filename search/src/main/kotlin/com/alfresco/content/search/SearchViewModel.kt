@@ -1,6 +1,5 @@
 package com.alfresco.content.search
 
-import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
@@ -36,7 +35,6 @@ data class SearchParams(
 )
 
 class SearchViewModel(
-    val context: Context,
     state: SearchResultsState,
     private val repository: SearchRepository
 ) : ListViewModel<SearchResultsState>(state) {
@@ -272,6 +270,6 @@ class SearchViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchResultsState
-        ) = SearchViewModel(viewModelContext.activity(), state, SearchRepository())
+        ) = SearchViewModel(state, SearchRepository())
     }
 }

@@ -123,8 +123,13 @@ class MainActivityViewModel(
 
     private fun loadAppConfig(session: Session, launch: Boolean) {
         viewModelScope.launch {
-            val result = SearchRepository(session).getAppConfig()
-            SearchRepository(session).fetchAndSaveAppConfig(launch)
+            ConnectivityTracker
+                .networkAvailable
+                .let {
+                    if (it.value) {
+                        SearchRepository(session).fetchAndSaveAppConfig(launch)
+                    }
+                }
         }
     }
 

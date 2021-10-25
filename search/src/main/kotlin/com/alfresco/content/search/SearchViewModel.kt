@@ -16,6 +16,7 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
+import com.alfresco.content.search.components.ComponentMetaData
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -205,15 +206,17 @@ class SearchViewModel(
     /**
      * update chip name after apply or reset the component
      */
-    fun updateChipName(state: SearchResultsState, model: SearchChipCategory, name: String) {
+    fun updateChipComponentResult(state: SearchResultsState, model: SearchChipCategory, metaData: ComponentMetaData) {
         val list = mutableListOf<SearchChipCategory>()
 
-        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
+        state.listSearchCategoryChips?.forEach { obj ->
             if (obj == model) {
                 list.add(
                     SearchChipCategory(
                         obj.category,
-                        isSelected = name.isNotEmpty(), selectedName = name, selectedQuery = obj.selectedQuery
+                        isSelected = metaData.name.isNotEmpty(),
+                        selectedName = metaData.name,
+                        selectedQuery = metaData.query
                     )
                 )
             } else

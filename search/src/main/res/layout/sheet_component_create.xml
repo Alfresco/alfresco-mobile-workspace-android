@@ -54,6 +54,10 @@
                 android:id="@+id/textComponent"
                 layout="@layout/view_text_component" />
 
+            <include
+                android:id="@+id/checkListComponent"
+                layout="@layout/view_check_list_component"/>
+
         </FrameLayout>
     </RelativeLayout>
 
@@ -87,8 +91,8 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/component_button_margin"
-            android:text="@string/component_action_reset"
             android:backgroundTint="@color/color_component_secondary"
+            android:text="@string/component_action_reset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/apply_button"
             app:layout_constraintTop_toTopOf="parent" />

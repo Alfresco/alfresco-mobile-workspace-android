@@ -9,14 +9,14 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
-import com.alfresco.content.data.AdvanceSearchModel
-import com.alfresco.content.data.ResponseAdvanceSearchConfig
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.content.models.AppConfigModel
+import com.alfresco.content.models.SearchItem
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class SearchViewModel(
 ) : ListViewModel<SearchResultsState>(state) {
     private val liveSearchEvents: MutableStateFlow<SearchParams>
     private val searchEvents: MutableStateFlow<SearchParams>
-    private val appConfigModel: ResponseAdvanceSearchConfig
+    private val appConfigModel: AppConfigModel
     private var params: SearchParams
 
     init {
@@ -52,7 +52,7 @@ class SearchViewModel(
         params = SearchParams("", state.contextId, defaultFilters(state), defaultAdvanceFilters(state), 0)
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
-        appConfigModel = ResponseAdvanceSearchConfig.with(repository.getAppConfig())
+        appConfigModel = repository.getAppConfig()
 
         setState { copy(listSearchFilters = appConfigModel.search) }
 
@@ -76,7 +76,7 @@ class SearchViewModel(
     /**
      * returns the all available search filters
      */
-    fun getSearchFilterList(): List<AdvanceSearchModel>? {
+    fun getSearchFilterList(): List<SearchItem>? {
         return appConfigModel.search
     }
 
@@ -103,7 +103,7 @@ class SearchViewModel(
     /**
      * returns the index of search filter item, or -1 if the list doesn't contain the search filter item.
      */
-    fun getDefaultSearchFilterIndex(list: List<AdvanceSearchModel>?): Int {
+    fun getDefaultSearchFilterIndex(list: List<SearchItem>?): Int {
         return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
@@ -123,14 +123,14 @@ class SearchViewModel(
     /**
      * returns filter data on the selection on item in filter menu
      */
-    fun getSelectedFilter(index: Int, state: SearchResultsState): AdvanceSearchModel? {
+    fun getSelectedFilter(index: Int, state: SearchResultsState): SearchItem? {
         return state.listSearchFilters?.get(index)
     }
 
     /**
      * true if search filters available otherwise false
      */
-    fun isShowAdvanceFilterView(list: List<AdvanceSearchModel>?): Boolean {
+    fun isShowAdvanceFilterView(list: List<SearchItem>?): Boolean {
         return !list.isNullOrEmpty()
     }
 

@@ -70,7 +70,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
         withState(viewModel) { state ->
             if (state.parent.category.component?.selector == ChipComponentType.TEXT.component) {
-                binding.textComponent.nameInputLayout.hint = ""
+                binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                 binding.textComponent.nameInput.setText(state.parent.selectedName)
                 binding.title.text = getString(R.string.title_text_filter)
             }
@@ -84,10 +84,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
         }
         binding.resetButton.setOnClickListener {
+            println("CreateComponentsSheet.onViewCreated resetButton")
             onReset?.invoke("", "")
             dismiss()
         }
         binding.cancelButton.setOnClickListener {
+            println("CreateComponentsSheet.onViewCreated cancelButton")
             onCancel?.invoke()
             dismiss()
         }

@@ -1,7 +1,7 @@
 package com.alfresco.content.search
 
 import android.os.Parcelable
-import com.alfresco.content.data.ChipModel
+import com.alfresco.content.models.CategoriesItem
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SearchChipCategory(
-    var category: ChipModel,
+    var category: CategoriesItem,
     var isSelected: Boolean,
     var selectedName: String = "",
     var selectedQuery: String = ""

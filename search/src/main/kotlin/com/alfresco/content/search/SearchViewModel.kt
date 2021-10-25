@@ -5,17 +5,13 @@ import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
-import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
-import com.alfresco.content.data.Entry
-import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyAdvanceFilters
-import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
@@ -28,48 +24,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-
-data class SearchResultsState(
-    override val entries: List<Entry> = emptyList(),
-    override val hasMoreItems: Boolean = false,
-    override val request: Async<ResponsePaging> = Uninitialized,
-
-    val selectedFilterIndex: Int = -1,
-    val listSearchFilters: List<SearchItem>? = emptyList(),
-    val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),
-    val filters: SearchFilters = emptyFilters(),
-    val contextId: String? = null,
-    val contextTitle: String? = null
-) : ListViewState {
-
-    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title)
-
-    val isContextual: Boolean
-        get() {
-            return contextId != null
-        }
-
-    override val isCompact: Boolean
-        get() {
-            return entries.firstOrNull()?.type == Entry.Type.SITE
-        }
-
-    fun updateEntries(response: ResponsePaging?): SearchResultsState {
-        if (response == null) return this
-
-        val nextPage = response.pagination.skipCount > 0
-        val pageEntries = response.entries
-        val newEntries = if (nextPage) {
-            entries + pageEntries
-        } else {
-            pageEntries
-        }
-
-        return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
-    }
-
-    override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
-}
 
 data class SearchParams(
     val terms: String,
@@ -101,6 +55,7 @@ class SearchViewModel(
         setState { copy(listSearchFilters = appConfigModel.search) }
 
         viewModelScope.launch {
+
             merge(
                 liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
                 searchEvents
@@ -245,6 +200,48 @@ class SearchViewModel(
             params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()
         }
+    }
+
+    /**
+     * update chip name after apply or reset the component
+     */
+    fun updateChipName(state: SearchResultsState, model: SearchChipCategory, name: String) {
+        val list = mutableListOf<SearchChipCategory>()
+
+        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
+            if (obj == model) {
+                list.add(
+                    SearchChipCategory(
+                        obj.category,
+                        isSelected = name.isNotEmpty(), selectedName = name, selectedQuery = obj.selectedQuery
+                    )
+                )
+            } else
+                list.add(obj)
+        }
+
+        setState { copy(listSearchCategoryChips = list) }
+    }
+
+    /**
+     * update isSelected when chip is selected
+     */
+    fun updateSelected(state: SearchResultsState, model: SearchChipCategory, isSelected: Boolean) {
+        val list = mutableListOf<SearchChipCategory>()
+
+        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
+            if (obj == model) {
+                list.add(
+                    SearchChipCategory(
+                        obj.category,
+                        isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
+                    )
+                )
+            } else
+                list.add(obj)
+        }
+
+        setState { copy(listSearchCategoryChips = list) }
     }
 
     fun saveSearch() {

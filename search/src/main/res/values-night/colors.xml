@@ -3,5 +3,7 @@
 
     <color name="color_blue_30">#3D2A7DE1</color>
     <color name="color_search_filter">@color/white</color>
+    <color name="color_view_line">#1FFFFFFF</color>
+    <color name="color_component_secondary">#0DFFFFFF</color>
 
 </resources>

@@ -73,6 +73,7 @@
             android:paddingHorizontal="16dp"
             android:visibility="gone">
 
+
             <com.alfresco.content.search.FilterChip
                 android:id="@+id/chip"
                 style="@style/Widget.Alfresco.Chip.Choice"

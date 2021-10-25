@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Widget.Alfresco.Camera.Button" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@drawable/bg_camera_btn</item>
         <item name="tint">?attr/colorControlNormal</item>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="component_default_margin">24dp</dimen>
+    <dimen name="component_button_margin">12dp</dimen>
+
+</resources>

@@ -71,3 +71,4 @@ lint/tmp/
 lint/reports/
 /app/release/
 /content-ktx/
+/content/

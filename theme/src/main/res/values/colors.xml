@@ -5,6 +5,7 @@
     <color name="alfresco_blue_300">#6EACFF</color>
 
     <color name="alfresco_gray_900">#212328</color>
+
     <color name="alfresco_gray_900_15">#26212328</color>
     <color name="alfresco_gray_900_60">#99212328</color>
     <color name="alfresco_gray_100">#F5F5F5</color>
@@ -15,4 +16,5 @@
     <color name="white">@android:color/white</color>
     <color name="white_15">#26FFFFFF</color>
     <color name="white_60">#99FFFFFF</color>
+
 </resources>

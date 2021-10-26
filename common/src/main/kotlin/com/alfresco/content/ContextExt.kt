@@ -34,10 +34,10 @@ fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 /**
  * @return the localised string from string.xml if found otherwise the same name
  */
-fun Fragment.getLocalizedName(context: Context, name: String): String {
-    val stringResource = context.resources.getIdentifier(name.lowercase(), "string", context.packageName)
+fun Context.getLocalizedName(name: String): String {
+    val stringResource = resources.getIdentifier(name.lowercase(), "string", packageName)
     return if (stringResource != 0)
-        context.getString(stringResource)
+        getString(stringResource)
     else
         name
 }

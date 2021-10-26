@@ -54,6 +54,11 @@
                 android:id="@+id/textComponent"
                 layout="@layout/view_text_component" />
 
+
+            <include
+                android:id="@+id/radioListComponent"
+                layout="@layout/view_radio_list_component" />
+
         </FrameLayout>
     </RelativeLayout>
 

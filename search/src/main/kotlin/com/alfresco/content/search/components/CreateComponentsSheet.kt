@@ -83,17 +83,19 @@ internal class ComponentCreateViewModel(
      * return true if the component is selected,otherwise false
      */
     fun isOptionSelected(state: ComponentCreateState, options: Options): Boolean {
-        if (state.parent.selectedQuery.isNotEmpty()) {
-            val selectedQuery = state.parent.selectedQuery
-            if (selectedQuery.contains(",")) {
-                selectedQuery.split(",").forEach { query ->
-                    if (query == options.value)
-                        return true
-                }
-            } else {
-                return selectedQuery == options.value
+
+        if (state.parent.selectedQuery.isEmpty())
+            return options.default ?: false
+
+        val selectedQuery = state.parent.selectedQuery
+        if (selectedQuery.contains(",")) {
+            selectedQuery.split(",").forEach { query ->
+                if (query == options.value)
+                    return true
             }
-        } else return options.default ?: false
+        } else {
+            return selectedQuery == options.value
+        }
         return false
     }
 

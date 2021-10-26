@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
@@ -20,6 +21,7 @@ import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.SearchChipCategory
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
+import com.alfresco.content.showSoftInput
 import com.alfresco.ui.BottomSheetDialogFragment
 
 internal data class ComponentCreateState(
@@ -125,7 +127,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         dialog?.setOnCancelListener {
             onCancel?.invoke()
         }
@@ -138,6 +140,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             when (state.parent.category.component?.selector) {
                 ChipComponentType.TEXT.component -> {
                     viewModel.buildSingleDataModel()
+                    binding.textComponent.nameInput.showSoftInput(requireContext())
                     binding.textComponent.componentParent.visibility = View.VISIBLE
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)

@@ -204,7 +204,7 @@ class SearchViewModel(
     }
 
     /**
-     * update chip name after apply or reset the component
+     * update chip component data after apply or reset the component
      */
     fun updateChipComponentResult(state: SearchResultsState, model: SearchChipCategory, metaData: ComponentMetaData) {
         val list = mutableListOf<SearchChipCategory>()

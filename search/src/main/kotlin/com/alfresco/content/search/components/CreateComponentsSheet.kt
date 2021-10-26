@@ -150,7 +150,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 }
                 ChipComponentType.RADIO.component -> {
                     viewModel.buildSingleDataModel()
-                    viewModel.copyDefaultComponentData()
+                    if (state.parent.selectedName.isEmpty())
+                        viewModel.copyDefaultComponentData()
                     binding.radioListComponent.radioParent.visibility = View.VISIBLE
                     binding.title.text = getString(R.string.title_file_type)
                 }

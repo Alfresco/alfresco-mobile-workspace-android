@@ -54,6 +54,16 @@ internal class ComponentCreateViewModel(
     fun updateSingleComponentData(name: String, query: String) =
         setState { copy(parent = getSearchChipCategory(parent, context.getLocalizedName(name), query)) }
 
+    /**
+     * copy default component data
+     */
+    fun copyDefaultComponentData() {
+        setState {
+            val obj = parent.category.component?.settings?.options?.find { it.default ?: false }
+            copy(parent = getSearchChipCategory(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
+        }
+    }
+
     private fun getSearchChipCategory(
         parent: SearchChipCategory,
         selectedName: String,
@@ -135,6 +145,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 }
                 ChipComponentType.RADIO.component -> {
                     viewModel.buildSingleDataModel()
+                    viewModel.copyDefaultComponentData()
                     binding.radioListComponent.radioParent.visibility = View.VISIBLE
                     binding.title.text = getString(R.string.title_file_type)
                 }

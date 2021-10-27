@@ -23,9 +23,11 @@ class ComponentCreateViewModel(
     var maxRange = ""
 
     fun updateFormatNumberRange() = withState {
-        val nameFormat = "$minRange - $maxRange"
-        val queryFormat = "${it.parent.category.component?.settings?.field}:[$minRange TO $maxRange]"
-        updateSingleComponentData(nameFormat, queryFormat)
+        if ((minRange.isNotEmpty() && maxRange.isNotEmpty()) && minRange.toInt() < maxRange.toInt()) {
+            val nameFormat = "$minRange - $maxRange"
+            val queryFormat = "${it.parent.category.component?.settings?.field}:[$minRange TO $maxRange]"
+            updateSingleComponentData(nameFormat, queryFormat)
+        } else updateSingleComponentData("", "")
     }
 
     /**

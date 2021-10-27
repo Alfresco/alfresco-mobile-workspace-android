@@ -50,9 +50,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         withState(viewModel) { state ->
             when (state.parent.category.component?.selector) {
                 ChipComponentType.TEXT.component -> {
-                    viewModel.buildSingleDataModel()
-                    binding.textComponent.nameInput.showSoftInput(requireContext())
                     binding.textComponent.componentParent.visibility = View.VISIBLE
+                    binding.textComponent.nameInput.showSoftInput(requireContext())
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.title.text = getString(R.string.title_text_filter)
@@ -73,8 +72,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 ChipComponentType.NUMBER_RANGE.component -> {
                     viewModel.buildSingleDataModel()
                     binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
-                    binding.numberRangeComponent.minInput.showSoftInput(requireContext())
-                    binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
+                    binding.numberRangeComponent.fromInput.showSoftInput(requireContext())
+                    if (state.parent.selectedName.isNotEmpty()) {
+                        val minMax = state.parent.selectedName.split("-")
+                        binding.numberRangeComponent.fromInput.setText(minMax[0].trim())
+                        binding.numberRangeComponent.toInput.setText(minMax[1].trim())
+                    }
                     binding.title.text = getString(R.string.title_number_range)
                 }
             }
@@ -111,7 +114,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
         })
 
-        binding.numberRangeComponent.minInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+        binding.numberRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
             }
@@ -123,10 +126,11 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             override fun afterTextChanged(s: Editable?) {
                 validateMinInput(s.toString())
                 viewModel.minRange = s.toString()
+                viewModel.updateFormatNumberRange()
             }
         })
 
-        binding.numberRangeComponent.maxInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+        binding.numberRangeComponent.toInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
             }
@@ -138,6 +142,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             override fun afterTextChanged(s: Editable?) {
                 validateMaxInput(s.toString())
                 viewModel.maxRange = s.toString()
+                viewModel.updateFormatNumberRange()
             }
         })
     }
@@ -145,26 +150,21 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun validateMinInput(minValue: String) {
         val isEmpty = minValue.isEmpty()
         val valid = viewModel.isMinValueValid(minValue)
-        binding.numberRangeComponent.minInputLayout.error = when {
+        binding.numberRangeComponent.fromInputLayout.error = when {
             !valid -> resources.getString(R.string.component_number_range_invalid_input)
             isEmpty -> resources.getString(R.string.component_number_range_empty)
             else -> null
         }
-
-        if (viewModel.minRange.isNotEmpty() && viewModel.maxRange.isNotEmpty())
-            viewModel.updateFormatNumberRange()
     }
 
     private fun validateMaxInput(maxValue: String) {
         val isEmpty = maxValue.isEmpty()
         val valid = viewModel.isMaxValueValid(maxValue)
-        binding.numberRangeComponent.maxInputLayout.error = when {
+        binding.numberRangeComponent.toInputLayout.error = when {
             !valid -> resources.getString(R.string.component_number_range_invalid_input)
             isEmpty -> resources.getString(R.string.component_number_range_empty)
             else -> null
         }
-        if (viewModel.minRange.isNotEmpty() && viewModel.maxRange.isNotEmpty())
-            viewModel.updateFormatNumberRange()
     }
 
     override fun invalidate() = withState(viewModel) { state ->

@@ -8,19 +8,19 @@
     android:visibility="gone">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/min_input_layout"
+        android:id="@+id/from_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="13dp"
-        android:hint="@string/hint_number_min_mb"
+        android:hint="@string/hint_number_range_from"
         app:layout_constraintEnd_toStartOf="@id/image_hyphen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/min_input"
+            android:id="@+id/from_input"
             android:layout_width="match_parent"
-            android:nextFocusForward="@id/max_input"
+            android:nextFocusForward="@id/to_input"
             android:imeOptions="actionNext"
             android:layout_height="wrap_content"
             android:inputType="number" />
@@ -35,22 +35,22 @@
         android:src="@drawable/ic_hyphen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintBottom_toBottomOf="@id/max_input_layout"
+        app:layout_constraintBottom_toBottomOf="@id/to_input_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/max_input_layout" />
+        app:layout_constraintTop_toTopOf="@id/to_input_layout" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/max_input_layout"
+        android:id="@+id/to_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="@string/hint_number_max_mb"
+        android:hint="@string/hint_number_range_to"
         app:layout_constraintStart_toEndOf="@id/image_hyphen"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/max_input"
+            android:id="@+id/to_input"
             android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

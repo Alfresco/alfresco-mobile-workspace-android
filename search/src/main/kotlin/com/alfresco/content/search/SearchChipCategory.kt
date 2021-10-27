@@ -16,6 +16,10 @@ data class SearchChipCategory(
 ) : Parcelable {
 
     companion object {
+
+        /**
+         * update and returns the searchChipCategory
+         */
         fun with(searchChipCategory: SearchChipCategory, name: String, query: String): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,

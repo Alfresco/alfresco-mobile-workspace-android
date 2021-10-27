@@ -197,7 +197,7 @@ class SearchFragment : Fragment(), MavericksView {
         val searchFilters = viewModel.getSearchFilterList()
         searchFilters?.forEach { item ->
             item.name?.let { name ->
-                items.add(getLocalizedName(requireContext(), name))
+                items.add(requireContext().getLocalizedName(name))
             }
         }
         val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
@@ -221,7 +221,7 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
         if (state.selectedFilterIndex != -1)
             viewModel.getDefaultSearchFilterName(state)?.let { name ->
-                binding.textSearchFilterTitle.text = getLocalizedName(requireContext(), name)
+                binding.textSearchFilterTitle.text = requireContext().getLocalizedName(name)
             }
     }
 
@@ -229,7 +229,7 @@ class SearchFragment : Fragment(), MavericksView {
         withState(viewModel) {
             viewModel.getSelectedFilter(it.selectedFilterIndex, it)?.let { searchItem ->
                 searchItem.name?.let { name ->
-                    binding.textSearchFilterTitle.text = getLocalizedName(requireContext(), name)
+                    binding.textSearchFilterTitle.text = requireContext().getLocalizedName(name)
                 }
             }
         }

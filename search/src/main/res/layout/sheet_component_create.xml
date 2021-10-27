@@ -37,18 +37,18 @@
             android:src="@drawable/ic_cancel_component" />
 
         <View
+            android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/cancel_button"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:background="@color/color_view_line" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/separator">
 
             <include
                 android:id="@+id/textComponent"
@@ -57,6 +57,11 @@
             <include
                 android:id="@+id/checkListComponent"
                 layout="@layout/view_check_list_component"/>
+
+
+            <include
+                android:id="@+id/radioListComponent"
+                layout="@layout/view_radio_list_component" />
 
         </FrameLayout>
     </RelativeLayout>
@@ -91,8 +96,8 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/component_button_margin"
-            android:backgroundTint="@color/color_component_secondary"
             android:text="@string/component_action_reset"
+            android:backgroundTint="@color/color_component_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/apply_button"
             app:layout_constraintTop_toTopOf="parent" />

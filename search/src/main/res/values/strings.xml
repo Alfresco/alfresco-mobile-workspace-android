@@ -23,4 +23,8 @@
     <string name="component_action_reset">Reset</string>
     <string name="component_action_apply">Apply</string>
     <string name="component_action_cancel">Cancel</string>
+    <string name="app.search.radio.none">None</string>
+    <string name="app.search.radio.all">All</string>
+    <string name="app.search.radio.folder">Folder</string>
+    <string name="app.search.radio.document">Document</string>
 </resources>

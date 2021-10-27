@@ -6,6 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.textfield.TextInputEditText
 
 inline fun <reified T : Context> Context.findBaseContext(): T? {
     var ctx: Context? = this
@@ -29,15 +30,25 @@ fun FragmentActivity.hideSoftInput() {
     }
 }
 
+/**
+ * show keyboard on TextInputEditText request
+ */
+fun TextInputEditText.showSoftInput(context: Context) {
+    this.requestFocus()
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?)?.toggleSoftInput(
+        InputMethodManager.SHOW_FORCED, 0
+    )
+}
+
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 
 /**
  * @return the localised string from string.xml if found otherwise the same name
  */
-fun Fragment.getLocalizedName(context: Context, name: String): String {
-    val stringResource = context.resources.getIdentifier(name.lowercase(), "string", context.packageName)
+fun Context.getLocalizedName(name: String): String {
+    val stringResource = resources.getIdentifier(name.lowercase(), "string", packageName)
     return if (stringResource != 0)
-        context.getString(stringResource)
+        getString(stringResource)
     else
         name
 }

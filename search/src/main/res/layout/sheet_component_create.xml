@@ -54,14 +54,18 @@
                 android:id="@+id/textComponent"
                 layout="@layout/view_text_component" />
 
-            <include
-                android:id="@+id/checkListComponent"
-                layout="@layout/view_check_list_component"/>
-
 
             <include
                 android:id="@+id/radioListComponent"
                 layout="@layout/view_radio_list_component" />
+
+            <include
+                android:id="@+id/checkListComponent"
+                layout="@layout/view_check_list_component"/>
+
+            <include
+                android:id="@+id/numberRangeComponent"
+                layout="@layout/view_number_range_component"/>
 
         </FrameLayout>
     </RelativeLayout>

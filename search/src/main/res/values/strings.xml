@@ -20,6 +20,7 @@
     <string name="folder">Folder</string>
     <string name="title_text_filter">Text filter</string>
     <string name="title_file_type">File type</string>
+    <string name="title_number_range">Number range</string>
     <string name="component_action_reset">Reset</string>
     <string name="component_action_apply">Apply</string>
     <string name="component_action_cancel">Cancel</string>
@@ -27,4 +28,8 @@
     <string name="app.search.radio.all">All</string>
     <string name="app.search.radio.folder">Folder</string>
     <string name="app.search.radio.document">Document</string>
+    <string name="component_number_range_empty">Required value</string>
+    <string name="component_number_range_invalid_input">From value should be less than To value</string>
+    <string name="hint_number_range_from">From</string>
+    <string name="hint_number_range_to">To</string>
 </resources>

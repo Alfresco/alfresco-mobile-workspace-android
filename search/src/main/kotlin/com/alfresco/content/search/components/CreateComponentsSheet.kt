@@ -1,6 +1,5 @@
 package com.alfresco.content.search.components
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,142 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.MavericksViewModel
-import com.airbnb.mvrx.MavericksViewModelFactory
-import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.getLocalizedName
-import com.alfresco.content.models.Options
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
-import com.alfresco.content.search.SearchChipCategory
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
 import com.alfresco.content.showSoftInput
 import com.alfresco.ui.BottomSheetDialogFragment
-
-internal data class ComponentCreateState(
-    val parent: SearchChipCategory
-) : MavericksState
-
-internal class ComponentCreateViewModel(
-    val context: Context,
-    stateChipCreate: ComponentCreateState
-) : MavericksViewModel<ComponentCreateState>(stateChipCreate) {
-
-    private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
-
-    /**
-     * build single value component data
-     */
-    fun buildSingleDataModel() = withState { state ->
-        if (state.parent.selectedQuery.isNotEmpty()) {
-            listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
-        }
-    }
-
-    /**
-     * update single selected component option (text)
-     */
-    fun updateSingleComponentData(name: String) =
-        setState { copy(parent = getSearchChipCategory(parent, name, parent.category.component?.settings?.field ?: "")) }
-
-    /**
-     * update single selected component option(radio)
-     */
-    fun updateSingleComponentData(name: String, query: String) =
-        setState { copy(parent = getSearchChipCategory(parent, context.getLocalizedName(name), query)) }
-
-    /**
-     * copy default component data
-     */
-    fun copyDefaultComponentData() {
-        setState {
-            val obj = parent.category.component?.settings?.options?.find { it.default ?: false }
-            copy(parent = getSearchChipCategory(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
-        }
-    }
-
-    private fun getSearchChipCategory(
-        parent: SearchChipCategory,
-        selectedName: String,
-        selectedQuery: String
-    ): SearchChipCategory {
-        return SearchChipCategory(
-            category = parent.category,
-            isSelected = parent.isSelected,
-            selectedName = selectedName,
-            selectedQuery = selectedQuery
-        )
-    }
-
-    /**
-     * return true if the component is selected,otherwise false
-     */
-    fun isOptionSelected(state: ComponentCreateState, options: Options): Boolean {
-
-        if (state.parent.selectedQuery.isEmpty())
-            return options.default ?: false
-
-        val selectedQuery = state.parent.selectedQuery
-        if (selectedQuery.contains(",")) {
-            selectedQuery.split(",").forEach { query ->
-                if (query == options.value)
-                    return true
-            }
-        } else {
-            return selectedQuery == options.value
-        }
-        return false
-    }
-
-    fun buildCheckListModel() = withState { state ->
-
-        if (state.parent.selectedQuery.isNotEmpty()) {
-            if (state.parent.selectedQuery.contains(",")) {
-                val arrayQuery = state.parent.selectedQuery.split(",")
-                val arrayName = state.parent.selectedName.split(",")
-
-                arrayQuery.forEachIndexed { index, query ->
-                    listOptionsData.add(ComponentMetaData(arrayName[index], query))
-                }
-            } else {
-                listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
-            }
-        }
-    }
-
-    fun updateComponentData(name: String, query: String) = withState { state ->
-
-        if (listOptionsData.find { it.query == query } == null) {
-            listOptionsData.add(ComponentMetaData(name, query))
-        } else {
-            val list = listOptionsData.filter { it.query != query }.toMutableList()
-            listOptionsData = list
-        }
-
-        val selectedName = listOptionsData.joinToString(",") { it.name }
-        val selectedQuery = listOptionsData.joinToString(",") { it.query }
-
-        val obj = SearchChipCategory(
-            category = state.parent.category,
-            isSelected = state.parent.isSelected,
-            selectedName = selectedName,
-            selectedQuery = selectedQuery
-        )
-
-        setState { copy(parent = obj) }
-    }
-
-    companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {
-        override fun create(
-            viewModelContext: ViewModelContext,
-            state: ComponentCreateState
-        ) = ComponentCreateViewModel(viewModelContext.activity(), state)
-    }
-}
 
 /**
  * Component sheet for chip components
@@ -179,13 +50,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         withState(viewModel) { state ->
             when (state.parent.category.component?.selector) {
                 ChipComponentType.TEXT.component -> {
-                    viewModel.buildSingleDataModel()
-                    binding.textComponent.nameInput.showSoftInput(requireContext())
                     binding.textComponent.componentParent.visibility = View.VISIBLE
+                    binding.textComponent.nameInput.showSoftInput(requireContext())
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.title.text = getString(R.string.title_text_filter)
                 }
+
                 ChipComponentType.CHECK_LIST.component -> {
                     viewModel.buildCheckListModel()
                     binding.checkListComponent.componentParent.visibility = View.VISIBLE
@@ -197,6 +68,17 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         viewModel.copyDefaultComponentData()
                     binding.radioListComponent.radioParent.visibility = View.VISIBLE
                     binding.title.text = getString(R.string.title_file_type)
+                }
+                ChipComponentType.NUMBER_RANGE.component -> {
+                    viewModel.buildSingleDataModel()
+                    binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
+                    binding.numberRangeComponent.fromInput.showSoftInput(requireContext())
+                    if (state.parent.selectedName.isNotEmpty()) {
+                        val fromToArray = state.parent.selectedName.split("-")
+                        binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
+                        binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
+                    }
+                    binding.title.text = getString(R.string.title_number_range)
                 }
             }
         }
@@ -231,8 +113,50 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 viewModel.updateSingleComponentData(s.toString())
             }
         })
-    }
 
+        binding.numberRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val valid = viewModel.isFromValueValid(s.toString())
+                println("CreateComponentsSheet.afterTextChanged 2 $valid")
+                binding.numberRangeComponent.numberRangeError.visibility = when {
+                    !valid -> View.VISIBLE
+                    else -> View.GONE
+                }
+                viewModel.fromValue = s.toString()
+                viewModel.updateFormatNumberRange()
+            }
+        })
+
+        binding.numberRangeComponent.toInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val valid = viewModel.isToValueValid(s.toString())
+                println("CreateComponentsSheet.afterTextChanged 1 $valid")
+                if (!valid)
+                    binding.numberRangeComponent.numberRangeError.visibility = View.VISIBLE
+                else
+                    binding.numberRangeComponent.numberRangeError.visibility = View.GONE
+
+                viewModel.toValue = s.toString()
+                viewModel.updateFormatNumberRange()
+            }
+        })
+    }
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
             state.parent.category
@@ -242,7 +166,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         data(option)
                         optionSelected(viewModel.isOptionSelected(state, option))
                         clickListener { model, _, _, _ ->
-                            viewModel.updateComponentData(
+                            viewModel.updateMultipleComponentData(
                                 model.data().name ?: "",
                                 model.data().value ?: ""
                             )

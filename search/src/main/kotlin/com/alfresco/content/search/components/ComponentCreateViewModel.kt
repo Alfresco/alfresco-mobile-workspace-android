@@ -9,10 +9,16 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
 import com.alfresco.content.search.SearchChipCategory
 
+/**
+ * Mark as ComponentCreateState class
+ */
 data class ComponentCreateState(
     val parent: SearchChipCategory
 ) : MavericksState
 
+/**
+ * Mark as ComponentCreateViewModel class
+ */
 class ComponentCreateViewModel(
     val context: Context,
     stateChipCreate: ComponentCreateState
@@ -22,6 +28,9 @@ class ComponentCreateViewModel(
     var minRange = ""
     var maxRange = ""
 
+    /**
+     * update the value for number range
+     */
     fun updateFormatNumberRange() = withState {
         if ((minRange.isNotEmpty() && maxRange.isNotEmpty()) && minRange.toInt() < maxRange.toInt()) {
             val nameFormat = "$minRange - $maxRange"
@@ -94,6 +103,9 @@ class ComponentCreateViewModel(
         return false
     }
 
+    /**
+     * build check list model for query and name
+     */
     fun buildCheckListModel() = withState { state ->
 
         if (state.parent.selectedQuery.isNotEmpty()) {
@@ -110,6 +122,9 @@ class ComponentCreateViewModel(
         }
     }
 
+    /**
+     * update multiple component option (check list)
+     */
     fun updateMultipleComponentData(name: String, query: String) = withState { state ->
 
         if (listOptionsData.find { it.query == query } == null) {
@@ -132,6 +147,9 @@ class ComponentCreateViewModel(
         setState { copy(parent = obj) }
     }
 
+    /**
+     * return true if max value valid otherwise false
+     */
     fun isMaxValueValid(maxValue: String): Boolean {
         if (maxValue.isEmpty())
             return true
@@ -142,6 +160,9 @@ class ComponentCreateViewModel(
             maxValue.toInt() > minRange.toInt()
     }
 
+    /**
+     * return true if min value valid otherwise false
+     */
     fun isMinValueValid(minValue: String): Boolean {
         if (minValue.isEmpty())
             return true

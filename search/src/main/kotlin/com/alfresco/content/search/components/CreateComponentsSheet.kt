@@ -149,6 +149,110 @@ internal class ComponentCreateViewModel(
         setState { copy(parent = obj) }
     }
 
+    private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
+
+    /**
+     * build single value component data
+     */
+    fun buildSingleDataModel() = withState { state ->
+        if (state.parent.selectedQuery.isNotEmpty()) {
+            listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
+        }
+    }
+
+    /**
+     * update single selected component option (text)
+     */
+    fun updateSingleComponentData(name: String) =
+        setState { copy(parent = getSearchChipCategory(parent, name, parent.category.component?.settings?.field ?: "")) }
+
+    /**
+     * update single selected component option(radio)
+     */
+    fun updateSingleComponentData(name: String, query: String) =
+        setState { copy(parent = getSearchChipCategory(parent, context.getLocalizedName(name), query)) }
+
+    /**
+     * copy default component data
+     */
+    fun copyDefaultComponentData() {
+        setState {
+            val obj = parent.category.component?.settings?.options?.find { it.default ?: false }
+            copy(parent = getSearchChipCategory(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
+        }
+    }
+
+    private fun getSearchChipCategory(
+        parent: SearchChipCategory,
+        selectedName: String,
+        selectedQuery: String
+    ): SearchChipCategory {
+        return SearchChipCategory(
+            category = parent.category,
+            isSelected = parent.isSelected,
+            selectedName = selectedName,
+            selectedQuery = selectedQuery
+        )
+    }
+
+    /**
+     * return true if the component is selected,otherwise false
+     */
+    fun isOptionSelected(state: ComponentCreateState, options: Options): Boolean {
+
+        if (state.parent.selectedQuery.isEmpty())
+            return options.default ?: false
+
+        val selectedQuery = state.parent.selectedQuery
+        if (selectedQuery.contains(",")) {
+            selectedQuery.split(",").forEach { query ->
+                if (query == options.value)
+                    return true
+            }
+        } else {
+            return selectedQuery == options.value
+        }
+        return false
+    }
+
+    fun buildCheckListModel() = withState { state ->
+
+        if (state.parent.selectedQuery.isNotEmpty()) {
+            if (state.parent.selectedQuery.contains(",")) {
+                val arrayQuery = state.parent.selectedQuery.split(",")
+                val arrayName = state.parent.selectedName.split(",")
+
+                arrayQuery.forEachIndexed { index, query ->
+                    listOptionsData.add(ComponentMetaData(arrayName[index], query))
+                }
+            } else {
+                listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
+            }
+        }
+    }
+
+    fun updateComponentData(name: String, query: String) = withState { state ->
+
+        if (listOptionsData.find { it.query == query } == null) {
+            listOptionsData.add(ComponentMetaData(name, query))
+        } else {
+            val list = listOptionsData.filter { it.query != query }.toMutableList()
+            listOptionsData = list
+        }
+
+        val selectedName = listOptionsData.joinToString(",") { it.name }
+        val selectedQuery = listOptionsData.joinToString(",") { it.query }
+
+        val obj = SearchChipCategory(
+            category = state.parent.category,
+            isSelected = state.parent.isSelected,
+            selectedName = selectedName,
+            selectedQuery = selectedQuery
+        )
+
+        setState { copy(parent = obj) }
+    }
+
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {
         override fun create(
             viewModelContext: ViewModelContext,
@@ -207,6 +311,27 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 ChipComponentType.CHECK_LIST.component -> {
                     viewModel.buildCheckListModel()
                     binding.checkListComponent.componentParent.visibility = View.VISIBLE
+                    binding.title.text = getString(R.string.title_file_type)
+                }
+            when (state.parent.category.component?.selector) {
+                ChipComponentType.TEXT.component -> {
+                    viewModel.buildSingleDataModel()
+                    binding.textComponent.nameInput.showSoftInput(requireContext())
+                    binding.textComponent.componentParent.visibility = View.VISIBLE
+                    binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
+                    binding.textComponent.nameInput.setText(state.parent.selectedName)
+                    binding.title.text = getString(R.string.title_text_filter)
+                }
+                ChipComponentType.CHECK_LIST.component -> {
+                    viewModel.buildCheckListModel()
+                    binding.checkListComponent.componentParent.visibility = View.VISIBLE
+                    binding.title.text = getString(R.string.title_file_type)
+                }
+                ChipComponentType.RADIO.component -> {
+                    viewModel.buildSingleDataModel()
+                    if (state.parent.selectedName.isEmpty())
+                        viewModel.copyDefaultComponentData()
+                    binding.radioListComponent.radioParent.visibility = View.VISIBLE
                     binding.title.text = getString(R.string.title_file_type)
                 }
             }
@@ -277,6 +402,38 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         }
                     }
             }
+        binding.checkListComponent.recyclerView.withModels {
+            state.parent.category
+                .component?.settings?.options?.forEach { option ->
+                    listViewCheckRow {
+                        id(option.hashCode())
+                        data(option)
+                        optionSelected(viewModel.isOptionSelected(state, option))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateComponentData(
+                                model.data().name ?: "",
+                                model.data().value ?: ""
+                            )
+                        }
+                    }
+                }
+        }
+
+        binding.radioListComponent.recyclerView.withModels {
+            state.parent.category
+                .component?.settings?.options?.forEach { option ->
+                    listViewRadioRow {
+                        id(option.hashCode())
+                        data(option)
+                        optionSelected(viewModel.isOptionSelected(state, option))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateSingleComponentData(
+                                model.data().name ?: "",
+                                model.data().value ?: ""
+                            )
+                        }
+                    }
+                }
         }
     }
 }

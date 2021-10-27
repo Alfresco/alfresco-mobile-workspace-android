@@ -63,6 +63,10 @@
                 android:id="@+id/checkListComponent"
                 layout="@layout/view_check_list_component"/>
 
+            <include
+                android:id="@+id/numberRangeComponent"
+                layout="@layout/view_number_range_component"/>
+
         </FrameLayout>
     </RelativeLayout>
 

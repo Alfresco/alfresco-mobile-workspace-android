@@ -74,9 +74,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
                     binding.numberRangeComponent.fromInput.showSoftInput(requireContext())
                     if (state.parent.selectedName.isNotEmpty()) {
-                        val minMax = state.parent.selectedName.split("-")
-                        binding.numberRangeComponent.fromInput.setText(minMax[0].trim())
-                        binding.numberRangeComponent.toInput.setText(minMax[1].trim())
+                        val fromToArray = state.parent.selectedName.split("-")
+                        binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
+                        binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
                     }
                     binding.title.text = getString(R.string.title_number_range)
                 }
@@ -130,7 +130,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     !valid -> View.VISIBLE
                     else -> View.GONE
                 }
-                viewModel.toValue = s.toString()
+                viewModel.fromValue = s.toString()
                 viewModel.updateFormatNumberRange()
             }
         })
@@ -152,7 +152,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 else
                     binding.numberRangeComponent.numberRangeError.visibility = View.GONE
 
-                viewModel.fromValue = s.toString()
+                viewModel.toValue = s.toString()
                 viewModel.updateFormatNumberRange()
             }
         })

@@ -10,6 +10,7 @@ import android.view.WindowManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
@@ -80,6 +81,29 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                     binding.title.text = getString(R.string.title_number_range)
                 }
+                ChipComponentType.SLIDER.component -> {
+                    viewModel.fromValue = "0"
+                    viewModel.buildSingleDataModel()
+                    binding.sliderComponent.componentParent.visibility = View.VISIBLE
+
+                    binding.sliderComponent.slider.apply {
+                        state.parent.category.component?.settings?.min?.let { min ->
+                            valueFrom = min.toFloat()
+                        }
+                        state.parent.category.component?.settings?.max?.let { max ->
+                            valueTo = max.toFloat()
+                        }
+                        state.parent.category.component?.settings?.step?.let { step ->
+                            stepSize = step.toFloat()
+                        }
+                        state.parent.category.component?.settings?.thumbLabel?.let { thumb ->
+                        }
+                    }
+                    if (state.parent.selectedName.isNotEmpty()) {
+                        binding.sliderComponent.slider.value = state.parent.selectedName.toFloat()
+                    }
+                    binding.title.text = getString(R.string.title_slider)
+                }
             }
         }
     }
@@ -131,7 +155,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     else -> View.GONE
                 }
                 viewModel.fromValue = s.toString()
-                viewModel.updateFormatNumberRange()
+                viewModel.updateFormatNumberRange(false)
             }
         })
 
@@ -153,10 +177,19 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.numberRangeComponent.numberRangeError.visibility = View.GONE
 
                 viewModel.toValue = s.toString()
-                viewModel.updateFormatNumberRange()
+                viewModel.updateFormatNumberRange(false)
             }
         })
+
+        binding.sliderComponent.slider.addOnChangeListener { _, value, _ ->
+            val sliderValue = value.toInt().toString()
+            if (viewModel.isToValueValid(sliderValue)) {
+                viewModel.toValue = sliderValue
+            } else viewModel.toValue = ""
+            viewModel.updateFormatNumberRange(true)
+        }
     }
+
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
             state.parent.category
@@ -184,7 +217,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         optionSelected(viewModel.isOptionSelected(state, option))
                         clickListener { model, _, _, _ ->
                             viewModel.updateSingleComponentData(
-                                model.data().name ?: "",
+                                requireContext().getLocalizedName(model.data().name ?: ""),
                                 model.data().value ?: ""
                             )
                         }

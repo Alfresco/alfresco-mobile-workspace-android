@@ -17,6 +17,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
+import com.alfresco.content.models.Options
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.SearchChipCategory
@@ -99,6 +100,70 @@ internal class ComponentCreateViewModel(
         return false
     }
 
+    private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
+
+    fun buildCheckListModel() = withState { state ->
+
+        if (state.parent.selectedQuery.isNotEmpty()) {
+            if (state.parent.selectedQuery.contains(",")) {
+                val arrayQuery = state.parent.selectedQuery.split(",")
+                val arrayName = state.parent.selectedName.split(",")
+
+                arrayQuery.forEachIndexed { index, query ->
+                    listOptionsData.add(ComponentMetaData(arrayName[index], query))
+                }
+            } else {
+                listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
+            }
+        }
+    }
+
+    fun updateTextComponentData(name: String) = withState { state ->
+        val obj = SearchChipCategory(
+            category = state.parent.category,
+            isSelected = state.parent.isSelected,
+            selectedName = name,
+            selectedQuery = state.parent.category.component?.settings?.field ?: ""
+        )
+
+        setState { copy(parent = obj) }
+    }
+
+    fun updateComponentData(name: String, query: String) = withState { state ->
+
+        if (listOptionsData.find { it.query == query } == null) {
+            listOptionsData.add(ComponentMetaData(name, query))
+        } else {
+            val list = listOptionsData.filter { it.query != query }.toMutableList()
+            listOptionsData = list
+        }
+
+        val selectedName = listOptionsData.joinToString(",") { it.name }
+        val selectedQuery = listOptionsData.joinToString(",") { it.query }
+
+        val obj = SearchChipCategory(
+            category = state.parent.category,
+            isSelected = state.parent.isSelected,
+            selectedName = selectedName,
+            selectedQuery = selectedQuery
+        )
+
+        setState { copy(parent = obj) }
+    }
+
+    fun isOptionSelected(state: ComponentCreateState, options: Options): Boolean {
+        val selectedQuery = state.parent.selectedQuery
+        if (selectedQuery.contains(",")) {
+            selectedQuery.split(",").forEach { query ->
+                if (query == options.value)
+                    return true
+            }
+        } else {
+            return selectedQuery == options.value
+        }
+        return false
+    }
+
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {
         override fun create(
             viewModelContext: ViewModelContext,
@@ -155,6 +220,18 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.radioListComponent.radioParent.visibility = View.VISIBLE
                     binding.title.text = getString(R.string.title_file_type)
                 }
+            when (state.parent.category.component?.selector) {
+                ChipComponentType.TEXT.component -> {
+                    binding.textComponent.componentParent.visibility = View.VISIBLE
+                    binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
+                    binding.textComponent.nameInput.setText(state.parent.selectedName)
+                    binding.title.text = getString(R.string.title_text_filter)
+                }
+                ChipComponentType.CHECK_LIST.component -> {
+                    viewModel.buildCheckListModel()
+                    binding.checkListComponent.componentParent.visibility = View.VISIBLE
+                    binding.title.text = getString(R.string.title_file_type)
+                }
             }
         }
     }
@@ -188,6 +265,20 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 viewModel.updateSingleComponentData(s.toString())
             }
         })
+
+        binding.textComponent.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateTextComponentData(s.toString())
+            }
+        })
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -201,6 +292,21 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         optionSelected(viewModel.isOptionSelected(state, option))
                         clickListener { model, _, _, _ ->
                             viewModel.updateSingleComponentData(
+                                model.data().name ?: "",
+                                model.data().value ?: ""
+                            )
+                        }
+                    }
+                }
+        binding.checkListComponent.recyclerView.withModels {
+            state.parent.category
+                .component?.settings?.options?.forEach { option ->
+                    listViewCheckRow {
+                        id(option.hashCode())
+                        data(option)
+                        optionSelected(viewModel.isOptionSelected(state, option))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateComponentData(
                                 model.data().name ?: "",
                                 model.data().value ?: ""
                             )

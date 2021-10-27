@@ -32,7 +32,7 @@ class ComponentCreateViewModel(
      * update the value for number range
      */
     fun updateFormatNumberRange() = withState {
-        if ((toValue.isNotEmpty() && fromValue.isNotEmpty()) && toValue.toInt() < fromValue.toInt()) {
+        if ((fromValue.isNotEmpty() && toValue.isNotEmpty()) && fromValue.toInt() < toValue.toInt()) {
             val nameFormat = "$fromValue - $toValue"
             val queryFormat = "${it.parent.category.component?.settings?.field}:[$fromValue TO $toValue]"
             updateSingleComponentData(nameFormat, queryFormat)

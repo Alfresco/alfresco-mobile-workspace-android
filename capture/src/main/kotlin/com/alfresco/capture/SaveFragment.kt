@@ -161,10 +161,8 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     private fun goBack() {
-        if (!viewModel.isEnterprise()) {
-            viewModel.clearCaptureList()
-            viewModel.clearCaptures()
-        }
+        viewModel.clearCaptureList()
+        viewModel.clearCaptures()
         requireActivity().onBackPressed()
     }
 

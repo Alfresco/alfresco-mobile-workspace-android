@@ -124,8 +124,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                validateMinInput(s.toString())
-                viewModel.minRange = s.toString()
+                val valid = viewModel.isFromValueValid(s.toString())
+                println("CreateComponentsSheet.afterTextChanged 2 $valid")
+                binding.numberRangeComponent.numberRangeError.visibility = when {
+                    !valid -> View.VISIBLE
+                    else -> View.GONE
+                }
+                viewModel.toValue = s.toString()
                 viewModel.updateFormatNumberRange()
             }
         })
@@ -140,33 +145,18 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                validateMaxInput(s.toString())
-                viewModel.maxRange = s.toString()
+                val valid = viewModel.isToValueValid(s.toString())
+                println("CreateComponentsSheet.afterTextChanged 1 $valid")
+                if (!valid)
+                    binding.numberRangeComponent.numberRangeError.visibility = View.VISIBLE
+                else
+                    binding.numberRangeComponent.numberRangeError.visibility = View.GONE
+
+                viewModel.fromValue = s.toString()
                 viewModel.updateFormatNumberRange()
             }
         })
     }
-
-    private fun validateMinInput(minValue: String) {
-        val isEmpty = minValue.isEmpty()
-        val valid = viewModel.isMinValueValid(minValue)
-        binding.numberRangeComponent.fromInputLayout.error = when {
-            !valid -> resources.getString(R.string.component_number_range_invalid_input)
-            isEmpty -> resources.getString(R.string.component_number_range_empty)
-            else -> null
-        }
-    }
-
-    private fun validateMaxInput(maxValue: String) {
-        val isEmpty = maxValue.isEmpty()
-        val valid = viewModel.isMaxValueValid(maxValue)
-        binding.numberRangeComponent.toInputLayout.error = when {
-            !valid -> resources.getString(R.string.component_number_range_invalid_input)
-            isEmpty -> resources.getString(R.string.component_number_range_empty)
-            else -> null
-        }
-    }
-
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
             state.parent.category

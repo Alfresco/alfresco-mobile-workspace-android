@@ -25,16 +25,16 @@ class ComponentCreateViewModel(
 ) : MavericksViewModel<ComponentCreateState>(stateChipCreate) {
 
     private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
-    var minRange = ""
-    var maxRange = ""
+    var toValue = ""
+    var fromValue = ""
 
     /**
      * update the value for number range
      */
     fun updateFormatNumberRange() = withState {
-        if ((minRange.isNotEmpty() && maxRange.isNotEmpty()) && minRange.toInt() < maxRange.toInt()) {
-            val nameFormat = "$minRange - $maxRange"
-            val queryFormat = "${it.parent.category.component?.settings?.field}:[$minRange TO $maxRange]"
+        if ((toValue.isNotEmpty() && fromValue.isNotEmpty()) && toValue.toInt() < fromValue.toInt()) {
+            val nameFormat = "$toValue - $fromValue"
+            val queryFormat = "${it.parent.category.component?.settings?.field}:[$toValue TO $fromValue]"
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -52,13 +52,13 @@ class ComponentCreateViewModel(
      * update single selected component option (text)
      */
     fun updateSingleComponentData(name: String) =
-        setState { copy(parent = getSearchChipCategory(parent, name, parent.category.component?.settings?.field ?: "")) }
+        setState { copy(parent = SearchChipCategory.with(parent, name, parent.category.component?.settings?.field ?: "")) }
 
     /**
      * update single selected component option(radio)
      */
     fun updateSingleComponentData(name: String, query: String) =
-        setState { copy(parent = getSearchChipCategory(parent, context.getLocalizedName(name), query)) }
+        setState { copy(parent = SearchChipCategory.with(parent, context.getLocalizedName(name), query)) }
 
     /**
      * copy default component data
@@ -66,21 +66,8 @@ class ComponentCreateViewModel(
     fun copyDefaultComponentData() {
         setState {
             val obj = parent.category.component?.settings?.options?.find { it.default ?: false }
-            copy(parent = getSearchChipCategory(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
+            copy(parent = SearchChipCategory.with(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
         }
-    }
-
-    private fun getSearchChipCategory(
-        parent: SearchChipCategory,
-        selectedName: String,
-        selectedQuery: String
-    ): SearchChipCategory {
-        return SearchChipCategory(
-            category = parent.category,
-            isSelected = parent.isSelected,
-            selectedName = selectedName,
-            selectedQuery = selectedQuery
-        )
     }
 
     /**
@@ -137,40 +124,33 @@ class ComponentCreateViewModel(
         val selectedName = listOptionsData.joinToString(",") { it.name }
         val selectedQuery = listOptionsData.joinToString(",") { it.query }
 
-        val obj = SearchChipCategory(
-            category = state.parent.category,
-            isSelected = state.parent.isSelected,
-            selectedName = selectedName,
-            selectedQuery = selectedQuery
-        )
-
-        setState { copy(parent = obj) }
+        setState { copy(parent = SearchChipCategory.with(parent, selectedName, selectedQuery)) }
     }
 
     /**
-     * return true if max value valid otherwise false
+     * return true if To value valid otherwise false
      */
-    fun isMaxValueValid(maxValue: String): Boolean {
-        if (maxValue.isEmpty())
+    fun isToValueValid(to: String): Boolean {
+        if (to.isEmpty())
             return true
 
-        return if (minRange.isEmpty())
+        return if (toValue.isEmpty())
             true
         else
-            maxValue.toInt() > minRange.toInt()
+            to.toInt() > toValue.toInt()
     }
 
     /**
-     * return true if min value valid otherwise false
+     * return true if from value valid otherwise false
      */
-    fun isMinValueValid(minValue: String): Boolean {
-        if (minValue.isEmpty())
+    fun isFromValueValid(from: String): Boolean {
+        if (from.isEmpty())
             return true
 
-        return if (maxRange.isEmpty())
+        return if (fromValue.isEmpty())
             true
         else
-            minValue.toInt() < maxRange.toInt()
+            from.toInt() < fromValue.toInt()
     }
 
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {

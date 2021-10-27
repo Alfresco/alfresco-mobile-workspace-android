@@ -13,4 +13,16 @@ data class SearchChipCategory(
     var isSelected: Boolean,
     var selectedName: String = "",
     var selectedQuery: String = ""
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        fun with(searchChipCategory: SearchChipCategory, name: String, query: String): SearchChipCategory {
+            return SearchChipCategory(
+                category = searchChipCategory.category,
+                isSelected = searchChipCategory.isSelected,
+                selectedName = name,
+                selectedQuery = query
+            )
+        }
+    }
+}

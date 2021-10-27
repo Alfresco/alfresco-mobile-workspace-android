@@ -22,6 +22,7 @@
     <string name="title_file_type">File type</string>
     <string name="title_number_range">Number range</string>
     <string name="title_slider">Size (MB)</string>
+    <string name="title_choose_date">Choose dates</string>
     <string name="component_action_reset">Reset</string>
     <string name="component_action_apply">Apply</string>
     <string name="component_action_cancel">Cancel</string>

@@ -37,22 +37,31 @@
             android:src="@drawable/ic_cancel_component" />
 
         <View
+            android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/cancel_button"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:background="@color/color_view_line" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/separator">
 
             <include
                 android:id="@+id/textComponent"
                 layout="@layout/view_text_component" />
+
+            <include
+                android:id="@+id/checkListComponent"
+                layout="@layout/view_check_list_component"/>
+
+
+            <include
+                android:id="@+id/radioListComponent"
+                layout="@layout/view_radio_list_component" />
 
         </FrameLayout>
     </RelativeLayout>

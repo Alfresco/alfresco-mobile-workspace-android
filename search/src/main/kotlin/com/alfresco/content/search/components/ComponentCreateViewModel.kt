@@ -144,6 +144,7 @@ class ComponentCreateViewModel(
      * return true if from value valid otherwise false
      */
     fun isFromValueValid(from: String): Boolean {
+        println("ComponentCreateViewModel.isFromValueValid ===  $from")
         if (from.isEmpty())
             return true
 

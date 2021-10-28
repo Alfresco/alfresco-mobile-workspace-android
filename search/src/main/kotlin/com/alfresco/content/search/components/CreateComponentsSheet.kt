@@ -124,13 +124,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isFromValueValid(s.toString())
-                println("CreateComponentsSheet.afterTextChanged 2 $valid")
+                val valid = viewModel.isFromValueValid(s.toString().trim())
                 binding.numberRangeComponent.numberRangeError.visibility = when {
                     !valid -> View.VISIBLE
                     else -> View.GONE
                 }
-                viewModel.fromValue = s.toString()
+                viewModel.fromValue = s.toString().trim()
                 viewModel.updateFormatNumberRange()
             }
         })
@@ -145,14 +144,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isToValueValid(s.toString())
-                println("CreateComponentsSheet.afterTextChanged 1 $valid")
+                val valid = viewModel.isToValueValid(s.toString().trim())
                 if (!valid)
                     binding.numberRangeComponent.numberRangeError.visibility = View.VISIBLE
                 else
                     binding.numberRangeComponent.numberRangeError.visibility = View.GONE
 
-                viewModel.toValue = s.toString()
+                viewModel.toValue = s.toString().trim()
                 viewModel.updateFormatNumberRange()
             }
         })

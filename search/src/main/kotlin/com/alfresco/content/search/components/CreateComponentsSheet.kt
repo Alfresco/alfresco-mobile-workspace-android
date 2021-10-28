@@ -13,7 +13,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
-import com.alfresco.content.showSoftInput
 import com.alfresco.ui.BottomSheetDialogFragment
 
 /**
@@ -51,7 +50,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             when (state.parent.category.component?.selector) {
                 ChipComponentType.TEXT.component -> {
                     binding.textComponent.componentParent.visibility = View.VISIBLE
-                    binding.textComponent.nameInput.showSoftInput(requireContext())
+                    binding.textComponent.nameInput.isFocusableInTouchMode = true
+                    binding.textComponent.nameInput.requestFocus()
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.title.text = getString(R.string.title_text_filter)
@@ -72,7 +72,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 ChipComponentType.NUMBER_RANGE.component -> {
                     viewModel.buildSingleDataModel()
                     binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
-                    binding.numberRangeComponent.fromInput.showSoftInput(requireContext())
+                    binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
+                    binding.numberRangeComponent.fromInput.requestFocus()
                     if (state.parent.selectedName.isNotEmpty()) {
                         val fromToArray = state.parent.selectedName.split("-")
                         binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
@@ -125,7 +126,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
             override fun afterTextChanged(s: Editable?) {
                 val valid = viewModel.isFromValueValid(s.toString())
-                println("CreateComponentsSheet.afterTextChanged 2 $valid")
                 binding.numberRangeComponent.numberRangeError.visibility = when {
                     !valid -> View.VISIBLE
                     else -> View.GONE
@@ -146,7 +146,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
             override fun afterTextChanged(s: Editable?) {
                 val valid = viewModel.isToValueValid(s.toString())
-                println("CreateComponentsSheet.afterTextChanged 1 $valid")
                 if (!valid)
                     binding.numberRangeComponent.numberRangeError.visibility = View.VISIBLE
                 else
@@ -157,6 +156,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
         })
     }
+
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
             state.parent.category

@@ -55,6 +55,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.textComponent.nameInput.requestFocus()
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
+                    binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
                     binding.title.text = getString(R.string.title_text_filter)
                 }
 
@@ -79,6 +80,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         val fromToArray = state.parent.selectedName.split("-")
                         binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
                         binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
+                        binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
                     }
                     binding.title.text = getString(R.string.title_number_range)
                 }
@@ -96,8 +98,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         }
                         state.parent.category.component?.settings?.step?.let { step ->
                             stepSize = step.toFloat()
-                        }
-                        state.parent.category.component?.settings?.thumbLabel?.let { thumb ->
                         }
                     }
                     if (state.parent.selectedName.isNotEmpty()) {
@@ -149,12 +149,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isFromValueValid(s.toString())
+                val min = s.toString().trim()
+                val valid = viewModel.isFromValueValid(min)
                 binding.numberRangeComponent.numberRangeError.visibility = when {
                     !valid -> View.VISIBLE
                     else -> View.GONE
                 }
-                viewModel.fromValue = s.toString()
+                viewModel.fromValue = min
                 viewModel.updateFormatNumberRange(false)
             }
         })
@@ -169,13 +170,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val valid = viewModel.isToValueValid(s.toString())
-                if (!valid)
-                    binding.numberRangeComponent.numberRangeError.visibility = View.VISIBLE
-                else
-                    binding.numberRangeComponent.numberRangeError.visibility = View.GONE
-
-                viewModel.toValue = s.toString()
+                val max = s.toString().trim()
+                val valid = viewModel.isToValueValid(max)
+                binding.numberRangeComponent.numberRangeError.visibility = when {
+                    !valid -> View.VISIBLE
+                    else -> View.GONE
+                }
+                viewModel.toValue = max
                 viewModel.updateFormatNumberRange(false)
             }
         })

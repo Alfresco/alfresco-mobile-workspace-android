@@ -71,6 +71,10 @@
                 android:id="@+id/sliderComponent"
                 layout="@layout/view_slider_component"/>
 
+            <include
+                android:id="@+id/dateRangeComponent"
+                layout="@layout/view_date_range_component"/>
+
         </FrameLayout>
     </RelativeLayout>
 

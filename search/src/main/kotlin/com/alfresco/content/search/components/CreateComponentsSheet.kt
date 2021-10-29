@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -15,6 +16,9 @@ import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
 import com.alfresco.ui.BottomSheetDialogFragment
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.launch
 
 /**
  * Component sheet for chip components
@@ -187,6 +191,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             } else viewModel.toValue = ""
             viewModel.updateFormatNumberRange(true)
         }
+
+        binding.dateRangeComponent.fromInput.setOnClickListener { showCalendar(true) }
+        binding.dateRangeComponent.toInput.setOnClickListener { showCalendar(false) }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -222,6 +229,28 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         }
                     }
                 }
+        }
+    }
+
+    private fun showCalendar(isFrom: Boolean) {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = suspendCoroutine<String?> {
+                DatePickerBuilder(requireContext())
+                    .onSuccess { date -> it.resume(date) }
+                    .onFailure { it.resume(null) }
+                    .show()
+            }
+
+            result?.let { date ->
+                if (isFrom) {
+                    viewModel.fromDate = date
+                    binding.dateRangeComponent.fromInput.setText(date)
+                } else {
+                    viewModel.toValue = date
+                    binding.dateRangeComponent.toInput.setText(date)
+                }
+            }
         }
     }
 }

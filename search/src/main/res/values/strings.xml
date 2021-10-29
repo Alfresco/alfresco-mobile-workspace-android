@@ -32,6 +32,6 @@
     <string name="app.search.radio.document">Document</string>
     <string name="component_number_range_empty">Required value</string>
     <string name="component_number_range_invalid_input">From value should be less than To value</string>
-    <string name="hint_number_range_from">From</string>
-    <string name="hint_number_range_to">To</string>
+    <string name="hint_range_from">From</string>
+    <string name="hint_range_to">To</string>
 </resources>

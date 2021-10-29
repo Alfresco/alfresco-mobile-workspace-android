@@ -27,6 +27,8 @@ class ComponentCreateViewModel(
     private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
     var toValue = ""
     var fromValue = ""
+    var fromDate = ""
+    var toDate = ""
 
     /**
      * update the value for number range

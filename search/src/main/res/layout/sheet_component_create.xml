@@ -67,6 +67,10 @@
                 android:id="@+id/numberRangeComponent"
                 layout="@layout/view_number_range_component"/>
 
+            <include
+                android:id="@+id/sliderComponent"
+                layout="@layout/view_slider_component"/>
+
         </FrameLayout>
     </RelativeLayout>
 

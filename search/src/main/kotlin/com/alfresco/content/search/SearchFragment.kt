@@ -313,7 +313,10 @@ class SearchFragment : Fragment(), MavericksView {
                     listViewFilterChips {
                         id(modelID)
                         data(item)
-                        clickListener { model, _, chipView, _ -> onChipClicked(model.data(), chipView) }
+                        clickListener { model, _, chipView, _ ->
+                            if (model.data().category.component != null)
+                                onChipClicked(model.data(), chipView)
+                        }
                     }
                 }
             }

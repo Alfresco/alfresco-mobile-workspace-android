@@ -31,10 +31,14 @@ class ComponentCreateViewModel(
     /**
      * update the value for number range
      */
-    fun updateFormatNumberRange() = withState {
+    fun updateFormatNumberRange(isSlider: Boolean) = withState {
         if ((fromValue.isNotEmpty() && toValue.isNotEmpty()) && fromValue.toInt() < toValue.toInt()) {
-            val nameFormat = "$fromValue - $toValue"
+            val nameFormat = if (isSlider)
+                toValue
+            else
+                context.getLocalizedName("$fromValue - $toValue")
             val queryFormat = "${it.parent.category.component?.settings?.field}:[$fromValue TO $toValue]"
+            println("ComponentCreateViewModel.updateFormatNumberRange $nameFormat")
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -58,7 +62,7 @@ class ComponentCreateViewModel(
      * update single selected component option(radio)
      */
     fun updateSingleComponentData(name: String, query: String) =
-        setState { copy(parent = SearchChipCategory.with(parent, context.getLocalizedName(name), query)) }
+        setState { copy(parent = SearchChipCategory.with(parent, name, query)) }
 
     /**
      * copy default component data

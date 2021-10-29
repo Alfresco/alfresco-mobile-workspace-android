@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="number"
+                android:maxLength="9"
                 android:nextFocusForward="@id/to_input" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -59,7 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="9" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,8 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:text="@string/component_number_range_invalid_input"
         android:textColor="@color/design_default_color_error"
         android:textSize="16sp"
-        android:visibility="gone"
-        android:text="@string/component_number_range_invalid_input" />
+        android:visibility="gone" />
 </LinearLayout>

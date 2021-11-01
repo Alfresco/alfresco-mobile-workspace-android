@@ -109,6 +109,22 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                     binding.title.text = getString(R.string.title_slider)
                 }
+                ChipComponentType.DATE_RANGE.component -> {
+                    binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
+                    binding.title.text = getString(R.string.title_created_date_range)
+
+                    binding.dateRangeComponent.fromInput.inputType = 0
+                    binding.dateRangeComponent.fromInput.isCursorVisible = false
+
+                    binding.dateRangeComponent.toInput.inputType = 0
+                    binding.dateRangeComponent.toInput.isCursorVisible = false
+
+                    if (state.parent.selectedName.isNotEmpty()) {
+                        val fromToArray = state.parent.selectedName.split("-")
+                        binding.dateRangeComponent.fromInput.setText(getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim()))
+                        binding.dateRangeComponent.toInput.setText(getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim()))
+                    }
+                }
             }
         }
     }
@@ -116,8 +132,23 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
-                onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery)
-                dismiss()
+                if (state.parent.category.component?.selector == ChipComponentType.DATE_RANGE.component) {
+                    when {
+                        viewModel.fromDate.isEmpty() -> {
+                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                        }
+                        viewModel.toDate.isEmpty() -> {
+                            binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
+                        }
+                        else -> {
+                            onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery)
+                            dismiss()
+                        }
+                    }
+                } else {
+                    onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery)
+                    dismiss()
+                }
             }
         }
         binding.resetButton.setOnClickListener {
@@ -193,8 +224,57 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             viewModel.updateFormatNumberRange(true)
         }
 
-        binding.dateRangeComponent.fromInput.setOnClickListener { showCalendar(true) }
-        binding.dateRangeComponent.toInput.setOnClickListener { showCalendar(false) }
+        binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
+            if (view.isInTouchMode && hasFocus)
+                view.performClick()
+        }
+        binding.dateRangeComponent.toInput.setOnFocusChangeListener { view, hasFocus ->
+            if (view.isInTouchMode && hasFocus)
+                view.performClick()
+        }
+
+        binding.dateRangeComponent.fromInput.setOnClickListener {
+            showCalendar(true)
+        }
+        binding.dateRangeComponent.toInput.setOnClickListener {
+            showCalendar(false)
+        }
+
+        binding.dateRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.fromDate = s.toString()
+                if (s.toString().isNotEmpty()) {
+                    binding.dateRangeComponent.fromInputLayout.error = null
+                    binding.dateRangeComponent.fromInputLayout.isErrorEnabled = false
+                }
+            }
+        })
+
+        binding.dateRangeComponent.toInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.toDate = s.toString()
+                if (s.toString().isNotEmpty()) {
+                    binding.dateRangeComponent.toInputLayout.error = null
+                    binding.dateRangeComponent.toInputLayout.isErrorEnabled = false
+                }
+            }
+        })
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -237,7 +317,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
         viewLifecycleOwner.lifecycleScope.launch {
             val result = suspendCoroutine<String?> {
-                DatePickerBuilder(requireContext())
+                DatePickerBuilder(
+                    context = requireContext(),
+                    fromDate = viewModel.fromDate,
+                    toDate = viewModel.toDate,
+                    isFrom = isFrom
+                )
                     .onSuccess { date -> it.resume(date) }
                     .onFailure { it.resume(null) }
                     .show()
@@ -248,9 +333,10 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     viewModel.fromDate = date
                     binding.dateRangeComponent.fromInput.setText(date)
                 } else {
-                    viewModel.toValue = date
+                    viewModel.toDate = date
                     binding.dateRangeComponent.toInput.setText(date)
                 }
+                viewModel.updateFormatDateRange()
             }
         }
     }

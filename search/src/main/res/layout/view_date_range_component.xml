@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/hint_range_from"
+        app:endIconMode="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,8 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_date_range_calendar"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:nextFocusForward="@id/to_input" />
@@ -36,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="@string/hint_range_to"
+        app:endIconMode="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/from_input_layout">
@@ -45,8 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_date_range_calendar"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:imeOptions="actionDone"
             android:inputType="text" />
 

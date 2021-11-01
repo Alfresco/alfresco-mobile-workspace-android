@@ -40,7 +40,6 @@ class ComponentCreateViewModel(
             else
                 context.getLocalizedName("$fromValue - $toValue")
             val queryFormat = "${it.parent.category.component?.settings?.field}:[$fromValue TO $toValue]"
-            println("ComponentCreateViewModel.updateFormatNumberRange $nameFormat")
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -143,7 +142,7 @@ class ComponentCreateViewModel(
         return if (fromValue.isEmpty())
             true
         else
-            to.toInt() > fromValue.toInt()
+            to.toLong() > fromValue.toLong()
     }
 
     /**
@@ -156,7 +155,7 @@ class ComponentCreateViewModel(
         return if (toValue.isEmpty())
             true
         else
-            from.toInt() < toValue.toInt()
+            from.toLong() < toValue.toLong()
     }
 
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {

@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
-            android:hint="@string/hint_number_range_from"
+            android:hint="@string/hint_range_from"
             app:layout_constraintEnd_toStartOf="@id/image_hyphen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
                 android:inputType="number"
+                android:maxLength="9"
                 android:nextFocusForward="@id/to_input" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -49,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
-            android:hint="@string/hint_number_range_to"
+            android:hint="@string/hint_range_to"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_hyphen"
             app:layout_constraintTop_toTopOf="parent">
@@ -59,7 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
-                android:inputType="number" />
+                android:inputType="number"
+                android:maxLength="9" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,8 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:text="@string/component_number_range_invalid_input"
         android:textColor="@color/design_default_color_error"
         android:textSize="16sp"
-        android:visibility="gone"
-        android:text="@string/component_number_range_invalid_input" />
+        android:visibility="gone" />
 </LinearLayout>

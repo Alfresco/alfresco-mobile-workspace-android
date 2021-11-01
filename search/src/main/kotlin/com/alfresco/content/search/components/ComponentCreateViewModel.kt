@@ -27,6 +27,9 @@ class ComponentCreateViewModel(
     private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
     var toValue = ""
     var fromValue = ""
+    var fromDate = ""
+    var toDate = ""
+    var dateFormat = ""
 
     /**
      * update the value for number range
@@ -38,8 +41,18 @@ class ComponentCreateViewModel(
             else
                 context.getLocalizedName("$fromValue - $toValue")
             val queryFormat = "${it.parent.category.component?.settings?.field}:[$fromValue TO $toValue]"
-            println("ComponentCreateViewModel.updateFormatNumberRange $nameFormat")
             updateSingleComponentData(nameFormat, queryFormat)
+        } else updateSingleComponentData("", "")
+    }
+
+    /**
+     * update the value for number range
+     */
+    fun updateFormatDateRange() = withState {
+        if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
+            val dateFormat = "$fromDate - $toDate"
+            val queryFormat = "${it.parent.category.component?.settings?.field}"
+            updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
 
@@ -141,7 +154,7 @@ class ComponentCreateViewModel(
         return if (fromValue.isEmpty())
             true
         else
-            to.toInt() > fromValue.toInt()
+            to.toLong() > fromValue.toLong()
     }
 
     /**
@@ -154,7 +167,7 @@ class ComponentCreateViewModel(
         return if (toValue.isEmpty())
             true
         else
-            from.toInt() < toValue.toInt()
+            from.toLong() < toValue.toLong()
     }
 
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {

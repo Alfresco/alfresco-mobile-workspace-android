@@ -106,11 +106,11 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
-                binding.rlDropDownSearch.visibility = View.VISIBLE
+                binding.parentAdvanceSearch.visibility = View.VISIBLE
                 binding.chipGroup.visibility = View.GONE
                 setupDropDown()
             } else {
-                binding.rlDropDownSearch.visibility = View.GONE
+                binding.parentAdvanceSearch.visibility = View.GONE
                 binding.chipGroup.visibility = View.VISIBLE
                 setupChips()
             }
@@ -216,6 +216,11 @@ class SearchFragment : Fragment(), MavericksView {
         }
 
         binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        binding.actionReset.setOnClickListener { resetAllFilters() }
+    }
+
+    private fun resetAllFilters(){
+        viewModel
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {

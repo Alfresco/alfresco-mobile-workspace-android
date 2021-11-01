@@ -35,4 +35,5 @@
     <string name="hint_range_from">From</string>
     <string name="hint_range_to">To</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="name_truncate_end" translatable="false">%1$s...</string>
 </resources>

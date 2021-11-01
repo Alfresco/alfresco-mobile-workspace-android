@@ -29,6 +29,7 @@ class ComponentCreateViewModel(
     var fromValue = ""
     var fromDate = ""
     var toDate = ""
+    var dateFormat = ""
 
     /**
      * update the value for number range
@@ -49,7 +50,7 @@ class ComponentCreateViewModel(
      */
     fun updateFormatDateRange() = withState {
         if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
-            val dateFormat = context.getLocalizedName("$fromDate - $toDate")
+            val dateFormat = "$fromDate - $toDate"
             val queryFormat = "${it.parent.category.component?.settings?.field}"
             updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")

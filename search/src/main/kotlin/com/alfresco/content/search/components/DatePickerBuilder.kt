@@ -34,6 +34,11 @@ data class DatePickerBuilder(
     private val dateFormatddMMMyy = "dd-MMM-yy"
     private val dateFormatddMMyyyy = "dd-MM-yyyy"
 
+    init {
+        if (dateFormat.isEmpty())
+            dateFormat = dateFormatddMMMyy
+    }
+
     /**
      * success callback
      */
@@ -57,39 +62,11 @@ data class DatePickerBuilder(
         }
 
         val constraintsBuilder = CalendarConstraints.Builder()
-        var endDate = MaterialDatePicker.todayInUtcMilliseconds()
-        val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
-        var selectionDate = MaterialDatePicker.todayInUtcMilliseconds()
 
-        if (dateFormat.isEmpty())
-            dateFormat = dateFormatddMMMyy
-
-        if (isFrom) {
-            if (fromDate.isNotEmpty())
-                fromDate.getddMMyyyyStringDate()?.let { stringDate ->
-                    selectionDate = getSelectionDate(stringDate)
-                }
-
-            if (toDate.isNotEmpty())
-                toDate.getDateFromString()?.let { date ->
-                    endDate = date.time
-                }
-        } else {
-            if (toDate.isNotEmpty())
-                toDate.getddMMyyyyStringDate()?.let { stringDate ->
-                    selectionDate = getSelectionDate(stringDate)
-                }
-
-            if (fromDate.isNotEmpty())
-                fromDate.getDateFromString()?.let { date ->
-                    validators.add(DateValidatorPointForward.from(date.time))
-                }
-        }
-        validators.add(DateValidatorPointBackward.before(endDate))
-        constraintsBuilder.setValidator(CompositeDateValidator.allOf(validators))
+        constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            setSelection(selectionDate)
+            setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
         }.build()
 
@@ -100,6 +77,41 @@ data class DatePickerBuilder(
             val stringDate = getFormatDate(date)
             onSuccess?.invoke(stringDate)
         }
+    }
+
+    private fun getValidators(): ArrayList<CalendarConstraints.DateValidator> {
+        val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
+        var endDate = MaterialDatePicker.todayInUtcMilliseconds()
+        if (isFrom) {
+            if (toDate.isNotEmpty())
+                toDate.getDateFromString()?.let { date ->
+                    endDate = date.time
+                }
+        } else {
+            if (fromDate.isNotEmpty())
+                fromDate.getDateFromString()?.let { date ->
+                    validators.add(DateValidatorPointForward.from(date.time))
+                }
+        }
+        validators.add(DateValidatorPointBackward.before(endDate))
+
+        return validators
+    }
+
+    private fun getSelectionDate(): Long {
+        var selectionDate = MaterialDatePicker.todayInUtcMilliseconds()
+        if (isFrom) {
+            if (fromDate.isNotEmpty())
+                fromDate.getddMMyyyyStringDate()?.let { stringDate ->
+                    selectionDate = getSelectionDate(stringDate)
+                }
+        } else {
+            if (toDate.isNotEmpty())
+                toDate.getddMMyyyyStringDate()?.let { stringDate ->
+                    selectionDate = getSelectionDate(stringDate)
+                }
+        }
+        return selectionDate
     }
 
     private fun getFormatDate(currentTime: Date): String {

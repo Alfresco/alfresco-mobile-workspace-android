@@ -1,6 +1,8 @@
 package com.alfresco.content.search
 
 import android.content.Context
+import android.text.InputFilter
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -29,13 +31,31 @@ class ListViewFilterChips @JvmOverloads constructor(
     fun setData(dataObj: SearchChipCategory) {
         binding.chip.uncheck(false)
 
-        binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category.name
-
         if (dataObj.category.id == SearchFilter.Contextual.toString()) {
             binding.chip.isChecked = true
         }
 
+        when (dataObj.category.component?.selector) {
+            ChipComponentType.TEXT.component -> {
+                if (dataObj.selectedName.length > 20) {
+                    binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
+                    binding.chip.ellipsize = TextUtils.TruncateAt.END
+                }
+                if (dataObj.selectedName.isNotEmpty())
+                    binding.chip.text = dataObj.selectedName.take20orDefault()
+                else
+                    binding.chip.text = dataObj.category.name
+            }
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category.name
+        }
+
         binding.chip.isChecked = dataObj.isSelected
+    }
+
+    private fun String.take20orDefault(): String {
+        if (this.length <= 20)
+            return this
+        return context.getString(R.string.name_truncate_end, this.take(20))
     }
 
     /**

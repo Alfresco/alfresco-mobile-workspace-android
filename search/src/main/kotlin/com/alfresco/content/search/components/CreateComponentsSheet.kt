@@ -119,10 +119,16 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.dateRangeComponent.toInput.inputType = 0
                     binding.dateRangeComponent.toInput.isCursorVisible = false
 
+                    state.parent.category.component?.settings?.dateFormat?.let { format ->
+                        viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
+                    }
+
                     if (state.parent.selectedName.isNotEmpty()) {
                         val fromToArray = state.parent.selectedName.split("-")
-                        binding.dateRangeComponent.fromInput.setText(getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim()))
-                        binding.dateRangeComponent.toInput.setText(getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim()))
+                        viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
+                        binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
+                        viewModel.toDate = getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim())
+                        binding.dateRangeComponent.toInput.setText(viewModel.toDate)
                     }
                 }
             }
@@ -321,7 +327,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     context = requireContext(),
                     fromDate = viewModel.fromDate,
                     toDate = viewModel.toDate,
-                    isFrom = isFrom
+                    isFrom = isFrom,
+                    dateFormat = viewModel.dateFormat
                 )
                     .onSuccess { date -> it.resume(date) }
                     .onFailure { it.resume(null) }

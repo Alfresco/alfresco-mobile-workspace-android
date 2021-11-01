@@ -3,9 +3,16 @@ package com.alfresco.content.search.components
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.datepicker.*
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.CompositeDateValidator
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import kotlin.collections.ArrayList
 
 internal typealias DatePickerOnSuccess = (String) -> Unit
@@ -19,12 +26,18 @@ data class DatePickerBuilder(
     val fromDate: String = "",
     val toDate: String = "",
     val isFrom: Boolean = false,
+    var dateFormat: String = "",
     var onSuccess: DatePickerOnSuccess? = null,
     var onFailure: DatePickerOnFailure? = null
 ) {
 
     private val dateFormatddMMMyy = "dd-MMM-yy"
     private val dateFormatddMMyyyy = "dd-MM-yyyy"
+
+    init {
+        if (dateFormat.isEmpty())
+            dateFormat = dateFormatddMMMyy
+    }
 
     /**
      * success callback
@@ -49,36 +62,11 @@ data class DatePickerBuilder(
         }
 
         val constraintsBuilder = CalendarConstraints.Builder()
-        var endDate = MaterialDatePicker.todayInUtcMilliseconds()
-        val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
-        var selectionDate = MaterialDatePicker.todayInUtcMilliseconds()
 
-        if (isFrom) {
-            if (fromDate.isNotEmpty())
-                fromDate.getddMMyyyyStringDate()?.let { stringDate ->
-                    selectionDate = getSelectionDate(stringDate)
-                }
-
-            if (toDate.isNotEmpty())
-                toDate.getDateFromString()?.let { date ->
-                    endDate = date.time
-                }
-        } else {
-            if (toDate.isNotEmpty())
-                toDate.getddMMyyyyStringDate()?.let { stringDate ->
-                    selectionDate = getSelectionDate(stringDate)
-                }
-
-            if (fromDate.isNotEmpty())
-                fromDate.getDateFromString()?.let { date ->
-                    validators.add(DateValidatorPointForward.from(date.time))
-                }
-        }
-        validators.add(DateValidatorPointBackward.before(endDate))
-        constraintsBuilder.setValidator(CompositeDateValidator.allOf(validators))
+        constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            setSelection(selectionDate)
+            setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
         }.build()
 
@@ -87,31 +75,57 @@ data class DatePickerBuilder(
         datePicker.addOnPositiveButtonClickListener {
             val date = Date(it)
             val stringDate = getFormatDate(date)
-            println("selected date $stringDate")
             onSuccess?.invoke(stringDate)
         }
-        datePicker.addOnNegativeButtonClickListener {
+    }
+
+    private fun getValidators(): ArrayList<CalendarConstraints.DateValidator> {
+        val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
+        var endDate = MaterialDatePicker.todayInUtcMilliseconds()
+        if (isFrom) {
+            if (toDate.isNotEmpty())
+                toDate.getDateFromString()?.let { date ->
+                    endDate = date.time
+                }
+        } else {
+            if (fromDate.isNotEmpty())
+                fromDate.getDateFromString()?.let { date ->
+                    validators.add(DateValidatorPointForward.from(date.time))
+                }
         }
-        datePicker.addOnCancelListener {
-            // Respond to cancel button click.
+        validators.add(DateValidatorPointBackward.before(endDate))
+
+        return validators
+    }
+
+    private fun getSelectionDate(): Long {
+        var selectionDate = MaterialDatePicker.todayInUtcMilliseconds()
+        if (isFrom) {
+            if (fromDate.isNotEmpty())
+                fromDate.getddMMyyyyStringDate()?.let { stringDate ->
+                    selectionDate = getSelectionDate(stringDate)
+                }
+        } else {
+            if (toDate.isNotEmpty())
+                toDate.getddMMyyyyStringDate()?.let { stringDate ->
+                    selectionDate = getSelectionDate(stringDate)
+                }
         }
-        datePicker.addOnDismissListener {
-            // Respond to dismiss events.
-        }
+        return selectionDate
     }
 
     private fun getFormatDate(currentTime: Date): String {
-        return SimpleDateFormat(dateFormatddMMMyy, Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
+        return SimpleDateFormat(dateFormat, Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
     }
 
     private fun String.getDateFromString(): Date? {
-        return SimpleDateFormat(dateFormatddMMMyy, Locale.ENGLISH).parse(this)
+        return SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(this)
     }
 
     private fun String.getddMMyyyyStringDate(): String? {
 
         val formatter = SimpleDateFormat(dateFormatddMMyyyy, Locale.ENGLISH)
-        val date = SimpleDateFormat(dateFormatddMMMyy, Locale.ENGLISH).parse(this)
+        val date = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(this)
         if (date != null)
             return formatter.format(date)
 

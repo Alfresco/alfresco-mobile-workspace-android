@@ -23,6 +23,9 @@ data class DatePickerBuilder(
     var onFailure: DatePickerOnFailure? = null
 ) {
 
+    private val dateFormatddMMMyy = "dd-MMM-yy"
+    private val dateFormatddMMyyyy = "dd-MM-yyyy"
+
     /**
      * success callback
      */
@@ -98,17 +101,17 @@ data class DatePickerBuilder(
     }
 
     private fun getFormatDate(currentTime: Date): String {
-        return SimpleDateFormat("dd-MMM-yy", Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
+        return SimpleDateFormat(dateFormatddMMMyy, Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
     }
 
     private fun String.getDateFromString(): Date? {
-        return SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
+        return SimpleDateFormat(dateFormatddMMMyy, Locale.ENGLISH).parse(this)
     }
 
     private fun String.getddMMyyyyStringDate(): String? {
 
-        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-        val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
+        val formatter = SimpleDateFormat(dateFormatddMMyyyy, Locale.ENGLISH)
+        val date = SimpleDateFormat(dateFormatddMMMyy, Locale.ENGLISH).parse(this)
         if (date != null)
             return formatter.format(date)
 

@@ -3,20 +3,17 @@ package com.alfresco.content.search.components
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.CompositeDateValidator
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.*
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
+import kotlin.collections.ArrayList
 
 internal typealias DatePickerOnSuccess = (String) -> Unit
 internal typealias DatePickerOnFailure = () -> Unit
 
+/**
+ * Mark as DatePickerBuilder class
+ */
 data class DatePickerBuilder(
     val context: Context,
     val fromDate: String = "",
@@ -26,12 +23,21 @@ data class DatePickerBuilder(
     var onFailure: DatePickerOnFailure? = null
 ) {
 
+    /**
+     * success callback
+     */
     fun onSuccess(callback: DatePickerOnSuccess?) =
         apply { this.onSuccess = callback }
 
+    /**
+     * failure callback
+     */
     fun onFailure(callback: DatePickerOnFailure?) =
         apply { this.onFailure = callback }
 
+    /**
+     * show material date picker
+     */
     fun show() {
         val fragmentManager = when (context) {
             is AppCompatActivity -> context.supportFragmentManager
@@ -92,8 +98,7 @@ data class DatePickerBuilder(
     }
 
     private fun getFormatDate(currentTime: Date): String {
-        val timeZoneDate = SimpleDateFormat("dd-MMM-yy", Locale.getDefault(Locale.Category.DISPLAY))
-        return timeZoneDate.format(currentTime)
+        return SimpleDateFormat("dd-MMM-yy", Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
     }
 
     private fun String.getDateFromString(): Date? {

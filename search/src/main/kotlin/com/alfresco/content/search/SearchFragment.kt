@@ -231,8 +231,9 @@ class SearchFragment : Fragment(), MavericksView {
         binding.actionReset.setOnClickListener { resetAllFilters() }
     }
 
-    private fun resetAllFilters(){
-        viewModel
+    private fun resetAllFilters() = withState(viewModel) { state ->
+        val listReset = viewModel.resetChips(state)
+        applyAdvanceFilters(state.selectedFilterIndex, listReset)
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {

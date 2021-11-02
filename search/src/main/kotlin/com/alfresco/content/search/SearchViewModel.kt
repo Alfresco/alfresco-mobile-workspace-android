@@ -251,13 +251,23 @@ class SearchViewModel(
         return list
     }
 
+    fun resetChips(state: SearchResultsState): MutableList<SearchChipCategory> {
+        val list = mutableListOf<SearchChipCategory>()
+        state.listSearchCategoryChips?.forEach { obj ->
+            list.add(SearchChipCategory.resetData(obj))
+        }
+        setState { copy(listSearchCategoryChips = list) }
+
+        return list
+    }
+
     /**
      * update isSelected when chip is selected
      */
     fun updateSelected(state: SearchResultsState, model: SearchChipCategory, isSelected: Boolean) {
         val list = mutableListOf<SearchChipCategory>()
 
-        state.listSearchCategoryChips?.forEachIndexed { index, obj ->
+        state.listSearchCategoryChips?.forEach { obj ->
             if (obj == model) {
                 list.add(
                     SearchChipCategory(

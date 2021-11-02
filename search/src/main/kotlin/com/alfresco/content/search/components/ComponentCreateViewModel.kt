@@ -69,7 +69,10 @@ class ComponentCreateViewModel(
      * update single selected component option (text)
      */
     fun updateSingleComponentData(name: String) =
-        setState { copy(parent = SearchChipCategory.with(parent, name, parent.category.component?.settings?.field ?: "")) }
+        setState {
+            val query = parent.category.component?.settings?.field + ":'$name'"
+            copy(parent = SearchChipCategory.with(parent, name, query))
+        }
 
     /**
      * update single selected component option(radio)
@@ -96,8 +99,9 @@ class ComponentCreateViewModel(
             return options.default ?: false
 
         val selectedQuery = state.parent.selectedQuery
-        if (selectedQuery.contains(",")) {
-            selectedQuery.split(",").forEach { query ->
+        val delimiters = " ${state.parent.category.component?.settings?.operator} "
+        if (selectedQuery.contains(delimiters)) {
+            selectedQuery.split(delimiters).forEach { query ->
                 if (query == options.value)
                     return true
             }
@@ -113,8 +117,9 @@ class ComponentCreateViewModel(
     fun buildCheckListModel() = withState { state ->
 
         if (state.parent.selectedQuery.isNotEmpty()) {
-            if (state.parent.selectedQuery.contains(",")) {
-                val arrayQuery = state.parent.selectedQuery.split(",")
+            val delimiters = " ${state.parent.category.component?.settings?.operator} "
+            if (state.parent.selectedQuery.contains(delimiters)) {
+                val arrayQuery = state.parent.selectedQuery.split(delimiters)
                 val arrayName = state.parent.selectedName.split(",")
 
                 arrayQuery.forEachIndexed { index, query ->
@@ -139,7 +144,7 @@ class ComponentCreateViewModel(
         }
 
         val selectedName = listOptionsData.joinToString(",") { it.name }
-        val selectedQuery = listOptionsData.joinToString(",") { it.query }
+        val selectedQuery = listOptionsData.joinToString(" ${state.parent.category.component?.settings?.operator} ") { it.query }
 
         setState { copy(parent = SearchChipCategory.with(parent, selectedName, selectedQuery)) }
     }

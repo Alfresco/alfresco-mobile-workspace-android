@@ -43,15 +43,16 @@ class SearchViewModel(
     private val searchEvents: MutableStateFlow<SearchParams>
     private val appConfigModel: AppConfigModel
     private var params: SearchParams
+    var isRefreshSearch = false
 
     init {
         setState { copy(filters = defaultFilters(state)) }
 
+        appConfigModel = repository.getAppConfig()
         // TODO: move search params to state object
         params = SearchParams("", state.contextId, defaultFilters(state), defaultAdvanceFilters(state), 0)
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
-        appConfigModel = repository.getAppConfig()
 
         setState { copy(listSearchFilters = appConfigModel.search) }
 
@@ -62,7 +63,7 @@ class SearchViewModel(
                 searchEvents
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
-            }.executeOnLatest({ repository.search(it.terms, it.contextId, it.filters, it.skipCount, it.maxItems) }) {
+            }.executeOnLatest({ repository.search(it.terms, it.contextId, it.filters, it.advanceSearchFilter, it.skipCount, it.maxItems) }) {
                 if (it is Loading) {
                     copy(request = it)
                 } else {
@@ -168,10 +169,25 @@ class SearchViewModel(
     private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
         if (state.isContextual)
-            AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name)
+            list.add(AdvanceSearchFilter("+TYPE:'${SearchFilter.Contextual.name}'", SearchFilter.Contextual.name))
+        val index = appConfigModel.search?.indexOfFirst { it.default == true }
+        if (index != null)
+            list.addAll(initAdvanceFilters(index))
+        return list
+    }
 
-        list.add(AdvanceSearchFilter(SearchFilter.Files.name, SearchFilter.Files.name))
-        list.add(AdvanceSearchFilter(SearchFilter.Folders.name, SearchFilter.Folders.name))
+    /**
+     * default filters for the advance search
+     */
+    fun initAdvanceFilters(index: Int): AdvanceSearchFilters {
+        val list = emptyAdvanceFilters()
+        if (appConfigModel.search?.size ?: 0 >= index) {
+            appConfigModel.search?.get(index)?.filterQueries?.filter { it.query != null }?.map { obj ->
+                obj.query?.let { query ->
+                    list.add(AdvanceSearchFilter(query = query, name = query))
+                }
+            }
+        }
         return list
     }
 
@@ -200,13 +216,17 @@ class SearchViewModel(
         if (advanceSearchFilter != params.advanceSearchFilter) {
             params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()
+        } else if (isRefreshSearch) {
+            params = params.copy(advanceSearchFilter = emptyAdvanceFilters())
+            refresh()
+            isRefreshSearch = false
         }
     }
 
     /**
      * update chip component data after apply or reset the component
      */
-    fun updateChipComponentResult(state: SearchResultsState, model: SearchChipCategory, metaData: ComponentMetaData) {
+    fun updateChipComponentResult(state: SearchResultsState, model: SearchChipCategory, metaData: ComponentMetaData): MutableList<SearchChipCategory> {
         val list = mutableListOf<SearchChipCategory>()
 
         state.listSearchCategoryChips?.forEach { obj ->
@@ -224,6 +244,8 @@ class SearchViewModel(
         }
 
         setState { copy(listSearchCategoryChips = list) }
+
+        return list
     }
 
     /**

@@ -8,6 +8,8 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
 import com.alfresco.content.search.SearchChipCategory
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Mark as ComponentCreateState class
@@ -30,6 +32,13 @@ class ComponentCreateViewModel(
     var fromDate = ""
     var toDate = ""
     var dateFormat = ""
+    var delimiters = ""
+
+    init {
+        withState { state ->
+            delimiters = " ${state.parent.category.component?.settings?.operator} "
+        }
+    }
 
     /**
      * update the value for number range
@@ -51,7 +60,7 @@ class ComponentCreateViewModel(
     fun updateFormatDateRange() = withState {
         if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
             val dateFormat = "$fromDate - $toDate"
-            val queryFormat = "${it.parent.category.component?.settings?.field}"
+            val queryFormat = "${it.parent.category.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
             updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -69,7 +78,10 @@ class ComponentCreateViewModel(
      * update single selected component option (text)
      */
     fun updateSingleComponentData(name: String) =
-        setState { copy(parent = SearchChipCategory.with(parent, name, parent.category.component?.settings?.field ?: "")) }
+        setState {
+            val query = parent.category.component?.settings?.field + ":'$name'"
+            copy(parent = SearchChipCategory.with(parent, name, query))
+        }
 
     /**
      * update single selected component option(radio)
@@ -96,8 +108,8 @@ class ComponentCreateViewModel(
             return options.default ?: false
 
         val selectedQuery = state.parent.selectedQuery
-        if (selectedQuery.contains(",")) {
-            selectedQuery.split(",").forEach { query ->
+        if (selectedQuery.contains(delimiters)) {
+            selectedQuery.split(delimiters).forEach { query ->
                 if (query == options.value)
                     return true
             }
@@ -113,8 +125,8 @@ class ComponentCreateViewModel(
     fun buildCheckListModel() = withState { state ->
 
         if (state.parent.selectedQuery.isNotEmpty()) {
-            if (state.parent.selectedQuery.contains(",")) {
-                val arrayQuery = state.parent.selectedQuery.split(",")
+            if (state.parent.selectedQuery.contains(delimiters)) {
+                val arrayQuery = state.parent.selectedQuery.split(delimiters)
                 val arrayName = state.parent.selectedName.split(",")
 
                 arrayQuery.forEachIndexed { index, query ->
@@ -139,7 +151,7 @@ class ComponentCreateViewModel(
         }
 
         val selectedName = listOptionsData.joinToString(",") { it.name }
-        val selectedQuery = listOptionsData.joinToString(",") { it.query }
+        val selectedQuery = listOptionsData.joinToString(delimiters) { it.query }
 
         setState { copy(parent = SearchChipCategory.with(parent, selectedName, selectedQuery)) }
     }
@@ -176,4 +188,17 @@ class ComponentCreateViewModel(
             state: ComponentCreateState
         ) = ComponentCreateViewModel(viewModelContext.activity(), state)
     }
+}
+
+/**
+ * returns formatted date string for query
+ */
+fun String.getQueryFormat(): String {
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
+    if (date != null)
+        return formatter.format(date)
+
+    return this
 }

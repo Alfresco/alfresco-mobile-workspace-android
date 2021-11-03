@@ -32,6 +32,13 @@ class ComponentCreateViewModel(
     var fromDate = ""
     var toDate = ""
     var dateFormat = ""
+    var delimiters = ""
+
+    init {
+        withState { state ->
+            delimiters = " ${state.parent.category.component?.settings?.operator} "
+        }
+    }
 
     /**
      * update the value for number range
@@ -101,9 +108,8 @@ class ComponentCreateViewModel(
             return options.default ?: false
 
         val selectedQuery = state.parent.selectedQuery
-        val delimitersOperator = " ${state.parent.category.component?.settings?.operator} "
-        if (selectedQuery.contains(delimitersOperator)) {
-            selectedQuery.split(delimitersOperator).forEach { query ->
+        if (selectedQuery.contains(delimiters)) {
+            selectedQuery.split(delimiters).forEach { query ->
                 if (query == options.value)
                     return true
             }
@@ -119,7 +125,6 @@ class ComponentCreateViewModel(
     fun buildCheckListModel() = withState { state ->
 
         if (state.parent.selectedQuery.isNotEmpty()) {
-            val delimiters = " ${state.parent.category.component?.settings?.operator} "
             if (state.parent.selectedQuery.contains(delimiters)) {
                 val arrayQuery = state.parent.selectedQuery.split(delimiters)
                 val arrayName = state.parent.selectedName.split(",")
@@ -146,7 +151,7 @@ class ComponentCreateViewModel(
         }
 
         val selectedName = listOptionsData.joinToString(",") { it.name }
-        val selectedQuery = listOptionsData.joinToString(" ${state.parent.category.component?.settings?.operator} ") { it.query }
+        val selectedQuery = listOptionsData.joinToString(delimiters) { it.query }
 
         setState { copy(parent = SearchChipCategory.with(parent, selectedName, selectedQuery)) }
     }

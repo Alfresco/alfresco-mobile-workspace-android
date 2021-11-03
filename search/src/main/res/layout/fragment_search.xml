@@ -62,7 +62,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/advance_search_title"
-            android:src="@drawable/ic_reset"
+            android:src="@drawable/ic_component_reset"
             app:layout_constraintBottom_toBottomOf="@id/rl_drop_down_search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/rl_drop_down_search" />

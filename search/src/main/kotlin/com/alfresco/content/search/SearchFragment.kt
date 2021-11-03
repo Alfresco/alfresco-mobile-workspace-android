@@ -202,8 +202,15 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->
-            if (state.selectedFilterIndex == -1)
-                viewModel.copyFilterIndex(viewModel.getDefaultSearchFilterIndex(state.listSearchFilters))
+            var index = state.selectedFilterIndex
+            if (state.selectedFilterIndex == -1) {
+                index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                viewModel.copyFilterIndex(index)
+            }
+            when (searchFilters?.get(index)?.resetButton) {
+                true -> binding.actionReset.visibility = View.VISIBLE
+                false -> binding.actionReset.visibility = View.GONE
+            }
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
@@ -310,6 +317,7 @@ class SearchFragment : Fragment(), MavericksView {
 
         if (filterIndex != -1) {
             val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
+
             var contextualSearchChipCategory: SearchChipCategory? = null
             if (state.filters.contains(SearchFilter.Contextual)) {
                 contextualSearchChipCategory = SearchChipCategory.withContextual(

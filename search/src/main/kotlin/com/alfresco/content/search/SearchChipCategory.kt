@@ -46,6 +46,9 @@ data class SearchChipCategory(
             )
         }
 
+        /**
+         * returns the default searchChipCategory object
+         */
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,

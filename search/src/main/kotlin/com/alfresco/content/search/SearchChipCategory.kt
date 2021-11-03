@@ -45,5 +45,17 @@ data class SearchChipCategory(
                 selectedQuery = "+TYPE:'${contextual.name}'"
             )
         }
+
+        /**
+         * returns the default searchChipCategory object
+         */
+        fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
+            return SearchChipCategory(
+                category = searchChipCategory.category,
+                isSelected = searchChipCategory.category.component == null,
+                selectedName = "",
+                selectedQuery = ""
+            )
+        }
     }
 }

@@ -106,11 +106,11 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
-                binding.rlDropDownSearch.visibility = View.VISIBLE
+                binding.parentAdvanceSearch.visibility = View.VISIBLE
                 binding.chipGroup.visibility = View.GONE
                 setupDropDown()
             } else {
-                binding.rlDropDownSearch.visibility = View.GONE
+                binding.parentAdvanceSearch.visibility = View.GONE
                 binding.chipGroup.visibility = View.VISIBLE
                 setupChips()
             }
@@ -202,8 +202,15 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->
-            if (state.selectedFilterIndex == -1)
-                viewModel.copyFilterIndex(viewModel.getDefaultSearchFilterIndex(state.listSearchFilters))
+            var index = state.selectedFilterIndex
+            if (state.selectedFilterIndex == -1) {
+                index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                viewModel.copyFilterIndex(index)
+            }
+            when (searchFilters?.get(index)?.resetButton) {
+                true -> binding.actionReset.visibility = View.VISIBLE
+                false -> binding.actionReset.visibility = View.GONE
+            }
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
@@ -228,6 +235,12 @@ class SearchFragment : Fragment(), MavericksView {
             }
         }
         binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        binding.actionReset.setOnClickListener { resetAllFilters() }
+    }
+
+    private fun resetAllFilters() = withState(viewModel) { state ->
+        val listReset = viewModel.resetChips(state)
+        applyAdvanceFilters(state.selectedFilterIndex, listReset)
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
@@ -304,6 +317,7 @@ class SearchFragment : Fragment(), MavericksView {
 
         if (filterIndex != -1) {
             val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
+
             var contextualSearchChipCategory: SearchChipCategory? = null
             if (state.filters.contains(SearchFilter.Contextual)) {
                 contextualSearchChipCategory = SearchChipCategory.withContextual(

@@ -8,6 +8,8 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
 import com.alfresco.content.search.SearchChipCategory
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Mark as ComponentCreateState class
@@ -51,7 +53,7 @@ class ComponentCreateViewModel(
     fun updateFormatDateRange() = withState {
         if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
             val dateFormat = "$fromDate - $toDate"
-            val queryFormat = "${it.parent.category.component?.settings?.field}"
+            val queryFormat = "${it.parent.category.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
             updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -181,4 +183,17 @@ class ComponentCreateViewModel(
             state: ComponentCreateState
         ) = ComponentCreateViewModel(viewModelContext.activity(), state)
     }
+}
+
+/**
+ * returns formatted date string for query
+ */
+fun String.getQueryFormat(): String {
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
+    if (date != null)
+        return formatter.format(date)
+
+    return this
 }

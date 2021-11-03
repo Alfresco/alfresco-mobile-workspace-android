@@ -26,8 +26,7 @@ dependencies {
     implementation project(':theme')
     implementation project(':listview')
 
-    implementation project(':content')
-//    implementation libs.alfresco.content
+    implementation libs.alfresco.content
 
     implementation libs.coroutines.core
     implementation libs.androidx.appcompat

@@ -173,7 +173,6 @@ class SearchViewModel(
         val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null)
             list.addAll(initAdvanceFilters(index))
-        println("type filter query default $list")
         return list
     }
 
@@ -189,7 +188,6 @@ class SearchViewModel(
                 }
             }
         }
-        println("type filter query initial $list")
         return list
     }
 
@@ -215,7 +213,6 @@ class SearchViewModel(
      */
     fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
         // Avoid triggering refresh when filters don't change
-        println("type filter query == ${advanceSearchFilter != params.advanceSearchFilter} == $isRefreshSearch")
         if (advanceSearchFilter != params.advanceSearchFilter) {
             params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()

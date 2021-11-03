@@ -30,6 +30,9 @@ data class SearchChipCategory(
             )
         }
 
+        /**
+         * returns the contextual searchChipCategory object
+         */
         fun withContextual(name: String, contextual: SearchFilter): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(

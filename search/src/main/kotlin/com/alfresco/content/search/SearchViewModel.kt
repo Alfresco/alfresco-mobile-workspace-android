@@ -173,23 +173,21 @@ class SearchViewModel(
         val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null)
             list.addAll(initAdvanceFilters(index))
-        println("type filter query default $list")
         return list
     }
 
+    /**
+     * default filters for the advance search
+     */
     fun initAdvanceFilters(index: Int): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
         if (appConfigModel.search?.size ?: 0 >= index) {
-            val selectedSearchObj = appConfigModel.search?.get(index)
-            selectedSearchObj?.let { searchItem ->
-                searchItem.filterQueries?.forEach { filterQueries ->
-                    filterQueries.query?.let { query ->
-                        list.add(AdvanceSearchFilter(query = query, name = query))
-                    }
+            appConfigModel.search?.get(index)?.filterQueries?.filter { it.query != null }?.map { obj ->
+                obj.query?.let { query ->
+                    list.add(AdvanceSearchFilter(query = query, name = query))
                 }
             }
         }
-        println("type filter query initial $list")
         return list
     }
 
@@ -215,7 +213,6 @@ class SearchViewModel(
      */
     fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
         // Avoid triggering refresh when filters don't change
-        println("type filter query == ${advanceSearchFilter != params.advanceSearchFilter} == $isRefreshSearch")
         if (advanceSearchFilter != params.advanceSearchFilter) {
             params = params.copy(advanceSearchFilter = advanceSearchFilter)
             refresh()

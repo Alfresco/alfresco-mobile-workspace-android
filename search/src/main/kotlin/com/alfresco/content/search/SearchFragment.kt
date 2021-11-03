@@ -364,7 +364,6 @@ class SearchFragment : Fragment(), MavericksView {
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = showComponentSheetDialog(requireContext(), data)
-                    println("type filter query result = $result")
                     if (result != null) {
                         val resultList = viewModel.updateChipComponentResult(state, data, result)
                         applyAdvanceFilters(state.selectedFilterIndex, resultList)
@@ -423,7 +422,6 @@ class SearchFragment : Fragment(), MavericksView {
         advanceSearchFilter.addAll(viewModel.initAdvanceFilters(position))
 
         list.forEach { if (it.isSelected) advanceSearchFilter.add(AdvanceSearchFilter(it.selectedQuery, it.selectedName)) }
-        println("type filter query list $advanceSearchFilter")
         resultsFragment.setFilters(advanceSearchFilter)
     }
 }

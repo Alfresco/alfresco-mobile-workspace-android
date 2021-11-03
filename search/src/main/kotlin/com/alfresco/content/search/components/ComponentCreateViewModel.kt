@@ -101,9 +101,9 @@ class ComponentCreateViewModel(
             return options.default ?: false
 
         val selectedQuery = state.parent.selectedQuery
-        val delimiters = " ${state.parent.category.component?.settings?.operator} "
-        if (selectedQuery.contains(delimiters)) {
-            selectedQuery.split(delimiters).forEach { query ->
+        val delimitersOperator = " ${state.parent.category.component?.settings?.operator} "
+        if (selectedQuery.contains(delimitersOperator)) {
+            selectedQuery.split(delimitersOperator).forEach { query ->
                 if (query == options.value)
                     return true
             }

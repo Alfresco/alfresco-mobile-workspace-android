@@ -176,15 +176,15 @@ class SearchViewModel(
         return list
     }
 
+    /**
+     * default filters for the advance search
+     */
     fun initAdvanceFilters(index: Int): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
         if (appConfigModel.search?.size ?: 0 >= index) {
-            val selectedSearchObj = appConfigModel.search?.get(index)
-            selectedSearchObj?.let { searchItem ->
-                searchItem.filterQueries?.forEach { filterQueries ->
-                    filterQueries.query?.let { query ->
-                        list.add(AdvanceSearchFilter(query = query, name = query))
-                    }
+            appConfigModel.search?.get(index)?.filterQueries?.filter { it.query != null }?.map { obj ->
+                obj.query?.let { query ->
+                    list.add(AdvanceSearchFilter(query = query, name = query))
                 }
             }
         }

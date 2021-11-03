@@ -39,7 +39,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         skipCount: Int,
         maxItems: Int
     ) = if (filters.contains(SearchFilter.Libraries)) {
-        println("type filter query libraries")
         ResponsePaging.with(
             queryService.findSites(
                 terms,
@@ -48,7 +47,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             )
         )
     } else if (advanceSearchFilters.isNotEmpty()) {
-        println("type filter query advance")
         ResponsePaging.with(
             searchService.advanceSearch(
                 terms,
@@ -59,7 +57,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             )
         )
     } else {
-        println("type filter query simple")
         ResponsePaging.with(
             searchService.simpleSearch(
                 terms,

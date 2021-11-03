@@ -248,6 +248,9 @@ class SearchViewModel(
         return list
     }
 
+    /**
+     * reset all the selected filters to default values
+     */
     fun resetChips(state: SearchResultsState): MutableList<SearchChipCategory> {
         val list = mutableListOf<SearchChipCategory>()
         state.listSearchCategoryChips?.forEach { obj ->

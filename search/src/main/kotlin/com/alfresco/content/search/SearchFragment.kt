@@ -20,14 +20,14 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
-import com.alfresco.Logger
+import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
+import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.search.components.ComponentBuilder
 import com.alfresco.content.search.components.ComponentMetaData
 import com.alfresco.content.search.databinding.FragmentSearchBinding
@@ -106,11 +106,11 @@ class SearchFragment : Fragment(), MavericksView {
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
-                binding.rlDropDownSearch.visibility = View.VISIBLE
+                binding.parentAdvanceSearch.visibility = View.VISIBLE
                 binding.chipGroup.visibility = View.GONE
                 setupDropDown()
             } else {
-                binding.rlDropDownSearch.visibility = View.GONE
+                binding.parentAdvanceSearch.visibility = View.GONE
                 binding.chipGroup.visibility = View.VISIBLE
                 setupChips()
             }
@@ -118,9 +118,7 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-
         setSearchFilterLocalizedName(state)
-
         epoxyController.requestModelBuild()
     }
 
@@ -204,18 +202,45 @@ class SearchFragment : Fragment(), MavericksView {
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->
-            if (state.selectedFilterIndex == -1)
-                viewModel.copyFilterIndex(viewModel.getDefaultSearchFilterIndex(state.listSearchFilters))
+            var index = state.selectedFilterIndex
+            if (state.selectedFilterIndex == -1) {
+                index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                viewModel.copyFilterIndex(index)
+            }
+            when (searchFilters?.get(index)?.resetButton) {
+                true -> binding.actionReset.visibility = View.VISIBLE
+                false -> binding.actionReset.visibility = View.GONE
+            }
         }
 
         searchFilterPopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            viewModel.copyFilterIndex(position)
-            viewModel.updateSearchChipCategoryList(position)
-            setSelectedFilterData()
-            searchFilterPopup.dismiss()
-        }
+            withState(viewModel) { state ->
+                if (state.selectedFilterIndex != position) {
+                    viewModel.isRefreshSearch = true
+                    viewModel.copyFilterIndex(position)
+                    viewModel.updateSearchChipCategoryList(position)
+                    setSelectedFilterData()
 
+                    val listSearchChip = mutableListOf<SearchChipCategory>()
+                    if (state.isContextual)
+                        listSearchChip.add(
+                            SearchChipCategory.withContextual(
+                                getString(R.string.search_chip_contextual, state.contextTitle),
+                                SearchFilter.Contextual
+                            )
+                        )
+                    applyAdvanceFilters(position, listSearchChip)
+                }
+                searchFilterPopup.dismiss()
+            }
+        }
         binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        binding.actionReset.setOnClickListener { resetAllFilters() }
+    }
+
+    private fun resetAllFilters() = withState(viewModel) { state ->
+        val listReset = viewModel.resetChips(state)
+        applyAdvanceFilters(state.selectedFilterIndex, listReset)
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
@@ -292,14 +317,12 @@ class SearchFragment : Fragment(), MavericksView {
 
         if (filterIndex != -1) {
             val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
+
             var contextualSearchChipCategory: SearchChipCategory? = null
             if (state.filters.contains(SearchFilter.Contextual)) {
-
-                contextualSearchChipCategory = SearchChipCategory(
-                    CategoriesItem(
-                        name = getString(R.string.search_chip_contextual, state.contextTitle), expanded = null,
-                        component = null, enabled = null, id = SearchFilter.Contextual.toString()
-                    ), true
+                contextualSearchChipCategory = SearchChipCategory.withContextual(
+                    getString(R.string.search_chip_contextual, state.contextTitle),
+                    SearchFilter.Contextual
                 )
             }
             if (!searchChipCategory.isNullOrEmpty()) {
@@ -316,6 +339,14 @@ class SearchFragment : Fragment(), MavericksView {
                         clickListener { model, _, chipView, _ ->
                             if (model.data().category.component != null)
                                 onChipClicked(model.data(), chipView)
+                            else {
+                                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked) {
+                                    ComponentMetaData(SearchFilter.Contextual.name, "+TYPE:'${SearchFilter.Contextual.name}'")
+                                } else
+                                    ComponentMetaData("", "")
+                                val resultList = viewModel.updateChipComponentResult(state, model.data(), result)
+                                applyAdvanceFilters(state.selectedFilterIndex, resultList)
+                            }
                         }
                     }
                 }
@@ -333,9 +364,9 @@ class SearchFragment : Fragment(), MavericksView {
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = showComponentSheetDialog(requireContext(), data)
-                    Logger.d("component result = ", result)
                     if (result != null) {
-                        viewModel.updateChipComponentResult(state, data, result)
+                        val resultList = viewModel.updateChipComponentResult(state, data, result)
+                        applyAdvanceFilters(state.selectedFilterIndex, resultList)
                     } else {
                         val isSelected = data.selectedName.isNotEmpty()
                         viewModel.updateSelected(state, data, isSelected)
@@ -383,5 +414,14 @@ class SearchFragment : Fragment(), MavericksView {
             filter = filter and SearchFilter.Libraries
         }
         resultsFragment.setFilters(filter)
+    }
+
+    private fun applyAdvanceFilters(position: Int, list: MutableList<SearchChipCategory>) {
+        val advanceSearchFilter = emptyAdvanceFilters()
+
+        advanceSearchFilter.addAll(viewModel.initAdvanceFilters(position))
+
+        list.forEach { if (it.isSelected) advanceSearchFilter.add(AdvanceSearchFilter(it.selectedQuery, it.selectedName)) }
+        resultsFragment.setFilters(advanceSearchFilter)
     }
 }

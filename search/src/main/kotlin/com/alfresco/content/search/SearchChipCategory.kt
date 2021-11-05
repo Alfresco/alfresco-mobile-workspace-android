@@ -1,6 +1,7 @@
 package com.alfresco.content.search
 
 import android.os.Parcelable
+import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.models.CategoriesItem
 import kotlinx.parcelize.Parcelize
 
@@ -26,6 +27,34 @@ data class SearchChipCategory(
                 isSelected = searchChipCategory.isSelected,
                 selectedName = name,
                 selectedQuery = query
+            )
+        }
+
+        /**
+         * returns the contextual searchChipCategory object
+         */
+        fun withContextual(name: String, contextual: SearchFilter): SearchChipCategory {
+            return SearchChipCategory(
+                category = CategoriesItem(
+                    name = name, expanded = null,
+                    component = null, enabled = null,
+                    id = contextual.toString()
+                ),
+                isSelected = true,
+                selectedName = contextual.name,
+                selectedQuery = "+TYPE:'${contextual.name}'"
+            )
+        }
+
+        /**
+         * returns the default searchChipCategory object
+         */
+        fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
+            return SearchChipCategory(
+                category = searchChipCategory.category,
+                isSelected = searchChipCategory.category.component == null,
+                selectedName = "",
+                selectedQuery = ""
             )
         }
     }

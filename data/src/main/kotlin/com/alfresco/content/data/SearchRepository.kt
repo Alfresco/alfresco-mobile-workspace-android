@@ -3,10 +3,12 @@ package com.alfresco.content.data
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.alfresco.content.apis.AdvanceSearchInclude
 import com.alfresco.content.apis.AppConfigApi
 import com.alfresco.content.apis.QueriesApi
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.apis.SearchInclude
+import com.alfresco.content.apis.advanceSearch
 import com.alfresco.content.apis.recentFiles
 import com.alfresco.content.apis.simpleSearch
 import com.alfresco.content.models.AppConfigModel
@@ -33,6 +35,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         terms: String,
         nodeId: String?,
         filters: SearchFilters,
+        advanceSearchFilters: AdvanceSearchFilters,
         skipCount: Int,
         maxItems: Int
     ) = if (filters.contains(SearchFilter.Libraries)) {
@@ -41,6 +44,16 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 terms,
                 skipCount,
                 maxItems
+            )
+        )
+    } else if (advanceSearchFilters.isNotEmpty()) {
+        ResponsePaging.with(
+            searchService.advanceSearch(
+                terms,
+                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+                skipCount,
+                maxItems,
+                includeFrom(advanceSearchFilters)
             )
         )
     } else {
@@ -62,6 +75,11 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 SearchFilter.Folders -> SearchInclude.Folders
                 else -> null
             }
+        }
+
+    private fun includeFrom(advanceSearchFilters: AdvanceSearchFilters) =
+        advanceSearchFilters.mapTo(mutableSetOf()) {
+            AdvanceSearchInclude(name = it.name, query = it.query)
         }
 
     suspend fun getRecents(skipCount: Int, maxItems: Int) =

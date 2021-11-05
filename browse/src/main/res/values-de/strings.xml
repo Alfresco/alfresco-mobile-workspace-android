@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
+
 <resources>
     <string name="browse_menu_personal">Persönliche Dateien</string>
     <string name="browse_menu_my_libraries">Meine Bibliotheken</string>

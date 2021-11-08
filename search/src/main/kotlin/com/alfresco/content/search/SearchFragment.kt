@@ -218,7 +218,6 @@ class SearchFragment : Fragment(), MavericksView {
                 if (state.selectedFilterIndex != position) {
                     viewModel.isRefreshSearch = true
                     viewModel.copyFilterIndex(position)
-//                    viewModel.updateSearchChipCategoryList(position)
                     setSelectedFilterData()
 
                     val listSearchChip = mutableListOf<SearchChipCategory>()
@@ -240,7 +239,14 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun resetAllFilters() = withState(viewModel) { state ->
         val listReset = viewModel.resetChips(state)
+        scrollToTop()
         applyAdvanceFilters(state.selectedFilterIndex, listReset)
+    }
+
+    private fun scrollToTop() {
+        if (isResumed) {
+            binding.recyclerViewChips.layoutManager?.scrollToPosition(0)
+        }
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
@@ -318,19 +324,7 @@ class SearchFragment : Fragment(), MavericksView {
         if (filterIndex != -1) {
             val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
 
-            /*var contextualSearchChipCategory: SearchChipCategory? = null
-            if (state.filters.contains(SearchFilter.Contextual)) {
-                contextualSearchChipCategory = SearchChipCategory.withContextual(
-                    getString(R.string.search_chip_contextual, state.contextTitle),
-                    SearchFilter.Contextual
-                )
-            }*/
-
             if (!searchChipCategory.isNullOrEmpty()) {
-
-                /*contextualSearchChipCategory?.let {
-                    searchChipCategory.add(0, it)
-                }*/
 
                 searchChipCategory.forEach { item ->
                     val modelID = filterIndex.toString() + item.category.id

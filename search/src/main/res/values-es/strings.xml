@@ -14,4 +14,24 @@
 
     <string name="search_empty_title">¡Vaya!</string>
     <string name="search_empty_message">No encontramos el fichero\nque busca.</string>
+
+    <string name="advance_search_title">Búsqueda avanzada</string>
+    <string name="default_search">Predeterminado</string>
+    <string name="folder">Carpeta</string>
+    <string name="title_text_filter">Filtro de texto</string>
+    <string name="title_file_type">Tipo de fichero</string>
+    <string name="title_number_range">Rango de tamaño</string>
+    <string name="title_slider">Tamaño (MB)</string>
+    <string name="title_choose_date">Elegir fechas</string>
+    <string name="component_action_reset">Re&amp;stablecer</string>
+    <string name="component_action_apply">Aplicar</string>
+    <string name="component_action_cancel">Cancelar</string>
+    <string name="app.search.radio.none">Ninguno</string>
+    <string name="app.search.radio.all">Todos</string>
+    <string name="app.search.radio.folder">Carpeta</string>
+    <string name="app.search.radio.document">Documento</string>
+    <string name="component_number_range_empty">Valor requerido</string>
+    <string name="component_number_range_invalid_input">El valor De debe ser menor que el valor A</string>
+    <string name="hint_number_range_from">De</string>
+    <string name="hint_number_range_to">A</string>
 </resources>

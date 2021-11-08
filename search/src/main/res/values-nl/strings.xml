@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Recente zoekopdrachten</string>
 
-    <string name="search_loading_message">Zoeken...</string>
+    <string name="search_loading_message">Zoeken&#8230;</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Bestanden</string>
@@ -14,4 +14,24 @@
 
     <string name="search_empty_title">Oeps!</string>
     <string name="search_empty_message">Het bestand dat u zoekt\nis niet gevonden.</string>
+
+    <string name="advance_search_title">Geavanceerd zoeken</string>
+    <string name="default_search">Standaard</string>
+    <string name="folder">Map</string>
+    <string name="title_text_filter">Tekstfilter</string>
+    <string name="title_file_type">Bestandstype</string>
+    <string name="title_number_range">Getallenbereik</string>
+    <string name="title_slider">Grootte (MB)</string>
+    <string name="title_choose_date">Datums kiezen</string>
+    <string name="component_action_reset">Opnieuw instellen</string>
+    <string name="component_action_apply">Toepassen</string>
+    <string name="component_action_cancel">Annuleren</string>
+    <string name="app.search.radio.none">Geen</string>
+    <string name="app.search.radio.all">Alle</string>
+    <string name="app.search.radio.folder">Map</string>
+    <string name="app.search.radio.document">Document</string>
+    <string name="component_number_range_empty">Vereiste waarde</string>
+    <string name="component_number_range_invalid_input">Van-waarde moet kleiner zijn dan Tot-waarde</string>
+    <string name="hint_number_range_from">Van</string>
+    <string name="hint_number_range_to">Tot</string>
 </resources>

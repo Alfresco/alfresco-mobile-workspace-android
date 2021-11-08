@@ -14,7 +14,7 @@
     <string name="capture_description_hint">Añadir descripción</string>
     <string name="capture_delete_photo_alt">Eliminar foto</string>
     <string name="capture_save_button">Guardar</string>
-    <string name="capture_file_name_invalid_chars">El nombre del fichero no puede contener ninguno de los siguientes caracteres: ?:\"*|/\&lt;></string>
+    <string name="capture_file_name_invalid_chars">El nombre del fichero no puede contener ninguno de los siguientes caracteres: ?: \"*|/\&lt;></string>
     <string name="capture_file_name_empty">El nombre del fichero no puede estar vacío.</string>
 
     <string name="capture_nav_save_title">Vista previa</string>
@@ -25,4 +25,7 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Para capturar contenido multimedia, active los permisos de Cámara y Micrófono.</string>
+    <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
+    <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
+
 </resources>

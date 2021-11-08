@@ -14,4 +14,24 @@
 
     <string name="search_empty_title">Oups !</string>
     <string name="search_empty_message">Nous n\'avons pas trouvé le fichier\nque vous recherchez.</string>
+
+    <string name="advance_search_title">Recherche avancée</string>
+    <string name="default_search">Par défaut</string>
+    <string name="folder">Dossier</string>
+    <string name="title_text_filter">Filtre texte</string>
+    <string name="title_file_type">Type de fichier</string>
+    <string name="title_number_range">Gamme de taille</string>
+    <string name="title_slider">Taille (MB)</string>
+    <string name="title_choose_date">Choisir les dates</string>
+    <string name="component_action_reset">Réinitialiser</string>
+    <string name="component_action_apply">Appliquer</string>
+    <string name="component_action_cancel">Annuler</string>
+    <string name="app.search.radio.none">Aucun(e)</string>
+    <string name="app.search.radio.all">Tout</string>
+    <string name="app.search.radio.folder">Dossier</string>
+    <string name="app.search.radio.document">Document</string>
+    <string name="component_number_range_empty">Valeur requise</string>
+    <string name="component_number_range_invalid_input">La valeur De doit être inférieure à la valeur A</string>
+    <string name="hint_number_range_from">De</string>
+    <string name="hint_number_range_to">A</string>
 </resources>

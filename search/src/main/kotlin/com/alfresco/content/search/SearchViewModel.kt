@@ -1,5 +1,6 @@
 package com.alfresco.content.search
 
+import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
@@ -36,6 +37,7 @@ data class SearchParams(
 )
 
 class SearchViewModel(
+    val context: Context,
     state: SearchResultsState,
     private val repository: SearchRepository
 ) : ListViewModel<SearchResultsState>(state) {
@@ -46,6 +48,7 @@ class SearchViewModel(
     var isRefreshSearch = false
 
     init {
+
         setState { copy(filters = defaultFilters(state)) }
 
         appConfigModel = repository.getAppConfig()
@@ -110,14 +113,25 @@ class SearchViewModel(
     /**
      * updated the search chip for relative filter by selecting it from dropdown
      */
-    fun updateSearchChipCategoryList(index: Int) {
+    fun updateSearchChipCategoryList(index: Int) = withState { state ->
         val list = mutableListOf<SearchChipCategory>()
 
         getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
             list.add(SearchChipCategory(categoryItem, false))
         }
 
-        setState { copy(listSearchCategoryChips = list) }
+        if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
+            list.add(
+                0, SearchChipCategory.withContextual(
+                    context.getString(R.string.search_chip_contextual, state.contextTitle),
+                    SearchFilter.Contextual
+                )
+            )
+        }
+
+        setState {
+            copy(listSearchCategoryChips = list)
+        }
     }
 
     /**
@@ -169,7 +183,7 @@ class SearchViewModel(
     private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
         if (state.isContextual)
-            list.add(AdvanceSearchFilter("+TYPE:'${SearchFilter.Contextual.name}'", SearchFilter.Contextual.name))
+            list.add(AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name))
         val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null)
             list.addAll(initAdvanceFilters(index))
@@ -254,7 +268,9 @@ class SearchViewModel(
     fun resetChips(state: SearchResultsState): MutableList<SearchChipCategory> {
         val list = mutableListOf<SearchChipCategory>()
         state.listSearchCategoryChips?.forEach { obj ->
-            list.add(SearchChipCategory.resetData(obj))
+            if (obj.selectedQuery == SearchFilter.Contextual.name)
+                list.add(obj)
+            else list.add(SearchChipCategory.resetData(obj))
         }
         setState { copy(listSearchCategoryChips = list) }
 
@@ -308,6 +324,6 @@ class SearchViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchResultsState
-        ) = SearchViewModel(state, SearchRepository())
+        ) = SearchViewModel(viewModelContext.activity, state, SearchRepository())
     }
 }

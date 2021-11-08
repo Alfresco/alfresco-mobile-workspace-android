@@ -49,7 +49,7 @@
     <string name="action_folder_create">Crear</string>
 
     <string name="action_folder_name_hint">Nombre</string>
-    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?:\"*|/\&lt;></string>
+    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: \"*|/\&lt;></string>
     <string name="action_folder_name_empty">El nombre de la carpeta no puede estar vacío.</string>
 
 </resources>

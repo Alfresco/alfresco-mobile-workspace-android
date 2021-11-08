@@ -25,10 +25,7 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Pour capturer un fichier multimédia, activez les autorisations pour l\'appareil photo et le microphone.</string>
-
-    <string name="discard_title">Supprimer les éléments capturés ?</string>
-    <string name="discard_subtitle">%d fichiers multimédia seront supprimés si vous quittez.</string>
-    <string name="discard_confirmation_negative">Annuler</string>
-    <string name="discard_confirmation_positive">Supprimer</string>
+    <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
+    <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
 
 </resources>

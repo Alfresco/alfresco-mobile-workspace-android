@@ -25,10 +25,7 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Para capturar contenido multimedia, active los permisos de Cámara y Micrófono.</string>
-
-    <string name="discard_title">¿Desea descartar las fotos y vídeos?</string>
-    <string name="discard_subtitle">Si sale, se descartarán %d ficheros multimedia.</string>
-    <string name="discard_confirmation_negative">Cancelar</string>
-    <string name="discard_confirmation_positive">Descartar</string>
+    <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
+    <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
 
 </resources>

@@ -25,10 +25,7 @@
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
     <string name="capture_failure_permissions">Schakel de rechten voor Camera en Microfoon in om media vast te leggen.</string>
-
-    <string name="discard_title">Opnamen verwijderen?</string>
-    <string name="discard_subtitle">%d mediabestanden worden verwijderd als u afsluit.</string>
-    <string name="discard_confirmation_negative">Annuleren</string>
-    <string name="discard_confirmation_positive">Verwijderen</string>
+    <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
+    <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
 
 </resources>

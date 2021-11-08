@@ -33,6 +33,7 @@ data class DatePickerBuilder(
 
     private val dateFormatddMMMyy = "dd-MMM-yy"
     private val dateFormatddMMyyyy = "dd-MM-yyyy"
+    private val addOneDay = 1000 * 60 * 60 * 24
 
     init {
         if (dateFormat.isEmpty())
@@ -85,7 +86,7 @@ data class DatePickerBuilder(
         if (isFrom) {
             if (toDate.isNotEmpty())
                 toDate.getDateFromString()?.let { date ->
-                    endDate = date.time
+                    endDate = Date(date.time.plus(addOneDay)).time
                 }
         } else {
             if (fromDate.isNotEmpty())

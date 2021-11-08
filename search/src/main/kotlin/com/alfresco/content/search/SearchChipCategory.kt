@@ -41,8 +41,8 @@ data class SearchChipCategory(
                     id = contextual.toString()
                 ),
                 isSelected = true,
-                selectedName = contextual.name,
-                selectedQuery = "+TYPE:'${contextual.name}'"
+                selectedName = name,
+                selectedQuery = contextual.name
             )
         }
 

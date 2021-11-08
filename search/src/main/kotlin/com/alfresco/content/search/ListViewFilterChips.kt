@@ -31,6 +31,8 @@ class ListViewFilterChips @JvmOverloads constructor(
     fun setData(dataObj: SearchChipCategory) {
         binding.chip.uncheck(false)
 
+        println("ListViewFilterChips.setData ${dataObj.category.name}")
+
         if (dataObj.category.id == SearchFilter.Contextual.toString()) {
             binding.chip.isChecked = true
         }

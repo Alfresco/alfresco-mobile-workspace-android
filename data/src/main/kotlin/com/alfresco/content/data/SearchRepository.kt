@@ -50,7 +50,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         ResponsePaging.with(
             searchService.advanceSearch(
                 terms,
-                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+                if (getNodeID(advanceSearchFilters)) nodeId else null,
                 skipCount,
                 maxItems,
                 includeFrom(advanceSearchFilters)
@@ -68,6 +68,13 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {
+        val isContextual = advanceSearchFilters.find {
+            it.query == SearchFilter.Contextual.name
+        }
+        return isContextual != null
+    }
+
     private fun includeFrom(filters: SearchFilters) =
         filters.mapNotNullTo(mutableSetOf()) {
             when (it) {
@@ -77,10 +84,15 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             }
         }
 
-    private fun includeFrom(advanceSearchFilters: AdvanceSearchFilters) =
-        advanceSearchFilters.mapTo(mutableSetOf()) {
+    private fun includeFrom(advanceSearchFilters: AdvanceSearchFilters): MutableSet<AdvanceSearchInclude> {
+
+        val listFilter = advanceSearchFilters.filter { it.query != SearchFilter.Contextual.name }
+
+        val advanceSet = listFilter.mapTo(mutableSetOf()) {
             AdvanceSearchInclude(name = it.name, query = it.query)
         }
+        return advanceSet
+    }
 
     suspend fun getRecents(skipCount: Int, maxItems: Int) =
         ResponsePaging.with(

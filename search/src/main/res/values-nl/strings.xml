@@ -17,12 +17,6 @@
 
     <string name="advance_search_title">Geavanceerd zoeken</string>
     <string name="default_search">Standaard</string>
-    <string name="folder">Map</string>
-    <string name="title_text_filter">Tekstfilter</string>
-    <string name="title_file_type">Bestandstype</string>
-    <string name="title_number_range">Getallenbereik</string>
-    <string name="title_slider">Grootte (MB)</string>
-    <string name="title_choose_date">Datums kiezen</string>
     <string name="component_action_reset">Opnieuw instellen</string>
     <string name="component_action_apply">Toepassen</string>
     <string name="component_action_cancel">Annuleren</string>
@@ -32,6 +26,6 @@
     <string name="app.search.radio.document">Document</string>
     <string name="component_number_range_empty">Vereiste waarde</string>
     <string name="component_number_range_invalid_input">Van-waarde moet kleiner zijn dan Tot-waarde</string>
-    <string name="hint_number_range_from">Van</string>
-    <string name="hint_number_range_to">Tot</string>
+    <string name="hint_range_from">Van</string>
+    <string name="hint_range_to">Tot</string>
 </resources>

@@ -17,12 +17,6 @@
 
     <string name="advance_search_title">Erweiterte Suche</string>
     <string name="default_search">Standard</string>
-    <string name="folder">Ordner</string>
-    <string name="title_text_filter">Textfilter</string>
-    <string name="title_file_type">Dateityp</string>
-    <string name="title_number_range">Zahlenbereich</string>
-    <string name="title_slider">Größe (MB)</string>
-    <string name="title_choose_date">Daten auswählen</string>
     <string name="component_action_reset">Zurücksetzen</string>
     <string name="component_action_apply">Anwenden</string>
     <string name="component_action_cancel">Abbrechen</string>
@@ -32,6 +26,6 @@
     <string name="app.search.radio.document">Dokument</string>
     <string name="component_number_range_empty">Erforderlicher Wert</string>
     <string name="component_number_range_invalid_input">Der „Von“ Wert muss kleiner als der „Bis“ Wert sein</string>
-    <string name="hint_number_range_from">Von</string>
-    <string name="hint_number_range_to">Bis</string>
+    <string name="hint_range_from">Von</string>
+    <string name="hint_range_to">Bis</string>
 </resources>

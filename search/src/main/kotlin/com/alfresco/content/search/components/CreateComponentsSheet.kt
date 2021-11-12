@@ -52,6 +52,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupComponents() {
         withState(viewModel) { state ->
+            binding.title.text = state.parent.category.name
             when (state.parent.category.component?.selector) {
                 ChipComponentType.TEXT.component -> {
                     binding.textComponent.componentParent.visibility = View.VISIBLE
@@ -60,20 +61,17 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
-                    binding.title.text = getString(R.string.title_text_filter)
                 }
 
                 ChipComponentType.CHECK_LIST.component -> {
                     viewModel.buildCheckListModel()
                     binding.checkListComponent.componentParent.visibility = View.VISIBLE
-                    binding.title.text = getString(R.string.title_file_type)
                 }
                 ChipComponentType.RADIO.component -> {
                     viewModel.buildSingleDataModel()
                     if (state.parent.selectedName.isEmpty())
                         viewModel.copyDefaultComponentData()
                     binding.radioListComponent.radioParent.visibility = View.VISIBLE
-                    binding.title.text = getString(R.string.title_file_type)
                 }
                 ChipComponentType.NUMBER_RANGE.component -> {
                     viewModel.buildSingleDataModel()
@@ -86,7 +84,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
                         binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
                     }
-                    binding.title.text = getString(R.string.title_number_range)
                 }
                 ChipComponentType.SLIDER.component -> {
                     viewModel.fromValue = "0"
@@ -107,11 +104,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     if (state.parent.selectedName.isNotEmpty()) {
                         binding.sliderComponent.slider.value = state.parent.selectedName.toFloat()
                     }
-                    binding.title.text = getString(R.string.title_slider)
                 }
                 ChipComponentType.DATE_RANGE.component -> {
                     binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
-                    binding.title.text = getString(R.string.title_created_date_range)
 
                     binding.dateRangeComponent.fromInput.inputType = 0
                     binding.dateRangeComponent.fromInput.isCursorVisible = false

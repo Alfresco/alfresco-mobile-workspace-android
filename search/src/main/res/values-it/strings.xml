@@ -17,12 +17,6 @@
 
     <string name="advance_search_title">Ricerca avanzata</string>
     <string name="default_search">Predefinito</string>
-    <string name="folder">Cartella</string>
-    <string name="title_text_filter">Filtro testo</string>
-    <string name="title_file_type">Tipo di file</string>
-    <string name="title_number_range">Intervallo dimensioni</string>
-    <string name="title_slider">Dimensioni (MB)</string>
-    <string name="title_choose_date">Scegli date</string>
     <string name="component_action_reset">Reimposta</string>
     <string name="component_action_apply">Applica</string>
     <string name="component_action_cancel">Annulla</string>
@@ -32,6 +26,6 @@
     <string name="app.search.radio.document">Documento</string>
     <string name="component_number_range_empty">Valore obbligatorio</string>
     <string name="component_number_range_invalid_input">Il valore Da deve essere inferiore al valore A</string>
-    <string name="hint_number_range_from">Da</string>
-    <string name="hint_number_range_to">A</string>
+    <string name="hint_range_from">Da</string>
+    <string name="hint_range_to">A</string>
 </resources>

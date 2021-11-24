@@ -78,6 +78,14 @@ data class DatePickerBuilder(
             val stringDate = getFormatDate(date)
             onSuccess?.invoke(stringDate)
         }
+        datePicker.addOnCancelListener {
+            println("focus cancelled")
+            onFailure?.invoke()
+        }
+        datePicker.addOnNegativeButtonClickListener {
+            println("focus negative")
+            onFailure?.invoke()
+        }
     }
 
     private fun getValidators(): ArrayList<CalendarConstraints.DateValidator> {

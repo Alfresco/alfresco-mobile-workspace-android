@@ -190,6 +190,7 @@ class SearchFragment : Fragment(), MavericksView {
 
         searchFilterPopup.anchorView = binding.rlDropDownSearch
         searchFilterPopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
+        searchFilterPopup.isModal = true
 
         val items = mutableListOf<String?>()
         val searchFilters = viewModel.getSearchFilterList()
@@ -332,15 +333,18 @@ class SearchFragment : Fragment(), MavericksView {
                         id(modelID)
                         data(item)
                         clickListener { model, _, chipView, _ ->
-                            if (model.data().category.component != null)
+                            if (model.data().category.component != null) {
                                 onChipClicked(model.data(), chipView)
-                            else {
-                                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked) {
-                                    ComponentMetaData(SearchFilter.Contextual.name, SearchFilter.Contextual.name)
-                                } else
-                                    ComponentMetaData("", "")
-                                val resultList = viewModel.updateChipComponentResult(state, model.data(), result)
-                                applyAdvanceFilters(state.selectedFilterIndex, resultList)
+                                binding.recyclerViewChips.isEnabled = false
+                            } else {
+                                withState(viewModel) { newState ->
+                                    val result: ComponentMetaData = if (newState.isContextual && (chipView as FilterChip).isChecked) {
+                                        ComponentMetaData(requireContext().getString(R.string.search_chip_contextual, state.contextTitle), SearchFilter.Contextual.name)
+                                    } else
+                                        ComponentMetaData("", "")
+                                    val resultList = viewModel.updateChipComponentResult(newState, model.data(), result)
+                                    applyAdvCanceFilters(newState.selectedFilterIndex, resultList)
+                                }
                             }
                         }
                     }
@@ -351,7 +355,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun onChipClicked(data: SearchChipCategory, chipView: View) = withState(viewModel) {
         hideSoftInput()
-        if (chipView.isPressed) {
+        if (chipView.isPressed && binding.recyclerViewChips.isEnabled) {
             withState(viewModel) { state ->
                 viewModel.updateSelected(state, data, true)
                 if (data.selectedName.isNotEmpty()) {
@@ -359,6 +363,7 @@ class SearchFragment : Fragment(), MavericksView {
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
                     val result = showComponentSheetDialog(requireContext(), data)
+                    binding.recyclerViewChips.isEnabled = true
                     if (result != null) {
                         val resultList = viewModel.updateChipComponentResult(state, data, result)
                         applyAdvanceFilters(state.selectedFilterIndex, resultList)
@@ -368,7 +373,7 @@ class SearchFragment : Fragment(), MavericksView {
                     }
                 }
             }
-        }
+        } else (chipView as FilterChip).isChecked = false
     }
 
     private suspend fun showComponentSheetDialog(

@@ -335,16 +335,8 @@ class SearchFragment : Fragment(), MavericksView {
                         clickListener { model, _, chipView, _ ->
                             if (model.data().category.component != null) {
                                 onChipClicked(model.data(), chipView)
-                                binding.recyclerViewChips.isEnabled = false
                             } else {
-                                withState(viewModel) { newState ->
-                                    val result: ComponentMetaData = if (newState.isContextual && (chipView as FilterChip).isChecked) {
-                                        ComponentMetaData(requireContext().getString(R.string.search_chip_contextual, state.contextTitle), SearchFilter.Contextual.name)
-                                    } else
-                                        ComponentMetaData("", "")
-                                    val resultList = viewModel.updateChipComponentResult(newState, model.data(), result)
-                                    applyAdvCanceFilters(newState.selectedFilterIndex, resultList)
-                                }
+                                onContextualChipClicked(model.data(), chipView)
                             }
                         }
                     }
@@ -353,9 +345,25 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
+    private fun onContextualChipClicked(data: SearchChipCategory, chipView: View) {
+        if (chipView.isPressed && binding.recyclerViewChips.isEnabled) {
+            binding.recyclerViewChips.isEnabled = false
+            withState(viewModel) { state ->
+                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked)
+                    ComponentMetaData(requireContext().getString(R.string.search_chip_contextual, state.contextTitle), SearchFilter.Contextual.name)
+                else
+                    ComponentMetaData("", "")
+                binding.recyclerViewChips.isEnabled = true
+                val resultList = viewModel.updateChipComponentResult(state, data, result)
+                applyAdvanceFilters(state.selectedFilterIndex, resultList)
+            }
+        } else (chipView as FilterChip).isChecked = false
+    }
+
     private fun onChipClicked(data: SearchChipCategory, chipView: View) = withState(viewModel) {
         hideSoftInput()
         if (chipView.isPressed && binding.recyclerViewChips.isEnabled) {
+            binding.recyclerViewChips.isEnabled = false
             withState(viewModel) { state ->
                 viewModel.updateSelected(state, data, true)
                 if (data.selectedName.isNotEmpty()) {

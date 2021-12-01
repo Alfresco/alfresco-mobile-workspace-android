@@ -30,6 +30,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     var onApply: ComponentApplyCallback? = null
     var onReset: ComponentResetCallback? = null
     var onCancel: ComponentCancelCallback? = null
+    var executedPicker = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +81,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.numberRangeComponent.fromInput.requestFocus()
                     if (state.parent.selectedName.isNotEmpty()) {
                         val fromToArray = state.parent.selectedName.split("-")
+                        viewModel.fromValue = fromToArray[0].trim()
+                        viewModel.toValue = fromToArray[1].trim()
                         binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
                         binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
                         binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
@@ -226,19 +229,26 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
-            if (view.isInTouchMode && hasFocus)
-                view.performClick()
+            if (hasFocus) view.performClick()
         }
         binding.dateRangeComponent.toInput.setOnFocusChangeListener { view, hasFocus ->
-            if (view.isInTouchMode && hasFocus)
-                view.performClick()
+            if (hasFocus) view.performClick()
         }
 
         binding.dateRangeComponent.fromInput.setOnClickListener {
-            showCalendar(true)
+            if (!executedPicker) {
+                binding.dateRangeComponent.componentParent.isEnabled = false
+                executedPicker = true
+                showCalendar(true)
+            }
         }
+
         binding.dateRangeComponent.toInput.setOnClickListener {
-            showCalendar(false)
+            if (!executedPicker) {
+                binding.dateRangeComponent.componentParent.isEnabled = false
+                executedPicker = true
+                showCalendar(false)
+            }
         }
 
         binding.dateRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -315,7 +325,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun showCalendar(isFrom: Boolean) {
-
         viewLifecycleOwner.lifecycleScope.launch {
             val result = suspendCoroutine<String?> {
                 DatePickerBuilder(
@@ -329,7 +338,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     .onFailure { it.resume(null) }
                     .show()
             }
-
+            executedPicker = false
+            binding.dateRangeComponent.componentParent.isEnabled = true
             result?.let { date ->
                 if (isFrom) {
                     viewModel.fromDate = date

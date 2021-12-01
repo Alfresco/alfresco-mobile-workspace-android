@@ -79,11 +79,9 @@ data class DatePickerBuilder(
             onSuccess?.invoke(stringDate)
         }
         datePicker.addOnCancelListener {
-            println("focus cancelled")
             onFailure?.invoke()
         }
         datePicker.addOnNegativeButtonClickListener {
-            println("focus negative")
             onFailure?.invoke()
         }
     }

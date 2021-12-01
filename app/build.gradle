@@ -85,7 +85,8 @@ dependencies {
     implementation project(':viewer')
 
     implementation project(':data')
-    implementation libs.alfresco.content
+    implementation project(':content')
+//    implementation libs.alfresco.content
 
     implementation libs.kotlin.stdlib
 

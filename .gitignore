@@ -72,3 +72,4 @@ lint/reports/
 /app/release/
 /content-ktx/
 /content/
+/gradle/libs.versions1.toml

@@ -4,9 +4,18 @@ import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.SearchFacetFields
+import com.alfresco.content.data.SearchFacetIntervals
+import com.alfresco.content.data.SearchFacetQueries
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.emptyFilters
+import com.alfresco.content.data.emptySearchFacetFields
+import com.alfresco.content.data.emptySearchFacetIntervals
+import com.alfresco.content.data.emptySearchFacetQueries
 import com.alfresco.content.listview.ListViewState
+import com.alfresco.content.models.FieldsItem
+import com.alfresco.content.models.IntervalsItem
+import com.alfresco.content.models.QueriesItem
 import com.alfresco.content.models.SearchItem
 
 /**
@@ -20,6 +29,9 @@ data class SearchResultsState(
     val selectedFilterIndex: Int = -1,
     val listSearchFilters: List<SearchItem>? = emptyList(),
     val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),
+    val listFacetQueries: SearchFacetQueries = emptySearchFacetQueries(),
+    val listFacetIntervals: SearchFacetIntervals = emptySearchFacetIntervals(),
+    val listFacetFields: SearchFacetFields = emptySearchFacetFields(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null

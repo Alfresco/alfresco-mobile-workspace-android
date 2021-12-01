@@ -22,8 +22,14 @@ dependencies {
     implementation project(':download')
 
     implementation libs.alfresco.auth
-    implementation libs.alfresco.content
-    implementation libs.alfresco.contentKtx
+    implementation project(':content')
+    implementation project(':content-ktx')
+
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.moshi
+    implementation libs.retrofit.converter.scalars
+//    implementation libs.alfresco.content
+//    implementation libs.alfresco.contentKtx
 
     implementation libs.androidx.preference
     api libs.androidx.work

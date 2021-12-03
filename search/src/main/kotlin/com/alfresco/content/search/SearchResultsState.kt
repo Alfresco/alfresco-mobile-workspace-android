@@ -13,9 +13,6 @@ import com.alfresco.content.data.emptySearchFacetFields
 import com.alfresco.content.data.emptySearchFacetIntervals
 import com.alfresco.content.data.emptySearchFacetQueries
 import com.alfresco.content.listview.ListViewState
-import com.alfresco.content.models.FieldsItem
-import com.alfresco.content.models.IntervalsItem
-import com.alfresco.content.models.QueriesItem
 import com.alfresco.content.models.SearchItem
 
 /**

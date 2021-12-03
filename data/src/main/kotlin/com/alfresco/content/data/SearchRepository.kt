@@ -109,7 +109,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     private fun includeFacetFieldsFrom(searchFacetFields: SearchFacetFields) =
         if (!searchFacetFields.isNullOrEmpty()) searchFacetFields.mapTo(mutableListOf()) {
             RequestFacetField(
-//                label = it.label,
+                label = it.label,
                 field = it.field,
                 mincount = it.mincount
             )

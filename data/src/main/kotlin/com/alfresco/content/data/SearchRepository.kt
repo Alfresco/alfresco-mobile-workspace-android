@@ -14,7 +14,7 @@ import com.alfresco.content.apis.recentFiles
 import com.alfresco.content.apis.simpleSearch
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.RequestFacetField
-import com.alfresco.content.models.RequestFacetIntervalsIntervals
+import com.alfresco.content.models.RequestFacetIntervalsInIntervals
 import com.alfresco.content.models.RequestFacetQueriesInner
 import com.alfresco.content.models.RequestFacetSet
 import com.alfresco.content.models.SetsItem
@@ -125,7 +125,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
     private fun includeFacetIntervalsFrom(searchFacetIntervals: SearchFacetIntervals) =
         if (!searchFacetIntervals.isNullOrEmpty()) searchFacetIntervals.mapTo(mutableListOf()) {
-            RequestFacetIntervalsIntervals(
+            RequestFacetIntervalsInIntervals(
                 label = it.label,
                 field = it.field,
                 sets = includeFacetSetsFrom(it.sets)

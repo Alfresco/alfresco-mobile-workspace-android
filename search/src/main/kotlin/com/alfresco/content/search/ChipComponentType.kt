@@ -11,5 +11,8 @@ enum class ChipComponentType(val component: String) {
     NUMBER_RANGE("number-range"),
     DATE_RANGE("date-range"),
     RADIO("radio"),
+    FACET_QUERIES("facet-queries"),
+    FACET_FIELDS("facet-fields"),
+    FACET_INTERVALS("facet-intervals"),
     None("none")
 }

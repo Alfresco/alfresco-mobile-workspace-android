@@ -139,7 +139,7 @@ class SearchViewModel(
         val list = mutableListOf<SearchChipCategory>()
 
         getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
-            list.add(SearchChipCategory(categoryItem, false))
+            list.add(SearchChipCategory(categoryItem, isSelected = false))
         }
 
         if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {

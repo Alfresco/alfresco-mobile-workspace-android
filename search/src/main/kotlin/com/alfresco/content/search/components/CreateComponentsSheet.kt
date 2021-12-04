@@ -53,13 +53,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupComponents() {
         withState(viewModel) { state ->
-            binding.title.text = state.parent.category.name
-            when (state.parent.category.component?.selector) {
+            binding.title.text = state.parent.category?.name
+            when (state.parent.category?.component?.selector) {
                 ChipComponentType.TEXT.component -> {
                     binding.textComponent.componentParent.visibility = View.VISIBLE
                     binding.textComponent.nameInput.isFocusableInTouchMode = true
                     binding.textComponent.nameInput.requestFocus()
-                    binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
+                    binding.textComponent.nameInputLayout.hint = state.parent.category?.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
                 }
@@ -94,13 +94,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.sliderComponent.componentParent.visibility = View.VISIBLE
 
                     binding.sliderComponent.slider.apply {
-                        state.parent.category.component?.settings?.min?.let { min ->
+                        state.parent.category?.component?.settings?.min?.let { min ->
                             valueFrom = min.toFloat()
                         }
-                        state.parent.category.component?.settings?.max?.let { max ->
+                        state.parent.category?.component?.settings?.max?.let { max ->
                             valueTo = max.toFloat()
                         }
-                        state.parent.category.component?.settings?.step?.let { step ->
+                        state.parent.category?.component?.settings?.step?.let { step ->
                             stepSize = step.toFloat()
                         }
                     }
@@ -117,7 +117,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.dateRangeComponent.toInput.inputType = 0
                     binding.dateRangeComponent.toInput.isCursorVisible = false
 
-                    state.parent.category.component?.settings?.dateFormat?.let { format ->
+                    state.parent.category?.component?.settings?.dateFormat?.let { format ->
                         viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
                     }
 
@@ -129,6 +129,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         binding.dateRangeComponent.toInput.setText(viewModel.toDate)
                     }
                 }
+                ChipComponentType.FACET_FIELDS.component -> {
+                    binding.facetSearchComponent.componentParent.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -136,7 +139,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
-                if (state.parent.category.component?.selector == ChipComponentType.DATE_RANGE.component) {
+                if (state.parent.category?.component?.selector == ChipComponentType.DATE_RANGE.component) {
                     when {
                         viewModel.fromDate.isEmpty() -> {
                             binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
@@ -290,8 +293,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
-            state.parent.category
-                .component?.settings?.options?.forEach { option ->
+            state.parent.category?.component?.settings?.options?.forEach { option ->
                     listViewCheckRow {
                         id(option.hashCode())
                         data(option)
@@ -307,20 +309,19 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.radioListComponent.recyclerView.withModels {
-            state.parent.category
-                .component?.settings?.options?.forEach { option ->
-                    listViewRadioRow {
-                        id(option.hashCode())
-                        data(option)
-                        optionSelected(viewModel.isOptionSelected(state, option))
-                        clickListener { model, _, _, _ ->
-                            viewModel.updateSingleComponentData(
-                                requireContext().getLocalizedName(model.data().name ?: ""),
-                                model.data().value ?: ""
-                            )
-                        }
+            state.parent.category?.component?.settings?.options?.forEach { option ->
+                listViewRadioRow {
+                    id(option.hashCode())
+                    data(option)
+                    optionSelected(viewModel.isOptionSelected(state, option))
+                    clickListener { model, _, _, _ ->
+                        viewModel.updateSingleComponentData(
+                            requireContext().getLocalizedName(model.data().name ?: ""),
+                            model.data().value ?: ""
+                        )
                     }
                 }
+            }
         }
     }
 

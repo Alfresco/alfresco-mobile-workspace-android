@@ -33,7 +33,6 @@ class ComponentCreateViewModel(
     var toDate = ""
     var dateFormat = ""
     var delimiters = ""
-    var isDatePickerExecuted = false
 
     init {
         withState { state ->

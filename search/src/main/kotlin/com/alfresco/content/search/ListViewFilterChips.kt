@@ -10,6 +10,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.search.databinding.ViewListFilterChipsBinding
 
 /**
@@ -31,13 +32,13 @@ class ListViewFilterChips @JvmOverloads constructor(
     fun setData(dataObj: SearchChipCategory) {
         binding.chip.uncheck(false)
 
-        println("ListViewFilterChips.setData ${dataObj.category.name}")
+        println("ListViewFilterChips.setData ${dataObj.category?.name}")
 
-        if (dataObj.category.id == SearchFilter.Contextual.toString()) {
+        if (dataObj.category?.id == SearchFilter.Contextual.toString()) {
             binding.chip.isChecked = true
         }
 
-        when (dataObj.category.component?.selector) {
+        when (dataObj.category?.component?.selector) {
             ChipComponentType.TEXT.component -> {
                 if (dataObj.selectedName.length > 20) {
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
@@ -46,9 +47,15 @@ class ListViewFilterChips @JvmOverloads constructor(
                 if (dataObj.selectedName.isNotEmpty())
                     binding.chip.text = dataObj.selectedName.take20orDefault()
                 else
-                    binding.chip.text = dataObj.category.name
+                    binding.chip.text = dataObj.category?.name
             }
-            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category.name
+            ChipComponentType.FACET_FIELDS.component -> {
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
+            }
+            ChipComponentType.FACET_INTERVALS.component -> {
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
+            }
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category?.name
         }
 
         binding.chip.isChecked = dataObj.isSelected

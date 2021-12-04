@@ -1,8 +1,12 @@
 package com.alfresco.content.search
 
 import android.os.Parcelable
+import com.alfresco.content.data.FacetFields
+import com.alfresco.content.data.FacetIntervals
+import com.alfresco.content.data.FacetQueries
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.models.CategoriesItem
+import com.alfresco.content.models.Component
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -10,8 +14,11 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SearchChipCategory(
-    var category: CategoriesItem,
-    var isSelected: Boolean,
+    var category: CategoriesItem? = null,
+    var queriesItem: FacetQueries? = null,
+    var fieldsItem: FacetFields? = null,
+    var intervalsItem: FacetIntervals? = null,
+    var isSelected: Boolean = false,
     var selectedName: String = "",
     var selectedQuery: String = ""
 ) : Parcelable {
@@ -52,7 +59,43 @@ data class SearchChipCategory(
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,
-                isSelected = searchChipCategory.category.component == null,
+                isSelected = searchChipCategory.category?.component == null,
+                selectedName = "",
+                selectedQuery = ""
+            )
+        }
+
+        fun withDefaultFacet(data: FacetQueries): SearchChipCategory {
+            return SearchChipCategory(
+                category = CategoriesItem(
+                    null, Component(null, ChipComponentType.FACET_QUERIES.component),
+                    null, null, null
+                ),
+                queriesItem = data,
+                selectedName = "",
+                selectedQuery = ""
+            )
+        }
+
+        fun withDefaultFacet(data: FacetFields): SearchChipCategory {
+            return SearchChipCategory(
+                category = CategoriesItem(
+                    null, Component(null, ChipComponentType.FACET_FIELDS.component),
+                    null, null, null
+                ),
+                fieldsItem = data,
+                selectedName = "",
+                selectedQuery = ""
+            )
+        }
+
+        fun withDefaultFacet(data: FacetIntervals): SearchChipCategory {
+            return SearchChipCategory(
+                category = CategoriesItem(
+                    null, Component(null, ChipComponentType.FACET_INTERVALS.component),
+                    null, null, null
+                ),
+                intervalsItem = data,
                 selectedName = "",
                 selectedQuery = ""
             )

@@ -60,6 +60,28 @@ data class SearchResultsState(
             pageEntries
         }
 
+        if (newEntries.isNotEmpty()) {
+            val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
+
+            val facetFields = response.facetContext?.facetResponse?.facetFields
+            val facetIntervals = response.facetContext?.facetResponse?.facetIntervals
+
+            facetFields?.forEach {
+                val obj = list?.find { data -> data.fieldsItem?.label == it.label }
+                if (obj == null)
+                    list?.add(SearchChipCategory.withDefaultFacet(it))
+            }
+
+            facetIntervals?.forEach {
+                val obj = list?.find { data -> data.intervalsItem?.label == it.label }
+                if (obj == null)
+                    list?.add(SearchChipCategory.withDefaultFacet(it))
+            }
+
+            if (list != listSearchCategoryChips)
+                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
+        }
+
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 

@@ -328,12 +328,12 @@ class SearchFragment : Fragment(), MavericksView {
             if (!searchChipCategory.isNullOrEmpty()) {
 
                 searchChipCategory.forEach { item ->
-                    val modelID = filterIndex.toString() + item.category.id
+                    val modelID = filterIndex.toString() + item.category?.id
                     listViewFilterChips {
                         id(modelID)
                         data(item)
                         clickListener { model, _, chipView, _ ->
-                            if (model.data().category.component != null) {
+                            if (model.data().category?.component != null || model.data().queriesItem != null) {
                                 onChipClicked(model.data(), chipView)
                             } else {
                                 onContextualChipClicked(model.data(), chipView)

@@ -147,6 +147,7 @@ data class Buckets(
         fun with(result: ResultBucketsBuckets): Buckets {
             return Buckets(result.label, result.filterQuery, result.count, result.display)
         }
+
         /**
          * returns the Buckets type of data using GenericBucket
          */

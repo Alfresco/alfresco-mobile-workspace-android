@@ -65,6 +65,9 @@ data class SearchChipCategory(
             )
         }
 
+        /**
+         * return the SearchChipCategory obj using FacetQueries data obj
+         */
         fun withDefaultFacet(data: FacetQueries): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
@@ -77,6 +80,9 @@ data class SearchChipCategory(
             )
         }
 
+        /**
+         * return the SearchChipCategory obj using FacetFields data obj
+         */
         fun withDefaultFacet(data: FacetFields): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
@@ -89,6 +95,9 @@ data class SearchChipCategory(
             )
         }
 
+        /**
+         * return the SearchChipCategory obj using FacetIntervals data obj
+         */
         fun withDefaultFacet(data: FacetIntervals): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(

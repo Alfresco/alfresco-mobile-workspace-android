@@ -9,10 +9,17 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
+import com.alfresco.content.data.SearchFacetData
+import com.alfresco.content.data.SearchFacetFields
+import com.alfresco.content.data.SearchFacetIntervals
+import com.alfresco.content.data.SearchFacetQueries
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.emptyAdvanceFilters
+import com.alfresco.content.data.emptySearchFacetFields
+import com.alfresco.content.data.emptySearchFacetIntervals
+import com.alfresco.content.data.emptySearchFacetQueries
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
@@ -32,6 +39,9 @@ data class SearchParams(
     val contextId: String?,
     val filters: SearchFilters,
     val advanceSearchFilter: AdvanceSearchFilters,
+    val listFacetQueries: SearchFacetQueries,
+    val listFacetIntervals: SearchFacetIntervals,
+    val listFacetFields: SearchFacetFields,
     val skipCount: Int,
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
 )
@@ -53,7 +63,10 @@ class SearchViewModel(
 
         appConfigModel = repository.getAppConfig()
         // TODO: move search params to state object
-        params = SearchParams("", state.contextId, defaultFilters(state), defaultAdvanceFilters(state), 0)
+        params = SearchParams(
+            "", state.contextId, defaultFilters(state), defaultAdvanceFilters(state),
+            defaultFacetQueries(), defaultFacetIntervals(), defaultFacetFields(), 0
+        )
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
 
@@ -66,7 +79,16 @@ class SearchViewModel(
                 searchEvents
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
-            }.executeOnLatest({ repository.search(it.terms, it.contextId, it.filters, it.advanceSearchFilter, it.skipCount, it.maxItems) }) {
+            }.executeOnLatest({
+                repository.search(
+                    it.terms, it.contextId, it.filters, it.advanceSearchFilter,
+                    SearchFacetData(
+                        searchFacetFields = it.listFacetFields,
+                        searchFacetQueries = it.listFacetQueries,
+                        searchFacetIntervals = it.listFacetIntervals
+                    ), it.skipCount, it.maxItems
+                )
+            }) {
                 if (it is Loading) {
                     copy(request = it)
                 } else {
@@ -117,7 +139,7 @@ class SearchViewModel(
         val list = mutableListOf<SearchChipCategory>()
 
         getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
-            list.add(SearchChipCategory(categoryItem, false))
+            list.add(SearchChipCategory(categoryItem, isSelected = false))
         }
 
         if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
@@ -187,6 +209,39 @@ class SearchViewModel(
         val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null)
             list.addAll(initAdvanceFilters(index))
+        return list
+    }
+
+    private fun defaultFacetFields(): SearchFacetFields {
+        val list = emptySearchFacetFields()
+        val index = appConfigModel.search?.indexOfFirst { it.default == true }
+        if (index != null) {
+            appConfigModel.search?.get(index)?.facetFields?.fields?.toMutableList()?.let {
+                list.addAll(it)
+            }
+        }
+        return list
+    }
+
+    private fun defaultFacetQueries(): SearchFacetQueries {
+        val list = emptySearchFacetQueries()
+        val index = appConfigModel.search?.indexOfFirst { it.default == true }
+        if (index != null) {
+            appConfigModel.search?.get(index)?.facetQueries?.queries?.toMutableList()?.let {
+                list.addAll(it)
+            }
+        }
+        return list
+    }
+
+    private fun defaultFacetIntervals(): SearchFacetIntervals {
+        val list = emptySearchFacetIntervals()
+        val index = appConfigModel.search?.indexOfFirst { it.default == true }
+        if (index != null) {
+            appConfigModel.search?.get(index)?.facetIntervals?.intervals?.toMutableList()?.let {
+                list.addAll(it)
+            }
+        }
         return list
     }
 

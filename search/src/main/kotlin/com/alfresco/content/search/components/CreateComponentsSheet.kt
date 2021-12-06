@@ -30,6 +30,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     var onApply: ComponentApplyCallback? = null
     var onReset: ComponentResetCallback? = null
     var onCancel: ComponentCancelCallback? = null
+    var executedPicker = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,13 +53,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupComponents() {
         withState(viewModel) { state ->
-            binding.title.text = state.parent.category.name
-            when (state.parent.category.component?.selector) {
+            binding.title.text = state.parent.category?.name
+            when (state.parent.category?.component?.selector) {
                 ChipComponentType.TEXT.component -> {
                     binding.textComponent.componentParent.visibility = View.VISIBLE
                     binding.textComponent.nameInput.isFocusableInTouchMode = true
                     binding.textComponent.nameInput.requestFocus()
-                    binding.textComponent.nameInputLayout.hint = state.parent.category.component?.settings?.placeholder
+                    binding.textComponent.nameInputLayout.hint = state.parent.category?.component?.settings?.placeholder
                     binding.textComponent.nameInput.setText(state.parent.selectedName)
                     binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
                 }
@@ -80,6 +81,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.numberRangeComponent.fromInput.requestFocus()
                     if (state.parent.selectedName.isNotEmpty()) {
                         val fromToArray = state.parent.selectedName.split("-")
+                        viewModel.fromValue = fromToArray[0].trim()
+                        viewModel.toValue = fromToArray[1].trim()
                         binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
                         binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
                         binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
@@ -91,13 +94,13 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.sliderComponent.componentParent.visibility = View.VISIBLE
 
                     binding.sliderComponent.slider.apply {
-                        state.parent.category.component?.settings?.min?.let { min ->
+                        state.parent.category?.component?.settings?.min?.let { min ->
                             valueFrom = min.toFloat()
                         }
-                        state.parent.category.component?.settings?.max?.let { max ->
+                        state.parent.category?.component?.settings?.max?.let { max ->
                             valueTo = max.toFloat()
                         }
-                        state.parent.category.component?.settings?.step?.let { step ->
+                        state.parent.category?.component?.settings?.step?.let { step ->
                             stepSize = step.toFloat()
                         }
                     }
@@ -114,7 +117,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     binding.dateRangeComponent.toInput.inputType = 0
                     binding.dateRangeComponent.toInput.isCursorVisible = false
 
-                    state.parent.category.component?.settings?.dateFormat?.let { format ->
+                    state.parent.category?.component?.settings?.dateFormat?.let { format ->
                         viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
                     }
 
@@ -126,6 +129,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         binding.dateRangeComponent.toInput.setText(viewModel.toDate)
                     }
                 }
+                ChipComponentType.FACET_FIELDS.component -> {
+                    binding.facetSearchComponent.componentParent.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -133,7 +139,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
-                if (state.parent.category.component?.selector == ChipComponentType.DATE_RANGE.component) {
+                if (state.parent.category?.component?.selector == ChipComponentType.DATE_RANGE.component) {
                     when {
                         viewModel.fromDate.isEmpty() -> {
                             binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
@@ -226,19 +232,26 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
-            if (view.isInTouchMode && hasFocus)
-                view.performClick()
+            if (hasFocus) view.performClick()
         }
         binding.dateRangeComponent.toInput.setOnFocusChangeListener { view, hasFocus ->
-            if (view.isInTouchMode && hasFocus)
-                view.performClick()
+            if (hasFocus) view.performClick()
         }
 
         binding.dateRangeComponent.fromInput.setOnClickListener {
-            showCalendar(true)
+            if (!executedPicker) {
+                binding.dateRangeComponent.componentParent.isEnabled = false
+                executedPicker = true
+                showCalendar(true)
+            }
         }
+
         binding.dateRangeComponent.toInput.setOnClickListener {
-            showCalendar(false)
+            if (!executedPicker) {
+                binding.dateRangeComponent.componentParent.isEnabled = false
+                executedPicker = true
+                showCalendar(false)
+            }
         }
 
         binding.dateRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -280,8 +293,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.checkListComponent.recyclerView.withModels {
-            state.parent.category
-                .component?.settings?.options?.forEach { option ->
+            state.parent.category?.component?.settings?.options?.forEach { option ->
                     listViewCheckRow {
                         id(option.hashCode())
                         data(option)
@@ -297,25 +309,23 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.radioListComponent.recyclerView.withModels {
-            state.parent.category
-                .component?.settings?.options?.forEach { option ->
-                    listViewRadioRow {
-                        id(option.hashCode())
-                        data(option)
-                        optionSelected(viewModel.isOptionSelected(state, option))
-                        clickListener { model, _, _, _ ->
-                            viewModel.updateSingleComponentData(
-                                requireContext().getLocalizedName(model.data().name ?: ""),
-                                model.data().value ?: ""
-                            )
-                        }
+            state.parent.category?.component?.settings?.options?.forEach { option ->
+                listViewRadioRow {
+                    id(option.hashCode())
+                    data(option)
+                    optionSelected(viewModel.isOptionSelected(state, option))
+                    clickListener { model, _, _, _ ->
+                        viewModel.updateSingleComponentData(
+                            requireContext().getLocalizedName(model.data().name ?: ""),
+                            model.data().value ?: ""
+                        )
                     }
                 }
+            }
         }
     }
 
     private fun showCalendar(isFrom: Boolean) {
-
         viewLifecycleOwner.lifecycleScope.launch {
             val result = suspendCoroutine<String?> {
                 DatePickerBuilder(
@@ -329,7 +339,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     .onFailure { it.resume(null) }
                     .show()
             }
-
+            executedPicker = false
+            binding.dateRangeComponent.componentParent.isEnabled = true
             result?.let { date ->
                 if (isFrom) {
                     viewModel.fromDate = date

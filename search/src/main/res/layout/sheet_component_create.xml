@@ -75,6 +75,10 @@
                 android:id="@+id/dateRangeComponent"
                 layout="@layout/view_date_range_component"/>
 
+            <include
+                android:id="@+id/facetSearchComponent"
+                layout="@layout/view_check_facet_list_component"/>
+
         </FrameLayout>
     </RelativeLayout>
 

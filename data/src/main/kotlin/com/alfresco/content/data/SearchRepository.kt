@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.apis.AdvanceSearchInclude
 import com.alfresco.content.apis.AppConfigApi
+import com.alfresco.content.apis.FacetSearchInclude
 import com.alfresco.content.apis.QueriesApi
 import com.alfresco.content.apis.SearchApi
 import com.alfresco.content.apis.SearchInclude
@@ -12,6 +13,11 @@ import com.alfresco.content.apis.advanceSearch
 import com.alfresco.content.apis.recentFiles
 import com.alfresco.content.apis.simpleSearch
 import com.alfresco.content.models.AppConfigModel
+import com.alfresco.content.models.RequestFacetField
+import com.alfresco.content.models.RequestFacetIntervalsInIntervals
+import com.alfresco.content.models.RequestFacetQueriesInner
+import com.alfresco.content.models.RequestFacetSet
+import com.alfresco.content.models.SetsItem
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 
@@ -36,6 +42,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         nodeId: String?,
         filters: SearchFilters,
         advanceSearchFilters: AdvanceSearchFilters,
+        searchFacetData: SearchFacetData,
         skipCount: Int,
         maxItems: Int
     ) = if (filters.contains(SearchFilter.Libraries)) {
@@ -53,7 +60,12 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 if (getNodeID(advanceSearchFilters)) nodeId else null,
                 skipCount,
                 maxItems,
-                includeFrom(advanceSearchFilters)
+                includeFrom(advanceSearchFilters),
+                FacetSearchInclude(
+                    includeFacetFieldsFrom(searchFacetData.searchFacetFields),
+                    includeFacetQueriesFrom(searchFacetData.searchFacetQueries),
+                    includeFacetIntervalsFrom(searchFacetData.searchFacetIntervals)
+                )
             )
         )
     } else {
@@ -93,6 +105,43 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         }
         return advanceSet
     }
+
+    private fun includeFacetFieldsFrom(searchFacetFields: SearchFacetFields) =
+        if (!searchFacetFields.isNullOrEmpty()) searchFacetFields.mapTo(mutableListOf()) {
+            RequestFacetField(
+                label = it.label,
+                field = it.field,
+                mincount = it.mincount
+            )
+        } else null
+
+    private fun includeFacetQueriesFrom(searchFacetQueries: SearchFacetQueries) =
+        if (!searchFacetQueries.isNullOrEmpty()) searchFacetQueries.mapTo(mutableListOf()) {
+            RequestFacetQueriesInner(
+                label = it.label,
+                query = it.query
+            )
+        } else null
+
+    private fun includeFacetIntervalsFrom(searchFacetIntervals: SearchFacetIntervals) =
+        if (!searchFacetIntervals.isNullOrEmpty()) searchFacetIntervals.mapTo(mutableListOf()) {
+            RequestFacetIntervalsInIntervals(
+                label = it.label,
+                field = it.field,
+                sets = includeFacetSetsFrom(it.sets)
+            )
+        } else null
+
+    private fun includeFacetSetsFrom(searchFacetSets: List<SetsItem>?) =
+        if (!searchFacetSets.isNullOrEmpty()) searchFacetSets.mapTo(mutableListOf()) {
+            RequestFacetSet(
+                label = it.label,
+                start = it.start,
+                end = it.end,
+                startInclusive = it.startInclusive,
+                endInclusive = it.endInclusive
+            )
+        } else null
 
     suspend fun getRecents(skipCount: Int, maxItems: Int) =
         ResponsePaging.with(

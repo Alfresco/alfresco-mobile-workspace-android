@@ -36,7 +36,7 @@ class ComponentCreateViewModel(
 
     init {
         withState { state ->
-            delimiters = " ${state.parent.category.component?.settings?.operator} "
+            delimiters = " ${state.parent.category?.component?.settings?.operator} "
         }
     }
 
@@ -49,7 +49,7 @@ class ComponentCreateViewModel(
                 toValue
             else
                 context.getLocalizedName("$fromValue - $toValue")
-            val queryFormat = "${it.parent.category.component?.settings?.field}:[$fromValue TO $toValue]"
+            val queryFormat = "${it.parent.category?.component?.settings?.field}:[$fromValue TO $toValue]"
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -60,7 +60,7 @@ class ComponentCreateViewModel(
     fun updateFormatDateRange() = withState {
         if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
             val dateFormat = "$fromDate - $toDate"
-            val queryFormat = "${it.parent.category.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
+            val queryFormat = "${it.parent.category?.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
             updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -79,7 +79,7 @@ class ComponentCreateViewModel(
      */
     fun updateSingleComponentData(name: String) =
         setState {
-            val query = parent.category.component?.settings?.field + ":'$name'"
+            val query = parent.category?.component?.settings?.field + ":'$name'"
             copy(parent = SearchChipCategory.with(parent, name, query))
         }
 
@@ -94,7 +94,7 @@ class ComponentCreateViewModel(
      */
     fun copyDefaultComponentData() {
         setState {
-            val obj = parent.category.component?.settings?.options?.find { it.default ?: false }
+            val obj = parent.category?.component?.settings?.options?.find { it.default ?: false }
             copy(parent = SearchChipCategory.with(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
         }
     }
@@ -141,7 +141,7 @@ class ComponentCreateViewModel(
     /**
      * update multiple component option (check list)
      */
-    fun updateMultipleComponentData(name: String, query: String) = withState { state ->
+    fun updateMultipleComponentData(name: String, query: String) {
 
         if (listOptionsData.find { it.query == query } == null) {
             listOptionsData.add(ComponentMetaData(name, query))

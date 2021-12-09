@@ -332,6 +332,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupFacetComponent() {
+        viewModel.buildCheckListModel()
         binding.facetCheckListComponent.componentParent.visibility = View.VISIBLE
         binding.facetCheckListComponent.recyclerView.setController(epoxyCheckFacetListController)
         binding.facetCheckListComponent.searchInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -428,7 +429,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 listViewFacetCheckRow {
                     id(bucket.hashCode())
                     data(bucket)
+                    optionSelected(viewModel.isOptionSelected(state, bucket))
                     clickListener { model, _, _, _ ->
+                        viewModel.updateMultipleComponentData(
+                            model.data().label ?: "",
+                            model.data().filterQuery ?: ""
+                        )
                     }
                 }
             }

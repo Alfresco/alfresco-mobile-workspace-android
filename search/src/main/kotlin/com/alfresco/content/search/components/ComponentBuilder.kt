@@ -51,15 +51,11 @@ data class ComponentBuilder(
             else -> throw IllegalArgumentException()
         }
 
-
-
         CreateComponentsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to searchChipCategory)
             onApply = this@ComponentBuilder.onApply
             onReset = this@ComponentBuilder.onReset
             onCancel = this@ComponentBuilder.onCancel
         }.show(fragmentManager, CreateComponentsSheet::class.java.simpleName)
-
-
     }
 }

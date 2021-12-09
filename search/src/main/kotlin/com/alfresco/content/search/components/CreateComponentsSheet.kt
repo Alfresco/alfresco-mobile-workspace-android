@@ -22,10 +22,9 @@ import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
+import kotlinx.coroutines.launch
 
 /**
  * Component sheet for chip components
@@ -62,7 +61,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         setListeners()
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         view?.viewTreeObserver?.addOnGlobalLayoutListener {
@@ -74,7 +72,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     isHideable = false
                     skipCollapsed = false
                     peekHeight = ((it.parent as View).height * peekAmount).toInt()
-
                 }
             }
         }
@@ -423,7 +420,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 listBucket = if (viewModel.searchQuery.isNotEmpty())
                     viewModel.searchBucketList
                 else
-                    state.parent.intervalsItem?.buckets?.filter { it.metrics?.get(0)?.value?.count!="0" }
+                    state.parent.intervalsItem?.buckets?.filter { it.metrics?.get(0)?.value?.count != "0" }
             }
         }
         if (listBucket?.isNotEmpty() == true)
@@ -432,7 +429,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(bucket.hashCode())
                     data(bucket)
                     clickListener { model, _, _, _ ->
-
                     }
                 }
             }

@@ -11,7 +11,7 @@ import com.alfresco.content.models.Options
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.SearchChipCategory
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 /**
  * Mark as ComponentCreateState class
@@ -222,7 +222,7 @@ class ComponentCreateViewModel(
         when (state.parent.category?.component?.selector) {
             ChipComponentType.FACET_FIELDS.component -> {
                 requireNotNull(state.parent.fieldsItem?.buckets)
-                searchBucketList= state.parent.fieldsItem?.buckets?.filter { it.label?.contains(searchText) == true } ?: emptyList()
+                searchBucketList = state.parent.fieldsItem?.buckets?.filter { it.label?.contains(searchText) == true } ?: emptyList()
                 onSearchComplete?.invoke(searchBucketList)
             }
         }

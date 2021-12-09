@@ -32,6 +32,8 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = searchChipCategory.category,
                 isSelected = searchChipCategory.isSelected,
+                fieldsItem = searchChipCategory.fieldsItem,
+                intervalsItem = searchChipCategory.intervalsItem,
                 selectedName = name,
                 selectedQuery = query
             )
@@ -87,7 +89,7 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_FIELDS.component),
-                    null, null, null
+                    null, data.label, null
                 ),
                 fieldsItem = data,
                 selectedName = "",
@@ -102,7 +104,7 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_INTERVALS.component),
-                    null, null, null
+                    null, data.label, null
                 ),
                 intervalsItem = data,
                 selectedName = "",

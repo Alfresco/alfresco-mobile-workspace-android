@@ -22,8 +22,6 @@ data class ComponentBuilder(
     var onCancel: ComponentCancelCallback? = null
 ) {
 
-    var componentSheet: CreateComponentsSheet? = null
-
     /**
      * Component sheet apply callback
      */
@@ -47,27 +45,21 @@ data class ComponentBuilder(
      */
     fun show() {
 
-        componentSheet?.let {
-            if (it.isVisible) {
-                println("ComponentBuilder.show ${it.isVisible}")
-                return
-            }
-            println("ComponentBuilder.show ${it.isVisible}")
-        }
-
         val fragmentManager = when (context) {
             is AppCompatActivity -> context.supportFragmentManager
             is Fragment -> context.childFragmentManager
             else -> throw IllegalArgumentException()
         }
 
-        componentSheet = CreateComponentsSheet().apply {
+
+
+        CreateComponentsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to searchChipCategory)
             onApply = this@ComponentBuilder.onApply
             onReset = this@ComponentBuilder.onReset
             onCancel = this@ComponentBuilder.onCancel
-        }
+        }.show(fragmentManager, CreateComponentsSheet::class.java.simpleName)
 
-        componentSheet?.show(fragmentManager, CreateComponentsSheet::class.java.simpleName)
+
     }
 }

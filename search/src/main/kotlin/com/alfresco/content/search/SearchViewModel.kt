@@ -25,7 +25,6 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
 import com.alfresco.content.search.components.ComponentMetaData
-import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -33,6 +32,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
+import java.util.concurrent.*
 
 data class SearchParams(
     val terms: String,
@@ -343,6 +343,8 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
+                        fieldsItem = obj.fieldsItem,
+                        intervalsItem = obj.intervalsItem,
                         isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
                     )
                 )

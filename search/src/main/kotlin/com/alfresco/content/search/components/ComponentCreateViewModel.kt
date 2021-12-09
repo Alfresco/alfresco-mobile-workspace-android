@@ -5,11 +5,13 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.Buckets
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
+import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.SearchChipCategory
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 /**
  * Mark as ComponentCreateState class
@@ -27,16 +29,30 @@ class ComponentCreateViewModel(
 ) : MavericksViewModel<ComponentCreateState>(stateChipCreate) {
 
     private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
+    private var isFacetComponent: Boolean = false
+    var onSearchComplete: ((List<Buckets>) -> Unit)? = null
+    var searchBucketList: List<Buckets> = emptyList()
     var toValue = ""
     var fromValue = ""
     var fromDate = ""
     var toDate = ""
     var dateFormat = ""
     var delimiters = ""
+    var searchQuery = ""
 
     init {
-        withState { state ->
-            delimiters = " ${state.parent.category?.component?.settings?.operator} "
+        updateComponentType()
+    }
+
+    private fun updateComponentType() = withState {
+        if (it.parent.category?.component?.selector == ChipComponentType.FACET_FIELDS.component ||
+            it.parent.category?.component?.selector == ChipComponentType.FACET_INTERVALS.component
+        ) {
+            delimiters = " OR "
+            isFacetComponent = true
+        } else {
+            delimiters = " ${it.parent.category?.component?.settings?.operator} "
+            isFacetComponent = false
         }
     }
 
@@ -120,6 +136,23 @@ class ComponentCreateViewModel(
     }
 
     /**
+     * return true if the component is selected,otherwise false
+     */
+    fun isOptionSelected(state: ComponentCreateState, bucket: Buckets): Boolean {
+
+        val selectedQuery = state.parent.selectedQuery
+        if (selectedQuery.contains(delimiters)) {
+            selectedQuery.split(delimiters).forEach { query ->
+                if (query == bucket.filterQuery)
+                    return true
+            }
+        } else {
+            return selectedQuery == bucket.filterQuery
+        }
+        return false
+    }
+
+    /**
      * build check list model for query and name
      */
     fun buildCheckListModel() = withState { state ->
@@ -180,6 +213,16 @@ class ComponentCreateViewModel(
             true
         else
             from.toLong() < toValue.toLong()
+    }
+
+    fun searchBucket(searchText: String) = withState { state ->
+        when (state.parent.category?.component?.selector) {
+            ChipComponentType.FACET_FIELDS.component -> {
+                requireNotNull(state.parent.fieldsItem?.buckets)
+                searchBucketList= state.parent.fieldsItem?.buckets?.filter { it.label?.contains(searchText) == true } ?: emptyList()
+                onSearchComplete?.invoke(searchBucketList)
+            }
+        }
     }
 
     companion object : MavericksViewModelFactory<ComponentCreateViewModel, ComponentCreateState> {

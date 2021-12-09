@@ -61,6 +61,8 @@ data class SearchChipCategory(
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,
+                fieldsItem = searchChipCategory.fieldsItem,
+                intervalsItem = searchChipCategory.intervalsItem,
                 isSelected = searchChipCategory.category?.component == null,
                 selectedName = "",
                 selectedQuery = ""

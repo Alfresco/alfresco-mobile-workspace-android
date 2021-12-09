@@ -215,6 +215,9 @@ class ComponentCreateViewModel(
             from.toLong() < toValue.toLong()
     }
 
+    /**
+     * returns the search result from bucket list on the basis of searchText
+     */
     fun searchBucket(searchText: String) = withState { state ->
         when (state.parent.category?.component?.selector) {
             ChipComponentType.FACET_FIELDS.component -> {

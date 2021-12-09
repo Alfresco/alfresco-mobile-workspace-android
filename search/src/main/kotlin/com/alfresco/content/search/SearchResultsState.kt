@@ -80,13 +80,6 @@ data class SearchResultsState(
 
             if (list != listSearchCategoryChips)
                 return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
-        } else {
-            val list = listSearchCategoryChips?.filter {
-                it.category?.component?.selector != ChipComponentType.FACET_FIELDS.component &&
-                        it.category?.component?.selector != ChipComponentType.FACET_INTERVALS.component
-            }
-            if (list != listSearchCategoryChips)
-                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
         }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)

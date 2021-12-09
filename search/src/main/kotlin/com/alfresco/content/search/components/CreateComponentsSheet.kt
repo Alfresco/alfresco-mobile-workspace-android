@@ -352,7 +352,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         })
     }
 
-    fun setSearchQuery(query: String) {
+    private fun setSearchQuery(query: String) {
         viewModel.searchQuery = cleanupSearchQuery(query)
         viewModel.searchBucket(searchText = viewModel.searchQuery)
     }
@@ -418,17 +418,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     viewModel.searchBucketList
                 else
                     state.parent.fieldsItem?.buckets
-
-                println("CreateComponentsSheet.epoxyCheckFacetListController ${listBucket?.size}")
             }
-
             ChipComponentType.FACET_INTERVALS.component -> {
                 listBucket = if (viewModel.searchQuery.isNotEmpty())
                     viewModel.searchBucketList
                 else
                     state.parent.intervalsItem?.buckets?.filter { it.metrics?.get(0)?.value?.count!="0" }
-
-                println("CreateComponentsSheet.epoxyCheckFacetListController ${listBucket?.size}")
             }
         }
         if (listBucket?.isNotEmpty() == true)

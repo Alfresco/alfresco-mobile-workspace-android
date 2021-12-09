@@ -334,11 +334,7 @@ class SearchFragment : Fragment(), MavericksView {
                         data(item)
                         clickListener { model, _, chipView, _ ->
                             if (model.data().category?.component != null) {
-                                when (model.data().category?.component?.selector) {
-                                    ChipComponentType.FACET_FIELDS.component,
-                                    ChipComponentType.FACET_INTERVALS.component -> {
-                                    } else -> onChipClicked(model.data(), chipView)
-                                }
+                                onChipClicked(model.data(), chipView)
                             } else {
                                 onContextualChipClicked(model.data(), chipView)
                             }

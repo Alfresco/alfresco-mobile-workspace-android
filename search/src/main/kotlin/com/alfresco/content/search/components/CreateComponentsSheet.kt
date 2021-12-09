@@ -1,5 +1,6 @@
 package com.alfresco.content.search.components
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,14 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.data.Buckets
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
+import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
@@ -27,6 +33,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ComponentCreateViewModel by fragmentViewModel()
     private lateinit var binding: SheetComponentCreateBinding
 
+    private val epoxyCheckListController: AsyncEpoxyController by lazy { epoxyCheckListController() }
+    private val epoxyRadioListController: AsyncEpoxyController by lazy { epoxyRadioListController() }
+    private val epoxyCheckFacetListController: AsyncEpoxyController by lazy { epoxyCheckFacetListController() }
     var onApply: ComponentApplyCallback? = null
     var onReset: ComponentResetCallback? = null
     var onCancel: ComponentCancelCallback? = null
@@ -47,91 +56,39 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         dialog?.setOnCancelListener {
             onCancel?.invoke()
         }
+
         setupComponents()
         setListeners()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        view?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                BottomSheetBehavior.from<View>(it).apply {
+                    val peekAmount = 1.0
+                    isHideable = false
+                    skipCollapsed = false
+                    peekHeight = ((it.parent as View).height * peekAmount).toInt()
+                }
+            }
+        }
     }
 
     private fun setupComponents() {
         withState(viewModel) { state ->
             binding.title.text = state.parent.category?.name
             when (state.parent.category?.component?.selector) {
-                ChipComponentType.TEXT.component -> {
-                    binding.textComponent.componentParent.visibility = View.VISIBLE
-                    binding.textComponent.nameInput.isFocusableInTouchMode = true
-                    binding.textComponent.nameInput.requestFocus()
-                    binding.textComponent.nameInputLayout.hint = state.parent.category?.component?.settings?.placeholder
-                    binding.textComponent.nameInput.setText(state.parent.selectedName)
-                    binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
-                }
-
-                ChipComponentType.CHECK_LIST.component -> {
-                    viewModel.buildCheckListModel()
-                    binding.checkListComponent.componentParent.visibility = View.VISIBLE
-                }
-                ChipComponentType.RADIO.component -> {
-                    viewModel.buildSingleDataModel()
-                    if (state.parent.selectedName.isEmpty())
-                        viewModel.copyDefaultComponentData()
-                    binding.radioListComponent.radioParent.visibility = View.VISIBLE
-                }
-                ChipComponentType.NUMBER_RANGE.component -> {
-                    viewModel.buildSingleDataModel()
-                    binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
-                    binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
-                    binding.numberRangeComponent.fromInput.requestFocus()
-                    if (state.parent.selectedName.isNotEmpty()) {
-                        val fromToArray = state.parent.selectedName.split("-")
-                        viewModel.fromValue = fromToArray[0].trim()
-                        viewModel.toValue = fromToArray[1].trim()
-                        binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
-                        binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
-                        binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
-                    }
-                }
-                ChipComponentType.SLIDER.component -> {
-                    viewModel.fromValue = "0"
-                    viewModel.buildSingleDataModel()
-                    binding.sliderComponent.componentParent.visibility = View.VISIBLE
-
-                    binding.sliderComponent.slider.apply {
-                        state.parent.category?.component?.settings?.min?.let { min ->
-                            valueFrom = min.toFloat()
-                        }
-                        state.parent.category?.component?.settings?.max?.let { max ->
-                            valueTo = max.toFloat()
-                        }
-                        state.parent.category?.component?.settings?.step?.let { step ->
-                            stepSize = step.toFloat()
-                        }
-                    }
-                    if (state.parent.selectedName.isNotEmpty()) {
-                        binding.sliderComponent.slider.value = state.parent.selectedName.toFloat()
-                    }
-                }
-                ChipComponentType.DATE_RANGE.component -> {
-                    binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
-
-                    binding.dateRangeComponent.fromInput.inputType = 0
-                    binding.dateRangeComponent.fromInput.isCursorVisible = false
-
-                    binding.dateRangeComponent.toInput.inputType = 0
-                    binding.dateRangeComponent.toInput.isCursorVisible = false
-
-                    state.parent.category?.component?.settings?.dateFormat?.let { format ->
-                        viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
-                    }
-
-                    if (state.parent.selectedName.isNotEmpty()) {
-                        val fromToArray = state.parent.selectedName.split("-")
-                        viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
-                        binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
-                        viewModel.toDate = getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim())
-                        binding.dateRangeComponent.toInput.setText(viewModel.toDate)
-                    }
-                }
-                ChipComponentType.FACET_FIELDS.component -> {
-                    binding.facetSearchComponent.componentParent.visibility = View.VISIBLE
-                }
+                ChipComponentType.TEXT.component -> setupTextComponent(state)
+                ChipComponentType.CHECK_LIST.component -> setupCheckListComponent()
+                ChipComponentType.RADIO.component -> setupRadioListComponent(state)
+                ChipComponentType.NUMBER_RANGE.component -> setupNumberRangeComponent(state)
+                ChipComponentType.SLIDER.component -> setupSliderComponent(state)
+                ChipComponentType.DATE_RANGE.component -> setupDateRangeComponent(state)
+                ChipComponentType.FACET_FIELDS.component,
+                ChipComponentType.FACET_INTERVALS.component -> setupFacetComponent()
             }
         }
     }
@@ -167,6 +124,18 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             dismiss()
         }
 
+        viewModel.onSearchComplete = {
+            epoxyCheckFacetListController.requestModelBuild()
+        }
+    }
+
+    private fun setupTextComponent(state: ComponentCreateState) {
+        binding.textComponent.componentParent.visibility = View.VISIBLE
+        binding.textComponent.nameInput.isFocusableInTouchMode = true
+        binding.textComponent.nameInput.requestFocus()
+        binding.textComponent.nameInputLayout.hint = state.parent.category?.component?.settings?.placeholder
+        binding.textComponent.nameInput.setText(state.parent.selectedName)
+        binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
         binding.textComponent.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -180,7 +149,35 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 viewModel.updateSingleComponentData(s.toString())
             }
         })
+    }
 
+    private fun setupCheckListComponent() {
+        viewModel.buildCheckListModel()
+        binding.checkListComponent.componentParent.visibility = View.VISIBLE
+        binding.checkListComponent.recyclerView.setController(epoxyCheckListController)
+    }
+
+    private fun setupRadioListComponent(state: ComponentCreateState) {
+        viewModel.buildSingleDataModel()
+        if (state.parent.selectedName.isEmpty())
+            viewModel.copyDefaultComponentData()
+        binding.radioListComponent.radioParent.visibility = View.VISIBLE
+        binding.radioListComponent.recyclerView.setController(epoxyRadioListController)
+    }
+
+    private fun setupNumberRangeComponent(state: ComponentCreateState) {
+        viewModel.buildSingleDataModel()
+        binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
+        binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
+        binding.numberRangeComponent.fromInput.requestFocus()
+        if (state.parent.selectedName.isNotEmpty()) {
+            val fromToArray = state.parent.selectedName.split("-")
+            viewModel.fromValue = fromToArray[0].trim()
+            viewModel.toValue = fromToArray[1].trim()
+            binding.numberRangeComponent.fromInput.setText(fromToArray[0].trim())
+            binding.numberRangeComponent.toInput.setText(fromToArray[1].trim())
+            binding.numberRangeComponent.fromInput.setSelection(fromToArray[0].trim().length)
+        }
         binding.numberRangeComponent.fromInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -222,13 +219,55 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 viewModel.updateFormatNumberRange(false)
             }
         })
+    }
 
+    private fun setupSliderComponent(state: ComponentCreateState) {
+        viewModel.fromValue = "0"
+        viewModel.buildSingleDataModel()
+        binding.sliderComponent.componentParent.visibility = View.VISIBLE
+
+        binding.sliderComponent.slider.apply {
+            state.parent.category?.component?.settings?.min?.let { min ->
+                valueFrom = min.toFloat()
+            }
+            state.parent.category?.component?.settings?.max?.let { max ->
+                valueTo = max.toFloat()
+            }
+            state.parent.category?.component?.settings?.step?.let { step ->
+                stepSize = step.toFloat()
+            }
+        }
+        if (state.parent.selectedName.isNotEmpty()) {
+            binding.sliderComponent.slider.value = state.parent.selectedName.toFloat()
+        }
         binding.sliderComponent.slider.addOnChangeListener { _, value, _ ->
             val sliderValue = value.toInt().toString()
             if (viewModel.isToValueValid(sliderValue)) {
                 viewModel.toValue = sliderValue
             } else viewModel.toValue = ""
             viewModel.updateFormatNumberRange(true)
+        }
+    }
+
+    private fun setupDateRangeComponent(state: ComponentCreateState) {
+        binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
+
+        binding.dateRangeComponent.fromInput.inputType = 0
+        binding.dateRangeComponent.fromInput.isCursorVisible = false
+
+        binding.dateRangeComponent.toInput.inputType = 0
+        binding.dateRangeComponent.toInput.isCursorVisible = false
+
+        state.parent.category?.component?.settings?.dateFormat?.let { format ->
+            viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
+        }
+
+        if (state.parent.selectedName.isNotEmpty()) {
+            val fromToArray = state.parent.selectedName.split("-")
+            viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
+            binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
+            viewModel.toDate = getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim())
+            binding.dateRangeComponent.toInput.setText(viewModel.toDate)
         }
 
         binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
@@ -291,24 +330,69 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         })
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupFacetComponent() {
+        viewModel.buildCheckListModel()
+        binding.facetCheckListComponent.componentParent.visibility = View.VISIBLE
+        binding.facetCheckListComponent.recyclerView.setController(epoxyCheckFacetListController)
+        binding.facetCheckListComponent.searchInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                setSearchQuery(s.toString().trim())
+            }
+        })
+    }
+
+    private fun setSearchQuery(query: String) {
+        viewModel.searchQuery = cleanupSearchQuery(query)
+        viewModel.searchBucket(searchText = viewModel.searchQuery)
+    }
+
+    private fun cleanupSearchQuery(query: String): String {
+        return query.replace("\\s+".toRegex(), " ").trim()
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
-        binding.checkListComponent.recyclerView.withModels {
+        when (state.parent.category?.component?.selector) {
+            ChipComponentType.CHECK_LIST.component -> {
+                epoxyCheckListController.requestModelBuild()
+            }
+            ChipComponentType.RADIO.component -> {
+                epoxyRadioListController.requestModelBuild()
+            }
+            ChipComponentType.FACET_FIELDS.component,
+            ChipComponentType.FACET_INTERVALS.component -> {
+                epoxyCheckFacetListController.requestModelBuild()
+            }
+        }
+    }
+
+    private fun epoxyCheckListController() = simpleController(viewModel) { state ->
+        if (state.parent.category?.component?.settings?.options?.isNotEmpty() == true)
             state.parent.category?.component?.settings?.options?.forEach { option ->
-                    listViewCheckRow {
-                        id(option.hashCode())
-                        data(option)
-                        optionSelected(viewModel.isOptionSelected(state, option))
-                        clickListener { model, _, _, _ ->
-                            viewModel.updateMultipleComponentData(
-                                model.data().name ?: "",
-                                model.data().value ?: ""
-                            )
-                        }
+                listViewCheckRow {
+                    id(option.hashCode())
+                    data(option)
+                    optionSelected(viewModel.isOptionSelected(state, option))
+                    clickListener { model, _, _, _ ->
+                        viewModel.updateMultipleComponentData(
+                            model.data().name ?: "",
+                            model.data().value ?: ""
+                        )
                     }
                 }
-        }
+            }
+    }
 
-        binding.radioListComponent.recyclerView.withModels {
+    private fun epoxyRadioListController() = simpleController(viewModel) { state ->
+        if (state.parent.category?.component?.settings?.options?.isNotEmpty() == true)
             state.parent.category?.component?.settings?.options?.forEach { option ->
                 listViewRadioRow {
                     id(option.hashCode())
@@ -322,7 +406,38 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                 }
             }
+    }
+
+    private fun epoxyCheckFacetListController() = simpleController(viewModel) { state ->
+        var listBucket: List<Buckets>? = null
+        when (state.parent.category?.component?.selector) {
+            ChipComponentType.FACET_FIELDS.component -> {
+                listBucket = if (viewModel.searchQuery.isNotEmpty())
+                    viewModel.searchBucketList
+                else
+                    state.parent.fieldsItem?.buckets
+            }
+            ChipComponentType.FACET_INTERVALS.component -> {
+                listBucket = if (viewModel.searchQuery.isNotEmpty())
+                    viewModel.searchBucketList
+                else
+                    state.parent.intervalsItem?.buckets?.filter { it.metrics?.get(0)?.value?.count != "0" }
+            }
         }
+        if (listBucket?.isNotEmpty() == true)
+            listBucket.forEach { bucket ->
+                listViewFacetCheckRow {
+                    id(bucket.hashCode())
+                    data(bucket)
+                    optionSelected(viewModel.isOptionSelected(state, bucket))
+                    clickListener { model, _, _, _ ->
+                        viewModel.updateMultipleComponentData(
+                            model.data().label ?: "",
+                            model.data().filterQuery ?: ""
+                        )
+                    }
+                }
+            }
     }
 
     private fun showCalendar(isFrom: Boolean) {

@@ -136,7 +136,7 @@ data class Buckets(
     var label: String? = null,
     var filterQuery: String? = null,
     var count: Int? = null,
-    var display: String? = null,
+    var display: String? = "",
     var metrics: List<Metric>? = null,
     var bucketInfo: BucketInfo? = null
 ) : Parcelable {

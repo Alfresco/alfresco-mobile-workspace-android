@@ -333,7 +333,7 @@ class SearchFragment : Fragment(), MavericksView {
                         id(modelID)
                         data(item)
                         clickListener { model, _, chipView, _ ->
-                            if (model.data().category?.component != null || model.data().queriesItem != null) {
+                            if (model.data().category?.component != null) {
                                 onChipClicked(model.data(), chipView)
                             } else {
                                 onContextualChipClicked(model.data(), chipView)

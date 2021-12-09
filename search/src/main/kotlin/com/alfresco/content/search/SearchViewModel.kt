@@ -343,6 +343,8 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
+                        fieldsItem = obj.fieldsItem,
+                        intervalsItem = obj.intervalsItem,
                         isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
                     )
                 )

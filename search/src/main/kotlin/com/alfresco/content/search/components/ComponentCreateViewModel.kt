@@ -156,7 +156,6 @@ class ComponentCreateViewModel(
      * build check list model for query and name
      */
     fun buildCheckListModel() = withState { state ->
-
         if (state.parent.selectedQuery.isNotEmpty()) {
             if (state.parent.selectedQuery.contains(delimiters)) {
                 val arrayQuery = state.parent.selectedQuery.split(delimiters)

@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
@@ -40,6 +43,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     var onReset: ComponentResetCallback? = null
     var onCancel: ComponentCancelCallback? = null
     var executedPicker = false
+    private val minVisibleItem = 10
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +60,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         dialog?.setOnCancelListener {
             onCancel?.invoke()
         }
-
         setupComponents()
         setListeners()
     }
@@ -69,8 +72,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             bottomSheet?.let {
                 BottomSheetBehavior.from<View>(it).apply {
                     val peekAmount = 1.0
-                    isHideable = false
-                    skipCollapsed = false
                     peekHeight = ((it.parent as View).height * peekAmount).toInt()
                 }
             }
@@ -79,7 +80,10 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupComponents() {
         withState(viewModel) { state ->
-            binding.title.text = state.parent.category?.name
+            binding.parentView.removeAllViews()
+            binding.parentView.addView(binding.topView)
+            binding.parentView.addView(binding.separator)
+            binding.title.text = requireContext().getLocalizedName(state.parent.category?.name ?: "")
             when (state.parent.category?.component?.selector) {
                 ChipComponentType.TEXT.component -> setupTextComponent(state)
                 ChipComponentType.CHECK_LIST.component -> setupCheckListComponent()
@@ -88,7 +92,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 ChipComponentType.SLIDER.component -> setupSliderComponent(state)
                 ChipComponentType.DATE_RANGE.component -> setupDateRangeComponent(state)
                 ChipComponentType.FACET_FIELDS.component,
-                ChipComponentType.FACET_INTERVALS.component -> setupFacetComponent()
+                ChipComponentType.FACET_INTERVALS.component -> {
+                    setupFacetComponent(state)
+                }
             }
         }
     }
@@ -130,6 +136,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setupTextComponent(state: ComponentCreateState) {
+        binding.parentView.addView(binding.frameText)
         binding.textComponent.componentParent.visibility = View.VISIBLE
         binding.textComponent.nameInput.isFocusableInTouchMode = true
         binding.textComponent.nameInput.requestFocus()
@@ -152,12 +159,14 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setupCheckListComponent() {
+        binding.parentView.addView(binding.frameCheckList)
         viewModel.buildCheckListModel()
         binding.checkListComponent.componentParent.visibility = View.VISIBLE
         binding.checkListComponent.recyclerView.setController(epoxyCheckListController)
     }
 
     private fun setupRadioListComponent(state: ComponentCreateState) {
+        binding.parentView.addView(binding.frameRadio)
         viewModel.buildSingleDataModel()
         if (state.parent.selectedName.isEmpty())
             viewModel.copyDefaultComponentData()
@@ -166,6 +175,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setupNumberRangeComponent(state: ComponentCreateState) {
+        binding.parentView.addView(binding.frameNumberRange)
         viewModel.buildSingleDataModel()
         binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
         binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
@@ -222,6 +232,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setupSliderComponent(state: ComponentCreateState) {
+        binding.parentView.addView(binding.frameSlider)
         viewModel.fromValue = "0"
         viewModel.buildSingleDataModel()
         binding.sliderComponent.componentParent.visibility = View.VISIBLE
@@ -250,6 +261,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setupDateRangeComponent(state: ComponentCreateState) {
+
+        binding.parentView.addView(binding.frameDateRange)
         binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
 
         binding.dateRangeComponent.fromInput.inputType = 0
@@ -331,8 +344,15 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupFacetComponent() {
+    private fun setupFacetComponent(state: ComponentCreateState) {
         viewModel.buildCheckListModel()
+        binding.parentView.addView(binding.frameFacet)
+        state.parent.fieldsItem?.buckets?.let {
+            if (it.size > minVisibleItem) {
+                binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
+                binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
+            }
+        }
         binding.facetCheckListComponent.componentParent.visibility = View.VISIBLE
         binding.facetCheckListComponent.recyclerView.setController(epoxyCheckFacetListController)
         binding.facetCheckListComponent.searchInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -467,5 +487,10 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 viewModel.updateFormatDateRange()
             }
         }
+    }
+
+    private fun getRecyclerviewLayoutParams(): LinearLayout.LayoutParams {
+        val calculatedHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, minVisibleItem * 48f, resources.displayMetrics).toInt()
+        return LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, calculatedHeight)
     }
 }

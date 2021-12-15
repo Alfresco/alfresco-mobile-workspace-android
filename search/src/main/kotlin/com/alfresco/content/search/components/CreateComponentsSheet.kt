@@ -91,9 +91,23 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 ChipComponentType.NUMBER_RANGE.component -> setupNumberRangeComponent(state)
                 ChipComponentType.SLIDER.component -> setupSliderComponent(state)
                 ChipComponentType.DATE_RANGE.component -> setupDateRangeComponent(state)
-                ChipComponentType.FACET_FIELDS.component,
+                ChipComponentType.FACET_FIELDS.component -> {
+                    state.parent.fieldsItem?.buckets?.let {
+                        if (it.size > minVisibleItem) {
+                            binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
+                            binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
+                        }
+                    }
+                    setupFacetComponent()
+                }
                 ChipComponentType.FACET_INTERVALS.component -> {
-                    setupFacetComponent(state)
+                    state.parent.intervalsItem?.buckets?.let {
+                        if (it.size > minVisibleItem) {
+                            binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
+                            binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
+                        }
+                    }
+                    setupFacetComponent()
                 }
             }
         }
@@ -344,15 +358,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupFacetComponent(state: ComponentCreateState) {
+    private fun setupFacetComponent() {
         viewModel.buildCheckListModel()
         binding.parentView.addView(binding.frameFacet)
-        state.parent.fieldsItem?.buckets?.let {
-            if (it.size > minVisibleItem) {
-                binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
-                binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
-            }
-        }
         binding.facetCheckListComponent.componentParent.visibility = View.VISIBLE
         binding.facetCheckListComponent.recyclerView.setController(epoxyCheckFacetListController)
         binding.facetCheckListComponent.searchInputLayout.editText?.addTextChangedListener(object : TextWatcher {
@@ -441,7 +449,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                 listBucket = if (viewModel.searchQuery.isNotEmpty())
                     viewModel.searchBucketList
                 else
-                    state.parent.intervalsItem?.buckets?.filter { it.metrics?.get(0)?.value?.count != "0" }
+                    state.parent.intervalsItem?.buckets
             }
         }
         if (listBucket?.isNotEmpty() == true)

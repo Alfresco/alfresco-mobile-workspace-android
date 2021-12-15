@@ -3,6 +3,7 @@ package com.alfresco.content.search.components
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.alfresco.content.search.R
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -67,6 +68,9 @@ data class DatePickerBuilder(
         constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
+            if (isFrom)
+                setTitleText(context.getString(R.string.hint_range_from_date))
+            else setTitleText(context.getString(R.string.hint_range_to_date))
             setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
         }.build()

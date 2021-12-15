@@ -48,12 +48,12 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.text = dataObj.category?.name
             }
             ChipComponentType.FACET_FIELDS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.take20orDefault() else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
             }
             ChipComponentType.FACET_INTERVALS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.take20orDefault() else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
             }
-            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category?.name
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.take20orDefault() else dataObj.category?.name
         }
 
         binding.chip.isChecked = dataObj.isSelected
@@ -62,7 +62,13 @@ class ListViewFilterChips @JvmOverloads constructor(
     private fun String.take20orDefault(): String {
         if (this.length <= 20)
             return this
-        return context.getString(R.string.name_truncate_end, this.take(20))
+
+        if (this.contains(",")) {
+            val splitStringArray = this.split(",")
+            return context.getString(R.string.name_truncate_in_end, splitStringArray[0].take20orDefault(), splitStringArray.size.minus(1))
+        }
+
+        return context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
     }
 
     /**

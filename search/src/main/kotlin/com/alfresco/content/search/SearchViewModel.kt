@@ -214,6 +214,9 @@ class SearchViewModel(
         return list
     }
 
+    /**
+     * return the default facet fields list from app config json using the index
+     */
     fun defaultFacetFields(index: Int?): SearchFacetFields {
         val list = emptySearchFacetFields()
         if (index != null) {
@@ -224,6 +227,9 @@ class SearchViewModel(
         return list
     }
 
+    /**
+     * return the default facet queries list from app config json using the index
+     */
     fun defaultFacetQueries(index: Int?): SearchFacetQueries {
         val list = emptySearchFacetQueries()
         if (index != null) {
@@ -234,6 +240,9 @@ class SearchViewModel(
         return list
     }
 
+    /**
+     * return the default facet intervals list from app config json using the index
+     */
     fun defaultFacetIntervals(index: Int?): SearchFacetIntervals {
         val list = emptySearchFacetIntervals()
         if (index != null) {

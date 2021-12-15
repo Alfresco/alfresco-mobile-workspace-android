@@ -70,15 +70,17 @@ data class SearchResultsState(
             val facetIntervals = response.facetContext?.facetResponse?.facetIntervals
 
             var isFacetFilterSelected = false
-            run outForEach@{
-                list?.forEach { filterChip ->
+
+            if (list != null) {
+                for (filterChip in list) {
+
                     if (filterChip.fieldsItem != null && filterChip.isSelected) {
                         isFacetFilterSelected = true
-                        return@outForEach
+                        break
                     }
                     if (filterChip.intervalsItem != null && filterChip.isSelected) {
                         isFacetFilterSelected = true
-                        return@outForEach
+                        break
                     }
                 }
             }
@@ -114,16 +116,12 @@ data class SearchResultsState(
 
     private fun getFieldBucketList(obj: SearchChipCategory, fieldObj: FacetFields): List<Buckets> {
         val listBuckets: MutableList<Buckets> = mutableListOf()
+
         obj.fieldsItem?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateFieldBucketCount(oldBucket)
-            run outForEachBucket@{
-                fieldObj.buckets?.forEach { newBucket ->
-                    if (oldBucket.filterQuery == newBucket.filterQuery) {
-                        bucketObj.count = newBucket.count
-                        return@outForEachBucket
-                    }
-                }
-            }
+            val newBucketObj = fieldObj.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
+            if (newBucketObj != null)
+                bucketObj.count = newBucketObj.count
             listBuckets.add(bucketObj)
         }
         return listBuckets
@@ -133,14 +131,9 @@ data class SearchResultsState(
         val listBuckets: MutableList<Buckets> = mutableListOf()
         obj.intervalsItem?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)
-            run outForEachBucket@{
-                intervalsItem.buckets?.forEach { newBucket ->
-                    if (oldBucket.filterQuery == newBucket.filterQuery) {
-                        bucketObj.metrics?.get(0)?.value?.count = newBucket.metrics?.get(0)?.value?.count
-                        return@outForEachBucket
-                    }
-                }
-            }
+            val newBucketObj = intervalsItem.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
+            if (newBucketObj != null)
+                bucketObj.metrics?.get(0)?.value?.count = newBucketObj.metrics?.get(0)?.value?.count
             listBuckets.add(bucketObj)
         }
         return listBuckets

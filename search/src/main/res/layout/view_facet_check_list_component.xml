@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -27,7 +29,6 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         app:layoutManager="LinearLayoutManager" />
 
 </LinearLayout>

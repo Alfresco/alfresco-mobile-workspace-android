@@ -61,6 +61,8 @@ data class SearchChipCategory(
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,
+                fieldsItem = searchChipCategory.fieldsItem,
+                intervalsItem = searchChipCategory.intervalsItem,
                 isSelected = searchChipCategory.category?.component == null,
                 selectedName = "",
                 selectedQuery = ""
@@ -89,7 +91,7 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_FIELDS.component),
-                    null, data.label, null
+                    data.label, data.label, null
                 ),
                 fieldsItem = data,
                 selectedName = "",
@@ -104,7 +106,7 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_INTERVALS.component),
-                    null, data.label, null
+                    data.label, data.label, null
                 ),
                 intervalsItem = data,
                 selectedName = "",

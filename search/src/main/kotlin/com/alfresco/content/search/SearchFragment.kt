@@ -21,6 +21,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.AdvanceSearchFilter
+import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
 import com.alfresco.content.data.emptyAdvanceFilters
@@ -426,10 +427,16 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun applyAdvanceFilters(position: Int, list: MutableList<SearchChipCategory>) {
         val advanceSearchFilter = emptyAdvanceFilters()
+        val facetData = SearchFacetData(
+            viewModel.defaultFacetFields(position),
+            viewModel.defaultFacetQueries(position),
+            viewModel.defaultFacetIntervals(position)
+        )
 
         advanceSearchFilter.addAll(viewModel.initAdvanceFilters(position))
 
         list.forEach { if (it.isSelected) advanceSearchFilter.add(AdvanceSearchFilter(it.selectedQuery, it.selectedName)) }
-        resultsFragment.setFilters(advanceSearchFilter)
+
+        resultsFragment.setFilters(advanceSearchFilter, facetData)
     }
 }

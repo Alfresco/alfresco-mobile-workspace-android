@@ -10,6 +10,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
@@ -40,9 +41,9 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     /**
      * set the advance filters on the viewModel
      */
-    fun setFilters(filters: AdvanceSearchFilters) {
+    fun setFilters(filters: AdvanceSearchFilters, facetData: SearchFacetData) {
         scrollToTop()
-        viewModel.setFilters(filters)
+        viewModel.setFilters(filters, facetData)
     }
 
     private fun scrollToTop() {
@@ -68,8 +69,8 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
             // Shown only when refining a search
             topLoadingIndicator?.isVisible =
                 state.request is Loading &&
-                state.entries.isNotEmpty() &&
-                !refreshLayout.isRefreshing
+                        state.entries.isNotEmpty() &&
+                        !refreshLayout.isRefreshing
         }
     }
 }

@@ -63,9 +63,11 @@ class SearchViewModel(
 
         appConfigModel = repository.getAppConfig()
         // TODO: move search params to state object
+        val defaultIndex = appConfigModel.search?.indexOfFirst { it.default == true }
         params = SearchParams(
             "", state.contextId, defaultFilters(state), defaultAdvanceFilters(state),
-            defaultFacetQueries(), defaultFacetIntervals(), defaultFacetFields(), 0
+            defaultFacetQueries(defaultIndex), defaultFacetIntervals(defaultIndex),
+            defaultFacetFields(defaultIndex), 0
         )
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
@@ -212,9 +214,11 @@ class SearchViewModel(
         return list
     }
 
-    private fun defaultFacetFields(): SearchFacetFields {
+    /**
+     * return the default facet fields list from app config json using the index
+     */
+    fun defaultFacetFields(index: Int?): SearchFacetFields {
         val list = emptySearchFacetFields()
-        val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null) {
             appConfigModel.search?.get(index)?.facetFields?.fields?.toMutableList()?.let {
                 list.addAll(it)
@@ -223,9 +227,11 @@ class SearchViewModel(
         return list
     }
 
-    private fun defaultFacetQueries(): SearchFacetQueries {
+    /**
+     * return the default facet queries list from app config json using the index
+     */
+    fun defaultFacetQueries(index: Int?): SearchFacetQueries {
         val list = emptySearchFacetQueries()
-        val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null) {
             appConfigModel.search?.get(index)?.facetQueries?.queries?.toMutableList()?.let {
                 list.addAll(it)
@@ -234,9 +240,11 @@ class SearchViewModel(
         return list
     }
 
-    private fun defaultFacetIntervals(): SearchFacetIntervals {
+    /**
+     * return the default facet intervals list from app config json using the index
+     */
+    fun defaultFacetIntervals(index: Int?): SearchFacetIntervals {
         val list = emptySearchFacetIntervals()
-        val index = appConfigModel.search?.indexOfFirst { it.default == true }
         if (index != null) {
             appConfigModel.search?.get(index)?.facetIntervals?.intervals?.toMutableList()?.let {
                 list.addAll(it)
@@ -280,13 +288,23 @@ class SearchViewModel(
     /**
      * set advance filters to search params
      */
-    fun setFilters(advanceSearchFilter: AdvanceSearchFilters) {
+    fun setFilters(advanceSearchFilter: AdvanceSearchFilters, facetData: SearchFacetData) {
         // Avoid triggering refresh when filters don't change
         if (advanceSearchFilter != params.advanceSearchFilter) {
-            params = params.copy(advanceSearchFilter = advanceSearchFilter)
+            params = params.copy(
+                advanceSearchFilter = advanceSearchFilter,
+                listFacetFields = facetData.searchFacetFields,
+                listFacetIntervals = facetData.searchFacetIntervals,
+                listFacetQueries = facetData.searchFacetQueries
+            )
             refresh()
         } else if (isRefreshSearch) {
-            params = params.copy(advanceSearchFilter = emptyAdvanceFilters())
+            params = params.copy(
+                advanceSearchFilter = emptyAdvanceFilters(),
+                listFacetFields = facetData.searchFacetFields,
+                listFacetIntervals = facetData.searchFacetIntervals,
+                listFacetQueries = facetData.searchFacetQueries
+            )
             refresh()
             isRefreshSearch = false
         }

@@ -30,10 +30,16 @@
     <string name="hint_range_to">To</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="label_count_format_string" translatable="false">%1$s (%2$s)</string>
 
     <string name="search.facet_fields.size">Size</string>
     <string name="search.facet_fields.created">Created</string>
     <string name="search.facet_fields.type">Type</string>
     <string name="search.facet_fields.modifier">Modifier</string>
     <string name="search.facet_fields.creator">Creator</string>
+    <string name="hint_range_from_date">From Date</string>
+    <string name="hint_range_to_date">To Date</string>
+    <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
+    <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
 </resources>

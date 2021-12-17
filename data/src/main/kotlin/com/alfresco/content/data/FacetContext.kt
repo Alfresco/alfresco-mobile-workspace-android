@@ -87,6 +87,15 @@ data class FacetFields(
                 result.buckets?.map { Buckets.with(it) } ?: emptyList()
             )
         }
+
+        /**
+         * returns the update FacetFields using the new value
+         */
+        fun updateFacetFieldBucket(result: FacetFields, listBucket: MutableList<Buckets>): FacetFields {
+            return FacetFields(
+                result.label, listBucket
+            )
+        }
     }
 }
 
@@ -155,6 +164,19 @@ data class Buckets(
             return Buckets(result.label, result.filterQuery, metrics = result.metrics?.map { Metric.with(it) } ?: emptyList(),
                 bucketInfo = result.bucketInfo?.let { BucketInfo.with(it) })
         }
+        /**
+         * returns the update Buckets after set the count value to 0
+         */
+        fun updateFieldBucketCount(result: Buckets): Buckets {
+            return Buckets(label = result.label, filterQuery = result.filterQuery, count = 0, display = result.display)
+        }
+
+        /**
+         * returns the update Buckets after set the Metrics count value to 0
+         */
+        fun updateIntervalBucketCount(result: Buckets): Buckets {
+            return Buckets(label = result.label, filterQuery = result.filterQuery, metrics = result.metrics?.map { Metric.updateMetric(it) } ?: emptyList(), bucketInfo = result.bucketInfo)
+        }
     }
 }
 
@@ -193,6 +215,13 @@ data class Metric(
         fun with(result: GenericMetric): Metric {
             return Metric(result.type, result.value?.let { Value.with(it) })
         }
+
+        /**
+         * returns the update Metric obj
+         */
+        fun updateMetric(result: Metric): Metric {
+            return Metric(result.type, Value(count = "0"))
+        }
     }
 }
 
@@ -201,7 +230,7 @@ data class Metric(
  */
 @Parcelize
 data class Value(
-    val count: String? = null
+    var count: String? = null
 ) : Parcelable {
     companion object {
         /**

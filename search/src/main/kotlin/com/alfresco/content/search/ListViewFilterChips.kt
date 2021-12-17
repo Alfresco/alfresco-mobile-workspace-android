@@ -43,26 +43,32 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
                 if (dataObj.selectedName.isNotEmpty())
-                    binding.chip.text = dataObj.selectedName.take20orDefault()
+                    binding.chip.text = dataObj.selectedName.wrapWithLimit(20, ",")
                 else
                     binding.chip.text = dataObj.category?.name
             }
             ChipComponentType.FACET_FIELDS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
             }
             ChipComponentType.FACET_INTERVALS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
             }
-            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName else dataObj.category?.name
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else dataObj.category?.name
         }
 
         binding.chip.isChecked = dataObj.isSelected
     }
 
-    private fun String.take20orDefault(): String {
-        if (this.length <= 20)
+    private fun String.wrapWithLimit(limit: Int, delimiter: String): String {
+        if (this.length <= limit)
             return this
-        return context.getString(R.string.name_truncate_end, this.take(20))
+
+        if (this.contains(delimiter)) {
+            val splitStringArray = this.split(delimiter)
+            return context.getString(R.string.name_truncate_in_end, splitStringArray[0].wrapWithLimit(20, ","), splitStringArray.size.minus(1))
+        }
+
+        return context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
     }
 
     /**

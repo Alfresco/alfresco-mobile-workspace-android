@@ -2,7 +2,10 @@ package com.alfresco.content.search
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.data.Buckets
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.FacetFields
+import com.alfresco.content.data.FacetIntervals
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFacetFields
 import com.alfresco.content.data.SearchFacetIntervals
@@ -66,16 +69,42 @@ data class SearchResultsState(
             val facetFields = response.facetContext?.facetResponse?.facetFields
             val facetIntervals = response.facetContext?.facetResponse?.facetIntervals
 
-            facetFields?.forEach {
-                val obj = list?.find { data -> data.fieldsItem?.label == it.label }
-                if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(it))
+            var isFacetFilterSelected = false
+
+            if (list != null) {
+                for (filterChip in list) {
+
+                    if (filterChip.fieldsItem != null && filterChip.isSelected) {
+                        isFacetFilterSelected = true
+                        break
+                    }
+                    if (filterChip.intervalsItem != null && filterChip.isSelected) {
+                        isFacetFilterSelected = true
+                        break
+                    }
+                }
             }
 
-            facetIntervals?.forEach {
-                val obj = list?.find { data -> data.intervalsItem?.label == it.label }
+            facetFields?.forEach { fieldObj ->
+                val obj = list?.find { data -> data.fieldsItem?.label == fieldObj.label }
                 if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(it))
+                    list?.add(SearchChipCategory.withDefaultFacet(fieldObj))
+                else {
+                    if (isFacetFilterSelected)
+                        fieldObj.buckets = getFieldBucketList(obj, fieldObj)
+                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, fieldObj)
+                }
+            }
+
+            facetIntervals?.forEach { intervalObj ->
+                val obj = list?.find { data -> data.intervalsItem?.label == intervalObj.label }
+                if (obj == null)
+                    list?.add(SearchChipCategory.withDefaultFacet(intervalObj))
+                else {
+                    if (isFacetFilterSelected)
+                        intervalObj.buckets = getIntervalBucketList(obj, intervalObj)
+                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, intervalObj)
+                }
             }
 
             if (list != listSearchCategoryChips)
@@ -83,6 +112,31 @@ data class SearchResultsState(
         }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
+    }
+
+    private fun getFieldBucketList(obj: SearchChipCategory, fieldObj: FacetFields): List<Buckets> {
+        val listBuckets: MutableList<Buckets> = mutableListOf()
+
+        obj.fieldsItem?.buckets?.forEach { oldBucket ->
+            val bucketObj = Buckets.updateFieldBucketCount(oldBucket)
+            val newBucketObj = fieldObj.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
+            if (newBucketObj != null)
+                bucketObj.count = newBucketObj.count
+            listBuckets.add(bucketObj)
+        }
+        return listBuckets
+    }
+
+    private fun getIntervalBucketList(obj: SearchChipCategory, intervalsItem: FacetIntervals): List<Buckets> {
+        val listBuckets: MutableList<Buckets> = mutableListOf()
+        obj.intervalsItem?.buckets?.forEach { oldBucket ->
+            val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)
+            val newBucketObj = intervalsItem.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
+            if (newBucketObj != null)
+                bucketObj.metrics?.get(0)?.value?.count = newBucketObj.metrics?.get(0)?.value?.count
+            listBuckets.add(bucketObj)
+        }
+        return listBuckets
     }
 
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)

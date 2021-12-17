@@ -61,6 +61,8 @@ data class SearchChipCategory(
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,
+                fieldsItem = searchChipCategory.fieldsItem,
+                intervalsItem = searchChipCategory.intervalsItem,
                 isSelected = searchChipCategory.category?.component == null,
                 selectedName = "",
                 selectedQuery = ""
@@ -89,7 +91,7 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_FIELDS.component),
-                    null, data.label, null
+                    data.label, data.label, null
                 ),
                 fieldsItem = data,
                 selectedName = "",
@@ -104,11 +106,37 @@ data class SearchChipCategory(
             return SearchChipCategory(
                 category = CategoriesItem(
                     null, Component(null, ChipComponentType.FACET_INTERVALS.component),
-                    null, data.label, null
+                    data.label, data.label, null
                 ),
                 intervalsItem = data,
                 selectedName = "",
                 selectedQuery = ""
+            )
+        }
+
+        /**
+         * return the update SearchChipCategory obj using FacetFields data obj
+         */
+        fun updateFacet(oldDataObj: SearchChipCategory, data: FacetFields): SearchChipCategory {
+            return SearchChipCategory(
+                category = oldDataObj.category,
+                fieldsItem = data,
+                selectedName = oldDataObj.selectedName,
+                selectedQuery = oldDataObj.selectedQuery,
+                isSelected = oldDataObj.isSelected
+            )
+        }
+
+        /**
+         * return the update SearchChipCategory obj using FacetIntervals data obj
+         */
+        fun updateFacet(oldDataObj: SearchChipCategory, data: FacetIntervals): SearchChipCategory {
+            return SearchChipCategory(
+                category = oldDataObj.category,
+                intervalsItem = data,
+                selectedName = oldDataObj.selectedName,
+                selectedQuery = oldDataObj.selectedQuery,
+                isSelected = oldDataObj.isSelected
             )
         }
     }

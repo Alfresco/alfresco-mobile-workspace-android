@@ -65,7 +65,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                     includeFacetFieldsFrom(searchFacetData.searchFacetFields),
                     includeFacetQueriesFrom(searchFacetData.searchFacetQueries),
                     includeFacetIntervalsFrom(searchFacetData.searchFacetIntervals)
-                )
+                ),
+                "V2"
             )
         )
     } else {

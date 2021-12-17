@@ -20,8 +20,8 @@ include ':viewer-image'
 include ':viewer-text'
 include ':viewer-media'
 include ':app'
-//include ':content'
-//include ':content-ktx'
+include ':content'
+include ':content-ktx'
 
 // Enable Gradle's version catalog support
 // Ref: https://docs.gradle.org/current/userguide/platforms.html

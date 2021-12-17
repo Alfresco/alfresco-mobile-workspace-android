@@ -28,7 +28,8 @@ dependencies {
     implementation project(':listview')
     implementation project(':session')
 
-    implementation libs.alfresco.content
+    implementation project(':content')
+//    implementation libs.alfresco.content
 
     implementation libs.kotlin.reflect
     implementation libs.androidx.core

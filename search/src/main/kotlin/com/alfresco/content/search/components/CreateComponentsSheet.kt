@@ -83,25 +83,16 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             binding.parentView.removeAllViews()
             binding.parentView.addView(binding.topView)
             binding.parentView.addView(binding.separator)
-            binding.title.text = requireContext().getLocalizedName(state.parent.category?.name ?: "")
-            when (state.parent.category?.component?.selector) {
+            binding.title.text = requireContext().getLocalizedName(state.parent?.category?.name ?: "")
+            when (state.parent?.category?.component?.selector) {
                 ChipComponentType.TEXT.component -> setupTextComponent(state)
                 ChipComponentType.CHECK_LIST.component -> setupCheckListComponent()
                 ChipComponentType.RADIO.component -> setupRadioListComponent(state)
                 ChipComponentType.NUMBER_RANGE.component -> setupNumberRangeComponent(state)
                 ChipComponentType.SLIDER.component -> setupSliderComponent(state)
                 ChipComponentType.DATE_RANGE.component -> setupDateRangeComponent(state)
-                ChipComponentType.FACET_FIELDS.component -> {
-                    state.parent.fieldsItem?.buckets?.let {
-                        if (it.size > minVisibleItem) {
-                            binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
-                            binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
-                        }
-                    }
-                    setupFacetComponent()
-                }
-                ChipComponentType.FACET_INTERVALS.component -> {
-                    state.parent.intervalsItem?.buckets?.let {
+                ChipComponentType.FACETS.component -> {
+                    state.parent.facets?.buckets?.let {
                         if (it.size > minVisibleItem) {
                             binding.facetCheckListComponent.recyclerView.layoutParams = getRecyclerviewLayoutParams()
                             binding.facetCheckListComponent.searchInputLayout.visibility = View.VISIBLE
@@ -116,7 +107,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
-                if (state.parent.category?.component?.selector == ChipComponentType.DATE_RANGE.component) {
+                if (state.parent?.category?.component?.selector == ChipComponentType.DATE_RANGE.component) {
                     when {
                         viewModel.fromDate.isEmpty() -> {
                             binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
@@ -130,7 +121,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         }
                     }
                 } else {
-                    onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery)
+                    onApply?.invoke(state.parent?.selectedName ?: "", state.parent?.selectedQuery ?: "")
                     dismiss()
                 }
             }
@@ -154,9 +145,9 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         binding.textComponent.componentParent.visibility = View.VISIBLE
         binding.textComponent.nameInput.isFocusableInTouchMode = true
         binding.textComponent.nameInput.requestFocus()
-        binding.textComponent.nameInputLayout.hint = state.parent.category?.component?.settings?.placeholder
-        binding.textComponent.nameInput.setText(state.parent.selectedName)
-        binding.textComponent.nameInput.setSelection(state.parent.selectedName.length)
+        binding.textComponent.nameInputLayout.hint = state.parent?.category?.component?.settings?.placeholder
+        binding.textComponent.nameInput.setText(state.parent?.selectedName)
+        state.parent?.selectedName?.length?.let { length -> binding.textComponent.nameInput.setSelection(length) }
         binding.textComponent.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -182,7 +173,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setupRadioListComponent(state: ComponentCreateState) {
         binding.parentView.addView(binding.frameRadio)
         viewModel.buildSingleDataModel()
-        if (state.parent.selectedName.isEmpty())
+        if (state.parent?.selectedName?.isEmpty() == true)
             viewModel.copyDefaultComponentData()
         binding.radioListComponent.radioParent.visibility = View.VISIBLE
         binding.radioListComponent.recyclerView.setController(epoxyRadioListController)
@@ -194,7 +185,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
         binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
         binding.numberRangeComponent.fromInput.requestFocus()
-        if (state.parent.selectedName.isNotEmpty()) {
+        if (state.parent?.selectedName?.isNotEmpty() == true) {
             val fromToArray = state.parent.selectedName.split("-")
             viewModel.fromValue = fromToArray[0].trim()
             viewModel.toValue = fromToArray[1].trim()
@@ -252,17 +243,17 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         binding.sliderComponent.componentParent.visibility = View.VISIBLE
 
         binding.sliderComponent.slider.apply {
-            state.parent.category?.component?.settings?.min?.let { min ->
+            state.parent?.category?.component?.settings?.min?.let { min ->
                 valueFrom = min.toFloat()
             }
-            state.parent.category?.component?.settings?.max?.let { max ->
+            state.parent?.category?.component?.settings?.max?.let { max ->
                 valueTo = max.toFloat()
             }
-            state.parent.category?.component?.settings?.step?.let { step ->
+            state.parent?.category?.component?.settings?.step?.let { step ->
                 stepSize = step.toFloat()
             }
         }
-        if (state.parent.selectedName.isNotEmpty()) {
+        if (state.parent?.selectedName?.isNotEmpty() == true) {
             binding.sliderComponent.slider.value = state.parent.selectedName.toFloat()
         }
         binding.sliderComponent.slider.addOnChangeListener { _, value, _ ->
@@ -285,11 +276,11 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         binding.dateRangeComponent.toInput.inputType = 0
         binding.dateRangeComponent.toInput.isCursorVisible = false
 
-        state.parent.category?.component?.settings?.dateFormat?.let { format ->
+        state.parent?.category?.component?.settings?.dateFormat?.let { format ->
             viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
         }
 
-        if (state.parent.selectedName.isNotEmpty()) {
+        if (state.parent?.selectedName?.isNotEmpty() == true) {
             val fromToArray = state.parent.selectedName.split("-")
             viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
             binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
@@ -388,22 +379,21 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        when (state.parent.category?.component?.selector) {
+        when (state.parent?.category?.component?.selector) {
             ChipComponentType.CHECK_LIST.component -> {
                 epoxyCheckListController.requestModelBuild()
             }
             ChipComponentType.RADIO.component -> {
                 epoxyRadioListController.requestModelBuild()
             }
-            ChipComponentType.FACET_FIELDS.component,
-            ChipComponentType.FACET_INTERVALS.component -> {
+            ChipComponentType.FACETS.component -> {
                 epoxyCheckFacetListController.requestModelBuild()
             }
         }
     }
 
     private fun epoxyCheckListController() = simpleController(viewModel) { state ->
-        if (state.parent.category?.component?.settings?.options?.isNotEmpty() == true)
+        if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
             state.parent.category?.component?.settings?.options?.forEach { option ->
                 listViewCheckRow {
                     id(option.hashCode())
@@ -420,7 +410,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun epoxyRadioListController() = simpleController(viewModel) { state ->
-        if (state.parent.category?.component?.settings?.options?.isNotEmpty() == true)
+        if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
             state.parent.category?.component?.settings?.options?.forEach { option ->
                 listViewRadioRow {
                     id(option.hashCode())
@@ -438,18 +428,12 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun epoxyCheckFacetListController() = simpleController(viewModel) { state ->
         var listBucket: List<Buckets>? = null
-        when (state.parent.category?.component?.selector) {
-            ChipComponentType.FACET_FIELDS.component -> {
+        when (state.parent?.category?.component?.selector) {
+            ChipComponentType.FACETS.component -> {
                 listBucket = if (viewModel.searchQuery.isNotEmpty())
                     viewModel.searchBucketList
                 else
-                    state.parent.fieldsItem?.buckets
-            }
-            ChipComponentType.FACET_INTERVALS.component -> {
-                listBucket = if (viewModel.searchQuery.isNotEmpty())
-                    viewModel.searchBucketList
-                else
-                    state.parent.intervalsItem?.buckets
+                    state.parent.facets?.buckets
             }
         }
         if (listBucket?.isNotEmpty() == true)
@@ -460,7 +444,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                     optionSelected(viewModel.isOptionSelected(state, bucket))
                     clickListener { model, _, _, _ ->
                         viewModel.updateMultipleComponentData(
-                            model.data().label ?: "",
+                            requireContext().getLocalizedName(model.data().label ?: ""),
                             model.data().filterQuery ?: ""
                         )
                     }

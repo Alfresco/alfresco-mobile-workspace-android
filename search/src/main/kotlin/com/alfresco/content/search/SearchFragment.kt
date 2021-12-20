@@ -36,6 +36,7 @@ import com.alfresco.content.simpleController
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,8 +68,8 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private lateinit var binding: FragmentSearchBinding
-
     private lateinit var searchView: SearchView
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private val recentsFragment by lazy {
@@ -371,6 +372,7 @@ class SearchFragment : Fragment(), MavericksView {
                     (chipView as FilterChip).isChecked = true
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
+
                     val result = showComponentSheetDialog(requireContext(), data)
                     binding.recyclerViewChips.isEnabled = true
                     if (result != null) {
@@ -388,7 +390,7 @@ class SearchFragment : Fragment(), MavericksView {
     private suspend fun showComponentSheetDialog(
         context: Context,
         searchChipCategory: SearchChipCategory
-    ) = withContext(Dispatchers.Main) {
+    ) = withContext(dispatcher) {
         suspendCoroutine<ComponentMetaData?> {
             ComponentBuilder(context, searchChipCategory)
                 .onApply { name, query ->

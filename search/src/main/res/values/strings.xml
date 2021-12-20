@@ -42,4 +42,26 @@
     <string name="hint_range_to_date">To Date</string>
     <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
     <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
+
+
+    <string name="size.facet.queries">Size Facet Queries</string>
+    <string name="search.facet_queries.medium">Medium</string>
+    <string name="search.facet_queries.large">Large</string>
+    <string name="search.facet_queries.small">Small</string>
+    <string name="search.facet_queries.xtrasmall">Extra Small</string>
+    <string name="search.facet_queries.xtralarge">Extra Large</string>
+    <string name="search.facet_queries.xxtralarge">Extra Extra Large</string>
+    <string name="earlier">Earlier</string>
+    <string name="lastYear">Last Year</string>
+    <string name="currentYear">Current Year</string>
+    <string name="search.facet_queries.created_this_year">This Year</string>
+    <string name="search.facet_queries.mimetype">MIME Type</string>
+    <string name="the.created.mobileapps">The Created</string>
+    <string name="the.modified.mobileapps">The Modified</string>
+    <string name="folder.size.mobileapps">Size</string>
+    <string name="folder.created.mobileapps">Folder Created</string>
+    <string name="folder.creator.mobileapps">Folder created</string>
+    <string name="folder.modifier.mobileapps">Folder Modifier</string>
+    <string name="search.facet_queries.my_facet_queries">My Facet Queries</string>
+
 </resources>

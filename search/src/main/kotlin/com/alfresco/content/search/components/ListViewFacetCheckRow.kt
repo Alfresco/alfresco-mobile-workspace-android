@@ -8,6 +8,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.Buckets
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.ViewCheckListRowBinding
 
@@ -21,10 +22,11 @@ internal class ListViewFacetCheckRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(options: Buckets) {
+        val label = options.label ?: ""
         if (options.metrics == null) {
-            binding.title.text = String.format(context.getString(R.string.label_count_format_integer), options.label, options.count)
+            binding.title.text = String.format(context.getString(R.string.label_count_format_integer), context.getLocalizedName(label), options.count)
         } else {
-            binding.title.text = String.format(context.getString(R.string.label_count_format_string), options.label, options.metrics?.get(0)?.value?.count)
+            binding.title.text = String.format(context.getString(R.string.label_count_format_string), context.getLocalizedName(label), options.metrics?.get(0)?.value?.count)
         }
     }
 

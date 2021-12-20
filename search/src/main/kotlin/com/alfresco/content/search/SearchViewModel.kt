@@ -321,11 +321,10 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
-                        fieldsItem = obj.fieldsItem,
-                        intervalsItem = obj.intervalsItem,
-                        isSelected = metaData.name.isNotEmpty(),
-                        selectedName = metaData.name,
-                        selectedQuery = metaData.query
+                        facets = obj.facets,
+                        isSelected = metaData.name?.isNotEmpty() == true,
+                        selectedName = metaData.name ?: "",
+                        selectedQuery = metaData.query ?: ""
                     )
                 )
             } else
@@ -363,8 +362,7 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
-                        fieldsItem = obj.fieldsItem,
-                        intervalsItem = obj.intervalsItem,
+                        facets = obj.facets,
                         isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
                     )
                 )

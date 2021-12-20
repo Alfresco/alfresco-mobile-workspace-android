@@ -120,7 +120,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         if (!searchFacetQueries.isNullOrEmpty()) searchFacetQueries.mapTo(mutableListOf()) {
             RequestFacetQueriesInner(
                 label = it.label,
-                query = it.query
+                query = it.query,
+                group = it.group
             )
         } else null
 
@@ -157,39 +158,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     /**
      * Get AppConfigModel from the internal storage or from assets
      */
-    fun getAppConfig(): AppConfigModel = if (isAppConfigExistOnLocal(context)) {
-        val jsonFileString = retrieveJSONFromInternalDirectory(context)
-        getModelFromStringJSON(jsonFileString)
-    } else {
-        val jsonFileString = getJsonDataFromAsset(context, APP_CONFIG_JSON) ?: ""
-        getModelFromStringJSON(jsonFileString)
-    }
-
-    /**
-     * @property launch
-     * Fetch App config from server and save to internal directory
-     */
-    suspend fun fetchAndSaveAppConfig(launch: Boolean) {
-        if (launch || isTimeToFetchConfig(getAppConfigLastFetchTime())) {
-            saveAppConfigFetchTime()
-            val configModel = appConfigService.getAppConfig()
-            val jsonString = getJSONFromModel(configModel)
-            saveJSONToInternalDirectory(context, jsonString)
-        }
-    }
-
-    private fun getAppConfigLastFetchTime(): Long {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return sharedPrefs.getLong(APP_CONFIG_FETCH_TIME_KEY, 0L)
-    }
-
-    private fun saveAppConfigFetchTime() {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-
-        val editor = sharedPrefs.edit()
-        editor.putLong(APP_CONFIG_FETCH_TIME_KEY, System.currentTimeMillis())
-        editor.apply()
-    }
+    fun getAppConfig(): AppConfigModel = getModelFromStringJSON(getJsonDataFromAsset(context, APP_CONFIG_JSON) ?: "")
 
     fun getRecentSearches(): List<String> {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -237,7 +206,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
     private companion object {
         const val RECENT_SEARCH_KEY = "recent_searches"
-        const val APP_CONFIG_FETCH_TIME_KEY = "app_config_fetch_time"
         const val MAX_RECENT_FILES_AGE = 30
         const val MAX_RECENT_SEARCHES = 15
     }

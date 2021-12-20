@@ -7,10 +7,8 @@ import com.alfresco.content.models.GenericFacetResponse
 import com.alfresco.content.models.GenericMetric
 import com.alfresco.content.models.GenericValue
 import com.alfresco.content.models.ResponseConsistency
-import com.alfresco.content.models.ResultBuckets
 import com.alfresco.content.models.ResultBucketsBuckets
 import com.alfresco.content.models.ResultSetContext
-import com.alfresco.content.models.ResultSetContextFacetQueries
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -36,9 +34,7 @@ data class FacetContext(
 @Parcelize
 data class FacetResponse(
     val consistency: Consistency,
-    var facetQueries: List<FacetQueries>? = null,
-    var facetFields: List<FacetFields>? = null,
-    var facetIntervals: List<FacetIntervals>? = null
+    var facets: List<Facets>? = null
 ) : Parcelable {
     companion object {
         /**
@@ -47,9 +43,7 @@ data class FacetResponse(
         fun with(result: ResultSetContext?): FacetResponse {
             return FacetResponse(
                 consistency = Consistency.with(result?.consistency),
-                facetQueries = result?.facetQueries?.map { FacetQueries.wth(it) } ?: emptyList(),
-                facetFields = result?.facetsFields?.map { FacetFields.with(it) } ?: emptyList(),
-                facetIntervals = result?.facets?.map { FacetIntervals.with(it) } ?: emptyList()
+                facets = result?.facets?.map { Facets.with(it) } ?: emptyList()
             )
         }
     }
@@ -71,58 +65,10 @@ data class Consistency(var lastTxId: Int? = null) : Parcelable {
 }
 
 /**
- * Mark as FacetFields class
- */
-@Parcelize
-data class FacetFields(
-    val label: String? = null,
-    var buckets: List<Buckets>? = null
-) : Parcelable {
-    companion object {
-        /**
-         * returns the FacetFields type of data
-         */
-        fun with(result: ResultBuckets): FacetFields {
-            return FacetFields(result.label,
-                result.buckets?.map { Buckets.with(it) } ?: emptyList()
-            )
-        }
-
-        /**
-         * returns the update FacetFields using the new value
-         */
-        fun updateFacetFieldBucket(result: FacetFields, listBucket: MutableList<Buckets>): FacetFields {
-            return FacetFields(
-                result.label, listBucket
-            )
-        }
-    }
-}
-
-/**
- * Mark as FacetQueries class
- */
-@Parcelize
-data class FacetQueries(
-    var label: String? = null,
-    var filterQuery: String? = null,
-    var count: Int? = null
-) : Parcelable {
-    companion object {
-        /**
-         * returns the FacetQueries type of data
-         */
-        fun wth(result: ResultSetContextFacetQueries): FacetQueries {
-            return FacetQueries(result.label, result.filterQuery, result.count)
-        }
-    }
-}
-
-/**
  * Mark as FacetIntervals class
  */
 @Parcelize
-data class FacetIntervals(
+data class Facets(
     var label: String? = null,
     var type: String? = null,
     var buckets: List<Buckets>? = null
@@ -131,8 +77,12 @@ data class FacetIntervals(
         /**
          * returns the FacetIntervals type of data
          */
-        fun with(result: GenericFacetResponse): FacetIntervals {
-            return FacetIntervals(result.label, result.type, result.buckets?.map { Buckets.with(it) } ?: emptyList())
+        fun with(result: GenericFacetResponse): Facets {
+            return Facets(result.label, result.type, result.buckets?.map { Buckets.with(it) } ?: emptyList())
+        }
+
+        fun filterZeroCount(result: Facets): Facets {
+            return Facets(result.label, result.type, result.buckets?.filter { bucket -> bucket.metrics?.get(0)?.value?.count != "0" })
         }
     }
 }
@@ -163,12 +113,6 @@ data class Buckets(
         fun with(result: GenericBucket): Buckets {
             return Buckets(result.label, result.filterQuery, metrics = result.metrics?.map { Metric.with(it) } ?: emptyList(),
                 bucketInfo = result.bucketInfo?.let { BucketInfo.with(it) })
-        }
-        /**
-         * returns the update Buckets after set the count value to 0
-         */
-        fun updateFieldBucketCount(result: Buckets): Buckets {
-            return Buckets(label = result.label, filterQuery = result.filterQuery, count = 0, display = result.display)
         }
 
         /**

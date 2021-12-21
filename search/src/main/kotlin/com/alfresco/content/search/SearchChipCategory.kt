@@ -1,9 +1,7 @@
 package com.alfresco.content.search
 
 import android.os.Parcelable
-import com.alfresco.content.data.FacetFields
-import com.alfresco.content.data.FacetIntervals
-import com.alfresco.content.data.FacetQueries
+import com.alfresco.content.data.Facets
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.models.CategoriesItem
 import com.alfresco.content.models.Component
@@ -15,9 +13,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SearchChipCategory(
     var category: CategoriesItem? = null,
-    var queriesItem: FacetQueries? = null,
-    var fieldsItem: FacetFields? = null,
-    var intervalsItem: FacetIntervals? = null,
+    var facets: Facets? = null,
     var isSelected: Boolean = false,
     var selectedName: String = "",
     var selectedQuery: String = ""
@@ -28,12 +24,11 @@ data class SearchChipCategory(
         /**
          * update and returns the searchChipCategory
          */
-        fun with(searchChipCategory: SearchChipCategory, name: String, query: String): SearchChipCategory {
+        fun with(searchChipCategory: SearchChipCategory?, name: String, query: String): SearchChipCategory {
             return SearchChipCategory(
-                category = searchChipCategory.category,
-                isSelected = searchChipCategory.isSelected,
-                fieldsItem = searchChipCategory.fieldsItem,
-                intervalsItem = searchChipCategory.intervalsItem,
+                category = searchChipCategory?.category,
+                isSelected = searchChipCategory?.isSelected == true,
+                facets = searchChipCategory?.facets,
                 selectedName = name,
                 selectedQuery = query
             )
@@ -61,39 +56,8 @@ data class SearchChipCategory(
         fun resetData(searchChipCategory: SearchChipCategory): SearchChipCategory {
             return SearchChipCategory(
                 category = searchChipCategory.category,
-                fieldsItem = searchChipCategory.fieldsItem,
-                intervalsItem = searchChipCategory.intervalsItem,
+                facets = searchChipCategory.facets,
                 isSelected = searchChipCategory.category?.component == null,
-                selectedName = "",
-                selectedQuery = ""
-            )
-        }
-
-        /**
-         * return the SearchChipCategory obj using FacetQueries data obj
-         */
-        fun withDefaultFacet(data: FacetQueries): SearchChipCategory {
-            return SearchChipCategory(
-                category = CategoriesItem(
-                    null, Component(null, ChipComponentType.FACET_QUERIES.component),
-                    null, null, null
-                ),
-                queriesItem = data,
-                selectedName = "",
-                selectedQuery = ""
-            )
-        }
-
-        /**
-         * return the SearchChipCategory obj using FacetFields data obj
-         */
-        fun withDefaultFacet(data: FacetFields): SearchChipCategory {
-            return SearchChipCategory(
-                category = CategoriesItem(
-                    null, Component(null, ChipComponentType.FACET_FIELDS.component),
-                    data.label, data.label, null
-                ),
-                fieldsItem = data,
                 selectedName = "",
                 selectedQuery = ""
             )
@@ -102,41 +66,42 @@ data class SearchChipCategory(
         /**
          * return the SearchChipCategory obj using FacetIntervals data obj
          */
-        fun withDefaultFacet(data: FacetIntervals): SearchChipCategory {
+        fun withDefaultFacet(data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    null, Component(null, ChipComponentType.FACET_INTERVALS.component),
+                    null, Component(null, ChipComponentType.FACETS.component),
                     data.label, data.label, null
                 ),
-                intervalsItem = data,
+                facets = data,
                 selectedName = "",
                 selectedQuery = ""
             )
         }
 
         /**
-         * return the update SearchChipCategory obj using FacetFields data obj
+         * return the update SearchChipCategory obj using FacetIntervals data obj
          */
-        fun updateFacet(oldDataObj: SearchChipCategory, data: FacetFields): SearchChipCategory {
+        fun updateFacet(oldDataObj: SearchChipCategory, data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = oldDataObj.category,
-                fieldsItem = data,
+                facets = data,
                 selectedName = oldDataObj.selectedName,
                 selectedQuery = oldDataObj.selectedQuery,
                 isSelected = oldDataObj.isSelected
             )
         }
-
         /**
          * return the update SearchChipCategory obj using FacetIntervals data obj
          */
-        fun updateFacet(oldDataObj: SearchChipCategory, data: FacetIntervals): SearchChipCategory {
+        fun withFilterCountZero(data: Facets): SearchChipCategory {
             return SearchChipCategory(
-                category = oldDataObj.category,
-                intervalsItem = data,
-                selectedName = oldDataObj.selectedName,
-                selectedQuery = oldDataObj.selectedQuery,
-                isSelected = oldDataObj.isSelected
+                category = CategoriesItem(
+                    null, Component(null, ChipComponentType.FACETS.component),
+                    data.label, data.label, null
+                ),
+                facets = Facets.filterZeroCount(data),
+                selectedName = "",
+                selectedQuery = ""
             )
         }
     }

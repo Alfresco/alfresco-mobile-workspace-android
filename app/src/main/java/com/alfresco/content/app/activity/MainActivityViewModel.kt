@@ -18,7 +18,6 @@ import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
-import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.session.Session
@@ -72,7 +71,6 @@ class MainActivityViewModel(
 
         // Cleanup unused db entries
         cleanupStorage(session)
-        loadAppConfig(session, true)
         syncService = configureSync(context, viewModelScope)
     }
 
@@ -118,18 +116,6 @@ class MainActivityViewModel(
             }
             syncService?.uploadIfNeeded()
             syncService?.syncIfNeeded()
-        }
-    }
-
-    private fun loadAppConfig(session: Session, launch: Boolean) {
-        viewModelScope.launch {
-            ConnectivityTracker
-                .networkAvailable
-                .let {
-                    if (it.value) {
-                        SearchRepository(session).fetchAndSaveAppConfig(launch)
-                    }
-                }
         }
     }
 

@@ -43,7 +43,8 @@ data class SearchParams(
     val listFacetIntervals: SearchFacetIntervals,
     val listFacetFields: SearchFacetFields,
     val skipCount: Int,
-    val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
+    val maxItems: Int = ListViewModel.ITEMS_PER_PAGE,
+    val executeLoader: Boolean = false
 )
 
 class SearchViewModel(
@@ -378,7 +379,7 @@ class SearchViewModel(
     }
 
     override fun refresh() {
-        params = params.copy(skipCount = 0)
+        params = params.copy(skipCount = 0, executeLoader = !params.executeLoader)
         searchEvents.value = params
     }
 

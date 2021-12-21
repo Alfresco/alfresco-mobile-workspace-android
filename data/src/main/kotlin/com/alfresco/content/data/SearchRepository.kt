@@ -121,7 +121,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             RequestFacetQueriesInner(
                 label = it.label,
                 query = it.query,
-                group = it.group
             )
         } else null
 

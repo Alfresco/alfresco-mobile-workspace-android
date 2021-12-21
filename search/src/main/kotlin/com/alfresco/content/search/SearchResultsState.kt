@@ -4,8 +4,7 @@ import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Buckets
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.FacetFields
-import com.alfresco.content.data.FacetIntervals
+import com.alfresco.content.data.Facets
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchFacetFields
 import com.alfresco.content.data.SearchFacetIntervals
@@ -63,41 +62,13 @@ data class SearchResultsState(
             pageEntries
         }
 
-        if (newEntries.isNotEmpty()) {
-            val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
+        val facets = response.facetContext?.facetResponse?.facets
+        val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
+        val isFacetFilterSelected = isFacetSelected(list)
 
-            val facetFields = response.facetContext?.facetResponse?.facetFields
-            val facetIntervals = response.facetContext?.facetResponse?.facetIntervals
-
-            var isFacetFilterSelected = false
-
-            if (list != null) {
-                for (filterChip in list) {
-
-                    if (filterChip.fieldsItem != null && filterChip.isSelected) {
-                        isFacetFilterSelected = true
-                        break
-                    }
-                    if (filterChip.intervalsItem != null && filterChip.isSelected) {
-                        isFacetFilterSelected = true
-                        break
-                    }
-                }
-            }
-
-            facetFields?.forEach { fieldObj ->
-                val obj = list?.find { data -> data.fieldsItem?.label == fieldObj.label }
-                if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(fieldObj))
-                else {
-                    if (isFacetFilterSelected)
-                        fieldObj.buckets = getFieldBucketList(obj, fieldObj)
-                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, fieldObj)
-                }
-            }
-
-            facetIntervals?.forEach { intervalObj ->
-                val obj = list?.find { data -> data.intervalsItem?.label == intervalObj.label }
+        if (isFacetFilterSelected && newEntries.isNotEmpty()) {
+            facets?.forEach { intervalObj ->
+                val obj = list?.find { data -> data.facets?.label == intervalObj.label }
                 if (obj == null)
                     list?.add(SearchChipCategory.withDefaultFacet(intervalObj))
                 else {
@@ -106,30 +77,28 @@ data class SearchResultsState(
                     list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, intervalObj)
                 }
             }
-
             if (list != listSearchCategoryChips)
                 return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
+        } else if (!isFacetFilterSelected && newEntries.isNotEmpty()) {
+            val updateList = list?.filter { it.category?.component?.selector != ChipComponentType.FACETS.component }?.toMutableList()
+            facets?.forEach { facetObj ->
+                updateList?.add(SearchChipCategory.withFilterCountZero(facetObj))
+            }
+            if (updateList != listSearchCategoryChips)
+                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = updateList)
         }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 
-    private fun getFieldBucketList(obj: SearchChipCategory, fieldObj: FacetFields): List<Buckets> {
-        val listBuckets: MutableList<Buckets> = mutableListOf()
-
-        obj.fieldsItem?.buckets?.forEach { oldBucket ->
-            val bucketObj = Buckets.updateFieldBucketCount(oldBucket)
-            val newBucketObj = fieldObj.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
-            if (newBucketObj != null)
-                bucketObj.count = newBucketObj.count
-            listBuckets.add(bucketObj)
-        }
-        return listBuckets
+    private fun isFacetSelected(list: MutableList<SearchChipCategory>?): Boolean {
+        val facetChipObj = list?.find { filterChip -> filterChip.facets != null && filterChip.isSelected }
+        return facetChipObj != null
     }
 
-    private fun getIntervalBucketList(obj: SearchChipCategory, intervalsItem: FacetIntervals): List<Buckets> {
+    private fun getIntervalBucketList(obj: SearchChipCategory, intervalsItem: Facets): List<Buckets> {
         val listBuckets: MutableList<Buckets> = mutableListOf()
-        obj.intervalsItem?.buckets?.forEach { oldBucket ->
+        obj.facets?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)
             val newBucketObj = intervalsItem.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
             if (newBucketObj != null)

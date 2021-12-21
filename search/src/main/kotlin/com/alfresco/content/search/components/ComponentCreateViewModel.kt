@@ -17,7 +17,7 @@ import java.util.Locale
  * Mark as ComponentCreateState class
  */
 data class ComponentCreateState(
-    val parent: SearchChipCategory
+    val parent: SearchChipCategory?
 ) : MavericksState
 
 /**
@@ -45,13 +45,12 @@ class ComponentCreateViewModel(
     }
 
     private fun updateComponentType() = withState {
-        if (it.parent.category?.component?.selector == ChipComponentType.FACET_FIELDS.component ||
-            it.parent.category?.component?.selector == ChipComponentType.FACET_INTERVALS.component
+        if (it.parent?.category?.component?.selector == ChipComponentType.FACETS.component
         ) {
             delimiters = " OR "
             isFacetComponent = true
         } else {
-            delimiters = " ${it.parent.category?.component?.settings?.operator} "
+            delimiters = " ${it.parent?.category?.component?.settings?.operator} "
             isFacetComponent = false
         }
     }
@@ -65,7 +64,7 @@ class ComponentCreateViewModel(
                 toValue
             else
                 context.getLocalizedName("$fromValue - $toValue")
-            val queryFormat = "${it.parent.category?.component?.settings?.field}:[$fromValue TO $toValue]"
+            val queryFormat = "${it.parent?.category?.component?.settings?.field}:[$fromValue TO $toValue]"
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -76,7 +75,7 @@ class ComponentCreateViewModel(
     fun updateFormatDateRange() = withState {
         if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
             val dateFormat = "$fromDate - $toDate"
-            val queryFormat = "${it.parent.category?.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
+            val queryFormat = "${it.parent?.category?.component?.settings?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
             updateSingleComponentData(dateFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -85,7 +84,7 @@ class ComponentCreateViewModel(
      * build single value component data
      */
     fun buildSingleDataModel() = withState { state ->
-        if (state.parent.selectedQuery.isNotEmpty()) {
+        if (state.parent?.selectedQuery?.isNotEmpty() == true) {
             listOptionsData.add(ComponentMetaData(state.parent.selectedName, state.parent.selectedQuery))
         }
     }
@@ -95,7 +94,7 @@ class ComponentCreateViewModel(
      */
     fun updateSingleComponentData(name: String) =
         setState {
-            val query = parent.category?.component?.settings?.field + ":'$name'"
+            val query = parent?.category?.component?.settings?.field + ":'$name'"
             copy(parent = SearchChipCategory.with(parent, name, query))
         }
 
@@ -110,7 +109,7 @@ class ComponentCreateViewModel(
      */
     fun copyDefaultComponentData() {
         setState {
-            val obj = parent.category?.component?.settings?.options?.find { it.default ?: false }
+            val obj = parent?.category?.component?.settings?.options?.find { it.default ?: false }
             copy(parent = SearchChipCategory.with(parent, context.getLocalizedName(obj?.name ?: ""), obj?.value ?: ""))
         }
     }
@@ -120,11 +119,11 @@ class ComponentCreateViewModel(
      */
     fun isOptionSelected(state: ComponentCreateState, options: Options): Boolean {
 
-        if (state.parent.selectedQuery.isEmpty())
+        if (state.parent?.selectedQuery?.isEmpty() == true)
             return options.default ?: false
 
-        val selectedQuery = state.parent.selectedQuery
-        if (selectedQuery.contains(delimiters)) {
+        val selectedQuery = state.parent?.selectedQuery
+        if (selectedQuery?.contains(delimiters) == true) {
             selectedQuery.split(delimiters).forEach { query ->
                 if (query == options.value)
                     return true
@@ -140,8 +139,8 @@ class ComponentCreateViewModel(
      */
     fun isOptionSelected(state: ComponentCreateState, bucket: Buckets): Boolean {
 
-        val selectedQuery = state.parent.selectedQuery
-        if (selectedQuery.contains(delimiters)) {
+        val selectedQuery = state.parent?.selectedQuery
+        if (selectedQuery?.contains(delimiters) == true) {
             selectedQuery.split(delimiters).forEach { query ->
                 if (query == bucket.filterQuery)
                     return true
@@ -156,7 +155,7 @@ class ComponentCreateViewModel(
      * build check list model for query and name
      */
     fun buildCheckListModel() = withState { state ->
-        if (state.parent.selectedQuery.isNotEmpty()) {
+        if (state.parent?.selectedQuery?.isNotEmpty() == true) {
             if (state.parent.selectedQuery.contains(delimiters)) {
                 val arrayQuery = state.parent.selectedQuery.split(delimiters)
                 val arrayName = state.parent.selectedName.split(",")
@@ -182,8 +181,8 @@ class ComponentCreateViewModel(
             listOptionsData = list
         }
 
-        val selectedName = listOptionsData.joinToString(",") { it.name }
-        val selectedQuery = listOptionsData.joinToString(delimiters) { it.query }
+        val selectedName = listOptionsData.joinToString(",") { it.name ?: "" }
+        val selectedQuery = listOptionsData.joinToString(delimiters) { it.query ?: "" }
 
         setState { copy(parent = SearchChipCategory.with(parent, selectedName, selectedQuery)) }
     }
@@ -218,10 +217,10 @@ class ComponentCreateViewModel(
      * returns the search result from bucket list on the basis of searchText
      */
     fun searchBucket(searchText: String) = withState { state ->
-        when (state.parent.category?.component?.selector) {
-            ChipComponentType.FACET_FIELDS.component -> {
-                requireNotNull(state.parent.fieldsItem?.buckets)
-                searchBucketList = state.parent.fieldsItem?.buckets?.filter { it.label?.contains(searchText) == true } ?: emptyList()
+        when (state.parent?.category?.component?.selector) {
+            ChipComponentType.FACETS.component -> {
+                requireNotNull(state.parent.facets?.buckets)
+                searchBucketList = state.parent.facets?.buckets?.filter { it.label?.contains(searchText) == true } ?: emptyList()
                 onSearchComplete?.invoke(searchBucketList)
             }
         }

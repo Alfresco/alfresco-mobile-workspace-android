@@ -42,16 +42,10 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                if (dataObj.selectedName.isNotEmpty())
-                    binding.chip.text = dataObj.selectedName.wrapWithLimit(20, ",")
-                else
-                    binding.chip.text = dataObj.category?.name
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20) else dataObj.category?.name
             }
-            ChipComponentType.FACET_FIELDS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.fieldsItem?.label ?: "")
-            }
-            ChipComponentType.FACET_INTERVALS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.intervalsItem?.label ?: "")
+            ChipComponentType.FACETS.component -> {
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.facets?.label ?: "")
             }
             else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else dataObj.category?.name
         }
@@ -59,16 +53,19 @@ class ListViewFilterChips @JvmOverloads constructor(
         binding.chip.isChecked = dataObj.isSelected
     }
 
-    private fun String.wrapWithLimit(limit: Int, delimiter: String): String {
+    private fun String.wrapWithLimit(limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
         if (this.length <= limit)
             return this
 
-        if (this.contains(delimiter)) {
+        if (delimiter != null && this.contains(delimiter)) {
             val splitStringArray = this.split(delimiter)
-            return context.getString(R.string.name_truncate_in_end, splitStringArray[0].wrapWithLimit(20, ","), splitStringArray.size.minus(1))
+            return context.getString(R.string.name_truncate_in_end, splitStringArray[0].wrapWithLimit(20, ",", true), splitStringArray.size.minus(1))
         }
 
-        return context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
+        return if (multipleValue)
+            context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
+        else
+            context.getString(R.string.name_truncate_end, this.take(20))
     }
 
     /**

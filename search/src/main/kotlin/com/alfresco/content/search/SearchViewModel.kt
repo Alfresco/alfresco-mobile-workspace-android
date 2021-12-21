@@ -43,7 +43,8 @@ data class SearchParams(
     val listFacetIntervals: SearchFacetIntervals,
     val listFacetFields: SearchFacetFields,
     val skipCount: Int,
-    val maxItems: Int = ListViewModel.ITEMS_PER_PAGE
+    val maxItems: Int = ListViewModel.ITEMS_PER_PAGE,
+    val executeLoader: Boolean = false
 )
 
 class SearchViewModel(
@@ -298,6 +299,7 @@ class SearchViewModel(
                 listFacetQueries = facetData.searchFacetQueries
             )
             refresh()
+            isRefreshSearch = false
         } else if (isRefreshSearch) {
             params = params.copy(
                 advanceSearchFilter = emptyAdvanceFilters(),
@@ -321,11 +323,10 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
-                        fieldsItem = obj.fieldsItem,
-                        intervalsItem = obj.intervalsItem,
-                        isSelected = metaData.name.isNotEmpty(),
-                        selectedName = metaData.name,
-                        selectedQuery = metaData.query
+                        facets = obj.facets,
+                        isSelected = metaData.name?.isNotEmpty() == true,
+                        selectedName = metaData.name ?: "",
+                        selectedQuery = metaData.query ?: ""
                     )
                 )
             } else
@@ -363,8 +364,7 @@ class SearchViewModel(
                 list.add(
                     SearchChipCategory(
                         obj.category,
-                        fieldsItem = obj.fieldsItem,
-                        intervalsItem = obj.intervalsItem,
+                        facets = obj.facets,
                         isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
                     )
                 )
@@ -380,7 +380,7 @@ class SearchViewModel(
     }
 
     override fun refresh() {
-        params = params.copy(skipCount = 0)
+        params = params.copy(skipCount = 0, executeLoader = !params.executeLoader)
         searchEvents.value = params
     }
 

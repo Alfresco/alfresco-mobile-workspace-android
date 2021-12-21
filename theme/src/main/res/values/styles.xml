@@ -120,5 +120,5 @@
 
     <style name="Widget.Alfresco.MaterialCalendar.HeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
         <item name="android:visibility">gone</item>
-    </style>
+    </style>z
 </resources>

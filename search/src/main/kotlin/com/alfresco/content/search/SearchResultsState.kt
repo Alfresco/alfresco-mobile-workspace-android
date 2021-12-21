@@ -91,7 +91,7 @@ data class SearchResultsState(
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 
-    fun isFacetSelected(list: MutableList<SearchChipCategory>?): Boolean {
+    private fun isFacetSelected(list: MutableList<SearchChipCategory>?): Boolean {
         val facetChipObj = list?.find { filterChip -> filterChip.facets != null && filterChip.isSelected }
         return facetChipObj != null
     }

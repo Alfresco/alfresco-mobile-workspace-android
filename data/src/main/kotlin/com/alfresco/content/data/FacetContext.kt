@@ -75,12 +75,15 @@ data class Facets(
 ) : Parcelable {
     companion object {
         /**
-         * returns the FacetIntervals type of data
+         * returns the Facets type of data
          */
         fun with(result: GenericFacetResponse): Facets {
             return Facets(result.label, result.type, result.buckets?.map { Buckets.with(it) } ?: emptyList())
         }
 
+        /**
+         * filter bucket list value with count not equal to zero and returns the update Facet obj
+         */
         fun filterZeroCount(result: Facets): Facets {
             return Facets(result.label, result.type, result.buckets?.filter { bucket -> bucket.metrics?.get(0)?.value?.count != "0" })
         }

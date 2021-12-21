@@ -25,10 +25,9 @@ import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
+import kotlinx.coroutines.launch
 
 /**
  * Component sheet for chip components

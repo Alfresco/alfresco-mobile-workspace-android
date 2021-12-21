@@ -120,7 +120,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         if (!searchFacetQueries.isNullOrEmpty()) searchFacetQueries.mapTo(mutableListOf()) {
             RequestFacetQueriesInner(
                 label = it.label,
-                query = it.query,
+                query = it.query
             )
         } else null
 

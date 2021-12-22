@@ -146,6 +146,7 @@
         "mincount": 1,
         "queries": [
           {
+            "group": "SEARCH.FACET_QUERIES.MY_FACET_QUERIES",
             "query": "created:2019",
             "label": "SEARCH.FACET_QUERIES.CREATED_THIS_YEAR"
           },
@@ -493,6 +494,7 @@
         "mincount": 1,
         "queries": [
           {
+            "group": "SEARCH.FACET_QUERIES.MY_FACET_QUERIES",
             "query": "created:2019",
             "label": "SEARCH.FACET_QUERIES.CREATED_THIS_YEAR"
           },

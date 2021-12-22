@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.apis.AdvanceSearchInclude
-import com.alfresco.content.apis.AppConfigApi
 import com.alfresco.content.apis.FacetSearchInclude
 import com.alfresco.content.apis.QueriesApi
 import com.alfresco.content.apis.SearchApi
@@ -31,10 +30,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
     private val queryService: QueriesApi by lazy {
         session.createService(QueriesApi::class.java)
-    }
-
-    private val appConfigService: AppConfigApi by lazy {
-        session.createServiceConfig(AppConfigApi::class.java)
     }
 
     suspend fun search(
@@ -120,7 +115,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         if (!searchFacetQueries.isNullOrEmpty()) searchFacetQueries.mapTo(mutableListOf()) {
             RequestFacetQueriesInner(
                 label = it.label,
-                query = it.query
+                query = it.query,
+                group = it.group
             )
         } else null
 

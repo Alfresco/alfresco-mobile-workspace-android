@@ -299,6 +299,7 @@ class SearchViewModel(
                 listFacetQueries = facetData.searchFacetQueries
             )
             refresh()
+            isRefreshSearch = false
         } else if (isRefreshSearch) {
             params = params.copy(
                 advanceSearchFilter = emptyAdvanceFilters(),

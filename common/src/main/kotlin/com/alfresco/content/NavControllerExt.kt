@@ -47,4 +47,7 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 fun NavController.navigateToContextualSearch(id: String, title: String) =
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))
 
+fun NavController.navigateToPreview(mimeType: String, path: String, title: String) =
+    navigate(Uri.parse("$BASE_URI/view/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
+
 private const val BASE_URI = "alfresco://content"

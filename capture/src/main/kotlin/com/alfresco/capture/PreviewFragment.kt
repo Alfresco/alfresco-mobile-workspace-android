@@ -52,10 +52,6 @@ class PreviewFragment : Fragment() {
 
         val args = PreviewArgs.with(requireArguments())
         configureViewer(args)
-
-        binding.closeButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
     }
 
     private fun configureViewer(args: PreviewArgs) {

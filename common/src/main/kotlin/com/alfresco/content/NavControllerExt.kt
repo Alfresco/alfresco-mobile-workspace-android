@@ -11,7 +11,7 @@ fun NavController.navigateTo(entry: Entry) {
         Entry.Type.SITE -> navigateToSite(entry)
         Entry.Type.FILE_LINK -> navigateFileLink(entry)
         Entry.Type.FOLDER_LINK -> navigateFolderLink(entry)
-        else -> { } // no-op for now
+        else -> {} // no-op for now
     }
 }
 
@@ -47,6 +47,9 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 fun NavController.navigateToContextualSearch(id: String, title: String) =
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))
 
+/**
+ * navigate to preview activity using deep linking
+ */
 fun NavController.navigateToPreview(mimeType: String, path: String, title: String) =
     navigate(Uri.parse("$BASE_URI/view/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
 

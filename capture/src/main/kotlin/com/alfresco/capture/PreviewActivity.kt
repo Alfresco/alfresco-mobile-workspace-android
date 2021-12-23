@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.alfresco.capture.databinding.ActivityPreviewBinding
 
+/**
+ * Mark as Preview Activity
+ */
 class PreviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreviewBinding
 

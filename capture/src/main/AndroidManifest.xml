@@ -14,5 +14,9 @@
         <activity
             android:name=".CaptureActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".PreviewActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
+
 </manifest>

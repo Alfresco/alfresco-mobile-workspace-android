@@ -29,4 +29,21 @@
             android:name="path"
             app:argType="string" />
     </fragment>
+
+    <activity
+        android:id="@+id/nav_viewer"
+        android:name="com.alfresco.capture.PreviewActivity"
+        android:label="{title}">
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="mimeType"
+            app:argType="string" />
+        <deepLink app:uri="alfresco://content/view/preview?title={title},mimeType={mimeType},path={path}" />
+    </activity>
+
 </navigation>

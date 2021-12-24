@@ -22,10 +22,10 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.capture.databinding.FragmentSaveBinding
 import com.alfresco.content.carouselBuilder
+import com.alfresco.content.navigateToPreview
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.alfresco.ui.text
-import java.util.ArrayList
 
 class SaveFragment : Fragment(), MavericksView {
 
@@ -179,12 +179,9 @@ class SaveFragment : Fragment(), MavericksView {
     private fun showPreview(captureItem: CaptureItem?) = withState(viewModel) {
         requireNotNull(captureItem)
 
-        findNavController().navigate(
-            R.id.action_saveFragment_to_previewFragment,
-            PreviewArgs.bundle(
-                captureItem.uri.toString(),
-                captureItem.mimeType
-            )
+        findNavController().navigateToPreview(
+            captureItem.mimeType,
+            captureItem.uri.toString(), captureItem.name
         )
     }
 }

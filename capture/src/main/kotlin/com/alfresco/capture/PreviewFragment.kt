@@ -11,7 +11,6 @@ import com.alfresco.capture.databinding.FragmentPreviewBinding
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.image.ImagePreviewProvider
 import com.alfresco.content.viewer.media.MediaPreviewProvider
-import com.alfresco.ui.WindowCompat
 import java.lang.IllegalArgumentException
 
 data class PreviewArgs(
@@ -70,26 +69,4 @@ class PreviewFragment : Fragment() {
             ImagePreviewProvider.isMimeTypeSupported(mimeType) -> ImagePreviewProvider
             else -> throw IllegalArgumentException("Unsupported MIME type")
         }.createViewer()
-
-    override fun onResume() {
-        super.onResume()
-
-        setFullscreen(true)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        setFullscreen(false)
-    }
-
-    private fun setFullscreen(fullscreen: Boolean) {
-        activity?.window?.let {
-            if (fullscreen) {
-                WindowCompat.enterImmersiveMode(it)
-            } else {
-                WindowCompat.restoreSystemUi(it)
-            }
-        }
-    }
 }

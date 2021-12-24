@@ -16,7 +16,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".PreviewActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize" />
     </application>
 

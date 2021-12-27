@@ -67,14 +67,25 @@ data class SearchResultsState(
         val isFacetFilterSelected = isChipSelected(list)
 
         if (isFacetFilterSelected && newEntries.isNotEmpty()) {
-            facets?.forEach { intervalObj ->
-                val obj = list?.find { data -> data.facets?.label == intervalObj.label }
+
+            // reset all facet chip bucket count to zero
+            list?.forEach { chip ->
+                chip.facets?.let { facetObj ->
+                    list[list.indexOf(chip)] = SearchChipCategory.updateFacet(chip, Facets.updateFacetBucketWithZeroCount(facetObj))
+                }
+            }
+
+            // updating the new facet's data
+            facets?.forEach { newFacetObj ->
+                // returns the SearchChipCategory obj that matches facets label otherwise null
+                val obj = list?.find { data -> data.facets?.label == newFacetObj.label }
+
                 if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(intervalObj))
+                    list?.add(SearchChipCategory.withDefaultFacet(newFacetObj))
                 else {
                     if (isFacetFilterSelected)
-                        intervalObj.buckets = getFacetBucketList(obj, intervalObj)
-                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, intervalObj)
+                        newFacetObj.buckets = getFacetBucketList(obj, newFacetObj)
+                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, newFacetObj)
                 }
             }
             if (list != listSearchCategoryChips)
@@ -96,16 +107,29 @@ data class SearchResultsState(
         return facetChipObj != null
     }
 
-    private fun getFacetBucketList(obj: SearchChipCategory, intervalsItem: Facets): List<Buckets> {
+    private fun getFacetBucketList(obj: SearchChipCategory, facets: Facets): List<Buckets> {
         val listBuckets: MutableList<Buckets> = mutableListOf()
         obj.facets?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)
-            val newBucketObj = intervalsItem.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
+            val newBucketObj = facets.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
             if (newBucketObj != null)
                 bucketObj.metrics?.get(0)?.value?.count = newBucketObj.metrics?.get(0)?.value?.count
             listBuckets.add(bucketObj)
         }
         return listBuckets
+    }
+
+    fun <T> List<T>.copy(vararg pairs: Pair<T, T>): List<T> {
+        val mutableList = toMutableList()
+        pairs.forEach { (old, new) ->
+            val index = mutableList.indexOf(old)
+            if (index != -1) {
+                mutableList[index] = new
+            } else {
+                throw IllegalStateException("Item does not exist in the list: $old")
+            }
+        }
+        return mutableList
     }
 
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)

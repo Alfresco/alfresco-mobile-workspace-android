@@ -87,6 +87,13 @@ data class Facets(
         fun filterZeroCount(result: Facets): Facets {
             return Facets(result.label, result.type, result.buckets?.filter { bucket -> bucket.metrics?.get(0)?.value?.count != "0" })
         }
+
+        /**
+         * returns the Facets obj after updating the bucket list count to zero
+         */
+        fun updateFacetBucketWithZeroCount(result: Facets): Facets {
+            return Facets(result.label, result.type, result.buckets?.map { Buckets.updateIntervalBucketCount(it) } ?: emptyList())
+        }
     }
 }
 

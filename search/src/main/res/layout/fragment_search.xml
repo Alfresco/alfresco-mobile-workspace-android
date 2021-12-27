@@ -81,6 +81,7 @@
             android:orientation="horizontal"
             android:paddingStart="4dp"
             android:paddingEnd="16dp"
+            android:splitMotionEvents="false"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

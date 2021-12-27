@@ -119,18 +119,5 @@ data class SearchResultsState(
         return listBuckets
     }
 
-    fun <T> List<T>.copy(vararg pairs: Pair<T, T>): List<T> {
-        val mutableList = toMutableList()
-        pairs.forEach { (old, new) ->
-            val index = mutableList.indexOf(old)
-            if (index != -1) {
-                mutableList[index] = new
-            } else {
-                throw IllegalStateException("Item does not exist in the list: $old")
-            }
-        }
-        return mutableList
-    }
-
     override fun copy(_entries: List<Entry>): ListViewState = copy(entries = _entries)
 }

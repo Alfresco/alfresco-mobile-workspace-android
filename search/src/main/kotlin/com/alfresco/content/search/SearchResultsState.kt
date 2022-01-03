@@ -66,39 +66,47 @@ data class SearchResultsState(
         val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
         val isFacetFilterSelected = isChipSelected(list)
 
-        if (isFacetFilterSelected && newEntries.isNotEmpty()) {
-
-            // reset all facet chip bucket count to zero
-            list?.forEach { chip ->
-                chip.facets?.let { facetObj ->
-                    list[list.indexOf(chip)] = SearchChipCategory.updateFacet(chip, Facets.updateFacetBucketWithZeroCount(facetObj))
-                }
+        // reset all facet chip bucket count to zero
+        list?.forEach { chip ->
+            chip.facets?.let { facetObj ->
+                list[list.indexOf(chip)] = SearchChipCategory.updateFacet(chip, Facets.updateFacetBucketWithZeroCount(facetObj))
             }
-
-            // updating the new facet's data
-            facets?.forEach { newFacetObj ->
-                // returns the SearchChipCategory obj that matches facets label otherwise null
-                val obj = list?.find { data -> data.facets?.label == newFacetObj.label }
-
-                if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(newFacetObj))
-                else {
-                    if (isFacetFilterSelected)
-                        newFacetObj.buckets = getFacetBucketList(obj, newFacetObj)
-                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, newFacetObj)
-                }
-            }
-            if (list != listSearchCategoryChips)
-                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
-        } else if (!isFacetFilterSelected && newEntries.isNotEmpty()) {
-            val updateList = list?.filter { it.category?.component?.selector != ChipComponentType.FACETS.component }?.toMutableList()
-            facets?.forEach { facetObj ->
-                updateList?.add(SearchChipCategory.withFilterCountZero(facetObj))
-            }
-            if (updateList != listSearchCategoryChips)
-                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = updateList)
         }
 
+        when (isFacetFilterSelected) {
+
+            true -> {
+                if (newEntries.isNotEmpty()) {
+                    // updating the new facet's data
+                    facets?.forEach { newFacetObj ->
+                        // returns the SearchChipCategory obj that matches facets label otherwise null
+                        val obj = list?.find { data -> data.facets?.label == newFacetObj.label }
+
+                        if (obj == null)
+                            list?.add(SearchChipCategory.withDefaultFacet(newFacetObj))
+                        else {
+                            if (isFacetFilterSelected)
+                                newFacetObj.buckets = getFacetBucketList(obj, newFacetObj)
+                            list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, newFacetObj)
+                        }
+                    }
+                }
+                if (list != listSearchCategoryChips)
+                    return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
+            }
+            false -> {
+                if (newEntries.isNotEmpty()) {
+                    val updateList = list?.filter { it.category?.component?.selector != ChipComponentType.FACETS.component }?.toMutableList()
+                    facets?.forEach { facetObj ->
+                        updateList?.add(SearchChipCategory.withFilterCountZero(facetObj))
+                    }
+                    if (updateList != listSearchCategoryChips)
+                        return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = updateList)
+
+                }
+
+            }
+        }
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }
 

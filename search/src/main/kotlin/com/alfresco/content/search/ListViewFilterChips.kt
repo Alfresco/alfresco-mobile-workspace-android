@@ -54,12 +54,17 @@ class ListViewFilterChips @JvmOverloads constructor(
     }
 
     private fun String.wrapWithLimit(limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
-        if (this.length <= limit)
+        if (this.length <= limit && delimiter == null)
             return this
 
         if (delimiter != null && this.contains(delimiter)) {
             val splitStringArray = this.split(delimiter)
-            return context.getString(R.string.name_truncate_in_end, splitStringArray[0].wrapWithLimit(20, ",", true), splitStringArray.size.minus(1))
+
+            val chip1stString = splitStringArray[0]
+            if (chip1stString.length > limit) {
+                return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(20, ",", true), splitStringArray.size.minus(1))
+            }
+            return context.getString(R.string.name_truncate_in_end, chip1stString, splitStringArray.size.minus(1))
         }
 
         return if (multipleValue)

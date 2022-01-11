@@ -51,4 +51,6 @@
     <string name="action_folder_name_invalid_chars">Folder name can\'t contain any of the following characters: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Folder name can\'t be empty.</string>
 
+    <string name="action_upload_files_title">Upload files</string>
+
 </resources>

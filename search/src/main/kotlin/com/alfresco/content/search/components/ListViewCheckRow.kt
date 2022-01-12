@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
 import com.alfresco.content.search.databinding.ViewCheckListRowBinding
 
@@ -20,7 +21,7 @@ internal class ListViewCheckRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(options: Options) {
-        binding.title.text = options.name
+        binding.title.text = context.getLocalizedName(options.name ?: "")
     }
 
     @ModelProp

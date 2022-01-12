@@ -286,7 +286,7 @@
         },
         {
           "id": "queryType",
-          "name": "Type",
+          "name": "APP.SEARCH.RADIO.TYPE",
           "enabled": true,
           "component": {
             "selector": "radio",

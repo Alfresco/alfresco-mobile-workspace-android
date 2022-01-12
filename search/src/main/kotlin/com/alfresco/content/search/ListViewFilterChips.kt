@@ -43,12 +43,12 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit) else dataObj.category?.name
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit) else context.getLocalizedName(dataObj.category?.name?:"")
             }
             ChipComponentType.FACETS.component -> {
                 binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.facets?.label ?: "")
             }
-            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else dataObj.category?.name
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.category?.name ?: "")
         }
 
         binding.chip.isChecked = dataObj.isSelected

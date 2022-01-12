@@ -235,9 +235,9 @@
                 "end": "NOW/YEAR+1YEAR"
               },
               {
-                "label": "earlierThan2017",
+                "label": "earlier",
                 "start": "*",
-                "end": "2017",
+                "end": "2021",
                 "endInclusive": false
               }
             ]
@@ -511,8 +511,8 @@
             "sets": [
               {
                 "label": "lastYear",
-                "start": "2018",
-                "end": "2019",
+                "start": "2020",
+                "end": "2021",
                 "endInclusive": false
               },
               {
@@ -523,7 +523,7 @@
               {
                 "label": "earlier",
                 "start": "*",
-                "end": "2018",
+                "end": "2021",
                 "endInclusive": false
               }
             ],
@@ -554,9 +554,9 @@
                 "end": "NOW/YEAR+1YEAR"
               },
               {
-                "label": "earlierThan2017",
+                "label": "earlier",
                 "start": "*",
-                "end": "2017",
+                "end": "2021",
                 "endInclusive": false
               }
             ],

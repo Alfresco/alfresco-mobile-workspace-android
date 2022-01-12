@@ -67,6 +67,7 @@
     <!--Search Filters-->
     <string name="app.search.content.date.range">Created Date (range)</string>
     <string name="app.search.content.size">Content Size</string>
+    <string name="app.search.radio.type">Type</string>
     <string name="app.search.file.name">File Name</string>
     <string name="app.search.text.hint">Enter the name</string>
     <string name="category.default.search">Default</string>

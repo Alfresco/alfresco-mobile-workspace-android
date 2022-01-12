@@ -23,6 +23,7 @@ class ListViewFilterChips @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val chipTextDisplayLimit = 20
     private val binding = ViewListFilterChipsBinding.inflate(LayoutInflater.from(context), this)
 
     /**
@@ -42,12 +43,12 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20) else dataObj.category?.name
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit) else dataObj.category?.name
             }
             ChipComponentType.FACETS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else context.getLocalizedName(dataObj.facets?.label ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.facets?.label ?: "")
             }
-            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(20, ",") else dataObj.category?.name
+            else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else dataObj.category?.name
         }
 
         binding.chip.isChecked = dataObj.isSelected
@@ -62,7 +63,7 @@ class ListViewFilterChips @JvmOverloads constructor(
                 val splitStringArray = this.split(delimiter)
                 val chip1stString = splitStringArray[0]
                 if (chip1stString.length > limit) {
-                    return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(20, ",", true), splitStringArray.size.minus(1))
+                    return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(chipTextDisplayLimit, ",", true), splitStringArray.size.minus(1))
                 }
                 return context.getString(R.string.name_truncate_in_end, chip1stString, splitStringArray.size.minus(1))
             } else {
@@ -73,7 +74,7 @@ class ListViewFilterChips @JvmOverloads constructor(
         return if (multipleValue)
             context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
         else
-            context.getString(R.string.name_truncate_end, this.take(20))
+            context.getString(R.string.name_truncate_end, this.take(chipTextDisplayLimit))
     }
 
     /**

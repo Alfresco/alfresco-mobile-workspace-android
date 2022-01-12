@@ -39,7 +39,7 @@ class ListViewFilterChips @JvmOverloads constructor(
 
         when (dataObj.category?.component?.selector) {
             ChipComponentType.TEXT.component -> {
-                if (dataObj.selectedName.length > 20) {
+                if (dataObj.selectedName.length > chipTextDisplayLimit) {
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(23))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }

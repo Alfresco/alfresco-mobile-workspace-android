@@ -78,7 +78,7 @@ data class SearchResultsState(
             val tempSearchChipList = mutableListOf<SearchChipCategory>()
             searchChipList.forEach { chipDataObj ->
                 val facetObj = chipDataObj.facets
-                if (facetObj != null) {
+                if (facetObj != null && !chipDataObj.isSelected) {
                     val bucketList = facetObj.buckets?.filter { bucketObj -> bucketObj.metrics?.get(0)?.value?.count != "0" }
                     if (!bucketList.isNullOrEmpty())
                         tempSearchChipList.add(chipDataObj)

@@ -196,8 +196,8 @@
             "sets": [
               {
                 "label": "lastYear",
-                "start": "2018",
-                "end": "2019",
+                "start": "2020",
+                "end": "2021",
                 "endInclusive": false
               },
               {
@@ -208,7 +208,7 @@
               {
                 "label": "earlier",
                 "start": "*",
-                "end": "2018",
+                "end": "2021",
                 "endInclusive": false
               }
             ]

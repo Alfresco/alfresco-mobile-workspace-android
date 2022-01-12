@@ -247,7 +247,7 @@
       "categories": [
         {
           "id": "queryName",
-          "name": "File Name",
+          "name": "APP.SEARCH.FILE.NAME",
           "enabled": true,
           "expanded": true,
           "component": {
@@ -255,13 +255,13 @@
             "settings": {
               "pattern": "cm:name:'(.*?)'",
               "field": "cm:name",
-              "placeholder": "Enter the name"
+              "placeholder": "APP.SEARCH.TEXT.HINT"
             }
           }
         },
         {
           "id": "contentSizeRange",
-          "name": "Content Size",
+          "name": "APP.SEARCH.CONTENT.SIZE",
           "enabled": true,
           "component": {
             "selector": "number-range",
@@ -273,7 +273,7 @@
         },
         {
           "id": "createdDateRange",
-          "name": "Created Date (range)",
+          "name": "APP.SEARCH.CONTENT.DATE.RANGE",
           "enabled": true,
           "component": {
             "selector": "date-range",
@@ -331,7 +331,7 @@
           }
         ]
       },
-      "name": "DEFAULT_SEARCH",
+      "name": "CATEGORY.DEFAULT.SEARCH",
       "default": true
     },
     {
@@ -570,7 +570,7 @@
       "categories": [
         {
           "id": "contentSizeRange",
-          "name": "Content Size",
+          "name": "APP.SEARCH.CONTENT.SIZE",
           "enabled": true,
           "component": {
             "selector": "number-range",
@@ -596,7 +596,7 @@
           }
         ]
       },
-      "name": "Folder"
+      "name": "CATEGORY.FOLDER"
     }
   ],
   "search-headers": {

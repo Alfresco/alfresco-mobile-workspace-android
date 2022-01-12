@@ -255,7 +255,7 @@
             "settings": {
               "pattern": "cm:name:'(.*?)'",
               "field": "cm:name",
-              "placeholder": "APP.SEARCH.TEXT.HINT"
+              "placeholder": "APP.SEARCH.TEXT.PLACEHOLDER"
             }
           }
         },

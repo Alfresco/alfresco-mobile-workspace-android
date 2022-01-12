@@ -69,7 +69,7 @@
     <string name="app.search.content.size">Content Size</string>
     <string name="app.search.radio.type">Type</string>
     <string name="app.search.file.name">File Name</string>
-    <string name="app.search.text.hint">Enter the name</string>
+    <string name="app.search.text.placeholder">Enter the name</string>
     <string name="category.default.search">Default</string>
     <string name="category.folder">Folder</string>
 

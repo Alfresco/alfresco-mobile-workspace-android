@@ -145,7 +145,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         binding.textComponent.componentParent.visibility = View.VISIBLE
         binding.textComponent.nameInput.isFocusableInTouchMode = true
         binding.textComponent.nameInput.requestFocus()
-        binding.textComponent.nameInputLayout.hint = state.parent?.category?.component?.settings?.placeholder
+        binding.textComponent.nameInputLayout.hint = requireContext().getLocalizedName(state.parent?.category?.component?.settings?.placeholder ?: "")
         binding.textComponent.nameInput.setText(state.parent?.selectedName)
         state.parent?.selectedName?.length?.let { length -> binding.textComponent.nameInput.setSelection(length) }
         binding.textComponent.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {

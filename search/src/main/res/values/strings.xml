@@ -64,4 +64,13 @@
     <string name="folder.modifier.mobileapps">Modifier</string>
     <string name="search.facet_queries.my_facet_queries">My Facet Queries</string>
 
+    <!--Search Filters-->
+    <string name="app.search.content.date.range">Created Date (range)</string>
+    <string name="app.search.content.size">Content Size</string>
+    <string name="app.search.radio.type">Type</string>
+    <string name="app.search.file.name">File Name</string>
+    <string name="app.search.text.placeholder">Enter the name</string>
+    <string name="category.default.search">Default</string>
+    <string name="category.folder">Folder</string>
+
 </resources>

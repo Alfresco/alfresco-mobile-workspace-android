@@ -52,6 +52,7 @@ internal class ActionCreateViewModel(
         actions.add(ActionCreateFolder(parent))
         actions.add(ActionUploadMedia(parent))
         actions.add(ActionCaptureMedia(parent))
+        actions.add(ActionUploadFiles(parent))
 
         return actions
     }

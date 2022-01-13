@@ -64,47 +64,60 @@ data class SearchResultsState(
 
         val facets = response.facetContext?.facetResponse?.facets
         val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
-        val isFacetFilterSelected = isChipSelected(list)
 
-        if (isFacetFilterSelected && newEntries.isNotEmpty()) {
+        // reset all facet chip bucket count to zero
+        list?.forEach { chip ->
+            chip.facets?.let { facetObj ->
+                list[list.indexOf(chip)] = SearchChipCategory.updateFacet(chip, Facets.updateFacetBucketWithZeroCount(facetObj))
+            }
+        }
 
-            // reset all facet chip bucket count to zero
-            list?.forEach { chip ->
-                chip.facets?.let { facetObj ->
-                    list[list.indexOf(chip)] = SearchChipCategory.updateFacet(chip, Facets.updateFacetBucketWithZeroCount(facetObj))
+        val searchChipList = isChipSelected(list, newEntries, facets)
+
+        return if (searchChipList != null && searchChipList != listSearchCategoryChips) {
+            val tempSearchChipList = mutableListOf<SearchChipCategory>()
+            searchChipList.forEach { chipDataObj ->
+                val facetObj = chipDataObj.facets
+                if (facetObj != null && !chipDataObj.isSelected) {
+                    val bucketList = facetObj.buckets?.filter { bucketObj -> bucketObj.metrics?.get(0)?.value?.count != "0" }
+                    if (!bucketList.isNullOrEmpty())
+                        tempSearchChipList.add(chipDataObj)
+                } else {
+                    tempSearchChipList.add(chipDataObj)
                 }
             }
+            copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = tempSearchChipList)
+        } else
+            copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
+    }
 
+    private fun isChipSelected(list: MutableList<SearchChipCategory>?, newEntries: List<Entry>, facets: List<Facets>?): MutableList<SearchChipCategory>? {
+        val facetChipObj = list?.find { filterChip -> filterChip.category?.component != null && filterChip.isSelected }
+
+        if (facetChipObj != null && newEntries.isEmpty())
+            return list
+
+        if (facetChipObj != null && newEntries.isNotEmpty()) {
             // updating the new facet's data
             facets?.forEach { newFacetObj ->
                 // returns the SearchChipCategory obj that matches facets label otherwise null
-                val obj = list?.find { data -> data.facets?.label == newFacetObj.label }
-
-                if (obj == null)
-                    list?.add(SearchChipCategory.withDefaultFacet(newFacetObj))
+                val existingFacetObj = list.find { data -> data.facets?.label == newFacetObj.label }
+                if (existingFacetObj == null)
+                    list.add(SearchChipCategory.withDefaultFacet(newFacetObj))
                 else {
-                    if (isFacetFilterSelected)
-                        newFacetObj.buckets = getFacetBucketList(obj, newFacetObj)
-                    list[list.indexOf(obj)] = SearchChipCategory.updateFacet(obj, newFacetObj)
+                    newFacetObj.buckets = getFacetBucketList(existingFacetObj, newFacetObj)
+                    list[list.indexOf(existingFacetObj)] = SearchChipCategory.updateFacet(existingFacetObj, newFacetObj)
                 }
             }
-            if (list != listSearchCategoryChips)
-                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = list)
-        } else if (!isFacetFilterSelected && newEntries.isNotEmpty()) {
+            return list
+        } else if (newEntries.isNotEmpty()) {
             val updateList = list?.filter { it.category?.component?.selector != ChipComponentType.FACETS.component }?.toMutableList()
             facets?.forEach { facetObj ->
                 updateList?.add(SearchChipCategory.withFilterCountZero(facetObj))
             }
-            if (updateList != listSearchCategoryChips)
-                return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = updateList)
+            return updateList
         }
-
-        return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
-    }
-
-    private fun isChipSelected(list: MutableList<SearchChipCategory>?): Boolean {
-        val facetChipObj = list?.find { filterChip -> filterChip.category?.component != null && filterChip.isSelected }
-        return facetChipObj != null
+        return null
     }
 
     private fun getFacetBucketList(obj: SearchChipCategory, facets: Facets): List<Buckets> {

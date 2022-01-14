@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_add_favorite_title">Aggiungi a Preferiti</string>
     <string name="action_remove_favorite_title">Rimuovi dai Preferiti</string>
@@ -48,7 +48,9 @@
     <string name="action_folder_create">Crea</string>
 
     <string name="action_folder_name_hint">Nome</string>
-    <string name="action_folder_name_invalid_chars">Il nome della cartella non può contenere i caratteri seguenti: ?:\"*|/\&lt;></string>
+    <string name="action_folder_name_invalid_chars">Il nome della cartella non può contenere i caratteri seguenti: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Il nome della cartella non può essere vuoto.</string>
+
+    <string name="action_upload_files_title">Carica file</string>
 
 </resources>

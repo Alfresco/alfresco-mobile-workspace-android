@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Buscar</string>
     <string name="search_hint">Buscar</string>
@@ -17,7 +17,7 @@
 
     <string name="advance_search_title">Búsqueda avanzada</string>
     <string name="default_search">Predeterminado</string>
-    <string name="component_action_reset">Re&amp;stablecer</string>
+    <string name="component_action_reset">Re&stablecer</string>
     <string name="component_action_apply">Aplicar</string>
     <string name="component_action_cancel">Cancelar</string>
     <string name="app.search.radio.none">Ninguno</string>
@@ -28,4 +28,49 @@
     <string name="component_number_range_invalid_input">El valor De debe ser menor que el valor A</string>
     <string name="hint_range_from">De</string>
     <string name="hint_range_to">A</string>
+    <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="label_count_format_string" translatable="false">%1$s (%2$s)</string>
+
+    <string name="search.facet_fields.size">Tamaño de fichero</string>
+    <string name="search.facet_fields.created">Fecha de creación</string>
+    <string name="search.facet_fields.type">Tipo de fichero</string>
+    <string name="search.facet_fields.modifier">Modificador</string>
+    <string name="search.facet_fields.creator">Creador</string>
+    <string name="hint_range_from_date">Desde la fecha</string>
+    <string name="hint_range_to_date">Hasta la fecha</string>
+    <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
+    <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
+
+
+    <string name="size.facet.queries">Consultas con filtros por tamaño</string>
+    <string name="search.facet_queries.medium">Mediano</string>
+    <string name="search.facet_queries.large">Grande</string>
+    <string name="search.facet_queries.small">Pequeño</string>
+    <string name="search.facet_queries.xtrasmall">Extra pequeño</string>
+    <string name="search.facet_queries.xtralarge">Extra grande</string>
+    <string name="search.facet_queries.xxtralarge">Supergrande</string>
+    <string name="earlier">Anterior</string>
+    <string name="lastYear">Último año</string>
+    <string name="currentYear">Año actual</string>
+    <string name="search.facet_queries.created_this_year">Este año</string>
+    <string name="search.facet_queries.mimetype">Tipo MIME</string>
+    <string name="the.created.mobileapps">Año de creación</string>
+    <string name="the.modified.mobileapps">Año de modificación</string>
+    <string name="folder.size.mobileapps">Tamaño</string>
+    <string name="folder.created.mobileapps">Fecha de creación</string>
+    <string name="folder.creator.mobileapps">Creador</string>
+    <string name="folder.modifier.mobileapps">Modificador</string>
+    <string name="search.facet_queries.my_facet_queries">Mis consultas por filtros</string>
+
+    <!--Search Filters-->
+    <string name="app.search.content.date.range">Fecha de creación (rango)</string>
+    <string name="app.search.content.size">Tamaño de contenido</string>
+    <string name="app.search.radio.type">Tipo</string>
+    <string name="app.search.file.name">Nombre del fichero</string>
+    <string name="app.search.text.placeholder">Introduzca el nombre</string>
+    <string name="category.default.search">Predeterminado</string>
+    <string name="category.folder">Carpeta</string>
+
 </resources>

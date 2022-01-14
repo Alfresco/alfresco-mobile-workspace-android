@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Buscar</string>
     <string name="search_hint">Buscar</string>
@@ -17,7 +17,7 @@
 
     <string name="advance_search_title">Búsqueda avanzada</string>
     <string name="default_search">Predeterminado</string>
-    <string name="component_action_reset">Re&stablecer</string>
+    <string name="component_action_reset">Re&amp;stablecer</string>
     <string name="component_action_apply">Aplicar</string>
     <string name="component_action_cancel">Cancelar</string>
     <string name="app.search.radio.none">Ninguno</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Rechercher</string>
     <string name="search_hint">Rechercher</string>
@@ -72,5 +72,6 @@
     <string name="app.search.text.placeholder">Saisir le nom</string>
     <string name="category.default.search">Par défaut</string>
     <string name="category.folder">Dossier</string>
+    <string name="type.facet.queries">Recherches avec filtre par type</string>
 
 </resources>

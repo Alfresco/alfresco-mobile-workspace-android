@@ -72,5 +72,6 @@
     <string name="app.search.text.placeholder">Introduzca el nombre</string>
     <string name="category.default.search">Predeterminado</string>
     <string name="category.folder">Carpeta</string>
+    <string name="type.facet.queries">Consultas con filtros por tipo</string>
 
 </resources>

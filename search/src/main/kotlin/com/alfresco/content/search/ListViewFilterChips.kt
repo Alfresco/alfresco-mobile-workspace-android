@@ -46,7 +46,8 @@ class ListViewFilterChips @JvmOverloads constructor(
                 binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit) else context.getLocalizedName(dataObj.category?.name ?: "")
             }
             ChipComponentType.FACETS.component -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.facets?.label ?: "")
+                binding.chip.text =
+                    if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.facets?.label?.replace(" ", ".") ?: "")
             }
             else -> binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",") else context.getLocalizedName(dataObj.category?.name ?: "")
         }

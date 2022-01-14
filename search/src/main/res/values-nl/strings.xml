@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Zoeken</string>
     <string name="search_hint">Zoeken</string>
@@ -72,5 +72,6 @@
     <string name="app.search.text.placeholder">Voer de naam in</string>
     <string name="category.default.search">Standaard</string>
     <string name="category.folder">Map</string>
+    <string name="type.facet.queries">Facetquery\’s op basis van type</string>
 
 </resources>

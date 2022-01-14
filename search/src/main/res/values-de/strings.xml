@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Suchen</string>
     <string name="search_hint">Suche</string>
@@ -72,5 +72,6 @@
     <string name="app.search.text.placeholder">Namen eingeben</string>
     <string name="category.default.search">Standard</string>
     <string name="category.folder">Ordner</string>
+    <string name="type.facet.queries">Facet-Abfragen nach Typ</string>
 
 </resources>

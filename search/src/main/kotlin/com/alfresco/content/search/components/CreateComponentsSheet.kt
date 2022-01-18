@@ -83,7 +83,14 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             binding.parentView.removeAllViews()
             binding.parentView.addView(binding.topView)
             binding.parentView.addView(binding.separator)
-            binding.title.text = requireContext().getLocalizedName(state.parent?.category?.name ?: "")
+
+            val replacedString = state.parent?.category?.name?.replace(" ", ".") ?: ""
+            val localizedName = requireContext().getLocalizedName(replacedString)
+            if (localizedName == replacedString)
+                binding.title.text = state.parent?.category?.name ?: ""
+            else
+                binding.title.text = localizedName
+
             when (state.parent?.category?.component?.selector) {
                 ChipComponentType.TEXT.component -> setupTextComponent(state)
                 ChipComponentType.CHECK_LIST.component -> setupCheckListComponent()

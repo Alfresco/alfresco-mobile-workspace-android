@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Ricerche recenti</string>
 
-    <string name="search_loading_message">Ricerca in corso&#8230;</string>
+    <string name="search_loading_message">Ricerca in corso\u2026</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">File</string>
@@ -28,4 +28,50 @@
     <string name="component_number_range_invalid_input">Il valore Da deve essere inferiore al valore A</string>
     <string name="hint_range_from">Da</string>
     <string name="hint_range_to">A</string>
+    <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="label_count_format_string" translatable="false">%1$s (%2$s)</string>
+
+    <string name="search.facet_fields.size">Dimensioni file</string>
+    <string name="search.facet_fields.created">Data di creazione</string>
+    <string name="search.facet_fields.type">Tipo di file</string>
+    <string name="search.facet_fields.modifier">Modificatore</string>
+    <string name="search.facet_fields.creator">Creatore</string>
+    <string name="hint_range_from_date">Data di inizio</string>
+    <string name="hint_range_to_date">Data di fine</string>
+    <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
+    <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
+
+
+    <string name="size.facet.queries">Query con filtro per dimensioni</string>
+    <string name="search.facet_queries.medium">Media</string>
+    <string name="search.facet_queries.large">Grande</string>
+    <string name="search.facet_queries.small">Piccola</string>
+    <string name="search.facet_queries.xtrasmall">Molto piccola</string>
+    <string name="search.facet_queries.xtralarge">Molto grande</string>
+    <string name="search.facet_queries.xxtralarge">Grandissima</string>
+    <string name="earlier">Data precedente</string>
+    <string name="lastYear">Anno scorso</string>
+    <string name="currentYear">Anno corrente</string>
+    <string name="search.facet_queries.created_this_year">Anno in corso</string>
+    <string name="search.facet_queries.mimetype">Tipo MIME</string>
+    <string name="the.created.mobileapps">Anno di creazione</string>
+    <string name="the.modified.mobileapps">Anno di modifica</string>
+    <string name="folder.size.mobileapps">Dimensione</string>
+    <string name="folder.created.mobileapps">Data di creazione</string>
+    <string name="folder.creator.mobileapps">Creatore</string>
+    <string name="folder.modifier.mobileapps">Modificatore</string>
+    <string name="search.facet_queries.my_facet_queries">Query con filtro personali</string>
+
+    <!--Search Filters-->
+    <string name="app.search.content.date.range">Data di creazione (intervallo)</string>
+    <string name="app.search.content.size">Dimensioni contenuto</string>
+    <string name="app.search.radio.type">Tipo</string>
+    <string name="app.search.file.name">Nome file</string>
+    <string name="app.search.text.placeholder">Immettere il nome</string>
+    <string name="category.default.search">Predefinito</string>
+    <string name="category.folder">Cartella</string>
+    <string name="type.facet.queries">Query con filtro per tipo</string>
+
 </resources>

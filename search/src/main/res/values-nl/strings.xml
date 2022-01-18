@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Recente zoekopdrachten</string>
 
-    <string name="search_loading_message">Zoeken&#8230;</string>
+    <string name="search_loading_message">Zoeken\u2026</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Bestanden</string>
@@ -28,4 +28,50 @@
     <string name="component_number_range_invalid_input">Van-waarde moet kleiner zijn dan Tot-waarde</string>
     <string name="hint_range_from">Van</string>
     <string name="hint_range_to">Tot</string>
+    <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="label_count_format_string" translatable="false">%1$s (%2$s)</string>
+
+    <string name="search.facet_fields.size">Bestandsgrootte</string>
+    <string name="search.facet_fields.created">Datum gemaakt</string>
+    <string name="search.facet_fields.type">Bestandstype</string>
+    <string name="search.facet_fields.modifier">Gewijzigd door</string>
+    <string name="search.facet_fields.creator">Maker</string>
+    <string name="hint_range_from_date">Van-datum</string>
+    <string name="hint_range_to_date">Tot-datum</string>
+    <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
+    <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
+
+
+    <string name="size.facet.queries">Facetquery\'s op basis van grootte</string>
+    <string name="search.facet_queries.medium">Gemiddeld</string>
+    <string name="search.facet_queries.large">Groot</string>
+    <string name="search.facet_queries.small">Klein</string>
+    <string name="search.facet_queries.xtrasmall">Extra klein</string>
+    <string name="search.facet_queries.xtralarge">Extra groot</string>
+    <string name="search.facet_queries.xxtralarge">Extra extra groot</string>
+    <string name="earlier">Eerder</string>
+    <string name="lastYear">Vorig jaar</string>
+    <string name="currentYear">Huidig jaar</string>
+    <string name="search.facet_queries.created_this_year">Dit jaar</string>
+    <string name="search.facet_queries.mimetype">MIME-type</string>
+    <string name="the.created.mobileapps">Jaar gemaakt</string>
+    <string name="the.modified.mobileapps">Jaar aangepast</string>
+    <string name="folder.size.mobileapps">Grootte</string>
+    <string name="folder.created.mobileapps">Datum gemaakt</string>
+    <string name="folder.creator.mobileapps">Maker</string>
+    <string name="folder.modifier.mobileapps">Gewijzigd door</string>
+    <string name="search.facet_queries.my_facet_queries">Mijn facetquery\'s</string>
+
+    <!--Search Filters-->
+    <string name="app.search.content.date.range">Datum gemaakt (bereik)</string>
+    <string name="app.search.content.size">Contentgrootte</string>
+    <string name="app.search.radio.type">Type</string>
+    <string name="app.search.file.name">Bestandsnaam</string>
+    <string name="app.search.text.placeholder">Voer de naam in</string>
+    <string name="category.default.search">Standaard</string>
+    <string name="category.folder">Map</string>
+    <string name="type.facet.queries">Facetquery\'s op basis van type</string>
+
 </resources>

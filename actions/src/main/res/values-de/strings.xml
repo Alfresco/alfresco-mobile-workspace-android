@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_add_favorite_title">Zu Favoriten hinzufügen</string>
     <string name="action_remove_favorite_title">Aus Favoriten entfernen</string>
@@ -49,7 +49,9 @@
     <string name="action_folder_create">Erstellen</string>
 
     <string name="action_folder_name_hint">Name</string>
-    <string name="action_folder_name_invalid_chars">Der Ordnername darf keines der folgenden Zeichen enthalten: ?:\"*|/\&lt;></string>
+    <string name="action_folder_name_invalid_chars">Der Ordnername darf keines der folgenden Zeichen enthalten: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Der Ordnername darf nicht leer sein.</string>
+
+    <string name="action_upload_files_title">Dateien hochladen</string>
 
 </resources>

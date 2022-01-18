@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_add_favorite_title">Añadir a favoritos</string>
     <string name="action_remove_favorite_title">Quitar de favoritos</string>
@@ -36,8 +36,7 @@
     <string name="action_remove_offline_toast">%s ya no estará disponible sin conexión.</string>
 
     <string name="action_upload_photo_title">Cargar fotos o vídeos</string>
-    <string name="action_capture_media_title_multiple">Hacer fotos o vídeos</string>
-    <string name="action_capture_media_title_single">Hacer una foto o un vídeo</string>
+    <string name="action_capture_media_title">Tomar una foto o un vídeo</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Contenido multimedia programado para cargar.</string>
@@ -49,7 +48,9 @@
     <string name="action_folder_create">Crear</string>
 
     <string name="action_folder_name_hint">Nombre</string>
-    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: \"*|/\&lt;></string>
+    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: "*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">El nombre de la carpeta no puede estar vacío.</string>
+
+    <string name="action_upload_files_title">Cargar ficheros</string>
 
 </resources>

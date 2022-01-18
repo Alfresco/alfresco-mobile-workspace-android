@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Suchen</string>
     <string name="search_hint">Suche</string>
 
     <string name="recent_search_title">Letzte Suchaufträge</string>
 
-    <string name="search_loading_message">Suche läuft...</string>
+    <string name="search_loading_message">Suche läuft\u2026</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Dateien</string>
@@ -28,4 +28,50 @@
     <string name="component_number_range_invalid_input">Der „Von“ Wert muss kleiner als der „Bis“ Wert sein</string>
     <string name="hint_range_from">Von</string>
     <string name="hint_range_to">Bis</string>
+    <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="label_count_format_string" translatable="false">%1$s (%2$s)</string>
+
+    <string name="search.facet_fields.size">Dateigröße</string>
+    <string name="search.facet_fields.created">Datum der Erstellung</string>
+    <string name="search.facet_fields.type">Dateityp</string>
+    <string name="search.facet_fields.modifier">Bearbeiter</string>
+    <string name="search.facet_fields.creator">Ersteller</string>
+    <string name="hint_range_from_date">Von-Datum</string>
+    <string name="hint_range_to_date">Bis-Datum</string>
+    <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
+    <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
+
+
+    <string name="size.facet.queries">Facet-Abfragen nach Größe</string>
+    <string name="search.facet_queries.medium">Mittel</string>
+    <string name="search.facet_queries.large">Groß</string>
+    <string name="search.facet_queries.small">Klein</string>
+    <string name="search.facet_queries.xtrasmall">Sehr klein</string>
+    <string name="search.facet_queries.xtralarge">Sehr groß (XL)</string>
+    <string name="search.facet_queries.xxtralarge">Extrem groß (XXL)</string>
+    <string name="earlier">Früher</string>
+    <string name="lastYear">Letztes Jahr</string>
+    <string name="currentYear">Aktuelles Jahr</string>
+    <string name="search.facet_queries.created_this_year">Dieses Jahr</string>
+    <string name="search.facet_queries.mimetype">MIME-Type</string>
+    <string name="the.created.mobileapps">Jahr erstellt</string>
+    <string name="the.modified.mobileapps">Jahr bearbeitet</string>
+    <string name="folder.size.mobileapps">Größe</string>
+    <string name="folder.created.mobileapps">Datum der Erstellung</string>
+    <string name="folder.creator.mobileapps">Ersteller</string>
+    <string name="folder.modifier.mobileapps">Bearbeiter</string>
+    <string name="search.facet_queries.my_facet_queries">Meine Facet-Abfragen</string>
+
+    <!--Search Filters-->
+    <string name="app.search.content.date.range">Erstellungsdatum (Bereich)</string>
+    <string name="app.search.content.size">Content-Typ</string>
+    <string name="app.search.radio.type">Typ</string>
+    <string name="app.search.file.name">Dateiname</string>
+    <string name="app.search.text.placeholder">Namen eingeben</string>
+    <string name="category.default.search">Standard</string>
+    <string name="category.folder">Ordner</string>
+    <string name="type.facet.queries">Facet-Abfragen nach Typ</string>
+
 </resources>

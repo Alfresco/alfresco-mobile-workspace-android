@@ -72,6 +72,6 @@
     <string name="app.search.text.placeholder">Voer de naam in</string>
     <string name="category.default.search">Standaard</string>
     <string name="category.folder">Map</string>
-    <string name="type.facet.queries">Facetquery\’s op basis van type</string>
+    <string name="type.facet.queries">Facetquery\'s op basis van type</string>
 
 </resources>

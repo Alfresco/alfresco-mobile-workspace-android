@@ -46,11 +46,11 @@
 
     <string name="size.facet.queries">Recherches avec filtre par taille</string>
     <string name="search.facet_queries.medium">Moyenne</string>
-    <string name="search.facet_queries.large">Grande</string>
+    <string name="search.facet_queries.large">Gros</string>
     <string name="search.facet_queries.small">Petite</string>
     <string name="search.facet_queries.xtrasmall">Très petit</string>
-    <string name="search.facet_queries.xtralarge">Très large</string>
-    <string name="search.facet_queries.xxtralarge">Très très large</string>
+    <string name="search.facet_queries.xtralarge">Très gros</string>
+    <string name="search.facet_queries.xxtralarge">Énorme</string>
     <string name="earlier">Plus tôt</string>
     <string name="lastYear">Dernière année</string>
     <string name="currentYear">L\'année en cours</string>

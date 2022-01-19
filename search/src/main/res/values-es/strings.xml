@@ -53,7 +53,7 @@
     <string name="search.facet_queries.xxtralarge">Supergrande</string>
     <string name="earlier">Anterior</string>
     <string name="lastYear">Último año</string>
-    <string name="currentYear">Año actual</string>
+    <string name="currentyear">Año actual</string>
     <string name="search.facet_queries.created_this_year">Este año</string>
     <string name="search.facet_queries.mimetype">Tipo MIME</string>
     <string name="the.created.mobileapps">Año de creación</string>

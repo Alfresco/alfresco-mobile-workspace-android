@@ -53,7 +53,7 @@
     <string name="search.facet_queries.xxtralarge">Grandissima</string>
     <string name="earlier">Data precedente</string>
     <string name="lastYear">Anno scorso</string>
-    <string name="currentYear">Anno corrente</string>
+    <string name="currentyear">Anno corrente</string>
     <string name="search.facet_queries.created_this_year">Anno in corso</string>
     <string name="search.facet_queries.mimetype">Tipo MIME</string>
     <string name="the.created.mobileapps">Anno di creazione</string>

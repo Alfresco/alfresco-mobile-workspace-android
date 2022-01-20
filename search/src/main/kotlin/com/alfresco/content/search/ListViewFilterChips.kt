@@ -53,9 +53,9 @@ class ListViewFilterChips @JvmOverloads constructor(
                     val replacedString = dataObj.facets?.label?.replace(" ", ".") ?: ""
                     val localizedName = context.getLocalizedName(replacedString)
                     if (localizedName == replacedString)
-                        binding.chip.text = dataObj.facets?.label ?: ""
+                        binding.chip.text = dataObj.facets?.label?.wrapWithLimit(chipTextDisplayLimit) ?: ""
                     else
-                        binding.chip.text = localizedName
+                        binding.chip.text = localizedName.wrapWithLimit(chipTextDisplayLimit)
                 }
             }
             else -> {

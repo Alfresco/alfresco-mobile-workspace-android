@@ -53,7 +53,7 @@
     <string name="search.facet_queries.xxtralarge">Énorme</string>
     <string name="earlier">Plus tôt</string>
     <string name="lastYear">Dernière année</string>
-    <string name="currentYear">L\'année en cours</string>
+    <string name="currentyear">L\'année en cours</string>
     <string name="search.facet_queries.created_this_year">Cette année</string>
     <string name="search.facet_queries.mimetype">Type MIME</string>
     <string name="the.created.mobileapps">Année créée</string>

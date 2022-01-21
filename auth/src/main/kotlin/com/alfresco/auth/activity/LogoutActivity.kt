@@ -29,7 +29,8 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
                     AuthConfig.jsonDeserialize(configString)
                 } else {
                     null
-                } } catch (ex: JSONException) {
+                }
+            } catch (ex: JSONException) {
                 null
             }
 

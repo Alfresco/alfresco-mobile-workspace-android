@@ -1,6 +1,5 @@
 package com.alfresco.content.app.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -78,11 +77,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_LOGOUT) {
-            if (resultCode == Activity.RESULT_OK) {
-                deleteAccount()
-            } else {
-                // no-op
-            }
+            // no-op
+            deleteAccount()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

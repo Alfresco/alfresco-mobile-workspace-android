@@ -44,6 +44,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     var onCancel: ComponentCancelCallback? = null
     var executedPicker = false
     private val minVisibleItem = 10
+    private val FILE_SIZE = "search.facet_fields.size"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,6 +89,8 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             val localizedName = requireContext().getLocalizedName(replacedString)
             if (localizedName == replacedString)
                 binding.title.text = state.parent?.category?.name ?: ""
+            else if (state.parent?.category?.name?.lowercase().equals(FILE_SIZE))
+                binding.title.text = requireContext().getString(R.string.size_end_kb, localizedName)
             else
                 binding.title.text = localizedName
 
@@ -188,6 +191,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupNumberRangeComponent(state: ComponentCreateState) {
         binding.parentView.addView(binding.frameNumberRange)
+        binding.title.text = requireContext().getString(R.string.size_end_kb, binding.title.text.toString())
         viewModel.buildSingleDataModel()
         binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
         binding.numberRangeComponent.fromInput.isFocusableInTouchMode = true
@@ -445,17 +449,19 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
         if (listBucket?.isNotEmpty() == true)
             listBucket.forEach { bucket ->
-                listViewFacetCheckRow {
-                    id(bucket.hashCode())
-                    data(bucket)
-                    optionSelected(viewModel.isOptionSelected(state, bucket))
-                    clickListener { model, _, _, _ ->
-                        viewModel.updateMultipleComponentData(
-                            requireContext().getLocalizedName(model.data().label ?: ""),
-                            model.data().filterQuery ?: ""
-                        )
+                if (state.parent?.category?.name?.lowercase()?.equals(FILE_SIZE) == true)
+
+                    listViewFacetCheckRow {
+                        id(bucket.hashCode())
+                        data(bucket)
+                        optionSelected(viewModel.isOptionSelected(state, bucket))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateMultipleComponentData(
+                                requireContext().getLocalizedName(model.data().label ?: ""),
+                                model.data().filterQuery ?: ""
+                            )
+                        }
                     }
-                }
             }
     }
 

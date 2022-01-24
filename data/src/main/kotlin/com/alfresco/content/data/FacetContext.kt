@@ -94,6 +94,17 @@ data class Facets(
         fun updateFacetBucketWithZeroCount(result: Facets): Facets {
             return Facets(result.label, result.type, result.buckets?.map { Buckets.updateIntervalBucketCount(it) } ?: emptyList())
         }
+
+        /**
+         * returns the Facets obj after updating the bucket list label
+         */
+        fun updateFacetFileSizeLabel(result: Facets): Facets {
+            return Facets(result.label, result.type,
+                if (result.label?.lowercase().equals("search.facet_fields.size"))
+                    result.buckets?.map { Buckets.updateBucketLabel(it) } ?: emptyList()
+                else result.buckets
+            )
+        }
     }
 }
 
@@ -130,6 +141,15 @@ data class Buckets(
          */
         fun updateIntervalBucketCount(result: Buckets): Buckets {
             return Buckets(label = result.label, filterQuery = result.filterQuery, metrics = result.metrics?.map { Metric.updateMetric(it) } ?: emptyList(), bucketInfo = result.bucketInfo)
+        }
+
+        /**
+         * returns the update Buckets after updating the file label
+         */
+        fun updateBucketLabel(result: Buckets): Buckets {
+            return Buckets(
+                label = (result.label?.toDouble()?.div(1000)).toString(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
+            )
         }
     }
 }

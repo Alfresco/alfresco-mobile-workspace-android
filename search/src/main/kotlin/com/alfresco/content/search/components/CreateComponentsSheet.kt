@@ -44,7 +44,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     var onCancel: ComponentCancelCallback? = null
     var executedPicker = false
     private val minVisibleItem = 10
-    private val FILE_SIZE = "search.facet_fields.size"
+    private val textFileSize = "search.facet_fields.size"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +89,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
             val localizedName = requireContext().getLocalizedName(replacedString)
             if (localizedName == replacedString)
                 binding.title.text = state.parent?.category?.name ?: ""
-            else if (state.parent?.category?.name?.lowercase().equals(FILE_SIZE))
+            else if (state.parent?.category?.name?.lowercase().equals(textFileSize))
                 binding.title.text = requireContext().getString(R.string.size_end_kb, localizedName)
             else
                 binding.title.text = localizedName
@@ -449,8 +449,6 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
         if (listBucket?.isNotEmpty() == true)
             listBucket.forEach { bucket ->
-                if (state.parent?.category?.name?.lowercase()?.equals(FILE_SIZE) == true)
-
                     listViewFacetCheckRow {
                         id(bucket.hashCode())
                         data(bucket)

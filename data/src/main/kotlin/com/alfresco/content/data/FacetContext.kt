@@ -113,6 +113,7 @@ data class Facets(
  */
 @Parcelize
 data class Buckets(
+    var originalLabel: String? = null,
     var label: String? = null,
     var filterQuery: String? = null,
     var count: Int? = null,
@@ -125,14 +126,17 @@ data class Buckets(
          * returns the Buckets type of data using ResultBucketsBuckets
          */
         fun with(result: ResultBucketsBuckets): Buckets {
-            return Buckets(result.label, result.filterQuery, result.count, result.display)
-        }
+            return Buckets(originalLabel = result.label, label = result.label, filterQuery = result.filterQuery, count = result.count, display = result.display) }
 
         /**
          * returns the Buckets type of data using GenericBucket
          */
         fun with(result: GenericBucket): Buckets {
-            return Buckets(result.label, result.filterQuery, metrics = result.metrics?.map { Metric.with(it) } ?: emptyList(),
+            return Buckets(
+                originalLabel = result.label,
+                label = result.label,
+                filterQuery = result.filterQuery,
+                metrics = result.metrics?.map { Metric.with(it) } ?: emptyList(),
                 bucketInfo = result.bucketInfo?.let { BucketInfo.with(it) })
         }
 
@@ -140,7 +144,12 @@ data class Buckets(
          * returns the update Buckets after set the Metrics count value to 0
          */
         fun updateIntervalBucketCount(result: Buckets): Buckets {
-            return Buckets(label = result.label, filterQuery = result.filterQuery, metrics = result.metrics?.map { Metric.updateMetric(it) } ?: emptyList(), bucketInfo = result.bucketInfo)
+            return Buckets(
+                originalLabel = result.originalLabel,
+                label = result.label,
+                filterQuery = result.filterQuery,
+                metrics = result.metrics?.map { Metric.updateMetric(it) } ?: emptyList(),
+                bucketInfo = result.bucketInfo)
         }
 
         /**
@@ -148,7 +157,8 @@ data class Buckets(
          */
         fun updateBucketLabel(result: Buckets): Buckets {
             return Buckets(
-                label = (result.label?.toDouble()?.div(1000)).toString(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
+                originalLabel = result.originalLabel,
+                label = (result.originalLabel?.toDouble()?.div(1000)).toString(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
             )
         }
     }

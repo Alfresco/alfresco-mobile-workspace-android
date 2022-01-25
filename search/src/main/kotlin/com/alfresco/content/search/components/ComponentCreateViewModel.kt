@@ -64,7 +64,7 @@ class ComponentCreateViewModel(
                 toValue
             else
                 context.getLocalizedName("$fromValue - $toValue")
-            val queryFormat = "${it.parent?.category?.component?.settings?.field}:[$fromValue TO $toValue]"
+            val queryFormat = "${it.parent?.category?.component?.settings?.field}:[${fromValue.kBToByte()} TO ${toValue.kBToByte()}]"
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }
@@ -245,4 +245,12 @@ fun String.getQueryFormat(): String {
         return formatter.format(date)
 
     return this
+}
+
+private fun String.byteToKB(): String {
+    return this.toDouble().div(1000).toString()
+}
+
+private fun String.kBToByte(): String {
+    return "%.0f".format(this.toDouble().times(1000)).toString()
 }

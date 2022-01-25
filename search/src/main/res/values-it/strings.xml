@@ -73,5 +73,6 @@
     <string name="category.default.search">Predefinito</string>
     <string name="category.folder">Cartella</string>
     <string name="type.facet.queries">Query con filtro per tipo</string>
+    <string name="size_end_kb">%1$s (KB)</string>
 
 </resources>

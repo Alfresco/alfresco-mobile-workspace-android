@@ -449,17 +449,17 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
         }
         if (listBucket?.isNotEmpty() == true)
             listBucket.forEach { bucket ->
-                    listViewFacetCheckRow {
-                        id(bucket.hashCode())
-                        data(bucket)
-                        optionSelected(viewModel.isOptionSelected(state, bucket))
-                        clickListener { model, _, _, _ ->
-                            viewModel.updateMultipleComponentData(
-                                requireContext().getLocalizedName(model.data().label ?: ""),
-                                model.data().filterQuery ?: ""
-                            )
-                        }
+                listViewFacetCheckRow {
+                    id(bucket.hashCode())
+                    data(bucket)
+                    optionSelected(viewModel.isOptionSelected(state, bucket))
+                    clickListener { model, _, _, _ ->
+                        viewModel.updateMultipleComponentData(
+                            requireContext().getLocalizedName(model.data().label ?: ""),
+                            model.data().filterQuery ?: ""
+                        )
                     }
+                }
             }
     }
 

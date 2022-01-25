@@ -9,6 +9,8 @@ import com.alfresco.content.models.GenericValue
 import com.alfresco.content.models.ResponseConsistency
 import com.alfresco.content.models.ResultBucketsBuckets
 import com.alfresco.content.models.ResultSetContext
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -126,7 +128,8 @@ data class Buckets(
          * returns the Buckets type of data using ResultBucketsBuckets
          */
         fun with(result: ResultBucketsBuckets): Buckets {
-            return Buckets(originalLabel = result.label, label = result.label, filterQuery = result.filterQuery, count = result.count, display = result.display) }
+            return Buckets(originalLabel = result.label, label = result.label, filterQuery = result.filterQuery, count = result.count, display = result.display)
+        }
 
         /**
          * returns the Buckets type of data using GenericBucket
@@ -156,9 +159,11 @@ data class Buckets(
          * returns the update Buckets after updating the file label
          */
         fun updateBucketLabel(result: Buckets): Buckets {
+            val df = DecimalFormat("#.00")
+            df.roundingMode = RoundingMode.FLOOR
             return Buckets(
                 originalLabel = result.originalLabel,
-                label = (result.originalLabel?.toDouble()?.div(1000)).toString(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
+                label = (df.format(result.originalLabel?.toDouble()?.div(1000))).toString(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
             )
         }
     }

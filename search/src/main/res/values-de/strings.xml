@@ -73,5 +73,6 @@
     <string name="category.default.search">Standard</string>
     <string name="category.folder">Ordner</string>
     <string name="type.facet.queries">Facet-Abfragen nach Typ</string>
+    <string name="size_end_kb">%1$s (KB)</string>
 
 </resources>

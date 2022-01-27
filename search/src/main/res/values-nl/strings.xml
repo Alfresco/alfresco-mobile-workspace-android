@@ -73,5 +73,6 @@
     <string name="category.default.search">Standaard</string>
     <string name="category.folder">Map</string>
     <string name="type.facet.queries">Facetquery\'s op basis van type</string>
+    <string name="size_end_kb">%1$s (KB)</string>
 
 </resources>

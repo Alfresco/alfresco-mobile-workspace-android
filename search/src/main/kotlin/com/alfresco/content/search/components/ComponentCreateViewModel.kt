@@ -6,6 +6,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.Buckets
+import com.alfresco.content.data.kBToByte
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.models.Options
 import com.alfresco.content.search.ChipComponentType
@@ -64,7 +65,7 @@ class ComponentCreateViewModel(
                 toValue
             else
                 context.getLocalizedName("$fromValue - $toValue")
-            val queryFormat = "${it.parent?.category?.component?.settings?.field}:[$fromValue TO $toValue]"
+            val queryFormat = "${it.parent?.category?.component?.settings?.field}:[${fromValue.kBToByte()} TO ${toValue.kBToByte()}]"
             updateSingleComponentData(nameFormat, queryFormat)
         } else updateSingleComponentData("", "")
     }

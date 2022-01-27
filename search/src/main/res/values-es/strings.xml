@@ -73,5 +73,6 @@
     <string name="category.default.search">Predeterminado</string>
     <string name="category.folder">Carpeta</string>
     <string name="type.facet.queries">Consultas con filtros por tipo</string>
+    <string name="size_end_kb">%1$s (KB)</string>
 
 </resources>

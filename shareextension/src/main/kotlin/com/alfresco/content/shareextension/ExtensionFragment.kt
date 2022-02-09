@@ -17,7 +17,6 @@ data class ExtensionArgs(val image: String) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
 
-        fun bundle(path: String) = bundleOf(PATH_KEY to path)
     }
 }
 

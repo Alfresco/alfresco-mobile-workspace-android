@@ -83,6 +83,7 @@ dependencies {
     implementation project(':browse')
     implementation project(':search')
     implementation project(':viewer')
+    implementation project(':shareextension')
 
     implementation project(':data')
     implementation libs.alfresco.content
@@ -103,6 +104,8 @@ dependencies {
     implementation libs.mavericks
 
     implementation libs.coil.core
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
     coreLibraryDesugaring libs.android.desugar
 

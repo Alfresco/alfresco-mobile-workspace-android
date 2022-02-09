@@ -8,6 +8,9 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as ExtensionArgs class
+ */
 @Parcelize
 data class ExtensionArgs(val image: String) : Parcelable {
 
@@ -18,6 +21,9 @@ data class ExtensionArgs(val image: String) : Parcelable {
     }
 }
 
+/**
+ * Marked as ExtensionFragment class
+ */
 class ExtensionFragment : Fragment(), MavericksView {
 
     private val viewModel: ExtensionViewModel by fragmentViewModel()

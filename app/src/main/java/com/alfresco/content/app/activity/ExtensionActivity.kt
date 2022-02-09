@@ -12,6 +12,9 @@ import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 
+/**
+ * Marked as ExtensionActivity class
+ */
 class ExtensionActivity : AppCompatActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()

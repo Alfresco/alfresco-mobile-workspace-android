@@ -5,6 +5,9 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 
+/**
+ * Marked as ExtensionViewModel class
+ */
 class ExtensionViewModel(
     val context: Context,
     state: ExtensionViewState

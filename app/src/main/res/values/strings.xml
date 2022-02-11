@@ -8,6 +8,7 @@
     <string name="nav_title_offline">Offline</string>
     <string name="nav_title_browse">Browse</string>
     <string name="nav_title_settings">Account</string>
+    <string name="nav_title_share">Share</string>
 
     <string name="sign_out_confirmation_title">Sign out</string>
     <string name="sign_out_confirmation_message">Are you sure you want to sign out?</string>

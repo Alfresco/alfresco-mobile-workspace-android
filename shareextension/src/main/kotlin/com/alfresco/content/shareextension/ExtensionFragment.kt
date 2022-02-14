@@ -1,7 +1,6 @@
 package com.alfresco.content.shareextension
 
 import android.os.Parcelable
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
@@ -16,7 +15,6 @@ data class ExtensionArgs(val image: String) : Parcelable {
 
     companion object {
         private const val PATH_KEY = "path"
-
     }
 }
 

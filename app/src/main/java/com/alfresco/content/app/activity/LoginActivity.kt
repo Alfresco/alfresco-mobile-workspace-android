@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
-    override fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig) {
+    override fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig, isExtension: Boolean) {
         val account = Account(credentials.username, credentials.authState, credentials.authType, authConfig.jsonSerialize(), endpoint)
         val context = applicationContext
 
@@ -26,7 +26,9 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val person = PeopleRepository(session).me()
                 val myFiles = BrowseRepository(session).myFilesNodeId()
                 processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
-                navigateToMain()
+                if (!isExtension)
+                    navigateToMain()
+                else finish()
             } catch (ex: Exception) {
                 onError(R.string.auth_error_wrong_credentials)
             }

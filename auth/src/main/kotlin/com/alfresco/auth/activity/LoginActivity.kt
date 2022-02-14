@@ -104,10 +104,10 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         }
     }
 
-    abstract fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig)
+    abstract fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig, isExtension: Boolean)
 
     override fun onCredentials(credentials: Credentials) {
-        onCredentials(credentials, viewModel.canonicalApplicationUrl, viewModel.authConfig)
+        onCredentials(credentials, viewModel.canonicalApplicationUrl, viewModel.authConfig, viewModel.isExtension)
     }
 
     override fun onError(error: String) {
@@ -115,9 +115,11 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         viewModel.isLoading.value = false
 
         val parentLayout: View = findViewById(android.R.id.content)
-        Snackbar.make(parentLayout,
-                error,
-                Snackbar.LENGTH_LONG).show()
+        Snackbar.make(
+            parentLayout,
+            error,
+            Snackbar.LENGTH_LONG
+        ).show()
 
         // Hacky way to set error state to match design
         updateAll<TextInputLayout> {

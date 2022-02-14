@@ -19,7 +19,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoginViewModel(private val applicationContext: Context, authType: AuthType?, authState: String?, authConfig: AuthConfig?, endpoint: String?) : AuthenticationViewModel() {
+class LoginViewModel(
+    private val applicationContext: Context,
+    authType: AuthType?,
+    authState: String?,
+    authConfig: AuthConfig?,
+    endpoint: String?,
+    val isExtension: Boolean
+) : AuthenticationViewModel() {
 
     lateinit var authConfig: AuthConfig
     override var context = applicationContext
@@ -51,7 +58,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     val canonicalApplicationUrl: String
         get() {
             return previousAppEndpoint
-                    ?: discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
+                ?: discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
         }
 
     // Used for display purposes
@@ -190,7 +197,8 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         this.isLoading.value = false
 
         when (step) {
-            Step.InputIdentityServer -> { }
+            Step.InputIdentityServer -> {
+            }
             Step.InputAppServer -> {
                 applicationUrl.value = ""
             }
@@ -198,8 +206,10 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
                 // Assume application url is the same as identity for basic auth
                 applicationUrl.value = identityUrl.value
             }
-            Step.EnterPkceCredentials -> { }
-            Step.Cancelled -> { }
+            Step.EnterPkceCredentials -> {
+            }
+            Step.Cancelled -> {
+            }
         }
 
         _step.value = step
@@ -214,6 +224,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
     }
 
     val basicAuth = BasicAuth()
+
     inner class BasicAuth {
         private val _enabled = MediatorLiveData<Boolean>()
 
@@ -240,6 +251,7 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
         private const val SHARED_PREFS_NAME = "org.activiti.aims.android.auth"
         private const val SHARED_PREFS_CONFIG_KEY = "config"
 
+        const val EXTRA_IS_EXTENSION = "is_extension"
         const val EXTRA_ENDPOINT = "endpoint"
         const val EXTRA_AUTH_TYPE = "authType"
         const val EXTRA_AUTH_STATE = "authState"
@@ -250,19 +262,23 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
             var stateString: String? = null
             var authType: AuthType? = null
             var endpoint: String? = null
+            var isExtension = false
 
             val extras = intent.extras
             if (extras != null) {
                 config = try {
                     AuthConfig.jsonDeserialize(extras.getString(EXTRA_AUTH_CONFIG)!!)
-                } catch (ex: Exception) { null }
+                } catch (ex: Exception) {
+                    null
+                }
 
                 stateString = extras.getString(EXTRA_AUTH_STATE)
                 endpoint = extras.getString(EXTRA_ENDPOINT)
+                isExtension = extras.getBoolean(EXTRA_IS_EXTENSION)
                 authType = extras.getString(EXTRA_AUTH_TYPE)?.let { AuthType.fromValue(it) }
             }
 
-            return LoginViewModel(context, authType, stateString, config, endpoint)
+            return LoginViewModel(context, authType, stateString, config, endpoint, isExtension)
         }
     }
 
@@ -333,12 +349,12 @@ class LoginViewModel(private val applicationContext: Context, authType: AuthType
 
         fun get(): AuthConfig {
             return AuthConfig(
-                    https = https.value ?: false,
-                    port = port.value ?: "",
-                    contentServicePath = contentServicePath.value ?: "",
-                    realm = realm.value ?: "",
-                    clientId = clientId.value ?: "",
-                    redirectUrl = redirectUrl
+                https = https.value ?: false,
+                port = port.value ?: "",
+                contentServicePath = contentServicePath.value ?: "",
+                realm = realm.value ?: "",
+                clientId = clientId.value ?: "",
+                redirectUrl = redirectUrl
             )
         }
 

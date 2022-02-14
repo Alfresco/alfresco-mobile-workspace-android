@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private fun navigateToReLogin() {
         val i = Intent(this, LoginActivity::class.java)
         val acc = SessionManager.requireSession.account
+        i.putExtra(LoginViewModel.EXTRA_IS_EXTENSION, false)
         i.putExtra(LoginViewModel.EXTRA_ENDPOINT, acc.serverUrl)
         i.putExtra(LoginViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)

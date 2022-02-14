@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.session.SessionManager
 
 /**
  * Marked as ExtensionActivity class
@@ -65,5 +67,16 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) {
+    }
+
+    private fun navigateToReLogin() {
+        val i = Intent(this, LoginActivity::class.java)
+        val acc = SessionManager.requireSession.account
+        i.putExtra(LoginViewModel.EXTRA_IS_EXTENSION, true)
+        i.putExtra(LoginViewModel.EXTRA_ENDPOINT, acc.serverUrl)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_TYPE, acc.authType)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
+        i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
+        startActivity(i)
     }
 }

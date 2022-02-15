@@ -92,9 +92,15 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
             .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
             .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
             .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
+                navigateToReLogin()
             }
             .show()
         signedOutDialog = WeakReference(dialog)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        println("ExtensionActivity.onNewIntent")
     }
 
     private fun navigateToReLogin() {
@@ -106,5 +112,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         startActivity(i)
+        finish()
     }
 }

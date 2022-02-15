@@ -26,9 +26,9 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val person = PeopleRepository(session).me()
                 val myFiles = BrowseRepository(session).myFilesNodeId()
                 processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
-                if (!isExtension)
-                    navigateToMain()
-                else finish()
+                if (isExtension)
+                    navigateToExtension()
+                else navigateToMain()
             } catch (ex: Exception) {
                 onError(R.string.auth_error_wrong_credentials)
             }
@@ -69,6 +69,13 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
     private fun navigateToMain() {
         val i = Intent(this, MainActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(i)
+        finish()
+    }
+
+    private fun navigateToExtension() {
+        val i = Intent(this, ExtensionActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(i)
         finish()

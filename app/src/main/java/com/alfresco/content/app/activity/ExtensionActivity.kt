@@ -56,7 +56,15 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         navController.graph = graph
 
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.showActionBarLayout()
+        actionBarController.setupSimpleActionBar(this, navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return if (navController.currentDestination?.id == R.id.nav_browse_extension) {
+            finish()
+            false
+        } else
+            navController.navigateUp()
     }
 
     private fun handleSendImage(intent: Intent) {

@@ -3,7 +3,6 @@ package com.alfresco.content.shareextension
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import com.alfresco.content.browse.BrowseArgs
 import com.alfresco.content.browse.BrowseViewModel
 import com.alfresco.content.browse.BrowseViewState
@@ -30,13 +29,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
         inflater.inflate(R.menu.menu_browse, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
     }
 
     override fun invalidate() {

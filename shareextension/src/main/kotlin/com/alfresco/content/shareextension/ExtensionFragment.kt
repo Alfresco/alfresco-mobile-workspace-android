@@ -44,7 +44,7 @@ class ExtensionFragment : Fragment(), MavericksView {
         args = ExtensionArgs.with(requireArguments())
 
         val nodeId = viewModel.getMyFilesNodeId()
-        findNavController().navigateToExtension(nodeId, "Save to Alfresco")
+        findNavController().navigateToExtension(nodeId, "")
     }
 
     override fun invalidate() = withState(viewModel) { state ->

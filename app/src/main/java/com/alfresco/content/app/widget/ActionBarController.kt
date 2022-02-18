@@ -39,6 +39,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
         }
     }
 
+    fun hideActionBarLayout() {
+        layout.expand(false)
+    }
+
     fun setProfileIcon(uri: Uri) = layout.loadProfileIcon(uri)
 
     fun setOnline(value: Boolean) = layout.setOnline(value)

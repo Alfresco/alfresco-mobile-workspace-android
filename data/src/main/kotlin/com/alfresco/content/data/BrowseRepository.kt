@@ -36,6 +36,13 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             maxItems,
             include = extraFields()
         ))
+    suspend fun fetchExtensionFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
+        ResponsePaging.withExtension(service.listNodeChildren(
+            folderId,
+            skipCount,
+            maxItems,
+            include = extraFields()
+        ))
 
     suspend fun fetchLibraryDocumentsFolder(siteId: String) =
         Entry.with(service.getNode(

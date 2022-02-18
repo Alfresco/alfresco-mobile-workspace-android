@@ -47,6 +47,10 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 fun NavController.navigateToContextualSearch(id: String, title: String) =
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))
 
+fun NavController.navigateToExtension(id: String, title: String, mode: String = "remote") {
+    navigate(Uri.parse("$BASE_URI/browse/extension/$mode/$id?title=${Uri.encode(title)}"))
+}
+
 /**
  * navigate to preview activity using deep linking
  */

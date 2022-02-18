@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "12:7704753326571321060",
+      "lastPropertyId": "13:8937782131764470873",
       "name": "Entry",
       "properties": [
         {
@@ -71,6 +71,12 @@
           "id": "12:7704753326571321060",
           "name": "properties",
           "type": 9
+        },
+        {
+          "id": "13:8937782131764470873",
+          "name": "isExtension",
+          "type": 1,
+          "flags": 4
         }
       ],
       "relations": []

@@ -23,7 +23,6 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
-import java.lang.IllegalStateException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -68,7 +67,10 @@ class BrowseViewModel(
     private fun Entry.ifType(
         types: Set<Entry.Type>,
         block: (entry: Entry) -> Unit
-    ) = if (types.contains(type)) { block(this) } else { }
+    ) = if (types.contains(type)) {
+        block(this)
+    } else {
+    }
 
     @Suppress("UNUSED_PARAMETER")
     private fun refresh(ignored: Entry) = refresh() // TODO: why?
@@ -93,7 +95,9 @@ class BrowseViewModel(
                     is Success -> {
                         update(it()).copy(request = Success(it()))
                     }
-                    else -> { this }
+                    else -> {
+                        this
+                    }
                 }
             }
         }
@@ -119,7 +123,9 @@ class BrowseViewModel(
                         observeUploads(it().second?.id)
                         update(it().first).copy(parent = it().second, request = Success(it().first))
                     }
-                    else -> { this }
+                    else -> {
+                        this
+                    }
                 }
             }
         }
@@ -159,6 +165,9 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_folder) ->
                 BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
+            context.getString(R.string.nav_path_extension) ->
+                BrowseRepository()::fetchExtensionFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
+
             context.getString(R.string.nav_path_site) ->
                 BrowseRepository()::fetchLibraryItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
@@ -179,7 +188,9 @@ class BrowseViewModel(
             .execute {
                 if (it is Success) {
                     updateUploads(it())
-                } else { this }
+                } else {
+                    this
+                }
             }
     }
 

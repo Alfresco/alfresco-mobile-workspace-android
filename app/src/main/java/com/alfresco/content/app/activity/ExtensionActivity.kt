@@ -56,6 +56,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         navController.graph = graph
 
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
+        actionBarController.hideActionBarLayout()
     }
 
     private fun handleSendImage(intent: Intent) {

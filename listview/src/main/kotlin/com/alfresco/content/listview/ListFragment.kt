@@ -98,8 +98,8 @@ abstract class ListViewModel<S : ListViewState>(
     }
 }
 
-abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState> :
-    Fragment(R.layout.fragment_list), MavericksView {
+abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: Int = R.layout.fragment_list) :
+    Fragment(layoutID), MavericksView {
     abstract val viewModel: VM
 
     lateinit var loadingAnimation: View

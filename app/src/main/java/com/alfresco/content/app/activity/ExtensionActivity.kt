@@ -56,7 +56,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         navController.graph = graph
 
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupSimpleActionBar(this, navController)
+        actionBarController.setupActionBar(this, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

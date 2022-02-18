@@ -12,7 +12,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
 
     private lateinit var navController: NavController
 
-    fun setupSimpleActionBar(activity: AppCompatActivity, navController: NavController) {
+    /**
+     * setup the actionbar without appbar
+     */
+    fun setupActionBar(activity: AppCompatActivity, navController: NavController) {
         this.navController = navController
 
         activity.setSupportActionBar(layout.toolbar)

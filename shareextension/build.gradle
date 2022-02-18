@@ -21,9 +21,8 @@ dependencies {
     implementation project(':common')
     implementation project(':data')
     implementation project(':mimetype')
-    implementation project(':download')
-    implementation project(':capture')
     implementation project(':listview')
+    implementation project(':browse')
 
     implementation libs.kotlin.stdlib
     implementation libs.coroutines.core
@@ -32,6 +31,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.navigation.fragment
 
     implementation libs.google.material
     implementation libs.epoxy.core

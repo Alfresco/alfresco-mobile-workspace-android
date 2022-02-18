@@ -12,7 +12,6 @@ import com.alfresco.list.merge
 import com.alfresco.list.replace
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
-import kotlinx.coroutines.flow.merge
 
 data class BrowseViewState(
     val path: String,
@@ -29,7 +28,7 @@ data class BrowseViewState(
 
     override val isCompact: Boolean
         get() = when (path) {
-            "site", "folder", "my-libraries", "fav-libraries" -> true
+            "site", "folder", "extension", "my-libraries", "fav-libraries" -> true
             else -> false
         }
 
@@ -40,7 +39,11 @@ data class BrowseViewState(
 
         val nextPage = response.pagination.skipCount > 0
         val pageEntries = response.entries
-        val newEntries = if (nextPage) { baseEntries + pageEntries } else { pageEntries }
+        val newEntries = if (nextPage) {
+            baseEntries + pageEntries
+        } else {
+            pageEntries
+        }
 
         return copyIncludingUploads(newEntries, uploads, response.pagination.hasMoreItems)
     }
@@ -141,14 +144,16 @@ data class BrowseViewState(
             if (currentGroup != targetGroup) {
                 currentGroup = targetGroup
 
-                groupedList.add(Entry(
-                    currentGroup.title(),
-                    null,
-                    Entry.Type.GROUP,
-                    currentGroup.title(),
-                    null,
-                    null
-                ))
+                groupedList.add(
+                    Entry(
+                        currentGroup.title(),
+                        null,
+                        Entry.Type.GROUP,
+                        currentGroup.title(),
+                        null,
+                        null
+                    )
+                )
             }
             groupedList.add(entry)
         }

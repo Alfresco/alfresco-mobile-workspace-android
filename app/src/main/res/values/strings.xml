@@ -9,6 +9,7 @@
     <string name="nav_title_browse">Browse</string>
     <string name="nav_title_settings">Account</string>
     <string name="nav_title_share">Share</string>
+    <string name="nav_title_browse_extension">Save to Alfresco</string>
 
     <string name="sign_out_confirmation_title">Sign out</string>
     <string name="sign_out_confirmation_message">Are you sure you want to sign out?</string>
@@ -27,6 +28,7 @@
 
     <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>
     <string name="settings_sync_network_title">Update offline files using</string>
+
     <string-array name="settings_sync_network_value_labels">
         <item>Wi-Fi only</item>
         <item>Wi-Fi and mobile data</item>

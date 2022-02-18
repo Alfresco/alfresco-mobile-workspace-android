@@ -40,6 +40,14 @@ class ListViewRow @JvmOverloads constructor(
             else -> MimeType.with(entry.mimeType)
         }
 
+        if (entry.isExtension && !entry.isFolder) {
+            binding.parent.alpha = 0.5f
+            binding.parent.isEnabled = false
+        } else {
+            binding.parent.alpha = 1.0f
+            binding.parent.isEnabled = true
+        }
+
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
         configureOfflineStatus(entry)
@@ -105,8 +113,8 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink && !entry.isUpload &&
-            // Child folder in offline tab
-            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
+                // Child folder in offline tab
+                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
 
     @ModelProp
     fun setCompact(compact: Boolean) {

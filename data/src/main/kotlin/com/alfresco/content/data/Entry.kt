@@ -19,7 +19,6 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
-import java.lang.Exception
 import java.time.Instant
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
@@ -66,7 +65,8 @@ data class Entry(
     val isUpload: Boolean = false,
     @Convert(converter = BoxOfflineStatusConverter::class, dbType = String::class)
     val offlineStatus: OfflineStatus = OfflineStatus.UNDEFINED,
-    @Id var boxId: Long = 0
+    @Id var boxId: Long = 0,
+    val isExtension: Boolean = false
 ) : Parcelable {
 
     val isSynced: Boolean
@@ -90,7 +90,8 @@ data class Entry(
         return if (offline != null) {
             copy(
                 boxId = offline.boxId,
-                isOffline = offline.isOffline)
+                isOffline = offline.isOffline
+            )
         } else {
             this
         }
@@ -98,15 +99,15 @@ data class Entry(
 
     fun metadataEquals(other: Entry): Boolean =
         id == other.id &&
-            parentId == other.parentId &&
-            type == other.type &&
-            name == other.name &&
-            path == other.path &&
-            mimeType == other.mimeType &&
-            modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
-            isFavorite == other.isFavorite &&
-            canDelete == other.canDelete &&
-            otherId == other.otherId
+                parentId == other.parentId &&
+                type == other.type &&
+                name == other.name &&
+                path == other.path &&
+                mimeType == other.mimeType &&
+                modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
+                isFavorite == other.isFavorite &&
+                canDelete == other.canDelete &&
+                otherId == other.otherId
 
     fun copyWithMetadata(other: Entry) =
         copy(
@@ -197,6 +198,28 @@ data class Entry(
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
                 otherId = node.properties?.get("cm:destination") as String?
+            ).withOfflineStatus()
+        }
+
+        /**
+         * returns the Entry obj with extension value true
+         */
+        fun with(node: NodeChildAssociation, isExtension: Boolean): Entry {
+            return Entry(
+                node.id,
+                node.parentId,
+                Type.from(node.nodeType, node.isFile, node.isFolder),
+                node.name,
+                node.path?.formattedString(),
+                node.content?.mimeType,
+                propertiesCompat(node.properties),
+                node.modifiedAt,
+                node.isFavorite == null || node.allowableOperations == null,
+                node.isFavorite ?: false,
+                canDelete(node.allowableOperations),
+                canCreate(node.allowableOperations),
+                otherId = node.properties?.get("cm:destination") as String?,
+                isExtension = isExtension
             ).withOfflineStatus()
         }
 
@@ -350,7 +373,11 @@ enum class OfflineStatus {
 
 class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
-        try { OfflineStatus.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { OfflineStatus.UNDEFINED }
+        try {
+            OfflineStatus.valueOf(databaseValue?.uppercase() ?: "")
+        } catch (_: Exception) {
+            OfflineStatus.UNDEFINED
+        }
 
     override fun convertToDatabaseValue(entityProperty: OfflineStatus?) =
         entityProperty?.value()
@@ -358,7 +385,11 @@ class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
 
 class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
-        try { Entry.Type.valueOf(databaseValue?.uppercase() ?: "") } catch (_: Exception) { Entry.Type.UNKNOWN }
+        try {
+            Entry.Type.valueOf(databaseValue?.uppercase() ?: "")
+        } catch (_: Exception) {
+            Entry.Type.UNKNOWN
+        }
 
     override fun convertToDatabaseValue(entityProperty: Entry.Type?) =
         entityProperty?.name?.lowercase()

@@ -14,6 +14,9 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
+/**
+ * Mark as BrowseRepository
+ */
 class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     private val service: NodesApi by lazy {
@@ -31,6 +34,17 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
     suspend fun fetchFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
         ResponsePaging.with(service.listNodeChildren(
+            folderId,
+            skipCount,
+            maxItems,
+            include = extraFields()
+        ))
+
+    /**
+     * fetching the folder items
+     */
+    suspend fun fetchExtensionFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
+        ResponsePaging.withExtension(service.listNodeChildren(
             folderId,
             skipCount,
             maxItems,

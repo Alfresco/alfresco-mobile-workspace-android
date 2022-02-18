@@ -47,5 +47,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      * return callback for list item
      */
     override fun onItemClicked(entry: Entry) {
+        println("BrowseExtensionFragment.onItemClicked")
     }
 }

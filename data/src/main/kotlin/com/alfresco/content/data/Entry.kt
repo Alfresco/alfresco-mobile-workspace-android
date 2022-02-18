@@ -201,6 +201,9 @@ data class Entry(
             ).withOfflineStatus()
         }
 
+        /**
+         * returns the Entry obj with extension value true
+         */
         fun with(node: NodeChildAssociation, isExtension: Boolean): Entry {
             return Entry(
                 node.id,

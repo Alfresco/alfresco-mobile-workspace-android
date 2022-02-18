@@ -39,7 +39,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
         }
     }
 
-    fun hideActionBarLayout() {
+    /**
+     * expand the toolbar
+     */
+    fun showActionBarLayout() {
         layout.expand(false)
     }
 

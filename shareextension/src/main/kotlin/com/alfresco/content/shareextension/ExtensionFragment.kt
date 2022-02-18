@@ -10,6 +10,9 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.navigateToExtension
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Mark as ExtensionArgs
+ */
 @Parcelize
 data class ExtensionArgs(
     val path: String
@@ -17,6 +20,9 @@ data class ExtensionArgs(
     companion object {
         private const val PATH_KEY = "path"
 
+        /**
+         * return the ExtensionArgs obj
+         */
         fun with(args: Bundle): ExtensionArgs {
             return ExtensionArgs(
                 args.getString(PATH_KEY, "")
@@ -25,6 +31,9 @@ data class ExtensionArgs(
     }
 }
 
+/**
+ * Mark as ExtensionFragment
+ */
 class ExtensionFragment : Fragment(), MavericksView {
     private lateinit var args: ExtensionArgs
     val viewModel: ExtensionViewModel by fragmentViewModelWithArgs { args }

@@ -13,6 +13,9 @@ data class ResponsePaging(
             )
         }
 
+        /**
+         * return the response with updated extension value
+         */
         fun withExtension(raw: com.alfresco.content.models.NodeChildAssociationPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),

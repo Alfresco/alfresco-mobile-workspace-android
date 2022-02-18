@@ -12,6 +12,9 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 
+/**
+ * Mark as BrowseExtensionFragment
+ */
 class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_extension_list) {
 
     private lateinit var args: BrowseArgs
@@ -23,9 +26,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         args = BrowseArgs.with(requireArguments())
 
         // Contextual search only in folders/sites
-//        if (args.id != null) {
         setHasOptionsMenu(true)
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

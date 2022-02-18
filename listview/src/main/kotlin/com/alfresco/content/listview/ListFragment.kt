@@ -98,6 +98,9 @@ abstract class ListViewModel<S : ListViewState>(
     }
 }
 
+/**
+ * Mark as ListFragment
+ */
 abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: Int = R.layout.fragment_list) :
     Fragment(layoutID), MavericksView {
     abstract val viewModel: VM

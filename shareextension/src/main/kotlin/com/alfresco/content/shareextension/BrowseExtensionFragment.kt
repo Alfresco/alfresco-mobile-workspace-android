@@ -43,6 +43,9 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         super.invalidate()
     }
 
+    /**
+     * return callback for list item
+     */
     override fun onItemClicked(entry: Entry) {
     }
 }

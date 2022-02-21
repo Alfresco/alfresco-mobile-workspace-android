@@ -18,7 +18,6 @@
             android:icon="@drawable/ic_launcher_foreground"
             android:launchMode="singleInstance"
             android:logo="@drawable/ic_launcher_foreground"
-            android:theme="@style/Theme.Alfresco"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>

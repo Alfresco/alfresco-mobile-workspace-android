@@ -15,13 +15,23 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * Mark as ActionExtension
+ */
 interface ActionExtension {
     val entry: Entry
     val title: Int
 
     suspend fun execute(context: Context, list: List<Uri>): Entry
+
+    /**
+     * copied entry obj
+     */
     fun copy(_entry: Entry): ActionExtension
 
+    /**
+     * execute for uploading the files
+     */
     fun execute(
         context: Context,
         scope: CoroutineScope,
@@ -44,16 +54,26 @@ interface ActionExtension {
         }
     }
 
+    /**
+     * showing toast on execution complete
+     */
     fun showToast(view: View, anchorView: View? = null)
 
-    fun maxFileNameInToast(view: View) =
-        view.context.resources.getInteger(R.integer.action_toast_file_name_max_length)
-
+    /**
+     * Mark as Error
+     */
     data class Error(val message: String)
 
+    /**
+     * Mark as Exception
+     */
     class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
+
+        /**
+         * show Message on coroutine scope using lifecycle
+         */
         fun showActionExtensionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<ActionExtension>(block = showToast(view, anchorView))
             scope.on<Error> {

@@ -220,13 +220,15 @@ class BrowseViewModel(
             else -> false
         }
 
+    /**
+     * Upload files on the current node
+     */
     fun uploadFiles(state: BrowseViewState) {
         val list = browseRepository.getExtensionDataList().map { Uri.parse(it) }
         if (!list.isNullOrEmpty()) {
             state.nodeId?.let { id ->
                 execute(ActionUploadExtensionFiles(Entry(id = id)), list)
                 browseRepository.clearExtensionData()
-//                onUploadQueue?.invoke()
             }
         }
     }

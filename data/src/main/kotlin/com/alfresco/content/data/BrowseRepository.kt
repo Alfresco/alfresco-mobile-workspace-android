@@ -145,6 +145,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         return "${baseUrl}alfresco/versions/1/nodes/${entry.id}/content?attachment=false&alf_ticket=${session.ticket}"
     }
 
+    /**
+     * returns the shared files into preferences
+     */
     fun getExtensionDataList(): List<String> {
 
         if (sharedPref.contains(SHARE_MULTIPLE_URI) &&
@@ -156,6 +159,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         return emptyList()
     }
 
+    /**
+     * clear the shared files from preferences
+     */
     fun clearExtensionData() {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPrefs.edit()

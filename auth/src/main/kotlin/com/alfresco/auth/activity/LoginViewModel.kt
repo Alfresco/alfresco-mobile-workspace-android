@@ -251,6 +251,7 @@ class LoginViewModel(
         private const val SHARED_PREFS_NAME = "org.activiti.aims.android.auth"
         private const val SHARED_PREFS_CONFIG_KEY = "config"
 
+        const val EXTRA_IS_LOGIN = "is_login"
         const val EXTRA_IS_EXTENSION = "is_extension"
         const val EXTRA_ENDPOINT = "endpoint"
         const val EXTRA_AUTH_TYPE = "authType"

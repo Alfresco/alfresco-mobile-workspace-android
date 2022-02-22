@@ -1,5 +1,7 @@
 package com.alfresco.content.data
 
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.alfresco.content.apis.AlfrescoApi
 import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.NodesApiExt
@@ -7,6 +9,7 @@ import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.models.NodeBodyCreate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.google.gson.Gson
 import java.io.File
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -19,6 +22,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
  */
 class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
+    private val context get() = session.context
+
     private val service: NodesApi by lazy {
         session.createService(NodesApi::class.java)
     }
@@ -27,54 +32,68 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         session.createService(NodesApiExt::class.java)
     }
 
+    private val sharedPref: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
     val myFilesNodeId: String get() = SessionManager.requireSession.account.myFiles ?: ""
 
     suspend fun myFilesNodeId() =
         service.getMyNode().entry.id
 
     suspend fun fetchFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listNodeChildren(
-            folderId,
-            skipCount,
-            maxItems,
-            include = extraFields()
-        ))
+        ResponsePaging.with(
+            service.listNodeChildren(
+                folderId,
+                skipCount,
+                maxItems,
+                include = extraFields()
+            )
+        )
 
     /**
      * fetching the folder items
      */
     suspend fun fetchExtensionFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.withExtension(service.listNodeChildren(
-            folderId,
-            skipCount,
-            maxItems,
-            include = extraFields()
-        ))
+        ResponsePaging.withExtension(
+            service.listNodeChildren(
+                folderId,
+                skipCount,
+                maxItems,
+                include = extraFields()
+            )
+        )
 
     suspend fun fetchLibraryDocumentsFolder(siteId: String) =
-        Entry.with(service.getNode(
-            siteId,
-            extraFields(),
-            LIB_DOCUMENTS_PATH
-        ).entry)
+        Entry.with(
+            service.getNode(
+                siteId,
+                extraFields(),
+                LIB_DOCUMENTS_PATH
+            ).entry
+        )
 
     suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listNodeChildren(
-            siteId,
-            skipCount,
-            maxItems,
-            include = extraFields(),
-            relativePath = LIB_DOCUMENTS_PATH
-        ))
+        ResponsePaging.with(
+            service.listNodeChildren(
+                siteId,
+                skipCount,
+                maxItems,
+                include = extraFields(),
+                relativePath = LIB_DOCUMENTS_PATH
+            )
+        )
 
     private fun extraFields() =
         AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations", "properties")
 
     suspend fun fetchEntry(entryId: String) =
-        Entry.with(service.getNode(
-            entryId,
-            extraFields()
-        ).entry)
+        Entry.with(
+            service.getNode(
+                entryId,
+                extraFields()
+            ).entry
+        )
 
     suspend fun deleteEntry(entry: Entry) =
         service.deleteNode(entry.id, null)
@@ -126,7 +145,26 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         return "${baseUrl}alfresco/versions/1/nodes/${entry.id}/content?attachment=false&alf_ticket=${session.ticket}"
     }
 
-    private companion object {
+    fun getExtensionDataList(): List<String> {
+
+        if (sharedPref.contains(SHARE_MULTIPLE_URI) &&
+            !sharedPref.getString(SHARE_MULTIPLE_URI, "").isNullOrEmpty()
+        ) {
+
+            return Gson().fromJson(sharedPref.getString(SHARE_MULTIPLE_URI, ""), Array<String>::class.java).toList()
+        }
+        return emptyList()
+    }
+
+    fun clearExtensionData() {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = sharedPrefs.edit()
+        editor.remove(SHARE_MULTIPLE_URI)
+        editor.apply()
+    }
+
+    companion object {
         const val LIB_DOCUMENTS_PATH = "documentLibrary"
+        const val SHARE_MULTIPLE_URI = "SHARE_MULTIPLE_URI"
     }
 }

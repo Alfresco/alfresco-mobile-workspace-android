@@ -36,6 +36,8 @@ dependencies {
     implementation libs.google.material
     implementation libs.epoxy.core
     implementation libs.mavericks
+    implementation libs.gson
+    implementation libs.androidx.preference
 
     kapt libs.epoxy.processor
 }

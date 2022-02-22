@@ -2,6 +2,7 @@ package com.alfresco.content.actions
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.Logger
@@ -14,21 +15,21 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-interface Action {
+interface ActionExtension {
     val entry: Entry
-    val icon: Int
     val title: Int
 
-    suspend fun execute(context: Context): Entry
-    fun copy(_entry: Entry): Action
+    suspend fun execute(context: Context, list: List<Uri>): Entry
+    fun copy(_entry: Entry): ActionExtension
 
     fun execute(
         context: Context,
-        scope: CoroutineScope
+        scope: CoroutineScope,
+        list: List<Uri>
     ) = scope.launch {
         val bus = EventBus.default
         try {
-            val newEntry = execute(context)
+            val newEntry = execute(context, list)
             val newAction = copy(newEntry)
             bus.send(newAction)
         } catch (ex: CancellationException) {
@@ -53,8 +54,8 @@ interface Action {
     class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
-        fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
-            scope.on<Action>(block = showToast(view, anchorView))
+        fun showActionExtensionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
+            scope.on<ActionExtension>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)
@@ -62,7 +63,7 @@ interface Action {
             }
         }
 
-        private fun <T : Action> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
+        private fun <T : ActionExtension> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
             return { action: T ->
                 // Don't call on backstack views
                 if (view != null) {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+
+    <!-- Upload queue dialog -->
+    <string name="upload_queue_title">Upload</string>
+    <string name="upload_queue_subtitle">Uploading in queue. Please track the status in the mobile app.</string>
+    <string name="upload_queue_ok_button">Ok</string>
+</resources>

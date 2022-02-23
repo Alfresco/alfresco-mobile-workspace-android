@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.Credentials
+import com.alfresco.auth.activity.LoginViewModel.Companion.EXTRA_IS_LOGIN
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
 import com.alfresco.content.data.BrowseRepository
@@ -76,6 +77,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
     private fun navigateToExtension() {
         val i = Intent(this, ExtensionActivity::class.java)
+        i.putExtra(EXTRA_IS_LOGIN, true)
         i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(i)
         finish()

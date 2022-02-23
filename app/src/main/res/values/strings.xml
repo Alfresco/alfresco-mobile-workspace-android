@@ -28,6 +28,7 @@
 
     <string name="auth_error_wrong_credentials">Wrong username or password provided.</string>
     <string name="settings_sync_network_title">Update offline files using</string>
+    <string name="share_limit_message">Can\'t share more than 50 media items</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>Wi-Fi only</item>

@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
-import com.alfresco.content.navigateToExtension
+import com.alfresco.content.navigateToParent
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -46,7 +46,7 @@ class ExtensionFragment : Fragment(), MavericksView {
         val nodeId = viewModel.getMyFilesNodeId()
         println("ExtensionFragment.onCreate $nodeId")
 
-        findNavController().navigateToExtension(nodeId, "")
+        findNavController().navigateToParent(nodeId, "")
     }
 
     override fun invalidate() = withState(viewModel) { state ->

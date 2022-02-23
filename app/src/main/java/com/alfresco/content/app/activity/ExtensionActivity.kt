@@ -74,7 +74,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
             finish()
             false
         } else
-            navController.navigateUp()
+        return navController.navigateUp()
     }
 
     private fun handleSingleFile(intent: Intent) {
@@ -143,7 +143,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        println("ExtensionActivity.onNewIntent")
     }
 
     private fun navigateToReLogin() {

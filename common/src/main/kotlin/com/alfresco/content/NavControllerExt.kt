@@ -11,12 +11,16 @@ fun NavController.navigateTo(entry: Entry) {
         Entry.Type.SITE -> navigateToSite(entry)
         Entry.Type.FILE_LINK -> navigateFileLink(entry)
         Entry.Type.FOLDER_LINK -> navigateFolderLink(entry)
-        else -> {} // no-op for now
+        else -> {
+        } // no-op for now
     }
 }
 
-private fun NavController.navigateToFolder(entry: Entry) =
-    navigateToFolder(entry.id, entry.name, modeFor(entry))
+private fun NavController.navigateToFolder(entry: Entry) {
+    if (entry.isExtension)
+        navigateToChildFolder(entry.id, entry.name, modeFor(entry))
+    else navigateToFolder(entry.id, entry.name, modeFor(entry))
+}
 
 private fun modeFor(entry: Entry) =
     if (entry.hasOfflineStatus) {
@@ -48,10 +52,17 @@ fun NavController.navigateToContextualSearch(id: String, title: String) =
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))
 
 /**
- * navigate to browse extension
+ * navigate to browse parent folder
  */
-fun NavController.navigateToExtension(id: String, title: String, mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse/extension/$mode/$id?title=${Uri.encode(title)}"))
+fun NavController.navigateToParent(id: String, title: String, mode: String = REMOTE) {
+    navigate(Uri.parse("$BASE_URI/browse_parent/extension/$mode/$id?title=${Uri.encode(title)}"))
+}
+
+/**
+ * navigate to browse child folder
+ */
+fun NavController.navigateToChildFolder(id: String, title: String, mode: String = REMOTE) {
+    navigate(Uri.parse("$BASE_URI/browse_child/folder_extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
 /**

@@ -73,8 +73,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         return if (navController.currentDestination?.id == R.id.nav_browse_extension) {
             finish()
             false
-        } else
-        return navController.navigateUp()
+        } else navController.navigateUp()
     }
 
     private fun handleSingleFile(intent: Intent) {

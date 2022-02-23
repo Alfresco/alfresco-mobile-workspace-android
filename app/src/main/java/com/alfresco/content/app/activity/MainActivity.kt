@@ -78,12 +78,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         actionBarController.setOnline(state.isOnline)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        println("current destination ${navController.currentDestination}")
-        println("current destination matched ${navController.currentDestination?.id == R.id.nav_browse_extension}")
-
-        return navController.navigateUp()
-    }
+    override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
 
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()

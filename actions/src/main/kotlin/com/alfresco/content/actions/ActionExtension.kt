@@ -22,6 +22,9 @@ interface ActionExtension {
     val entry: Entry
     val title: Int
 
+    /**
+     * execute declaration for uploading the files
+     */
     suspend fun execute(context: Context, list: List<Uri>): Entry
 
     /**
@@ -30,7 +33,7 @@ interface ActionExtension {
     fun copy(_entry: Entry): ActionExtension
 
     /**
-     * execute for uploading the files
+     * execute body for uploading the files
      */
     fun execute(
         context: Context,

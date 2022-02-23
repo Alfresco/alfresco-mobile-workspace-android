@@ -47,10 +47,10 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
             } else {
                 when (intent?.action) {
                     Intent.ACTION_SEND -> {
-                        handleSendImage(intent)
+                        handleSingleFile(intent)
                     }
                     Intent.ACTION_SEND_MULTIPLE -> {
-                        handleSendMultipleImages(intent)
+                        handleMultipleFiles(intent)
                     }
                 }
                 configure()
@@ -77,13 +77,13 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
             navController.navigateUp()
     }
 
-    private fun handleSendImage(intent: Intent) {
+    private fun handleSingleFile(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             saveShareData(arrayOf(it.toString()))
         }
     }
 
-    private fun handleSendMultipleImages(intent: Intent) {
+    private fun handleMultipleFiles(intent: Intent) {
         intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)?.let {
             if (it.size > shareLimit) {
                 Toast.makeText(this, getString(R.string.share_limit_message), Toast.LENGTH_SHORT).show()

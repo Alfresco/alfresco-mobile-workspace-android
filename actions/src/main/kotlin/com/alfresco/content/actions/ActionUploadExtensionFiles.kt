@@ -22,7 +22,7 @@ data class ActionUploadExtensionFiles(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context, list: List<Uri>): Entry {
-        if (list.count() > 0) {
+        if (!list.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
                 list.map {
                     repository.scheduleContentForUpload(context, it, entry.id)

@@ -16,6 +16,27 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_browse_sub_folders"
+        android:name="com.alfresco.content.shareextension.BrowseExtensionFragment"
+        android:label="{title}">
+
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+
+        <deepLink app:uri="alfresco://content/browse_child/{path}/remote/{id}?title={title}" />
+
+    </fragment>
+
+
+    <fragment
         android:id="@+id/nav_browse_extension"
         android:name="com.alfresco.content.shareextension.BrowseExtensionFragment"
         android:label="@string/nav_title_browse_extension">
@@ -31,7 +52,7 @@
             app:argType="string"
             android:defaultValue=""/>
 
-        <deepLink app:uri="alfresco://content/browse/{path}/remote/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse_parent/{path}/remote/{id}?title={title}" />
 
     </fragment>
 

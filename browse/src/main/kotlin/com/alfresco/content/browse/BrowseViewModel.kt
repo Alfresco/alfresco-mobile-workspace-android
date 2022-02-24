@@ -1,6 +1,7 @@
 package com.alfresco.content.browse
 
 import android.content.Context
+import android.net.Uri
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
@@ -8,8 +9,10 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionDeleteForever
+import com.alfresco.content.actions.ActionExtension
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRestore
+import com.alfresco.content.actions.ActionUploadExtensionFiles
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -23,6 +26,7 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -35,6 +39,8 @@ class BrowseViewModel(
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
+    private val browseRepository = BrowseRepository()
+    var onUploadQueue: (() -> Unit)? = null
 
     init {
         fetchInitial()
@@ -166,7 +172,7 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_folder) ->
                 BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
-            context.getString(R.string.nav_path_extension) ->
+            context.getString(R.string.nav_path_extension), context.getString(R.string.nav_path_folder_extension) ->
                 BrowseRepository()::fetchExtensionFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             context.getString(R.string.nav_path_site) ->
@@ -213,6 +219,21 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_site) -> state.parent?.canCreate ?: false
             else -> false
         }
+
+    /**
+     * Upload files on the current node
+     */
+    fun uploadFiles(state: BrowseViewState) {
+        val list = browseRepository.getExtensionDataList().map { Uri.parse(it) }
+        if (!list.isNullOrEmpty() && state.parent != null) {
+
+            execute(ActionUploadExtensionFiles(state.parent), list)
+            browseRepository.clearExtensionData()
+        }
+    }
+
+    private fun execute(action: ActionExtension, list: List<Uri>) =
+        action.execute(context, GlobalScope, list)
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
 

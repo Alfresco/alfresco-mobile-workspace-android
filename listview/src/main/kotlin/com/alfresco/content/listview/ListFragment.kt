@@ -30,6 +30,7 @@ import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
 import com.alfresco.list.replace
+import com.google.android.material.button.MaterialButton
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
@@ -109,6 +110,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     lateinit var recyclerView: EpoxyRecyclerView
     lateinit var refreshLayout: SwipeRefreshLayout
     lateinit var loadingMessage: TextView
+    var uploadButton: MaterialButton? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
 
@@ -119,6 +121,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         recyclerView = view.findViewById(R.id.recycler_view)
         refreshLayout = view.findViewById(R.id.refresh_layout)
         loadingMessage = view.findViewById(R.id.loading_message)
+
+        uploadButton = view.findViewById(R.id.upload_button)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()

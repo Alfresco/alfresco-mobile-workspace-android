@@ -54,4 +54,9 @@
 
     <string name="action_upload_files_title">Upload files</string>
 
+    <!-- Upload queue dialog -->
+    <string name="action_upload_queue_title">Upload</string>
+    <string name="action_upload_queue_subtitle">Uploading in queue. Please track the status in the mobile app.</string>
+    <string name="action_upload_queue_ok_button">Ok</string>
+
 </resources>

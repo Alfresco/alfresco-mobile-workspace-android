@@ -62,7 +62,7 @@ fun NavController.navigateToParent(id: String, title: String, mode: String = REM
  * navigate to browse child folder
  */
 fun NavController.navigateToChildFolder(id: String, title: String, mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse_child/folder_extension/$mode/$id?title=${Uri.encode(title)}"))
+    navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
 /**

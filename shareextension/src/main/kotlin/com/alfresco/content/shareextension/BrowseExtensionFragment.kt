@@ -38,13 +38,11 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (args.path != "folder_extension") {
-            uploadButton?.setOnClickListener {
-                withState(viewModel) { state ->
-                    viewModel.uploadFiles(state)
-                }
+        uploadButton?.setOnClickListener {
+            withState(viewModel) { state ->
+                viewModel.uploadFiles(state)
             }
-        } else uploadButton?.isEnabled = false
+        }
 
         viewModel.onUploadQueue = {
             showUploadQueuePrompt()

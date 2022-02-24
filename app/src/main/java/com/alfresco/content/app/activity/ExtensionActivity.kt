@@ -73,8 +73,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         return if (navController.currentDestination?.id == R.id.nav_browse_extension) {
             finish()
             false
-        } else
-            navController.navigateUp()
+        } else navController.navigateUp()
     }
 
     private fun handleSingleFile(intent: Intent) {
@@ -143,7 +142,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        println("ExtensionActivity.onNewIntent")
     }
 
     private fun navigateToReLogin() {

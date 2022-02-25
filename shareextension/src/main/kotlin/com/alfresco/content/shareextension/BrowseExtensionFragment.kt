@@ -86,7 +86,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      * return callback for list item
      */
     override fun onItemClicked(entry: Entry) {
-        if (!entry.isFolder ) return
+        if (!entry.isFolder) return
 
         findNavController().navigateTo(entry)
     }

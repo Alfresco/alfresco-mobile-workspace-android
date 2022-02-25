@@ -183,6 +183,9 @@ data class Entry(
             ).withOfflineStatus()
         }
 
+        /**
+         * return the Entry obj with isExtension value true
+         */
         fun with(result: ResultNode, isExtension: Boolean): Entry {
             return Entry(
                 result.id,

@@ -58,8 +58,13 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
 
     override fun onItemClicked(entry: Entry) {
         viewModel.saveSearch()
-
-        findNavController().navigateTo(entry)
+        withState(viewModel) { state ->
+            if (!state.isExtension) {
+                findNavController().navigateTo(entry)
+            } else if (entry.isFolder) {
+                findNavController().navigateTo(entry)
+            }
+        }
     }
 
     override fun invalidate() {

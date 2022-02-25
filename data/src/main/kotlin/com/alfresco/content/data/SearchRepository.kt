@@ -76,6 +76,23 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    suspend fun search(
+        terms: String,
+        nodeId: String?,
+        filters: SearchFilters,
+        skipCount: Int,
+        maxItems: Int
+    ) =
+        ResponsePaging.withExtension(
+            searchService.simpleSearch(
+                terms,
+                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+                skipCount,
+                maxItems,
+                includeFrom(filters)
+            )
+        )
+
     private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {
         val isContextual = advanceSearchFilters.find {
             it.query == SearchFilter.Contextual.name

@@ -33,10 +33,11 @@ data class SearchResultsState(
     val listFacetFields: SearchFacetFields = emptySearchFacetFields(),
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
-    val contextTitle: String? = null
+    val contextTitle: String? = null,
+    val isExtension: Boolean = false
 ) : ListViewState {
 
-    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title)
+    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension)
 
     val isContextual: Boolean
         get() {

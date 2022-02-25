@@ -76,8 +76,8 @@
     <string name="auth_internet_unavailable_ok_button">Ok</string>
 
     <!-- Login App dialog -->
-    <string name="auth_login_app_title">Login Alert</string>
-    <string name="auth_login_app_subtitle">Please login into the app first.</string>
+    <string name="auth_login_app_title">Session unavailable</string>
+    <string name="auth_login_app_subtitle">Please launch Alfresco Mobile Workspace before continuing.</string>
     <string name="auth_login_app_ok_button">Ok</string>
 
 

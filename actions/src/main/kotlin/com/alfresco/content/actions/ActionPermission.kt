@@ -15,7 +15,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// Mark as ActionPermission interface
+/**
+ * Marked as ActionPermission
+ */
 interface ActionPermission {
 
     /**

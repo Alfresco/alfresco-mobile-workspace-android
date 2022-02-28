@@ -228,8 +228,14 @@ class BrowseViewModel(
         if (!list.isNullOrEmpty() && state.parent != null) {
 
             execute(ActionUploadExtensionFiles(state.parent), list)
-            browseRepository.clearExtensionData()
         }
+    }
+
+    /**
+     * Cleared the extension data
+     */
+    fun clearSharedData() {
+        browseRepository.clearExtensionData()
     }
 
     private fun execute(action: ActionExtension, list: List<Uri>) =
@@ -240,6 +246,6 @@ class BrowseViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: BrowseViewState
-        ) = BrowseViewModel(state, viewModelContext.app())
+        ) = BrowseViewModel(state, viewModelContext.activity)
     }
 }

@@ -44,7 +44,6 @@ class ExtensionFragment : Fragment(), MavericksView {
         args = ExtensionArgs.with(requireArguments())
 
         val nodeId = viewModel.getMyFilesNodeId()
-        println("ExtensionFragment.onCreate $nodeId")
 
         findNavController().navigateToParent(nodeId, "")
     }

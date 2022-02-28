@@ -231,6 +231,9 @@ class BrowseViewModel(
         }
     }
 
+    /**
+     * Cleared the extension data
+     */
     fun clearSharedData() {
         browseRepository.clearExtensionData()
     }

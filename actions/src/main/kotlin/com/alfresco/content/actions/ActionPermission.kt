@@ -1,19 +1,26 @@
 package com.alfresco.content.actions
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.alfresco.content.PermissionFragment
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
+import com.google.android.material.snackbar.Snackbar
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// Mark as ActionPermission interface
 interface ActionPermission {
 
+    /**
+     * It executed when we have read permission granted
+     */
     suspend fun executeIntentData(context: Context)
 
     fun executePermission(
@@ -43,10 +50,8 @@ interface ActionPermission {
                 permissionRationale(context)
             )
         ) {
-            println("Read Permission Granted")
             return true
         } else {
-            println("Read Permission not Granted")
             throw Exception(
                 context.getString(R.string.share_files_failure_permissions)
             )
@@ -58,14 +63,21 @@ interface ActionPermission {
      */
     class Error(val message: String)
 
+    /**
+     * showing toast on execution complete
+     */
     fun showToast(view: View, anchorView: View? = null)
 
     companion object {
+
+        /**
+         * show Message on coroutine scope using lifecycle
+         */
         fun showActionPermissionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<ActionPermission>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
-                    ActionExtension.showToast(view, anchorView, it.message)
+                    showToast(view, anchorView, it.message)
                 }
             }
         }
@@ -77,6 +89,32 @@ interface ActionPermission {
                     action.showToast(view, anchorView)
                 }
             }
+        }
+
+        internal fun showToast(
+            view: View,
+            anchorView: View?,
+            @StringRes messageResId: Int,
+            vararg formatArgs: String
+        ) = showToast(
+            view,
+            anchorView,
+            view.resources.getString(
+                messageResId, *formatArgs
+            )
+        )
+
+        @SuppressLint("ShowToast")
+        internal fun showToast(
+            view: View,
+            anchorView: View?,
+            message: CharSequence
+        ) {
+            Snackbar.make(
+                view,
+                message,
+                Snackbar.LENGTH_LONG
+            ).setAnchorView(anchorView).show()
         }
 
         private fun requiredPermissions() =

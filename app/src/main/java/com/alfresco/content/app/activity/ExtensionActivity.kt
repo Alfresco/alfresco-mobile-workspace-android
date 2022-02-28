@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.Logger
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.actions.ActionExtension
 import com.alfresco.content.actions.ActionPermission
@@ -25,8 +26,8 @@ import com.alfresco.content.data.BrowseRepository.Companion.SHARE_MULTIPLE_URI
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.GlobalScope
+import java.lang.ref.WeakReference
 
 /**
  * Marked as ExtensionActivity class
@@ -51,24 +52,25 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     private fun executeIntentData() {
         if (viewModel.requiresLogin) {
             showLoginAppPrompt()
-        } else {
-            intent?.let { intentObj ->
-                if (intentObj.hasExtra(LoginViewModel.EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(LoginViewModel.EXTRA_IS_LOGIN, false)) {
-                    saveLoginSessionStatus()
-                    configure()
-                } else {
-                    when (intent?.action) {
-                        Intent.ACTION_SEND -> {
-                            handleSingleFile(intent)
-                        }
-                        Intent.ACTION_SEND_MULTIPLE -> {
-                            handleMultipleFiles(intent)
-                        }
+            return
+        }
+        intent?.let { intentObj ->
+            if (intentObj.hasExtra(LoginViewModel.EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(LoginViewModel.EXTRA_IS_LOGIN, false)) {
+                saveLoginSessionStatus()
+                configure()
+            } else {
+                when (intent?.action) {
+                    Intent.ACTION_SEND -> {
+                        handleSingleFile(intent)
                     }
-                    configure()
+                    Intent.ACTION_SEND_MULTIPLE -> {
+                        handleMultipleFiles(intent)
+                    }
                 }
+                configure()
             }
         }
+
     }
 
     private fun configure() = withState(viewModel) {
@@ -124,11 +126,8 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        if (viewModel.readPermission) {
-            if (state.requiresReLogin && state.isOnline) {
-                showSignedOutPrompt()
-            } else {
-            }
+        if (viewModel.readPermission && state.requiresReLogin && state.isOnline) {
+            showSignedOutPrompt()
         }
     }
 
@@ -207,5 +206,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     }
 
     override fun showToast(view: View, anchorView: View?) {
+        Logger.d("Read Permission Granted")
     }
 }

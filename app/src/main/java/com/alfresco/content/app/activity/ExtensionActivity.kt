@@ -200,13 +200,13 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
             executeIntentData()
         }
     }
+}
 
-    /**
-     * Marked as AlertType
-     */
-    enum class AlertType {
-        TYPE_SIGN_OUT,
-        TYPE_INTERNET_UNAVAILABLE,
-        TYPE_NO_LOGIN
-    }
+/**
+ * Marked as AlertType
+ */
+enum class AlertType {
+    TYPE_SIGN_OUT,
+    TYPE_INTERNET_UNAVAILABLE,
+    TYPE_NO_LOGIN
 }

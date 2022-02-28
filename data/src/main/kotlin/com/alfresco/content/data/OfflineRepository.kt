@@ -115,13 +115,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         var name: String? = null
         val projection = arrayOf(MediaStore.Files.FileColumns.DISPLAY_NAME)
         val cursor = resolver.query(contentUri, projection, null, null, null)
-
         if (cursor != null) {
             cursor.moveToFirst()
             name = cursor.getString(0)
             cursor.close()
         }
-
         val mimeType = resolver.getType(contentUri)
 
         requireNotNull(name)

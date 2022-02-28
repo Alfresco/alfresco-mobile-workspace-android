@@ -43,6 +43,7 @@ class MainActivityViewModel(
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
     private var refreshTicketJob: Job? = null
     private var syncService: SyncService? = null
+    var readPermission: Boolean = false
 
     init {
         // Start a new session

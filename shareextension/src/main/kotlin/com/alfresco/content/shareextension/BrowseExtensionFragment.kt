@@ -47,6 +47,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
 
         viewModel.onUploadQueue = {
+            viewModel.clearSharedData()
             showUploadQueuePrompt()
         }
     }

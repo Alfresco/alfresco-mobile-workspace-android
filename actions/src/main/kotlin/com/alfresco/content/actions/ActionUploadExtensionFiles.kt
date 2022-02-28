@@ -22,6 +22,7 @@ data class ActionUploadExtensionFiles(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context, list: List<Uri>): Entry {
+
         if (!list.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
                 list.map {
@@ -44,9 +45,5 @@ data class ActionUploadExtensionFiles(
                 (view.context as AppCompatActivity).finish()
             }
             .show()
-    }
-
-    private companion object {
-        val MIME_TYPES = arrayOf("*/*")
     }
 }

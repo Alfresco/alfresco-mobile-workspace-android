@@ -1,9 +1,11 @@
 package com.alfresco.content.app.activity
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -13,21 +15,23 @@ import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
-import com.alfresco.auth.activity.LoginViewModel.Companion.EXTRA_IS_LOGIN
 import com.alfresco.content.actions.ActionExtension
+import com.alfresco.content.actions.ActionPermission
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.BrowseRepository.Companion.LOGIN_SESSION_STATUS
 import com.alfresco.content.data.BrowseRepository.Companion.SHARE_MULTIPLE_URI
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.GlobalScope
 
 /**
  * Marked as ExtensionActivity class
  */
-class ExtensionActivity : AppCompatActivity(), MavericksView {
+class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -40,14 +44,18 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_extension)
+        setupActionExtensionToasts()
+        executePermission(this, GlobalScope)
+    }
 
+    private fun executeIntentData() {
         if (viewModel.requiresLogin) {
             showLoginAppPrompt()
         } else {
             intent?.let { intentObj ->
-                if (intentObj.hasExtra(EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(EXTRA_IS_LOGIN, false)) {
+                if (intentObj.hasExtra(LoginViewModel.EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(LoginViewModel.EXTRA_IS_LOGIN, false)) {
+                    saveLoginSessionStatus()
                     configure()
-                    return
                 } else {
                     when (intent?.action) {
                         Intent.ACTION_SEND -> {
@@ -70,8 +78,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
 
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
         actionBarController.setupActionBar(this, navController)
-
-        setupActionExtensionToasts()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -110,12 +116,19 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         editor.apply()
     }
 
+    private fun saveLoginSessionStatus() {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = sharedPrefs.edit()
+        editor.putBoolean(LOGIN_SESSION_STATUS, true)
+        editor.apply()
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
-        if (state.requiresReLogin) {
-            if (state.isOnline) {
+        if (viewModel.readPermission) {
+            if (state.requiresReLogin && state.isOnline) {
                 showSignedOutPrompt()
+            } else {
             }
-        } else {
         }
     }
 
@@ -158,10 +171,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         loginAppDialog = WeakReference(dialog)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-    }
-
     private fun navigateToReLogin() {
         val i = Intent(this, LoginActivity::class.java)
         val acc = SessionManager.requireSession.account
@@ -174,9 +183,29 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
         finish()
     }
 
-    private fun setupActionExtensionToasts() =
+    private fun setupActionExtensionToasts() {
         ActionExtension.showActionExtensionToasts(
             lifecycleScope,
             findViewById(android.R.id.content)
         )
+        ActionPermission.showActionPermissionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content)
+        )
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
+    override suspend fun executeIntentData(context: Context) {
+        viewModel.readPermission = true
+        runOnUiThread {
+            executeIntentData()
+        }
+    }
+
+    override fun showToast(view: View, anchorView: View?) {
+    }
 }

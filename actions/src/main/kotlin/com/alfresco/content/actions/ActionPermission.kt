@@ -23,6 +23,9 @@ interface ActionPermission {
      */
     suspend fun executeIntentData(context: Context)
 
+    /**
+     * It executed to take the read permission from user.
+     */
     fun executePermission(
         context: Context,
         scope: CoroutineScope

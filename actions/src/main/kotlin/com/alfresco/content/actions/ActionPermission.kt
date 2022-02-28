@@ -68,30 +68,15 @@ interface ActionPermission {
      */
     class Error(val message: String)
 
-    /**
-     * showing toast on execution complete
-     */
-    fun showToast(view: View, anchorView: View? = null)
-
     companion object {
 
         /**
          * show Message on coroutine scope using lifecycle
          */
         fun showActionPermissionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
-            scope.on<ActionPermission>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)
-                }
-            }
-        }
-
-        private fun <T : ActionPermission> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
-            return { action: T ->
-                // Don't call on backstack views
-                if (view != null) {
-                    action.showToast(view, anchorView)
                 }
             }
         }

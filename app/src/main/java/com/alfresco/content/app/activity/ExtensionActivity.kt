@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,6 @@ import com.alfresco.content.actions.ActionPermission
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
-import com.alfresco.content.data.BrowseRepository.Companion.LOGIN_SESSION_STATUS
 import com.alfresco.content.data.BrowseRepository.Companion.SHARE_MULTIPLE_URI
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,8 +36,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private lateinit var actionBarController: ActionBarController
     private var alertDialog = WeakReference<AlertDialog>(null)
-    private var internetUnavailableDialog = WeakReference<AlertDialog>(null)
-    private var loginAppDialog = WeakReference<AlertDialog>(null)
     private val shareLimit = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +69,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
             if (intentObj.hasExtra(LoginViewModel.EXTRA_IS_LOGIN) &&
                 intentObj.getBooleanExtra(LoginViewModel.EXTRA_IS_LOGIN, false)
             ) {
-                saveLoginSessionStatus()
                 configure()
             } else {
                 when (intent?.action) {
@@ -132,13 +127,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         val editor = sharedPrefs.edit()
         val jsonString = Gson().toJson(list)
         editor.putString(SHARE_MULTIPLE_URI, jsonString)
-        editor.apply()
-    }
-
-    private fun saveLoginSessionStatus() {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = sharedPrefs.edit()
-        editor.putBoolean(LOGIN_SESSION_STATUS, true)
         editor.apply()
     }
 
@@ -213,10 +201,9 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         }
     }
 
-    override fun showToast(view: View, anchorView: View?) {
-        Logger.d("Read Permission Granted")
-    }
-
+    /**
+     * Marked as AlertType
+     */
     enum class AlertType {
         TYPE_SIGN_OUT,
         TYPE_INTERNET_UNAVAILABLE,

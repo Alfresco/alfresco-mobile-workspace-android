@@ -59,6 +59,6 @@
     <string name="action_upload_queue_ok_button">Ok</string>
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
-    <string name="share_files_failure_permissions">To share files, turn on Read storage permissions.</string>
+    <string name="share_files_failure_permissions">To share files, turn on read storage permissions.</string>
 
 </resources>

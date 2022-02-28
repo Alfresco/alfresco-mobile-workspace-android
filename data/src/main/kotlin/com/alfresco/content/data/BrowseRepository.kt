@@ -165,13 +165,11 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
     fun clearExtensionData() {
         val editor = sharedPref.edit()
         editor.remove(SHARE_MULTIPLE_URI)
-        editor.remove(LOGIN_SESSION_STATUS)
         editor.apply()
     }
 
     companion object {
         const val LIB_DOCUMENTS_PATH = "documentLibrary"
         const val SHARE_MULTIPLE_URI = "SHARE_MULTIPLE_URI"
-        const val LOGIN_SESSION_STATUS = "loginSessionStatus"
     }
 }

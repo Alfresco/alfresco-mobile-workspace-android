@@ -79,7 +79,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "")
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", false)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -101,8 +101,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             ).apply {
                 gravity = Gravity.BOTTOM or Gravity.END
                 // TODO: define margins
-                setMargins(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                    .toInt())
+                setMargins(
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                        .toInt()
+                )
             }
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {

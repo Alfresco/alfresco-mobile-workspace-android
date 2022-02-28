@@ -3,6 +3,7 @@ package com.alfresco.content.shareextension
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
+import com.alfresco.content.navigateToContextualSearch
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
 
@@ -66,6 +68,16 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         inflater.inflate(R.menu.menu_browse, menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search -> {
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun invalidate() {
         super.invalidate()
     }
@@ -74,8 +86,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      * return callback for list item
      */
     override fun onItemClicked(entry: Entry) {
-        // Disable interaction on Trash or Upload items
-        if (entry.isTrashed || entry.isUpload) return
+        if (!entry.isFolder) return
 
         findNavController().navigateTo(entry)
     }

@@ -56,4 +56,25 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/contextualSearchFragment"
+        android:name="com.alfresco.content.search.SearchFragment"
+        android:label="SearchFragment">
+        <argument
+            android:name="id"
+            app:argType="string" />
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+
+        <argument
+            android:name="extension"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+
+        <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}?title={title}" />
+    </fragment>
+
 </navigation>

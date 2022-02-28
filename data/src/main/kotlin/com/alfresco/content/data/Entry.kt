@@ -183,6 +183,27 @@ data class Entry(
             ).withOfflineStatus()
         }
 
+        /**
+         * return the Entry obj with isExtension value true
+         */
+        fun with(result: ResultNode, isExtension: Boolean): Entry {
+            return Entry(
+                result.id,
+                result.parentId,
+                Type.from(result.nodeType, result.isFile, result.isFolder),
+                result.name,
+                result.path?.formattedString(),
+                result.content?.mimeType,
+                propertiesCompat(result.properties),
+                result.modifiedAt,
+                result.isFavorite == null || result.allowableOperations == null,
+                result.isFavorite ?: false,
+                canDelete(result.allowableOperations),
+                canCreate(result.allowableOperations),
+                isExtension = isExtension
+            ).withOfflineStatus()
+        }
+
         fun with(node: NodeChildAssociation): Entry {
             return Entry(
                 node.id,

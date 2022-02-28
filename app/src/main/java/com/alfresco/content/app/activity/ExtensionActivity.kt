@@ -131,14 +131,23 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        if (viewModel.readPermission && state.requiresReLogin && state.isOnline) {
-            showAlertPrompt(
-                resources.getString(R.string.auth_signed_out_title),
-                resources.getString(R.string.auth_signed_out_subtitle),
-                resources.getString(R.string.auth_basic_sign_in_button),
-                resources.getString(R.string.sign_out_confirmation_negative),
-                AlertType.TYPE_SIGN_OUT
-            )
+        if (viewModel.readPermission) {
+            if (state.requiresReLogin && state.isOnline) {
+                showAlertPrompt(
+                    resources.getString(R.string.auth_signed_out_title),
+                    resources.getString(R.string.auth_signed_out_subtitle),
+                    resources.getString(R.string.auth_basic_sign_in_button),
+                    resources.getString(R.string.sign_out_confirmation_negative),
+                    AlertType.TYPE_SIGN_OUT
+                )
+            } else if (!state.isOnline)
+                showAlertPrompt(
+                    resources.getString(R.string.auth_internet_unavailable_title),
+                    resources.getString(R.string.auth_internet_unavailable_subtitle),
+                    resources.getString(R.string.auth_internet_unavailable_ok_button),
+                    null,
+                    AlertType.TYPE_INTERNET_UNAVAILABLE
+                )
         }
     }
 
@@ -166,7 +175,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
                 .setMessage(message)
                 .setPositiveButton(positive) { _, _ ->
                     when (type) {
-                        AlertType.TYPE_NO_LOGIN -> finish()
+                        AlertType.TYPE_NO_LOGIN, AlertType.TYPE_INTERNET_UNAVAILABLE -> finish()
                         else -> {
                             Logger.d(getString(R.string.no_type))
                         }

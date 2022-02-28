@@ -83,14 +83,19 @@ class SearchViewModel(
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                repository.search(
-                    it.terms, it.contextId, it.filters, it.advanceSearchFilter,
-                    SearchFacetData(
-                        searchFacetFields = it.listFacetFields,
-                        searchFacetQueries = it.listFacetQueries,
-                        searchFacetIntervals = it.listFacetIntervals
-                    ), it.skipCount, it.maxItems
-                )
+                if (state.isExtension)
+                    repository.search(
+                        it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
+                    )
+                else
+                    repository.search(
+                        it.terms, it.contextId, it.filters, it.advanceSearchFilter,
+                        SearchFacetData(
+                            searchFacetFields = it.listFacetFields,
+                            searchFacetQueries = it.listFacetQueries,
+                            searchFacetIntervals = it.listFacetIntervals
+                        ), it.skipCount, it.maxItems
+                    )
             }) {
                 if (it is Loading) {
                     copy(request = it)

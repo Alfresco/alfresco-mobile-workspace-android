@@ -34,26 +34,31 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
     private lateinit var actionBarController: ActionBarController
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var internetUnavailableDialog = WeakReference<AlertDialog>(null)
+    private var loginAppDialog = WeakReference<AlertDialog>(null)
     private val shareLimit = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_extension)
 
-        intent?.let { intentObj ->
-            if (intentObj.hasExtra(EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(EXTRA_IS_LOGIN, false)) {
-                configure()
-                return
-            } else {
-                when (intent?.action) {
-                    Intent.ACTION_SEND -> {
-                        handleSingleFile(intent)
+        if (viewModel.requiresLogin) {
+            showLoginAppPrompt()
+        } else {
+            intent?.let { intentObj ->
+                if (intentObj.hasExtra(EXTRA_IS_LOGIN) && intentObj.getBooleanExtra(EXTRA_IS_LOGIN, false)) {
+                    configure()
+                    return
+                } else {
+                    when (intent?.action) {
+                        Intent.ACTION_SEND -> {
+                            handleSingleFile(intent)
+                        }
+                        Intent.ACTION_SEND_MULTIPLE -> {
+                            handleMultipleFiles(intent)
+                        }
                     }
-                    Intent.ACTION_SEND_MULTIPLE -> {
-                        handleMultipleFiles(intent)
-                    }
+                    configure()
                 }
-                configure()
             }
         }
     }
@@ -138,6 +143,19 @@ class ExtensionActivity : AppCompatActivity(), MavericksView {
             }
             .show()
         internetUnavailableDialog = WeakReference(dialog)
+    }
+
+    private fun showLoginAppPrompt() {
+        val oldDialog = loginAppDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.auth_login_app_title))
+            .setMessage(resources.getString(R.string.auth_login_app_subtitle))
+            .setPositiveButton(resources.getString(R.string.auth_login_app_ok_button)) { _, _ ->
+                finish()
+            }
+            .show()
+        loginAppDialog = WeakReference(dialog)
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -31,6 +31,17 @@ data class ResponsePaging(
             )
         }
 
+        /**
+         * returns Response for search while sharing the files through extension
+         */
+        fun withExtension(raw: com.alfresco.content.models.ResultSetPaging): ResponsePaging {
+            return ResponsePaging(
+                raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),
+                Pagination.with(raw.list!!.pagination!!),
+                FacetContext.with(raw.list?.context)
+            )
+        }
+
         fun with(raw: com.alfresco.content.models.SitePaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },

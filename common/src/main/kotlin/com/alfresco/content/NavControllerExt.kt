@@ -48,8 +48,8 @@ private fun NavController.navigateFileLink(entry: Entry) =
 private fun NavController.navigateFolderLink(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/folder/$REMOTE/${entry.otherId}?title=${Uri.encode(entry.name)}"))
 
-fun NavController.navigateToContextualSearch(id: String, title: String) =
-    navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)}"))
+fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean) =
+    navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension?title=${Uri.encode(title)}"))
 
 /**
  * navigate to browse parent folder

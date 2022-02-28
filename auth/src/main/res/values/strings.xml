@@ -75,5 +75,10 @@
     <string name="auth_internet_unavailable_subtitle">Please check your internet connection and Try again.</string>
     <string name="auth_internet_unavailable_ok_button">Ok</string>
 
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Session unavailable</string>
+    <string name="auth_login_app_subtitle">Please launch Alfresco Mobile Workspace before continuing.</string>
+    <string name="auth_login_app_ok_button">Ok</string>
+
 
 </resources>

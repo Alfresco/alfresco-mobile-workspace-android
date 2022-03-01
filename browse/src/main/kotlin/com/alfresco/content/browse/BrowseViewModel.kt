@@ -226,16 +226,9 @@ class BrowseViewModel(
     fun uploadFiles(state: BrowseViewState) {
         val list = browseRepository.getExtensionDataList().map { Uri.parse(it) }
         if (!list.isNullOrEmpty() && state.parent != null) {
-
             execute(ActionUploadExtensionFiles(state.parent), list)
+            browseRepository.clearExtensionData()
         }
-    }
-
-    /**
-     * Cleared the extension data
-     */
-    fun clearSharedData() {
-        browseRepository.clearExtensionData()
     }
 
     private fun execute(action: ActionExtension, list: List<Uri>) =

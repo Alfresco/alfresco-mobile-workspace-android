@@ -43,12 +43,12 @@ class ListViewRow @JvmOverloads constructor(
         if (entry.isExtension && !entry.isFolder) {
             binding.parent.alpha = 0.5f
             binding.parent.isEnabled = false
-            binding.moreButton.isEnabled = false
         } else {
             binding.parent.alpha = 1.0f
             binding.parent.isEnabled = true
-            binding.moreButton.isEnabled = true
         }
+
+        binding.moreButton.isEnabled = !entry.isExtension
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 

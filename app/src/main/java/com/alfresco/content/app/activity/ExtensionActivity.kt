@@ -175,7 +175,11 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
                 .setMessage(message)
                 .setPositiveButton(positive) { _, _ ->
                     when (type) {
-                        AlertType.TYPE_NO_LOGIN, AlertType.TYPE_INTERNET_UNAVAILABLE -> finish()
+                        AlertType.TYPE_NO_LOGIN -> {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                            finish()
+                        }
+                        AlertType.TYPE_INTERNET_UNAVAILABLE -> finish()
                         else -> {
                             Logger.d(getString(R.string.no_type))
                         }

@@ -145,7 +145,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
 
-        uploadButton?.isEnabled = state.request is Success && state.entries.isNotEmpty()
+        uploadButton?.isEnabled = state.request is Success
 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false

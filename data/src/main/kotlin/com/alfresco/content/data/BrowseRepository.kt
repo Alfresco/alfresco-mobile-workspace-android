@@ -163,8 +163,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
      * clear the shared files from preferences
      */
     fun clearExtensionData() {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = sharedPrefs.edit()
+        val editor = sharedPref.edit()
         editor.remove(SHARE_MULTIPLE_URI)
         editor.apply()
     }

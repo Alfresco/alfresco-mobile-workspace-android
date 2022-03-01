@@ -17,6 +17,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
@@ -143,6 +144,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     override fun invalidate() = withState(viewModel) { state ->
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
+
+        uploadButton?.isEnabled = state.request is Success && state.entries.isNotEmpty()
 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false

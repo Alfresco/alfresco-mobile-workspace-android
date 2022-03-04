@@ -32,7 +32,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private val box: Box<Entry>
-    var totalTransferFilesSize: Int = 0
 
     init {
         ObjectBox.init(session.context)
@@ -56,6 +55,26 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     fun update(entry: Entry) =
         entry.also { box.put(it) }
+
+    fun updateTransferSize(size: Int) {
+        val list = box.query().equal(Entry_.isTotalEntry, true).build().find()
+        if (list.isEmpty()) {
+            val entry = Entry(totalCount = size, isTotalEntry = true)
+            entry.also { box.put(it) }
+        } else {
+            val entryObj = list[0]
+            val entry = entryObj.copy(totalCount = size)
+            entry.also { box.put(it) }
+        }
+    }
+
+    fun getTotalTransfersSize(): Int {
+        val list = box.query()
+            .equal(Entry_.isTotalEntry, true)
+            .build()
+            .find()
+        return if (list.isEmpty()) 0 else list[0].totalCount
+    }
 
     fun offlineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
         val query = offlineEntriesQuery(parentId)
@@ -133,16 +152,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         removeCompletedUploads()
         val list = fetchAllTransferEntries()
         val listById = fetchAllTransferEntries(parentId)
-        if (list.isNotEmpty()) {
-            totalTransferFilesSize += listById.size
-        } else totalTransferFilesSize = listById.size
-    }
-
-    fun setTotalTransferSize() {
-        val list = fetchAllTransferEntries()
-        println("BrowseFragment.updateBanner list size == ${list.size}")
-        totalTransferFilesSize += list.size
-        println("BrowseFragment.updateBanner list size 1 == $totalTransferFilesSize")
+        if (list.isEmpty())
+            updateTransferSize(listById.size)
+        else updateTransferSize(list.size + listById.size)
     }
 
     fun scheduleContentForUpload(

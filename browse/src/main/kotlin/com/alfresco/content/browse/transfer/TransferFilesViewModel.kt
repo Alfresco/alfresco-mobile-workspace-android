@@ -1,4 +1,4 @@
-package com.alfresco.content.shareextension
+package com.alfresco.content.browse.transfer
 
 import android.content.Context
 import com.airbnb.mvrx.MavericksState
@@ -9,6 +9,8 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.Settings
+import com.alfresco.content.network.ConnectivityTracker
 import kotlinx.coroutines.Job
 
 /**
@@ -16,7 +18,8 @@ import kotlinx.coroutines.Job
  */
 data class TransferFilesViewState(
     val extension: Boolean,
-    val entries: List<Entry> = emptyList()
+    val entries: List<Entry> = emptyList(),
+    val syncNowEnabled: Boolean = false
 ) : MavericksState {
     constructor(args: TransferFilesArgs) : this(args.extension)
 
@@ -52,13 +55,16 @@ class TransferFilesViewModel(
         observeExtensionUploadsJob = repo.observeTransferUploads()
             .execute {
                 if (it is Success) {
-                    println("BrowseViewModel.observeExtensionUploads---------calling")
                     updateExtensionUploads(it())
                 } else {
                     this
                 }
             }
     }
+
+    fun canSyncOverCurrentNetwork() =
+        Settings(context).canSyncOverMeteredNetwork ||
+                !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MavericksViewModelFactory<TransferFilesViewModel, TransferFilesViewState> {
 

@@ -77,7 +77,7 @@
 
     <!-- Login App dialog -->
     <string name="auth_login_app_title">Session unavailable</string>
-    <string name="auth_login_app_subtitle">Please launch Alfresco Mobile Workspace before continuing.</string>
+    <string name="auth_login_app_subtitle">Tap to launch Alfresco Mobile Workspace.</string>
     <string name="auth_login_app_ok_button">Ok</string>
 
 

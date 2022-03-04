@@ -99,7 +99,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
         println("BrowseFragment.updateBanner $totalSize $pendingFilesCount")
 
-        if (totalSize == 0) {
+        if (pendingFilesCount == 0) {
             hideBanner(0)
             return
         }

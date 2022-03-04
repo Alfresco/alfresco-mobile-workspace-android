@@ -51,8 +51,8 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
-            offlineRepository.setTotalTransferSize()
-            setState { copy(totalTransfersSize = offlineRepository.totalTransferFilesSize) }
+            offlineRepository.updateTransferSize(offlineRepository.buildTransferList().size)
+            setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
         }
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
@@ -83,7 +83,7 @@ class BrowseViewModel(
         // TODO
     }
 
-    fun refreshTransfersSize() = setState { copy(totalTransfersSize = offlineRepository.totalTransferFilesSize) }
+    fun refreshTransfersSize() = setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
 
     @Suppress("UNUSED_PARAMETER")
     private fun refresh(ignored: Entry) = refresh() // TODO: why?

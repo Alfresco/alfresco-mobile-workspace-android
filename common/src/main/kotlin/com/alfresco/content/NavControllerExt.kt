@@ -65,6 +65,9 @@ fun NavController.navigateToChildFolder(id: String, title: String, mode: String 
     navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
+/**
+ * navigate to transfer files
+ */
 fun NavController.navigateToUploadFilesPath(extension: Boolean, title: String) =
     navigate(Uri.parse("$BASE_URI/transfer_files/$extension?title=${Uri.encode(title)}"))
 

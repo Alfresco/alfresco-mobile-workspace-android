@@ -45,6 +45,9 @@ class TransferFilesViewModel(
         setState { copy(entries = list) }
     }
 
+    /**
+     * return empty message is transfers has no data
+     */
     fun emptyMessageArgs() = Triple(R.drawable.ic_empty_folder, R.string.folder_empty_upload_title, R.string.folder_empty_upload_message)
 
     private fun observeExtensionUploads() {
@@ -62,6 +65,9 @@ class TransferFilesViewModel(
             }
     }
 
+    /**
+     * syncing network
+     */
     fun canSyncOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
                 !ConnectivityTracker.isActiveNetworkMetered(context)

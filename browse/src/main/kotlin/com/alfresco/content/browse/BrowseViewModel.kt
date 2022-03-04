@@ -39,7 +39,7 @@ class BrowseViewModel(
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
-    private var observeExtensionUploadsJob: Job? = null
+    private var observeTransferUploadsJob: Job? = null
     private val browseRepository = BrowseRepository()
     private val offlineRepository = OfflineRepository()
 
@@ -83,6 +83,9 @@ class BrowseViewModel(
         // TODO
     }
 
+    /**
+     * refresh totalTransferSize count
+     */
     fun refreshTransfersSize() = setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
 
     @Suppress("UNUSED_PARAMETER")
@@ -207,13 +210,16 @@ class BrowseViewModel(
             }
     }
 
-    fun observeExtensionUploads() {
+    /**
+     * observer for transfer uploads
+     */
+    fun observeTransferUploads() {
 
-        observeExtensionUploadsJob?.cancel()
-        observeExtensionUploadsJob = OfflineRepository().observeTransferUploads()
+        observeTransferUploadsJob?.cancel()
+        observeTransferUploadsJob = OfflineRepository().observeTransferUploads()
             .execute {
                 if (it is Success) {
-                    updateExtensionUploads(it())
+                    updateTransferUploads(it())
                 } else {
                     this
                 }

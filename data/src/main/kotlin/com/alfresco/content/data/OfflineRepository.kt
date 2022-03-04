@@ -56,6 +56,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun update(entry: Entry) =
         entry.also { box.put(it) }
 
+    /**
+     * updating the total transfer count
+     */
     fun updateTransferSize(size: Int) {
         val list = box.query().equal(Entry_.isTotalEntry, true).build().find()
         if (list.isEmpty()) {
@@ -68,6 +71,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         }
     }
 
+    /**
+     * returns the transfer size count
+     */
     fun getTotalTransfersSize(): Int {
         val list = box.query()
             .equal(Entry_.isTotalEntry, true)
@@ -145,9 +151,15 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     internal fun fetchOfflineEntry(target: Entry) = entry(target.id)
 
+    /**
+     * returns the pending transfer list from database
+     */
     fun buildTransferList(): List<Entry> =
         fetchAllTransferEntries()
 
+    /**
+     * update transfer size count using the parent ID
+     */
     fun setTotalTransferSize(parentId: String?) {
         removeCompletedUploads()
         val list = fetchAllTransferEntries()
@@ -242,6 +254,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             awaitClose { subscription.cancel() }
         }
 
+    /**
+     * observer for transfer uploads
+     */
     fun observeTransferUploads(): Flow<List<Entry>> =
         callbackFlow {
             val query = box.query()

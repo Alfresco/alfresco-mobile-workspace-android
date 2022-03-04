@@ -73,7 +73,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         withState(viewModel) { state ->
             if (state.path == getString(R.string.nav_path_recents)) {
                 viewModel.refreshTransfersSize()
-                viewModel.observeExtensionUploads()
+                viewModel.observeTransferUploads()
                 bannerTransferData?.setOnClickListener {
                     findNavController().navigateToUploadFilesPath(true, requireContext().getString(R.string.title_transfers))
                 }

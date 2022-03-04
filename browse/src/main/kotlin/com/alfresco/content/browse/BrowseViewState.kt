@@ -60,7 +60,10 @@ data class BrowseViewState(
         }
     }
 
-    fun updateExtensionUploads(uploads: List<Entry>): BrowseViewState {
+    /**
+     * update transfer list after uploading entries to server
+     */
+    fun updateTransferUploads(uploads: List<Entry>): BrowseViewState {
         return copy(uploadTransferList = uploads)
     }
 

@@ -39,16 +39,20 @@ class BrowseViewModel(
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
+    private var observeExtensionUploadsJob: Job? = null
     private val browseRepository = BrowseRepository()
-    var onUploadQueue: (() -> Unit)? = null
+    private val offlineRepository = OfflineRepository()
 
     init {
         fetchInitial()
-
         withState {
             if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
             }
+        }
+        if (state.path == context.getString(R.string.nav_path_recents)) {
+            offlineRepository.setTotalTransferSize()
+            setState { copy(totalTransfersSize = offlineRepository.totalTransferFilesSize) }
         }
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
@@ -78,6 +82,8 @@ class BrowseViewModel(
     } else {
         // TODO
     }
+
+    fun refreshTransfersSize() = setState { copy(totalTransfersSize = offlineRepository.totalTransferFilesSize) }
 
     @Suppress("UNUSED_PARAMETER")
     private fun refresh(ignored: Entry) = refresh() // TODO: why?
@@ -151,9 +157,9 @@ class BrowseViewModel(
 
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return when (path) {
-            context.getString(R.string.nav_path_recents) ->
+            context.getString(R.string.nav_path_recents) -> {
                 SearchRepository()::getRecents.asFlow(skipCount, maxItems)
-
+            }
             context.getString(R.string.nav_path_favorites) ->
                 FavoritesRepository()::getFavorites.asFlow(skipCount, maxItems)
 
@@ -172,7 +178,7 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_folder) ->
                 BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
-            context.getString(R.string.nav_path_extension), context.getString(R.string.nav_path_folder_extension) ->
+            context.getString(R.string.nav_path_extension) ->
                 BrowseRepository()::fetchExtensionFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             context.getString(R.string.nav_path_site) ->
@@ -195,6 +201,19 @@ class BrowseViewModel(
             .execute {
                 if (it is Success) {
                     updateUploads(it())
+                } else {
+                    this
+                }
+            }
+    }
+
+    fun observeExtensionUploads() {
+
+        observeExtensionUploadsJob?.cancel()
+        observeExtensionUploadsJob = OfflineRepository().observeTransferUploads()
+            .execute {
+                if (it is Success) {
+                    updateExtensionUploads(it())
                 } else {
                     this
                 }

@@ -32,6 +32,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private val box: Box<Entry>
+    var totalTransferFilesSize: Int = 0
 
     init {
         ObjectBox.init(session.context)
@@ -104,12 +105,51 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .find()
 
+    private fun fetchAllTransferEntries() =
+        box.query()
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+            .equal(Entry_.isUpload, true)
+            .build()
+            .find()
+
+    private fun fetchAllTransferEntries(parentId: String?) =
+        box.query()
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId)
+                    notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+                    equal(Entry_.isUpload, true)
+                }
+            }
+            .build()
+            .find()
+
     internal fun fetchOfflineEntry(target: Entry) = entry(target.id)
+
+    fun buildTransferList(): List<Entry> =
+        fetchAllTransferEntries()
+
+    fun setTotalTransferSize(parentId: String?) {
+        removeCompletedUploads()
+        val list = fetchAllTransferEntries()
+        val listById = fetchAllTransferEntries(parentId)
+        if (list.isNotEmpty()) {
+            totalTransferFilesSize += listById.size
+        } else totalTransferFilesSize = listById.size
+    }
+
+    fun setTotalTransferSize() {
+        val list = fetchAllTransferEntries()
+        println("BrowseFragment.updateBanner list size == ${list.size}")
+        totalTransferFilesSize += list.size
+        println("BrowseFragment.updateBanner list size 1 == $totalTransferFilesSize")
+    }
 
     fun scheduleContentForUpload(
         context: Context,
         contentUri: Uri,
-        parentId: String
+        parentId: String,
+        isExtension: Boolean = false
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -131,6 +171,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
+            isExtension = isExtension,
             offlineStatus = OfflineStatus.PENDING
         )
         update(entry)
@@ -180,6 +221,20 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             val query = box.query()
                 .equal(Entry_.parentId, parentId)
                 .equal(Entry_.isUpload, true)
+                .order(Entry_.name)
+                .build()
+            val subscription = query.subscribe()
+                .observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
+        }
+
+    fun observeTransferUploads(): Flow<List<Entry>> =
+        callbackFlow {
+            val query = box.query()
+                .equal(Entry_.isUpload, true)
+                .equal(Entry_.id, "")
                 .order(Entry_.name)
                 .build()
             val subscription = query.subscribe()

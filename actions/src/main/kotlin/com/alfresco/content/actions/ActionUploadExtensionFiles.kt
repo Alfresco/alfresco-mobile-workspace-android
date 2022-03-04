@@ -26,9 +26,10 @@ data class ActionUploadExtensionFiles(
         if (!list.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
                 list.map {
-                    repository.scheduleContentForUpload(context, it, entry.id)
+                    repository.scheduleContentForUpload(context, it, entry.id, true)
                 }
             }
+            repository.setTotalTransferSize(entry.parentId)
         } else {
             throw CancellationException("User Cancellation")
         }
@@ -38,8 +39,10 @@ data class ActionUploadExtensionFiles(
     override fun copy(_entry: Entry): ActionExtension = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) {
+        println("Upload Extension Files List Size === " + repository.buildTransferList().size)
         MaterialAlertDialogBuilder(view.context)
             .setTitle(view.resources.getString(R.string.action_upload_queue_title))
+            .setCancelable(false)
             .setMessage(view.resources.getString(R.string.action_upload_queue_subtitle))
             .setPositiveButton(view.resources.getString(R.string.action_upload_queue_ok_button)) { _, _ ->
                 (view.context as AppCompatActivity).finish()

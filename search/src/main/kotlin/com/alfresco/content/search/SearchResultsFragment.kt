@@ -72,10 +72,9 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
 
         withState(viewModel) { state ->
             // Shown only when refining a search
+            if (state.isExtension) super.disableRefreshLayout()
             topLoadingIndicator?.isVisible =
-                state.request is Loading &&
-                        state.entries.isNotEmpty() &&
-                        !refreshLayout.isRefreshing
+                state.request is Loading && state.entries.isNotEmpty() && !refreshLayout.isRefreshing
         }
     }
 }

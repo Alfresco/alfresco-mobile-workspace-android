@@ -5,4 +5,9 @@
     <string name="offline_status_in_progress">Syncing&#8230;</string>
     <string name="offline_status_error">Sync failed</string>
     <string name="extension_upload_button">Upload</string>
+    <string name="upload_file_text_single">Uploading %d file…</string>
+    <string name="upload_complete_text_single">%d upload complete</string>
+    <string name="upload_file_text_multiple">Uploading %d files…</string>
+    <string name="upload_complete_text_multiple">%d uploads complete</string>
+    <string name="upload_percentage_text">%d%%</string>
 </resources>

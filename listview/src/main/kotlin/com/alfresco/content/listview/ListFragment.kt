@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ import com.alfresco.content.simpleController
 import com.alfresco.events.on
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
@@ -111,7 +113,11 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     lateinit var recyclerView: EpoxyRecyclerView
     lateinit var refreshLayout: SwipeRefreshLayout
     lateinit var loadingMessage: TextView
+    var tvUploadingFiles: TextView? = null
+    var tvPercentage: TextView? = null
+    var bannerTransferData: FrameLayout? = null
     var uploadButton: MaterialButton? = null
+    var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
 
@@ -122,13 +128,16 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         recyclerView = view.findViewById(R.id.recycler_view)
         refreshLayout = view.findViewById(R.id.refresh_layout)
         loadingMessage = view.findViewById(R.id.loading_message)
+        bannerTransferData = view.findViewById(R.id.banner_parent)
 
         uploadButton = view.findViewById(R.id.upload_button)
+        tvUploadingFiles = view.findViewById(R.id.tv_uploading_files)
+        tvPercentage = view.findViewById(R.id.tv_percentage)
+        percentageFiles = view.findViewById(R.id.percentage_files)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
         }
-
         recyclerView.setController(epoxyController)
 
         epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -142,6 +151,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
 
@@ -150,8 +160,14 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false
         }
-
         epoxyController.requestModelBuild()
+    }
+
+    /**
+     * Disable refresh layout while sharing files
+     */
+    fun disableRefreshLayout() {
+        refreshLayout.isEnabled = false
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->

@@ -23,7 +23,10 @@ data class TransferFilesViewState(
 ) : MavericksState {
     constructor(args: TransferFilesArgs) : this(args.extension)
 
-    fun updateExtensionUploads(uploads: List<Entry>): TransferFilesViewState {
+    /**
+     * update the uploads list
+     */
+    fun updateTransferUploads(uploads: List<Entry>): TransferFilesViewState {
         return copy(entries = uploads)
     }
 }
@@ -58,7 +61,7 @@ class TransferFilesViewModel(
         observeExtensionUploadsJob = repo.observeTransferUploads()
             .execute {
                 if (it is Success) {
-                    updateExtensionUploads(it())
+                    updateTransferUploads(it())
                 } else {
                     this
                 }

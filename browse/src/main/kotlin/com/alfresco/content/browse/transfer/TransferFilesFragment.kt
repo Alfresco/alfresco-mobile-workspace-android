@@ -23,6 +23,7 @@ import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewRow
 import com.alfresco.content.simpleController
 import com.alfresco.events.emit
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import kotlinx.parcelize.Parcelize
 
@@ -140,9 +141,20 @@ class TransferFilesFragment : Fragment(), MavericksView {
         if (viewModel.canSyncOverCurrentNetwork()) {
             startSync(false)
         } else {
-//            makeSyncUnavailablePrompt().show()
+            makeSyncUnavailablePrompt().show()
         }
     }
+
+    private fun makeSyncUnavailablePrompt() =
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.offline_sync_unavailable_title))
+            .setMessage(resources.getString(R.string.offline_sync_unavailable_message))
+            .setPositiveButton(resources.getString(R.string.offline_sync_unavailable_positive)) { _, _ ->
+                startSync(true)
+            }
+            .setNegativeButton(resources.getString(R.string.offline_sync_unavailable_negative)) { _, _ ->
+                startSync(false)
+            }
 
     private fun startSync(overrideNetwork: Boolean) =
         lifecycleScope.emit(ActionSyncNow(overrideNetwork))

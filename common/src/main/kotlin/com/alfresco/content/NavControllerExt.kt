@@ -66,6 +66,12 @@ fun NavController.navigateToChildFolder(id: String, title: String, mode: String 
 }
 
 /**
+ * navigate to transfer files
+ */
+fun NavController.navigateToUploadFilesPath(extension: Boolean, title: String) =
+    navigate(Uri.parse("$BASE_URI/transfer_files/$extension?title=${Uri.encode(title)}"))
+
+/**
  * navigate to preview activity using deep linking
  */
 fun NavController.navigateToPreview(mimeType: String, path: String, title: String) =

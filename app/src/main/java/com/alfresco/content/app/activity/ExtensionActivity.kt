@@ -159,6 +159,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
             dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
+                .setCancelable(false)
                 .setNegativeButton(negative, null)
                 .setPositiveButton(positive) { _, _ ->
                     when (type) {
@@ -173,6 +174,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
             dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
+                .setCancelable(false)
                 .setPositiveButton(positive) { _, _ ->
                     when (type) {
                         AlertType.TYPE_NO_LOGIN -> {

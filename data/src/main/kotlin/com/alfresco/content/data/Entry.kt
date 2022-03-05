@@ -66,7 +66,9 @@ data class Entry(
     @Convert(converter = BoxOfflineStatusConverter::class, dbType = String::class)
     val offlineStatus: OfflineStatus = OfflineStatus.UNDEFINED,
     @Id var boxId: Long = 0,
-    val isExtension: Boolean = false
+    val isExtension: Boolean = false,
+    val totalCount: Int = 0,
+    val isTotalEntry: Boolean = false
 ) : Parcelable {
 
     val isSynced: Boolean

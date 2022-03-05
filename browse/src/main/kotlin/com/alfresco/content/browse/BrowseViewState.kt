@@ -21,7 +21,9 @@ data class BrowseViewState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     val baseEntries: List<Entry> = emptyList(),
-    val uploads: List<Entry> = emptyList()
+    val uploads: List<Entry> = emptyList(),
+    val uploadTransferList: List<Entry> = emptyList(),
+    val totalTransfersSize: Int = 0
 ) : ListViewState {
 
     constructor(args: BrowseArgs) : this(args.path, args.id)
@@ -56,6 +58,13 @@ data class BrowseViewState(
         } else {
             copy(uploads = uploads)
         }
+    }
+
+    /**
+     * update transfer list after uploading entries to server
+     */
+    fun updateTransferUploads(uploads: List<Entry>): BrowseViewState {
+        return copy(uploadTransferList = uploads)
     }
 
     private fun copyIncludingUploads(

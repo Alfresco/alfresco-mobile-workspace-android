@@ -39,6 +39,7 @@ data class ActionCaptureMedia(
                                 item.mimeType
                             )
                         }
+                        repository.setTotalTransferSize(entry.parentId)
                     }
                 }
             } else {

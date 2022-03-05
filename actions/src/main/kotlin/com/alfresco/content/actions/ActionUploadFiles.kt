@@ -27,6 +27,7 @@ data class ActionUploadFiles(
                 result.map {
                     repository.scheduleContentForUpload(context, it, entry.id)
                 }
+                repository.setTotalTransferSize(entry.parentId)
             }
         } else {
             throw CancellationException("User Cancellation")
@@ -36,8 +37,9 @@ data class ActionUploadFiles(
 
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
-    override fun showToast(view: View, anchorView: View?) =
+    override fun showToast(view: View, anchorView: View?) {
         Action.showToast(view, anchorView, R.string.action_upload_media_toast)
+    }
 
     private companion object {
         val MIME_TYPES = arrayOf("*/*")

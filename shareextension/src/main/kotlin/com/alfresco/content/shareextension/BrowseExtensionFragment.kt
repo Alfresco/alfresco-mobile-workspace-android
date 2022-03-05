@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.BrowseArgs
@@ -16,8 +15,6 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.ref.WeakReference
 
 /**
  * Mark as BrowseExtensionFragment
@@ -26,7 +23,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
 
     private lateinit var args: BrowseArgs
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
-    private var uploadQueueDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,23 +41,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
                 viewModel.uploadFiles(state)
             }
         }
-
-        viewModel.onUploadQueue = {
-            showUploadQueuePrompt()
-        }
-    }
-
-    private fun showUploadQueuePrompt() {
-        val oldDialog = uploadQueueDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.upload_queue_title))
-            .setMessage(resources.getString(R.string.upload_queue_subtitle))
-            .setPositiveButton(resources.getString(R.string.upload_queue_ok_button)) { _, _ ->
-                requireActivity().finish()
-            }
-            .show()
-        uploadQueueDialog = WeakReference(dialog)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -78,7 +57,9 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
-    override fun invalidate() {
+    override fun invalidate() = withState(viewModel) { state ->
+        if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension))
+            super.disableRefreshLayout()
         super.invalidate()
     }
 

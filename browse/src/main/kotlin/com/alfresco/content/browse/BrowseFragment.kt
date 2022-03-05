@@ -8,11 +8,16 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
 import androidx.navigation.fragment.findNavController
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.data.Entry
@@ -20,6 +25,7 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
+import com.alfresco.content.navigateToUploadFilesPath
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 
@@ -62,14 +68,75 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        withState(viewModel) { state ->
+            if (state.path == getString(R.string.nav_path_recents)) {
+                viewModel.refreshTransfersSize()
+                viewModel.observeTransferUploads()
+                bannerTransferData?.setOnClickListener {
+                    findNavController().navigateToUploadFilesPath(true, requireContext().getString(R.string.title_transfers))
+                }
+            } else bannerTransferData?.visibility = View.GONE
+        }
+    }
+
     override fun invalidate() {
         super.invalidate()
 
         withState(viewModel) { state ->
+            if (state.path == getString(R.string.nav_path_recents)) {
+                updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
+            }
+
             if (viewModel.canAddItems(state)) {
                 (view as ViewGroup).addView(makeFab(requireContext()))
             }
         }
+    }
+
+    private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
+
+        println("BrowseFragment.updateBanner $totalSize $pendingFilesCount")
+
+        if (pendingFilesCount == 0) {
+            hideBanner(0)
+            return
+        }
+        bannerTransferData?.visibility = View.VISIBLE
+
+        val uploadFileCount = totalSize - pendingFilesCount
+        val percentage = (uploadFileCount.toFloat().div(totalSize.toFloat())).times(100)
+
+        if (totalSize > 1) {
+            if (pendingFilesCount != 0)
+                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_multiple), pendingFilesCount)
+            else tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
+        } else {
+            if (pendingFilesCount != 0)
+                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_single), pendingFilesCount)
+            else tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_single), totalSize)
+        }
+
+        tvPercentage?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_percentage_text), percentage.toInt())
+
+        percentageFiles?.progress = percentage.toInt()
+
+        if (pendingFilesCount == 0)
+            hideBanner(1000)
+    }
+
+    private fun hideBanner(millis: Long) {
+        bannerTransferData?.postDelayed({
+            bannerTransferData?.apply {
+                TransitionManager.beginDelayedTransition(
+                    this, TransitionSet()
+                        .addTransition(Fade())
+                        .addTransition(ChangeBounds())
+                )
+                bannerTransferData?.visibility = View.GONE
+            }
+        }, millis)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

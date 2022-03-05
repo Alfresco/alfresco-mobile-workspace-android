@@ -56,6 +56,32 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun update(entry: Entry) =
         entry.also { box.put(it) }
 
+    /**
+     * updating the total transfer count
+     */
+    fun updateTransferSize(size: Int) {
+        val list = box.query().equal(Entry_.isTotalEntry, true).build().find()
+        if (list.isEmpty()) {
+            val entry = Entry(totalCount = size, isTotalEntry = true)
+            entry.also { box.put(it) }
+        } else {
+            val entryObj = list[0]
+            val entry = entryObj.copy(totalCount = size)
+            entry.also { box.put(it) }
+        }
+    }
+
+    /**
+     * returns the transfer size count
+     */
+    fun getTotalTransfersSize(): Int {
+        val list = box.query()
+            .equal(Entry_.isTotalEntry, true)
+            .build()
+            .find()
+        return if (list.isEmpty()) 0 else list[0].totalCount
+    }
+
     fun offlineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
         val query = offlineEntriesQuery(parentId)
         val subscription = query.subscribe()
@@ -104,12 +130,50 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .find()
 
+    private fun fetchAllTransferEntries() =
+        box.query()
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+            .equal(Entry_.isUpload, true)
+            .build()
+            .find()
+
+    private fun fetchAllTransferEntries(parentId: String?) =
+        box.query()
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId)
+                    notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+                    equal(Entry_.isUpload, true)
+                }
+            }
+            .build()
+            .find()
+
     internal fun fetchOfflineEntry(target: Entry) = entry(target.id)
+
+    /**
+     * returns the pending transfer list from database
+     */
+    fun buildTransferList(): List<Entry> =
+        fetchAllTransferEntries()
+
+    /**
+     * update transfer size count using the parent ID
+     */
+    fun setTotalTransferSize(parentId: String?) {
+        removeCompletedUploads()
+        val list = fetchAllTransferEntries()
+        val listById = fetchAllTransferEntries(parentId)
+        if (list.isEmpty())
+            updateTransferSize(listById.size)
+        else updateTransferSize(list.size + listById.size)
+    }
 
     fun scheduleContentForUpload(
         context: Context,
         contentUri: Uri,
-        parentId: String
+        parentId: String,
+        isExtension: Boolean = false
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -131,6 +195,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
+            isExtension = isExtension,
             offlineStatus = OfflineStatus.PENDING
         )
         update(entry)
@@ -180,6 +245,23 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             val query = box.query()
                 .equal(Entry_.parentId, parentId)
                 .equal(Entry_.isUpload, true)
+                .order(Entry_.name)
+                .build()
+            val subscription = query.subscribe()
+                .observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
+        }
+
+    /**
+     * observer for transfer uploads
+     */
+    fun observeTransferUploads(): Flow<List<Entry>> =
+        callbackFlow {
+            val query = box.query()
+                .equal(Entry_.isUpload, true)
+                .equal(Entry_.id, "")
                 .order(Entry_.name)
                 .build()
             val subscription = query.subscribe()

@@ -226,6 +226,11 @@ class BrowseViewModel(
             }
     }
 
+    fun resetTransferData() {
+        offlineRepository.removeCompletedUploads()
+        offlineRepository.updateTransferSize(0)
+    }
+
     override fun emptyMessageArgs(state: ListViewState) =
         when ((state as BrowseViewState).path) {
             context.getString(R.string.nav_path_recents) ->

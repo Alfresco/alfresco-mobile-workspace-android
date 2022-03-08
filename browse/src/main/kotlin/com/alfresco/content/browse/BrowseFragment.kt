@@ -87,6 +87,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         withState(viewModel) { state ->
             if (state.path == getString(R.string.nav_path_recents)) {
                 updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
+                if (state.uploadTransferList.isEmpty())
+                    viewModel.resetTransferData()
             }
 
             if (viewModel.canAddItems(state)) {
@@ -99,31 +101,37 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
         println("BrowseFragment.updateBanner $totalSize $pendingFilesCount")
 
-        if (pendingFilesCount == 0) {
-            hideBanner(0)
-            return
-        }
-        bannerTransferData?.visibility = View.VISIBLE
+        if (totalSize != 0 && pendingFilesCount != 0)
+            bannerTransferData?.visibility = View.VISIBLE
 
         val uploadFileCount = totalSize - pendingFilesCount
         val percentage = (uploadFileCount.toFloat().div(totalSize.toFloat())).times(100)
 
         if (totalSize > 1) {
-            if (pendingFilesCount != 0)
+            if (pendingFilesCount != 0) {
+                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
                 tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_multiple), pendingFilesCount)
-            else tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
+            } else {
+                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
+                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
+            }
         } else {
-            if (pendingFilesCount != 0)
+            if (pendingFilesCount != 0) {
+                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
                 tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_single), pendingFilesCount)
-            else tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_single), totalSize)
+            } else {
+                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
+                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_single), totalSize)
+            }
         }
 
         tvPercentage?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_percentage_text), percentage.toInt())
 
         percentageFiles?.progress = percentage.toInt()
 
-        if (pendingFilesCount == 0)
-            hideBanner(1000)
+        if (totalSize != 0 && pendingFilesCount == 0) {
+            hideBanner(3000)
+        }
     }
 
     private fun hideBanner(millis: Long) {

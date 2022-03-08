@@ -8,11 +8,11 @@ import com.alfresco.content.session.SessionManager
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
-import java.io.File
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.io.File
 
 class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
@@ -161,7 +161,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * update transfer size count using the parent ID
      */
     fun setTotalTransferSize(parentId: String?) {
-        removeCompletedUploads()
         val list = fetchAllTransferEntries()
         val listById = fetchAllTransferEntries(parentId)
         if (list.isEmpty())
@@ -195,7 +194,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
-            isExtension = isExtension,
             offlineStatus = OfflineStatus.PENDING
         )
         update(entry)
@@ -290,6 +288,24 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             }
             .build()
             .remove()
+
+    fun removeTrashedUploads(parentId: String? = null) {
+        box.query()
+            .equal(Entry_.isUpload, true)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId)
+                }
+            }
+            .build()
+            .remove()
+        val list = box.query()
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
+            .equal(Entry_.isUpload, true)
+            .build()
+            .find()
+        updateTransferSize(list.size)
+    }
 
     fun contentUri(entry: Entry): String =
         "file://${contentFile(entry).absolutePath}"

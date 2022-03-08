@@ -5,7 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
-import java.lang.Exception
 
 class UploadWorker(
     appContext: Context,
@@ -38,7 +37,8 @@ class UploadWorker(
             )
             true
         } catch (ex: Exception) {
-            repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR))
+            val rootId = BrowseRepository().myFilesNodeId
+            repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR, parentId = rootId))
             Logger.e(ex)
             false
         }

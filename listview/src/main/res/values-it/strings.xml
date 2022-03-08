@@ -1,7 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="list_loading_message">Caricamento in corso&#8230;</string>
 
-    <string name="offline_status_in_progress">Sincronizzo...</string>
+    <string name="offline_status_in_progress">Sincronizzazione in corso&#8230;</string>
     <string name="offline_status_error">Sincronizzazione non riuscita</string>
+    <string name="extension_upload_button">Carica</string>
+    <string name="upload_file_text_single">Caricamento in corso di %d file&#8230;</string>
+    <string name="upload_complete_text_single">%d caricamento completato</string>
+    <string name="upload_file_text_multiple">Caricamento di %d file&#8230;</string>
+    <string name="upload_complete_text_multiple">%d caricamenti completati</string>
+    <string name="upload_percentage_text">%d%%</string>
 </resources>

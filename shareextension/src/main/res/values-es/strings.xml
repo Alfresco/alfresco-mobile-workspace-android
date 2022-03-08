@@ -1,3 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
+
+    <!-- Upload queue dialog -->
+    <string name="upload_queue_title">Cargar</string>
+    <string name="upload_queue_subtitle">La carga está en cola. Haga un seguimiento del estado en la aplicación móvil.</string>
+    <string name="upload_queue_ok_button">Aceptar</string>
 </resources>

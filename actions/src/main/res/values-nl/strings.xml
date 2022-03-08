@@ -48,9 +48,17 @@
     <string name="action_folder_create">Maken</string>
 
     <string name="action_folder_name_hint">Naam</string>
-    <string name="action_folder_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:"*|/\\&lt;&gt;</string>
+    <string name="action_folder_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:"*|/\<></string>
     <string name="action_folder_name_empty">Mapnaam mag niet leeg zijn.</string>
 
     <string name="action_upload_files_title">Bestanden uploaden</string>
+
+    <!-- Upload queue dialog -->
+    <string name="action_upload_queue_title">Uploaden</string>
+    <string name="action_upload_queue_subtitle">Uploaden staat in de wachtrij. Volg de status in de mobiele app.</string>
+    <string name="action_upload_queue_ok_button">OK</string>
+
+    <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
+    <string name="share_files_failure_permissions">Om bestanden te delen, schakelt u het lezen van opslagmachtigingen in.</string>
 
 </resources>

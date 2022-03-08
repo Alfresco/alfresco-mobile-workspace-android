@@ -1,6 +1,6 @@
-﻿<resources>
+<resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Tous droits réservés.</string>
+    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Tous droits réservés.</string>
 
     <string name="auth_connect_field_hint">Connexion à</string>
     <string name="auth_connect_button">Connexion</string>
@@ -10,7 +10,7 @@
     <string name="auth_progress_bar_message">Connexion en cours</string>
 
     <string name="auth_help_overlay_title">Aide</string>
-    <string name="auth_help_identity_body">
+    <string name="auth_help_identity_body">\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<h1>Comment\u0020se\u0020connecter\u0020à\u0020Alfresco</h1>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<h6>URL\u0020d\'Alfresco\u0020Content\u0020Services</h6>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<p>Vous\u0020pouvez\u0020saisir\u0020l\'URL\u0020de\u0020votre\u0020instance\u0020d\'Alfresco\u0020Content\u0020Services.\u0020Vous\u0020devrez\u0020entrer\u0020vos\u0020nom\u0020d\'utilisateur\u0020et\u0020mot\u0020de\u0020passe\u0020pour\u0020vous\u0020authentifier.</p>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<h6>Connexion\u0020avec\u0020SSO</h6>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<p>Vous\u0020pouvez\u0020saisir\u0020l\'URL\u0020de\u0020votre\u0020service\u0020de\u0020gestion\u0020d\'identité\u0020Alfresco\u0020pour\u0020vous\u0020authentifier\u0020auprès\u0020du\u0020fournisseur\u0020d\'identité\u0020de\u0020votre\u0020société.</p>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<p>*Vous\u0020devrez\u0020ensuite\u0020entrer\u0020l\'URL\u0020de\u0020votre\u0020instance\u0020d\'Alfresco\u0020Content\u0020Services</p>\n\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020<p>Pour\u0020obtenir\u0020de\u0020l\'aide,\u0020contactez\u0020votre\u0020administrateur\u0020Alfresco.</p>\n\u0020\u0020\u0020\u0020</string>
         <![CDATA[<h1>Comment se connecter à Alfresco</h1>
         <h6>URL d\'Alfresco Content Services</h6>
         <p>Vous pouvez saisir l\'URL de votre instance d\'Alfresco Content Services. Vous devrez entrer vos nom d\'utilisateur et mot de passe pour vous authentifier.</p>
@@ -18,20 +18,20 @@
         <p>Vous pouvez saisir l\'URL de votre service de gestion d\'identité Alfresco pour vous authentifier auprès du fournisseur d\'identité de votre société.</p>
         <p>*Vous devrez ensuite entrer l\'URL de votre instance d\'Alfresco Content Services</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Emplacement de l\'entrepôt de contenu</h6>
         <p>URL d\'Alfresco Content Services :</p>
         <p>Il s\'agit de l\'URL de votre instance d\'Alfresco Content Services.</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_settings_body">
         <![CDATA[<h1>Authentification Alfresco</h1>
         <p>Si vous n\'utilisez pas les paramètres SSO par défaut, définissez les paramètres ici.</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Aucun service d\'authentification trouvé à l\'URL Alfresco spécifiée.</string>
@@ -69,4 +69,16 @@
     <string name="auth_signed_out_subtitle">Vous n\'êtes plus connecté. Reconnectez-vous pour continuer.</string>
     <string name="auth_signed_out_other_account">Utiliser un autre compte</string>
     <string name="auth_signed_out_add_account">Ajouter un compte</string>
+
+    <!-- Internet Unavailable dialog -->
+    <string name="auth_internet_unavailable_title">Internet non disponible</string>
+    <string name="auth_internet_unavailable_subtitle">Veuillez vérifier votre connexion Internet et réessayer.</string>
+    <string name="auth_internet_unavailable_ok_button">Ok</string>
+
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Session non disponible</string>
+    <string name="auth_login_app_subtitle">Appuyez sur pour lancer Alfresco Mobile Workspace.</string>
+    <string name="auth_login_app_ok_button">Ok</string>
+
+
 </resources>

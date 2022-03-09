@@ -48,7 +48,7 @@
     <string name="action_folder_create">Créer</string>
 
     <string name="action_folder_name_hint">Nom</string>
-    <string name="action_folder_name_invalid_chars">Le nom du dossier ne peut pas contenir les caractères suivants : ?:\"*|/\<></string>
+    <string name="action_folder_name_invalid_chars">Le nom du dossier ne peut pas contenir les caractères suivants : ?:\"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Le nom du dossier ne peut pas être vide.</string>
 
     <string name="action_upload_files_title">Importer des fichiers</string>

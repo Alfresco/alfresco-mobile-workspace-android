@@ -48,7 +48,7 @@
     <string name="action_folder_create">Maken</string>
 
     <string name="action_folder_name_hint">Naam</string>
-    <string name="action_folder_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:"*|/\<></string>
+    <string name="action_folder_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Mapnaam mag niet leeg zijn.</string>
 
     <string name="action_upload_files_title">Bestanden uploaden</string>

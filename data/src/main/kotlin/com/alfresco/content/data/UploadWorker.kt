@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
+import retrofit2.HttpException
 
 class UploadWorker(
     appContext: Context,
@@ -37,8 +38,10 @@ class UploadWorker(
             )
             true
         } catch (ex: Exception) {
-            val rootId = BrowseRepository().myFilesNodeId
-            repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR, parentId = rootId))
+            if ((ex as HttpException).code() == 404) {
+                val rootId = BrowseRepository().myFilesNodeId
+                repository.update(entry.copy(offlineStatus = OfflineStatus.ERROR, parentId = rootId))
+            }
             Logger.e(ex)
             false
         }

@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
@@ -157,5 +156,7 @@ class TransferFilesFragment : Fragment(), MavericksView {
             }
 
     private fun startSync(overrideNetwork: Boolean) =
-        lifecycleScope.emit(ActionSyncNow(overrideNetwork))
+        lifecycleScope.emit(TransferSyncNow(overrideNetwork))
 }
+// Not a typical action - used as an event.
+data class TransferSyncNow(val overrideNetwork: Boolean)

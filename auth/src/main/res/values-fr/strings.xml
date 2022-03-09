@@ -1,6 +1,6 @@
-﻿<resources>
+<resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Tous droits réservés.</string>
+    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Tous droits réservés.</string>
 
     <string name="auth_connect_field_hint">Connexion à</string>
     <string name="auth_connect_button">Connexion</string>
@@ -18,20 +18,20 @@
         <p>Vous pouvez saisir l\'URL de votre service de gestion d\'identité Alfresco pour vous authentifier auprès du fournisseur d\'identité de votre société.</p>
         <p>*Vous devrez ensuite entrer l\'URL de votre instance d\'Alfresco Content Services</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Emplacement de l\'entrepôt de contenu</h6>
         <p>URL d\'Alfresco Content Services :</p>
         <p>Il s\'agit de l\'URL de votre instance d\'Alfresco Content Services.</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_settings_body">
         <![CDATA[<h1>Authentification Alfresco</h1>
         <p>Si vous n\'utilisez pas les paramètres SSO par défaut, définissez les paramètres ici.</p>
         <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    </string>
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Aucun service d\'authentification trouvé à l\'URL Alfresco spécifiée.</string>
@@ -69,4 +69,16 @@
     <string name="auth_signed_out_subtitle">Vous n\'êtes plus connecté. Reconnectez-vous pour continuer.</string>
     <string name="auth_signed_out_other_account">Utiliser un autre compte</string>
     <string name="auth_signed_out_add_account">Ajouter un compte</string>
+
+    <!-- Internet Unavailable dialog -->
+    <string name="auth_internet_unavailable_title">Internet non disponible</string>
+    <string name="auth_internet_unavailable_subtitle">Veuillez vérifier votre connexion Internet et réessayer.</string>
+    <string name="auth_internet_unavailable_ok_button">Ok</string>
+
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Session non disponible</string>
+    <string name="auth_login_app_subtitle">Appuyez sur pour lancer Alfresco Mobile Workspace.</string>
+    <string name="auth_login_app_ok_button">Ok</string>
+
+
 </resources>

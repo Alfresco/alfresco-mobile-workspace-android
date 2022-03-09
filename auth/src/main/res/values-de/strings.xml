@@ -1,6 +1,6 @@
-﻿<resources>
+<resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Alle Rechte vorbehalten.</string>
+    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Alle Rechte vorbehalten.</string>
 
     <string name="auth_connect_field_hint">Verbinden mit</string>
     <string name="auth_connect_button">Verbinden</string>
@@ -11,7 +11,7 @@
 
     <string name="auth_help_overlay_title">Hilfe</string>
     <string name="auth_help_identity_body">
-          <![CDATA[<h1>Verbindung mit Alfresco</h1>
+        <![CDATA[<h1>Verbindung mit Alfresco</h1>
         <h6>Alfresco Content Services-URL</h6>
         <p>Sie können die URL Ihrer Alfresco Content Services-Instanz eingeben. Dabei müssen Sie zur Authentifizierung Ihren Benutzernamen und das Passwort eingeben.</p>
         <h6>SSO-Anmeldung</h6>
@@ -21,16 +21,16 @@
     </string>
 
     <string name="auth_help_sso_body">
-          <![CDATA[<h6>Speicherort des Inhaltsrepositorys</h6>
-          <p>Alfresco Content Services-URL:</p>
-          <p>Dies ist die URL Ihrer Alfresco Content Services-Instanz.</p>
-          <p>Wenden Sie sich an Ihren Alfresco-Administrator, falls Sie Hilfe benötigen.</p>]]>
+        <![CDATA[<h6>Speicherort des Inhaltsrepositorys</h6>
+        <p>Alfresco Content Services-URL:</p>
+        <p>Dies ist die URL Ihrer Alfresco Content Services-Instanz.</p>
+        <p>Wenden Sie sich an Ihren Alfresco-Administrator, falls Sie Hilfe benötigen.</p>]]>
     </string>
 
     <string name="auth_help_settings_body">
-          <![CDATA[<h1>Authentifizierung mit Alfresco</h1>
-          <p>Falls Sie nicht die standardmäßigen SSO-Einstellungen nutzen, können Ihre Werte hier festgelegt werden.</p>
-          <p>Falls Sie Hilfe benötigen, wenden Sie sich an Ihren Alfresco-Administrator.</p>]]>
+        <![CDATA[<h1>Authentifizierung mit Alfresco</h1>
+        <p>Falls Sie nicht die standardmäßigen SSO-Einstellungen nutzen, können Ihre Werte hier festgelegt werden.</p>
+        <p>Falls Sie Hilfe benötigen, wenden Sie sich an Ihren Alfresco-Administrator.</p>]]>
     </string>
 
     <!-- Errors -->
@@ -69,4 +69,16 @@
     <string name="auth_signed_out_subtitle">Sie wurden abgemeldet. Melden Sie sich zum Fortfahren wieder an.</string>
     <string name="auth_signed_out_other_account">Mit anderem Konto versuchen</string>
     <string name="auth_signed_out_add_account">Konto hinzufügen</string>
+
+    <!-- Internet Unavailable dialog -->
+    <string name="auth_internet_unavailable_title">Keine Internetverbindung</string>
+    <string name="auth_internet_unavailable_subtitle">Bitte überprüfen Sie Ihre Internetverbindung und starten anschließend den Vorgang erneut.</string>
+    <string name="auth_internet_unavailable_ok_button">OK</string>
+
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Sitzung nicht auffindbar</string>
+    <string name="auth_login_app_subtitle">Tippen zum Starten von Alfresco Mobile Workspace</string>
+    <string name="auth_login_app_ok_button">OK</string>
+
+
 </resources>

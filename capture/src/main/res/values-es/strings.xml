@@ -14,7 +14,7 @@
     <string name="capture_description_hint">Añadir descripción</string>
     <string name="capture_delete_photo_alt">Eliminar foto</string>
     <string name="capture_save_button">Guardar</string>
-    <string name="capture_file_name_invalid_chars">El nombre del fichero no puede contener ninguno de los siguientes caracteres: ?: \"*|/\&lt;></string>
+    <string name="capture_file_name_invalid_chars">El nombre del fichero no puede contener ninguno de los siguientes caracteres: ?:"*|/\\&lt;&gt;</string>
     <string name="capture_file_name_empty">El nombre del fichero no puede estar vacío.</string>
 
     <string name="capture_nav_save_title">Vista previa</string>

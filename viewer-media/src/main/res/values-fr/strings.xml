@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="error_generic">La lecture a échoué</string>
-    <string name="error_no_decoder">Cet appareil ne fournit pas de décodeur pour &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
-    <string name="error_no_secure_decoder">Cet appareil ne fournit pas de décodeur sécurisé pour &lt;xliff:g id=\"mime_type\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
+    <string name="error_no_decoder">Cet appareil ne fournit pas de décodeur pour <xliff:g id="mime_type" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="error_no_secure_decoder">Cet appareil ne fournit pas de décodeur sécurisé pour <xliff:g id="mime_type" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
     <string name="error_querying_decoders">Impossible d\'interroger les décodeurs de l\'appareil</string>
-    <string name="error_instantiating_decoder">Impossible d\'instancier le décodeur &lt;xliff:g id=\"decoder_name\" xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\">%1$s&lt;/xliff:g></string>
+    <string name="error_instantiating_decoder">Impossible d\'instancier le décodeur <xliff:g id="decoder_name" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
     <string name="error_unsupported_video">Le support contient des pistes vidéo, mais aucune ne peut être lue par cet appareil</string>
     <string name="error_unsupported_audio">Le support contient des pistes audio, mais aucune ne peut être lue par cet appareil</string>
 </resources>

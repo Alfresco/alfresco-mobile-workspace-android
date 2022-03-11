@@ -29,7 +29,7 @@ data class ActionUploadExtensionFiles(
                     repository.scheduleContentForUpload(context, it, entry.id, true)
                 }
             }
-            repository.setTotalTransferSize(entry.parentId)
+            repository.setTotalTransferSize(list.size)
         } else {
             throw CancellationException("User Cancellation")
         }

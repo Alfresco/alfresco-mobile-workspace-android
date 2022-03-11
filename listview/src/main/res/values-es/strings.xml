@@ -5,9 +5,7 @@
     <string name="offline_status_in_progress">Sincronizando&#8230;</string>
     <string name="offline_status_error">Error al sincronizar</string>
     <string name="extension_upload_button">Cargar</string>
-    <string name="upload_file_text_single">Cargando %d ficheros&#8230;</string>
-    <string name="upload_complete_text_single">Cargas finalizadas %d</string>
-    <string name="upload_file_text_multiple">Cargando %d ficheros&#8230;</string>
-    <string name="upload_complete_text_multiple">%d cargas finalizadas</string>
+    <string name="upload_file_text_multiple">Cargando %d fichero(s)</string>
+    <string name="upload_complete_text_multiple">Finalizada la carga de %d fichero(s)</string>
     <string name="upload_percentage_text">%d%%</string>
 </resources>

@@ -48,7 +48,7 @@ class TransferFilesViewModel(
     init {
         viewModelScope.launch {
             SyncService
-                .observe(context)
+                .observeTransfer(context)
                 .map { it == SyncService.SyncState.Running }
                 .combine(ConnectivityTracker.networkAvailable) { running, connected ->
                     !running && connected
@@ -60,7 +60,6 @@ class TransferFilesViewModel(
 
         observeExtensionUploads()
         val list = OfflineRepository().buildTransferList()
-        println("transfer files list size ${list.size}")
         setState { copy(entries = list) }
     }
 

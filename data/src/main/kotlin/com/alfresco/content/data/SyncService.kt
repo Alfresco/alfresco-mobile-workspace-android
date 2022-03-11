@@ -207,6 +207,20 @@ class SyncService(
                     it?.let { SyncState.from(it.state) }
                 }
 
+        fun observeTransfer(context: Context): Flow<SyncState?> =
+            WorkManager
+                .getInstance(context)
+                .getWorkInfosForUniqueWorkLiveData(UNIQUE_UPLOAD_WORK_NAME)
+                .asFlow()
+                .map { list ->
+                    list?.find { it.state == WorkInfo.State.RUNNING }
+                    ?: list?.find { !it.state.isFinished }
+                    ?: list?.firstOrNull()
+                }
+                .map {
+                    it?.let { SyncState.from(it.state) }
+                }
+
         // TODO: race condition work is cancelled but sync service may still trigger it
         fun cancel(context: Context) {
             WorkManager

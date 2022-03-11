@@ -51,7 +51,10 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
-            offlineRepository.updateTransferSize(offlineRepository.buildTransferList().size)
+            println("syncing test init called")
+            val list = offlineRepository.buildTransferList()
+            if (list.isEmpty())
+                offlineRepository.updateTransferSize(0)
             setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
         }
 

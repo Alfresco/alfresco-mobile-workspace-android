@@ -99,7 +99,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
 
-        println("BrowseFragment.updateBanner $totalSize $pendingFilesCount")
+        println("syncing test updateBanner $totalSize $pendingFilesCount")
 
         if (totalSize != 0 && pendingFilesCount != 0)
             bannerTransferData?.visibility = View.VISIBLE
@@ -107,25 +107,15 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         val uploadFileCount = totalSize - pendingFilesCount
         val percentage = (uploadFileCount.toFloat().div(totalSize.toFloat())).times(100)
 
-        if (totalSize > 1) {
-            if (pendingFilesCount != 0) {
-                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
-                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_multiple), pendingFilesCount)
-            } else {
-                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
-                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
-            }
+        if (pendingFilesCount != 0) {
+            tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
+            tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_multiple), pendingFilesCount)
         } else {
-            if (pendingFilesCount != 0) {
-                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
-                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_single), pendingFilesCount)
-            } else {
-                tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
-                tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_single), totalSize)
-            }
+            tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
+            tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
         }
 
-        tvPercentage?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_percentage_text), percentage.toInt())
+        tvPercentage?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_percentage_text), percentage)
 
         percentageFiles?.progress = percentage.toInt()
 

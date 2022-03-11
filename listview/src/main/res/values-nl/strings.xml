@@ -5,9 +5,7 @@
     <string name="offline_status_in_progress">Synchroniseren&#8230;</string>
     <string name="offline_status_error">Synchroniseren mislukt</string>
     <string name="extension_upload_button">Uploaden</string>
-    <string name="upload_file_text_single">%d bestand uploaden&#8230;</string>
-    <string name="upload_complete_text_single">%d upload voltooid</string>
-    <string name="upload_file_text_multiple">%d bestanden uploaden&#8230;</string>
-    <string name="upload_complete_text_multiple">%d uploads voltooid</string>
+    <string name="upload_file_text_multiple">%d bestanden uploaden</string>
+    <string name="upload_complete_text_multiple">Uploaden van %d bestanden is voltooid</string>
     <string name="upload_percentage_text">%d%%</string>
 </resources>

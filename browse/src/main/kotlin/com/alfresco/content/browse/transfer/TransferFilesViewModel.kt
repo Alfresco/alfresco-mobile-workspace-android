@@ -10,8 +10,12 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.Settings
+import com.alfresco.content.data.SyncService
 import com.alfresco.content.network.ConnectivityTracker
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 /**
  * Mark as UploadFilesViewState
@@ -42,9 +46,20 @@ class TransferFilesViewModel(
     private var observeExtensionUploadsJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            SyncService
+                .observeTransfer(context)
+                .map { it == SyncService.SyncState.Running }
+                .combine(ConnectivityTracker.networkAvailable) { running, connected ->
+                    !running && connected
+                }
+                .execute {
+                    copy(syncNowEnabled = it() ?: false)
+                }
+        }
+
         observeExtensionUploads()
         val list = OfflineRepository().buildTransferList()
-        println("transfer files list size ${list.size}")
         setState { copy(entries = list) }
     }
 

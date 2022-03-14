@@ -15,6 +15,7 @@ import com.alfresco.content.actions.ActionCaptureMedia
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.ActionUploadMedia
+import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
@@ -86,6 +87,7 @@ class MainActivityViewModel(
             coroutineScope.on<ActionCaptureMedia> { service.upload() }
             coroutineScope.on<ActionUploadMedia> { service.upload() }
             coroutineScope.on<ActionSyncNow> { service.syncNow(it.overrideNetwork) }
+            coroutineScope.on<TransferSyncNow> { service.upload() }
         }
 
     val requiresLogin: Boolean

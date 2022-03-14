@@ -24,7 +24,7 @@ data class ActionUploadMedia(
                 result.map {
                     repository.scheduleContentForUpload(context, it, entry.id)
                 }
-                repository.setTotalTransferSize(entry.parentId)
+                repository.setTotalTransferSize(result.size)
             }
         } else {
             throw CancellationException("User Cancellation")

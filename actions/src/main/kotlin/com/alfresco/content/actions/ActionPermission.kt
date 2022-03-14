@@ -37,10 +37,8 @@ interface ActionPermission {
             if (checkReadPermission(context))
                 executeIntentData(context)
         } catch (ex: CancellationException) {
-            println("ExtensionActivity.CancellationException")
             (context as AppCompatActivity).finish()
         } catch (ex: Exception) {
-            println("ExtensionActivity.Exception")
             bus.send(Error(ex.message ?: ""))
             delay(1000)
             (context as AppCompatActivity).finish()

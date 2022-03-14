@@ -39,7 +39,6 @@ data class ActionUploadExtensionFiles(
     override fun copy(_entry: Entry): ActionExtension = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) {
-        println("Upload Extension Files List Size === " + repository.buildTransferList().size)
         MaterialAlertDialogBuilder(view.context)
             .setTitle(view.resources.getString(R.string.action_upload_queue_title))
             .setCancelable(false)

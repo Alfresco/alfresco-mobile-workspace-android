@@ -60,7 +60,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * updating the total transfer count
      */
     fun updateTransferSize(size: Int) {
-        println("syncing test update size : $size")
         val list = box.query().equal(Entry_.isTotalEntry, true).build().find()
         if (list.isEmpty()) {
             val entry = Entry(totalCount = size, isTotalEntry = true)
@@ -80,9 +79,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .equal(Entry_.isTotalEntry, true)
             .build()
             .find()
-        val size = if (list.isEmpty()) 0 else list[0].totalCount
-        println("syncing test get size : $size")
-        return size
+        return if (list.isEmpty()) 0 else list[0].totalCount
     }
 
     fun offlineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
@@ -154,8 +151,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun setTotalTransferSize(size: Int) {
         val count = getTotalTransfersSize()
         val list = fetchAllTransferEntries()
-
-        println("syncing test count = $count :: list size = ${list.size} :: listById size $size")
 
         if (list.isEmpty())
             updateTransferSize(size)

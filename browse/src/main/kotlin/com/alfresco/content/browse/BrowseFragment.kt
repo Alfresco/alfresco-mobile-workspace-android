@@ -99,8 +99,6 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
 
-        println("syncing test updateBanner $totalSize $pendingFilesCount")
-
         if (totalSize != 0 && pendingFilesCount != 0)
             bannerTransferData?.visibility = View.VISIBLE
 

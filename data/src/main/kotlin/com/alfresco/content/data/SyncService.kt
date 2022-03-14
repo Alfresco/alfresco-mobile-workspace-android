@@ -207,6 +207,9 @@ class SyncService(
                     it?.let { SyncState.from(it.state) }
                 }
 
+        /**
+         * observer for uploading the files
+         */
         fun observeTransfer(context: Context): Flow<SyncState?> =
             WorkManager
                 .getInstance(context)

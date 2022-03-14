@@ -158,5 +158,8 @@ class TransferFilesFragment : Fragment(), MavericksView {
     private fun startSync(overrideNetwork: Boolean) =
         lifecycleScope.emit(TransferSyncNow(overrideNetwork))
 }
-// Not a typical action - used as an event.
+
+/**
+ *  Not a typical action - used as an event.
+ */
 data class TransferSyncNow(val overrideNetwork: Boolean)

@@ -51,7 +51,6 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
-            println("syncing test init called")
             val list = offlineRepository.buildTransferList()
             if (list.isEmpty())
                 offlineRepository.updateTransferSize(0)
@@ -229,6 +228,9 @@ class BrowseViewModel(
             }
     }
 
+    /**
+     * reset local files after uploading to server
+     */
     fun resetTransferData() {
         offlineRepository.removeCompletedUploads()
         offlineRepository.updateTransferSize(0)

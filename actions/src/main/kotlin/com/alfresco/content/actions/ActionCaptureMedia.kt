@@ -27,20 +27,18 @@ data class ActionCaptureMedia(
         ) {
             PermissionFragment.requestOptionalPermissions(context, CaptureHelperFragment.optionalPermissions())
             val result = CaptureHelperFragment.capturePhoto(context)
-            if (result != null) {
-                if (result.count() > 0) {
-                    withContext(Dispatchers.IO) {
-                        result.map { item ->
-                            repository.scheduleForUpload(
-                                item.uri.toString(),
-                                entry.id,
-                                item.filename,
-                                item.description,
-                                item.mimeType
-                            )
-                        }
-                        repository.setTotalTransferSize(entry.parentId)
+            if (!result.isNullOrEmpty()) {
+                withContext(Dispatchers.IO) {
+                    result.map { item ->
+                        repository.scheduleForUpload(
+                            item.uri.toString(),
+                            entry.id,
+                            item.filename,
+                            item.description,
+                            item.mimeType
+                        )
                     }
+                    repository.setTotalTransferSize(result.size)
                 }
             } else {
                 throw CancellationException("User Cancellation")

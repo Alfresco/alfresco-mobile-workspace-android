@@ -247,7 +247,6 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
     private inner class PlayerEventListener : Player.EventListener {
 
         override fun onPlaybackStateChanged(state: Int) {
-            println("PlayerEventListener.onPlaybackStateChanged $state")
             if (state == PlaybackState.STATE_PLAYING ||
                 state == PlaybackState.STATE_STOPPED
             ) {

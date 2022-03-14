@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 
 <resources>
@@ -24,7 +24,9 @@
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
     <string name="favorites_empty_message">Parece que no ha añadido nada.</string>
     <string name="folder_empty_title">La carpeta está vacía</string>
+    <string name="folder_empty_upload_title">¡Carga completada!\u0020</string>
     <string name="folder_empty_message">Parece que todavía \nno hay contenido.</string>
+    <string name="folder_empty_upload_message">No quedan ficheros para cargar. Vea que los ficheros estén en sus respectivas carpetas.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizar todo</string>
@@ -36,4 +38,6 @@
     <string name="offline_sync_unavailable_message">Esto anulará su configuración y se descargará a través de datos móviles esta vez. De lo contrario, la descarga comenzará más tarde después de conectarse a Wifi.</string>
     <string name="offline_sync_unavailable_positive">Sí</string>
     <string name="offline_sync_unavailable_negative">Más tarde</string>
+
+    <string name="title_transfers">Transferencias</string>
 </resources>

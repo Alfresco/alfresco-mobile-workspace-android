@@ -1,6 +1,6 @@
-﻿<resources>
+<resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Alle Rechte vorbehalten.</string>
+    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Alle Rechte vorbehalten.</string>
 
     <string name="auth_connect_field_hint">Verbinden mit</string>
     <string name="auth_connect_button">Verbinden</string>
@@ -69,4 +69,16 @@
     <string name="auth_signed_out_subtitle">Sie wurden abgemeldet. Melden Sie sich zum Fortfahren wieder an.</string>
     <string name="auth_signed_out_other_account">Mit anderem Konto versuchen</string>
     <string name="auth_signed_out_add_account">Konto hinzufügen</string>
+
+    <!-- Internet Unavailable dialog -->
+    <string name="auth_internet_unavailable_title">Keine Internetverbindung</string>
+    <string name="auth_internet_unavailable_subtitle">Bitte überprüfen Sie Ihre Internetverbindung und starten anschließend den Vorgang erneut.</string>
+    <string name="auth_internet_unavailable_ok_button">OK</string>
+
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Sitzung nicht auffindbar</string>
+    <string name="auth_login_app_subtitle">Tippen zum Starten von Alfresco Mobile Workspace</string>
+    <string name="auth_login_app_ok_button">OK</string>
+
+
 </resources>

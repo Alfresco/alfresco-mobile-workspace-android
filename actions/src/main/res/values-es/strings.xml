@@ -54,4 +54,12 @@
 
     <string name="action_upload_files_title">Cargar ficheros</string>
 
+    <!-- Upload queue dialog -->
+    <string name="action_upload_queue_title">Cargar</string>
+    <string name="action_upload_queue_subtitle">La carga está en cola. Haga un seguimiento del estado en la aplicación móvil.</string>
+    <string name="action_upload_queue_ok_button">Aceptar</string>
+
+    <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
+    <string name="share_files_failure_permissions">Para compartir ficheros, active los permisos de almacenamiento de lectura.</string>
+
 </resources>

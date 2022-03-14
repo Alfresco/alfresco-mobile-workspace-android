@@ -51,7 +51,9 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
-            offlineRepository.updateTransferSize(offlineRepository.buildTransferList().size)
+            val list = offlineRepository.buildTransferList()
+            if (list.isEmpty())
+                offlineRepository.updateTransferSize(0)
             setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
         }
 
@@ -224,6 +226,14 @@ class BrowseViewModel(
                     this
                 }
             }
+    }
+
+    /**
+     * reset local files after uploading to server
+     */
+    fun resetTransferData() {
+        offlineRepository.removeCompletedUploads()
+        offlineRepository.updateTransferSize(0)
     }
 
     override fun emptyMessageArgs(state: ListViewState) =

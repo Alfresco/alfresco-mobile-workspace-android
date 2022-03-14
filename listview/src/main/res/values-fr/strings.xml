@@ -1,7 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="list_loading_message">Chargement&#8230;</string>
+    <string name="list_loading_message">Chargement...</string>
 
-    <string name="offline_status_in_progress">Synchronisation&#8230;</string>
+    <string name="offline_status_in_progress">Synchronisation...</string>
     <string name="offline_status_error">La synchronisation a échoué</string>
+    <string name="extension_upload_button">Importer</string>
+    <string name="upload_file_text_multiple">Importer %d fichier(s)</string>
+    <string name="upload_complete_text_multiple">%d fichier(s) a terminé l\'importation</string>
+    <string name="upload_percentage_text">%.1f%%</string>
 </resources>

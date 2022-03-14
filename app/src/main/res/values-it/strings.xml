@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Workspace</string>
     <string name="auth_app_name">Alfresco\nMobile Workspace</string>
@@ -8,6 +8,8 @@
     <string name="nav_title_offline">Offline</string>
     <string name="nav_title_browse">Sfoglia</string>
     <string name="nav_title_settings">Account</string>
+    <string name="nav_title_share">Condividi</string>
+    <string name="nav_title_browse_extension">Salva in Alfresco</string>
 
     <string name="sign_out_confirmation_title">Disconnetti</string>
     <string name="sign_out_confirmation_message">Vuoi disconnetterti?</string>
@@ -26,6 +28,9 @@
 
     <string name="auth_error_wrong_credentials">Nome utente o password non corretti.</string>
     <string name="settings_sync_network_title">Aggiorna file offline utilizzando</string>
+    <string name="share_limit_message">Impossibile condividere più di 50 elementi multimediali</string>
+    <string name="no_type">Nessun tipo</string>
+
     <string-array name="settings_sync_network_value_labels">
         <item>Solo Wi-Fi</item>
         <item>Wi-Fi e dati mobili</item>

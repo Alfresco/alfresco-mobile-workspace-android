@@ -137,18 +137,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .find()
 
-    private fun fetchAllTransferEntries(parentId: String?) =
-        box.query()
-            .apply {
-                if (parentId != null) {
-                    equal(Entry_.parentId, parentId)
-                    notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value())
-                    equal(Entry_.isUpload, true)
-                }
-            }
-            .build()
-            .find()
-
     internal fun fetchOfflineEntry(target: Entry) = entry(target.id)
 
     /**
@@ -160,13 +148,13 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     /**
      * update transfer size count using the parent ID
      */
-    fun setTotalTransferSize(parentId: String?) {
-        removeCompletedUploads()
+    fun setTotalTransferSize(size: Int) {
+        val count = getTotalTransfersSize()
         val list = fetchAllTransferEntries()
-        val listById = fetchAllTransferEntries(parentId)
+
         if (list.isEmpty())
-            updateTransferSize(listById.size)
-        else updateTransferSize(list.size + listById.size)
+            updateTransferSize(size)
+        else updateTransferSize(count + size)
     }
 
     fun scheduleContentForUpload(
@@ -195,9 +183,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
-            isExtension = isExtension,
             offlineStatus = OfflineStatus.PENDING
         )
+
+        clearData()
+
         update(entry)
 
         val dest = File(session.uploadDir, entry.boxId.toString())
@@ -209,6 +199,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 input.copyTo(output)
             }
         }
+    }
+
+    private fun clearData() {
+        removeCompletedUploads()
+        if (buildTransferList().isEmpty())
+            updateTransferSize(0)
     }
 
     fun scheduleForUpload(
@@ -228,6 +224,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING
         )
+
+        clearData()
+
         update(entry)
         val srcPath = path.removePrefix("file://")
         File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))

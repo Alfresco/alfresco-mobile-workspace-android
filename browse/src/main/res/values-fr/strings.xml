@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 
 <resources>
@@ -24,7 +24,9 @@
     <string name="favorite_sites_empty_title">Aucune bibliothèque favorite</string>
     <string name="favorites_empty_message">Il semble que vous n\'ayez\nrien ajouté.</string>
     <string name="folder_empty_title">Le dossier est vide</string>
+    <string name="folder_empty_upload_title">Importation terminée !</string>
     <string name="folder_empty_message">Il semble que cet emplacement\nne contienne aucun élément.</string>
+    <string name="folder_empty_upload_message">Il n\'y a plus de fichiers à importer. Veuillez afficher les fichiers dans leurs dossiers respectifs.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Synchroniser tout</string>
@@ -36,4 +38,6 @@
     <string name="offline_sync_unavailable_message">Vos réglages seront remplacés et des données mobiles seront utilisées pour le téléchargement. Sinon, le téléchargement aura lieu plus tard lorsque la connexion Wi-Fi sera disponible.</string>
     <string name="offline_sync_unavailable_positive">Oui</string>
     <string name="offline_sync_unavailable_negative">Plus tard</string>
+
+    <string name="title_transfers">Transferts</string>
 </resources>

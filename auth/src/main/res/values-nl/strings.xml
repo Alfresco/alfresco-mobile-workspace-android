@@ -1,6 +1,6 @@
-﻿<resources>
+<resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2021 Alfresco Software, Inc. Alle rechten voorbehouden.</string>
+    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Alle rechten voorbehouden.</string>
 
     <string name="auth_connect_field_hint">Verbinden met</string>
     <string name="auth_connect_button">Verbinden</string>
@@ -13,12 +13,12 @@
     <string name="auth_help_identity_body">
         <![CDATA[<h1>Verbinding maken met Alfresco</h1>
         <h6>Alfresco Content Services-URL</h6>
-        <p>U kunt de URL van uw Alfresco Content Services-instance invoeren. Hiervoor moet u uw gebruikersnaam en wachtwoord opgeven voor verificatie.</p>
+        <p>YU kunt de URL van uw Alfresco Content Services-instance invoeren. Hiervoor moet u uw gebruikersnaam en wachtwoord opgeven voor verificatie.</p>
         <h6>Aanmelden met SSO</h6>
         <p>U kunt de URL van uw Alfresco Identity Management Service invoeren voor verificatie met de identiteitsprovider van uw organisatie.</p>
         <p>*U moet de URL van uw Alfresco Content Services-instance naderhand opgeven.</p>
         <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
-      </string>
+    </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Locatie content-repository</h6>
@@ -69,4 +69,16 @@
     <string name="auth_signed_out_subtitle">U bent niet meer aangemeld. Meld u opnieuw aan om door te gaan.</string>
     <string name="auth_signed_out_other_account">Probeer een ander account</string>
     <string name="auth_signed_out_add_account">Account toevoegen</string>
+
+    <!-- Internet Unavailable dialog -->
+    <string name="auth_internet_unavailable_title">Internet niet beschikbaar</string>
+    <string name="auth_internet_unavailable_subtitle">Controleer uw internetverbinding en probeer het opnieuw.</string>
+    <string name="auth_internet_unavailable_ok_button">OK</string>
+
+    <!-- Login App dialog -->
+    <string name="auth_login_app_title">Sessie niet beschikbaar</string>
+    <string name="auth_login_app_subtitle">Tik om Alfresco Mobile Workspace te starten.</string>
+    <string name="auth_login_app_ok_button">OK</string>
+
+
 </resources>

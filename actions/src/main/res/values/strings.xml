@@ -56,7 +56,7 @@
 
     <!-- Upload queue dialog -->
     <string name="action_upload_queue_title">Upload</string>
-    <string name="action_upload_queue_subtitle">Uploading in queue. Please track the status in the mobile app.</string>
+    <string name="action_upload_queue_subtitle">Uploading is in queue. Please track the status in the mobile app.</string>
     <string name="action_upload_queue_ok_button">Ok</string>
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>

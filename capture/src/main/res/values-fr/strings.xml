@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_button_alt">Fermer</string>
-    <string name="capture_button_alt">Capturer</string>
-    <string name="switch_camera_button_alt">Basculer l\'appareil photo</string>
+    <string name="capture_button_alt">Capture</string>
+    <string name="switch_camera_button_alt">Changer de caméra</string>
     <string name="gallery_button_alt">Galerie</string>
-    <string name="flash_button_alt">Mode flash</string>
+    <string name="flash_button_alt">Modèle de flash</string>
 
     <string name="capture_mode_photo">Photo</string>
     <string name="capture_mode_video">Vidéo</string>
@@ -14,7 +14,7 @@
     <string name="capture_description_hint">Ajouter une description</string>
     <string name="capture_delete_photo_alt">Supprimer la photo</string>
     <string name="capture_save_button">Enregistrer</string>
-    <string name="capture_file_name_invalid_chars">Le nom de fichier ne peut pas contenir les caractères suivants : ?:\"*|/\&lt;></string>
+    <string name="capture_file_name_invalid_chars">Le nom de fichier ne peut contenir aucun des caractères suivants : ? : \"*|/\\&lt;&gt;</string>
     <string name="capture_file_name_empty">Le nom de fichier ne peut pas être vide.</string>
 
     <string name="capture_nav_save_title">Aperçu</string>
@@ -24,7 +24,7 @@
     <string name="camera_flash_off">Désactivé</string>
 
     <string name="capture_permissions_rationale">@string/capture_failure_permissions</string>
-    <string name="capture_failure_permissions">Pour capturer un fichier multimédia, activez les autorisations pour l\'appareil photo et le microphone.</string>
+    <string name="capture_failure_permissions">Pour capturer des médias, activez les autorisations de l\'appareil photo et du microphone.</string>
     <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
     <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
 

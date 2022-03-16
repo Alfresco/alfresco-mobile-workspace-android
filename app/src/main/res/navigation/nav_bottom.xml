@@ -75,7 +75,7 @@
     <fragment
         android:id="@+id/nav_transfer_files"
         android:name="com.alfresco.content.browse.transfer.TransferFilesFragment"
-        android:label="Transfers">
+        android:label="{title}">
         <argument
             android:name="extension"
             app:argType="boolean"

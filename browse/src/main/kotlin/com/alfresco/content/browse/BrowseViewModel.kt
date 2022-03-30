@@ -7,7 +7,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionAddFavorite
+import com.alfresco.content.actions.ActionCreateFolder
 import com.alfresco.content.actions.ActionDeleteForever
 import com.alfresco.content.actions.ActionExtension
 import com.alfresco.content.actions.ActionRemoveFavorite
@@ -266,8 +268,19 @@ class BrowseViewModel(
         }
     }
 
+    /**
+     * It will create the new folder on the current node
+     */
+    fun createFolder(state: BrowseViewState) {
+        if (state.parent != null)
+            execute(ActionCreateFolder(state.parent))
+    }
+
     private fun execute(action: ActionExtension, list: List<Uri>) =
         action.execute(context, GlobalScope, list)
+
+    private fun execute(action: Action) =
+        action.execute(context, GlobalScope)
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
 

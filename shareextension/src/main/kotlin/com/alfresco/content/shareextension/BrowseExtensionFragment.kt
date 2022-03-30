@@ -1,15 +1,10 @@
 package com.alfresco.content.shareextension
 
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.setMargins
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.BrowseArgs
@@ -20,7 +15,6 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 /**
  * Mark as BrowseExtensionFragment
@@ -50,13 +44,19 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_browse, menu)
+        inflater.inflate(R.menu.menu_browse_extension, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
                 findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true)
+                true
+            }
+            R.id.new_folder -> {
+                withState(viewModel) {
+                    viewModel.createFolder(it)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -77,22 +77,4 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
 
         findNavController().navigateTo(entry)
     }
-
-    private fun makeFab(context: Context) =
-        ExtendedFloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.END
-                // TODO: define margins
-                setMargins(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt()
-                )
-            }
-            text = context.getText(com.alfresco.content.browse.R.string.action_create_folder)
-            setOnClickListener {
-            }
-        }
 }

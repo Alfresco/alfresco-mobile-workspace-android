@@ -3,7 +3,6 @@ package com.alfresco.content.data
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
 
 class UploadWorker(
@@ -26,20 +25,21 @@ class UploadWorker(
         repository.fetchPendingUploads()
 
     private suspend fun createItem(entry: Entry): Boolean {
-        return try {
-            repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
-            val file = repository.contentFile(entry)
-            val res = BrowseRepository().createEntry(entry, file)
-            file.delete() // TODO: what if delete fails?
-            repository.update(
-                entry.copyWithMetadata(res)
-                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
-            )
-            true
-        } catch (ex: Exception) {
-            Logger.e(ex)
-            false
-        }
+        return false
+        /*return try {
+                repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
+                val file = repository.contentFile(entry)
+                val res = BrowseRepository().createEntry(entry, file)
+                file.delete() // TODO: what if delete fails?
+                repository.update(
+                    entry.copyWithMetadata(res)
+                        .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
+                )
+                true
+            } catch (ex: Exception) {
+                Logger.e(ex)
+                false
+            }*/
     }
 
     private companion object {

@@ -59,6 +59,9 @@
                     android:scheme="androidacsapp" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.alfresco.content.browse.preview.PreviewActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>

@@ -120,4 +120,21 @@
             app:argType="string" />
         <deepLink app:uri="alfresco://content/view/{mode}/{id}/preview?title={title}" />
     </activity>
+
+    <activity
+        android:id="@+id/nav_local_viewer"
+        android:name="com.alfresco.content.browse.preview.PreviewActivity"
+        android:label="{title}">
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="mimeType"
+            app:argType="string" />
+        <deepLink app:uri="alfresco://content/view/local/preview?title={title},mimeType={mimeType},path={path}" />
+    </activity>
+
 </navigation>

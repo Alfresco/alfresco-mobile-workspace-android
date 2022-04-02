@@ -77,5 +77,11 @@ fun NavController.navigateToUploadFilesPath(extension: Boolean, title: String) =
 fun NavController.navigateToPreview(mimeType: String, path: String, title: String) =
     navigate(Uri.parse("$BASE_URI/view/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
 
+/**
+ * navigate to local preview activity using deep linking
+ */
+fun NavController.navigateToLocalPreview(mimeType: String, path: String, title: String) =
+    navigate(Uri.parse("$BASE_URI/view/local/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
+
 private const val BASE_URI = "alfresco://content"
 private const val REMOTE = "remote"

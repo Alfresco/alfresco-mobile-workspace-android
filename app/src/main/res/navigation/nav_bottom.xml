@@ -69,7 +69,27 @@
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
-        <deepLink app:uri="alfresco://content/search/folder/{id}?title={title}" />
+        <argument
+            android:name="extension"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+
+        <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}?title={title}" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_transfer_files"
+        android:name="com.alfresco.content.browse.transfer.TransferFilesFragment"
+        android:label="{title}">
+        <argument
+            android:name="extension"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+        <deepLink app:uri="alfresco://content/transfer_files/{extension}?title={title}" />
     </fragment>
 
     <fragment

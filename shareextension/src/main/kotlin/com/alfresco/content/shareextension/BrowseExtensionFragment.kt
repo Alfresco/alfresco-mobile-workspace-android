@@ -44,13 +44,19 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_browse, menu)
+        inflater.inflate(R.menu.menu_browse_extension, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
                 findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true)
+                true
+            }
+            R.id.new_folder -> {
+                withState(viewModel) {
+                    viewModel.createFolder(it)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

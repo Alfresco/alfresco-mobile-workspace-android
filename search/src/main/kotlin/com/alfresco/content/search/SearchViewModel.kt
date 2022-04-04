@@ -198,7 +198,6 @@ class SearchViewModel(
     private fun defaultFilters(state: SearchResultsState): SearchFilters {
         return if (state.isExtension && state.isContextual) {
             SearchFilters.of(
-                SearchFilter.Contextual,
                 SearchFilter.Folders
             )
         } else if (state.isContextual) {

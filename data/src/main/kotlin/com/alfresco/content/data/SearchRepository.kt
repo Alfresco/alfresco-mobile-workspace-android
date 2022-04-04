@@ -95,7 +95,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
     private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {
         val isContextual = advanceSearchFilters.find {
-            it.query == SearchFilter.Contextual.name
+            it.query.contains(SearchFilter.Contextual.name)
         }
         return isContextual != null
     }

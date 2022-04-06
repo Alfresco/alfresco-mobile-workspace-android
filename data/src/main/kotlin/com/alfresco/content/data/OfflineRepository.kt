@@ -9,7 +9,6 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import java.io.File
-import kotlin.random.Random
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -181,7 +180,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         val entry = Entry(
             parentId = parentId,
             name = name,
-            path = contentUri.toString(),
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
@@ -190,7 +188,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
         clearData()
 
-//        update(entry)
+        update(entry)
 
         val dest = File(session.uploadDir, entry.boxId.toString())
         update(entry.copy(path = dest.absolutePath))
@@ -220,8 +218,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         val entry = Entry(
             parentId = parentId,
             name = name,
-            path = path,
-            boxId = Random.nextLong(),
             type = Entry.Type.FILE,
             mimeType = mimeType,
             properties = mapOf("cm:description" to description),
@@ -229,14 +225,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             offlineStatus = OfflineStatus.PENDING
         )
 
-        val newFile = File(session.uploadDir, entry.boxId.toString())
-
         clearData()
-
-        println("OfflineRepository.scheduleForUpload path ==== ${newFile.absolutePath}")
-        update(entry.copy(path = newFile.absolutePath))
+        update(entry)
+        val dest = File(session.uploadDir, entry.boxId.toString())
         val srcPath = path.removePrefix("file://")
-        File(srcPath).renameTo(newFile)
+        update(entry.copy(path = dest.absolutePath))
+        File(srcPath).renameTo(dest)
     }
 
     internal fun fetchPendingUploads() =

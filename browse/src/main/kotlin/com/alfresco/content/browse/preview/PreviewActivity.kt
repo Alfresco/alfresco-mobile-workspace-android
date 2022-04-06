@@ -27,7 +27,7 @@ class PreviewActivity : AppCompatActivity() {
 
     override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
-        if (fragment is PreviewFragment) {
+        if (fragment is LocalPreviewFragment) {
             fragment.arguments = intent.extras
         }
     }

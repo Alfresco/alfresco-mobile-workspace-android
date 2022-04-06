@@ -14,7 +14,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/content"
-        android:name="com.alfresco.content.browse.preview.PreviewFragment"
+        android:name="com.alfresco.content.browse.preview.LocalPreviewFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -24,18 +24,5 @@
         android:layout_height="1dp"
         android:background="@android:color/white"
         android:backgroundTint="?attr/separatorColor" />
-
-    <com.alfresco.ui.MaterialShapeView
-        style="?attr/bottomNavigationStyle"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="@dimen/design_bottom_navigation_elevation"
-        app:backgroundColor="?attr/colorSurface">
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/action_list_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.alfresco.ui.MaterialShapeView>
 
 </LinearLayout>

@@ -46,4 +46,5 @@ class UploadWorker(
         private const val MAX_CONCURRENT_OPERATIONS = 3
         private const val MAX_RETRIES = 5
     }
+
 }

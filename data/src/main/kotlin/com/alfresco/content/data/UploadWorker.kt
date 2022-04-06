@@ -27,19 +27,19 @@ class UploadWorker(
 
     private suspend fun createItem(entry: Entry): Boolean {
         return try {
-                repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
-                val file = repository.contentFile(entry)
-                val res = BrowseRepository().createEntry(entry, file)
-                file.delete() // TODO: what if delete fails?
-                repository.update(
-                    entry.copyWithMetadata(res)
-                        .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
-                )
-                true
-            } catch (ex: Exception) {
-                Logger.e(ex)
-                false
-            }
+            repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
+            val file = repository.contentFile(entry)
+            val res = BrowseRepository().createEntry(entry, file)
+            file.delete() // TODO: what if delete fails?
+            repository.update(
+                entry.copyWithMetadata(res)
+                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
+            )
+            true
+        } catch (ex: Exception) {
+            Logger.e(ex)
+            false
+        }
     }
 
     private companion object {

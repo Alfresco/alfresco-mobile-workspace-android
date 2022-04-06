@@ -18,6 +18,9 @@ import com.alfresco.content.viewer.media.MediaPreviewProvider
 import com.alfresco.content.viewer.pdf.PdfPreviewProvider
 import com.alfresco.content.viewer.text.TextPreviewProvider
 
+/**
+ * Mark as LocalPreviewArgs
+ */
 data class LocalPreviewArgs(
     val path: String,
     val title: String,
@@ -28,6 +31,9 @@ data class LocalPreviewArgs(
         private const val TITLE_KEY = "title"
         private const val MIME_TYPE_KEY = "mimeType"
 
+        /**
+         * returns the LocalPreviewArgs obj
+         */
         fun with(args: Bundle): LocalPreviewArgs {
             return LocalPreviewArgs(
                 args.getString(PATH_KEY, ""),
@@ -35,12 +41,12 @@ data class LocalPreviewArgs(
                 args.getString(MIME_TYPE_KEY, "")
             )
         }
-
-        fun bundle(path: String, mimeType: String) =
-            bundleOf(PATH_KEY to path, MIME_TYPE_KEY to mimeType)
     }
 }
 
+/**
+ * Mark as LocalPreviewFragment
+ */
 class LocalPreviewFragment : Fragment() {
 
     private lateinit var binding: FragmentLocalPreviewBinding

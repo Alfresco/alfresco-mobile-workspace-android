@@ -27,6 +27,12 @@ dependencies {
     implementation project(':mimetype')
     implementation project(':listview')
     implementation project(':session')
+    implementation project(':viewer-common')
+    implementation project(':viewer-image')
+    implementation project(':viewer-media')
+    implementation project(':viewer-pdf')
+    implementation project(':viewer-text')
+    implementation project(':viewer')
 
     implementation libs.alfresco.content
 

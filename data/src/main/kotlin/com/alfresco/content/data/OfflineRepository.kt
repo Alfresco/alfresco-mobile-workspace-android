@@ -191,7 +191,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         update(entry)
 
         val dest = File(session.uploadDir, entry.boxId.toString())
-
+        update(entry.copy(path = dest.absolutePath))
         resolver.openInputStream(contentUri).use { input ->
             requireNotNull(input)
 
@@ -226,10 +226,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         )
 
         clearData()
-
         update(entry)
+        val dest = File(session.uploadDir, entry.boxId.toString())
         val srcPath = path.removePrefix("file://")
-        File(srcPath).renameTo(File(session.uploadDir, entry.boxId.toString()))
+        update(entry.copy(path = dest.absolutePath))
+        File(srcPath).renameTo(dest)
     }
 
     internal fun fetchPendingUploads() =

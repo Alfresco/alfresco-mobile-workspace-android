@@ -25,6 +25,7 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
+import com.alfresco.content.navigateToLocalPreview
 import com.alfresco.content.navigateToUploadFilesPath
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
@@ -151,9 +152,17 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     override fun onItemClicked(entry: Entry) {
         // Disable interaction on Trash or Upload items
-        if (entry.isTrashed || entry.isUpload) return
+        if (entry.isTrashed) return
 
-        findNavController().navigateTo(entry)
+        if (entry.isUpload)
+            entry.mimeType?.let {
+                findNavController().navigateToLocalPreview(
+                    it,
+                    entry.path.toString(), entry.name
+                )
+            }
+        else
+            findNavController().navigateTo(entry)
     }
 
     private fun makeFab(context: Context) =

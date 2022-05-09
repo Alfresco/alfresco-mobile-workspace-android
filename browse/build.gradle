@@ -33,7 +33,6 @@ dependencies {
     implementation project(':viewer-pdf')
     implementation project(':viewer-text')
     implementation project(':viewer')
-    implementation project(':search')
 
     implementation libs.alfresco.content
 
@@ -44,7 +43,6 @@ dependencies {
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.navigation.ui
 
     coreLibraryDesugaring libs.android.desugar
 

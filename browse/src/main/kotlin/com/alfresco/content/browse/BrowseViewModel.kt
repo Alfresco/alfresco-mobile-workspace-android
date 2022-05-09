@@ -185,7 +185,7 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_folder) ->
                 BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
-            context.getString(R.string.nav_path_extension) ->
+            context.getString(R.string.nav_path_extension), context.getString(R.string.nav_path_move) ->
                 BrowseRepository()::fetchExtensionFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             context.getString(R.string.nav_path_site) ->

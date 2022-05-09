@@ -24,10 +24,11 @@ internal class ContextualActionsViewModel(
         buildModel()
 
         // Update the model if necessary
-        viewModelScope.on<ActionAddFavorite> (block = ::updateState)
-        viewModelScope.on<ActionRemoveFavorite> (block = ::updateState)
-        viewModelScope.on<ActionAddOffline> (block = ::updateState)
-        viewModelScope.on<ActionRemoveOffline> (block = ::updateState)
+        viewModelScope.on<ActionAddFavorite>(block = ::updateState)
+        viewModelScope.on<ActionRemoveFavorite>(block = ::updateState)
+        viewModelScope.on<ActionAddOffline>(block = ::updateState)
+        viewModelScope.on<ActionRemoveOffline>(block = ::updateState)
+        viewModelScope.on<ActionMoveFilesFolders>(block = ::updateState)
     }
 
     private fun buildModel() = withState { state ->
@@ -93,7 +94,8 @@ internal class ContextualActionsViewModel(
             offlineActionFor(entry),
             favoriteActionFor(entry),
             externalActionsFor(entry),
-            deleteActionFor(entry)
+            deleteActionFor(entry),
+            moveActionFor(entry)
         ).flatten()
 
     private fun actionsForTrashed(entry: Entry): List<Action> =
@@ -126,6 +128,9 @@ internal class ContextualActionsViewModel(
 
     private fun deleteActionFor(entry: Entry) =
         if (entry.canDelete) listOf(ActionDelete(entry)) else listOf()
+
+    private fun moveActionFor(entry: Entry) =
+        if (entry.canDelete) listOf(ActionMoveFilesFolders(entry)) else listOf()
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()

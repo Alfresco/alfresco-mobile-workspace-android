@@ -2,12 +2,15 @@ package com.alfresco.content.app.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
+import com.alfresco.content.actions.Action
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
@@ -22,6 +25,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
+    private val bottomView by lazy { findViewById<View>(R.id.bottom_view) }
     private lateinit var actionBarController: ActionBarController
     private var signedOutDialog = WeakReference<AlertDialog>(null)
 
@@ -38,7 +42,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         val bundle = Bundle().apply {
         }
         navController.setGraph(graph, bundle)
-
+        setupActionToasts()
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
         actionBarController.setupActionBar(this, navController)
     }
@@ -87,6 +91,12 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         startActivity(i)
     }
+
+    private fun setupActionToasts() = Action.showActionToasts(
+        lifecycleScope,
+        findViewById(android.R.id.content),
+        bottomView
+    )
 
     override fun onBackPressed() {
         super.onBackPressed()

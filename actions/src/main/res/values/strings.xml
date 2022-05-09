@@ -61,6 +61,9 @@
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
     <string name="share_files_failure_permissions">To share files, turn on read storage permissions.</string>
 
+    <string name="action_move_title">Move to folder</string>
+    <string name="action_move_toast">%s was moved successfully</string>
+
     <string name="action_rename_file_folder">Rename</string>
     <string name="action_rename_file_folder_toast">%s was renamed</string>
     <string name="action_file_folder_update">Update</string>

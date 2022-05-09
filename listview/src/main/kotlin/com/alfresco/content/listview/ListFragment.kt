@@ -24,6 +24,7 @@ import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCreateFolder
 import com.alfresco.content.actions.ActionDelete
+import com.alfresco.content.actions.ActionMoveFilesFolders
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionUpdateFileFolder
@@ -67,6 +68,7 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
+        viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
     }
 
     private fun onDelete(entry: Entry) = entry.run {
@@ -78,6 +80,10 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     private fun onCreateFolder(entry: Entry) = entry.run {
+        refresh()
+    }
+
+    private fun onMove(entry: Entry) = entry.run {
         refresh()
     }
 
@@ -119,6 +125,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     var tvPercentage: TextView? = null
     var bannerTransferData: FrameLayout? = null
     var uploadButton: MaterialButton? = null
+    var moveHereButton: MaterialButton? = null
+    var cancelButton: MaterialButton? = null
     var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
@@ -133,6 +141,8 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         bannerTransferData = view.findViewById(R.id.banner_parent)
 
         uploadButton = view.findViewById(R.id.upload_button)
+        moveHereButton = view.findViewById(R.id.move_here_button)
+        cancelButton = view.findViewById(R.id.cancel_button)
         tvUploadingFiles = view.findViewById(R.id.tv_uploading_files)
         tvPercentage = view.findViewById(R.id.tv_percentage)
         percentageFiles = view.findViewById(R.id.percentage_files)

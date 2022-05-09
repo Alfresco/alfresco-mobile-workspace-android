@@ -2,18 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_share_extension"
-    app:startDestination="@id/nav_extension">
-
-    <fragment
-        android:id="@+id/nav_extension"
-        android:name="com.alfresco.content.shareextension.ExtensionFragment"
-        android:label="">
-
-        <argument
-            android:name="path"
-            app:argType="string" />
-
-    </fragment>
+    app:startDestination="@id/nav_move">
 
     <fragment
         android:id="@+id/nav_move"
@@ -36,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_browse_sub_folders"
-        android:name="com.alfresco.content.shareextension.BrowseExtensionFragment"
+        android:name="com.alfresco.content.move.BrowseMoveFragment"
         android:label="{title}">
 
         <argument
@@ -51,27 +40,6 @@
             android:defaultValue=""/>
 
         <deepLink app:uri="alfresco://content/browse_child/{path}/remote/{id}?title={title}" />
-
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/nav_browse_extension"
-        android:name="com.alfresco.content.shareextension.BrowseExtensionFragment"
-        android:label="@string/nav_title_browse_extension">
-
-        <argument
-            android:name="path"
-            app:argType="string" />
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
-
-        <deepLink app:uri="alfresco://content/browse_parent/{path}/remote/{id}?title={title}" />
 
     </fragment>
 

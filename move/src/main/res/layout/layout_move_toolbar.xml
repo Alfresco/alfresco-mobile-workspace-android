@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alfresco.content.move.widget.MoveActionBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_move"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="vertical">
+
+    <com.alfresco.ui.MaterialShapeView
+        android:id="@+id/toolbar_move_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="0dp"
+        app:backgroundColor="?android:attr/colorBackground"
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+        app:strokeColor="?attr/separatorColor"
+        app:strokeWidth="1dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/expanded_toolbar_move"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</com.alfresco.content.move.widget.MoveActionBarLayout>

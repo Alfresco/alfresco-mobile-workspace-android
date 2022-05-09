@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Move</string>
+    <string name="folder_empty_title">Folder is empty</string>
+    <string name="folder_empty_message">Looks like there is\nnothing here yet.</string>
+
+    <string name="modified_group_today">Today</string>
+    <string name="modified_group_yesterday">Yesterday</string>
+    <string name="modified_group_this_week">This week</string>
+    <string name="modified_group_last_week">Last week</string>
+    <string name="modified_group_older">Older</string>
+
+
+    <string name="contextual_search_title">Search</string>
+
+</resources>

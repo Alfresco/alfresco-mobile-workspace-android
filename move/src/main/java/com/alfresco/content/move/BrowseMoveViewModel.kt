@@ -1,4 +1,4 @@
-package com.alfresco.content.browse
+package com.alfresco.content.move
 
 import android.content.Context
 import android.net.Uri
@@ -8,26 +8,16 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionCreateFolder
-import com.alfresco.content.actions.ActionDeleteForever
 import com.alfresco.content.actions.ActionExtension
-import com.alfresco.content.actions.ActionRemoveFavorite
-import com.alfresco.content.actions.ActionRestore
 import com.alfresco.content.actions.ActionUploadExtensionFiles
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ResponsePaging
-import com.alfresco.content.data.SearchRepository
-import com.alfresco.content.data.SharedLinksRepository
-import com.alfresco.content.data.SitesRepository
-import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
-import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -35,10 +25,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
-class BrowseViewModel(
-    state: BrowseViewState,
+class BrowseMoveViewModel(
+    state: BrowseMoveViewState,
     val context: Context
-) : ListViewModel<BrowseViewState>(state) {
+) : ListViewModel<BrowseMoveViewState>(state) {
 
     private var observeUploadsJob: Job? = null
     private var observeTransferUploadsJob: Job? = null
@@ -48,32 +38,9 @@ class BrowseViewModel(
     init {
         fetchInitial()
         withState {
-            if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
-                BrowseViewState.ModifiedGroup.prepare(context)
+            if (it.sortOrder == BrowseMoveViewState.SortOrder.ByModifiedDate) {
+                BrowseMoveViewState.ModifiedGroup.prepare(context)
             }
-        }
-        if (state.path == context.getString(R.string.nav_path_recents)) {
-            val list = offlineRepository.buildTransferList()
-            if (list.isEmpty())
-                offlineRepository.updateTransferSize(0)
-            setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
-        }
-
-        if (state.path == context.getString(R.string.nav_path_favorites)) {
-            val types = setOf(Entry.Type.FILE, Entry.Type.FOLDER)
-            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
-            viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
-        }
-
-        if (state.path == context.getString(R.string.nav_path_fav_libraries)) {
-            val types = setOf(Entry.Type.SITE)
-            viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
-            viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
-        }
-
-        if (state.path == context.getString(R.string.nav_path_trash)) {
-            viewModelScope.on<ActionRestore> { removeEntry(it.entry) }
-            viewModelScope.on<ActionDeleteForever> { removeEntry(it.entry) }
         }
     }
 
@@ -154,42 +121,13 @@ class BrowseViewModel(
     private suspend fun fetchNode(path: String, item: String?): Flow<Entry?> = if (item == null) {
         flowOf(null)
     } else {
-        when (path) {
-            context.getString(R.string.nav_path_site) ->
-                BrowseRepository()::fetchLibraryDocumentsFolder.asFlow(item)
-            else ->
-                BrowseRepository()::fetchEntry.asFlow(item)
-        }
+        BrowseRepository()::fetchEntry.asFlow(item)
     }
 
     private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
         return when (path) {
-            context.getString(R.string.nav_path_recents) -> {
-                SearchRepository()::getRecents.asFlow(skipCount, maxItems)
-            }
-            context.getString(R.string.nav_path_favorites) ->
-                FavoritesRepository()::getFavorites.asFlow(skipCount, maxItems)
-
-            context.getString(R.string.nav_path_my_libraries) ->
-                SitesRepository()::getMySites.asFlow(skipCount, maxItems)
-
-            context.getString(R.string.nav_path_fav_libraries) ->
-                FavoritesRepository()::getFavoriteLibraries.asFlow(skipCount, maxItems)
-
-            context.getString(R.string.nav_path_shared) ->
-                SharedLinksRepository()::getSharedLinks.asFlow(skipCount, maxItems)
-
-            context.getString(R.string.nav_path_trash) ->
-                TrashCanRepository()::getDeletedNodes.asFlow(skipCount, maxItems)
-
-            context.getString(R.string.nav_path_folder) ->
-                BrowseRepository()::fetchFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
-
-            context.getString(R.string.nav_path_extension), context.getString(R.string.nav_path_move) ->
+            context.getString(R.string.nav_path_move), context.getString(R.string.nav_path_extension) ->
                 BrowseRepository()::fetchExtensionFolderItems.asFlow(requireNotNull(item), skipCount, maxItems)
-
-            context.getString(R.string.nav_path_site) ->
-                BrowseRepository()::fetchLibraryItems.asFlow(requireNotNull(item), skipCount, maxItems)
 
             else -> throw IllegalStateException()
         }
@@ -239,28 +177,12 @@ class BrowseViewModel(
     }
 
     override fun emptyMessageArgs(state: ListViewState) =
-        when ((state as BrowseViewState).path) {
-            context.getString(R.string.nav_path_recents) ->
-                Triple(R.drawable.ic_empty_recent, R.string.recent_empty_title, R.string.recent_empty_message)
-            context.getString(R.string.nav_path_favorites) ->
-                Triple(R.drawable.ic_empty_favorites, R.string.favorite_files_empty_title, R.string.favorites_empty_message)
-            context.getString(R.string.nav_path_fav_libraries) ->
-                Triple(R.drawable.ic_empty_favorites, R.string.favorite_sites_empty_title, R.string.favorites_empty_message)
-            else ->
-                Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
-        }
-
-    fun canAddItems(state: BrowseViewState): Boolean =
-        when (state.path) {
-            context.getString(R.string.nav_path_folder) -> state.parent?.canCreate ?: false
-            context.getString(R.string.nav_path_site) -> state.parent?.canCreate ?: false
-            else -> false
-        }
+        Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
 
     /**
      * Upload files on the current node
      */
-    fun uploadFiles(state: BrowseViewState) {
+    fun uploadFiles(state: BrowseMoveViewState) {
         val list = browseRepository.getExtensionDataList().map { Uri.parse(it) }
         if (!list.isNullOrEmpty() && state.parent != null) {
             execute(ActionUploadExtensionFiles(state.parent), list)
@@ -271,7 +193,7 @@ class BrowseViewModel(
     /**
      * It will create the new folder on the current node
      */
-    fun createFolder(state: BrowseViewState) {
+    fun createFolder(state: BrowseMoveViewState) {
         if (state.parent != null)
             execute(ActionCreateFolder(state.parent))
     }
@@ -282,11 +204,11 @@ class BrowseViewModel(
     private fun execute(action: Action) =
         action.execute(context, GlobalScope)
 
-    companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
+    companion object : MavericksViewModelFactory<BrowseMoveViewModel, BrowseMoveViewState> {
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: BrowseViewState
-        ) = BrowseViewModel(state, viewModelContext.activity)
+            state: BrowseMoveViewState
+        ) = BrowseMoveViewModel(state, viewModelContext.activity)
     }
 }

@@ -7,6 +7,7 @@ import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.NodesApiExt
 import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.models.NodeBodyCreate
+import com.alfresco.content.models.NodeBodyMove
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.google.gson.Gson
@@ -138,6 +139,10 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 autoRename = true
             ).entry
         )
+    }
+
+    suspend fun moveNode(entryId: String, targetParentId: String): Entry {
+        return Entry.with(service.moveNode(entryId, NodeBodyMove(targetParentId)).entry)
     }
 
     fun contentUri(entry: Entry): String {

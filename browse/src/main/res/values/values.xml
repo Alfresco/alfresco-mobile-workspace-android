@@ -11,6 +11,7 @@
 
     <string name="nav_path_folder">folder</string>
     <string name="nav_path_extension">extension</string>
+    <string name="nav_path_move">move</string>
     <string name="nav_path_folder_extension">folder_extension</string>
     <string name="nav_path_site">site</string>
 </resources>

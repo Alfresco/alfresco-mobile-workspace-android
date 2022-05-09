@@ -29,6 +29,8 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
 
     implementation libs.google.material
     implementation libs.epoxy.core

@@ -14,9 +14,12 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ActionMove
+import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.move.MoveActivity
 import com.alfresco.content.session.SessionManager
 import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
@@ -62,6 +65,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
+        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
     }
 
@@ -105,12 +109,18 @@ class MainActivity : AppCompatActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() =
+    private fun setupActionToasts() {
         Action.showActionToasts(
             lifecycleScope,
             findViewById(android.R.id.content),
             bottomNav
         )
+        ActionMove.showActionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content),
+            bottomNav
+        )
+    }
 
     private fun setupDownloadNotifications() =
         DownloadMonitor

@@ -1,44 +1,43 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+}
 
 android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
     }
-
-    buildFeatures {
-        viewBinding true
-    }
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 dependencies {
+
     implementation project(':base')
+    api project(':base-ui')
     implementation project(':common')
     implementation project(':data')
     implementation project(':mimetype')
-    implementation project(':theme')
+    implementation project(':actions')
     implementation project(':listview')
-    implementation project(':content')
+    implementation project(':search')
 
-//    implementation libs.alfresco.content
-
+    implementation libs.kotlin.stdlib
     implementation libs.coroutines.core
+
     implementation libs.androidx.appcompat
+    implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.lifecycle.runtime
     implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.swiperefreshlayout
+    implementation libs.androidx.navigation.ui
 
     implementation libs.google.material
-
-    implementation libs.mavericks
-
     implementation libs.epoxy.core
+    implementation libs.mavericks
+    implementation libs.gson
+    implementation libs.androidx.preference
+
     kapt libs.epoxy.processor
 }

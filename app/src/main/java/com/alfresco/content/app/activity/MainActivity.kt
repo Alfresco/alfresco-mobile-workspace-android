@@ -14,7 +14,6 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.ActionMove
 import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
@@ -108,18 +107,11 @@ class MainActivity : AppCompatActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() {
-        Action.showActionToasts(
-            lifecycleScope,
-            findViewById(android.R.id.content),
-            bottomNav
-        )
-        ActionMove.showActionToasts(
-            lifecycleScope,
-            findViewById(android.R.id.content),
-            bottomNav
-        )
-    }
+    private fun setupActionToasts() = Action.showActionToasts(
+        lifecycleScope,
+        findViewById(android.R.id.content),
+        bottomNav
+    )
 
     private fun setupDownloadNotifications() =
         DownloadMonitor

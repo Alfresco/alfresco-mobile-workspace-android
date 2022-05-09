@@ -13,9 +13,9 @@ import kotlinx.coroutines.withContext
  */
 data class ActionMoveFilesFolders(
     override var entry: Entry,
-    override val icon: Int = R.drawable.ic_delete,
+    override val icon: Int = R.drawable.ic_move,
     override val title: Int = R.string.action_move_title
-) : ActionMove {
+) : Action {
 
     override suspend fun execute(context: Context): Entry {
 
@@ -30,7 +30,7 @@ data class ActionMoveFilesFolders(
         return entry
     }
 
-    override fun copy(_entry: Entry): ActionMove = copy(entry = _entry)
+    override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_move_toast, entry.name)

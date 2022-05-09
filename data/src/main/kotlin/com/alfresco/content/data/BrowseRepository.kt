@@ -7,8 +7,8 @@ import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.NodesApiExt
 import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.models.NodeBodyCreate
-import com.alfresco.content.models.NodeBodyUpdate
 import com.alfresco.content.models.NodeBodyMove
+import com.alfresco.content.models.NodeBodyUpdate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.google.gson.Gson

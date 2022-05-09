@@ -94,8 +94,7 @@ internal class ContextualActionsViewModel(
             offlineActionFor(entry),
             favoriteActionFor(entry),
             externalActionsFor(entry),
-            deleteActionFor(entry),
-            moveActionFor(entry)
+            deleteActionFor(entry)
         ).flatten()
 
     private fun actionsForTrashed(entry: Entry): List<Action> =
@@ -130,13 +129,11 @@ internal class ContextualActionsViewModel(
         val actions = mutableListOf<Action>()
         if (entry.canDelete) {
             actions.add(ActionDelete(entry))
+            actions.add(ActionMoveFilesFolders(entry))
             actions.add(ActionUpdateFileFolder(entry))
         }
         return actions
     }
-
-    private fun moveActionFor(entry: Entry) =
-        if (entry.canDelete) listOf(ActionMoveFilesFolders(entry)) else listOf()
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()

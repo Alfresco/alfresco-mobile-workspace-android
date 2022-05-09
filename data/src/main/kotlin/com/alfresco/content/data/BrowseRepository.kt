@@ -7,6 +7,7 @@ import com.alfresco.content.apis.NodesApi
 import com.alfresco.content.apis.NodesApiExt
 import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.models.NodeBodyCreate
+import com.alfresco.content.models.NodeBodyUpdate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.google.gson.Gson
@@ -136,6 +137,21 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 nodeId = requireNotNull(parentId),
                 nodeBodyCreate = nodeBodyCreate,
                 autoRename = true
+            ).entry
+        )
+    }
+
+    suspend fun updateFileFolder(name: String, description: String, nodeId: String?, nodeType: String): Entry {
+        val nodeBodyUpdate = NodeBodyUpdate(
+            name = name,
+            nodeType = nodeType,
+            properties = mapOf("cm:title" to name, "cm:description" to description)
+        )
+
+        return Entry.with(
+            service.updateNode(
+                nodeId = requireNotNull(nodeId),
+                nodeBodyUpdate = nodeBodyUpdate
             ).entry
         )
     }

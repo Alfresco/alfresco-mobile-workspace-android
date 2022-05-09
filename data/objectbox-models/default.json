@@ -1,0 +1,108 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7418739230874782251",
+      "lastPropertyId": "15:1402070468679110259",
+      "name": "Entry",
+      "properties": [
+        {
+          "id": "1:6686896439510728713",
+          "name": "id",
+          "type": 9
+        },
+        {
+          "id": "2:2709938397048835442",
+          "name": "parentId",
+          "type": 9
+        },
+        {
+          "id": "3:3519936899806604030",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "4:3770359114219685286",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:1419289036995635177",
+          "name": "path",
+          "type": 9
+        },
+        {
+          "id": "6:8425870500399705027",
+          "name": "mimeType",
+          "type": 9
+        },
+        {
+          "id": "7:2892606343574616114",
+          "name": "properties",
+          "type": 9
+        },
+        {
+          "id": "8:9042111169153743606",
+          "name": "modified",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "9:2926851016656706534",
+          "name": "isOffline",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "10:7973540885934509286",
+          "name": "isUpload",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "11:3434754745958291166",
+          "name": "offlineStatus",
+          "type": 9
+        },
+        {
+          "id": "12:2593287968845183191",
+          "name": "boxId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "13:2849388493208960562",
+          "name": "isExtension",
+          "type": 1,
+          "flags": 4
+        },
+        {
+          "id": "14:1415060853006967034",
+          "name": "totalCount",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "15:1402070468679110259",
+          "name": "isTotalEntry",
+          "type": 1,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:7418739230874782251",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

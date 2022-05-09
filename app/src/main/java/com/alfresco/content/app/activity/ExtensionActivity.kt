@@ -85,7 +85,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     }
 
     private fun configure() = withState(viewModel) {
-        val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
+        val graph = navController.navInflater.inflate(R.navigation.nav_share_extension)
         graph.startDestination = R.id.nav_extension
         navController.graph = graph
 

@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.alfresco.content.app"
         versionCode envOrDef('VERSION_CODE', '1') as Integer
-        versionName "1.2.0"
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -84,6 +84,7 @@ dependencies {
     implementation project(':search')
     implementation project(':viewer')
     implementation project(':shareextension')
+    implementation project(':move')
 
     implementation project(':data')
     implementation libs.alfresco.content

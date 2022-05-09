@@ -30,7 +30,7 @@ data class BrowseViewState(
 
     override val isCompact: Boolean
         get() = when (path) {
-            "site", "folder", "extension", "my-libraries", "fav-libraries" -> true
+            "site", "folder", "extension", "move", "my-libraries", "fav-libraries" -> true
             else -> false
         }
 

@@ -37,8 +37,7 @@
     <string name="action_remove_offline_toast">%s ist offline nicht mehr verfügbar.</string>
 
     <string name="action_upload_photo_title">Bilder oder Videos hochladen</string>
-    <string name="action_capture_media_title_multiple">Fotos oder Videos aufnehmen</string>
-    <string name="action_capture_media_title_single">Foto oder Video aufnehmen</string>
+    <string name="action_capture_media_title_multiple">Bilder oder Videos aufnehmen</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Zum Hochladen vorgesehene Medien.</string>

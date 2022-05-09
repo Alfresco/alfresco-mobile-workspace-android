@@ -19,6 +19,7 @@ import com.alfresco.auth.DiscoveryService
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.activity.LoginViewModel.Companion.DISTRIBUTION_VERSION
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
+        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
     }
 
@@ -138,12 +140,11 @@ class MainActivity : AppCompatActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() =
-        Action.showActionToasts(
-            lifecycleScope,
-            findViewById(android.R.id.content),
-            bottomNav
-        )
+    private fun setupActionToasts() = Action.showActionToasts(
+        lifecycleScope,
+        findViewById(android.R.id.content),
+        bottomNav
+    )
 
     private fun setupDownloadNotifications() =
         DownloadMonitor

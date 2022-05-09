@@ -15,7 +15,7 @@ data class MoveViewState(val path: String) : MavericksState {
 }
 
 /**
- * Mark as ExtensionViewModel
+ * Mark as MoveViewModel
  */
 class MoveViewModel(
     state: MoveViewState,

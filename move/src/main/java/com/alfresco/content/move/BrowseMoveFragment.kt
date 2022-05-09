@@ -56,7 +56,7 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_browse_move, menu)
+        inflater.inflate(R.menu.menu_browse_extension, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

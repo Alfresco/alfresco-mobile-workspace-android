@@ -58,6 +58,9 @@ fun NavController.navigateToParent(id: String, title: String, mode: String = REM
     navigate(Uri.parse("$BASE_URI/browse_parent/extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
+/**
+ * navigate to browse move parent folder
+ */
 fun NavController.navigateToMoveParent(id: String, title: String, mode: String = REMOTE) {
     navigate(Uri.parse("$BASE_URI/browse_move_parent/move/$mode/$id?title=${Uri.encode(title)}"))
 }

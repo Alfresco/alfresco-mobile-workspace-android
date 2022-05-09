@@ -8,6 +8,9 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Mark as ActionMoveFilesFolders
+ */
 data class ActionMoveFilesFolders(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_delete,

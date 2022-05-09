@@ -1,71 +1,53 @@
 package com.alfresco.content.app.activity
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
-import com.alfresco.content.actions.Action
-import com.alfresco.content.actions.ActionMove
-import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
-import com.alfresco.download.DownloadMonitor
-import com.alfresco.ui.getColorForAttribute
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
 
-class MainActivity : AppCompatActivity(), MavericksView {
+/**
+ * Marked as MoveActivity class
+ */
+class MoveActivity : AppCompatActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
-    private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
     private lateinit var actionBarController: ActionBarController
     private var signedOutDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_move)
 
-        // Check login during creation for faster transition on startup
-        if (viewModel.requiresLogin) {
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            finish()
-        } else {
-            configure()
-        }
-
-        if (!resources.getBoolean(R.bool.isTablet)) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+        configure()
     }
 
-    private fun configure() = withState(viewModel) { state ->
-        val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
-        graph.startDestination = if (state.isOnline) R.id.nav_recents else R.id.nav_offline
-        navController.graph = graph
+    private fun configure() {
+        val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
+        graph.startDestination = R.id.nav_move
+        val bundle = Bundle().apply {
+        }
+        navController.setGraph(graph, bundle)
 
-        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupActionBar(this, navController, appBarConfiguration)
+        actionBarController.setupActionBar(this, navController)
+    }
 
-        bottomNav.setupWithNavController(navController)
-
-        setupActionToasts()
-        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
-        setupDownloadNotifications()
+    override fun onSupportNavigateUp(): Boolean {
+        return if (navController.currentDestination?.id == R.id.nav_browse_move) {
+            finish()
+            false
+        } else navController.navigateUp()
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -80,8 +62,6 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
         actionBarController.setOnline(state.isOnline)
     }
-
-    override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
 
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
@@ -108,25 +88,8 @@ class MainActivity : AppCompatActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() {
-        Action.showActionToasts(
-            lifecycleScope,
-            findViewById(android.R.id.content),
-            bottomNav
-        )
-        ActionMove.showActionToasts(
-            lifecycleScope,
-            findViewById(android.R.id.content),
-            bottomNav
-        )
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
-
-    private fun setupDownloadNotifications() =
-        DownloadMonitor
-            .smallIcon(R.drawable.ic_notification_small)
-            .tint(primaryColor(this))
-            .observe(this)
-
-    private fun primaryColor(context: Context) =
-        context.getColorForAttribute(R.attr.colorPrimary)
 }

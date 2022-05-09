@@ -21,6 +21,7 @@ dependencies {
     implementation project(':mimetype')
     implementation project(':actions')
     implementation project(':listview')
+    implementation project(':browse')
     implementation project(':search')
 
     implementation libs.kotlin.stdlib

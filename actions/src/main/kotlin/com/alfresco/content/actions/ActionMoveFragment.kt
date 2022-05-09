@@ -8,6 +8,9 @@ import com.alfresco.content.withFragment
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
+/**
+ * Mark as ActionMoveFragment
+ */
 class ActionMoveFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
     private var onResult: CancellableContinuation<String?>? = null
@@ -29,6 +32,9 @@ class ActionMoveFragment : Fragment() {
     companion object {
         private val TAG = ActionMoveFragment::class.java.simpleName
 
+        /**
+         * Generating ActionMoveFragment
+         */
         suspend fun moveItem(
             context: Context
         ): String? =

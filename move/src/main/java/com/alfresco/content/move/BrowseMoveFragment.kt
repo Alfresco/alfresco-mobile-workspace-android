@@ -3,57 +3,34 @@ package com.alfresco.content.move
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.MoveResultContract
+import com.alfresco.content.browse.BrowseArgs
+import com.alfresco.content.browse.BrowseViewModel
+import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data class BrowseMoveArgs(
-    val path: String,
-    val id: String?,
-    val title: String?
-) : Parcelable {
-    companion object {
-        private const val PATH_KEY = "path"
-        private const val ID_KEY = "id"
-        private const val TITLE_KEY = "title"
-
-        fun with(args: Bundle): BrowseMoveArgs {
-            return BrowseMoveArgs(
-                args.getString(PATH_KEY, ""),
-                args.getString(ID_KEY, null),
-                args.getString(TITLE_KEY, null)
-            )
-        }
-
-        fun bundle(path: String) = bundleOf(PATH_KEY to path)
-    }
-}
 
 /**
  * Mark as BrowseMoveFragment
  */
-class BrowseMoveFragment : ListFragment<BrowseMoveViewModel, BrowseMoveViewState>(R.layout.fragment_move_list) {
+class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_move_list) {
 
-    private lateinit var args: BrowseMoveArgs
-    override val viewModel: BrowseMoveViewModel by fragmentViewModelWithArgs { args }
+    private lateinit var args: BrowseArgs
+    override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        args = BrowseMoveArgs.with(requireArguments())
+        args = BrowseArgs.with(requireArguments())
 
         // Contextual search only in folders/sites
         setHasOptionsMenu(true)

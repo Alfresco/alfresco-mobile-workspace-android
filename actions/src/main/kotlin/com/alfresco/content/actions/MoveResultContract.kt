@@ -6,6 +6,9 @@ import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
 
+/**
+ * Mark as MoveResultContract
+ */
 class MoveResultContract : ActivityResultContract<Unit, String?>() {
     @CallSuper
     override fun createIntent(context: Context, input: Unit): Intent {
@@ -20,6 +23,10 @@ class MoveResultContract : ActivityResultContract<Unit, String?>() {
     companion object {
         const val OUTPUT_KEY = "targetParentId"
         lateinit var intent: Intent
+
+        /**
+         * adding intent for MoveActivity
+         */
         fun addMoveIntent(moveIntent: Intent) {
             intent = moveIntent
         }

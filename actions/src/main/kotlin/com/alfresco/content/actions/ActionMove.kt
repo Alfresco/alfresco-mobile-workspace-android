@@ -7,17 +7,19 @@ import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Mark as ActionMove
+ */
+
 interface ActionMove : Action {
 
-    class Exception(string: String) : kotlin.Exception(string)
-
-    data class Error(val message: String)
-
     companion object {
-
+        /**
+         * Showing toast for the move action
+         */
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on(block = showToast(view, anchorView))
-            scope.on<Error> {
+            scope.on<Action.Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)
                 }

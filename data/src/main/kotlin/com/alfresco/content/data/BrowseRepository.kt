@@ -141,6 +141,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * executing api for moving the items (file or folder)
+     */
     suspend fun moveNode(entryId: String, targetParentId: String): Entry {
         return Entry.with(service.moveNode(entryId, NodeBodyMove(targetParentId)).entry)
     }

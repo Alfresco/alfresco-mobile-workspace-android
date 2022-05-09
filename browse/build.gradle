@@ -34,9 +34,8 @@ dependencies {
     implementation project(':viewer-text')
     implementation project(':viewer')
     implementation project(':search')
-    implementation project(':content')
 
-//    implementation libs.alfresco.content
+    implementation libs.alfresco.content
 
     implementation libs.kotlin.reflect
     implementation libs.androidx.core

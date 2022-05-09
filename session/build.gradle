@@ -11,11 +11,9 @@ android {
 dependencies {
     implementation project(':base')
     api project(':account')
-    implementation project(':content')
 
     implementation libs.alfresco.auth
-//    implementation libs.alfresco.content
-    implementation libs.retrofit.core
+    implementation libs.alfresco.content
 
     implementation libs.kotlin.stdlib
 

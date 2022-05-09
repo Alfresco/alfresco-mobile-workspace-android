@@ -52,8 +52,7 @@ android {
 
     // Temporary kotlin module duplication fix
     packagingOptions {
-//        pickFirst 'META-INF/auth_release.kotlin_module'
-        pickFirst 'META-INF/*'
+        pickFirst 'META-INF/auth_release.kotlin_module'
     }
 }
 
@@ -88,8 +87,7 @@ dependencies {
     implementation project(':move')
 
     implementation project(':data')
-    implementation project(':content')
-//    implementation libs.alfresco.content
+    implementation libs.alfresco.content
 
     implementation libs.kotlin.stdlib
 

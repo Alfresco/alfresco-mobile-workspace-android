@@ -35,7 +35,7 @@ class CreateFolderDialog : DialogFragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(
                 getString(
-                    if (isUpdate) R.string.action_folder_name_hint
+                    if (isUpdate) R.string.action_rename_file_folder
                     else R.string.action_create_folder
                 )
             )
@@ -58,9 +58,6 @@ class CreateFolderDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
 
-        if (isUpdate && !name.isNullOrEmpty())
-            binding.folderNameInput.setText(name)
-
         binding.folderNameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -74,9 +71,13 @@ class CreateFolderDialog : DialogFragment() {
                 validateInput(s.toString())
             }
         })
-
-        // Default disabled
-        positiveButton.isEnabled = false
+        if (isUpdate && !name.isNullOrEmpty()) {
+            binding.folderNameInput.setText(name)
+            positiveButton.isEnabled = true
+        } else {
+            // Default disabled
+            positiveButton.isEnabled = false
+        }
     }
 
     private fun validateInput(title: String) {

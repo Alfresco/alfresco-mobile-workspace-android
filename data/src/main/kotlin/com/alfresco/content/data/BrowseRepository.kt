@@ -142,6 +142,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * update the file and folders data by calling update node api
+     */
     suspend fun updateFileFolder(name: String, description: String, nodeId: String?, nodeType: String): Entry {
         val nodeBodyUpdate = NodeBodyUpdate(
             name = name,

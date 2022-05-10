@@ -10,6 +10,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Marked as ActionUpdateFileFolder
+ */
 data class ActionUpdateFileFolder(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_create_folder,

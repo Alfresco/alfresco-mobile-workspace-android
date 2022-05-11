@@ -33,6 +33,9 @@ private fun modeFor(entry: Entry) =
         REMOTE
     }
 
+/**
+ * navigate to move screen
+ */
 fun NavController.navigateToFolder(id: String, title: String, mode: String = REMOTE) {
     navigate(Uri.parse("$BASE_URI/browse/folder/$mode/$id?title=${Uri.encode(title)}"))
 }
@@ -52,6 +55,9 @@ private fun NavController.navigateFileLink(entry: Entry) =
 private fun NavController.navigateFolderLink(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/folder/$REMOTE/${entry.otherId}?title=${Uri.encode(entry.name)}"))
 
+/**
+ * navigate to contextual search
+ */
 fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean, moveId: String = "") =
     navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension/$moveId?title=${Uri.encode(title)}"))
 

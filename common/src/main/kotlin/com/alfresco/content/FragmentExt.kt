@@ -62,6 +62,9 @@ private fun <F : Fragment> findFragmentAndResume(
     }
 }
 
+/**
+ * Load new instance of fragment
+ */
 private fun <F : Fragment> loadFragment(
     context: Context,
     tag: String,

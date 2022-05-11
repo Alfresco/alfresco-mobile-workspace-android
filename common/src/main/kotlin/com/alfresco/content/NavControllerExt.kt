@@ -18,8 +18,12 @@ fun NavController.navigateTo(entry: Entry) {
 
 private fun NavController.navigateToFolder(entry: Entry) {
     if (entry.isExtension)
-        navigateToChildFolder(entry.id, entry.name, modeFor(entry))
+        navigateToChildFolder(entry.id, entry.name, mode = modeFor(entry))
     else navigateToFolder(entry.id, entry.name, modeFor(entry))
+}
+
+fun NavController.navigateToFolder(entry: Entry, moveId: String) {
+    navigateToChildFolder(entry.id, entry.name, moveId, modeFor(entry))
 }
 
 private fun modeFor(entry: Entry) =
@@ -48,8 +52,8 @@ private fun NavController.navigateFileLink(entry: Entry) =
 private fun NavController.navigateFolderLink(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/folder/$REMOTE/${entry.otherId}?title=${Uri.encode(entry.name)}"))
 
-fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean) =
-    navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension?title=${Uri.encode(title)}"))
+fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean, moveId: String = "") =
+    navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension/$moveId?title=${Uri.encode(title)}"))
 
 /**
  * navigate to browse parent folder
@@ -61,15 +65,15 @@ fun NavController.navigateToParent(id: String, title: String, mode: String = REM
 /**
  * navigate to browse move parent folder
  */
-fun NavController.navigateToMoveParent(id: String, title: String, mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse_move_parent/move/$mode/$id?title=${Uri.encode(title)}"))
+fun NavController.navigateToMoveParent(id: String, moveId: String, title: String, mode: String = REMOTE) {
+    navigate(Uri.parse("$BASE_URI/browse_move_parent/move/$mode/$id/$moveId?title=${Uri.encode(title)}"))
 }
 
 /**
  * navigate to browse child folder
  */
-fun NavController.navigateToChildFolder(id: String, title: String, mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
+fun NavController.navigateToChildFolder(id: String, title: String, moveId: String = "", mode: String = REMOTE) {
+    navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id/$moveId?title=${Uri.encode(title)}"))
 }
 
 /**

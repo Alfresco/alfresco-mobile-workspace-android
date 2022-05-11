@@ -10,16 +10,12 @@
         android:label="">
 
         <argument
-            android:name="id"
-            app:argType="string" />
-
-        <argument
-            android:name="title"
-            app:argType="string" />
-
-        <argument
             android:name="path"
             app:argType="string" />
+
+        <argument
+            android:name="entryObj"
+            app:argType="com.alfresco.content.data.Entry" />
 
     </fragment>
 
@@ -35,11 +31,14 @@
             android:name="id"
             app:argType="string" />
         <argument
+            android:name="moveId"
+            app:argType="string" />
+        <argument
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
 
-        <deepLink app:uri="alfresco://content/browse_child/{path}/remote/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse_child/{path}/remote/{id}/{moveId}?title={title}" />
 
     </fragment>
 
@@ -55,11 +54,14 @@
             android:name="id"
             app:argType="string" />
         <argument
+            android:name="moveId"
+            app:argType="string" />
+        <argument
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
 
-        <deepLink app:uri="alfresco://content/browse_move_parent/{path}/remote/{id}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse_move_parent/{path}/remote/{id}/{moveId}?title={title}" />
 
     </fragment>
 
@@ -81,7 +83,11 @@
             app:argType="boolean"
             android:defaultValue="false"/>
 
-        <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}?title={title}" />
+        <argument
+            android:name="moveId"
+            app:argType="string" />
+
+        <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}/{moveId}?title={title}" />
     </fragment>
 
 </navigation>

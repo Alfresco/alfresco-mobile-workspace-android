@@ -3,7 +3,6 @@ package com.alfresco.content
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import java.lang.ClassCastException
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -19,6 +18,16 @@ suspend fun <F : Fragment, R> withFragment(
 ): R =
     lambda(suspendCancellableCoroutine { continuation ->
         findFragmentAndResume(context, tag, continuation, factory)
+    })
+
+suspend fun <F : Fragment, R> withNewFragment(
+    context: Context,
+    tag: String,
+    lambda: suspend (F) -> R,
+    factory: () -> F
+): R =
+    lambda(suspendCancellableCoroutine { continuation ->
+        loadFragment(context, tag, continuation, factory)
     })
 
 private fun <F : Fragment> findFragmentAndResume(
@@ -51,4 +60,30 @@ private fun <F : Fragment> findFragmentAndResume(
             continuation.resume(fragment, null)
         }.commit()
     }
+}
+
+private fun <F : Fragment> loadFragment(
+    context: Context,
+    tag: String,
+    continuation: CancellableContinuation<F>,
+    factory: () -> F
+) {
+    val fragmentManager = when (context) {
+        is AppCompatActivity -> context.supportFragmentManager
+        is Fragment -> context.childFragmentManager
+        else -> null
+    }
+
+    if (fragmentManager == null) {
+        continuation.cancel(ClassCastException())
+        return
+    }
+
+    val fragment = factory()
+    fragmentManager.beginTransaction().add(
+        fragment,
+        tag
+    ).runOnCommit {
+        continuation.resume(fragment, null)
+    }.commit()
 }

@@ -16,8 +16,8 @@ import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
+import com.alfresco.content.navigateToFolder
 
 /**
  * Mark as BrowseMoveFragment
@@ -62,7 +62,9 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true)
+                withState(viewModel) { state ->
+                    findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true, state.moveId)
+                }
                 true
             }
             R.id.new_folder -> {
@@ -86,7 +88,8 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
      */
     override fun onItemClicked(entry: Entry) {
         if (!entry.isFolder) return
-
-        findNavController().navigateTo(entry)
+        withState(viewModel) { state ->
+            findNavController().navigateToFolder(entry, state.moveId)
+        }
     }
 }

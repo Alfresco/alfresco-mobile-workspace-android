@@ -19,7 +19,7 @@ data class ActionMoveFilesFolders(
 
     override suspend fun execute(context: Context): Entry {
 
-        val result = ActionMoveFragment.moveItem(context)
+        val result = ActionMoveFragment.moveItem(context, entry)
         if (!result.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
                 BrowseRepository().moveNode(entry.id, result)

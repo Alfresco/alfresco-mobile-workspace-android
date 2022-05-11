@@ -4,21 +4,22 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
-import com.alfresco.content.withFragment
+import com.alfresco.content.data.Entry
+import com.alfresco.content.withNewFragment
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * Mark as ActionMoveFragment
  */
-class ActionMoveFragment : Fragment() {
+class ActionMoveFragment(private val entryObj: Entry?) : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
     private var onResult: CancellableContinuation<String?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestLauncher = registerForActivityResult(MoveResultContract()) {
+        requestLauncher = registerForActivityResult(MoveResultContract(entryObj)) {
             onResult?.resume(it, null)
         }
     }
@@ -36,13 +37,14 @@ class ActionMoveFragment : Fragment() {
          * Generating ActionMoveFragment
          */
         suspend fun moveItem(
-            context: Context
+            context: Context,
+            entry: Entry
         ): String? =
-            withFragment(
+            withNewFragment(
                 context,
                 TAG,
                 { it.moveItems() },
-                { ActionMoveFragment() }
+                { ActionMoveFragment(entry) }
             )
     }
 }

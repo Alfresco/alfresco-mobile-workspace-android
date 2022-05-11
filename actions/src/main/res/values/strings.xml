@@ -64,4 +64,8 @@
     <string name="action_move_title">Move to folder</string>
     <string name="action_move_toast">%s was moved successfully</string>
 
+    <string name="action_rename_file_folder">Rename</string>
+    <string name="action_rename_file_folder_toast">%s was renamed</string>
+    <string name="action_file_folder_update">Update</string>
+
 </resources>

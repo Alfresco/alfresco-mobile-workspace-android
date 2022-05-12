@@ -16,6 +16,7 @@ import java.time.temporal.ChronoField
 data class BrowseViewState(
     val path: String,
     val nodeId: String?,
+    val moveId: String,
     val parent: Entry? = null,
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
@@ -26,7 +27,7 @@ data class BrowseViewState(
     val totalTransfersSize: Int = 0
 ) : ListViewState {
 
-    constructor(args: BrowseArgs) : this(args.path, args.id)
+    constructor(args: BrowseArgs) : this(args.path, args.id, args.moveId)
 
     override val isCompact: Boolean
         get() = when (path) {
@@ -40,7 +41,7 @@ data class BrowseViewState(
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
-        val pageEntries = response.entries
+        val pageEntries = response.entries.filter { it.id != moveId }
         val newEntries = if (nextPage) {
             baseEntries + pageEntries
         } else {

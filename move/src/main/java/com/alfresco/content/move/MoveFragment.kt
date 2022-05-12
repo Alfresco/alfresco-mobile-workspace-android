@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.navigateToMoveParent
 import kotlinx.parcelize.Parcelize
@@ -15,17 +16,20 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class MoveArgs(
-    val path: String
+    val path: String,
+    val entryObj: Entry?
 ) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
+        private const val ENTRY_OBJ_KEY = "entryObj"
 
         /**
          * return the MoveArgs obj
          */
         fun with(args: Bundle): MoveArgs {
             return MoveArgs(
-                args.getString(PATH_KEY, "")
+                args.getString(PATH_KEY, ""),
+                args.getParcelable(ENTRY_OBJ_KEY)
             )
         }
     }
@@ -44,8 +48,9 @@ class MoveFragment : Fragment(), MavericksView {
         args = MoveArgs.with(requireArguments())
 
         val nodeId = viewModel.getMyFilesNodeId()
-
-        findNavController().navigateToMoveParent(nodeId, "Personal Files")
+        args.entryObj?.let {
+            findNavController().navigateToMoveParent(nodeId, it.id, "Personal Files")
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

@@ -28,15 +28,25 @@ class CreateFolderDialog : DialogFragment() {
 
     var onSuccess: CreateFolderSuccessCallback? = null
     var onCancel: CreateFolderCancelCallback? = null
+    var isUpdate: Boolean = false
+    var name: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.action_create_folder))
+            .setTitle(
+                getString(
+                    if (isUpdate) R.string.action_rename_file_folder
+                    else R.string.action_create_folder
+                )
+            )
             .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
                 onCancel?.invoke()
                 dialog?.dismiss()
             }
-            .setPositiveButton(getString(R.string.action_folder_create)) { _, _ ->
+            .setPositiveButton(
+                if (isUpdate) getString(R.string.action_file_folder_save)
+                else getString(R.string.action_folder_create)
+            ) { _, _ ->
                 onSuccess?.invoke(
                     binding.folderNameInput.text.toString(),
                     binding.folderDescriptionInput.text.toString()
@@ -61,9 +71,13 @@ class CreateFolderDialog : DialogFragment() {
                 validateInput(s.toString())
             }
         })
-
-        // Default disabled
-        positiveButton.isEnabled = false
+        if (isUpdate && !name.isNullOrEmpty()) {
+            binding.folderNameInput.setText(name)
+            positiveButton.isEnabled = true
+        } else {
+            // Default disabled
+            positiveButton.isEnabled = false
+        }
     }
 
     private fun validateInput(title: String) {
@@ -88,6 +102,8 @@ class CreateFolderDialog : DialogFragment() {
 
     data class Builder(
         val context: Context,
+        val updateValue: Boolean,
+        val name: String? = null,
         var onSuccess: CreateFolderSuccessCallback? = null,
         var onCancel: CreateFolderCancelCallback? = null
     ) {
@@ -107,6 +123,8 @@ class CreateFolderDialog : DialogFragment() {
             CreateFolderDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel
+                isUpdate = this@Builder.updateValue
+                name = this@Builder.name
             }.show(fragmentManager, CreateFolderDialog::class.java.simpleName)
         }
     }

@@ -91,11 +91,11 @@ internal class ContextualActionsViewModel(
 
     private fun defaultActionsFor(entry: Entry) =
         listOf(
-            offlineActionFor(entry),
-            favoriteActionFor(entry),
             externalActionsFor(entry),
-            deleteActionFor(entry),
-            moveActionFor(entry)
+            favoriteActionFor(entry),
+            renameMoveActionFor(entry),
+            offlineActionFor(entry),
+            deleteActionFor(entry)
         ).flatten()
 
     private fun actionsForTrashed(entry: Entry): List<Action> =
@@ -103,8 +103,8 @@ internal class ContextualActionsViewModel(
 
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
-            offlineActionFor(entry),
-            externalActionsFor(entry)
+            externalActionsFor(entry),
+            offlineActionFor(entry)
         ).flatten()
 
     private fun offlineActionFor(entry: Entry) =
@@ -126,11 +126,16 @@ internal class ContextualActionsViewModel(
             listOf()
         }
 
-    private fun deleteActionFor(entry: Entry) =
-        if (entry.canDelete) listOf(ActionDelete(entry)) else listOf()
+    private fun deleteActionFor(entry: Entry) = if (entry.canDelete) listOf(ActionDelete(entry)) else listOf()
 
-    private fun moveActionFor(entry: Entry) =
-        if (entry.canDelete) listOf(ActionMoveFilesFolders(entry)) else listOf()
+    private fun renameMoveActionFor(entry: Entry): List<Action> {
+        val actions = mutableListOf<Action>()
+        if (entry.canDelete) {
+            actions.add(ActionUpdateFileFolder(entry))
+            actions.add(ActionMoveFilesFolders(entry))
+        }
+        return actions
+    }
 
     private fun makeTopActions(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()

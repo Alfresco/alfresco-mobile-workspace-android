@@ -59,7 +59,6 @@ internal class ActionCreateViewModel(
             actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_multiple))
         else actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_single))
         actions.add(ActionUploadFiles(parent))
-        actions.add(ActionUploadFiles(parent))
 
         return actions
     }

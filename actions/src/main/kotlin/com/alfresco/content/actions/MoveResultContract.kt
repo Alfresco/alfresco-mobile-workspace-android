@@ -5,13 +5,15 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
+import com.alfresco.content.data.Entry
 
 /**
  * Mark as MoveResultContract
  */
-class MoveResultContract : ActivityResultContract<Unit, String?>() {
+class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<Unit, String?>() {
     @CallSuper
     override fun createIntent(context: Context, input: Unit): Intent {
+        intent.putExtra(ENTRY_OBJ_KEY, entryObj)
         return intent
     }
 
@@ -22,6 +24,8 @@ class MoveResultContract : ActivityResultContract<Unit, String?>() {
 
     companion object {
         const val OUTPUT_KEY = "targetParentId"
+        const val ENTRY_OBJ_KEY = "entryObj"
+        const val MOVE_ID_KEY = "moveId"
         lateinit var intent: Intent
 
         /**

@@ -27,6 +27,7 @@ import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionMoveFilesFolders
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
+import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
@@ -62,6 +63,7 @@ abstract class ListViewModel<S : ListViewState>(
     init {
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
+        viewModelScope.on<ActionUpdateFileFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }

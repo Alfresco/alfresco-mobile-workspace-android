@@ -20,6 +20,7 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.CreateActionsSheet
+import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
@@ -34,6 +35,7 @@ import kotlinx.parcelize.Parcelize
 data class BrowseArgs(
     val path: String,
     val id: String?,
+    val moveId: String,
     val title: String?
 ) : Parcelable {
     companion object {
@@ -45,6 +47,7 @@ data class BrowseArgs(
             return BrowseArgs(
                 args.getString(PATH_KEY, ""),
                 args.getString(ID_KEY, null),
+                args.getString(MOVE_ID_KEY, ""),
                 args.getString(TITLE_KEY, null)
             )
         }

@@ -22,6 +22,9 @@ private fun NavController.navigateToFolder(entry: Entry) {
     else navigateToFolder(entry.id, entry.name, modeFor(entry))
 }
 
+/**
+ * navigate to move screen
+ */
 fun NavController.navigateToFolder(entry: Entry, moveId: String) {
     navigateToChildFolder(entry.id, entry.name, moveId, modeFor(entry))
 }
@@ -33,9 +36,6 @@ private fun modeFor(entry: Entry) =
         REMOTE
     }
 
-/**
- * navigate to move screen
- */
 fun NavController.navigateToFolder(id: String, title: String, mode: String = REMOTE) {
     navigate(Uri.parse("$BASE_URI/browse/folder/$mode/$id?title=${Uri.encode(title)}"))
 }

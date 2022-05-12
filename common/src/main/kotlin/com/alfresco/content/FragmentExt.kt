@@ -20,6 +20,10 @@ suspend fun <F : Fragment, R> withFragment(
         findFragmentAndResume(context, tag, continuation, factory)
     })
 
+/**
+ * Calls the specified [lambda] with the a [F] fragment as the receiver and returns its result.
+ * creates [F] fragment new instance using [factory].
+ */
 suspend fun <F : Fragment, R> withNewFragment(
     context: Context,
     tag: String,
@@ -27,7 +31,7 @@ suspend fun <F : Fragment, R> withNewFragment(
     factory: () -> F
 ): R =
     lambda(suspendCancellableCoroutine { continuation ->
-        findNewFragmentInstance(context, tag, continuation, factory)
+        findFragment(context, tag, continuation, factory)
     })
 
 private fun <F : Fragment> findFragmentAndResume(
@@ -65,7 +69,7 @@ private fun <F : Fragment> findFragmentAndResume(
 /**
  * finding new instance of fragment
  */
-private fun <F : Fragment> findNewFragmentInstance(
+private fun <F : Fragment> findFragment(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,

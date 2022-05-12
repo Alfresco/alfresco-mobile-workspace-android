@@ -34,10 +34,11 @@ data class SearchResultsState(
     val filters: SearchFilters = emptyFilters(),
     val contextId: String? = null,
     val contextTitle: String? = null,
-    val isExtension: Boolean = false
+    val isExtension: Boolean = false,
+    val moveId: String
 ) : ListViewState {
 
-    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension)
+    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension, moveId = args.moveId)
 
     val isContextual: Boolean
         get() {
@@ -56,7 +57,7 @@ data class SearchResultsState(
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
-        val pageEntries = response.entries
+        val pageEntries = response.entries.filter { it.id != moveId }
         val newEntries = if (nextPage) {
             entries + pageEntries
         } else {

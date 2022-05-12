@@ -11,9 +11,11 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.MoveResultContract.Companion.ENTRY_OBJ_KEY
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.Entry
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
@@ -28,10 +30,15 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     private val bottomView by lazy { findViewById<View>(R.id.bottom_view) }
     private lateinit var actionBarController: ActionBarController
     private var signedOutDialog = WeakReference<AlertDialog>(null)
+    private var entryObj: Entry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_move)
+
+        if (intent.extras != null) {
+            entryObj = intent.getParcelableExtra(ENTRY_OBJ_KEY) as Entry?
+        }
 
         configure()
     }
@@ -40,6 +47,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
         graph.startDestination = R.id.nav_move
         val bundle = Bundle().apply {
+            putParcelable(ENTRY_OBJ_KEY, entryObj)
         }
         navController.setGraph(graph, bundle)
         setupActionToasts()

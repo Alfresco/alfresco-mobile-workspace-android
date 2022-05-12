@@ -46,18 +46,21 @@ import kotlinx.parcelize.Parcelize
 data class ContextualSearchArgs(
     val id: String?,
     val title: String?,
+    val moveId: String,
     val isExtension: Boolean
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
         private const val EXTENSION_KEY = "extension"
+        private const val MOVE_ID_KEY = "moveId"
 
         fun with(args: Bundle?): ContextualSearchArgs? {
             if (args == null) return null
             return ContextualSearchArgs(
                 args.getString(ID_KEY, null),
                 args.getString(TITLE_KEY, null),
+                args.getString(MOVE_ID_KEY, null),
                 args.getBoolean(EXTENSION_KEY, false)
             )
         }

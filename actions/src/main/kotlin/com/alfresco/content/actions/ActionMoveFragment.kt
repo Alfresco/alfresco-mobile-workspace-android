@@ -13,7 +13,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 /**
  * Mark as ActionMoveFragment
  */
-class ActionMoveFragment() : Fragment() {
+class ActionMoveFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
     private var onResult: CancellableContinuation<String?>? = null
 

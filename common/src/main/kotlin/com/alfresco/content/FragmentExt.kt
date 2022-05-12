@@ -31,7 +31,7 @@ suspend fun <F : Fragment, R> withNewFragment(
     factory: () -> F
 ): R =
     lambda(suspendCancellableCoroutine { continuation ->
-        findFragment(context, tag, continuation, factory)
+        findNewInstance(context, tag, continuation, factory)
     })
 
 private fun <F : Fragment> findFragmentAndResume(
@@ -69,7 +69,7 @@ private fun <F : Fragment> findFragmentAndResume(
 /**
  * finding new instance of fragment
  */
-private fun <F : Fragment> findFragment(
+private fun <F : Fragment> findNewInstance(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,

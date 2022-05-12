@@ -43,10 +43,6 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         configure()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-    }
-
     private fun configure() {
         val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
         graph.startDestination = R.id.nav_move

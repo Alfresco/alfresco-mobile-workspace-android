@@ -41,6 +41,10 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
                 viewModel.uploadFiles(state)
             }
         }
+
+        cancelButton?.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

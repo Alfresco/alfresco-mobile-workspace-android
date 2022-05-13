@@ -79,7 +79,9 @@ fun NavController.navigateToMoveParent(id: String, moveId: String, title: String
  * navigate to browse child folder
  */
 fun NavController.navigateToChildFolder(id: String, title: String, moveId: String = "", mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id/$moveId?title=${Uri.encode(title)}"))
+    if (moveId.isNotEmpty())
+        navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id/$moveId?title=${Uri.encode(title)}"))
+    else navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
 /**

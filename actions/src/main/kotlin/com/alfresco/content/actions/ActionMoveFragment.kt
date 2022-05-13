@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
+import com.alfresco.content.actions.MoveResultContract.Companion.ENTRY_OBJ_KEY
 import com.alfresco.content.data.Entry
 import com.alfresco.content.withNewFragment
 import kotlinx.coroutines.CancellableContinuation
@@ -12,15 +13,17 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 /**
  * Mark as ActionMoveFragment
  */
-class ActionMoveFragment(private val entryObj: Entry?) : Fragment() {
+class ActionMoveFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
     private var onResult: CancellableContinuation<String?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requestLauncher = registerForActivityResult(MoveResultContract(entryObj)) {
-            onResult?.resume(it, null)
+        arguments?.let { bundle ->
+            val entryObj = bundle.getParcelable(ENTRY_OBJ_KEY) as Entry?
+            requestLauncher = registerForActivityResult(MoveResultContract(entryObj)) {
+                onResult?.resume(it, null)
+            }
         }
     }
 
@@ -39,12 +42,18 @@ class ActionMoveFragment(private val entryObj: Entry?) : Fragment() {
         suspend fun moveItem(
             context: Context,
             entry: Entry
-        ): String? =
-            withNewFragment(
+        ): String? {
+            val fragment = ActionMoveFragment()
+            val bundle = Bundle().apply {
+                putParcelable(ENTRY_OBJ_KEY, entry)
+            }
+            fragment.arguments = bundle
+            return withNewFragment(
                 context,
                 TAG,
                 { it.moveItems() },
-                { ActionMoveFragment(entry) }
+                { fragment }
             )
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.alfresco.content.app.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -41,6 +42,10 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         }
 
         configure()
+
+        if (!resources.getBoolean(R.bool.isTablet)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
 
     private fun configure() {

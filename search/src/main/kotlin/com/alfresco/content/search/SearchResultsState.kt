@@ -35,7 +35,7 @@ data class SearchResultsState(
     val contextId: String? = null,
     val contextTitle: String? = null,
     val isExtension: Boolean = false,
-    val moveId: String
+    val moveId: String = ""
 ) : ListViewState {
 
     constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension, moveId = args.moveId)

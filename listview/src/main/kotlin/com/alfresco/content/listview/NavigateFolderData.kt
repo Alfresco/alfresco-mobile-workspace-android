@@ -5,4 +5,4 @@ import com.alfresco.content.data.Entry
 /**
  * Mark as NavigateFolderData
  */
-data class NavigateFolderData(val isNavigate: Boolean, val entry: Entry)
+data class NavigateFolderData(val entry: Entry)

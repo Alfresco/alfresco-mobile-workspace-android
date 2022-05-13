@@ -107,7 +107,6 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     )
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        onSupportNavigateUp()
     }
 }

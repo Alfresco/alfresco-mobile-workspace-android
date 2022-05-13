@@ -83,9 +83,10 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     private fun onCreateFolder(entry: Entry) = entry.run {
+        println("BrowseMoveFragment.onViewCreated navigate -- 1")
         refresh()
         GlobalScope.launch {
-            EventBus.default.send(NavigateFolderData(true, entry))
+            EventBus.default.send(NavigateFolderData(entry))
         }
     }
 

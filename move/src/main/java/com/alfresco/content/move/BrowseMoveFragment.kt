@@ -29,6 +29,7 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
 
     private lateinit var args: BrowseArgs
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
+    private var isNavigate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +59,11 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         }
 
         lifecycleScope.on<NavigateFolderData> {
-            if (it.isNavigate)
+            if (!isNavigate) {
+                println("BrowseMoveFragment.onViewCreated navigate")
+                isNavigate = true
                 onItemClicked(it.entry)
+            }
         }
     }
 
@@ -77,6 +81,7 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
             }
             R.id.new_folder -> {
                 withState(viewModel) {
+                    isNavigate = false
                     viewModel.createFolder(it)
                 }
                 true

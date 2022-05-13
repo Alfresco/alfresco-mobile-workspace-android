@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -24,10 +25,12 @@ import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.NavigateFolderData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToLocalPreview
 import com.alfresco.content.navigateToUploadFilesPath
+import com.alfresco.events.on
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.parcelize.Parcelize
 
@@ -60,6 +63,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private lateinit var args: BrowseArgs
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
+    private var isNavigate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +86,15 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                     findNavController().navigateToUploadFilesPath(true, requireContext().getString(R.string.title_transfers))
                 }
             } else bannerTransferData?.visibility = View.GONE
+        }
+
+        lifecycleScope.on<NavigateFolderData> {
+            if (!isNavigate) {
+                println("BrowseMoveFragment.onViewCreated navigate -- 2")
+                isNavigate = true
+                onItemClicked(it.entry)
+            }
+            println("BrowseMoveFragment.onViewCreated navigate -- 4 $isNavigate")
         }
     }
 
@@ -183,6 +196,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             }
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
+                println("BrowseMoveFragment.onViewCreated navigate -- 3")
+                isNavigate = false
                 showCreateSheet()
             }
         }

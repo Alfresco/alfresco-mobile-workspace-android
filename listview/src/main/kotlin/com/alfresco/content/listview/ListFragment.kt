@@ -32,10 +32,13 @@ import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
+import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
@@ -81,6 +84,9 @@ abstract class ListViewModel<S : ListViewState>(
 
     private fun onCreateFolder(entry: Entry) = entry.run {
         refresh()
+        GlobalScope.launch {
+            EventBus.default.send(NavigateFolderData(true, entry))
+        }
     }
 
     private fun onMove(entry: Entry) = entry.run {

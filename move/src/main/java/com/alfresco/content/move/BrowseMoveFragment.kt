@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.MoveResultContract
@@ -16,8 +17,10 @@ import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.NavigateFolderData
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToFolder
+import com.alfresco.events.on
 
 /**
  * Mark as BrowseMoveFragment
@@ -52,6 +55,11 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
 
         cancelButton?.setOnClickListener {
             requireActivity().finish()
+        }
+
+        lifecycleScope.on<NavigateFolderData> {
+            if (it.isNavigate)
+                onItemClicked(it.entry)
         }
     }
 

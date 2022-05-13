@@ -2,6 +2,7 @@ package com.alfresco.content.search
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.Loading
@@ -14,6 +15,7 @@ import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
+import com.alfresco.content.navigateToFolder
 
 class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
 
@@ -62,7 +64,12 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
             if (!state.isExtension) {
                 findNavController().navigateTo(entry)
             } else if (entry.isFolder) {
-                findNavController().navigateTo(entry)
+                if (state.moveId.isNotEmpty()) {
+                    val parentId = entry.parentPaths.find { it == state.moveId }
+                    if (parentId.isNullOrEmpty())
+                        findNavController().navigateToFolder(entry, state.moveId)
+                    else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
+                } else findNavController().navigateTo(entry)
             }
         }
     }

@@ -68,7 +68,9 @@ data class Entry(
     @Id var boxId: Long = 0,
     val isExtension: Boolean = false,
     val totalCount: Int = 0,
-    val isTotalEntry: Boolean = false
+    val isTotalEntry: Boolean = false,
+    @Transient
+    val parentPaths: MutableList<String> = mutableListOf()
 ) : Parcelable {
 
     val isSynced: Boolean
@@ -181,7 +183,8 @@ data class Entry(
                 result.isFavorite == null || result.allowableOperations == null,
                 result.isFavorite ?: false,
                 canDelete(result.allowableOperations),
-                canCreate(result.allowableOperations)
+                canCreate(result.allowableOperations),
+                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf()
             ).withOfflineStatus()
         }
 
@@ -202,7 +205,8 @@ data class Entry(
                 result.isFavorite ?: false,
                 canDelete(result.allowableOperations),
                 canCreate(result.allowableOperations),
-                isExtension = isExtension
+                isExtension = isExtension,
+                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf()
             ).withOfflineStatus()
         }
 

@@ -116,6 +116,9 @@ abstract class ListViewModel<S : ListViewState>(
         }
     }
 
+    /**
+     * Set the listener to be notified when a new folder created and move to created folder sceen
+     */
     fun setListener(listener: FolderCreatedListener) {
         folderListener = listener
     }
@@ -185,6 +188,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         registerEventInstance()
     }
 
+    /**
+     * Register event instance only once.
+     */
     private fun registerEventInstance() {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         if (!sharedPrefs.getBoolean(IS_EVENT_REGISTERED, false)) {

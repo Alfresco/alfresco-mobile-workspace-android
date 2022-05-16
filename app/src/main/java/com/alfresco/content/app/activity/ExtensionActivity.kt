@@ -40,7 +40,6 @@ class ExtensionActivity : BaseActivity(), MavericksView, ActionPermission {
     override fun onCreate(savedInstanceState: Bundle?) {
         screenType = ScreenType.ExtensionActivity
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_extension)
 
         ActionExtension.showActionExtensionToasts(

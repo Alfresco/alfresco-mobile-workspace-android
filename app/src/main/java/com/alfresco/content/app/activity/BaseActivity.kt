@@ -31,6 +31,9 @@ open class BaseActivity : AppCompatActivity() {
     }
 }
 
+/**
+ * Marked as ScreenType
+ */
 enum class ScreenType {
     MainActivity,
     ExtensionActivity,

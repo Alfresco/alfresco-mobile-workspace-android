@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 class EventBus {
     val bus = MutableSharedFlow<Any>()
 
-    suspend fun send(obj: Any) {
-        bus.emit(obj)
-    }
+    suspend fun send(obj: Any) { bus.emit(obj) }
 
     inline fun <reified T> on() = bus.filter { it is T }.map { it as T }
 
@@ -32,18 +30,18 @@ inline fun <reified T> CoroutineScope.on(
     bus.on<T>().collect(block)
 }
 
-inline fun <reified T> CoroutineScope.onLatest(
-    bus: EventBus = EventBus.default,
-    context: CoroutineContext = EmptyCoroutineContext,
-    noinline block: suspend (value: T) -> Unit
-) = launch(context) {
-    bus.on<T>().collectLatest(block)
-}
-
 fun <T : Any> CoroutineScope.emit(
     value: T,
     bus: EventBus = EventBus.default,
     context: CoroutineContext = EmptyCoroutineContext
 ) = launch(context) {
     bus.send(value)
+}
+
+inline fun <reified T> CoroutineScope.onLatest(
+    bus: EventBus = EventBus.default,
+    context: CoroutineContext = EmptyCoroutineContext,
+    noinline block: suspend (value: T) -> Unit
+) = launch(context) {
+    bus.on<T>().collectLatest(block)
 }

@@ -24,6 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
 
+/**
+ * Marked as MainActivity class
+ */
 class MainActivity : BaseActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()

@@ -8,7 +8,7 @@ import com.alfresco.content.data.Entry
 interface FolderCreatedListener {
 
     /**
-     * It will get called once folder created and responsible to move user to the created screen.
+     * It will get called once folder created and browse to the same created folder.
      */
     fun onFolderCreated(entry: Entry)
 }

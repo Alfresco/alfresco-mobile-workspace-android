@@ -79,6 +79,9 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
     }
 
+    /**
+     * browse the currently created folder automatically
+     */
     fun registerEventCreateFolder() {
         viewModelScope.onLatest<ActionCreateFolder> {
             onCreateFolder(it.entry)
@@ -185,13 +188,13 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             }
         })
 
-        registerEventInstance()
+        updateEventRegisterState()
     }
 
     /**
      * Register event instance only once.
      */
-    private fun registerEventInstance() {
+    private fun updateEventRegisterState() {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         if (!sharedPrefs.getBoolean(IS_EVENT_REGISTERED, false)) {
             viewModel.registerEventCreateFolder()

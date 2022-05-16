@@ -38,6 +38,9 @@ fun <T : Any> CoroutineScope.emit(
     bus.send(value)
 }
 
+/**
+ * collect the flow data and send block to event where it is registered
+ */
 inline fun <reified T> CoroutineScope.onLatest(
     bus: EventBus = EventBus.default,
     context: CoroutineContext = EmptyCoroutineContext,

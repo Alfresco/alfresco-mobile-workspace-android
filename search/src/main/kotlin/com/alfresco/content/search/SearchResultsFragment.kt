@@ -74,6 +74,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         }
     }
 
+    override fun onFolderCreated(entry: Entry) {
+        TODO("Not yet implemented")
+    }
+
     override fun invalidate() {
         super.invalidate()
 

@@ -17,10 +17,9 @@ import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.listview.NavigateFolderData
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToFolder
-import com.alfresco.events.on
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * Mark as BrowseMoveFragment
@@ -29,7 +28,6 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
 
     private lateinit var args: BrowseArgs
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
-    private var isNavigate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +56,11 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
             requireActivity().finish()
         }
 
-        lifecycleScope.on<NavigateFolderData> {
-            if (!isNavigate) {
-                println("BrowseMoveFragment.onViewCreated navigate")
-                isNavigate = true
-                onItemClicked(it.entry)
+        lifecycleScope.launchWhenStarted {
+            println("BrowseMoveFragment.onViewCreated navigate -- 0")
+            viewModel.sharedFlow.collectLatest { entry ->
+                println("BrowseMoveFragment.onViewCreated navigate -- 4")
+                onItemClicked(entry)
             }
         }
     }
@@ -81,13 +79,16 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
             }
             R.id.new_folder -> {
                 withState(viewModel) {
-                    isNavigate = false
                     viewModel.createFolder(it)
                 }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onFolderCreated(entry: Entry) {
+        onItemClicked(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

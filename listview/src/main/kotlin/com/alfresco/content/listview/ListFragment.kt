@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -31,14 +32,15 @@ import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.listview.ListViewModel.Companion.IS_EVENT_REGISTERED
 import com.alfresco.content.simpleController
-import com.alfresco.events.EventBus
 import com.alfresco.events.on
+import com.alfresco.events.onLatest
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
@@ -63,15 +65,24 @@ abstract class ListViewModel<S : ListViewState>(
     initialState: S
 ) : MavericksViewModel<S>(initialState) {
 
+    private val _sharedFlow = MutableSharedFlow<Entry>()
+    val sharedFlow = _sharedFlow.asSharedFlow()
+    private var folderListener: FolderCreatedListener? = null
+
     init {
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
-        viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionUpdateFileFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
+    }
+
+    fun registerEventCreateFolder() {
+        viewModelScope.onLatest<ActionCreateFolder> {
+            onCreateFolder(it.entry)
+        }
     }
 
     private fun onDelete(entry: Entry) = entry.run {
@@ -83,11 +94,8 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     private fun onCreateFolder(entry: Entry) = entry.run {
-        println("BrowseMoveFragment.onViewCreated navigate -- 1")
         refresh()
-        GlobalScope.launch {
-            EventBus.default.send(NavigateFolderData(entry))
-        }
+        folderListener?.onFolderCreated(entry)
     }
 
     private fun onMove(entry: Entry) = entry.run {
@@ -108,12 +116,17 @@ abstract class ListViewModel<S : ListViewState>(
         }
     }
 
+    fun setListener(listener: FolderCreatedListener) {
+        folderListener = listener
+    }
+
     abstract fun refresh()
     abstract fun fetchNextPage()
     abstract fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int>
 
     companion object {
         const val ITEMS_PER_PAGE = 25
+        const val IS_EVENT_REGISTERED = "isEventRegistered"
     }
 }
 
@@ -121,7 +134,7 @@ abstract class ListViewModel<S : ListViewState>(
  * Mark as ListFragment
  */
 abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: Int = R.layout.fragment_list) :
-    Fragment(layoutID), MavericksView {
+    Fragment(layoutID), MavericksView, FolderCreatedListener {
     abstract val viewModel: VM
 
     lateinit var loadingAnimation: View
@@ -158,6 +171,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             viewModel.refresh()
         }
         recyclerView.setController(epoxyController)
+        viewModel.setListener(this)
 
         epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -167,6 +181,18 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 }
             }
         })
+
+        registerEventInstance()
+    }
+
+    private fun registerEventInstance() {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        if (!sharedPrefs.getBoolean(IS_EVENT_REGISTERED, false)) {
+            viewModel.registerEventCreateFolder()
+            val editor = sharedPrefs.edit()
+            editor.putBoolean(IS_EVENT_REGISTERED, true)
+            editor.apply()
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

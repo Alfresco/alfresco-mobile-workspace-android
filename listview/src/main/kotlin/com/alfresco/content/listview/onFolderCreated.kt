@@ -5,4 +5,6 @@ import com.alfresco.content.data.Entry
 /**
  * Mark as NavigateFolderData
  */
-data class NavigateFolderData(val entry: Entry)
+interface FolderCreatedListener {
+    fun onFolderCreated(entry: Entry)
+}

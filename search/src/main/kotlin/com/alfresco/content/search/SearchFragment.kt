@@ -60,7 +60,7 @@ data class ContextualSearchArgs(
             return ContextualSearchArgs(
                 args.getString(ID_KEY, null),
                 args.getString(TITLE_KEY, null),
-                args.getString(MOVE_ID_KEY, null),
+                args.getString(MOVE_ID_KEY, ""),
                 args.getBoolean(EXTENSION_KEY, false)
             )
         }

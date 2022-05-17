@@ -30,6 +30,10 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         fab = null
     }
 
+    override fun onFolderCreated(entry: Entry) {
+        TODO("Not yet implemented")
+    }
+
     override fun invalidate() {
         super.invalidate()
 

@@ -1,10 +1,10 @@
 package com.alfresco.content.app.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.airbnb.mvrx.MavericksView
@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference
 /**
  * Marked as MoveActivity class
  */
-class MoveActivity : AppCompatActivity(), MavericksView {
+class MoveActivity : BaseActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -33,6 +33,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     private var entryObj: Entry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        screenType = ScreenType.MoveActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_move)
 
@@ -41,6 +42,10 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         }
 
         configure()
+
+        if (!resources.getBoolean(R.bool.isTablet)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
 
     private fun configure() {
@@ -107,7 +112,6 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     )
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        onSupportNavigateUp()
     }
 }

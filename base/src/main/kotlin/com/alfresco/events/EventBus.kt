@@ -5,6 +5,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -35,4 +36,15 @@ fun <T : Any> CoroutineScope.emit(
     context: CoroutineContext = EmptyCoroutineContext
 ) = launch(context) {
     bus.send(value)
+}
+
+/**
+ * collect the flow data and send block to event where it is registered
+ */
+inline fun <reified T> CoroutineScope.onLatest(
+    bus: EventBus = EventBus.default,
+    context: CoroutineContext = EmptyCoroutineContext,
+    noinline block: suspend (value: T) -> Unit
+) = launch(context) {
+    bus.on<T>().collectLatest(block)
 }

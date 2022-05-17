@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.MoveResultContract
@@ -18,6 +19,7 @@ import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToFolder
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * Mark as BrowseMoveFragment
@@ -53,6 +55,14 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         cancelButton?.setOnClickListener {
             requireActivity().finish()
         }
+
+        lifecycleScope.launchWhenStarted {
+            println("BrowseMoveFragment.onViewCreated navigate -- 0")
+            viewModel.sharedFlow.collectLatest { entry ->
+                println("BrowseMoveFragment.onViewCreated navigate -- 4")
+                onItemClicked(entry)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -75,6 +85,10 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onFolderCreated(entry: Entry) {
+        onItemClicked(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

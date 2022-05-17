@@ -33,6 +33,7 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.swiperefreshlayout
+    implementation libs.androidx.preference
 
     implementation libs.google.material
 

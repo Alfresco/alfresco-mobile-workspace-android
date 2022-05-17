@@ -199,4 +199,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             return fragment
         }
     }
+
+    override fun onFolderCreated(entry: Entry) {
+        onItemClicked(entry)
+    }
 }

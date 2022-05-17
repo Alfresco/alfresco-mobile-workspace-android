@@ -67,6 +67,10 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
+    override fun onFolderCreated(entry: Entry) {
+        onItemClicked(entry)
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
         if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension))
             super.disableRefreshLayout()

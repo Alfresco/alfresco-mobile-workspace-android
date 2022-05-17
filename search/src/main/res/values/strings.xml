@@ -74,5 +74,5 @@
     <string name="category.folder">Folder</string>
     <string name="type.facet.queries">Type facet queries</string>
     <string name="size_end_kb">%1$s (KB)</string>
-
+    <string name="search_move_warning">you cannot move to own and subfolders.</string>
 </resources>

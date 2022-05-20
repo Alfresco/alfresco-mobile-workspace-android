@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.AuthConfig
@@ -37,6 +38,7 @@ import kotlinx.coroutines.withContext
  */
 class MainActivity : BaseActivity(), MavericksView {
 
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }

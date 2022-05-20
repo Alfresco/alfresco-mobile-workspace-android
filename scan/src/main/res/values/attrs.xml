@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="capture_layout_margin">24dp</dimen>
+    <dimen name="capture_layout_margin_button">28dp</dimen>
+    <dimen name="capture_carousel_margin">32dp</dimen>
+    <dimen name="capture_layout_small_margin">16dp</dimen>
+    <dimen name="capture_button_size">40dp</dimen>
+    <dimen name="preview_image_size">32dp</dimen>
+    <dimen name="preview_image_parent_size">80dp</dimen>
+    <dimen name="capture_button_padding">16dp</dimen>
+    <dimen name="capture_button_min_spacing">8dp</dimen>
+    <dimen name="preview_image_count_size">16dp</dimen>
+    <dimen name="image_count_margin">-5dp</dimen>
+    <dimen name="image_count_margin_start">-10dp</dimen>
+    <dimen name="view_pager_item_padding">8dp</dimen>
+</resources>

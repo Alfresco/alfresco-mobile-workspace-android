@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.BrowseArgs
 import com.alfresco.content.browse.BrowseViewModel
@@ -22,6 +23,7 @@ import com.alfresco.content.navigateToContextualSearch
 class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_extension_list) {
 
     private lateinit var args: BrowseArgs
+    @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alfresco.scan.ScanLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/preview_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/view_finder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scaleType="fillCenter" />
+
+        <TextView
+            android:id="@+id/message_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/focus_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_focus_marks"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp">
+
+        <!-- Can't use Widget.AppCompat.ImageButton style because icon is already tinted. -->
+        <ImageButton
+            android:id="@+id/close_button"
+            android:layout_width="@dimen/capture_button_size"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_marginStart="@dimen/capture_layout_small_margin"
+            android:background="@drawable/bg_camera_btn"
+            android:contentDescription="@string/close_button_alt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+        <ImageButton
+            android:id="@+id/flash_button"
+            style="@style/Widget.Alfresco.Camera.Button"
+            android:layout_width="@dimen/capture_button_size"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_marginEnd="@dimen/capture_layout_small_margin"
+            android:contentDescription="@string/flash_button_alt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_flash_auto" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/on_frame_controls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.alfresco.scan.ScanFlashMenu
+            android:id="@+id/flash_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/capture_layout_small_margin"
+            android:backgroundTint="@color/bg_camera_btn"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            app:shapeAppearance="?attr/shapeAppearanceSmallComponent" />
+
+        <TextView
+            android:id="@+id/zoom_text"
+            style="@style/Widget.Alfresco.Camera.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginVertical="12dp"
+            android:gravity="center"
+            android:minWidth="@dimen/capture_button_size"
+            android:paddingHorizontal="10dp"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shutter_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="ltr"
+        android:padding="12dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/preview_image_parent_size"
+            android:layout_marginStart="@dimen/capture_layout_small_margin"
+            app:layout_constraintBottom_toBottomOf="@id/shutter_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/shutter_button">
+
+            <RelativeLayout
+                android:id="@+id/struct_slot"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/bg_preview_stroke">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv"
+                    android:layout_width="@dimen/preview_image_size"
+                    android:layout_height="@dimen/preview_image_size"
+                    android:layout_centerInParent="true"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/capture_photo_preview_alt"
+                        android:scaleType="centerCrop" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/struct_slot"
+                android:layout_marginStart="-8dp"
+                android:layout_marginTop="-8dp"
+                android:layout_toEndOf="@id/struct_slot"
+                android:background="@drawable/bg_count_stroke"
+                android:padding="4dp">
+
+                <TextView
+                    android:id="@+id/image_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/preview_image_count_size"
+                    android:background="@drawable/bg_count_solid"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4sp"
+                    android:minWidth="@dimen/preview_image_count_size"
+                    android:paddingHorizontal="4dp"
+                    android:textAppearance="@style/image_count_style"
+                    android:textSize="10sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <com.alfresco.scan.ShutterButton
+            android:id="@+id/shutter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/capture_button_alt"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/camera_switch_button"
+            style="@style/Widget.Alfresco.Camera.Button"
+            android:layout_width="@dimen/capture_button_size"
+            android:layout_height="@dimen/capture_button_size"
+            android:layout_marginEnd="@dimen/capture_layout_small_margin"
+            android:contentDescription="@string/switch_camera_button_alt"
+            app:layout_constraintBottom_toBottomOf="@id/shutter_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/shutter_button"
+            app:srcCompat="@drawable/ic_switch" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.alfresco.scan.ScanLayout>

@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
@@ -22,6 +23,9 @@ import com.alfresco.content.viewer.common.LoadingListener
 import com.alfresco.content.viewer.databinding.ViewerBinding
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as ViewerArgs data class
+ */
 @Parcelize
 data class ViewerArgs(
     val id: String,
@@ -33,6 +37,9 @@ data class ViewerArgs(
         private const val TITLE_KEY = "title"
         private const val MODE_KEY = "mode"
 
+        /**
+         * returns the ViewerArgs obj after adding the ID_KEY, TITLE_KEY, MODE_KEY from arguments
+         */
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(
                 args.getString(ID_KEY, ""),
@@ -43,9 +50,13 @@ data class ViewerArgs(
     }
 }
 
+/**
+ * Marked as ViewerFragment class
+ */
 class ViewerFragment : Fragment(), MavericksView {
 
     private lateinit var args: ViewerArgs
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: ViewerBinding
     private var childFragment: ChildViewerFragment? = null

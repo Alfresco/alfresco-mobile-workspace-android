@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_scan"
+    app:startDestination="@id/scanFragment">
+
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="com.alfresco.scan.ScanFragment">
+        <argument
+            android:name="parentId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_scanFragment_to_cropFragment"
+            app:destination="@id/cropFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/cropFragment"
+        android:name="com.alfresco.scan.CropFragment">
+
+    </fragment>
+    <fragment
+        android:id="@+id/previewFragment"
+        android:name="com.alfresco.scan.ScanPreviewFragment">
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
+
+    <activity
+        android:id="@+id/nav_viewer"
+        android:name="com.alfresco.scan.ScanPreviewActivity"
+        android:label="{title}">
+        <argument
+            android:name="path"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="mimeType"
+            app:argType="string" />
+        <deepLink app:uri="alfresco://content/view/preview?title={title},mimeType={mimeType},path={path}" />
+    </activity>
+
+</navigation>

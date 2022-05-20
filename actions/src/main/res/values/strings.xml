@@ -68,5 +68,6 @@
     <string name="action_rename_file_folder">Rename</string>
     <string name="action_rename_file_folder_toast">%s was renamed</string>
     <string name="action_file_folder_save">Save</string>
+    <string name="action_scan_title">Scan documents</string>
 
 </resources>

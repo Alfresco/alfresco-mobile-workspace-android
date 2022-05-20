@@ -21,6 +21,8 @@ include ':viewer-text'
 include ':viewer-media'
 include ':shareextension'
 include ':move'
+include ':scan'
+include ':documentscanner'
 include ':app'
 //include ':content'
 //include ':content-ktx'
@@ -29,4 +31,5 @@ include ':app'
 // Enable Gradle's version catalog support
 // Ref: https://docs.gradle.org/current/userguide/platforms.html
 enableFeaturePreview("VERSION_CATALOGS")
+
 

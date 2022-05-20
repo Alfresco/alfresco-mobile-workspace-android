@@ -53,11 +53,11 @@ internal class ActionCreateViewModel(
         val actions = mutableListOf<Action>()
 
         actions.add(ActionCreateFolder(parent))
-        actions.add(ActionUploadMedia(parent))
-
+        actions.add(ActionScanDocument(parent))
         if (distributionVersion() == Settings.DistributionVersion.ENTERPRISE)
             actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_multiple))
         else actions.add(ActionCaptureMedia(parent, title = R.string.action_capture_media_title_single))
+        actions.add(ActionUploadMedia(parent))
         actions.add(ActionUploadFiles(parent))
 
         return actions

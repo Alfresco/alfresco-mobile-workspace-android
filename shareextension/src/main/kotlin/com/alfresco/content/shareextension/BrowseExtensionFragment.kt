@@ -68,7 +68,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onFolderCreated(entry: Entry) {
-        onItemClicked(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

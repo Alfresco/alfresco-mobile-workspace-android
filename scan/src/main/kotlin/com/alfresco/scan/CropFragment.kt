@@ -19,7 +19,6 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.scan.databinding.FragmentCropBinding
 import com.labters.documentscanner.getCroppedImage
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
@@ -49,8 +48,7 @@ class CropFragment : Fragment(), MavericksView {
         binding.sd.load(viewModel.uri, imageLoader)
 
         binding.btnKeepScan.setOnClickListener {
-            val destFileParent = createIfMissing(File(requireContext().filesDir, File_CROP_DIR))
-            val destFile = createIfMissing(File(destFileParent, System.currentTimeMillis().toString()))
+            val destFile = viewModel.prepareCropFile()
             val image = binding.documentScanner.getCroppedImage()
 
             var fileOutputStream: FileOutputStream? = null
@@ -76,13 +74,6 @@ class CropFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) {
-    }
-
-    private fun createIfMissing(dir: File): File {
-        if (!dir.exists()) {
-            dir.createNewFile()
-        }
-        return dir
     }
 
     private val imageLoader: ImageLoader by lazy {

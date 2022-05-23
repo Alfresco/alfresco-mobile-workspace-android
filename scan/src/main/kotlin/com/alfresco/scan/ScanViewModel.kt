@@ -28,6 +28,7 @@ class ScanViewModel(
     var onSaveComplete: ((List<ScanItem>) -> Unit)? = null
 
     private val captureDir = SessionManager.requireSession.captureDir
+    private val cropDir = SessionManager.requireSession.captureDir
     var flashMode = ImageCapture.FLASH_MODE_AUTO
     var lensFacing = -1
     var uri: Uri? = null
@@ -52,6 +53,12 @@ class ScanViewModel(
      */
     fun prepareCaptureFile() =
         File(captureDir, "${System.currentTimeMillis()}${extensionFor()}")
+
+    /**
+     * preparing the capture file path
+     */
+    fun prepareCropFile() =
+        File(cropDir, "${System.currentTimeMillis()}${extensionFor()}")
 
     private fun extensionFor() = ScanItem.PHOTO_EXTENSION
 

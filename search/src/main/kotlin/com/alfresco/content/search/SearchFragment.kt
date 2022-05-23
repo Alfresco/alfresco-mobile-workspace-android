@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.AdvanceSearchFilter
@@ -43,9 +42,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
-/**
- *  Marked as ContextualSearchArgs data class
- */
 @Parcelize
 data class ContextualSearchArgs(
     val id: String?,
@@ -59,9 +55,6 @@ data class ContextualSearchArgs(
         private const val EXTENSION_KEY = "extension"
         private const val MOVE_ID_KEY = "moveId"
 
-        /**
-         * returns the ContextualSearchArgs after adding data from arguments
-         */
         fun with(args: Bundle?): ContextualSearchArgs? {
             if (args == null) return null
             return ContextualSearchArgs(
@@ -74,12 +67,8 @@ data class ContextualSearchArgs(
     }
 }
 
-/**
- * Marked as SearchFragment class
- */
 class SearchFragment : Fragment(), MavericksView {
 
-    @OptIn(InternalMavericksApi::class)
     private val viewModel: SearchViewModel by fragmentViewModelWithArgs {
         ContextualSearchArgs.with(arguments)
     }
@@ -186,9 +175,6 @@ class SearchFragment : Fragment(), MavericksView {
         })
     }
 
-    /**
-     * updating the search query and avoid the network request caused by filters
-     */
     fun setSearchQuery(query: String) {
         val terms = cleanupSearchQuery(query)
         // Always update search query in internal state.

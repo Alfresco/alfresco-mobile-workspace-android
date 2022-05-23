@@ -18,7 +18,6 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
@@ -60,7 +59,6 @@ data class BrowseArgs(
 class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private lateinit var args: BrowseArgs
-    @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {

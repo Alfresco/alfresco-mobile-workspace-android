@@ -161,10 +161,8 @@ class SaveFragment : Fragment(), MavericksView {
     }
 
     private fun goBack() {
-        if (!viewModel.isEnterprise()) {
-            viewModel.clearCaptureList()
-            viewModel.clearCaptures()
-        }
+        viewModel.clearCaptureList()
+        viewModel.clearCaptures()
         requireActivity().onBackPressed()
     }
 
@@ -178,7 +176,6 @@ class SaveFragment : Fragment(), MavericksView {
 
     private fun showPreview(captureItem: CaptureItem?) = withState(viewModel) {
         requireNotNull(captureItem)
-
         findNavController().navigateToPreview(
             captureItem.mimeType,
             captureItem.uri.toString(), captureItem.name

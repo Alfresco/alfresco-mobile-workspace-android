@@ -14,16 +14,17 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (screenType == ScreenType.MainActivity) saveEventInitialRegistereState()
+        if (screenType == ScreenType.MoveActivity || screenType == ScreenType.ExtensionActivity)
+            saveEventInitialRegisteredState()
     }
 
     override fun onStart() {
         super.onStart()
-        if (screenType == ScreenType.MoveActivity || screenType == ScreenType.ExtensionActivity)
-            saveEventInitialRegistereState()
+        if (screenType == ScreenType.MainActivity)
+            saveEventInitialRegisteredState()
     }
 
-    private fun saveEventInitialRegistereState() {
+    private fun saveEventInitialRegisteredState() {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = sharedPrefs.edit()
         editor.putBoolean(ListViewModel.IS_EVENT_REGISTERED, false)

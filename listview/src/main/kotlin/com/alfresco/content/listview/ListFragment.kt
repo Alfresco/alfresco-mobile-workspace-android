@@ -98,7 +98,8 @@ abstract class ListViewModel<S : ListViewState>(
 
     private fun onCreateFolder(entry: Entry) = entry.run {
         refresh()
-        folderListener?.onFolderCreated(entry)
+        if (entry.isFolder)
+            folderListener?.onFolderCreated(entry)
     }
 
     private fun onMove(entry: Entry) = entry.run {

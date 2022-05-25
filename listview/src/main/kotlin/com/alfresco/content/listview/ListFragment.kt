@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -32,10 +31,8 @@ import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
-import com.alfresco.content.listview.ListViewModel.Companion.IS_EVENT_REGISTERED
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
-import com.alfresco.events.onLatest
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -70,6 +67,7 @@ abstract class ListViewModel<S : ListViewState>(
     private var folderListener: FolderCreatedListener? = null
 
     init {
+        viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
         viewModelScope.on<ActionUpdateFileFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
@@ -77,15 +75,6 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
-    }
-
-    /**
-     * browse the currently created folder automatically
-     */
-    fun registerEventCreateFolder() {
-        viewModelScope.onLatest<ActionCreateFolder> {
-            onCreateFolder(it.entry)
-        }
     }
 
     private fun onDelete(entry: Entry) = entry.run {
@@ -188,21 +177,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 }
             }
         })
-
-        updateEventRegisterState()
-    }
-
-    /**
-     * Register event instance only once.
-     */
-    private fun updateEventRegisterState() {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        if (!sharedPrefs.getBoolean(IS_EVENT_REGISTERED, false)) {
-            viewModel.registerEventCreateFolder()
-            val editor = sharedPrefs.edit()
-            editor.putBoolean(IS_EVENT_REGISTERED, true)
-            editor.apply()
-        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

@@ -16,18 +16,19 @@ fun NavController.navigateTo(entry: Entry) {
     }
 }
 
-private fun NavController.navigateToFolder(entry: Entry) {
-    if (entry.isExtension)
-        navigateToChildFolder(entry.id, entry.name, mode = modeFor(entry))
-    else navigateToFolder(entry.id, entry.name, modeFor(entry))
-}
+private fun NavController.navigateToFolder(entry: Entry) = navigateToFolder(entry.id, entry.name, modeFor(entry))
 
 /**
  * navigate to move screen
  */
-fun NavController.navigateToFolder(entry: Entry, moveId: String) {
+fun NavController.navigateToFolder(entry: Entry, moveId: String) =
     navigateToChildFolder(entry.id, entry.name, moveId, modeFor(entry))
-}
+
+/**
+ * navigate to extension child folders
+ */
+fun NavController.navigateToExtensionFolder(entry: Entry) =
+    navigateToChildFolder(entry.id, entry.name, mode = modeFor(entry))
 
 private fun modeFor(entry: Entry) =
     if (entry.hasOfflineStatus) {

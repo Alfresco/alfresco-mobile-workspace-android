@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.BrowseArgs
 import com.alfresco.content.browse.BrowseViewModel
@@ -14,8 +13,8 @@ import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
+import com.alfresco.content.navigateToExtensionFolder
 
 /**
  * Mark as BrowseExtensionFragment
@@ -23,7 +22,6 @@ import com.alfresco.content.navigateToContextualSearch
 class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_extension_list) {
 
     private lateinit var args: BrowseArgs
-    @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +68,8 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onFolderCreated(entry: Entry) {
+        if (isAdded)
+            onItemClicked(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -84,6 +84,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     override fun onItemClicked(entry: Entry) {
         if (!entry.isFolder) return
 
-        findNavController().navigateTo(entry)
+        findNavController().navigateToExtensionFolder(entry)
     }
 }

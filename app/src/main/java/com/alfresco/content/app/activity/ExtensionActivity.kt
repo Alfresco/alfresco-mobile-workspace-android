@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
@@ -29,7 +30,7 @@ import kotlinx.coroutines.GlobalScope
 /**
  * Marked as ExtensionActivity class
  */
-class ExtensionActivity : BaseActivity(), MavericksView, ActionPermission {
+class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -38,7 +39,6 @@ class ExtensionActivity : BaseActivity(), MavericksView, ActionPermission {
     private val shareLimit = 50
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        screenType = ScreenType.ExtensionActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_extension)
 

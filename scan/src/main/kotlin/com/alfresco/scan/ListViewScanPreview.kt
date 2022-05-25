@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.core.view.isVisible
 import coil.EventListener
 import coil.ImageLoader
 import coil.fetch.VideoFrameFileFetcher
@@ -21,7 +20,7 @@ import com.alfresco.scan.databinding.ViewScanListPreviewBinding
 /**
  * Generated Model View for the Preview Screen
  */
-@ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
+@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewScanPreview @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -39,7 +38,6 @@ class ListViewScanPreview @JvmOverloads constructor(
             .eventListener(object : EventListener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     super.onSuccess(request, metadata)
-                    binding.deletePhotoButton.isVisible = true
                 }
             })
             .build()
@@ -98,22 +96,6 @@ class ListViewScanPreview @JvmOverloads constructor(
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
-    }
-
-    /**
-     * set clickListener to the preview button to en-large the view
-     */
-    @CallbackProp
-    fun setPreviewClickListener(listener: OnClickListener?) {
-        binding.preview.setOnClickListener(listener)
-    }
-
-    /**
-     * set clickListener to the delete button to delete the view
-     */
-    @CallbackProp
-    fun setDeletePhotoClickListener(listener: OnClickListener?) {
-        binding.deletePhotoButton.setOnClickListener(listener)
     }
 
     companion object {

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 /**
  * Scaled bitmap with new height and width
  */
-fun DocumentScannerView.scaledBitmap(bitmap: Bitmap, width: Int, height: Int) = flow<Bitmap> {
+fun scaledBitmap(bitmap: Bitmap, width: Int, height: Int) = flow<Bitmap> {
     val m = Matrix()
     m.setRectToRect(
         RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat()), RectF(

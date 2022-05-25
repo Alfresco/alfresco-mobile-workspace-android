@@ -30,7 +30,6 @@ class CropFragment : Fragment(), MavericksView {
 
     private val viewModel: ScanViewModel by activityViewModel()
     private lateinit var binding: FragmentCropBinding
-    private val File_CROP_DIR = "crop"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +62,7 @@ class CropFragment : Fragment(), MavericksView {
                 fileOutputStream?.close()
             }
 
-            viewModel.onCapturePhoto(Uri.fromFile(destFile))
+            viewModel.onCapturePhotoOrPdf(Uri.fromFile(destFile), true)
 
             requireActivity().onBackPressed()
         }

@@ -123,6 +123,16 @@ class ScanFragment : Fragment(), ScanKeyHandler, MavericksView {
 
         // Prepare UI controls
         setUpCameraUi()
+
+        layout.preview.setOnClickListener {
+            viewModel.createPdf()
+        }
+
+        viewModel.onPdfCreated = {
+            view.post {
+                findNavController().navigate(R.id.action_scanFragment_to_scanPreviewFragment)
+            }
+        }
     }
 
     private suspend fun updateCameraState() {
@@ -246,7 +256,7 @@ class ScanFragment : Fragment(), ScanKeyHandler, MavericksView {
 
     private fun goBack() {
         withState(viewModel) {
-            if (it.listCapture.isNotEmpty())
+            if (it.listScanCaptures.isNotEmpty())
                 discardPhotoPrompt()
             else
                 requireActivity().finish()
@@ -344,12 +354,12 @@ class ScanFragment : Fragment(), ScanKeyHandler, MavericksView {
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
 
     override fun invalidate(): Unit = withState(viewModel) {
-        if (it.listCapture.isNotEmpty()) {
-            layout.preview.load(it.listCapture.last().uri, imageLoader)
+        if (it.listScanCaptures.isNotEmpty()) {
+            layout.preview.load(it.listScanCaptures.last().uri, imageLoader)
             layout.rlPreview.visibility = View.VISIBLE
-        } else {
+        } /*else {
             layout.rlPreview.visibility = View.INVISIBLE
-        }
+        }*/
     }
 
     private fun discardPhotoPrompt() {
@@ -369,6 +379,5 @@ class ScanFragment : Fragment(), ScanKeyHandler, MavericksView {
 
     companion object {
         private val TAG: String = ScanFragment::class.java.simpleName
-        private const val DEFAULT_FLASH_MODE = ImageCapture.FLASH_MODE_AUTO
     }
 }

@@ -22,5 +22,14 @@
     <string name="keep_scan_button">Keep scan</string>
     <string name="retake_button">Retake</string>
     <string name="scan_loading">Loading</string>
+    <string name="pdf_description_hint">Add Description</string>
+    <string name="pdf_name_hint">File name</string>
+    <string name="pdf_confirmation_negative">Cancel</string>
+    <string name="pdf_confirmation_positive">Create</string>
+    <string name="pdf_title_create">Create</string>
+    <string name="pdf_name_invalid_chars">Folder name can\'t contain any of the following characters: ?:"*|/\\&lt;&gt;</string>
+    <string name="pdf_name_empty">Folder name can\'t be empty.</string>
+    <string name="error_preview_not_available">Preview not available</string>
+    <string name="scan_pdf_save_title">Save</string>
 
 </resources>

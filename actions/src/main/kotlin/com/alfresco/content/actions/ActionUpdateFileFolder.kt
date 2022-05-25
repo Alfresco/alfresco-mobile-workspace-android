@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
  */
 data class ActionUpdateFileFolder(
     override var entry: Entry,
-    override val icon: Int = R.drawable.ic_action_create_folder,
+    override val icon: Int = R.drawable.ic_rename,
     override val title: Int = R.string.action_rename_file_folder
 ) : Action {
 

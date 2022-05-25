@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
  */
 data class ActionScanDocument(
     override var entry: Entry,
-    override val icon: Int = R.drawable.ic_action_capture_photo,
+    override val icon: Int = R.drawable.ic_scan_doc,
     override val title: Int = R.string.action_scan_title
 ) : Action {
 
@@ -47,7 +47,7 @@ data class ActionScanDocument(
             }
         } else {
             throw Action.Exception(
-                context.resources.getString(R.string.action_capture_failed_permissions)
+                context.resources.getString(R.string.action_scan_failed_permissions)
             )
         }
 
@@ -57,5 +57,5 @@ data class ActionScanDocument(
     override fun copy(_entry: Entry): Action = copy(entry = _entry)
 
     override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_upload_media_toast)
+        Action.showToast(view, anchorView, R.string.action_upload_scan_documents_toast)
 }

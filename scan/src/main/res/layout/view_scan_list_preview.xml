@@ -4,35 +4,22 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="wrap_content"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/alfresco_gray_900_15"
+            android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:layout_gravity="center_horizontal"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="0dp">
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            app:cardElevation="4dp">
 
             <ImageView
                 android:id="@+id/preview"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/capture_photo_preview_alt"/>
+                android:contentDescription="@null" />
 
-            <ImageButton
-                android:id="@+id/delete_photo_button"
-                style="@style/Widget.Alfresco.Camera.Button"
-                android:layout_width="@dimen/capture_button_size"
-                android:layout_height="@dimen/capture_button_size"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="@dimen/capture_layout_small_margin"
-                android:visibility="gone"
-                android:background="@drawable/bg_camera_btn"
-                android:contentDescription="@string/capture_delete_photo_alt"
-                android:src="@drawable/ic_photo_delete" />
+
         </com.google.android.material.card.MaterialCardView>
     </FrameLayout>
 </merge>

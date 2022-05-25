@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:contentDescription="@null"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="0dp"

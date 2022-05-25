@@ -132,7 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
-                        android:contentDescription="@string/capture_photo_preview_alt"
+                        android:contentDescription="@null"
                         android:scaleType="centerCrop" />
 
                 </com.google.android.material.card.MaterialCardView>

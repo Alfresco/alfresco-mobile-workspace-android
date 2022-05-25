@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -27,7 +28,7 @@ import java.lang.ref.WeakReference
 /**
  * Marked as MainActivity class
  */
-class MainActivity : BaseActivity(), MavericksView {
+class MainActivity : AppCompatActivity(), MavericksView {
 
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -36,7 +37,6 @@ class MainActivity : BaseActivity(), MavericksView {
     private var signedOutDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        screenType = ScreenType.MainActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

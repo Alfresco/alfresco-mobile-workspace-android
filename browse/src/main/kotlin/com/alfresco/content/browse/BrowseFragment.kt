@@ -201,6 +201,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onFolderCreated(entry: Entry) {
-        onItemClicked(entry)
+        if (isAdded)
+            onItemClicked(entry)
     }
 }

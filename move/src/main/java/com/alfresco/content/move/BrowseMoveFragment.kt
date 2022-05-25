@@ -88,7 +88,8 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     }
 
     override fun onFolderCreated(entry: Entry) {
-        onItemClicked(entry)
+        if (isAdded)
+            onItemClicked(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

@@ -57,8 +57,7 @@ dependencies {
 
     implementation libs.mavericks
 
-    implementation 'com.itextpdf:itextg:5.5.10'
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation libs.itextpdf
 
     implementation libs.epoxy.core
     kapt libs.epoxy.processor

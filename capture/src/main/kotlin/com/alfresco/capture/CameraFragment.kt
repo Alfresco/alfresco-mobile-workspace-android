@@ -61,8 +61,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         LocationData(requireContext())
     }
 
-    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
-    private var mode: CaptureMode = CaptureMode.Photo
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraController: AlfrescoCameraController? = null
 

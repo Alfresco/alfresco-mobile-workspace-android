@@ -69,7 +69,7 @@ abstract class ListViewModel<S : ListViewState>(
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
         viewModelScope.on<ActionDelete> { onDelete(it.entry) }
-        viewModelScope.on<ActionUpdateFileFolder> { onCreateFolder(it.entry) }
+        viewModelScope.on<ActionUpdateFileFolder> { refresh() }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }

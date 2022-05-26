@@ -4,12 +4,12 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
-import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Marked as ActionUpdateFileFolder
@@ -26,13 +26,14 @@ data class ActionUpdateFileFolder(
             Entry.Type.FOLDER -> "cm:folder"
             else -> "cm:content"
         }
-        val name = "${result.name}.${entry.name.nameAndExtension().second}"
+        val name = if (entry.isFile) "${result.name}.${entry.name.nameAndExtension().second}" else result.name
         return BrowseRepository().updateFileFolder(name, result.description, entry.id, nodeType)
     }
 
     private suspend fun showCreateFolderDialog(context: Context) = withContext(Dispatchers.Main) {
         suspendCoroutine<CreateFolderMetadata?> {
-            CreateFolderDialog.Builder(context, true, entry.name.nameAndExtension().first)
+            val name = if (entry.isFile) entry.name.nameAndExtension().first else entry.name
+            CreateFolderDialog.Builder(context, true, name)
                 .onSuccess { title, description ->
                     it.resume(CreateFolderMetadata(title, description))
                 }

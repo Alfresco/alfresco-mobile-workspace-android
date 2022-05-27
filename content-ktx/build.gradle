@@ -1,0 +1,14 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    defaultConfig {
+        versionName "0.3.0"
+    }
+}
+
+dependencies {
+    implementation project(':content')
+//    implementation libs.alfresco.content
+    implementation libs.retrofit.core
+}

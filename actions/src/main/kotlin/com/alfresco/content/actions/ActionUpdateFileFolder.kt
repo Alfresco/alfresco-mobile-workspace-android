@@ -4,12 +4,12 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Marked as ActionUpdateFileFolder

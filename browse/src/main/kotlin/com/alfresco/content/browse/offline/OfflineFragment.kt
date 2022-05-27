@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
@@ -22,7 +21,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 
 class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
-    @OptIn(InternalMavericksApi::class)
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     private var fab: ExtendedFloatingActionButton? = null
 

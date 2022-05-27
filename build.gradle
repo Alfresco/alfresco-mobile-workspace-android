@@ -15,7 +15,6 @@ buildscript {
         classpath libs.spotless
         classpath libs.gradleVersionsPlugin
         classpath libs.gradleLicensePlugin
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 

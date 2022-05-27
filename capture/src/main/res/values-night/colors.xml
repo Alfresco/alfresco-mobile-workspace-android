@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="shutter_photo_tint">@android:color/white</color>
-    <color name="badge_count_tint">@color/alfresco_gray_900</color>
-    <color name="text_badge_tint">@android:color/black</color>
-
 </resources>

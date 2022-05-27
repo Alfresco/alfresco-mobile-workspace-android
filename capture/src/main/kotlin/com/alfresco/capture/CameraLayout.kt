@@ -6,8 +6,6 @@ import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
@@ -38,20 +36,16 @@ class CameraLayout(
     lateinit var messageView: TextView
     lateinit var modeSelectorView: CaptureModeSelectorView
     lateinit var captureDurationView: CaptureDurationView
-    lateinit var preview: ImageView
-    lateinit var imageCount: TextView
-    lateinit var rlPreview: RelativeLayout
 
     private val orientationAwareControls get() =
-            listOf(
-                cameraSwitchButton,
-                flashButton,
-                closeButton,
-                zoomTextView,
-                messageView,
-                flashMenu,
-                rlPreview
-            )
+        listOf(
+            cameraSwitchButton,
+            flashButton,
+            closeButton,
+            zoomTextView,
+            messageView,
+            flashMenu
+        )
     private var controlRotation = 0
     private var deviceOrientation = 0
 
@@ -90,9 +84,6 @@ class CameraLayout(
         messageView = findViewById(R.id.message_view)
         modeSelectorView = findViewById(R.id.mode_selector)
         captureDurationView = findViewById(R.id.capture_duration)
-        preview = findViewById(R.id.preview)
-        imageCount = findViewById(R.id.image_count)
-        rlPreview = findViewById(R.id.rl_preview)
 
         initControls()
     }
@@ -197,8 +188,7 @@ class CameraLayout(
             }
 
             if (controlRotation != rotation &&
-                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS
-            ) {
+                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS) {
                 controlRotation = rotation
                 deviceOrientation = orientation
                 orientationAwareControls.map {
@@ -224,23 +214,6 @@ class CameraLayout(
                 .rotation(controlRotation - 360f)
                 .withEndAction { it.rotation = controlRotation.toFloat() }
                 .start()
-        }
-    }
-
-    fun animatePreview() {
-        preview.animate()
-            .alpha(1.0f)
-            .scaleX(1.0f)
-            .scaleY(1.0f)
-            .setDuration(200L)
-            .start()
-    }
-
-    fun animatePreviewHide() {
-        preview.let {
-            it.alpha = 0.0f
-            it.scaleX = 0.0f
-            it.scaleY = 0.0f
         }
     }
 

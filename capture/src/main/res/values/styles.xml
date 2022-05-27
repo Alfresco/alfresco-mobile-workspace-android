@@ -16,12 +16,6 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.Alfresco.Grayscale</item>
     </style>
 
-    <style name="image_count_style">
-        <item name="android:textSize">10sp</item>
-        <item name="android:letterSpacing">0.02</item>
-        <item name="android:textColor">@color/text_badge_tint</item>
-    </style>
-
     <style name="Widget.Alfresco.Camera.Mode.Text" parent="">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:background">@drawable/bg_camera_btn</item>

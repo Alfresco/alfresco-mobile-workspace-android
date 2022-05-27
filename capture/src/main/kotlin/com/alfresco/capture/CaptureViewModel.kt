@@ -8,7 +8,6 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.Settings
 import com.alfresco.content.session.SessionManager
 import java.io.File
 
@@ -27,7 +26,6 @@ class CaptureViewModel(
     var latitude = "0"
     private val captureDir = SessionManager.requireSession.captureDir
     var mode: CaptureMode = CaptureMode.Photo
-    private fun distributionVersion() = Settings(context).getDistributionVersion
     var flashMode = ImageCapture.FLASH_MODE_AUTO
     var lensFacing = -1
 
@@ -128,6 +126,9 @@ class CaptureViewModel(
         return isValidNotEmpty
     }
 
+    /**
+     * update the name for the current visible capture on carousel
+     */
     fun updateName(newFileName: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
@@ -141,6 +142,9 @@ class CaptureViewModel(
         setState { copy(listCapture = newList) }
     }
 
+    /**
+     * update the description for the current visible capture on carousel
+     */
     fun updateDescription(newDescription: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
@@ -154,6 +158,9 @@ class CaptureViewModel(
         setState { copy(listCapture = newList) }
     }
 
+    /**
+     * copy the visible item from the carousel as current item
+     */
     fun copyVisibleItem(item: CaptureItem) {
         setState {
             copy(visibleItem = item)
@@ -172,8 +179,6 @@ class CaptureViewModel(
 
         return metadata
     }
-
-    fun isEnterprise(): Boolean = distributionVersion() == Settings.DistributionVersion.ENTERPRISE
 
     companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
         override fun create(

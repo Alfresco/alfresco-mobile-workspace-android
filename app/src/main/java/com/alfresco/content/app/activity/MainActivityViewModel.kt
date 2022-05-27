@@ -13,6 +13,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCaptureMedia
 import com.alfresco.content.actions.ActionRemoveOffline
+import com.alfresco.content.actions.ActionScanDocument
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.browse.transfer.TransferSyncNow
@@ -85,6 +86,7 @@ class MainActivityViewModel(
             coroutineScope.on<ActionAddOffline> { service.sync() }
             coroutineScope.on<ActionRemoveOffline> { service.sync() }
             coroutineScope.on<ActionCaptureMedia> { service.upload() }
+            coroutineScope.on<ActionScanDocument> { service.upload() }
             coroutineScope.on<ActionUploadMedia> { service.upload() }
             coroutineScope.on<ActionSyncNow> { service.syncNow(it.overrideNetwork) }
             coroutineScope.on<TransferSyncNow> { service.upload() }

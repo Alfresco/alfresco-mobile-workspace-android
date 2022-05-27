@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="72dp"
+            android:height="72dp"
+            android:viewportWidth="72"
+            android:viewportHeight="72">
+            <path
+                android:name="path"
+                android:pathData="M 36 8 C 28.577 8 21.45 10.952 16.201 16.201 C 10.952 21.45 8 28.577 8 36 C 8 43.423 10.952 50.55 16.201 55.799 C 21.45 61.048 28.577 64 36 64 C 43.423 64 50.55 61.048 55.799 55.799 C 61.048 50.55 64 43.423 64 36 C 64 28.577 61.048 21.45 55.799 16.201 C 50.55 10.952 43.423 8 36 8 Z"
+                android:fillColor="#f34139"
+                android:strokeWidth="1"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="300"
+                android:valueFrom="M 36 8 C 28.577 8 21.45 10.952 16.201 16.201 C 13.576 18.826 11.526 21.919 10.132 25.285 C 8.738 28.651 8 32.288 8 36 C 8 43.423 10.952 50.55 16.201 55.799 C 18.826 58.423 21.919 60.474 25.285 61.868 C 28.651 63.262 32.288 64 36 64 C 43.423 64 50.55 61.048 55.799 55.799 C 58.423 53.175 60.474 50.081 61.868 46.715 C 63.262 43.349 64 39.712 64 36 C 64 28.577 61.048 21.45 55.799 16.201 C 50.55 10.952 43.423 8 36 8 L 36 8"
+                android:valueTo="M 24 20 C 22.94 20 21.921 20.422 21.172 21.172 C 20.422 21.921 20 22.94 20 24 C 20 32 20 40 20 48 C 20 49.06 20.422 50.079 21.172 50.828 C 21.921 51.578 22.94 52 24 52 C 32 52 40 52 48 52 C 49.06 52 50.079 51.578 50.828 50.828 C 51.578 50.079 52 49.06 52 48 C 52 40 52 32 52 24 C 52 22.94 51.578 21.921 50.828 21.172 C 50.079 20.422 49.06 20 48 20 L 24 20"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

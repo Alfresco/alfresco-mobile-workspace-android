@@ -25,13 +25,13 @@
         <p>Alfresco Content Services-URL:</p>
         <p>Dit is de URL van uw Alfresco Content Services-instance.</p>
         <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
-    </string>
+      </string>
 
     <string name="auth_help_settings_body">
         <![CDATA[<h1>Verifiëren met Alfresco</h1>
         <p>Als u de standaard SSO-instellingen niet gebruikt, kunnen uw waarden hier worden ingesteld.</p>
         <p>Neem contact op met uw Alfresco-beheerder als u hulp nodig hebt.</p>]]>
-    </string>
+      </string>
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Kan geen verificatieservice vinden op de opgegeven Alfresco-URL.</string>

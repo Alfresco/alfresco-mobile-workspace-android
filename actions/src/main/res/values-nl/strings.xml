@@ -36,7 +36,8 @@
     <string name="action_remove_offline_toast">%s is niet langer offline beschikbaar.</string>
 
     <string name="action_upload_photo_title">Foto\'s of video\'s uploaden</string>
-    <string name="action_capture_media_title">Een foto maken of een video opnemen</string>
+    <string name="action_capture_media_title_multiple">Foto\'s maken of video\'s opnemen</string>
+    <string name="action_capture_media_title_single">Foto\'s of video\'s uploaden</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media gepland om te uploaden.</string>

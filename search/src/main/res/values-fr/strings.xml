@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Recherches récentes</string>
 
-    <string name="search_loading_message">Recherche&#8230;</string>
+    <string name="search_loading_message">Recherche\u2026</string>
 
     <string name="search_chip_contextual">dans : %s</string>
     <string name="search_chip_files">Fichiers</string>

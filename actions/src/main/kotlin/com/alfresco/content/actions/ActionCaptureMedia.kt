@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
-    override val title: Int = R.string.action_capture_media_title
+    override val title: Int
 ) : Action {
 
     private val repository = OfflineRepository()

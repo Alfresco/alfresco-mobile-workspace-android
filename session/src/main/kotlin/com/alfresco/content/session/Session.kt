@@ -127,6 +127,9 @@ class Session(
     val captureDir: File =
         createIfMissing(File(filesDir, CAPTURE_DIR))
 
+    val cropDir: File =
+        createIfMissing(File(filesDir, CROP_DIR))
+
     val uploadDir: File =
         createIfMissing(File(filesDir, UPLOAD_DIR))
 
@@ -139,6 +142,7 @@ class Session(
 
     private companion object {
         const val CAPTURE_DIR = "capture"
+        const val CROP_DIR = "crop"
         const val UPLOAD_DIR = "upload"
     }
 }

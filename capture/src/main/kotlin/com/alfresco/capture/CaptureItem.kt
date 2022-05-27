@@ -18,7 +18,6 @@ data class CaptureItem(
 ) : Parcelable {
     val filename: String
         get() = "$name$extension"
-
     val extension: String
         get() = when (mimeType) {
             PHOTO_MIMETYPE -> PHOTO_EXTENSION
@@ -47,9 +46,8 @@ data class CaptureItem(
             CaptureItem(uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
 
         private fun defaultFilename(prefix: String): String {
-            val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+            val formatter = SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US)
             val time: Date = Calendar.getInstance().time
-
             return "$prefix${formatter.format(time)}"
         }
     }

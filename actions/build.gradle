@@ -21,6 +21,7 @@ dependencies {
     implementation project(':mimetype')
     implementation project(':download')
     implementation project(':capture')
+    implementation project(':scan')
 
     implementation libs.kotlin.stdlib
     implementation libs.coroutines.core

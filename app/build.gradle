@@ -41,6 +41,11 @@ android {
         }
     }
 
+    dexOptions {
+        jumboMode = true
+        javaMaxHeapSize "12g"
+    }
+
     buildFeatures {
         dataBinding = true
         viewBinding = true
@@ -53,6 +58,15 @@ android {
     // Temporary kotlin module duplication fix
     packagingOptions {
         pickFirst 'META-INF/auth_release.kotlin_module'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'arm64-v8a'
+            universalApk false
+        }
     }
 }
 

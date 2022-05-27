@@ -91,6 +91,12 @@ class CaptureModeSelectorView(
         recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.isActivated = true
     }
 
+    fun updateActive(position: Int) {
+        println("re position $position")
+        setActive(position)
+        recyclerView.smoothScrollToCenteredPosition(position)
+    }
+
     private inner class Adapter(private val dataSet: List<String>) :
         RecyclerView.Adapter<Adapter.ViewHolder>() {
 

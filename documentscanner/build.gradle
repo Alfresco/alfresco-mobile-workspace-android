@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+group = 'com.github.mayuce'
+android {
+
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core
+    implementation libs.kotlin.stdlib
+    implementation libs.coroutines.android
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.opencv
+}

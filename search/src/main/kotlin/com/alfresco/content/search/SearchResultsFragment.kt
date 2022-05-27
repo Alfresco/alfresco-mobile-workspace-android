@@ -15,6 +15,7 @@ import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
+import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder
 
 class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
@@ -69,7 +70,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
                     if (parentId.isNullOrEmpty())
                         findNavController().navigateToFolder(entry, state.moveId)
                     else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
-                } else findNavController().navigateTo(entry)
+                } else findNavController().navigateToExtensionFolder(entry)
             }
         }
     }

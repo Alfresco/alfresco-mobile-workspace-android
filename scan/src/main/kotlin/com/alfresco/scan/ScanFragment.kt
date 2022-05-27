@@ -356,10 +356,12 @@ class ScanFragment : Fragment(), ScanKeyHandler, MavericksView {
     override fun invalidate(): Unit = withState(viewModel) {
         if (it.listScanCaptures.isNotEmpty()) {
             layout.preview.load(it.listScanCaptures.last().uri, imageLoader)
+            layout.imageCount.text = String.format("%,d", it.listScanCaptures.size)
             layout.rlPreview.visibility = View.VISIBLE
-        } /*else {
+        } else {
+            layout.imageCount.text = ""
             layout.rlPreview.visibility = View.INVISIBLE
-        }*/
+        }
     }
 
     private fun discardPhotoPrompt() {

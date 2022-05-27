@@ -140,7 +140,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/struct_slot"
@@ -169,7 +168,6 @@
             android:id="@+id/shutter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/capture_button_alt"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -180,7 +178,6 @@
             android:layout_width="@dimen/capture_button_size"
             android:layout_height="@dimen/capture_button_size"
             android:layout_marginEnd="@dimen/capture_layout_small_margin"
-            android:contentDescription="@string/switch_camera_button_alt"
             app:layout_constraintBottom_toBottomOf="@id/shutter_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/shutter_button"

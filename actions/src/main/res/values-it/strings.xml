@@ -36,8 +36,7 @@
     <string name="action_remove_offline_toast">%s non sarà più disponibile offline.</string>
 
     <string name="action_upload_photo_title">Carica foto o video</string>
-    <string name="action_capture_media_title_multiple">Acquisisci foto o video</string>
-    <string name="action_capture_media_title_single">Acquisisci una foto o un video</string>
+    <string name="action_capture_media_title">Acquisisci una foto o un video</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Contenuti multimediali pianificati per il caricamento.</string>

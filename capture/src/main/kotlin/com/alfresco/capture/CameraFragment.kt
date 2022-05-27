@@ -13,7 +13,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -34,7 +33,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.ImageLoader
 import coil.fetch.VideoFrameFileFetcher
-import coil.load
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -43,9 +41,7 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
-import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
@@ -56,7 +52,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
-    private var discardPhotoDialog = WeakReference<AlertDialog>(null)
     private val locationData: LocationData by lazy {
         LocationData(requireContext())
     }
@@ -134,10 +129,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Prepare UI controls
         setUpCameraUi()
-
-        layout.preview.setOnClickListener {
-            navigateToSave()
-        }
     }
 
     private suspend fun updateCameraState() {
@@ -250,8 +241,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.shutterButton.setOnClickListener {
             val controller = requireNotNull(cameraController)
             if (controller.isImageCaptureEnabled) {
-                if (viewModel.isEnterprise())
-                    enableShutterButton(false)
                 onTakePhotoButtonClick(controller)
             } else if (controller.isVideoCaptureEnabled) {
                 onTakeVideoButtonClick(controller)
@@ -291,10 +280,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun goBack() {
         withState(viewModel) {
-            if (viewModel.isEnterprise() && it.listCapture.isNotEmpty())
-                discardPhotoPrompt(it.listCapture.size)
-            else
-                requireActivity().finish()
+            viewModel.clearCaptures()
+            requireActivity().finish()
         }
     }
 
@@ -328,20 +315,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     Logger.d("Photo capture succeeded: $savedUri")
 
                     viewModel.onCapturePhoto(savedUri)
-
-                    if (viewModel.isEnterprise()) {
-                        layout.animatePreviewHide()
-                        enableShutterButton(true)
-                        requireActivity().runOnUiThread {
-                            layout.animatePreview()
-                        }
-                    } else navigateToSave()
+                    navigateToSave()
                 }
 
                 override fun onError(exc: ImageCaptureException) {
                     Logger.e("Photo capture failed: ${exc.message}", exc)
-                    if (viewModel.isEnterprise())
-                        enableShutterButton(true)
                 }
             })
 
@@ -356,8 +334,6 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun onTakeVideoButtonClick(controller: CameraController) {
         if (controller.isRecording) {
-            if (viewModel.isEnterprise())
-                enableShutterButton(false)
             layout.shutterButton.state = ShutterButton.State.Video
             layout.modeSelectorView.isVisible = true
             layout.captureDurationView.isVisible = false
@@ -382,16 +358,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         Logger.d("Video capture succeeded: $savedUri")
                         savedUri.path?.let {
                             val length = File(it).length()
-                            layout.animatePreviewHide()
-                            enableShutterButton(true)
                             if (length > 0L) {
                                 viewModel.onCaptureVideo(savedUri)
-                                if (viewModel.isEnterprise()) {
-                                    requireActivity().runOnUiThread {
-                                        layout.animatePreview()
-                                    }
-                                } else
-                                    navigateToSave()
+
+                                navigateToSave()
                             }
                         }
                     }
@@ -401,17 +371,9 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         message: String,
                         cause: Throwable?
                     ) {
-                        if (viewModel.isEnterprise())
-                            enableShutterButton(true)
                         Logger.e("Video capture failed: ${cause?.message}", cause)
                     }
                 })
-        }
-    }
-
-    private fun enableShutterButton(enabled: Boolean) {
-        requireActivity().runOnUiThread {
-            layout.shutterButton.isEnabled = enabled
         }
     }
 
@@ -482,34 +444,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun hasFrontCamera(): Boolean =
         cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
-    override fun invalidate(): Unit = withState(viewModel) {
-        if (viewModel.isEnterprise()) {
-            if (it.listCapture.isNotEmpty()) {
-                layout.preview.load(it.listCapture.last().uri, imageLoader)
-                layout.imageCount.text = String.format("%,d", it.listCapture.size)
-                layout.rlPreview.visibility = View.VISIBLE
-            } else {
-                layout.imageCount.text = ""
-                layout.rlPreview.visibility = View.INVISIBLE
-            }
-        } else
-            layout.rlPreview.visibility = View.INVISIBLE
-    }
-
-    private fun discardPhotoPrompt(count: Int) {
-        val oldDialog = discardPhotoDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.discard_title))
-            .setMessage(String.format(resources.getString(R.string.discard_subtitle), count))
-            .setNegativeButton(resources.getString(R.string.discard_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.discard_confirmation_positive)) { _, _ ->
-                viewModel.clearCaptures()
-                requireActivity().finish()
-            }
-            .show()
-        discardPhotoDialog = WeakReference(dialog)
-    }
+    override fun invalidate() {}
 
     override fun onStart() {
         super.onStart()
@@ -517,8 +452,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         withState(viewModel) {
             if (it.listCapture.isNotEmpty()) {
                 layout.captureDurationView.isVisible = false
-                if (!viewModel.isEnterprise())
-                    navigateToSave()
+                navigateToSave()
             }
         }
     }

@@ -36,8 +36,7 @@
     <string name="action_remove_offline_toast">%s ne sera plus disponible hors ligne.</string>
 
     <string name="action_upload_photo_title">Importer des photos ou des vidéos</string>
-    <string name="action_capture_media_title_multiple">Prendre des photos ou des vidéos</string>
-    <string name="action_capture_media_title_single">Prendre une photo ou une vidéo</string>
+    <string name="action_capture_media_title">Prendre une photo ou une vidéo</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Importation du fichier multimédia prévue.</string>

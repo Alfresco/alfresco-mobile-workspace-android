@@ -36,8 +36,7 @@
     <string name="action_remove_offline_toast">%s will no longer be available offline.</string>
 
     <string name="action_upload_photo_title">Upload photos or videos</string>
-    <string name="action_capture_media_title_multiple">Take photos or videos</string>
-    <string name="action_capture_media_title_single">Take a photo or video</string>
+    <string name="action_capture_media_title">Take a photo or video</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Media scheduled for upload.</string>
@@ -68,8 +67,5 @@
     <string name="action_rename_file_folder">Rename</string>
     <string name="action_rename_file_folder_toast">%s was renamed</string>
     <string name="action_file_folder_save">Save</string>
-    <string name="action_scan_title">Scan documents</string>
-    <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
-    <string name="action_upload_scan_documents_toast">Document scheduled for upload.</string>
 
 </resources>

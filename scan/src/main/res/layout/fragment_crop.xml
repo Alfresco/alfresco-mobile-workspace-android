@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".CropFragment">
 
-    <ImageView
-        android:id="@+id/sd"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null"
-        android:visibility="invisible" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -23,13 +16,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.labters.documentscanner.DocumentScannerView
-            android:id="@+id/document_scanner"
+        <FrameLayout
+            android:id="@+id/holderImageView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:layout_weight="10" />
+            android:layout_weight="10">
+
+            <FrameLayout
+                android:id="@+id/holderImageCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/sd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/imagePreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null" />
+
+            </FrameLayout>
+
+            <com.zynksoftware.documentscanner.ui.components.polygon.PolygonView
+                android:id="@+id/polygonView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
 
 
     </LinearLayout>
@@ -68,8 +91,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,9 +107,9 @@
             android:id="@+id/loading_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:text="@string/scan_loading"
-            android:layout_gravity="center"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="@color/color_on_surface_60" />
     </LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="zdc_point_padding">0dp</dimen>
+    <dimen name="zdc_polygon_dimens">32dp</dimen>
+    <dimen name="zdc_polygon_line_stroke_width">2dp</dimen>
+    <dimen name="zdc_polygon_point_stroke_width">1dp</dimen>
+
+</resources>

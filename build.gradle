@@ -31,6 +31,7 @@ allprojects {
             url "https://jitpack.io"
             content { includeGroup "com.github.chrisbanes" }
         }
+        maven { url "https://jitpack.io" }
     }
 }
 

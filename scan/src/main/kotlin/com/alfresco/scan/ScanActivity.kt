@@ -1,5 +1,6 @@
 package com.alfresco.scan
 
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.scan.databinding.ActivityScanBinding
 import com.alfresco.ui.ScanKeyHandler
+import com.zynksoftware.documentscanner.ui.DocumentScanner
 
 /**
  * Marked as ScanActivity class
@@ -19,6 +21,11 @@ class ScanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val configuration = DocumentScanner.Configuration()
+        configuration.imageQuality = FILE_QUALITY
+        configuration.imageType = FILE_TYPE
+        DocumentScanner.init(this, configuration)
 
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -62,5 +69,11 @@ class ScanActivity : AppCompatActivity() {
             }
         }
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        private const val FILE_SIZE = 1000000L
+        private const val FILE_QUALITY = 100
+        private val FILE_TYPE = Bitmap.CompressFormat.JPEG
     }
 }

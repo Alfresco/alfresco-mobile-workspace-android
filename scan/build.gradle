@@ -13,6 +13,11 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -27,7 +32,8 @@ dependencies {
     implementation project(':viewer-media')
     implementation project(':viewer-pdf')
     implementation project(':viewer-text')
-    implementation project(':documentscanner')
+    implementation project(':DocumentScanner')
+    implementation 'id.zelory:compressor:3.0.1'
 
     // Fix caused by conflicting ListenableFuture imported by ExoPlayer and CameraX
     implementation libs.guava

@@ -36,7 +36,8 @@
     <string name="action_remove_offline_toast">%s ya no estará disponible sin conexión.</string>
 
     <string name="action_upload_photo_title">Cargar fotos o vídeos</string>
-    <string name="action_capture_media_title_multiple">Tomar una foto o un vídeo</string>
+    <string name="action_capture_media_title_multiple">Tomar fotos o un vídeos</string>
+    <string name="action_capture_media_title_single">Tomar una foto o un vídeo</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Contenido multimedia programado para cargar.</string>
@@ -48,7 +49,7 @@
     <string name="action_folder_create">Crear</string>
 
     <string name="action_folder_name_hint">Nombre</string>
-    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: "*|/\\&lt;&gt;</string>
+    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">El nombre de la carpeta no puede estar vacío.</string>
 
     <string name="action_upload_files_title">Cargar ficheros</string>
@@ -60,5 +61,15 @@
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
     <string name="share_files_failure_permissions">Para compartir ficheros, active los permisos de almacenamiento de lectura.</string>
+
+    <string name="action_move_title">Mover</string>
+    <string name="action_move_toast">%s se ha movido correctamente</string>
+
+    <string name="action_rename_file_folder">Cambiar nombre</string>
+    <string name="action_rename_file_folder_toast">Se ha cambiado el nombre de %s</string>
+    <string name="action_file_folder_save">Guardar</string>
+    <string name="action_scan_title">Escanear documento</string>
+    <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
+    <string name="action_upload_scan_documents_toast">Documento programado para cargar.</string>
 
 </resources>

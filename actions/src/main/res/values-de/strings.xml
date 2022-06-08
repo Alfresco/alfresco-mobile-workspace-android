@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="action_add_favorite_title">Zu Favoriten hinzufügen</string>
     <string name="action_remove_favorite_title">Aus Favoriten entfernen</string>
@@ -36,8 +35,9 @@
     <string name="action_add_offline_toast">%s wird offline zur Verfügung gestellt.</string>
     <string name="action_remove_offline_toast">%s ist offline nicht mehr verfügbar.</string>
 
-    <string name="action_upload_photo_title">Bilder oder Videos hochladen</string>
-    <string name="action_capture_media_title_multiple">Bilder oder Videos aufnehmen</string>
+    <string name="action_upload_photo_title">Fotos oder Videos hochladen</string>
+    <string name="action_capture_media_title_multiple">Fotos oder Videos aufnehmen</string>
+    <string name="action_capture_media_title_single">Foto oder Video aufnehmen</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
     <string name="action_upload_media_toast">Zum Hochladen vorgesehene Medien.</string>
@@ -56,10 +56,20 @@
 
     <!-- Upload queue dialog -->
     <string name="action_upload_queue_title">Hochladen</string>
-    <string name="action_upload_queue_subtitle">Übertragung wird ausgeführt. Bitte verfolgen Sie den Verlauf in der mobilen Anwendung.</string>
+    <string name="action_upload_queue_subtitle">Das Hochladen befindet sich in der Warteschlange. Bitte verfolgen Sie den Status in der mobilen Anwendung.</string>
     <string name="action_upload_queue_ok_button">OK</string>
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
     <string name="share_files_failure_permissions">Für das Freigeben von Dateien muss die Berechtigung zum Lesen des Datenspeichers erteilt werden.</string>
+
+    <string name="action_move_title">Verschieben</string>
+    <string name="action_move_toast">%s wurde erfolgreich verschoben</string>
+
+    <string name="action_rename_file_folder">Umbenennen</string>
+    <string name="action_rename_file_folder_toast">%s wurde umbenannt</string>
+    <string name="action_file_folder_save">Speichern</string>
+    <string name="action_scan_title">Dokumente scannen</string>
+    <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
+    <string name="action_upload_scan_documents_toast">Zum Hochladen vorgesehenes Dokument.</string>
 
 </resources>

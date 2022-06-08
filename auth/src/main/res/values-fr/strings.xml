@@ -1,6 +1,6 @@
 <resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2022 Alfresco Software, Inc. Tous droits réservés.</string>
+    <string name="auth_copyright_notice">&#169; 2021 Alfresco Software, Inc. Tous droits réservés.</string>
 
     <string name="auth_connect_field_hint">Connexion à</string>
     <string name="auth_connect_button">Connexion</string>
@@ -12,26 +12,26 @@
     <string name="auth_help_overlay_title">Aide</string>
     <string name="auth_help_identity_body">
         <![CDATA[<h1>Comment se connecter à Alfresco</h1>
-        <h6>URL d\'Alfresco Content Services</h6>
-        <p>Vous pouvez saisir l\'URL de votre instance d\'Alfresco Content Services. Vous devrez entrer vos nom d\'utilisateur et mot de passe pour vous authentifier.</p>
-        <h6>Connexion avec SSO</h6>
-        <p>Vous pouvez saisir l\'URL de votre service de gestion d\'identité Alfresco pour vous authentifier auprès du fournisseur d\'identité de votre société.</p>
-        <p>*Vous devrez ensuite entrer l\'URL de votre instance d\'Alfresco Content Services</p>
-        <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
+    <h6>URL d\'Alfresco Content Services</h6>
+    <p>Vous pouvez saisir l\'URL de votre instance d\'Alfresco Content Services. Vous devrez entrer vos nom d\'utilisateur et mot de passe pour vous authentifier.</p>
+    <h6>Connexion avec SSO</h6>
+    <p>Vous pouvez saisir l\'URL de votre service de gestion d\'identité Alfresco pour vous authentifier auprès du fournisseur d\'identité de votre société.</p>
+    <p>*Vous devrez ensuite entrer l\'URL de votre instance d\'Alfresco Content Services</p>
+    <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
     </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Emplacement de l\'entrepôt de contenu</h6>
         <p>URL d\'Alfresco Content Services :</p>
-        <p>Il s\'agit de l\'URL de votre instance d\'Alfresco Content Services.</p>
-        <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    <p>Il s\'agit de l\'URL de votre instance d\'Alfresco Content Services.</p>
+    <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
+    </string>
 
     <string name="auth_help_settings_body">
         <![CDATA[<h1>Authentification Alfresco</h1>
-        <p>Si vous n\'utilisez pas les paramètres SSO par défaut, définissez les paramètres ici.</p>
-        <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
-      </string>
+    <p>Si vous n\'utilisez pas les paramètres SSO par défaut, définissez les paramètres ici.</p>
+    <p>Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</p>]]>
+    </string>
 
     <!-- Errors -->
     <string name="auth_error_check_connect_url">Aucun service d\'authentification trouvé à l\'URL Alfresco spécifiée.</string>

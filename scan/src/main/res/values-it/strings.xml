@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Chiudi</string>
+    <string name="gallery_button_alt">Galleria</string>
+    <string name="flash_button_alt">Modalità flash</string>
+
+    <string name="scan_mode_photo">Foto</string>
+
+    <string name="scan_permissions_rationale">@string/scan_failure_permissions</string>
+    <string name="scan_failure_permissions">Per acquisire i documenti, attivare la fotocamera e le autorizzazioni di lettura.</string>
+
+    <string name="discard_scan_title">Eliminare i file acquisiti?</string>
+    <string name="discard_scan_subtitle">Se si esce, i file acquisiti verranno eliminati.</string>
+    <string name="discard_scan_confirmation_negative">Annulla</string>
+    <string name="discard_scan_confirmation_positive">Elimina</string>
+
+
+    <string name="scan">Avanti</string>
+    <string name="scanning">Scansione in corso</string>
+    <string name="low_memory">Memoria insufficiente</string>
+    <string name="low_memory_message">La memoria del telefono è insufficiente. Potrebbero verificarsi dei ritardi nella modifica delle immagini.</string>
+    <string name="keep_scan_button">Conserva la scansione</string>
+    <string name="retake_button">Riacquisisci</string>
+    <string name="scan_loading">Caricamento in corso</string>
+    <string name="pdf_description_hint">Aggiungi descrizione</string>
+    <string name="pdf_name_hint">Nome file</string>
+    <string name="pdf_confirmation_negative">Annulla</string>
+    <string name="pdf_confirmation_positive">Crea</string>
+    <string name="pdf_title_create">Crea</string>
+    <string name="pdf_name_invalid_chars">Il nome della cartella non può contenere i caratteri seguenti: ?:\"*|/\&lt;></string>
+    <string name="pdf_name_empty">Il nome della cartella non può essere vuoto.</string>
+    <string name="error_preview_not_available">Anteprima non disponibile</string>
+    <string name="scan_pdf_save_title">Salva</string>
+
+</resources>

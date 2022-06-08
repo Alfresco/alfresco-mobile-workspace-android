@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Fermer</string>
+    <string name="gallery_button_alt">Galerie</string>
+    <string name="flash_button_alt">Mode flash</string>
+
+    <string name="scan_mode_photo">Photo</string>
+
+    <string name="scan_permissions_rationale">@string/scan_failure_permissions</string>
+    <string name="scan_failure_permissions">Pour scanner les documents, activez l\'appareil photo et les permissions de lecture.</string>
+
+    <string name="discard_scan_title">Supprimer le scannage des fichiers</string>
+    <string name="discard_scan_subtitle">Le scannage des fichiers sera supprimé si vous quittez.</string>
+    <string name="discard_scan_confirmation_negative">Annuler</string>
+    <string name="discard_scan_confirmation_positive">Supprimer</string>
+
+
+    <string name="scan">Suivant</string>
+    <string name="scanning">Scannage</string>
+    <string name="low_memory">Mémoire insuffisante</string>
+    <string name="low_memory_message">La mémoire de votre téléphone est faible, vous pouvez ressentir des décalages lors de l\'édition des images.</string>
+    <string name="keep_scan_button">Conserver le scan</string>
+    <string name="retake_button">Reprendre</string>
+    <string name="scan_loading">Chargement</string>
+    <string name="pdf_description_hint">Ajouter une description</string>
+    <string name="pdf_name_hint">Nom de fichier</string>
+    <string name="pdf_confirmation_negative">Annuler</string>
+    <string name="pdf_confirmation_positive">Créer</string>
+    <string name="pdf_title_create">Créer</string>
+    <string name="pdf_name_invalid_chars">Le nom du dossier ne peut pas contenir les caractères suivants : ?:\"*|/\&lt;></string>
+    <string name="pdf_name_empty">Le nom du dossier ne peut pas être vide.</string>
+    <string name="error_preview_not_available">Aperçu non disponible</string>
+    <string name="scan_pdf_save_title">Enregistrer</string>
+
+</resources>

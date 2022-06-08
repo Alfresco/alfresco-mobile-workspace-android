@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Cerrar</string>
+    <string name="gallery_button_alt">Galería</string>
+    <string name="flash_button_alt">Modo flash</string>
+
+    <string name="scan_mode_photo">Foto</string>
+
+    <string name="scan_permissions_rationale">@string/scan_failure_permissions</string>
+    <string name="scan_failure_permissions">Para escanear documentos, active los permisos de cámara y lectura.</string>
+
+    <string name="discard_scan_title">¿Descartar ficheros escaneados?</string>
+    <string name="discard_scan_subtitle">Si sale, se descartarán los ficheros escaneados.</string>
+    <string name="discard_scan_confirmation_negative">Cancelar</string>
+    <string name="discard_scan_confirmation_positive">Descartar</string>
+
+
+    <string name="scan">Siguiente</string>
+    <string name="scanning">Escaneo en curso</string>
+    <string name="low_memory">Baja memoria</string>
+    <string name="low_memory_message">Su móvil tiene poca memoria, es posible que tenga retrasos al editar imágenes.</string>
+    <string name="keep_scan_button">Guardar escaneo</string>
+    <string name="retake_button">Retomar</string>
+    <string name="scan_loading">Cargando</string>
+    <string name="pdf_description_hint">Añadir descripción</string>
+    <string name="pdf_name_hint">Nombre del fichero</string>
+    <string name="pdf_confirmation_negative">Cancelar</string>
+    <string name="pdf_confirmation_positive">Crear</string>
+    <string name="pdf_title_create">Crear</string>
+    <string name="pdf_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: \"*|/\&lt;></string>
+    <string name="pdf_name_empty">El nombre de la carpeta no puede estar vacío.</string>
+    <string name="error_preview_not_available">Vista previa no disponible</string>
+    <string name="scan_pdf_save_title">Guardar</string>
+
+</resources>

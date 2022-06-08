@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <resources>
 
 
     <!-- Upload queue dialog -->
     <string name="upload_queue_title">Hochladen</string>
-    <string name="upload_queue_subtitle">Übertragung wird ausgeführt. Bitte verfolgen Sie den Verlauf in der mobilen Anwendung.</string>
+    <string name="upload_queue_subtitle">Das Hochladen befindet sich in der Warteschlange. Bitte verfolgen Sie den Status in der mobilen Anwendung.</string>
     <string name="upload_queue_ok_button">OK</string>
 </resources>

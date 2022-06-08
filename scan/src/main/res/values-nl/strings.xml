@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Sluiten</string>
+    <string name="gallery_button_alt">Galerij</string>
+    <string name="flash_button_alt">Flitsmodus</string>
+
+    <string name="scan_mode_photo">Foto</string>
+
+    <string name="scan_permissions_rationale">@string/scan_failure_permissions</string>
+    <string name="scan_failure_permissions">Schakel de rechten voor Camera en Lezen in om documenten te scannen.</string>
+
+    <string name="discard_scan_title">Scanbestanden verwijderen?</string>
+    <string name="discard_scan_subtitle">Scanbestanden worden verwijderd als u afsluit.</string>
+    <string name="discard_scan_confirmation_negative">Annuleren</string>
+    <string name="discard_scan_confirmation_positive">Verwijderen</string>
+
+
+    <string name="scan">Volgende</string>
+    <string name="scanning">Scannen</string>
+    <string name="low_memory">Onvoldoende geheugen</string>
+    <string name="low_memory_message">Uw telefoon heeft onvoldoende geheugen beschikbaar.Er kunnen vertragingen zijn bij het bewerken van afbeeldingen.</string>
+    <string name="keep_scan_button">Scan houden</string>
+    <string name="retake_button">Opnieuw</string>
+    <string name="scan_loading">Laden&#8230;</string>
+    <string name="pdf_description_hint">Beschrijving toevoegen</string>
+    <string name="pdf_name_hint">Bestandsnaam</string>
+    <string name="pdf_confirmation_negative">Annuleren</string>
+    <string name="pdf_confirmation_positive">Maken</string>
+    <string name="pdf_title_create">Maken</string>
+    <string name="pdf_name_invalid_chars">Mapnaam mag geen van de volgende tekens bevatten: ?:\"*|/\&lt;></string>
+    <string name="pdf_name_empty">Mapnaam mag niet leeg zijn.</string>
+    <string name="error_preview_not_available">Preview niet beschikbaar</string>
+    <string name="scan_pdf_save_title">Opslaan</string>
+
+</resources>

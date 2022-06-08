@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_button_alt">Schließen</string>
+    <string name="gallery_button_alt">Galerie</string>
+    <string name="flash_button_alt">Blitzlichtmodus</string>
+
+    <string name="scan_mode_photo">Foto</string>
+
+    <string name="scan_permissions_rationale">@string/scan_failure_permissions</string>
+    <string name="scan_failure_permissions">Um Dokumente zu scannen, aktivieren Sie die Kamera und die Leseberechtigung.</string>
+
+    <string name="discard_scan_title">Gescannte Dateien verwerfen?</string>
+    <string name="discard_scan_subtitle">Gescannte Dateien werden verworfen, wenn Sie beenden.</string>
+    <string name="discard_scan_confirmation_negative">Abbrechen</string>
+    <string name="discard_scan_confirmation_positive">Verwerfen</string>
+
+
+    <string name="scan">Weiter</string>
+    <string name="scanning">Scannen</string>
+    <string name="low_memory">Geringer Speicher</string>
+    <string name="low_memory_message">Ihr Handy hat nur geringen Speicherplatz zur Verfügung, daher kann es bei der Bildbearbeitung zu Verzögerungen kommen.</string>
+    <string name="keep_scan_button">Scan beibehalten</string>
+    <string name="retake_button">Neuaufnahme</string>
+    <string name="scan_loading">Wird geladen</string>
+    <string name="pdf_description_hint">Beschreibung</string>
+    <string name="pdf_name_hint">Dateiname</string>
+    <string name="pdf_confirmation_negative">Abbrechen</string>
+    <string name="pdf_confirmation_positive">Erstellen</string>
+    <string name="pdf_title_create">Erstellen</string>
+    <string name="pdf_name_invalid_chars">Der Ordnername darf keines der folgenden Zeichen enthalten: ?:\"*|/\&lt;></string>
+    <string name="pdf_name_empty">Der Ordnername darf nicht leer sein.</string>
+    <string name="error_preview_not_available">Vorschau nicht verfügbar</string>
+    <string name="scan_pdf_save_title">Speichern</string>
+
+</resources>

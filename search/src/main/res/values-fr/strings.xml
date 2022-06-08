@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Recherches récentes</string>
 
-    <string name="search_loading_message">Recherche\u2026</string>
+    <string name="search_loading_message">Recherche&#8230;</string>
 
     <string name="search_chip_contextual">dans : %s</string>
     <string name="search_chip_files">Fichiers</string>
@@ -16,7 +16,7 @@
     <string name="search_empty_message">Nous n\'avons pas trouvé le fichier\nque vous recherchez.</string>
 
     <string name="advance_search_title">Recherche avancée</string>
-    <string name="default_search">Par défaut</string>
+    <string name="default_search">Défaut</string>
     <string name="component_action_reset">Réinitialiser</string>
     <string name="component_action_apply">Appliquer</string>
     <string name="component_action_cancel">Annuler</string>
@@ -70,9 +70,11 @@
     <string name="app.search.radio.type">Type</string>
     <string name="app.search.file.name">Nom de fichier</string>
     <string name="app.search.text.placeholder">Saisir le nom</string>
-    <string name="category.default.search">Par défaut</string>
+    <string name="category.default.search">Défaut</string>
     <string name="category.folder">Dossier</string>
     <string name="type.facet.queries">Recherches avec filtre par type</string>
     <string name="size_end_kb">%1$s (Ko)</string>
+
+    <string name="search_move_warning">Vous ne pouvez pas déplacer des fichiers vers votre propre dossier et sous-dossiers.</string>
 
 </resources>

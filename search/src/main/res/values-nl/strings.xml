@@ -75,4 +75,6 @@
     <string name="type.facet.queries">Facetquery\'s op basis van type</string>
     <string name="size_end_kb">%1$s (kB)</string>
 
+    <string name="search_move_warning">U kunt bestanden niet verplaatsen naar uw eigen map en submappen.</string>
+
 </resources>

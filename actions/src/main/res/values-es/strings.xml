@@ -48,7 +48,7 @@
     <string name="action_folder_create">Crear</string>
 
     <string name="action_folder_name_hint">Nombre</string>
-    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: "*|/\\&lt;&gt;</string>
+    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">El nombre de la carpeta no puede estar vacío.</string>
 
     <string name="action_upload_files_title">Cargar ficheros</string>
@@ -60,5 +60,12 @@
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
     <string name="share_files_failure_permissions">Para compartir ficheros, active los permisos de almacenamiento de lectura.</string>
+
+    <string name="action_move_title">Mover</string>
+    <string name="action_move_toast">%s se ha movido correctamente</string>
+
+    <string name="action_rename_file_folder">Cambiar nombre</string>
+    <string name="action_rename_file_folder_toast">Se ha cambiado el nombre de %s</string>
+    <string name="action_file_folder_save">Guardar</string>
 
 </resources>

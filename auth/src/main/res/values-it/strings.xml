@@ -13,24 +13,24 @@
     <string name="auth_help_identity_body">
         <![CDATA[<h1>Come connettersi ad Alfresco</h1>
         <h6>URL di Alfresco Content Services</h6>
-        <p>Puoi immettere l\'URL della tua istanza Alfresco Content Services. In questo caso, devi inserire il tuo nome utente e la password per autenticarti.</p>
-        <h6>Accesso con SSO</h6>
-        <p>Puoi immettere l\'URL di Alfresco Identity Management Service per autenticarti con il provider di identità della tua organizzazione.</p>
-        <p>*Dovrai quindi fornire l\'URL della tua istanza di Alfresco Content Services</p>
-        <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
-      </string>
+    <p>Puoi immettere l\'URL della tua istanza Alfresco Content Services. In questo caso, devi inserire il tuo nome utente e la password per autenticarti.</p>
+    <h6>Accesso con SSO</h6>
+    <p>Puoi immettere l\'URL di Alfresco Identity Management Service per autenticarti con il provider di identità della tua organizzazione.</p>
+    <p>*Dovrai quindi fornire l\'URL della tua istanza di Alfresco Content Services</p>
+    <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
+    </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Percorso repository dei contenuti</h6>
-        <p>URL di Alfresco Content Services:</p>
-        <p>Questo è l\'URL della tua istanza di Alfresco Content Services.</p>
-        <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
+    <p>URL di Alfresco Content Services:</p>
+    <p>Questo è l\'URL della tua istanza di Alfresco Content Services.</p>
+    <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
     </string>
 
     <string name="auth_help_settings_body">
         <![CDATA[<h1>Autenticazione con Alfresco</h1>
-        <p>Se non utilizzi le impostazioni SSO predefinite, puoi impostare qui i tuoi valori.</p>
-        <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
+    <p>Se non utilizzi le impostazioni SSO predefinite, puoi impostare qui i tuoi valori.</p>
+    <p>Per richiedere assistenza, contatta l\'amministratore di Alfresco.</p>]]>
     </string>
 
     <!-- Errors -->

@@ -5,7 +5,7 @@
 
     <string name="recent_search_title">Letzte Suchaufträge</string>
 
-    <string name="search_loading_message">Suche läuft\u2026</string>
+    <string name="search_loading_message">Suche läuft...</string>
 
     <string name="search_chip_contextual">in: %s</string>
     <string name="search_chip_files">Dateien</string>
@@ -75,4 +75,5 @@
     <string name="type.facet.queries">Facet-Abfragen nach Typ</string>
     <string name="size_end_kb">%1$s (KB)</string>
 
+    <string name="search_move_warning">Sie können keine Dateien in Ihren eigenen Ordner und Unterordner verschieben.</string>
 </resources>

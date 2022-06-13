@@ -49,7 +49,7 @@ class MoveFragment : Fragment(), MavericksView {
 
         val nodeId = viewModel.getMyFilesNodeId()
         args.entryObj?.let {
-            findNavController().navigateToMoveParent(nodeId, it.id, "Personal Files")
+            findNavController().navigateToMoveParent(nodeId, it.id, getString(R.string.browse_menu_personal))
         }
     }
 

@@ -36,7 +36,7 @@
     <string name="action_remove_offline_toast">%s ya no estará disponible sin conexión.</string>
 
     <string name="action_upload_photo_title">Cargar fotos o vídeos</string>
-    <string name="action_capture_media_title_multiple">Tomar fotos o un vídeos</string>
+    <string name="action_capture_media_title_multiple">Tomar fotos o vídeos</string>
     <string name="action_capture_media_title_single">Tomar una foto o un vídeo</string>
     <string name="action_capture_failed_permissions">@string/capture_failure_permissions</string>
 
@@ -68,7 +68,7 @@
     <string name="action_rename_file_folder">Cambiar nombre</string>
     <string name="action_rename_file_folder_toast">Se ha cambiado el nombre de %s</string>
     <string name="action_file_folder_save">Guardar</string>
-    <string name="action_scan_title">Escanear documento</string>
+    <string name="action_scan_title">Escanear documentos</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
     <string name="action_upload_scan_documents_toast">Documento programado para cargar.</string>
 

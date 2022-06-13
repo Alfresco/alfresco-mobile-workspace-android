@@ -81,7 +81,7 @@ gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.38.0"
 
 gradleLicensePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.90"
 
-gson = "com.google.code.gson:gson:2.8.5"
+gson = "com.google.code.gson:gson:2.8.9"
 
 guava = "com.google.guava:guava:30.0-android"
 

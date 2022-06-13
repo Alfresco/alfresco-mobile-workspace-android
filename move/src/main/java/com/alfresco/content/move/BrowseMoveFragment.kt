@@ -57,9 +57,7 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         }
 
         lifecycleScope.launchWhenStarted {
-            println("BrowseMoveFragment.onViewCreated navigate -- 0")
             viewModel.sharedFlow.collectLatest { entry ->
-                println("BrowseMoveFragment.onViewCreated navigate -- 4")
                 onItemClicked(entry)
             }
         }

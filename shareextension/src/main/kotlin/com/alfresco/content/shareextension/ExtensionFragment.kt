@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.fragmentViewModelWithArgs
@@ -36,6 +37,7 @@ data class ExtensionArgs(
  */
 class ExtensionFragment : Fragment(), MavericksView {
     private lateinit var args: ExtensionArgs
+    @OptIn(InternalMavericksApi::class)
     val viewModel: ExtensionViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {

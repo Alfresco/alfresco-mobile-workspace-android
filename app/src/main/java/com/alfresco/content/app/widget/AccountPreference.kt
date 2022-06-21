@@ -13,9 +13,9 @@ class AccountPreference(context: Context, attrs: AttributeSet?) : Preference(con
     private lateinit var signOutButton: MaterialButton
     var onSignOutClickListener: View.OnClickListener? = null
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder?) {
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        signOutButton = holder?.findViewById(R.id.sign_out_button) as MaterialButton
+        signOutButton = holder.findViewById(R.id.sign_out_button) as MaterialButton
         signOutButton.setOnClickListener(onSignOutClickListener)
     }
 }

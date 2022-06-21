@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
@@ -46,6 +47,7 @@ data class ViewerArgs(
 class ViewerFragment : Fragment(), MavericksView {
 
     private lateinit var args: ViewerArgs
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: ViewerBinding
     private var childFragment: ChildViewerFragment? = null

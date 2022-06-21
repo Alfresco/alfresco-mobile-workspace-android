@@ -41,14 +41,12 @@
         {
           "id": "7:5452033148610775403",
           "name": "modified",
-          "type": 6,
-          "flags": 2
+          "type": 6
         },
         {
           "id": "8:478363957192962053",
           "name": "isOffline",
-          "type": 1,
-          "flags": 4
+          "type": 1
         },
         {
           "id": "9:8089499220230382909",
@@ -64,8 +62,7 @@
         {
           "id": "11:2931623948301518676",
           "name": "isUpload",
-          "type": 1,
-          "flags": 4
+          "type": 1
         },
         {
           "id": "12:7704753326571321060",
@@ -75,20 +72,17 @@
         {
           "id": "13:8937782131764470873",
           "name": "isExtension",
-          "type": 1,
-          "flags": 4
+          "type": 1
         },
         {
           "id": "14:1311266378212477817",
           "name": "totalCount",
-          "type": 5,
-          "flags": 4
+          "type": 5
         },
         {
           "id": "15:3113908618782441744",
           "name": "isTotalEntry",
-          "type": 1,
-          "flags": 4
+          "type": 1
         }
       ],
       "relations": []

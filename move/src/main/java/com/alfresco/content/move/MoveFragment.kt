@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.Entry
@@ -40,6 +41,7 @@ data class MoveArgs(
  */
 class MoveFragment : Fragment(), MavericksView {
     private lateinit var args: MoveArgs
+    @OptIn(InternalMavericksApi::class)
     val viewModel: MoveViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {

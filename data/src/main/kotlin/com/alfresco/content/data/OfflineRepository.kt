@@ -41,7 +41,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     fun entry(id: String): Entry? =
         box.query()
-            .equal(Entry_.id, id,StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.id, id, StringOrder.CASE_SENSITIVE)
             .build()
             .findFirst()
 
@@ -108,7 +108,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box.query()
             .apply {
                 if (parentId != null) {
-                    equal(Entry_.parentId, parentId,StringOrder.CASE_SENSITIVE)
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
                     // Exclude uploads from synced folders
                     equal(Entry_.isUpload, false)
                 } else {
@@ -126,14 +126,14 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
     internal fun fetchAllOfflineEntries() =
         box.query()
-            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(),StringOrder.CASE_SENSITIVE)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, false)
             .build()
             .find()
 
     private fun fetchAllTransferEntries() =
         box.query()
-            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(),StringOrder.CASE_SENSITIVE)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)
             .build()
             .find()
@@ -237,14 +237,14 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     internal fun fetchPendingUploads() =
         box.query()
             .equal(Entry_.isUpload, true)
-            .notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value(),StringOrder.CASE_SENSITIVE)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
             .build()
             .find()
 
     fun observeUploads(parentId: String): Flow<List<Entry>> =
         callbackFlow {
             val query = box.query()
-                .equal(Entry_.parentId, parentId,StringOrder.CASE_SENSITIVE)
+                .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
                 .equal(Entry_.isUpload, true)
                 .order(Entry_.name)
                 .build()
@@ -262,7 +262,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         callbackFlow {
             val query = box.query()
                 .equal(Entry_.isUpload, true)
-                .equal(Entry_.id, "",StringOrder.CASE_SENSITIVE)
+                .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
                 .order(Entry_.name)
                 .build()
             val subscription = query.subscribe()
@@ -275,7 +275,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     // Removes a completed upload with id
     fun removeUpload(id: String) =
         box.query()
-            .equal(Entry_.id, id,StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.id, id, StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)
             .build()
             .remove()
@@ -283,10 +283,10 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun removeCompletedUploads(parentId: String? = null) =
         box.query()
             .equal(Entry_.isUpload, true)
-            .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(),StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
             .apply {
                 if (parentId != null) {
-                    equal(Entry_.parentId, parentId,StringOrder.CASE_SENSITIVE)
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
                 }
             }
             .build()

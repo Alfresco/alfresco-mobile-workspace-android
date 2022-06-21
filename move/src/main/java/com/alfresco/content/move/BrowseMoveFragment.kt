@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.browse.BrowseArgs
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.collectLatest
 class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_move_list) {
 
     private lateinit var args: BrowseArgs
+    @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,7 +1,7 @@
 [versions]
 camera = "1.1.0-alpha04"
 coil = "1.2.2"
-coroutines = "1.6.2"
+coroutines = "1.6.3"
 epoxy = "4.6.4"
 exoplayer = "2.14.0"
 kotlin = "1.7.0"
@@ -16,7 +16,7 @@ alfresco-auth = "com.alfresco.android:auth:0.8.0-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.0-SNAPSHOT"
 alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.0-SNAPSHOT"
 
-android-desugar = "com.android.tools:desugar_jdk_libs:1.0.10"
+android-desugar = "com.android.tools:desugar_jdk_libs:1.1.5"
 android-gradle = "com.android.tools.build:gradle:7.2.1"
 
 androidx-activity = "androidx.activity:activity-ktx:1.4.0"

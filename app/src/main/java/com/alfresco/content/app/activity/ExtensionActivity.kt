@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
@@ -32,6 +33,7 @@ import kotlinx.coroutines.GlobalScope
  */
 class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private lateinit var actionBarController: ActionBarController
@@ -86,7 +88,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 
     private fun configure() = withState(viewModel) {
         val graph = navController.navInflater.inflate(R.navigation.nav_share_extension)
-        graph.startDestination = R.id.nav_extension
+        graph.setStartDestination(R.id.nav_extension)
         navController.graph = graph
 
         actionBarController = ActionBarController(findViewById(R.id.toolbar))

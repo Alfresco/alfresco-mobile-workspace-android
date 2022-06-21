@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
@@ -30,6 +31,7 @@ import java.lang.ref.WeakReference
  */
 class MainActivity : AppCompatActivity(), MavericksView {
 
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
     private fun configure() = withState(viewModel) { state ->
         val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
-        graph.startDestination = if (state.isOnline) R.id.nav_recents else R.id.nav_offline
+        graph.setStartDestination(if (state.isOnline) R.id.nav_recents else R.id.nav_offline)
         navController.graph = graph
 
         val appBarConfiguration = AppBarConfiguration(bottomNav.menu)

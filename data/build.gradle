@@ -37,4 +37,6 @@ dependencies {
 
     implementation libs.gson
     implementation libs.guava
+
+    implementation libs.firebase.analytics
 }

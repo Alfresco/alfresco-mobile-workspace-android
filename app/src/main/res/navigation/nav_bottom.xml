@@ -74,10 +74,6 @@
             app:argType="boolean"
             android:defaultValue="false"/>
 
-        <argument
-            android:name="moveId"
-            app:argType="string" />
-
         <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}?title={title}" />
     </fragment>
 
@@ -105,11 +101,13 @@
             app:argType="string" />
         <argument
             android:name="id"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue=""/>
         <argument
             android:name="title"
             app:argType="string"
             android:defaultValue=""/>
+
         <deepLink app:uri="alfresco://content/browse/{path}/remote/{id}?title={title}" />
         <deepLink app:uri="alfresco://content/browse/{path}/remote?title={title}" />
     </fragment>

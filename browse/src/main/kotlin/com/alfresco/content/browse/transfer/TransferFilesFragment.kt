@@ -12,6 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
@@ -53,6 +54,7 @@ data class TransferFilesArgs(
 class TransferFilesFragment : Fragment(), MavericksView {
 
     private lateinit var args: TransferFilesArgs
+    @OptIn(InternalMavericksApi::class)
     private val viewModel: TransferFilesViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: FragmentTransferFilesListBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }

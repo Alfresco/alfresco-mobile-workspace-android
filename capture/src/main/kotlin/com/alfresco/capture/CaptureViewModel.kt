@@ -131,7 +131,7 @@ class CaptureViewModel(
     fun updateName(newFileName: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
-                val updateCapture = captureItem?.copy(name = newFileName)
+                val updateCapture = captureItem.copy(name = newFileName)
                 setState { copy(visibleItem = updateCapture) }
                 updateCapture
             } else {
@@ -144,7 +144,7 @@ class CaptureViewModel(
     fun updateDescription(newDescription: String) = withState {
         val newList = it.listCapture.map { captureItem ->
             if (captureItem == it.visibleItem) {
-                val updateCapture = captureItem?.copy(description = newDescription)
+                val updateCapture = captureItem.copy(description = newDescription)
                 setState { copy(visibleItem = updateCapture) }
                 updateCapture
             } else {

@@ -13,6 +13,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
+/**
+ * Marked as AnalyticsRepository class
+ */
 class AnalyticsRepository(val session: Session = SessionManager.requireSession) {
 
     private val context get() = session.context
@@ -60,6 +63,9 @@ class AnalyticsRepository(val session: Session = SessionManager.requireSession) 
     @SuppressLint("HardwareIds")
     private fun deviceID() = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
+    /**
+     * default parameters added in bundle for analytics
+     */
     fun defaultParams(): Bundle {
         val bundle = Bundle().apply {
             putString(DefaultParameters.ServerURL.name, serverURL())
@@ -72,22 +78,34 @@ class AnalyticsRepository(val session: Session = SessionManager.requireSession) 
         return bundle
     }
 
+    /**
+     * It will get triggered to log analytics on firebase console
+     */
     fun logEvent(type: EventType, params: Bundle) {
         firebaseAnalytics.logEvent(type.name, params)
     }
 }
 
+/**
+ * Marked as EventName enum
+ */
 enum class EventName(val value: String) {
     FilePreview("Event_FilePreview"),
     OpenWith("Event_OpenWith")
 }
 
+/**
+ * Marked as EventType enum
+ */
 enum class EventType(val value: String) {
     ScreenView("screen_view"),
     ActionEvent("action_event"),
     ApiTracker("api_tracker")
 }
 
+/**
+ * Marked as DefaultParameters enum
+ */
 enum class DefaultParameters(val value: String) {
     ServerURL("server_url"),
     DeviceName("device_name"),
@@ -97,6 +115,9 @@ enum class DefaultParameters(val value: String) {
     DeviceID("device_id")
 }
 
+/**
+ * Marked as NetworkStatus enum
+ */
 enum class NetworkStatus {
     NOT_CONNECTED,
     WIFI,

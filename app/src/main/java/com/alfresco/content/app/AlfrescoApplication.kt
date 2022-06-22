@@ -11,7 +11,6 @@ import com.alfresco.content.viewer.ViewerRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Suppress("unused")
@@ -40,6 +39,8 @@ class AlfrescoApplication : Application() {
         ConnectivityTracker.startTracking(this)
 
         Mavericks.initialize(this)
+
+//        throw NullPointerException("test crash")
     }
 
     private fun updateAppTheme(theme: Settings.Theme) {

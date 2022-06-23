@@ -5,6 +5,7 @@ import android.view.View
 import com.alfresco.capture.CaptureHelperFragment
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,8 @@ import kotlinx.coroutines.withContext
 data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
-    override val title: Int = R.string.action_capture_media_title
+    override val title: Int = R.string.action_capture_media_title,
+    override val eventName: EventName = EventName.CreateMedia
 ) : Action {
 
     private val repository = OfflineRepository()

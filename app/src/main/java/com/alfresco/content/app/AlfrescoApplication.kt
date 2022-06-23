@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.airbnb.mvrx.Mavericks
 import com.alfresco.Logger
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.network.ConnectivityTracker
@@ -21,7 +22,7 @@ class AlfrescoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        AnalyticsManager().appLaunch()
         Logger.init(BuildConfig.DEBUG)
 
         ViewerRegistry.setup()
@@ -39,16 +40,23 @@ class AlfrescoApplication : Application() {
         ConnectivityTracker.startTracking(this)
 
         Mavericks.initialize(this)
-
-//        throw NullPointerException("test crash")
     }
 
     private fun updateAppTheme(theme: Settings.Theme) {
         AppCompatDelegate.setDefaultNightMode(
             when (theme) {
-                Settings.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
-                Settings.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
-                Settings.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                Settings.Theme.Light -> {
+                    AnalyticsManager().theme(Settings.Theme.Light.name.lowercase())
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                Settings.Theme.Dark -> {
+                    AnalyticsManager().theme(Settings.Theme.Dark.name.lowercase())
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+                Settings.Theme.System -> {
+                    AnalyticsManager().theme(Settings.Theme.System.name.lowercase())
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
             }
         )
     }

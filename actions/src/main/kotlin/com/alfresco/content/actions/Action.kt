@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.Logger
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +19,7 @@ interface Action {
     val entry: Entry
     val icon: Int
     val title: Int
+    val eventName: EventName
 
     suspend fun execute(context: Context): Entry
     fun copy(_entry: Entry): Action

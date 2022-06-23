@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.download.ContentDownloader
@@ -23,7 +24,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 data class ActionOpenWith(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_open_with,
-    override val title: Int = R.string.action_open_with_title
+    override val title: Int = R.string.action_open_with_title,
+    override val eventName: EventName = EventName.OpenWith
 ) : Action {
 
     private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)

@@ -15,6 +15,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.ui.BottomSheetDialogFragment
 import kotlinx.coroutines.GlobalScope
@@ -86,6 +87,7 @@ class CreateActionsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(it.title)
                     action(it)
                     clickListener { _ ->
+                        AnalyticsManager().fileActionEvent(eventName = it.eventName)
                         viewModel.execute(it)
                         dismiss()
                     }

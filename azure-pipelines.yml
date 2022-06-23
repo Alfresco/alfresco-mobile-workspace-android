@@ -21,6 +21,11 @@ variables:
     value: 'app/build/outputs/apk/**/*.apk'
 
 steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '11'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
   - task: CacheBeta@1
     inputs:
       key: 'gradle_0 | "$(Agent.OS)" | $(deps_def_path)'

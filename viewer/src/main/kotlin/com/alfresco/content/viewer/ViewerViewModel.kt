@@ -2,6 +2,7 @@ package com.alfresco.content.viewer
 
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
@@ -27,6 +28,7 @@ class ViewerViewModel(
     private val offlineRepository = OfflineRepository()
     private val browseRepository = BrowseRepository()
     private val renditionRepository = RenditionRepository()
+    private val analyticsManager = AnalyticsManager()
 
     init {
         viewModelScope.launch {
@@ -45,24 +47,36 @@ class ViewerViewModel(
     private suspend fun loadContent(id: String, loader: ContentLoader) {
         val entry = loader.fetchEntry(id)
         requireNotNull(entry)
-
+        val mimeType = entry.mimeType
         setState { copy(entry = entry) }
 
-        if (ViewerRegistry.isPreviewSupported(entry.mimeType)) {
-            setState { copy(
-                ready = true,
-                viewerUri = loader.contentUri(entry),
-                viewerMimeType = entry.mimeType
-            ) }
+        if (ViewerRegistry.isPreviewSupported(mimeType)) {
+            setState {
+                copy(
+                    ready = true,
+                    viewerUri = loader.contentUri(entry),
+                    viewerMimeType = mimeType
+                )
+            }
+            analyticsManager.previewFile(mimeType ?: "",
+                entry.name.substringAfterLast(".", ""),
+                true)
         } else {
             val rendition = loader.rendition(entry)
+            analyticsManager.previewFile(
+                mimeType ?: "",
+                entry.name.substringAfterLast(".", ""),
+                false
+            )
             requireNotNull(rendition)
             // TODO: isRendition supported
-            setState { copy(
-                ready = true,
-                viewerUri = rendition.uri,
-                viewerMimeType = rendition.mimeType
-            ) }
+            setState {
+                copy(
+                    ready = true,
+                    viewerUri = rendition.uri,
+                    viewerMimeType = rendition.mimeType
+                )
+            }
         }
     }
 

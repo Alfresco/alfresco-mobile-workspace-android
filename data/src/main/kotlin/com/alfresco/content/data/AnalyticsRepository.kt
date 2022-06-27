@@ -68,12 +68,12 @@ class AnalyticsRepository(val session: Session = SessionManager.requireSession) 
      */
     fun defaultParams(): Bundle {
         val bundle = Bundle().apply {
-            putString(DefaultParameters.ServerURL.name, serverURL())
-            putString(DefaultParameters.DeviceName.name, deviceName())
-            putString(DefaultParameters.DeviceOS.name, deviceOS())
-            putString(DefaultParameters.DeviceNetwork.name, deviceNetwork())
-            putString(DefaultParameters.AppVersion.name, appVersion())
-            putString(DefaultParameters.DeviceName.name, deviceID())
+            putString(DefaultParameters.ServerURL.value, serverURL())
+            putString(DefaultParameters.DeviceName.value, deviceName())
+            putString(DefaultParameters.DeviceOS.value, deviceOS())
+            putString(DefaultParameters.DeviceNetwork.value, deviceNetwork())
+            putString(DefaultParameters.AppVersion.value, appVersion())
+            putString(DefaultParameters.DeviceID.value, deviceID())
         }
         return bundle
     }
@@ -82,7 +82,7 @@ class AnalyticsRepository(val session: Session = SessionManager.requireSession) 
      * It will get triggered to log analytics on firebase console
      */
     fun logEvent(type: EventType, params: Bundle) {
-        firebaseAnalytics.logEvent(type.name, params)
+        firebaseAnalytics.logEvent(type.value, params)
     }
 }
 
@@ -91,7 +91,24 @@ class AnalyticsRepository(val session: Session = SessionManager.requireSession) 
  */
 enum class EventName(val value: String) {
     FilePreview("Event_FilePreview"),
-    OpenWith("Event_OpenWith")
+    Download("Event_download"),
+    AddFavorite("Event_addFavorite"),
+    RemoveFavorite("Event_removeFavorite"),
+    RenameNode("Event_renameNode"),
+    MoveToFolder("Event_moveToFolder"),
+    MarkOffline("Event_markOffline"),
+    RemoveOffline("Event_removeOffline"),
+    MoveTrash("Event_moveTrash"),
+    ChangeTheme("Event_changeTheme"),
+    CreateFolder("Event_createFolder"),
+    UploadMedia("Event_uploadMedia"),
+    CreateMedia("Event_createMedia"),
+    UploadFiles("Event_uploadFiles"),
+    AppLaunched("Event_appLaunched"),
+    SearchFacets("Event_searchFacets"),
+    PermanentlyDelete("Event_permanentlyDelete"),
+    Restore("Event_restore"),
+    OpenWith("Event_openWith")
 }
 
 /**
@@ -122,4 +139,21 @@ enum class NetworkStatus {
     NOT_CONNECTED,
     WIFI,
     CELLULAR
+}
+
+/**
+ * Marked as Parameters enum
+ */
+enum class Parameters(val value: String) {
+    EventName("event_name"),
+    FileMimeType("file_mimetype"),
+    FileExtension("file_extension"),
+    FileSize("file_size"),
+    FolderName("folder_name"),
+    ThemeName("theme_name"),
+    NumberOfFiles("number_of_files"),
+    FacetName("facet_name"),
+    NumberOfAssets("number_of_assets"),
+    IsFile("is_file"),
+    Success("success")
 }

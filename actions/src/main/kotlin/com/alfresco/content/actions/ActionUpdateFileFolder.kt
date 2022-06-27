@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -17,7 +18,8 @@ import kotlinx.coroutines.withContext
 data class ActionUpdateFileFolder(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_rename,
-    override val title: Int = R.string.action_rename_file_folder
+    override val title: Int = R.string.action_rename_file_folder,
+    override val eventName: EventName = EventName.RenameNode
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {

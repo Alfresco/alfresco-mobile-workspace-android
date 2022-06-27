@@ -14,6 +14,7 @@ import androidx.documentfile.provider.DocumentFile
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import java.io.File
 import java.io.FileNotFoundException
@@ -22,7 +23,8 @@ import kotlin.coroutines.cancellation.CancellationException
 data class ActionDownload(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_download,
-    override val title: Int = R.string.action_download_title
+    override val title: Int = R.string.action_download_title,
+    override val eventName: EventName = EventName.Download
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {

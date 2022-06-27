@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.ContentPickerFragment
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,8 @@ import kotlinx.coroutines.withContext
 data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
-    override val title: Int = R.string.action_upload_files_title
+    override val title: Int = R.string.action_upload_files_title,
+    override val eventName: EventName = EventName.UploadFiles
 ) : Action {
 
     private val repository = OfflineRepository()

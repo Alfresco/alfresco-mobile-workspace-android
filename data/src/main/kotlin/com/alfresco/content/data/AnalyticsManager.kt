@@ -1,11 +1,14 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.session.Session
+import com.alfresco.content.session.SessionManager
+
 /**
  * Marked as AnalyticsManager class
  */
-class AnalyticsManager {
+class AnalyticsManager(val session: Session = SessionManager.requireSession) {
 
-    val repository = AnalyticsRepository()
+    private val repository: AnalyticsRepository by lazy { AnalyticsRepository(session) }
 
     /**
      * analytics event for preview file
@@ -55,7 +58,23 @@ class AnalyticsManager {
     fun searchFacets(name: String) {
         val params = repository.defaultParams()
         params.putString(Parameters.FacetName.value, name)
-        params.putString(Parameters.EventName.value, EventName.ChangeTheme.value)
+        params.putString(Parameters.EventName.value, EventName.SearchFacets.value)
         repository.logEvent(EventType.ActionEvent, params)
+    }
+
+    /**
+     * analytics for multiple screen view
+     */
+    fun screenViewEvent(pageViewName: PageView, folderName: String = "", noOfFiles: Int = -1) {
+        val params = repository.defaultParams()
+
+        if (folderName.isNotEmpty())
+            params.putString(Parameters.FolderName.value, folderName)
+
+        if (noOfFiles > -1)
+            params.putInt(Parameters.NumberOfFiles.value, noOfFiles)
+
+        params.putString(Parameters.EventName.value, pageViewName.value)
+        repository.logEvent(EventType.ScreenView, params)
     }
 }

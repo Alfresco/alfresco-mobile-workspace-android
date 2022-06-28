@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.core.content.getSystemService
 import com.alfresco.content.session.Session
-import com.alfresco.content.session.SessionManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -16,7 +15,7 @@ import com.google.firebase.ktx.Firebase
 /**
  * Marked as AnalyticsRepository class
  */
-class AnalyticsRepository(val session: Session = SessionManager.requireSession) {
+class AnalyticsRepository(val session: Session) {
 
     private val context get() = session.context
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
@@ -109,6 +108,35 @@ enum class EventName(val value: String) {
     PermanentlyDelete("Event_permanentlyDelete"),
     Restore("Event_restore"),
     OpenWith("Event_openWith")
+}
+
+/**
+ * Marked as PageView enum
+ */
+enum class PageView(val value: String) {
+    Recent("PageView_Recent"),
+    Favorites("PageView_Favorites"),
+    Offline("PageView_Offline"),
+    Browse("PageView_Browse"),
+    PersonalFiles("PageView_PersonalFiles"),
+    FolderName("PageView_FolderName"),
+    MyLibraries("PageView_MyLibraries"),
+    Shared("PageView_Shared"),
+    Trash("PageView_Trash"),
+    Search("PageView_Search"),
+    ShareExtension("PageView_ShareExtension"),
+    Transfers("PageView_Transfers"),
+    None("none")
+}
+
+/**
+ * Marked as APIEvent enum
+ */
+enum class APIEvent(val value: String) {
+    SyncingStatus("Event_API_SyncingStatus"),
+    NewFolder("Event_API_NewFolder"),
+    UploadFiles("Event_API_UploadFiles"),
+    Login("Event_API_Login")
 }
 
 /**

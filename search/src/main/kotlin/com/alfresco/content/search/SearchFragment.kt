@@ -23,6 +23,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
@@ -35,7 +36,6 @@ import com.alfresco.content.search.components.ComponentBuilder
 import com.alfresco.content.search.components.ComponentMetaData
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
-import java.lang.IllegalArgumentException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -106,7 +106,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        AnalyticsManager().screenViewEvent(PageView.Search)
         binding.recyclerViewChips.setController(epoxyController)
 
         withState(viewModel) { state ->

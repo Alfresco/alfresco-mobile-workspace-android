@@ -19,7 +19,8 @@ class Settings(
     private val preferenceChangedFlow = MutableSharedFlow<String>(extraBufferCapacity = 1)
 
     private val listener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+            AnalyticsManager().theme(prefs.getString(key, "") ?: "")
             preferenceChangedFlow.tryEmit(key)
         }
 

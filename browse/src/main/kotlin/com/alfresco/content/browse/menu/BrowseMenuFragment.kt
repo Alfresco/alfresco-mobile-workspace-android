@@ -11,6 +11,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentBrowseMenuBinding
+import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.navigateToFolder
 import com.alfresco.content.navigateToKnownPath
 
@@ -35,7 +37,7 @@ class BrowseMenuFragment : Fragment(), MavericksView {
                     browseMenuRow {
                         id(it.title)
                         entry(it)
-                        clickListener { _ -> navigateTo(it.path, it.title) }
+                        clickListener { _ -> navigateTo(it.path, it.title, it.pageView) }
                     }
                 } else {
                     browseMenuSeparator {
@@ -46,7 +48,8 @@ class BrowseMenuFragment : Fragment(), MavericksView {
         }
     }
 
-    private fun navigateTo(path: String, title: String) {
+    private fun navigateTo(path: String, title: String, pageView: PageView) {
+        AnalyticsManager().screenViewEvent(pageView)
         if (path == getString(R.string.nav_path_my_files)) {
             val nodeId = viewModel.getMyFilesNodeId()
             findNavController().navigateToFolder(nodeId, title)

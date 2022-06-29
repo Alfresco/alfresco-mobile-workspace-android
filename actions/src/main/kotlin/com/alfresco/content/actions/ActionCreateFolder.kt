@@ -2,11 +2,9 @@ package com.alfresco.content.actions
 
 import android.content.Context
 import android.view.View
-import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
-import com.alfresco.content.data.PageView
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
@@ -22,7 +20,6 @@ data class ActionCreateFolder(
 
     override suspend fun execute(context: Context): Entry {
         val result = showCreateFolderDialog(context) ?: throw CancellationException("User Cancellation")
-        AnalyticsManager().screenViewEvent(PageView.FolderName, folderName = result.name)
         return BrowseRepository().createFolder(result.name, result.description, entry.id)
     }
 

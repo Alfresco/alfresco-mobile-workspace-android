@@ -65,7 +65,7 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     /**
      * analytics for multiple screen view
      */
-    fun screenViewEvent(pageViewName: PageView, noOfFiles: Int = -1, folderName: String) {
+    fun screenViewEvent(pageViewName: PageView, noOfFiles: Int = -1, folderName: String = "") {
         val params = repository.defaultParams()
 
         if (noOfFiles > -1)

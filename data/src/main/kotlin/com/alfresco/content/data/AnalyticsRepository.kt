@@ -143,7 +143,7 @@ enum class APIEvent(val value: String) {
  * Marked as EventType enum
  */
 enum class EventType(val value: String) {
-    ScreenView("screen_view"),
+    ScreenView("screen_views"),
     ActionEvent("action_event"),
     ApiTracker("api_tracker")
 }

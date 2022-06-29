@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
@@ -18,7 +19,8 @@ import kotlinx.coroutines.withContext
 data class ActionDelete(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_delete,
-    override val title: Int = R.string.action_delete_title
+    override val title: Int = R.string.action_delete_title,
+    override val eventName: EventName = EventName.MoveTrash
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
@@ -40,7 +42,7 @@ data class ActionDelete(
         when (entry.type) {
             Entry.Type.FILE, Entry.Type.FOLDER -> BrowseRepository().deleteEntry(entry)
             Entry.Type.SITE -> SitesRepository().deleteSite(entry)
-            else -> { }
+            else -> {}
         }
     }
 
@@ -58,7 +60,8 @@ data class ActionDelete(
 data class ActionRestore(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_restore,
-    override val title: Int = R.string.action_restore_title
+    override val title: Int = R.string.action_restore_title,
+    override val eventName: EventName = EventName.Restore
 ) : Action {
     override suspend fun execute(context: Context): Entry {
         TrashCanRepository().restoreEntry(entry)
@@ -79,7 +82,8 @@ data class ActionRestore(
 data class ActionDeleteForever(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_delete_forever,
-    override val title: Int = R.string.action_delete_forever_title
+    override val title: Int = R.string.action_delete_forever_title,
+    override val eventName: EventName = EventName.PermanentlyDelete
 ) : Action {
     override suspend fun execute(context: Context): Entry {
         if (showConfirmation(context)) {

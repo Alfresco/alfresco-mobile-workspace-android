@@ -8,23 +8,34 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
+import com.alfresco.content.data.PageView
 
 class BrowseMenuViewModel(
     viewState: BrowseMenuViewState,
-    context: Context
+    val context: Context
 ) : MavericksViewModel<BrowseMenuViewState>(viewState) {
 
     init {
+        AnalyticsManager().screenViewEvent(PageView.Browse)
         val tiles = context.resources.getStringArray(R.array.browse_menu_titles)
         val icons = context.resources.getResourceList(R.array.browse_menu_icons)
         val paths = context.resources.getStringArray(R.array.browse_menu_paths)
-        val entries = tiles.zip(icons).zip(paths) { (t, i), p -> MenuEntry(p, t, i) }
+        val entries = tiles.zip(icons).zip(paths) { (t, i), p -> MenuEntry(p, t, i, getPageView(t)) }
 
         setState { copy(entries = entries) }
     }
 
     fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
+
+    private fun getPageView(path: String): PageView = when (path) {
+        context.getString(R.string.browse_menu_personal) -> PageView.PersonalFiles
+        context.getString(R.string.browse_menu_my_libraries) -> PageView.MyLibraries
+        context.getString(R.string.browse_menu_shared) -> PageView.Shared
+        context.getString(R.string.browse_menu_trash) -> PageView.Trash
+        else -> PageView.None
+    }
 
     companion object : MavericksViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
         override fun create(

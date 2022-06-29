@@ -15,10 +15,12 @@ import com.alfresco.content.actions.ActionExtension
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRestore
 import com.alfresco.content.actions.ActionUploadExtensionFiles
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SharedLinksRepository
@@ -53,6 +55,7 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
+            AnalyticsManager().screenViewEvent(PageView.Recent)
             val list = offlineRepository.buildTransferList()
             if (list.isEmpty())
                 offlineRepository.updateTransferSize(0)
@@ -60,6 +63,7 @@ class BrowseViewModel(
         }
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
+            AnalyticsManager().screenViewEvent(PageView.Favorites)
             val types = setOf(Entry.Type.FILE, Entry.Type.FOLDER)
             viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
             viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
@@ -75,6 +79,8 @@ class BrowseViewModel(
             viewModelScope.on<ActionRestore> { removeEntry(it.entry) }
             viewModelScope.on<ActionDeleteForever> { removeEntry(it.entry) }
         }
+        if (state.path == context.getString(R.string.nav_path_extension))
+            AnalyticsManager().screenViewEvent(PageView.ShareExtension, noOfFiles = browseRepository.getExtensionDataList().size)
     }
 
     @Suppress("ControlFlowWithEmptyBody")

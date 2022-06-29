@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.scan.ScanHelperFragment
 import kotlin.coroutines.cancellation.CancellationException
@@ -16,7 +17,8 @@ import kotlinx.coroutines.withContext
 data class ActionScanDocument(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_scan_doc,
-    override val title: Int = R.string.action_scan_title
+    override val title: Int = R.string.action_scan_title,
+    override val eventName: EventName = EventName.SCAN_DOCUMENTS
 ) : Action {
 
     private val repository = OfflineRepository()

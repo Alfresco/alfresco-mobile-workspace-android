@@ -22,6 +22,8 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.AdvanceSearchFilter
+import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.and
@@ -105,7 +107,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        AnalyticsManager().screenViewEvent(PageView.Search)
         binding.recyclerViewChips.setController(epoxyController)
 
         withState(viewModel) { state ->
@@ -352,6 +354,8 @@ class SearchFragment : Fragment(), MavericksView {
                         data(item)
                         clickListener { model, _, chipView, _ ->
                             if (model.data().category?.component != null) {
+                                val entry = model.data()
+                                AnalyticsManager().searchFacets(entry.category?.component?.selector ?: "")
                                 onChipClicked(model.data(), chipView)
                             } else {
                                 onContextualChipClicked(model.data(), chipView)
@@ -407,7 +411,7 @@ class SearchFragment : Fragment(), MavericksView {
         context: Context,
         searchChipCategory: SearchChipCategory
     ) = withContext(dispatcher) {
-        suspendCoroutine<ComponentMetaData?> {
+        suspendCoroutine {
             ComponentBuilder(context, searchChipCategory)
                 .onApply { name, query ->
                     executeContinuation(it, name, query)

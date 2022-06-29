@@ -11,6 +11,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionListBinding
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.ui.BottomSheetDialogFragment
@@ -49,6 +50,9 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(it.title)
                     action(it)
                     clickListener { _ ->
+                        AnalyticsManager().fileActionEvent(it.entry.mimeType ?: "",
+                            it.entry.name.substringAfterLast(".", ""),
+                            it.eventName)
                         viewModel.execute(it)
                         dismiss()
                     }

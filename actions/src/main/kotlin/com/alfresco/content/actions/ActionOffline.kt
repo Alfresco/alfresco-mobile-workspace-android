@@ -3,6 +3,7 @@ package com.alfresco.content.actions
 import android.content.Context
 import android.view.View
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.kotlin.ellipsize
@@ -10,7 +11,8 @@ import com.alfresco.kotlin.ellipsize
 data class ActionAddOffline(
     override val entry: Entry,
     override val icon: Int = R.drawable.ic_action_offline,
-    override val title: Int = R.string.action_add_offline_title
+    override val title: Int = R.string.action_add_offline_title,
+    override val eventName: EventName = EventName.MarkOffline
 ) : Action {
     private val repository: OfflineRepository = OfflineRepository()
 
@@ -34,7 +36,8 @@ data class ActionAddOffline(
 data class ActionRemoveOffline(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_offline_filled,
-    override val title: Int = R.string.action_remove_offline_title
+    override val title: Int = R.string.action_remove_offline_title,
+    override val eventName: EventName = EventName.RemoveOffline
 ) : Action {
     private val repository: OfflineRepository = OfflineRepository()
 

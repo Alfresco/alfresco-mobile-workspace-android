@@ -17,6 +17,7 @@ import com.alfresco.content.actions.ActionScanDocument
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.browse.transfer.TransferSyncNow
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
@@ -56,6 +57,7 @@ class MainActivityViewModel(
     }
 
     private fun init(context: Context, session: Session) {
+        AnalyticsManager().appLaunch()
         session.onSignedOut {
             setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
@@ -75,6 +77,7 @@ class MainActivityViewModel(
         // Cleanup unused db entries
         cleanupStorage(session)
         syncService = configureSync(context, viewModelScope)
+        AnalyticsManager(session).appLaunch()
     }
 
     private fun cleanupStorage(session: Session) {

@@ -40,6 +40,7 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.content.PermissionFragment
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
@@ -504,6 +505,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             .setMessage(String.format(resources.getString(R.string.discard_subtitle), count))
             .setNegativeButton(resources.getString(R.string.discard_confirmation_negative), null)
             .setPositiveButton(resources.getString(R.string.discard_confirmation_positive)) { _, _ ->
+                AnalyticsManager().discardCapture()
                 viewModel.clearCaptures()
                 requireActivity().finish()
             }

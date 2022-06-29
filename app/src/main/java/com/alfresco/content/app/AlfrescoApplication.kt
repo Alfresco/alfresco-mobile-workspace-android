@@ -11,7 +11,6 @@ import com.alfresco.content.viewer.ViewerRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Suppress("unused")
@@ -22,7 +21,6 @@ class AlfrescoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         Logger.init(BuildConfig.DEBUG)
 
         ViewerRegistry.setup()
@@ -45,9 +43,15 @@ class AlfrescoApplication : Application() {
     private fun updateAppTheme(theme: Settings.Theme) {
         AppCompatDelegate.setDefaultNightMode(
             when (theme) {
-                Settings.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
-                Settings.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
-                Settings.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                Settings.Theme.Light -> {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                Settings.Theme.Dark -> {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+                Settings.Theme.System -> {
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
             }
         )
     }

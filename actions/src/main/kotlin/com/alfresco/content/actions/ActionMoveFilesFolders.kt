@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +15,8 @@ import kotlinx.coroutines.withContext
 data class ActionMoveFilesFolders(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_move,
-    override val title: Int = R.string.action_move_title
+    override val title: Int = R.string.action_move_title,
+    override val eventName: EventName = EventName.MoveToFolder
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {

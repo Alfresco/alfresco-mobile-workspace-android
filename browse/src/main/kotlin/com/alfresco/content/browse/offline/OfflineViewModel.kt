@@ -5,7 +5,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.listview.ListViewModel
@@ -21,6 +23,7 @@ class OfflineViewModel(
 ) : ListViewModel<OfflineViewState>(state) {
 
     init {
+        AnalyticsManager().screenViewEvent(PageView.Offline)
         viewModelScope.launch {
             SyncService
                 .observe(context)
@@ -63,7 +66,7 @@ class OfflineViewModel(
 
     fun canSyncOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
-            !ConnectivityTracker.isActiveNetworkMetered(context)
+                !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
 

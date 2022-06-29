@@ -24,7 +24,7 @@ data class ActionCreateFolder(
     }
 
     private suspend fun showCreateFolderDialog(context: Context) = withContext(Dispatchers.Main) {
-        suspendCoroutine<CreateFolderMetadata?> {
+        suspendCoroutine {
             CreateFolderDialog.Builder(context, false, entry.name)
                 .onSuccess { title, description ->
                     it.resume(CreateFolderMetadata(title, description))

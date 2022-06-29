@@ -22,7 +22,9 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.PageView
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
@@ -60,6 +62,7 @@ data class BrowseArgs(
 class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private lateinit var args: BrowseArgs
+
     @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
@@ -158,6 +161,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onItemClicked(entry: Entry) {
         // Disable interaction on Trash or Upload items
         if (entry.isTrashed) return
+
+        if (entry.isFolder)
+            AnalyticsManager().screenViewEvent(PageView.FolderName, folderName = entry.name)
 
         if (entry.isUpload)
             entry.mimeType?.let {

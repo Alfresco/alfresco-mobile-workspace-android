@@ -16,7 +16,9 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.PageView
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.databinding.FragmentTransferFilesListBinding
 import com.alfresco.content.listview.listViewMessage
@@ -62,7 +64,7 @@ class TransferFilesFragment : Fragment(), MavericksView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        AnalyticsManager().screenViewEvent(PageView.Transfers)
         args = TransferFilesArgs.with(requireArguments())
     }
 
@@ -87,7 +89,7 @@ class TransferFilesFragment : Fragment(), MavericksView {
         }
 
         fab?.apply {
-            if (state.entries.count() > 0) {
+            if (state.entries.isNotEmpty()) {
                 show()
             } else {
                 hide()

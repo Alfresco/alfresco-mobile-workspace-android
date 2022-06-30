@@ -86,4 +86,16 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
             params.putString(Parameters.EventName.value, pageViewName.value)
         repository.logEvent(EventType.ScreenView, params)
     }
+
+    /**
+     * analytics for API tracker
+     */
+    fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "") {
+        val params = repository.defaultParams()
+        params.putString(Parameters.EventName.value, apiName.value)
+        params.putBoolean(Parameters.Success.value, status)
+        if (size.isNotEmpty())
+            params.putString(Parameters.FileSize.value, size)
+        repository.logEvent(EventType.ApiTracker, params)
+    }
 }

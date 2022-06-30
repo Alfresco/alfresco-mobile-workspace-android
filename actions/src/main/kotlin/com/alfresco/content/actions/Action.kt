@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.Logger
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.events.EventBus
@@ -30,19 +32,28 @@ interface Action {
     ) = scope.launch {
         val bus = EventBus.default
         try {
+            println("Action.execute $title ${R.string.action_create_folder}")
             val newEntry = execute(context)
             val newAction = copy(newEntry)
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
         } catch (ex: Exception) {
+            sendAnalytics()
             bus.send(Error(ex.message ?: ""))
         } catch (ex: SocketTimeoutException) {
+            sendAnalytics()
             bus.send(Error(context.getString(R.string.action_timeout_error)))
         } catch (ex: kotlin.Exception) {
+            sendAnalytics()
             Logger.e(ex)
             bus.send(Error(context.getString(R.string.action_generic_error)))
         }
+    }
+
+    private fun sendAnalytics() {
+        if (title == R.string.action_create_folder)
+            AnalyticsManager().apiTracker(APIEvent.NewFolder, status = false)
     }
 
     fun showToast(view: View, anchorView: View? = null)

@@ -135,7 +135,6 @@ enum class PageView(val value: String) {
  * Marked as APIEvent enum
  */
 enum class APIEvent(val value: String) {
-    SyncingStatus("Event_API_SyncingStatus"),
     NewFolder("Event_API_NewFolder"),
     UploadFiles("Event_API_UploadFiles"),
     Login("Event_API_Login")

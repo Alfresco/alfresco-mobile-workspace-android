@@ -24,9 +24,6 @@ include ':move'
 include ':scan'
 include ':DocumentScanner'
 include ':app'
-//include ':content'
-//include ':content-ktx'
-//include ':authalfresco'
 
 // Enable Gradle's version catalog support
 // Ref: https://docs.gradle.org/current/userguide/platforms.html

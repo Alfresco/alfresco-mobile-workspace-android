@@ -26,6 +26,8 @@ import com.alfresco.auth.fragments.InputServerFragment
 import com.alfresco.auth.ui.AuthenticationActivity
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.getViewModel
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.ui.components.TextInputLayout
 import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayDeque
@@ -112,6 +114,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
     override fun onError(error: String) {
         // Hide progress view on error
+        AnalyticsManager().apiTracker(APIEvent.Login, false)
         viewModel.isLoading.value = false
 
         val parentLayout: View = findViewById(android.R.id.content)

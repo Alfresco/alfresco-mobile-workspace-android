@@ -29,6 +29,7 @@ class UploadWorker(
         return try {
             repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
             val file = repository.contentFile(entry)
+            AnalyticsManager().apiTracker(APIEvent.UploadFiles, size = file.length().toString())
             val res = BrowseRepository().createEntry(entry, file)
             file.delete() // TODO: what if delete fails?
             repository.update(

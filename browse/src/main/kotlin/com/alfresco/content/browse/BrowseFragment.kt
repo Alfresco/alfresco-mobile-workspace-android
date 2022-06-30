@@ -163,7 +163,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         if (entry.isTrashed) return
 
         if (entry.isFolder)
-            AnalyticsManager().screenViewEvent(PageView.FolderName, folderName = entry.name)
+            AnalyticsManager().screenViewEvent(PageView.FolderName, folderName = "PageView_${entry.name}")
 
         if (entry.isUpload)
             entry.mimeType?.let {

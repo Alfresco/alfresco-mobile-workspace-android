@@ -133,13 +133,13 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             properties = mapOf("cm:title" to name, "cm:description" to description)
         )
 
-        return Entry.with(
-            service.createNode(
-                nodeId = requireNotNull(parentId),
-                nodeBodyCreate = nodeBodyCreate,
-                autoRename = true
-            ).entry
+        val response = service.createNode(
+            nodeId = requireNotNull(parentId),
+            nodeBodyCreate = nodeBodyCreate,
+            autoRename = true
         )
+
+        return Entry.with(response.entry)
     }
 
     /**

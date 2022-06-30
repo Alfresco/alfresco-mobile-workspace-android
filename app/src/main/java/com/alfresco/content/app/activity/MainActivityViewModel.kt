@@ -56,7 +56,7 @@ class MainActivityViewModel(
     }
 
     private fun init(context: Context, session: Session) {
-        AnalyticsManager().appLaunch()
+        AnalyticsManager(session).appLaunch()
         session.onSignedOut {
             setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
@@ -76,7 +76,6 @@ class MainActivityViewModel(
         // Cleanup unused db entries
         cleanupStorage(session)
         syncService = configureSync(context, viewModelScope)
-        AnalyticsManager(session).appLaunch()
     }
 
     private fun cleanupStorage(session: Session) {

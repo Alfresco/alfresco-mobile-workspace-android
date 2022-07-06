@@ -16,7 +16,6 @@ buildscript {
         classpath libs.gradleVersionsPlugin
         classpath libs.gradleLicensePlugin
 
-        classpath libs.dokka
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0'
     }
 }

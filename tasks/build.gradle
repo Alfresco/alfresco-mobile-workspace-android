@@ -4,16 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk 32
-
     defaultConfig {
-        minSdk 26
-        targetSdk 32
+        versionCode 1
+        versionName "1.0"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -23,7 +20,9 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation libs.androidx.core
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
+    implementation project(':process')
+
 }

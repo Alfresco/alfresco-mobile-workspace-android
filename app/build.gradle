@@ -90,7 +90,6 @@ dependencies {
     implementation project(':viewer')
     implementation project(':shareextension')
     implementation project(':move')
-    implementation project(':tasks')
 
     implementation project(':data')
     implementation libs.alfresco.content

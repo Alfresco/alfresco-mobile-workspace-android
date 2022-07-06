@@ -31,3 +31,5 @@ include ':alfresco-auth'*/
 enableFeaturePreview("VERSION_CATALOGS")
 
 
+include ':process'
+include ':tasks'

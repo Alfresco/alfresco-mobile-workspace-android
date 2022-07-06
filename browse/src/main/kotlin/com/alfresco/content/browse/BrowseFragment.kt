@@ -75,6 +75,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         if (args.id != null) {
             setHasOptionsMenu(true)
         }
+
+        println("BrowseViewModel.RECENTS on Create")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,6 +105,13 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             if (viewModel.canAddItems(state)) {
                 (view as ViewGroup).addView(makeFab(requireContext()))
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        withState(viewModel) {
+            viewModel.triggerAnalyticsEvent(it)
         }
     }
 

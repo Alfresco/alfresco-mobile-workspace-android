@@ -1,6 +1,6 @@
 {
   "project_info": {
-    "project_number": "0000000",
+    "project_number": "471005699027",
     "firebase_url": "https://alfresco-mobile-workspace.firebaseio.com",
     "project_id": "alfresco-mobile-workspace",
     "storage_bucket": "alfresco-mobile-workspace.appspot.com"
@@ -8,29 +8,75 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "0000000",
+        "mobilesdk_app_id": "1:471005699027:android:7c63ed54923346e78e6d26",
         "android_client_info": {
           "package_name": "com.alfresco.content.app"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "471005699027-resuftglekedi7cgv53bprjmk9flv3h9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "0000000"
+          "current_key": "AIzaSyCMvtCAKXekwyJI9_LSFU5x5_vcIzaVNis"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471005699027-resuftglekedi7cgv53bprjmk9flv3h9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "471005699027-3rikujvd5qsag6kpuaptv3vte8cqpukj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alfresco.contentapp"
+              }
+            }
+          ]
+        }
+      }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "0000000",
+        "mobilesdk_app_id": "1:471005699027:android:078997b35d00dcdc8e6d26",
         "android_client_info": {
           "package_name": "com.alfresco.content.app.debug"
         }
       },
+      "oauth_client": [
+        {
+          "client_id": "471005699027-resuftglekedi7cgv53bprjmk9flv3h9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "0000000"
+          "current_key": "AIzaSyCMvtCAKXekwyJI9_LSFU5x5_vcIzaVNis"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471005699027-resuftglekedi7cgv53bprjmk9flv3h9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "471005699027-3rikujvd5qsag6kpuaptv3vte8cqpukj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alfresco.contentapp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

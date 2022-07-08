@@ -2,5 +2,8 @@
 <resources>
 
     <color name="color_cancel_secondary">#0D212328</color>
+    <color name="color_burnt_orange">#3DC95100</color>
+    <color name="color_carnelian">#3DBA1B1B</color>
+    <color name="color_green">#3D00754A</color>
 
 </resources>

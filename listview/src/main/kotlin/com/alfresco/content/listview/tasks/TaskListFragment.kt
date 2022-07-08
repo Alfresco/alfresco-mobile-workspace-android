@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,7 +17,6 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
-import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
@@ -28,19 +26,16 @@ import com.alfresco.content.listview.listViewGroupHeader
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
-import com.alfresco.content.listview.listViewRow
 import com.alfresco.content.simpleController
 import com.alfresco.list.replace
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.LinearProgressIndicator
 
-interface ListTaskViewState : MavericksState {
+interface TaskListViewState : MavericksState {
     val entries: List<Entry>
     val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
     val isCompact: Boolean
 
-    fun copy(_entries: List<Entry>): ListTaskViewState
+    fun copy(_entries: List<Entry>): TaskListViewState
 
     fun copyRemoving(entry: Entry) =
         copy(entries.filter {
@@ -53,13 +48,13 @@ interface ListTaskViewState : MavericksState {
         })
 }
 
-abstract class ListTaskViewModel<S : ListTaskViewState>(
+abstract class TaskListViewModel<S : TaskListViewState>(
     initialState: S
 ) : MavericksViewModel<S>(initialState) {
 
     abstract fun refresh()
     abstract fun fetchNextPage()
-    abstract fun emptyMessageArgs(state: ListTaskViewState): Triple<Int, Int, Int>
+    abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
 
     companion object {
         const val ITEMS_PER_PAGE = 25
@@ -68,9 +63,9 @@ abstract class ListTaskViewModel<S : ListTaskViewState>(
 }
 
 /**
- * Mark as ListFragment
+ * Mark as TaskListFragment
  */
-abstract class ListFragment<VM : ListTaskViewModel<S>, S : ListTaskViewState>(layoutID: Int = R.layout.fragment_list) :
+abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState>(layoutID: Int = R.layout.fragment_task_list) :
     Fragment(layoutID), MavericksView {
     abstract val viewModel: VM
 
@@ -78,13 +73,6 @@ abstract class ListFragment<VM : ListTaskViewModel<S>, S : ListTaskViewState>(la
     lateinit var recyclerView: EpoxyRecyclerView
     lateinit var refreshLayout: SwipeRefreshLayout
     lateinit var loadingMessage: TextView
-    var tvUploadingFiles: TextView? = null
-    var tvPercentage: TextView? = null
-    var bannerTransferData: FrameLayout? = null
-    var uploadButton: MaterialButton? = null
-    var moveHereButton: MaterialButton? = null
-    var cancelButton: MaterialButton? = null
-    var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
 
@@ -95,14 +83,6 @@ abstract class ListFragment<VM : ListTaskViewModel<S>, S : ListTaskViewState>(la
         recyclerView = view.findViewById(R.id.recycler_view)
         refreshLayout = view.findViewById(R.id.refresh_layout)
         loadingMessage = view.findViewById(R.id.loading_message)
-        bannerTransferData = view.findViewById(R.id.banner_parent)
-
-        uploadButton = view.findViewById(R.id.upload_button)
-        moveHereButton = view.findViewById(R.id.move_here_button)
-        cancelButton = view.findViewById(R.id.cancel_button)
-        tvUploadingFiles = view.findViewById(R.id.tv_uploading_files)
-        tvPercentage = view.findViewById(R.id.tv_percentage)
-        percentageFiles = view.findViewById(R.id.percentage_files)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
@@ -123,8 +103,6 @@ abstract class ListFragment<VM : ListTaskViewModel<S>, S : ListTaskViewState>(la
 
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
-
-        uploadButton?.isEnabled = state.request is Success
 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false
@@ -149,7 +127,7 @@ abstract class ListFragment<VM : ListTaskViewModel<S>, S : ListTaskViewState>(la
                         title(it.name)
                     }
                 } else {
-                    listViewRow {
+                    listViewTaskRow {
                         id(stableId(it))
                         data(it)
                         compact(state.isCompact)

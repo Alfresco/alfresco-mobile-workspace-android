@@ -74,3 +74,4 @@ lint/reports/
 /content/
 /gradle/libs.versions1.toml
 /authalfresco/
+/process/

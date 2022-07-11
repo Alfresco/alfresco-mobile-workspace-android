@@ -50,14 +50,7 @@ class AnalyticsRepository(val session: Session) {
         }
     }
 
-    private fun appVersion(): String {
-        val packageManager = context.packageManager
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            packageManager.getPackageInfo(context.packageName, 0).longVersionCode.toString()
-        } else {
-            packageManager.getPackageInfo(context.packageName, 0).versionCode.toString()
-        }
-    }
+    private fun appVersion() = context.packageManager.getPackageInfo(context.packageName, 0).versionName
 
     @SuppressLint("HardwareIds")
     private fun deviceID() = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
@@ -81,6 +74,7 @@ class AnalyticsRepository(val session: Session) {
      * It will get triggered to log analytics on firebase console
      */
     fun logEvent(type: EventType, params: Bundle) {
+
         firebaseAnalytics.logEvent(type.value, params)
     }
 }
@@ -89,25 +83,25 @@ class AnalyticsRepository(val session: Session) {
  * Marked as EventName enum
  */
 enum class EventName(val value: String) {
-    FilePreview("Event_FilePreview"),
+    FilePreview("Event_filePreview"),
     Download("Event_download"),
-    AddFavorite("Event_addFavorite"),
-    RemoveFavorite("Event_removeFavorite"),
-    RenameNode("Event_renameNode"),
-    MoveToFolder("Event_moveToFolder"),
-    MarkOffline("Event_markOffline"),
-    RemoveOffline("Event_removeOffline"),
-    MoveTrash("Event_moveTrash"),
+    AddFavorite("Event_Add to Favorites"),
+    RemoveFavorite("Event_Remove from Favorite"),
+    RenameNode("Event_Rename"),
+    MoveToFolder("Event_Move"),
+    MarkOffline("Event_Make available offline"),
+    RemoveOffline("Event_Remove offline"),
+    MoveTrash("Event_Move to Trash"),
     ChangeTheme("Event_changeTheme"),
-    CreateFolder("Event_createFolder"),
-    UploadMedia("Event_uploadMedia"),
-    CreateMedia("Event_createMedia"),
-    UploadFiles("Event_uploadFiles"),
+    CreateFolder("Event_New folder"),
+    UploadMedia("Event_Upload photos or videos"),
+    CreateMedia("Event_Take a photo or video"),
+    UploadFiles("Event_Upload files"),
     AppLaunched("Event_appLaunched"),
     SearchFacets("Event_searchFacets"),
-    PermanentlyDelete("Event_permanentlyDelete"),
-    Restore("Event_restore"),
-    OpenWith("Event_openWith")
+    PermanentlyDelete("Event_Permanently Delete"),
+    Restore("Event_Restore"),
+    OpenWith("Event_Open with")
 }
 
 /**
@@ -118,9 +112,9 @@ enum class PageView(val value: String) {
     Favorites("PageView_Favorites"),
     Offline("PageView_Offline"),
     Browse("PageView_Browse"),
-    PersonalFiles("PageView_PersonalFiles"),
+    PersonalFiles("PageView_Personal files"),
     FolderName("PageView_FolderName"),
-    MyLibraries("PageView_MyLibraries"),
+    MyLibraries("PageView_My libraries"),
     Shared("PageView_Shared"),
     Trash("PageView_Trash"),
     Search("PageView_Search"),

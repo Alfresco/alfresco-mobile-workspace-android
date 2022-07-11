@@ -69,7 +69,7 @@ epoxy-processor = { module = "com.airbnb.android:epoxy-processor", version.ref =
 exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoplayer" }
 exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer" }
 
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:19.0.0"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.0.0"
 firebase-crashlytics-core = "com.google.firebase:firebase-crashlytics-ktx:18.0.0"
 firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.6.1"
 

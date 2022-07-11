@@ -79,6 +79,9 @@ class BrowseViewModel(
         }
     }
 
+    /**
+     * trigger the screen events
+     */
     fun triggerAnalyticsEvent(state: BrowseViewState) {
         when (state.path) {
             context.getString(R.string.nav_path_recents) -> AnalyticsManager().screenViewEvent(PageView.Recent)

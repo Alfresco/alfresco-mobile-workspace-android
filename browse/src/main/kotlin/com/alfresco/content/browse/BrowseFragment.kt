@@ -75,7 +75,6 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         if (args.id != null) {
             setHasOptionsMenu(true)
         }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

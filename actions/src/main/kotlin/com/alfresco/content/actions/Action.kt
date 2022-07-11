@@ -12,10 +12,10 @@ import com.alfresco.content.data.EventName
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
+import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
 
 interface Action {
     val entry: Entry

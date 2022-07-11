@@ -76,7 +76,6 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             setHasOptionsMenu(true)
         }
 
-        println("BrowseViewModel.RECENTS on Create")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

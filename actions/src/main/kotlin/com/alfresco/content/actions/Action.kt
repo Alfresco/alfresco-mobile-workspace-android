@@ -12,10 +12,10 @@ import com.alfresco.content.data.EventName
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
-import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 interface Action {
     val entry: Entry
@@ -32,28 +32,28 @@ interface Action {
     ) = scope.launch {
         val bus = EventBus.default
         try {
-            println("Action.execute $title ${R.string.action_create_folder}")
             val newEntry = execute(context)
             val newAction = copy(newEntry)
+            sendAnalytics(true)
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
         } catch (ex: Exception) {
-            sendAnalytics()
+            sendAnalytics(false)
             bus.send(Error(ex.message ?: ""))
         } catch (ex: SocketTimeoutException) {
-            sendAnalytics()
+            sendAnalytics(false)
             bus.send(Error(context.getString(R.string.action_timeout_error)))
         } catch (ex: kotlin.Exception) {
-            sendAnalytics()
+            sendAnalytics(false)
             Logger.e(ex)
             bus.send(Error(context.getString(R.string.action_generic_error)))
         }
     }
 
-    private fun sendAnalytics() {
+    private fun sendAnalytics(status: Boolean) {
         if (title == R.string.action_create_folder)
-            AnalyticsManager().apiTracker(APIEvent.NewFolder, status = false)
+            AnalyticsManager().apiTracker(APIEvent.NewFolder, status)
     }
 
     fun showToast(view: View, anchorView: View? = null)

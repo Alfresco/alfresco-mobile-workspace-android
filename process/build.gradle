@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'org.jetbrains.dokka'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 32
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation libs.moshi.core
+    implementation libs.moshi.adapters
+    kapt libs.moshi.codegen
+
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.moshi
+    implementation libs.retrofit.converter.scalars
+    implementation libs.gson
+
+    coreLibraryDesugaring libs.android.desugar
+}

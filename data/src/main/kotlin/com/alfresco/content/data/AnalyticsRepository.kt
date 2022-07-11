@@ -74,6 +74,7 @@ class AnalyticsRepository(val session: Session) {
      * It will get triggered to log analytics on firebase console
      */
     fun logEvent(type: EventType, params: Bundle) {
+
         firebaseAnalytics.logEvent(type.value, params)
     }
 }

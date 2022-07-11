@@ -48,6 +48,11 @@ class BrowseMenuFragment : Fragment(), MavericksView {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        AnalyticsManager().screenViewEvent(PageView.Browse)
+    }
+
     private fun navigateTo(path: String, title: String, pageView: PageView) {
         AnalyticsManager().screenViewEvent(pageView)
         if (path == getString(R.string.nav_path_my_files)) {

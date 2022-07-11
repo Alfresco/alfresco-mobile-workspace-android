@@ -55,7 +55,6 @@ class BrowseViewModel(
             }
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
-            AnalyticsManager().screenViewEvent(PageView.Recent)
             val list = offlineRepository.buildTransferList()
             if (list.isEmpty())
                 offlineRepository.updateTransferSize(0)
@@ -63,7 +62,6 @@ class BrowseViewModel(
         }
 
         if (state.path == context.getString(R.string.nav_path_favorites)) {
-            AnalyticsManager().screenViewEvent(PageView.Favorites)
             val types = setOf(Entry.Type.FILE, Entry.Type.FOLDER)
             viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
             viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
@@ -79,8 +77,17 @@ class BrowseViewModel(
             viewModelScope.on<ActionRestore> { removeEntry(it.entry) }
             viewModelScope.on<ActionDeleteForever> { removeEntry(it.entry) }
         }
-        if (state.path == context.getString(R.string.nav_path_extension))
-            AnalyticsManager().screenViewEvent(PageView.ShareExtension, noOfFiles = browseRepository.getExtensionDataList().size)
+    }
+
+    /**
+     * trigger the screen events
+     */
+    fun triggerAnalyticsEvent(state: BrowseViewState) {
+        when (state.path) {
+            context.getString(R.string.nav_path_recents) -> AnalyticsManager().screenViewEvent(PageView.Recent)
+            context.getString(R.string.nav_path_favorites) -> AnalyticsManager().screenViewEvent(PageView.Favorites)
+            context.getString(R.string.nav_path_extension) -> AnalyticsManager().screenViewEvent(PageView.ShareExtension, noOfFiles = browseRepository.getExtensionDataList().size)
+        }
     }
 
     @Suppress("ControlFlowWithEmptyBody")

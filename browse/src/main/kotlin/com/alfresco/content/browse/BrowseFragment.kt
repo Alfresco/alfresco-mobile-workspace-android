@@ -105,6 +105,13 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        withState(viewModel) {
+            viewModel.triggerAnalyticsEvent(it)
+        }
+    }
+
     private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
 
         if (totalSize != 0 && pendingFilesCount != 0)

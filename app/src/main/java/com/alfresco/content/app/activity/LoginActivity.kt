@@ -7,6 +7,8 @@ import com.alfresco.auth.Credentials
 import com.alfresco.auth.activity.LoginViewModel.Companion.EXTRA_IS_LOGIN
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
@@ -27,10 +29,12 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val person = PeopleRepository(session).me()
                 val myFiles = BrowseRepository(session).myFilesNodeId()
                 processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
+                AnalyticsManager(session).apiTracker(APIEvent.Login, true)
                 if (isExtension)
                     navigateToExtension()
                 else navigateToMain()
             } catch (ex: Exception) {
+                AnalyticsManager().apiTracker(APIEvent.Login, false)
                 onError(R.string.auth_error_wrong_credentials)
             }
         }

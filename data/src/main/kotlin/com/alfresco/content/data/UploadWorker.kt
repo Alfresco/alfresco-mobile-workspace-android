@@ -29,7 +29,11 @@ class UploadWorker(
         return try {
             repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
             val file = repository.contentFile(entry)
-            AnalyticsManager().apiTracker(APIEvent.UploadFiles, size = "${file.length().div(1024).div(1024)} MB")
+            AnalyticsManager().apiTracker(
+                APIEvent.UploadFiles,
+                status = true,
+                size = "${file.length().div(1024).div(1024)} MB"
+            )
             val res = BrowseRepository().createEntry(entry, file)
             file.delete() // TODO: what if delete fails?
             repository.update(
@@ -39,6 +43,11 @@ class UploadWorker(
             true
         } catch (ex: Exception) {
             Logger.e(ex)
+            AnalyticsManager().apiTracker(
+                APIEvent.UploadFiles,
+                status = false,
+                size = "0"
+            )
             false
         }
     }

@@ -1,23 +1,34 @@
 package com.alfresco.content.browse.tasks
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.os.Parcelable
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.alfresco.content.browse.R
+import androidx.core.os.bundleOf
+import com.airbnb.mvrx.InternalMavericksApi
+import com.airbnb.mvrx.fragmentViewModel
+import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.fragmentViewModelWithArgs
+import com.alfresco.content.listview.tasks.TaskListFragment
+import kotlinx.parcelize.Parcelize
 
 /**
- * Marked as TaskFragment
+ * Marked as TasksFragment
  */
-class TasksFragment : Fragment() {
+class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tasks, container, false)
+
+    override val viewModel: TasksViewModel by fragmentViewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun onItemClicked(entry: TaskEntry) {
     }
 }

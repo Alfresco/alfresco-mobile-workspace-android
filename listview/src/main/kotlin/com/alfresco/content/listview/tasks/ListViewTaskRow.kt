@@ -5,14 +5,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.alfresco.content.data.Entry
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
-import com.alfresco.content.mimetype.MimeType
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewTaskRow @JvmOverloads constructor(
@@ -25,26 +24,11 @@ class ListViewTaskRow @JvmOverloads constructor(
     private var isCompact: Boolean = false
 
     @ModelProp
-    fun setData(entry: Entry) {
+    fun setData(entry: TaskEntry) {
         binding.title.text = entry.name
-        binding.subtitle.text = entry.path
-        updateSubtitleVisibility()
+        binding.subtitle.text = entry.assignee.name
 
-        val type = when (entry.type) {
-            Entry.Type.SITE -> MimeType.LIBRARY
-            Entry.Type.FOLDER -> MimeType.FOLDER
-            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
-            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
-            else -> MimeType.with(entry.mimeType)
-        }
-
-        if (entry.isExtension && !entry.isFolder) {
-            binding.parent.alpha = 0.5f
-            binding.parent.isEnabled = false
-        } else {
-            binding.parent.alpha = 1.0f
-            binding.parent.isEnabled = true
-        }
+        updatePriority(entry.priority)
     }
 
     @ModelProp
@@ -57,12 +41,30 @@ class ListViewTaskRow @JvmOverloads constructor(
             resources.getDimension(heightResId).toInt()
         )
 
-        updateSubtitleVisibility()
     }
 
-    private fun updateSubtitleVisibility() {
-        binding.subtitle.isVisible = binding.subtitle.text.isNotEmpty() && !isCompact
+    private fun updatePriority(priority: String) {
+
+        when (priority) {
+            "0", "1", "2", "3" -> binding.tvPriority.apply {
+                text = context.getString(R.string.priority_low)
+                setTextColor(ContextCompat.getColor(context, R.color.colorPriorityLow))
+                background = ContextCompat.getDrawable(context, R.drawable.bg_priority_low)
+            }
+            "4", "5", "6", "7" -> binding.tvPriority.apply {
+                text = context.getString(R.string.priority_medium)
+                setTextColor(ContextCompat.getColor(context, R.color.colorPriorityMedium))
+                background = ContextCompat.getDrawable(context, R.drawable.bg_priority_medium)
+            }
+            else -> binding.tvPriority.apply {
+                text = context.getString(R.string.priority_high)
+                setTextColor(ContextCompat.getColor(context, R.color.colorPriorityHigh))
+                background = ContextCompat.getDrawable(context, R.drawable.bg_priority_high)
+            }
+        }
+
     }
+
 
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {

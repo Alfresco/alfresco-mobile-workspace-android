@@ -17,4 +17,8 @@
     <color name="white_15">#26FFFFFF</color>
     <color name="white_60">#99FFFFFF</color>
 
+    <color name="colorPriorityLow">#003A02</color>
+    <color name="colorPriorityMedium">#6A3C00</color>
+    <color name="colorPriorityHigh">#680003</color>
+
 </resources>

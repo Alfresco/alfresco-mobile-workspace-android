@@ -18,11 +18,9 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.ContextualActionsSheet
-import com.alfresco.content.data.Entry
-import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.ResponseList
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
-import com.alfresco.content.listview.listViewGroupHeader
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
@@ -30,20 +28,15 @@ import com.alfresco.content.simpleController
 import com.alfresco.list.replace
 
 interface TaskListViewState : MavericksState {
-    val entries: List<Entry>
+    val taskEntries: List<TaskEntry>
     val hasMoreItems: Boolean
-    val request: Async<ResponsePaging>
+    val request: Async<ResponseList>
     val isCompact: Boolean
 
-    fun copy(_entries: List<Entry>): TaskListViewState
+    fun copy(_entries: List<TaskEntry>): TaskListViewState
 
-    fun copyRemoving(entry: Entry) =
-        copy(entries.filter {
-            it.id != entry.id
-        })
-
-    fun copyUpdating(entry: Entry) =
-        copy(entries.replace(entry) {
+    fun copyUpdating(entry: TaskEntry) =
+        copy(taskEntries.replace(entry) {
             it.id == entry.id
         })
 }
@@ -55,11 +48,6 @@ abstract class TaskListViewModel<S : TaskListViewState>(
     abstract fun refresh()
     abstract fun fetchNextPage()
     abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
-
-    companion object {
-        const val ITEMS_PER_PAGE = 25
-        const val IS_EVENT_REGISTERED = "isEventRegistered"
-    }
 }
 
 /**
@@ -102,7 +90,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     override fun invalidate() = withState(viewModel) { state ->
 
         loadingAnimation.isVisible =
-            state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
+            state.request is Loading && state.taskEntries.isEmpty() && !refreshLayout.isRefreshing
 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false
@@ -111,7 +99,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.entries.isEmpty() && state.request.complete) {
+        if (state.taskEntries.isEmpty() && state.request.complete) {
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
@@ -119,57 +107,43 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                 title(args.second)
                 message(args.third)
             }
-        } else if (state.entries.isNotEmpty()) {
-            state.entries.forEach {
-                if (it.type == Entry.Type.GROUP) {
-                    listViewGroupHeader {
-                        id(it.name)
-                        title(it.name)
-                    }
-                } else {
-                    listViewTaskRow {
-                        id(stableId(it))
-                        data(it)
-                        compact(state.isCompact)
-                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
-                        moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
-                    }
+        } else if (state.taskEntries.isNotEmpty()) {
+            state.taskEntries.forEach {
+                listViewTaskRow {
+                    id(it.id)
+                    data(it)
+                    compact(state.isCompact)
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                 }
             }
+        }
 
-            if (state.hasMoreItems) {
-                if (state.request is Loading) {
-                    listViewPageLoading {
-                        id("loading at ${state.entries.size}")
-                    }
+        if (state.hasMoreItems) {
+            if (state.request is Loading) {
+                listViewPageLoading {
+                    id("loading at ${state.taskEntries.size}")
+                }
+            } else {
+                // On failure delay creating the boundary so that the list scrolls up
+                // and the user has to scroll back down to activate a retry
+                val isFail = state.request is Fail
+                if (isFail && !delayedBoundary) {
+                    delayedBoundary = true
+                    Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
                 } else {
-                    // On failure delay creating the boundary so that the list scrolls up
-                    // and the user has to scroll back down to activate a retry
-                    val isFail = state.request is Fail
-                    if (isFail && !delayedBoundary) {
-                        delayedBoundary = true
-                        Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
-                    } else {
-                        if (isFail) {
-                            delayedBoundary = false
-                        }
-                        listViewPageBoundary {
-                            id("boundary at ${state.entries.size}")
-                            onBind { _, _, _ -> viewModel.fetchNextPage() }
-                        }
+                    if (isFail) {
+                        delayedBoundary = false
+                    }
+                    listViewPageBoundary {
+                        id("boundary at ${state.taskEntries.size}")
+                        onBind { _, _, _ -> viewModel.fetchNextPage() }
                     }
                 }
             }
         }
     }
 
-    private fun stableId(entry: Entry): String =
-        if (entry.isUpload) entry.boxId.toString()
-        else entry.id
 
-    abstract fun onItemClicked(entry: Entry)
+    abstract fun onItemClicked(entry: TaskEntry)
 
-    open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(entry).show(childFragmentManager, null)
-    }
 }

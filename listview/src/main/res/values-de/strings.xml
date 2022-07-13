@@ -9,4 +9,7 @@
     <string name="upload_file_text_multiple">Hochladen von %d Datei(en)</string>
     <string name="upload_complete_text_multiple">%d Datei(en) fertig hochgeladen</string>
     <string name="upload_percentage_text">%.1f%%</string>
+    <string name="priority_low">Niedrig</string>
+    <string name="priority_medium">Mittel</string>
+    <string name="priority_high">Hoch</string>
 </resources>

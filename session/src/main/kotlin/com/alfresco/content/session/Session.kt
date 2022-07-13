@@ -10,10 +10,10 @@ import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
-import java.io.File
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import java.io.File
 
 class Session(
     val context: Context,
@@ -72,6 +72,7 @@ class Session(
     }
 
     val baseUrl get() = "${account.serverUrl}/api/-default-/public/"
+    val processBaseUrl get() = account.serverUrl.replace("/alfresco", "/activiti-app/")
 
     fun <T> createService(service: Class<T>): T {
         val okHttpClient: OkHttpClient = OkHttpClient()
@@ -84,6 +85,21 @@ class Session(
             .client(okHttpClient)
             .addConverterFactory(GeneratedCodeConverters.converterFactory())
             .baseUrl(baseUrl)
+            .build()
+        return retrofit.create(service)
+    }
+
+    fun <T> createProcessService(service: Class<T>): T {
+        val okHttpClient: OkHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GeneratedCodeConverters.converterFactory())
+            .baseUrl(processBaseUrl)
             .build()
         return retrofit.create(service)
     }

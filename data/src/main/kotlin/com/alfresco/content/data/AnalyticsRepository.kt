@@ -73,9 +73,8 @@ class AnalyticsRepository(val session: Session) {
     /**
      * It will get triggered to log analytics on firebase console
      */
-    fun logEvent(type: EventType, params: Bundle) {
-
-        firebaseAnalytics.logEvent(type.value, params)
+    fun logEvent(type: String, params: Bundle) {
+        firebaseAnalytics.logEvent(type, params)
     }
 }
 
@@ -113,7 +112,6 @@ enum class PageView(val value: String) {
     Offline("PageView_Offline"),
     Browse("PageView_Browse"),
     PersonalFiles("PageView_Personal files"),
-    FolderName("PageView_FolderName"),
     MyLibraries("PageView_My libraries"),
     Shared("PageView_Shared"),
     Trash("PageView_Trash"),
@@ -130,15 +128,6 @@ enum class APIEvent(val value: String) {
     NewFolder("Event_API_NewFolder"),
     UploadFiles("Event_API_UploadFiles"),
     Login("Event_API_Login")
-}
-
-/**
- * Marked as EventType enum
- */
-enum class EventType(val value: String) {
-    ScreenView("screen_views"),
-    ActionEvent("action_event"),
-    ApiTracker("api_tracker")
 }
 
 /**
@@ -170,11 +159,8 @@ enum class Parameters(val value: String) {
     FileMimeType("file_mimetype"),
     FileExtension("file_extension"),
     FileSize("file_size"),
-    FolderName("folder_name"),
     ThemeName("theme_name"),
     NumberOfFiles("number_of_files"),
     FacetName("facet_name"),
-    NumberOfAssets("number_of_assets"),
-    IsFile("is_file"),
     Success("success")
 }

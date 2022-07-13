@@ -18,8 +18,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         params.putString(Parameters.FileMimeType.value, fileMimeType)
         params.putString(Parameters.FileExtension.value, fileExtension)
         params.putBoolean(Parameters.Success.value, success)
-        params.putString(Parameters.EventName.value, EventName.FilePreview.value)
-        repository.logEvent(EventName.FilePreview.value, params)
+        params.putString(Parameters.EventName.value, EventName.FilePreview.value.lowercase())
+        repository.logEvent(EventName.FilePreview.value.lowercase(), params)
     }
 
     /**
@@ -29,8 +29,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         val params = repository.defaultParams()
         params.putString(Parameters.FileMimeType.value, fileMimeType)
         params.putString(Parameters.FileExtension.value, fileExtension)
-        params.putString(Parameters.EventName.value, eventName.value)
-        repository.logEvent(eventName.value, params)
+        params.putString(Parameters.EventName.value, eventName.value.lowercase())
+        repository.logEvent(eventName.value.lowercase(), params)
     }
 
     /**
@@ -39,8 +39,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     fun theme(name: String) {
         val params = repository.defaultParams()
         params.putString(Parameters.ThemeName.value, name)
-        params.putString(Parameters.EventName.value, EventName.ChangeTheme.value)
-        repository.logEvent(EventName.ChangeTheme.value, params)
+        params.putString(Parameters.EventName.value, EventName.ChangeTheme.value.lowercase())
+        repository.logEvent(EventName.ChangeTheme.value.lowercase(), params)
     }
 
     /**
@@ -48,8 +48,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
      */
     fun appLaunch() {
         val params = repository.defaultParams()
-        params.putString(Parameters.EventName.value, EventName.AppLaunched.value)
-        repository.logEvent(EventName.AppLaunched.value, params)
+        params.putString(Parameters.EventName.value, EventName.AppLaunched.value.lowercase())
+        repository.logEvent(EventName.AppLaunched.value.lowercase(), params)
     }
 
     /**
@@ -58,8 +58,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     fun searchFacets(name: String) {
         val params = repository.defaultParams()
         params.putString(Parameters.FacetName.value, name)
-        params.putString(Parameters.EventName.value, EventName.SearchFacets.value)
-        repository.logEvent(EventName.SearchFacets.value, params)
+        params.putString(Parameters.EventName.value, EventName.SearchFacets.value.lowercase())
+        repository.logEvent(EventName.SearchFacets.value.lowercase(), params)
     }
 
     /**
@@ -71,8 +71,8 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         if (noOfFiles > -1)
             params.putInt(Parameters.NumberOfFiles.value, noOfFiles)
 
-        params.putString(Parameters.EventName.value, pageViewName.value)
-        repository.logEvent(pageViewName.value, params)
+        params.putString(Parameters.EventName.value, pageViewName.value.lowercase())
+        repository.logEvent(pageViewName.value.lowercase(), params)
     }
 
     /**
@@ -80,10 +80,10 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
      */
     fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "") {
         val params = repository.defaultParams()
-        params.putString(Parameters.EventName.value, apiName.value)
+        params.putString(Parameters.EventName.value, apiName.value.lowercase())
         params.putBoolean(Parameters.Success.value, status)
         if (size.isNotEmpty())
             params.putString(Parameters.FileSize.value, size)
-        repository.logEvent(apiName.value, params)
+        repository.logEvent(apiName.value.lowercase(), params)
     }
 }

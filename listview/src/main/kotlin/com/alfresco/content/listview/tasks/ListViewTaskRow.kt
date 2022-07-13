@@ -40,7 +40,6 @@ class ListViewTaskRow @JvmOverloads constructor(
             ViewGroup.LayoutParams.MATCH_PARENT,
             resources.getDimension(heightResId).toInt()
         )
-
     }
 
     private fun updatePriority(priority: String) {
@@ -62,9 +61,7 @@ class ListViewTaskRow @JvmOverloads constructor(
                 background = ContextCompat.getDrawable(context, R.drawable.bg_priority_high)
             }
         }
-
     }
-
 
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {

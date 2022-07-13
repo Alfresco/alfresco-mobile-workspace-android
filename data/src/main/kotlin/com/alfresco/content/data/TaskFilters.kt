@@ -4,6 +4,7 @@ data class TaskFilters(
     val assignment: String = "",
     val sort: String = "",
     val start: Int = 0,
+    val page: Int = 0,
     val state: String = "",
     val text: String = ""
 ) {
@@ -13,17 +14,17 @@ data class TaskFilters(
             return TaskFilters(
                 assignment = "assignee",
                 sort = "created-desc",
-                start = 0,
+                page = 0,
                 state = "open",
                 text = ""
             )
         }
 
-        fun active(): TaskFilters {
+        fun active(page: Int = 0): TaskFilters {
             return TaskFilters(
                 assignment = "assignee",
                 sort = "created-desc",
-                start = 0,
+                page = page,
                 state = "open",
                 text = ""
             )
@@ -33,21 +34,16 @@ data class TaskFilters(
             return TaskFilters(
                 assignment = "assignee",
                 sort = "created-desc",
-                start = 0,
+                page = 0,
                 state = "complete",
                 text = ""
             )
         }
-
     }
-
 }
 
 enum class Tasks {
     All,
     Active,
     Completed
-
 }
-
-

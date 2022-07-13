@@ -26,16 +26,14 @@ class TasksViewModel(
         fetchInitial()
     }
 
-
-    override fun refresh() {
-        fetchInitial()
-    }
+    override fun refresh() = fetchInitial()
 
     override fun fetchNextPage() = withState { state ->
+        val newPage = state.page.plus(1)
         viewModelScope.launch {
             // Fetch tasks data
             TaskRepository()::getTasks.asFlow(
-                getSelectedTasks(state.displayTask)
+                getSelectedTasks(state.displayTask, newPage)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -75,16 +73,12 @@ class TasksViewModel(
         }
     }
 
-    private fun getSelectedTasks(tasks: Tasks): TaskFilters {
+    private fun getSelectedTasks(tasks: Tasks, page: Int): TaskFilters {
         return when (tasks) {
-            Active -> TaskFilters.active()
+            Active -> TaskFilters.active(page)
             Completed -> TaskFilters.complete()
             else -> TaskFilters.all()
         }
-    }
-
-    private fun loadResults(){
-
     }
 
     companion object : MavericksViewModelFactory<TasksViewModel, TasksViewState> {

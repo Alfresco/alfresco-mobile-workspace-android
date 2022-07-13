@@ -21,10 +21,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         return RequestTaskFilters(
             assignment = taskFilters.assignment,
             sort = taskFilters.sort,
-            start = taskFilters.start,
+            page = taskFilters.page,
             state = taskFilters.state,
             text = taskFilters.text
         )
     }
-
 }

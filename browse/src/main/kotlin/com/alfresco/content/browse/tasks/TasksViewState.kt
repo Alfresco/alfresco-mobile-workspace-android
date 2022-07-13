@@ -14,25 +14,36 @@ data class TasksViewState(
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,
-    val displayTask: Tasks = Active
+    val displayTask: Tasks = Active,
+    val loadItemsCount: Int = 0,
+    val page: Int = 0
 ) : TaskListViewState {
-
 
     override val isCompact = false
 
-    override fun copy(_entries: List<TaskEntry>): TaskListViewState {
-        TODO("Not yet implemented")
-    }
+    override fun copy(_entries: List<TaskEntry>) = copy(taskEntries = _entries)
 
     fun update(
         response: ResponseList?
     ): TasksViewState {
         if (response == null) return this
 
-        val pageTasks = response.listTask
+        var totalLoadCount = 0
 
-        return copy(taskEntries = pageTasks)
+        val taskPageEntries = response.listTask
+
+        val newTaskEntries = if (response.start != 0) {
+            totalLoadCount = loadItemsCount.plus(response.size)
+            taskEntries + taskPageEntries
+        } else {
+            totalLoadCount = response.size
+            taskPageEntries
+        }
+
+        return copy(
+            taskEntries = newTaskEntries,
+            loadItemsCount = totalLoadCount,
+            hasMoreItems = totalLoadCount < response.total
+        )
     }
-
-
 }

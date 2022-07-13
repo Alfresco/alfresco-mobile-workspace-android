@@ -143,7 +143,5 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         }
     }
 
-
     abstract fun onItemClicked(entry: TaskEntry)
-
 }

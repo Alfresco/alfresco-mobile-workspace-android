@@ -17,6 +17,9 @@ import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Marked as TasksViewModel class
+ */
 class TasksViewModel(
     state: TasksViewState,
     val context: Context

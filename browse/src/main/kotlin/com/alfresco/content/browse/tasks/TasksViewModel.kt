@@ -50,7 +50,11 @@ class TasksViewModel(
     }
 
     override fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int> {
-        return Triple(R.drawable.ic_empty_recent, R.string.tasks_empty_title, R.string.tasks_empty_message)
+
+        return when (state.request) {
+            is Fail -> Triple(R.drawable.ic_empty_recent, R.string.tasks_empty_title, R.string.account_not_configured)
+            else -> Triple(R.drawable.ic_empty_recent, R.string.tasks_empty_title, R.string.tasks_empty_message)
+        }
     }
 
     private fun fetchInitial() = withState { state ->

@@ -41,5 +41,6 @@
     <string name="offline_sync_unavailable_negative">Later</string>
 
     <string name="title_transfers">Transfers</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="account_not_configured">This account is not configured on the process services. Please contact to administrator.</string>
 </resources>

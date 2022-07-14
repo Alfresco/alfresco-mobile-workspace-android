@@ -26,8 +26,7 @@ class ListViewTaskRow @JvmOverloads constructor(
     @ModelProp
     fun setData(entry: TaskEntry) {
         binding.title.text = entry.name
-        binding.subtitle.text = entry.assignee.name
-
+        binding.subtitle.text = entry.assignee?.name
         updatePriority(entry.priority)
     }
 

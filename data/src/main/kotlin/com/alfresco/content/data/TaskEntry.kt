@@ -3,14 +3,17 @@ package com.alfresco.content.data
 import android.os.Parcelable
 import com.alfresco.process.models.AssigneeInfo
 import com.alfresco.process.models.TaskDataEntry
+import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TaskEntry(
     val id: String = "",
     val name: String = "",
-    val assignee: Assignee,
-    val priority: String = ""
+    val assignee: Assignee? = null,
+    val priority: String = "",
+    val created: ZonedDateTime? = null,
+    val type: Type = Type.UNKNOWN
 ) : Parcelable {
     companion object {
         fun with(data: TaskDataEntry): TaskEntry {
@@ -21,6 +24,11 @@ data class TaskEntry(
                 priority = data.priority ?: ""
             )
         }
+    }
+
+    enum class Type {
+        GROUP,
+        UNKNOWN
     }
 }
 

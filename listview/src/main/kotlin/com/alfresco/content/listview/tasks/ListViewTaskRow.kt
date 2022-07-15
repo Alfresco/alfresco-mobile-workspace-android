@@ -13,6 +13,9 @@ import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
 
+/**
+ * Marked as ListViewTaskRow class
+ */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewTaskRow @JvmOverloads constructor(
     context: Context,
@@ -23,13 +26,20 @@ class ListViewTaskRow @JvmOverloads constructor(
     private val binding = ViewListTaskRowBinding.inflate(LayoutInflater.from(context), this, true)
     private var isCompact: Boolean = false
 
+    /**
+     * set the data on view
+     */
     @ModelProp
     fun setData(entry: TaskEntry) {
         binding.title.text = entry.name
-        binding.subtitle.text = entry.assignee?.name
+        binding.subtitle.text = entry.assignee.name
+
         updatePriority(entry.priority)
     }
 
+    /**
+     * adjust the height of row if subtitle not available
+     */
     @ModelProp
     fun setCompact(compact: Boolean) {
         this.isCompact = compact
@@ -62,12 +72,11 @@ class ListViewTaskRow @JvmOverloads constructor(
         }
     }
 
+    /**
+     * row click listener
+     */
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
-    }
-
-    @CallbackProp
-    fun setMoreClickListener(listener: OnClickListener?) {
     }
 }

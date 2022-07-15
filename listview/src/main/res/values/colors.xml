@@ -5,5 +5,8 @@
     <color name="color_burnt_orange">#3DC95100</color>
     <color name="color_carnelian">#3DBA1B1B</color>
     <color name="color_green">#3D00754A</color>
+    <color name="colorPriorityLow">#003A02</color>
+    <color name="colorPriorityMedium">#6A3C00</color>
+    <color name="colorPriorityHigh">#680003</color>
 
 </resources>

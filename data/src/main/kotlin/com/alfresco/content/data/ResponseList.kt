@@ -2,6 +2,9 @@ package com.alfresco.content.data
 
 import com.alfresco.process.models.ResultList
 
+/**
+ * Marked as ResponseList class
+ */
 data class ResponseList(
     val size: Int,
     val total: Int,
@@ -9,6 +12,10 @@ data class ResponseList(
     val listTask: List<TaskEntry>
 ) {
     companion object {
+
+        /**
+         * return the ResponseList obj using ResultList
+         */
         fun with(raw: ResultList): ResponseList {
             return ResponseList(
                 size = raw.size ?: 0,

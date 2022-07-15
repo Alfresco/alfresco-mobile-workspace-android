@@ -21,7 +21,6 @@ include ':viewer-text'
 include ':viewer-media'
 include ':shareextension'
 include ':move'
-include ':process'
 include ':app'
 /*include ':content'
 include ':content-ktx'
@@ -30,5 +29,3 @@ include ':alfresco-auth'*/
 // Enable Gradle's version catalog support
 // Ref: https://docs.gradle.org/current/userguide/platforms.html
 enableFeaturePreview("VERSION_CATALOGS")
-
-include ':process'

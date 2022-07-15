@@ -14,6 +14,10 @@ import com.alfresco.content.listview.tasks.TaskListViewState
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
 
+
+/**
+ * Marked as TasksViewState class
+ */
 data class TasksViewState(
     val parent: Entry? = null,
     override val taskEntries: List<TaskEntry> = emptyList(),
@@ -28,6 +32,9 @@ data class TasksViewState(
 
     override fun copy(_entries: List<TaskEntry>) = copy(taskEntries = _entries)
 
+    /**
+     * update the latest response
+     */
     fun update(
         response: ResponseList?
     ): TasksViewState {

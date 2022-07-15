@@ -6,6 +6,9 @@ import com.alfresco.process.models.TaskDataEntry
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as TaskEntry class
+ */
 @Parcelize
 data class TaskEntry(
     val id: String = "",
@@ -16,6 +19,10 @@ data class TaskEntry(
     val type: Type = Type.UNKNOWN
 ) : Parcelable {
     companion object {
+
+        /**
+         * return the TaskEntry obj using TaskDataEntry
+         */
         fun with(data: TaskDataEntry): TaskEntry {
             return TaskEntry(
                 id = data.id ?: "",
@@ -32,6 +39,11 @@ data class TaskEntry(
     }
 }
 
+}
+
+/**
+ * Marked as Assignee class
+ */
 @Parcelize
 data class Assignee(
     val id: Int = 0,
@@ -44,6 +56,10 @@ data class Assignee(
         get() = "$firstName $lastName"
 
     companion object {
+
+        /**
+         * return the Assignee obj using AssigneeInfo
+         */
         fun with(assigneeInfo: AssigneeInfo): Assignee {
             return Assignee(
                 id = assigneeInfo.id ?: 0,

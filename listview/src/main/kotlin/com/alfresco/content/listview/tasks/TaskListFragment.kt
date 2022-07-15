@@ -26,33 +26,48 @@ import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
 import com.alfresco.content.simpleController
-import com.alfresco.list.replace
 
+
+/**
+ * Mark as TaskListViewState interface
+ */
 interface TaskListViewState : MavericksState {
     val taskEntries: List<TaskEntry>
     val hasMoreItems: Boolean
     val request: Async<ResponseList>
     val isCompact: Boolean
 
+    /**
+     * copy the task entries and update the state
+     */
     fun copy(_entries: List<TaskEntry>): TaskListViewState
-
-    fun copyUpdating(entry: TaskEntry) =
-        copy(taskEntries.replace(entry) {
-            it.id == entry.id
-        })
 }
 
+/**
+ * Mark as TaskListViewModel class
+ */
 abstract class TaskListViewModel<S : TaskListViewState>(
     initialState: S
 ) : MavericksViewModel<S>(initialState) {
 
+    /**
+     * it executes on pull to refresh
+     */
     abstract fun refresh()
+
+    /**
+     * it executes when loads pagination data
+     */
     abstract fun fetchNextPage()
+
+    /**
+     * it executes when no data found and api returns failure
+     */
     abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
 }
 
 /**
- * Mark as TaskListFragment
+ * Mark as TaskListFragment class
  */
 abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState>(layoutID: Int = R.layout.fragment_task_list) :
     Fragment(layoutID), MavericksView {
@@ -120,7 +135,6 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                         id(it.id)
                         data(it)
                         compact(state.isCompact)
-                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     }
                 }
             }
@@ -150,6 +164,4 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
             }
         }
     }
-
-    abstract fun onItemClicked(entry: TaskEntry)
 }

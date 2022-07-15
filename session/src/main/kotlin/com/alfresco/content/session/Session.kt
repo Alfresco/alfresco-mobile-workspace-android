@@ -105,6 +105,24 @@ class Session(
     }
 
     /**
+     * it creates the retrofit builder to access the process service apis
+     */
+    fun <T> createProcessService(service: Class<T>): T {
+        val okHttpClient: OkHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GeneratedCodeConverters.converterFactory())
+            .baseUrl(processBaseUrl)
+            .build()
+        return retrofit.create(service)
+    }
+
+    /**
      * @property service
      * This service is only built to fetch app config from server
      */

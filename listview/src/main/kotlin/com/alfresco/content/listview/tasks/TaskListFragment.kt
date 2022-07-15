@@ -127,7 +127,6 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                     id(it.id)
                     data(it)
                     compact(state.isCompact)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                 }
             }
         }
@@ -156,9 +155,4 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
             }
         }
     }
-
-    /**
-     * it executes when tap on list item
-     */
-    abstract fun onItemClicked(entry: TaskEntry)
 }

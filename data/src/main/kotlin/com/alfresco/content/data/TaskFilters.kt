@@ -4,7 +4,7 @@ package com.alfresco.content.data
  * Marked as TaskFilters
  */
 data class TaskFilters(
-    val assignment: String = "",
+    val assignment: String = "assignee",
     val sort: String = "created-desc",
     val start: Int = 0,
     val page: Int = 0,
@@ -18,10 +18,8 @@ data class TaskFilters(
          */
         fun all(): TaskFilters {
             return TaskFilters(
-                assignment = "assignee",
                 page = 0,
-                state = "open",
-                text = ""
+                state = "open"
             )
         }
 
@@ -31,10 +29,8 @@ data class TaskFilters(
          */
         fun active(page: Int = 0): TaskFilters {
             return TaskFilters(
-                assignment = "assignee",
                 page = page,
-                state = "open",
-                text = ""
+                state = "open"
             )
         }
 
@@ -43,10 +39,8 @@ data class TaskFilters(
          */
         fun complete(): TaskFilters {
             return TaskFilters(
-                assignment = "assignee",
                 page = 0,
-                state = "complete",
-                text = ""
+                state = "complete"
             )
         }
     }

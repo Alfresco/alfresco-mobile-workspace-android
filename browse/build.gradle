@@ -35,6 +35,7 @@ dependencies {
     implementation project(':viewer')
 
     implementation libs.alfresco.content
+    implementation libs.alfresco.process
 
     implementation libs.kotlin.reflect
     implementation libs.androidx.core

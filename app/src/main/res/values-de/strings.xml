@@ -5,6 +5,7 @@
 
     <string name="nav_title_recents">Zuletzt</string>
     <string name="nav_title_favorites">Favoriten</string>
+    <string name="nav_title_tasks">Aufgaben</string>
     <string name="nav_title_offline">Offline</string>
     <string name="nav_title_browse">Durchsuchen</string>
     <string name="nav_title_settings">Account</string>

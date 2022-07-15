@@ -44,7 +44,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
                 destination,
                 appBarConfiguration.topLevelDestinations
             )
-            if (isTopLevelDestination) {
+            if (isTopLevelDestination && (destination.label != layout.context.getString(R.string.nav_title_tasks))) {
                 layout.collapse(false)
             } else {
                 layout.expand(false)

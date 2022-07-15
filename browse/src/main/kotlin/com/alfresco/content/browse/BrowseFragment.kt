@@ -62,6 +62,7 @@ data class BrowseArgs(
 class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private lateinit var args: BrowseArgs
+
     @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 

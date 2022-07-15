@@ -74,5 +74,7 @@
     <string name="category.folder">Dossier</string>
     <string name="type.facet.queries">Recherches avec filtre par type</string>
     <string name="size_end_kb">%1$s (Ko)</string>
+
     <string name="search_move_warning">Vous ne pouvez pas déplacer des fichiers vers votre propre dossier et sous-dossiers.</string>
+
 </resources>

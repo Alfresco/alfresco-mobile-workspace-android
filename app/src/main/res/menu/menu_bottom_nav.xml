@@ -9,6 +9,10 @@
         android:title="@string/nav_title_favorites"
         android:icon="@drawable/ic_favorites" />
     <item
+        android:id="@+id/nav_tasks"
+        android:title="@string/nav_title_tasks"
+        android:icon="@drawable/ic_tasks" />
+    <item
         android:id="@+id/nav_offline"
         android:title="@string/nav_title_offline"
         android:icon="@drawable/ic_offline" />

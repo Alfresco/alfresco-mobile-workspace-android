@@ -19,6 +19,8 @@
 
     <string name="recent_empty_title">Keine aktuellen Dateien</string>
     <string name="recent_empty_message">Hier werden Dateien\naufgeführt, die Sie anzeigen und bearbeiten.</string>
+    <string name="tasks_empty_title">Keine Aufgaben gefunden</string>
+    <string name="tasks_empty_message">Erstellen Sie eine neue Aufgabe, die Sie später einfach wiederfinden können.</string>
     <string name="favorite_files_empty_title">Keine Dateien oder Ordner als Favoriten</string>
     <string name="favorite_sites_empty_title">Keine Bibliotheken als Favoriten</string>
     <string name="favorites_empty_message">Sie haben scheinbar noch\nnichts hinzugefügt.</string>
@@ -39,4 +41,6 @@
     <string name="offline_sync_unavailable_negative">Später</string>
 
     <string name="title_transfers">Übertragungen</string>
+
+    <string name="account_not_configured">Dieses Konto ist nicht für "Process Services" konfiguriert. Bitte wenden Sie sich an den Administrator.</string>
 </resources>

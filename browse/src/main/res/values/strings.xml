@@ -19,6 +19,8 @@
 
     <string name="recent_empty_title">No recent files</string>
     <string name="recent_empty_message">Files that you view and\nedit will show here.</string>
+    <string name="tasks_empty_title">No tasks found</string>
+    <string name="tasks_empty_message">Create a new task that you want to easily find later.</string>
     <string name="favorite_files_empty_title">No favorite files or folders</string>
     <string name="favorite_sites_empty_title">No favorite libraries</string>
     <string name="favorites_empty_message">Looks like you haven’t\nadded anything.</string>
@@ -39,4 +41,6 @@
     <string name="offline_sync_unavailable_negative">Later</string>
 
     <string name="title_transfers">Transfers</string>
+
+    <string name="account_not_configured">This account is not configured on the process services. Please contact to administrator.</string>
 </resources>

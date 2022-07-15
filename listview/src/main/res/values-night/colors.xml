@@ -2,10 +2,10 @@
 <resources>
 
     <color name="color_cancel_secondary">#0DFFFFFF</color>
-    <color name="color_burnt_orange">#C95100</color>
-    <color name="color_carnelian">#BA1B1B</color>
-    <color name="color_green">#00754A</color>
-    <color name="colorPriorityLow">@android:color/white</color>
-    <color name="colorPriorityMedium">@android:color/white</color>
-    <color name="colorPriorityHigh">@android:color/white</color>
+    <color name="color_burnt_orange">#7B2F00</color>
+    <color name="color_carnelian">#930006</color>
+    <color name="color_green">#005231</color>
+    <color name="colorPriorityLow">#91F7BE</color>
+    <color name="colorPriorityMedium">#FFDBCA</color>
+    <color name="colorPriorityHigh">#FFDAD4</color>
 </resources>

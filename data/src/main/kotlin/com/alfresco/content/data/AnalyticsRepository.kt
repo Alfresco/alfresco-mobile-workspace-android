@@ -33,9 +33,9 @@ class AnalyticsRepository(val session: Session) {
     }
 
     private fun deviceOS() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        "Android: ${Build.VERSION.RELEASE_OR_CODENAME}"
+        "android: ${Build.VERSION.RELEASE_OR_CODENAME}"
     } else {
-        "Android: ${Build.VERSION.RELEASE}"
+        "android: ${Build.VERSION.RELEASE}"
     }
 
     private fun deviceNetwork(): String {
@@ -44,9 +44,9 @@ class AnalyticsRepository(val session: Session) {
         val actNw = cm.getNetworkCapabilities(nw) ?: return NetworkStatus.NOT_CONNECTED.name
 
         return when {
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> NetworkStatus.WIFI.name
-            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> NetworkStatus.CELLULAR.name
-            else -> NetworkStatus.NOT_CONNECTED.name
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> NetworkStatus.WIFI.name.lowercase()
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> NetworkStatus.CELLULAR.name.lowercase()
+            else -> NetworkStatus.NOT_CONNECTED.name.lowercase()
         }
     }
 
@@ -73,9 +73,8 @@ class AnalyticsRepository(val session: Session) {
     /**
      * It will get triggered to log analytics on firebase console
      */
-    fun logEvent(type: EventType, params: Bundle) {
-
-        firebaseAnalytics.logEvent(type.value, params)
+    fun logEvent(type: String, params: Bundle) {
+        firebaseAnalytics.logEvent(type, params)
     }
 }
 
@@ -83,44 +82,43 @@ class AnalyticsRepository(val session: Session) {
  * Marked as EventName enum
  */
 enum class EventName(val value: String) {
-    FilePreview("Event_filePreview"),
-    Download("Event_download"),
-    AddFavorite("Event_Add to Favorites"),
-    RemoveFavorite("Event_Remove from Favorite"),
-    RenameNode("Event_Rename"),
-    MoveToFolder("Event_Move"),
-    MarkOffline("Event_Make available offline"),
-    RemoveOffline("Event_Remove offline"),
-    MoveTrash("Event_Move to Trash"),
-    ChangeTheme("Event_changeTheme"),
-    CreateFolder("Event_New folder"),
-    UploadMedia("Event_Upload photos or videos"),
-    CreateMedia("Event_Take a photo or video"),
-    UploadFiles("Event_Upload files"),
-    AppLaunched("Event_appLaunched"),
-    SearchFacets("Event_searchFacets"),
-    PermanentlyDelete("Event_Permanently Delete"),
-    Restore("Event_Restore"),
-    OpenWith("Event_Open with")
+    FilePreview("event_file_preview"),
+    Download("event_download"),
+    AddFavorite("event_add_to_favorites"),
+    RemoveFavorite("event_remove_from_favorite"),
+    RenameNode("event_rename"),
+    MoveToFolder("event_move"),
+    MarkOffline("event_Make_available_offline"),
+    RemoveOffline("event_remove_offline"),
+    MoveTrash("event_move_to_trash"),
+    ChangeTheme("event_change_theme"),
+    CreateFolder("event_new_folder"),
+    UploadMedia("event_upload_photos_or_videos"),
+    CreateMedia("event_take_a_photo_or_video"),
+    UploadFiles("event_upload_files"),
+    AppLaunched("event_app_launched"),
+    SearchFacets("event_search_facets"),
+    PermanentlyDelete("event_permanently_delete"),
+    Restore("event_restore"),
+    OpenWith("event_open_with")
 }
 
 /**
  * Marked as PageView enum
  */
 enum class PageView(val value: String) {
-    Recent("PageView_Recent"),
-    Favorites("PageView_Favorites"),
+    Recent("page_view_recent"),
+    Favorites("page_view_favorites"),
     Tasks("page_view_tasks"),
-    Offline("PageView_Offline"),
-    Browse("PageView_Browse"),
-    PersonalFiles("PageView_Personal files"),
-    FolderName("PageView_FolderName"),
-    MyLibraries("PageView_My libraries"),
-    Shared("PageView_Shared"),
-    Trash("PageView_Trash"),
-    Search("PageView_Search"),
-    ShareExtension("PageView_ShareExtension"),
-    Transfers("PageView_Transfers"),
+    Offline("page_view_offline"),
+    Browse("page_view_browse"),
+    PersonalFiles("page_view_personal_files"),
+    MyLibraries("page_view_my_libraries"),
+    Shared("page_view_shared"),
+    Trash("page_view_trash"),
+    Search("page_view_search"),
+    ShareExtension("page_view_share_extension"),
+    Transfers("page_view_transfers"),
     None("none")
 }
 
@@ -128,18 +126,9 @@ enum class PageView(val value: String) {
  * Marked as APIEvent enum
  */
 enum class APIEvent(val value: String) {
-    NewFolder("Event_API_NewFolder"),
-    UploadFiles("Event_API_UploadFiles"),
-    Login("Event_API_Login")
-}
-
-/**
- * Marked as EventType enum
- */
-enum class EventType(val value: String) {
-    ScreenView("screen_views"),
-    ActionEvent("action_event"),
-    ApiTracker("api_tracker")
+    NewFolder("event_api_new_folder"),
+    UploadFiles("event_api_upload_files"),
+    Login("event_api_login")
 }
 
 /**
@@ -171,11 +160,8 @@ enum class Parameters(val value: String) {
     FileMimeType("file_mimetype"),
     FileExtension("file_extension"),
     FileSize("file_size"),
-    FolderName("folder_name"),
     ThemeName("theme_name"),
     NumberOfFiles("number_of_files"),
     FacetName("facet_name"),
-    NumberOfAssets("number_of_assets"),
-    IsFile("is_file"),
     Success("success")
 }

@@ -72,6 +72,7 @@ class Session(
     }
 
     val baseUrl get() = "${account.serverUrl}/api/-default-/public/"
+    val processBaseUrl get() = account.serverUrl.replace("/alfresco", "/activiti-app/")
 
     fun <T> createService(service: Class<T>): T {
         val okHttpClient: OkHttpClient = OkHttpClient()
@@ -84,6 +85,24 @@ class Session(
             .client(okHttpClient)
             .addConverterFactory(GeneratedCodeConverters.converterFactory())
             .baseUrl(baseUrl)
+            .build()
+        return retrofit.create(service)
+    }
+
+    /**
+     * it creates the retrofit builder to access the process service apis
+     */
+    fun <T> createProcessService(service: Class<T>): T {
+        val okHttpClient: OkHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GeneratedCodeConverters.converterFactory())
+            .baseUrl(processBaseUrl)
             .build()
         return retrofit.create(service)
     }

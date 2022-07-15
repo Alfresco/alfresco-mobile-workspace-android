@@ -109,6 +109,7 @@ enum class EventName(val value: String) {
 enum class PageView(val value: String) {
     Recent("page_view_recent"),
     Favorites("page_view_favorites"),
+    Tasks("page_view_tasks"),
     Offline("page_view_offline"),
     Browse("page_view_browse"),
     PersonalFiles("page_view_personal_files"),

@@ -19,6 +19,8 @@
 
     <string name="recent_empty_title">No hay ficheros recientes</string>
     <string name="recent_empty_message">Los ficheros que vea y edite se mostrarán aquí.</string>
+    <string name="tasks_empty_title">No se encontró ninguna tarea</string>
+    <string name="tasks_empty_message">Crear una nueva tarea fácil de encontrar más adelante</string>
     <string name="favorite_files_empty_title">No hay ficheros ni carpetas favoritos</string>
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
     <string name="favorites_empty_message">Parece que no ha añadido nada.</string>
@@ -39,4 +41,6 @@
     <string name="offline_sync_unavailable_negative">Más tarde</string>
 
     <string name="title_transfers">Transferencias</string>
+
+    <string name="account_not_configured">Esta cuenta no está configurada en "Process Services". Póngase en contacto con el administrador.</string>
 </resources>

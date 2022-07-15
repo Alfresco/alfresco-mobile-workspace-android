@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:paddingStart="16dp"
+    android:paddingStart="24dp"
     android:paddingEnd="16dp">
 
     <LinearLayout

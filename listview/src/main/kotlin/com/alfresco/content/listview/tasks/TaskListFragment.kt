@@ -21,6 +21,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
+import com.alfresco.content.listview.listViewGroupHeader
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
@@ -123,10 +124,17 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
             }
         } else if (state.taskEntries.isNotEmpty()) {
             state.taskEntries.forEach {
-                listViewTaskRow {
-                    id(it.id)
-                    data(it)
-                    compact(state.isCompact)
+                if (it.type == TaskEntry.Type.GROUP) {
+                    listViewGroupHeader {
+                        id(it.name)
+                        title(it.name)
+                    }
+                } else {
+                    listViewTaskRow {
+                        id(it.id)
+                        data(it)
+                        compact(state.isCompact)
+                    }
                 }
             }
         }

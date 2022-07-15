@@ -27,6 +27,11 @@ class TasksViewModel(
 
     init {
         fetchInitial()
+        withState {
+            if (it.sortOrder == TasksViewState.SortOrder.ByModifiedDate) {
+                TasksViewState.ModifiedGroup.prepare(context)
+            }
+        }
     }
 
     override fun refresh() = fetchInitial()

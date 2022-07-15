@@ -27,6 +27,7 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
+                created = data.created,
                 assignee = data.assignee?.let { Assignee.with(it) } ?: Assignee(),
                 priority = data.priority ?: ""
             )

@@ -148,6 +148,9 @@ data class TasksViewState(
         }
     }
 
+    /**
+     * Marked as SortOrder enum class
+     */
     enum class SortOrder {
         ByModifiedDate,
         Default

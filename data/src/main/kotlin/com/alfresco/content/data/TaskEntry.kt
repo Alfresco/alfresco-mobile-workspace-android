@@ -33,6 +33,9 @@ data class TaskEntry(
         }
     }
 
+    /**
+     * Marked as Type enum class
+     */
     enum class Type {
         GROUP,
         UNKNOWN

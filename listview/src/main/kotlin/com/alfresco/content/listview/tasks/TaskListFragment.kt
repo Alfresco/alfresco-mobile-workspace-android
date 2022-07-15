@@ -27,7 +27,6 @@ import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
 import com.alfresco.content.simpleController
 
-
 /**
  * Mark as TaskListViewState interface
  */

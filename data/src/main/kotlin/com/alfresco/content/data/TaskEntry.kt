@@ -39,8 +39,6 @@ data class TaskEntry(
     }
 }
 
-}
-
 /**
  * Marked as Assignee class
  */

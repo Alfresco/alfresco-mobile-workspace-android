@@ -89,21 +89,6 @@ class Session(
         return retrofit.create(service)
     }
 
-    fun <T> createProcessService(service: Class<T>): T {
-        val okHttpClient: OkHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(authInterceptor)
-            .addOptionalInterceptor(loggingInterceptor)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GeneratedCodeConverters.converterFactory())
-            .baseUrl(processBaseUrl)
-            .build()
-        return retrofit.create(service)
-    }
-
     /**
      * it creates the retrofit builder to access the process service apis
      */

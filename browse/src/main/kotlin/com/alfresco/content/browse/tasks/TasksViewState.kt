@@ -3,7 +3,6 @@ package com.alfresco.content.browse.tasks
 import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
-import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
@@ -14,7 +13,6 @@ import com.alfresco.content.listview.tasks.TaskListViewState
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
 
-
 /**
  * Marked as TasksViewState class
  */
@@ -23,6 +21,7 @@ data class TasksViewState(
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,
+    val baseTaskEntries: List<TaskEntry> = emptyList(),
     val displayTask: Tasks = Active,
     val loadItemsCount: Int = 0,
     val page: Int = 0
@@ -46,13 +45,14 @@ data class TasksViewState(
 
         val newTaskEntries = if (response.start != 0) {
             totalLoadCount = loadItemsCount.plus(response.size)
-            taskEntries + taskPageEntries
+            baseTaskEntries + taskPageEntries
         } else {
             totalLoadCount = response.size
             taskPageEntries
         }
 
         return copyUpdatingEntries(newTaskEntries).copy(
+            baseTaskEntries = taskPageEntries,
             loadItemsCount = totalLoadCount,
             hasMoreItems = totalLoadCount < response.total
         )
@@ -64,8 +64,11 @@ data class TasksViewState(
             else -> defaultReducer(newEntries)
         }
 
-    val sortOrder: TasksViewState.SortOrder
-        get() = TasksViewState.SortOrder.ByModifiedDate
+    /**
+     * set sort order depends on the different views
+     */
+    val sortOrder: SortOrder
+        get() = SortOrder.ByModifiedDate
 
     private fun defaultReducer(newEntries: List<TaskEntry>): TasksViewState =
         copy(
@@ -79,17 +82,17 @@ data class TasksViewState(
         val firstOfWeek = startOfDay.with(ChronoField.DAY_OF_WEEK, 1)
         val firstOfLastWeek = firstOfWeek.minusWeeks(1)
 
-        var currentGroup = BrowseViewState.ModifiedGroup.None
+        var currentGroup = ModifiedGroup.None
         val groupedList = mutableListOf<TaskEntry>()
         for (entry in newEntries) {
             val modified = entry.created ?: startOfDay
 
             val targetGroup = when {
-                modified >= startOfDay -> BrowseViewState.ModifiedGroup.Today
-                modified >= startOfYesterday -> BrowseViewState.ModifiedGroup.Yesterday
-                modified >= firstOfWeek -> BrowseViewState.ModifiedGroup.ThisWeek
-                modified >= firstOfLastWeek -> BrowseViewState.ModifiedGroup.LastWeek
-                else -> BrowseViewState.ModifiedGroup.Older
+                modified >= startOfDay -> ModifiedGroup.Today
+                modified >= startOfYesterday -> ModifiedGroup.Yesterday
+                modified >= firstOfWeek -> ModifiedGroup.ThisWeek
+                modified >= firstOfLastWeek -> ModifiedGroup.LastWeek
+                else -> ModifiedGroup.Older
             }
 
             if (currentGroup != targetGroup) {
@@ -111,6 +114,9 @@ data class TasksViewState(
         )
     }
 
+    /**
+     * Marked as ModifiedGroup enum class
+     */
     enum class ModifiedGroup {
         Today,
         Yesterday,
@@ -119,6 +125,9 @@ data class TasksViewState(
         Older,
         None;
 
+        /**
+         * set default value for title
+         */
         fun title(): String {
             return valueMap[this] ?: ""
         }
@@ -126,6 +135,9 @@ data class TasksViewState(
         companion object {
             private val valueMap = HashMap<ModifiedGroup, String>()
 
+            /**
+             * fetching the sort title values from string.xml
+             */
             fun prepare(context: Context) {
                 valueMap[Today] = context.getString(R.string.modified_group_today)
                 valueMap[Yesterday] = context.getString(R.string.modified_group_yesterday)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="due_date_values">
+        <item>@string/due_date_asc</item>
+        <item>@string/due_date_desc</item>
+    </string-array>
+    <string-array name="created_values">
+        <item>@string/created_asc</item>
+        <item>@string/created_desc</item>
+    </string-array>
+    <string-array name="assignment_values">
+        <item>@string/assignment_assignee</item>
+        <item>@string/assignment_involved</item>
+        <item>@string/assignment_candidate</item>
+    </string-array>
+</resources>

@@ -8,4 +8,5 @@
     <color name="colorPriorityLow">#91F7BE</color>
     <color name="colorPriorityMedium">#FFDBCA</color>
     <color name="colorPriorityHigh">#FFDAD4</color>
+    <color name="color_search_filter">@color/white</color>
 </resources>

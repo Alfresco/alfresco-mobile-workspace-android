@@ -21,6 +21,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
+import com.alfresco.content.FilterChip
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView

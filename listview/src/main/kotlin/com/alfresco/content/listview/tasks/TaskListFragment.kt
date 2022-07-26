@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,7 +23,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
-import com.alfresco.content.listview.listViewGroupHeader
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
@@ -78,14 +79,22 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var loadingMessage: TextView
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
+    lateinit var recyclerViewSort: EpoxyRecyclerView
+    lateinit var rlStateFilters: RelativeLayout
+    lateinit var parentFilters: LinearLayout
+    lateinit var textStateFilter: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
         recyclerView = view.findViewById(R.id.recycler_view)
-        refreshLayout = view.findViewById(R.id.refresh_layout)
         loadingMessage = view.findViewById(R.id.loading_message)
+        refreshLayout = view.findViewById(R.id.refresh_layout)
+        recyclerViewSort = view.findViewById(R.id.recycler_view_sort_chips)
+        rlStateFilters = view.findViewById(R.id.rl_state_filters)
+        textStateFilter = view.findViewById(R.id.text_state_filter)
+        parentFilters = view.findViewById(R.id.parent_filters)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
@@ -100,6 +109,10 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                 }
             }
         })
+    }
+
+    fun visibleFilters(isVisible: Boolean) {
+        parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -124,17 +137,10 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
             }
         } else if (state.taskEntries.isNotEmpty()) {
             state.taskEntries.forEach {
-                if (it.type == TaskEntry.Type.GROUP) {
-                    listViewGroupHeader {
-                        id(it.name)
-                        title(it.name)
-                    }
-                } else {
-                    listViewTaskRow {
-                        id(it.id)
-                        data(it)
-                        compact(state.isCompact)
-                    }
+                listViewTaskRow {
+                    id(it.id)
+                    data(it)
+                    compact(state.isCompact)
                 }
             }
         }

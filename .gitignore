@@ -75,3 +75,4 @@ lint/reports/
 /gradle/libs.versions1.toml
 /authalfresco/
 /process/
+/auth-alfresco/

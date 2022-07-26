@@ -19,7 +19,7 @@
 
     <string name="recent_empty_title">No recent files</string>
     <string name="recent_empty_message">Files that you view and\nedit will show here.</string>
-    <string name="tasks_empty_title">No tasks found</string>
+    <string name="tasks_empty_title">No Tasks Found</string>
     <string name="tasks_empty_message">Create a new task that you want to easily find later.</string>
     <string name="favorite_files_empty_title">No favorite files or folders</string>
     <string name="favorite_sites_empty_title">No favorite libraries</string>
@@ -43,4 +43,16 @@
     <string name="title_transfers">Transfers</string>
 
     <string name="account_not_configured">This account is not configured on the process services. Please contact to administrator.</string>
+
+    <string name="sort_due_date">Due date</string>
+    <string name="sort_priority">Priority</string>
+    <string name="sort_created">Created</string>
+    <string name="sort_assignment">Assignment</string>
+    <string name="due_date_asc">Due-Asc</string>
+    <string name="due_date_desc">Due-Desc</string>
+    <string name="created_asc">Created-Asc</string>
+    <string name="created_desc">Created-Desc</string>
+    <string name="assignment_assignee">Assignee</string>
+    <string name="assignment_involved">Involved</string>
+    <string name="assignment_candidate">Candidate</string>
 </resources>

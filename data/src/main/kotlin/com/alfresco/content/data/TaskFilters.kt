@@ -12,35 +12,16 @@ data class TaskFilters(
     val text: String = ""
 ) {
     companion object {
-
-        /**
-         * return default all filter as TaskFilters obj
-         */
-        fun all(): TaskFilters {
-            return TaskFilters(
-                page = 0,
-                state = "open"
-            )
-        }
-
         /**
          * @param page
          * return active filter as TaskFilters obj
          */
-        fun active(page: Int = 0): TaskFilters {
+        fun filter(page: Int = 0, state: String, sort: String, assignment: String = "assignee"): TaskFilters {
             return TaskFilters(
+                assignment = assignment,
                 page = page,
-                state = "open"
-            )
-        }
-
-        /**
-         * return default complete filter as TaskFilters obj
-         */
-        fun complete(): TaskFilters {
-            return TaskFilters(
-                page = 0,
-                state = "complete"
+                state = state,
+                sort = sort
             )
         }
     }
@@ -49,7 +30,7 @@ data class TaskFilters(
 /**
  * Marked as Tasks class
  */
-enum class Tasks {
+enum class TaskState {
     All,
     Active,
     Completed

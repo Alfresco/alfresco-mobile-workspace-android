@@ -3,18 +3,18 @@ package com.alfresco.content.browse.preview
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.alfresco.content.browse.databinding.ActivityPreviewBinding
+import com.alfresco.content.browse.databinding.ActivityLocalPreviewBinding
 
 /**
  * Mark as Preview Activity
  */
-class PreviewActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPreviewBinding
+class LocalPreviewActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLocalPreviewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityPreviewBinding.inflate(layoutInflater)
+        binding = ActivityLocalPreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 

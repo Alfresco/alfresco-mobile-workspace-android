@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Zoeken</string>
-    <string name="search_hint">Zoeken</string>
 
     <string name="recent_search_title">Recente zoekopdrachten</string>
 
@@ -15,19 +14,11 @@
     <string name="search_empty_title">Oeps!</string>
     <string name="search_empty_message">Het bestand dat u zoekt\nis niet gevonden.</string>
 
-    <string name="advance_search_title">Geavanceerd zoeken</string>
     <string name="default_search">Standaard</string>
-    <string name="component_action_reset">Opnieuw instellen</string>
-    <string name="component_action_apply">Toepassen</string>
-    <string name="component_action_cancel">Annuleren</string>
     <string name="app.search.radio.none">Geen</string>
     <string name="app.search.radio.all">Alle</string>
     <string name="app.search.radio.folder">Map</string>
     <string name="app.search.radio.document">Document</string>
-    <string name="component_number_range_empty">Vereiste waarde</string>
-    <string name="component_number_range_invalid_input">Van-waarde moet kleiner zijn dan Tot-waarde</string>
-    <string name="hint_range_from">Van</string>
-    <string name="hint_range_to">Tot</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="name_truncate_end" translatable="false">%1$s...</string>
     <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
@@ -38,8 +29,6 @@
     <string name="search.facet_fields.type">Bestandstype</string>
     <string name="search.facet_fields.modifier">Gewijzigd door</string>
     <string name="search.facet_fields.creator">Maker</string>
-    <string name="hint_range_from_date">Van-datum</string>
-    <string name="hint_range_to_date">Tot-datum</string>
     <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
     <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
 

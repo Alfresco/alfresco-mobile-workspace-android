@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -79,10 +79,10 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var loadingMessage: TextView
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
-    lateinit var recyclerViewSort: EpoxyRecyclerView
-    lateinit var rlStateFilters: RelativeLayout
+    lateinit var recyclerViewFilters: EpoxyRecyclerView
     lateinit var parentFilters: LinearLayout
-    lateinit var textStateFilter: TextView
+    lateinit var topLoadingIndicator: View
+    lateinit var actionReset: ImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,10 +91,10 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         recyclerView = view.findViewById(R.id.recycler_view)
         loadingMessage = view.findViewById(R.id.loading_message)
         refreshLayout = view.findViewById(R.id.refresh_layout)
-        recyclerViewSort = view.findViewById(R.id.recycler_view_sort_chips)
-        rlStateFilters = view.findViewById(R.id.rl_state_filters)
-        textStateFilter = view.findViewById(R.id.text_state_filter)
+        recyclerViewFilters = view.findViewById(R.id.recycler_view_filters)
         parentFilters = view.findViewById(R.id.parent_filters)
+        topLoadingIndicator = view.findViewById(R.id.loading)
+        actionReset = view.findViewById(R.id.action_reset)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
@@ -119,6 +119,9 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
 
         loadingAnimation.isVisible =
             state.request is Loading && state.taskEntries.isEmpty() && !refreshLayout.isRefreshing
+
+        topLoadingIndicator.isVisible =
+            state.request is Loading && state.taskEntries.isNotEmpty() && !refreshLayout.isRefreshing
 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false

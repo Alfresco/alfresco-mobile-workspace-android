@@ -5,8 +5,8 @@ import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.data.TaskState
-import com.alfresco.content.data.TaskState.Active
+import com.alfresco.content.data.TaskFilterData
+import com.alfresco.content.data.TaskStateData
 import com.alfresco.content.listview.tasks.TaskListViewState
 
 /**
@@ -18,9 +18,9 @@ data class TasksViewState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,
     val baseTaskEntries: List<TaskEntry> = emptyList(),
-    val listSortDataChips: List<TaskSortData> = emptyList(),
-    val listTaskState: List<TaskState> = emptyList(),
-    val displayTask: TaskState = Active,
+    val listSortDataChips: List<TaskFilterData> = emptyList(),
+    val listTaskState: List<TaskStateData> = emptyList(),
+    val displayTask: TaskStateData = TaskStateData(),
     val loadItemsCount: Int = 0,
     val page: Int = 0
 ) : TaskListViewState {

@@ -7,12 +7,10 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
+import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.TaskFilters
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.TaskState
-import com.alfresco.content.data.TaskState.Active
-import com.alfresco.content.data.TaskState.All
-import com.alfresco.content.data.TaskState.Completed
+import com.alfresco.content.data.TaskStateData
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
@@ -23,11 +21,12 @@ import kotlinx.coroutines.launch
  */
 class TasksViewModel(
     state: TasksViewState,
-    val context: Context
+    val context: Context,
+    private val repository: TaskRepository
 ) : TaskListViewModel<TasksViewState>(state) {
 
     init {
-        setupSortAndFiltersData()
+        setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
         fetchInitial()
     }
 
@@ -37,7 +36,7 @@ class TasksViewModel(
         val newPage = state.page.plus(1)
         viewModelScope.launch {
             // Fetch tasks data
-            TaskRepository()::getTasks.asFlow(
+            repository::getTasks.asFlow(
                 getSelectedTasks(state.displayTask, newPage, state.listSortDataChips)
             ).execute {
                 when (it) {
@@ -63,10 +62,9 @@ class TasksViewModel(
     }
 
     private fun fetchInitial() = withState { state ->
-        println("executing api")
         viewModelScope.launch {
             // Fetch tasks data
-            TaskRepository()::getTasks.asFlow(
+            repository::getTasks.asFlow(
                 getSelectedTasks(state.displayTask, 0, state.listSortDataChips)
             ).execute {
                 when (it) {
@@ -83,60 +81,58 @@ class TasksViewModel(
         }
     }
 
-    private fun setupSortAndFiltersData() {
-        val listState = mutableListOf<TaskState>()
-        listState.add(All)
-        listState.add(Active)
-        listState.add(Completed)
-
-        val list = mutableListOf<TaskSortData>()
-        list.add(TaskSortData.with(context.getString(R.string.sort_due_date), context.resources.getStringArray(R.array.due_date_values).toList()))
-        list.add(TaskSortData.with(context.getString(R.string.sort_priority)))
-        list.add(TaskSortData.with(context.getString(R.string.sort_assignment), context.resources.getStringArray(R.array.assignment_values).toList()))
-        list.add(TaskSortData.with(context.getString(R.string.sort_created), context.resources.getStringArray(R.array.created_values).toList()))
-        setState {
-            copy(
-                listSortDataChips = list,
-                listTaskState = listState
-            )
-        }
-    }
-
-    private fun getSelectedTasks(taskState: TaskState, page: Int, listSort: List<TaskSortData>): TaskFilters {
+    private fun getSelectedTasks(taskState: TaskStateData, page: Int, listSort: List<TaskFilterData>): TaskFilters {
         val sortObj = listSort.find { it.isSelected }
-        return if (sortObj?.isSelected == true && sortObj.title == context.getString(R.string.sort_assignment)) {
-            TaskFilters.filter(
-                page, taskState.name.lowercase(),
-                sort = "",
-                assignment = sortObj.selectedValue.lowercase()
-            )
-        } else {
-            TaskFilters.filter(
-                page, taskState.name.lowercase(),
-                sort = sortObj?.selectedValue?.lowercase() ?: ""
-            )
-        }
+        return TaskFilters.filter(
+            page = page,
+            state = taskState.state,
+            sort = sortObj?.selectedValue?.lowercase() ?: ""
+        )
     }
 
-    fun updateState(position: Int) {
-        setState {
-            copy(displayTask = listTaskState[position])
-        }
-        refresh()
-    }
-
-    fun updateSortSelection(state: TasksViewState, data: TaskSortData) {
-        val list = mutableListOf<TaskSortData>()
+    fun updateSelected(state: TasksViewState, data: TaskFilterData, isSelected: Boolean) {
+        val list = mutableListOf<TaskFilterData>()
         state.listSortDataChips.forEach { obj ->
             if (obj == data) {
-                list.add(TaskSortData.updateData(obj))
+                list.add(TaskFilterData.updateData(obj, isSelected))
             } else {
-                list.add(TaskSortData.reset(obj))
+                list.add(obj)
             }
         }
         setState { copy(listSortDataChips = list) }
+    }
 
-        refresh()
+    fun updateChipFilterResult(state: TasksViewState, model: TaskFilterData, metaData: FilterMetaData): MutableList<TaskFilterData> {
+        val list = mutableListOf<TaskFilterData>()
+
+        state.listSortDataChips.forEach { obj ->
+            if (obj == model) {
+                list.add(
+                    TaskFilterData.withFilterResult(
+                        obj,
+                        isSelected = metaData.name?.isNotEmpty() == true,
+                        selectedName = metaData.name ?: "",
+                        selectedQuery = metaData.query ?: "",
+                        selectedQueryMap = metaData.queryMap ?: mapOf()
+                    )
+                )
+            } else
+                list.add(obj)
+        }
+
+        setState { copy(listSortDataChips = list) }
+
+        return list
+    }
+
+    fun resetChips(state: TasksViewState): List<TaskFilterData> {
+        val list = mutableListOf<TaskFilterData>()
+        state.listSortDataChips.forEach { obj ->
+            list.add(TaskFilterData.reset(obj))
+        }
+        setState { copy(listSortDataChips = list) }
+
+        return list
     }
 
     companion object : MavericksViewModelFactory<TasksViewModel, TasksViewState> {
@@ -144,6 +140,6 @@ class TasksViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: TasksViewState
-        ) = TasksViewModel(state, viewModelContext.activity)
+        ) = TasksViewModel(state, viewModelContext.activity, TaskRepository())
     }
 }

@@ -1,19 +1,29 @@
 package com.alfresco.content.browse.tasks
 
+import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.appcompat.widget.ListPopupWindow
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.FilterChip
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.TaskFilterData
+import com.alfresco.content.hideSoftInput
 import com.alfresco.content.listview.tasks.TaskListFragment
 import com.alfresco.content.simpleController
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Marked as TasksFragment
@@ -23,11 +33,27 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override val viewModel: TasksViewModel by fragmentViewModel()
     private val epoxyControllerFilters: AsyncEpoxyController by lazy { epoxyControllerFilters() }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         visibleFilters(true)
-        setupDropDown()
-        recyclerViewSort.setController(epoxyControllerFilters)
+        actionReset.setOnClickListener {
+            AnalyticsManager().taskFiltersEvent(EventName.TaskFilterReset.value)
+            resetAllFilters()
+        }
+        recyclerViewFilters.setController(epoxyControllerFilters)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_tasks, menu)
+    }
+
+    private fun resetAllFilters() = withState(viewModel) { state ->
+        val listReset = viewModel.resetChips(state)
     }
 
     override fun onResume() {
@@ -35,43 +61,76 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         AnalyticsManager().screenViewEvent(PageView.Tasks)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        super.invalidate()
-        textStateFilter.text = state.displayTask.name
-        epoxyControllerFilters.requestModelBuild()
+    private fun scrollToTop() {
+        if (isResumed) {
+            recyclerView.layoutManager?.scrollToPosition(0)
+        }
     }
 
-    private fun setupDropDown() {
-        val statePopup = ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
-
-        statePopup.anchorView = rlStateFilters
-        statePopup.setListSelector(ContextCompat.getDrawable(requireContext(), R.drawable.bg_pop_up_window))
-        statePopup.isModal = true
-
-        withState(viewModel) { state ->
-            val items = state.listTaskState.map { it.name }
-            val adapter = ArrayAdapter(requireContext(), R.layout.list_task_state_pop_up, items)
-            statePopup.setAdapter(adapter)
-        }
-
-        statePopup.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            viewModel.updateState(position)
-            statePopup.dismiss()
-        }
-        rlStateFilters.setOnClickListener { statePopup.show() }
+    override fun invalidate() = withState(viewModel) { state ->
+        super.invalidate()
+        epoxyControllerFilters.requestModelBuild()
+        if (state.page == 0)
+            scrollToTop()
     }
 
     private fun epoxyControllerFilters() = simpleController(viewModel) { state ->
         state.listSortDataChips.forEach { sortDataObj ->
             listViewSortChips {
-                id(sortDataObj.title)
+                id(sortDataObj.name)
                 data(sortDataObj)
                 clickListener { model, _, chipView, _ ->
-                    withState(viewModel) { state ->
-                        viewModel.updateSortSelection(state, model.data())
-                    }
+                    onChipClicked(model.data(), chipView)
                 }
             }
         }
+    }
+
+    private fun onChipClicked(data: TaskFilterData, chipView: View) {
+        hideSoftInput()
+        if (chipView.isPressed && recyclerViewFilters.isEnabled) {
+            AnalyticsManager().taskFiltersEvent(data.name ?: "")
+            recyclerViewFilters.isEnabled = false
+            withState(viewModel) { state ->
+                viewModel.updateSelected(state, data, true)
+                if (data.selectedName.isNotEmpty()) {
+                    (chipView as FilterChip).isChecked = true
+                }
+                viewLifecycleOwner.lifecycleScope.launch {
+
+                    val result = showFilterSheetDialog(requireContext(), data)
+                    recyclerViewFilters.isEnabled = true
+                    if (result != null) {
+                        viewModel.updateChipFilterResult(state, data, result)
+                    } else {
+                        val isSelected = data.selectedName.isNotEmpty()
+                        viewModel.updateSelected(state, data, isSelected)
+                    }
+                }
+            }
+        } else (chipView as FilterChip).isChecked = false
+    }
+
+    private suspend fun showFilterSheetDialog(
+        context: Context,
+        taskFilterData: TaskFilterData
+    ) = withContext(Dispatchers.Main) {
+        suspendCoroutine {
+            TaskFilterBuilder(context, taskFilterData)
+                .onApply { name, query, queryMap ->
+                    executeContinuation(it, name, query, queryMap)
+                }
+                .onReset { name, query, queryMap ->
+                    executeContinuation(it, name, query, queryMap)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
+    }
+
+    private fun executeContinuation(continuation: Continuation<FilterMetaData?>, name: String, query: String, queryMap: Map<String, String>) {
+        continuation.resume(FilterMetaData(name = name, query = query, queryMap = queryMap))
     }
 }

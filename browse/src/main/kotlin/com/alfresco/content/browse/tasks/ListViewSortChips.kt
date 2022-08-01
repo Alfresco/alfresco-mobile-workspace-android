@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.listview.databinding.ViewListSortChipsBinding
 
 /**
@@ -25,9 +26,9 @@ class ListViewSortChips @JvmOverloads constructor(
      * Binding the TaskSortData type data to chip
      */
     @ModelProp
-    fun setData(dataObj: TaskSortData) {
+    fun setData(dataObj: TaskFilterData) {
         binding.chip.uncheck(false)
-        binding.chip.text = if (dataObj.isSelected) dataObj.selectedValue else dataObj.title
+        binding.chip.text = dataObj.selectedName.ifEmpty { dataObj.name }
         binding.chip.isChecked = dataObj.isSelected
     }
 

@@ -39,10 +39,9 @@ class Session(
         authInterceptor.setListener(object : AuthInterceptor.Listener {
             override fun onAuthFailure(accountId: String, url: String) {
                 Logger.d("onAuthFailure")
-                if (!url.contains("activiti-app"))
-                    if (onSignedOut != null) {
-                        onSignedOut?.invoke()
-                    }
+                if (!url.contains("activiti-app") && onSignedOut != null) {
+                    onSignedOut?.invoke()
+                }
             }
 
             override fun onAuthStateChange(accountId: String, authState: String) {

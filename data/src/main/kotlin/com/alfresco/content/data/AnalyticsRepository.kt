@@ -100,7 +100,9 @@ enum class EventName(val value: String) {
     SearchFacets("event_search_facets"),
     PermanentlyDelete("event_permanently_delete"),
     Restore("event_restore"),
-    OpenWith("event_open_with")
+    OpenWith("event_open_with"),
+    TaskFilterReset("event_reset"),
+    None("event_none")
 }
 
 /**

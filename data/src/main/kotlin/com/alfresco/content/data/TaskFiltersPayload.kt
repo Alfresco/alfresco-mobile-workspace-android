@@ -4,7 +4,7 @@ package com.alfresco.content.data
  * Marked as TaskFilters
  */
 data class TaskFilters(
-    val assignment: String = "assignee",
+    val assignment: String = "involved",
     val sort: String = "created-desc",
     val start: Int = 0,
     val page: Int = 0,
@@ -16,9 +16,8 @@ data class TaskFilters(
          * @param page
          * return active filter as TaskFilters obj
          */
-        fun filter(page: Int = 0, state: String, sort: String, assignment: String = "assignee"): TaskFilters {
+        fun filter(page: Int = 0, state: String, sort: String): TaskFilters {
             return TaskFilters(
-                assignment = assignment,
                 page = page,
                 state = state,
                 sort = sort
@@ -28,10 +27,10 @@ data class TaskFilters(
 }
 
 /**
- * Marked as Tasks class
+ * Marked as TaskStateData class
  */
-enum class TaskState {
-    All,
-    Active,
-    Completed
-}
+data class TaskStateData(
+    val title: String = "Active",
+    val assignment: String = "involved",
+    val state: String = ""
+)

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_blue_30">#3D2A7DE1</color>
+    <color name="color_search_filter">#212121</color>
+    <color name="color_view_line">#1F212121</color>
+    <color name="color_component_secondary">#0D212328</color>
 </resources>

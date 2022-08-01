@@ -16,6 +16,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.DatePickerBuilder
 import com.alfresco.content.data.Buckets
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.search.ChipComponentType

@@ -90,6 +90,9 @@ class TasksViewModel(
         )
     }
 
+    /**
+     * update the isSelected state when user tap on filter chip.
+     */
     fun updateSelected(state: TasksViewState, data: TaskFilterData, isSelected: Boolean) {
         val list = mutableListOf<TaskFilterData>()
         state.listSortDataChips.forEach { obj ->
@@ -102,6 +105,9 @@ class TasksViewModel(
         setState { copy(listSortDataChips = list) }
     }
 
+    /**
+     * update the filter result
+     */
     fun updateChipFilterResult(state: TasksViewState, model: TaskFilterData, metaData: FilterMetaData): MutableList<TaskFilterData> {
         val list = mutableListOf<TaskFilterData>()
 
@@ -125,6 +131,9 @@ class TasksViewModel(
         return list
     }
 
+    /**
+     * reset the filter chips
+     */
     fun resetChips(state: TasksViewState): List<TaskFilterData> {
         val list = mutableListOf<TaskFilterData>()
         state.listSortDataChips.forEach { obj ->

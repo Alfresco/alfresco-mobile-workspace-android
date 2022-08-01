@@ -111,6 +111,9 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         })
     }
 
+    /**
+     * show filters only on task screen only
+     */
     fun visibleFilters(isVisible: Boolean) {
         parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
     }

@@ -136,7 +136,7 @@ class CreateFilterSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                viewModel.updateSingleComponentData(cleanupSearchQuery(s.toString()))
+                viewModel.updateSingleComponentData(viewModel.cleanupSearchQuery(s.toString()))
             }
         })
     }
@@ -231,10 +231,6 @@ class CreateFilterSheet : BottomSheetDialogFragment(), MavericksView {
                 }
             }
         })
-    }
-
-    private fun cleanupSearchQuery(query: String): String {
-        return query.replace("\\s+".toRegex(), " ").trim()
     }
 
     override fun invalidate() = withState(viewModel) { state ->

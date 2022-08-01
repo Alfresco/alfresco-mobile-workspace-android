@@ -3,6 +3,9 @@ package com.alfresco.content.data
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as FilterOptions class
+ */
 @Parcelize
 data class FilterOptions(
     val label: String = "",

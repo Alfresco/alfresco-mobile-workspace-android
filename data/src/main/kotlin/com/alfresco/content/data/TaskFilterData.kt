@@ -3,10 +3,16 @@ package com.alfresco.content.data
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as TaskFiltersJson class
+ */
 data class TaskFiltersJson(
     val filters: List<TaskFilterData>
 )
 
+/**
+ * Marked as TaskFilterData class
+ */
 @Parcelize
 data class TaskFilterData(
     val id: Int? = 0,
@@ -23,6 +29,10 @@ data class TaskFilterData(
 ) : Parcelable {
     companion object {
 
+        /**
+         * update to default values on reset
+         * @param obj
+         */
         fun reset(obj: TaskFilterData): TaskFilterData {
             return TaskFilterData(
                 id = obj.id,
@@ -34,6 +44,12 @@ data class TaskFilterData(
             )
         }
 
+        /**
+         * update the TaskFilterData obj after getting the result from filters
+         * @param obj
+         * @param selectedName
+         * @param selectedQuery
+         */
         fun with(obj: TaskFilterData?, selectedName: String, selectedQuery: String): TaskFilterData {
             return TaskFilterData(
                 id = obj?.id,
@@ -48,6 +64,12 @@ data class TaskFilterData(
             )
         }
 
+        /**
+         * update the TaskFilterData obj after getting the result from filters
+         * @param obj
+         * @param selectedName
+         * @param selectedQueryMap
+         */
         fun with(obj: TaskFilterData?, selectedName: String, selectedQueryMap: Map<String, String>): TaskFilterData {
             return TaskFilterData(
                 id = obj?.id,
@@ -62,6 +84,14 @@ data class TaskFilterData(
             )
         }
 
+        /**
+         * update the TaskFilterData obj after getting the result from filters
+         * @param obj
+         * @param isSelected
+         * @param selectedName
+         * @param selectedQuery
+         * @param selectedQueryMap
+         */
         fun withFilterResult(
             obj: TaskFilterData?,
             isSelected: Boolean,
@@ -83,6 +113,11 @@ data class TaskFilterData(
             )
         }
 
+        /**
+         * update the if chip selected
+         * @param obj
+         * @param isSelected
+         */
         fun updateData(obj: TaskFilterData, isSelected: Boolean): TaskFilterData {
             return TaskFilterData(
                 id = obj.id,

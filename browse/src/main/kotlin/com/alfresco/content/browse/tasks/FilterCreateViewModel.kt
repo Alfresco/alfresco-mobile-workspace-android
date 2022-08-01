@@ -7,8 +7,6 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.FilterOptions
 import com.alfresco.content.data.TaskFilterData
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Mark as FilterCreateState class
@@ -88,6 +86,13 @@ class FilterCreateViewModel(
     }
 
     /**
+     * remove the spaces from required queries
+     */
+    fun cleanupSearchQuery(query: String): String {
+        return query.replace("\\s+".toRegex(), " ").trim()
+    }
+
+    /**
      * return true if the component is selected,otherwise false
      */
     fun isOptionSelected(state: FilterCreateState, options: FilterOptions): Boolean {
@@ -106,17 +111,4 @@ class FilterCreateViewModel(
             state: FilterCreateState
         ) = FilterCreateViewModel(viewModelContext.activity(), state)
     }
-}
-
-/**
- * returns formatted date string for query
- */
-fun String.getQueryFormat(): String {
-
-    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
-    if (date != null)
-        return formatter.format(date)
-
-    return this
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_title">Buscar</string>
-    <string name="search_hint">Buscar</string>
 
     <string name="recent_search_title">Búsquedas recientes</string>
 
@@ -15,19 +14,11 @@
     <string name="search_empty_title">¡Vaya!</string>
     <string name="search_empty_message">No encontramos el fichero\nque busca.</string>
 
-    <string name="advance_search_title">Búsqueda avanzada</string>
     <string name="default_search">Predeterminado</string>
-    <string name="component_action_reset">Restablecer</string>
-    <string name="component_action_apply">Aplicar</string>
-    <string name="component_action_cancel">Cancelar</string>
     <string name="app.search.radio.none">Ninguno</string>
     <string name="app.search.radio.all">Todos</string>
     <string name="app.search.radio.folder">Carpeta</string>
     <string name="app.search.radio.document">Documento</string>
-    <string name="component_number_range_empty">Valor requerido</string>
-    <string name="component_number_range_invalid_input">El valor De debe ser menor que el valor A</string>
-    <string name="hint_range_from">De</string>
-    <string name="hint_range_to">A</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="name_truncate_end" translatable="false">%1$s...</string>
     <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
@@ -38,8 +29,6 @@
     <string name="search.facet_fields.type">Tipo de fichero</string>
     <string name="search.facet_fields.modifier">Modificador</string>
     <string name="search.facet_fields.creator">Creador</string>
-    <string name="hint_range_from_date">Desde la fecha</string>
-    <string name="hint_range_to_date">Hasta la fecha</string>
     <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
     <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
 

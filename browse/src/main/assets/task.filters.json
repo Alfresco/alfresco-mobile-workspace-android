@@ -1,0 +1,45 @@
+{
+  "filters": [
+    {
+      "id": 0,
+      "name": "Due date",
+      "selector": "date-range",
+      "options": [
+        {
+          "label": "Due before",
+          "query": "dueBefore",
+          "value": ""
+        },
+        {
+          "label": "Due After",
+          "query": "dueAfter",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Status",
+      "selector": "radio",
+      "options": [
+        {
+          "label": "Active",
+          "query": "state",
+          "value": ""
+        },
+        {
+          "label": "Completed",
+          "query": "state",
+          "value": "completed"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Task Name",
+      "selector": "text",
+      "query": "text",
+      "value": ""
+    }
+  ]
+}

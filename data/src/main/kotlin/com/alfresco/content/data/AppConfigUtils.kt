@@ -10,10 +10,10 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
-import java.lang.StringBuilder
 import java.util.concurrent.TimeUnit
 
 const val APP_CONFIG_JSON = "app.config.json"
+const val TASK_FILTERS_JSON = "task.filters.json"
 const val INTERVAL_HOURS = 24L
 
 /**
@@ -49,7 +49,7 @@ fun getJsonDataFromAsset(context: Context, fileName: String): String? {
 
 /**
  * @property jsonFileString
- * Get generic model from give json string
+ * Get generic model from given json string
  */
 inline fun <reified T> getModelFromStringJSON(jsonFileString: String): T {
     val gson = Gson()

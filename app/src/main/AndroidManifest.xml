@@ -61,7 +61,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.alfresco.content.browse.preview.PreviewActivity"
+            android:name="com.alfresco.content.browse.preview.LocalPreviewActivity"
             android:configChanges="orientation|screenSize" />
 
         <activity

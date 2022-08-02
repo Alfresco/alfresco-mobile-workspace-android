@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_filters"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/recycler_view_filters"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="16dp"
+            android:splitMotionEvents="false"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintEnd_toStartOf="@id/action_reset"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/action_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/component_action_reset"
+            android:src="@drawable/ic_component_reset"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_view_filters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recycler_view_filters" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

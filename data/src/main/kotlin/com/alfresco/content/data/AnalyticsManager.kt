@@ -34,6 +34,16 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     }
 
     /**
+     * analytics for task filters
+     */
+    fun taskFiltersEvent(name: String) {
+        val params = repository.defaultParams()
+        val eventName = "event_${name.replace(" ","_")}"
+        params.putString(Parameters.EventName.value, eventName.lowercase())
+        repository.logEvent(eventName.lowercase(), params)
+    }
+
+    /**
      * analytics for theme change
      */
     fun theme(name: String) {

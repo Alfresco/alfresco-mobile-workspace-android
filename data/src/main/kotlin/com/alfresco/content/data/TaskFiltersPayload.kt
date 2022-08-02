@@ -15,6 +15,9 @@ data class TaskFiltersPayload(
 ) {
     companion object {
 
+        /**
+         * update the filters and return the payload obj
+         */
         fun updateFilters(obj: TaskFiltersPayload, page: Int = 0): TaskFiltersPayload {
             return TaskFiltersPayload(
                 assignment = obj.assignment,

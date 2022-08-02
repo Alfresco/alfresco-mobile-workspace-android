@@ -26,7 +26,6 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     )
 
     private fun includeFilters(taskFilters: TaskFiltersPayload): RequestTaskFilters {
-        println("TaskRepository.includeFilters $taskFilters")
         return RequestTaskFilters(
             assignment = taskFilters.assignment,
             sort = taskFilters.sort,

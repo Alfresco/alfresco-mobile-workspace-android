@@ -62,7 +62,6 @@ class TasksViewModel(
     }
 
     private fun fetchInitial() = withState { state ->
-        println("TasksViewModel.fetchInitial ${state.filterParams}")
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
@@ -82,6 +81,9 @@ class TasksViewModel(
         }
     }
 
+    /**
+     * this method makes the payload filter for task api and execute it.
+     */
     fun applyFilters(list: List<TaskFilterData>) {
         val taskFiltersPayload = TaskFiltersPayload()
         list.filter { it.isSelected }.forEach {
@@ -101,7 +103,6 @@ class TasksViewModel(
                 }
             }
         }
-        println("TasksViewModel.applyFilters $taskFiltersPayload")
 
         setState {
             copy(filterParams = taskFiltersPayload)

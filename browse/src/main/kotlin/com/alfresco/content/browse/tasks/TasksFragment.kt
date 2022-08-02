@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.fragmentViewModel
@@ -54,6 +57,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     private fun resetAllFilters() = withState(viewModel) { state ->
         val listReset = viewModel.resetChips(state)
+        viewModel.applyFilters(listReset)
     }
 
     override fun onResume() {
@@ -80,6 +84,15 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 id(sortDataObj.name)
                 data(sortDataObj)
                 clickListener { model, _, chipView, _ ->
+
+                    ViewCompat.setAccessibilityDelegate(chipView,
+                        object : AccessibilityDelegateCompat() {
+                            override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfoCompat) {
+                                super.onInitializeAccessibilityNodeInfo(v, info)
+                                info.roleDescription = "Button"
+                            }
+                        })
+
                     onChipClicked(model.data(), chipView)
                 }
             }
@@ -101,7 +114,8 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                     val result = showFilterSheetDialog(requireContext(), data)
                     recyclerViewFilters.isEnabled = true
                     if (result != null) {
-                        viewModel.updateChipFilterResult(state, data, result)
+                        val list = viewModel.updateChipFilterResult(state, data, result)
+                        viewModel.applyFilters(list)
                     } else {
                         val isSelected = data.selectedName.isNotEmpty()
                         viewModel.updateSelected(state, data, isSelected)

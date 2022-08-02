@@ -37,13 +37,13 @@ class FilterCreateViewModel(
 
         if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
             selectedDateName = "$fromDate - $toDate"
-            dates = mapOf(DUE_BEFORE to fromDate, DUE_AFTER to toDate)
+            dates = mapOf(DUE_AFTER to fromDate, DUE_BEFORE to toDate)
         } else if (fromDate.isNotEmpty() && toDate.isEmpty()) {
             selectedDateName = fromDate
-            dates = mapOf(DUE_BEFORE to fromDate)
+            dates = mapOf(DUE_AFTER to fromDate)
         } else if (fromDate.isEmpty() && toDate.isNotEmpty()) {
             selectedDateName = toDate
-            dates = mapOf(DUE_AFTER to toDate)
+            dates = mapOf(DUE_BEFORE to toDate)
         }
 
         setState {

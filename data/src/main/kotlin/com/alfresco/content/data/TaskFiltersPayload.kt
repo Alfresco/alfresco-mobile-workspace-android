@@ -3,34 +3,29 @@ package com.alfresco.content.data
 /**
  * Marked as TaskFilters
  */
-data class TaskFilters(
+data class TaskFiltersPayload(
     val assignment: String = "involved",
     val sort: String = "created-desc",
-    val start: Int = 0,
-    val page: Int = 0,
-    val state: String = "",
-    val text: String = ""
+    var start: Int = 0,
+    var page: Int = 0,
+    var state: String = "",
+    var text: String = "",
+    var dueBefore: String = "",
+    var dueAfter: String = ""
 ) {
     companion object {
-        /**
-         * @param page
-         * return active filter as TaskFilters obj
-         */
-        fun filter(page: Int = 0, state: String, sort: String): TaskFilters {
-            return TaskFilters(
+
+        fun updateFilters(obj: TaskFiltersPayload, page: Int = 0): TaskFiltersPayload {
+            return TaskFiltersPayload(
+                assignment = obj.assignment,
+                sort = obj.sort,
+                start = obj.start,
                 page = page,
-                state = state,
-                sort = sort
+                state = obj.state,
+                text = obj.text,
+                dueBefore = obj.dueBefore,
+                dueAfter = obj.dueAfter
             )
         }
     }
 }
-
-/**
- * Marked as TaskStateData class
- */
-data class TaskStateData(
-    val title: String = "Active",
-    val assignment: String = "involved",
-    val state: String = ""
-)

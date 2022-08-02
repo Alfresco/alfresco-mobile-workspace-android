@@ -8,12 +8,12 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.TaskFilterData
-import com.alfresco.content.data.TaskFilters
+import com.alfresco.content.data.TaskFiltersPayload
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.TaskStateData
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
+import java.text.SimpleDateFormat
 import kotlinx.coroutines.launch
 
 /**
@@ -37,7 +37,7 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                getSelectedTasks(state.displayTask, newPage, state.listSortDataChips)
+                TaskFiltersPayload.updateFilters(state.filterParams, newPage)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -62,10 +62,11 @@ class TasksViewModel(
     }
 
     private fun fetchInitial() = withState { state ->
+        println("TasksViewModel.fetchInitial ${state.filterParams}")
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                getSelectedTasks(state.displayTask, 0, state.listSortDataChips)
+                TaskFiltersPayload.updateFilters(state.filterParams)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -81,13 +82,32 @@ class TasksViewModel(
         }
     }
 
-    private fun getSelectedTasks(taskState: TaskStateData, page: Int, listSort: List<TaskFilterData>): TaskFilters {
-        val sortObj = listSort.find { it.isSelected }
-        return TaskFilters.filter(
-            page = page,
-            state = taskState.state,
-            sort = sortObj?.selectedValue?.lowercase() ?: ""
-        )
+    fun applyFilters(list: List<TaskFilterData>) {
+        val taskFiltersPayload = TaskFiltersPayload()
+        list.filter { it.isSelected }.forEach {
+            when (it.name?.lowercase()) {
+                "due date" -> {
+                    if (it.selectedQueryMap.containsKey(FilterCreateViewModel.DUE_BEFORE))
+                        taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[FilterCreateViewModel.DUE_BEFORE])
+
+                    if (it.selectedQueryMap.containsKey(FilterCreateViewModel.DUE_AFTER))
+                        taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[FilterCreateViewModel.DUE_AFTER])
+                }
+                "status" -> {
+                    taskFiltersPayload.state = it.selectedQuery
+                }
+                "task name" -> {
+                    taskFiltersPayload.text = it.selectedQuery
+                }
+            }
+        }
+        println("TasksViewModel.applyFilters $taskFiltersPayload")
+
+        setState {
+            copy(filterParams = taskFiltersPayload)
+        }
+
+        refresh()
     }
 
     /**
@@ -142,6 +162,16 @@ class TasksViewModel(
         setState { copy(listSortDataChips = list) }
 
         return list
+    }
+
+    private fun getZoneFormattedDate(dateString: String?): String {
+
+        if (dateString.isNullOrEmpty()) return ""
+
+        val currentFormat = SimpleDateFormat("dd-MMM-yy")
+        val zonedFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+        return currentFormat.parse(dateString)?.let { zonedFormat.format(it) } ?: ""
     }
 
     companion object : MavericksViewModelFactory<TasksViewModel, TasksViewState> {

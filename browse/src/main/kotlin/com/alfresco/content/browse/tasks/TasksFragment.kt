@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.core.view.AccessibilityDelegateCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.fragmentViewModel
@@ -84,14 +81,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 id(sortDataObj.name)
                 data(sortDataObj)
                 clickListener { model, _, chipView, _ ->
-
-                    ViewCompat.setAccessibilityDelegate(chipView,
-                        object : AccessibilityDelegateCompat() {
-                            override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfoCompat) {
-                                super.onInitializeAccessibilityNodeInfo(v, info)
-                                info.roleDescription = "Button"
-                            }
-                        })
 
                     onChipClicked(model.data(), chipView)
                 }

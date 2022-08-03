@@ -8,5 +8,6 @@
     <color name="colorPriorityLow">#003A02</color>
     <color name="colorPriorityMedium">#6A3C00</color>
     <color name="colorPriorityHigh">#680003</color>
+    <color name="color_search_filter">#212121</color>
 
 </resources>

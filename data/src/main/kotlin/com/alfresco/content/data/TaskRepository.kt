@@ -10,6 +10,8 @@ import com.alfresco.process.models.RequestTaskFilters
  */
 class TaskRepository(val session: Session = SessionManager.requireSession) {
 
+    private val context get() = session.context
+
     private val processService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)
     }
@@ -17,19 +19,26 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * execute the task list api and returns the response as ResponseList obj
      */
-    suspend fun getTasks(filters: TaskFilters) = ResponseList.with(
+    suspend fun getTasks(filters: TaskFiltersPayload) = ResponseList.with(
         processService.taskList(
             includeFilters(filters)
         )
     )
 
-    private fun includeFilters(taskFilters: TaskFilters): RequestTaskFilters {
+    private fun includeFilters(taskFilters: TaskFiltersPayload): RequestTaskFilters {
         return RequestTaskFilters(
             assignment = taskFilters.assignment,
             sort = taskFilters.sort,
             page = taskFilters.page,
             state = taskFilters.state,
-            text = taskFilters.text
+            text = taskFilters.text,
+            dueBefore = taskFilters.dueBefore,
+            dueAfter = taskFilters.dueAfter
         )
     }
+
+    /**
+     * Get TaskFilterDataModel from the internal storage or from assets
+     */
+    fun getTaskFiltersJSON(): TaskFiltersJson = getModelFromStringJSON(getJsonDataFromAsset(context, TASK_FILTERS_JSON) ?: "")
 }

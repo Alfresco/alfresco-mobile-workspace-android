@@ -102,7 +102,9 @@ enum class EventName(val value: String) {
     Restore("event_restore"),
     OpenWith("event_open_with"),
     SCAN_DOCUMENTS("event_scan_documents"),
-    DISCARD_CAPTURE("event_discard_capture")
+    DISCARD_CAPTURE("event_discard_capture"),
+    TaskFilterReset("event_reset"),
+    None("event_none")
 }
 
 /**

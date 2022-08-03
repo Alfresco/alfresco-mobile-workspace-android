@@ -34,6 +34,16 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     }
 
     /**
+     * analytics for task filters
+     */
+    fun taskFiltersEvent(name: String) {
+        val params = repository.defaultParams()
+        val eventName = "event_${name.replace(" ", "_")}"
+        params.putString(Parameters.EventName.value, eventName.lowercase())
+        repository.logEvent(eventName.lowercase(), params)
+    }
+
+    /**
      * analytics for theme change
      */
     fun theme(name: String) {
@@ -90,7 +100,7 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
      * analytics for API tracker
      */
     fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "") {
-       val apiTrackName = if (status) "${apiName.value}_success".lowercase() else "${apiName.value}_fail".lowercase()
+        val apiTrackName = if (status) "${apiName.value}_success".lowercase() else "${apiName.value}_fail".lowercase()
         val params = repository.defaultParams()
         params.putString(Parameters.EventName.value, apiTrackName)
         params.putBoolean(Parameters.Success.value, status)

@@ -1,4 +1,4 @@
-package com.alfresco.content
+package com.alfresco.content.listview
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.collections.ArrayList
 
 internal typealias DatePickerOnSuccess = (String) -> Unit
 internal typealias DatePickerOnFailure = () -> Unit
@@ -27,6 +26,7 @@ data class DatePickerBuilder(
     val toDate: String = "",
     val isFrom: Boolean = false,
     var dateFormat: String = "",
+    var isTask: Boolean = false,
     var onSuccess: DatePickerOnSuccess? = null,
     var onFailure: DatePickerOnFailure? = null
 ) {
@@ -67,9 +67,9 @@ data class DatePickerBuilder(
         constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            /*if (isFrom)
+            if (isFrom)
                 setTitleText(context.getString(R.string.hint_range_from_date))
-            else setTitleText(context.getString(R.string.hint_range_to_date))*/
+            else setTitleText(context.getString(R.string.hint_range_to_date))
             setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
         }.build()
@@ -103,7 +103,8 @@ data class DatePickerBuilder(
                     validators.add(DateValidatorPointForward.from(date.time))
                 }
         }
-        validators.add(DateValidatorPointBackward.before(endDate))
+        if (!isTask)
+            validators.add(DateValidatorPointBackward.before(endDate))
 
         return validators
     }

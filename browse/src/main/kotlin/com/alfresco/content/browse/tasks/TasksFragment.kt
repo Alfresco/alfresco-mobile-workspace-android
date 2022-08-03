@@ -54,6 +54,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     private fun resetAllFilters() = withState(viewModel) { state ->
         val listReset = viewModel.resetChips(state)
+        viewModel.applyFilters(listReset)
     }
 
     override fun onResume() {
@@ -80,6 +81,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 id(sortDataObj.name)
                 data(sortDataObj)
                 clickListener { model, _, chipView, _ ->
+
                     onChipClicked(model.data(), chipView)
                 }
             }
@@ -101,7 +103,8 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                     val result = showFilterSheetDialog(requireContext(), data)
                     recyclerViewFilters.isEnabled = true
                     if (result != null) {
-                        viewModel.updateChipFilterResult(state, data, result)
+                        val list = viewModel.updateChipFilterResult(state, data, result)
+                        viewModel.applyFilters(list)
                     } else {
                         val isSelected = data.selectedName.isNotEmpty()
                         viewModel.updateSelected(state, data, isSelected)

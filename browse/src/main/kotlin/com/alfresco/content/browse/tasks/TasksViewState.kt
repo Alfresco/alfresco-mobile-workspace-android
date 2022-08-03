@@ -6,7 +6,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
-import com.alfresco.content.data.TaskStateData
+import com.alfresco.content.data.TaskFiltersPayload
 import com.alfresco.content.listview.tasks.TaskListViewState
 
 /**
@@ -19,8 +19,7 @@ data class TasksViewState(
     override val request: Async<ResponseList> = Uninitialized,
     val baseTaskEntries: List<TaskEntry> = emptyList(),
     val listSortDataChips: List<TaskFilterData> = emptyList(),
-    val listTaskState: List<TaskStateData> = emptyList(),
-    val displayTask: TaskStateData = TaskStateData(),
+    val filterParams: TaskFiltersPayload = TaskFiltersPayload(),
     val loadItemsCount: Int = 0,
     val page: Int = 0
 ) : TaskListViewState {

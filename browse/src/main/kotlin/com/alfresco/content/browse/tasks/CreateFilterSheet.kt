@@ -12,12 +12,12 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.DatePickerBuilder
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.SheetFilterCreateBinding
 import com.alfresco.content.browse.tasks.FilterCreateViewModel.Companion.DUE_AFTER
 import com.alfresco.content.browse.tasks.FilterCreateViewModel.Companion.DUE_BEFORE
 import com.alfresco.content.getLocalizedName
+import com.alfresco.content.listview.DatePickerBuilder
 import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -163,14 +163,14 @@ class CreateFilterSheet : BottomSheetDialogFragment(), MavericksView {
 
         if (state.parent?.selectedQueryMap?.containsKey(DUE_BEFORE) == true) {
             val dueBeforeArray = state.parent.selectedQueryMap[DUE_BEFORE]!!.split("-")
-            viewModel.fromDate = getString(R.string.date_format_new, dueBeforeArray[0].trim(), dueBeforeArray[1].trim(), dueBeforeArray[2].trim())
-            binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
+            viewModel.toDate = getString(R.string.date_format_new, dueBeforeArray[0].trim(), dueBeforeArray[1].trim(), dueBeforeArray[2].trim())
+            binding.dateRangeComponent.toInput.setText(viewModel.toDate)
         }
 
         if (state.parent?.selectedQueryMap?.containsKey(DUE_AFTER) == true) {
             val dueAfterArray = state.parent.selectedQueryMap[DUE_AFTER]!!.split("-")
-            viewModel.toDate = getString(R.string.date_format_new, dueAfterArray[0].trim(), dueAfterArray[1].trim(), dueAfterArray[2].trim())
-            binding.dateRangeComponent.toInput.setText(viewModel.toDate)
+            viewModel.fromDate = getString(R.string.date_format_new, dueAfterArray[0].trim(), dueAfterArray[1].trim(), dueAfterArray[2].trim())
+            binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
         }
 
         binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
@@ -266,7 +266,8 @@ class CreateFilterSheet : BottomSheetDialogFragment(), MavericksView {
                     fromDate = viewModel.fromDate,
                     toDate = viewModel.toDate,
                     isFrom = isFrom,
-                    dateFormat = viewModel.dateFormat
+                    dateFormat = viewModel.dateFormat,
+                    isTask = true
                 )
                     .onSuccess { date -> it.resume(date) }
                     .onFailure { it.resume(null) }

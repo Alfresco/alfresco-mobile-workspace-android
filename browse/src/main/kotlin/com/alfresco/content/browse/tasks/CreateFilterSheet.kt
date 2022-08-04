@@ -16,8 +16,8 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.SheetFilterCreateBinding
 import com.alfresco.content.browse.tasks.FilterCreateViewModel.Companion.DUE_AFTER
 import com.alfresco.content.browse.tasks.FilterCreateViewModel.Companion.DUE_BEFORE
+import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.listview.DatePickerBuilder
 import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -267,7 +267,7 @@ class CreateFilterSheet : BottomSheetDialogFragment(), MavericksView {
                     toDate = viewModel.toDate,
                     isFrom = isFrom,
                     dateFormat = viewModel.dateFormat,
-                    isTask = true
+                    isFutureDate = true
                 )
                     .onSuccess { date -> it.resume(date) }
                     .onFailure { it.resume(null) }

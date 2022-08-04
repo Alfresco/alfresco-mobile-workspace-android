@@ -11,6 +11,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.FilterChip
 import com.alfresco.content.browse.R
+import com.alfresco.content.component.ComponentBuilder
+import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
@@ -119,7 +121,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         taskFilterData: TaskFilterData
     ) = withContext(Dispatchers.Main) {
         suspendCoroutine {
-            TaskFilterBuilder(context, taskFilterData)
+            ComponentBuilder(context, ComponentData.with(taskFilterData))
                 .onApply { name, query, queryMap ->
                     executeContinuation(it, name, query, queryMap)
                 }

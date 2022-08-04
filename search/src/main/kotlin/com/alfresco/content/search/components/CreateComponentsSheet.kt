@@ -16,9 +16,8 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.data.Buckets
+import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.listview.DatePickerBuilder
 import com.alfresco.content.search.ChipComponentType
 import com.alfresco.content.search.R
 import com.alfresco.content.search.databinding.SheetComponentCreateBinding
@@ -405,24 +404,24 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun epoxyCheckListController() = simpleController(viewModel) { state ->
-        if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
-            state.parent.category?.component?.settings?.options?.forEach { option ->
-                listViewCheckRow {
-                    id(option.hashCode())
-                    data(option)
-                    optionSelected(viewModel.isOptionSelected(state, option))
-                    clickListener { model, _, _, _ ->
-                        viewModel.updateMultipleComponentData(
-                            model.data().name ?: "",
-                            model.data().value ?: ""
-                        )
-                    }
-                }
-            }
+        /* if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
+             state.parent.category?.component?.settings?.options?.forEach { option ->
+                 listViewCheckRow {
+                     id(option.hashCode())
+                     data(option)
+                     optionSelected(viewModel.isOptionSelected(state, option))
+                     clickListener { model, _, _, _ ->
+                         viewModel.updateMultipleComponentData(
+                             model.data().name ?: "",
+                             model.data().value ?: ""
+                         )
+                     }
+                 }
+             }*/
     }
 
     private fun epoxyRadioListController() = simpleController(viewModel) { state ->
-        if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
+        /*if (state.parent?.category?.component?.settings?.options?.isNotEmpty() == true)
             state.parent.category?.component?.settings?.options?.forEach { option ->
                 listViewRadioRow {
                     id(option.hashCode())
@@ -435,11 +434,11 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         )
                     }
                 }
-            }
+            }*/
     }
 
     private fun epoxyCheckFacetListController() = simpleController(viewModel) { state ->
-        var listBucket: List<Buckets>? = null
+        /*var listBucket: List<Buckets>? = null
         when (state.parent?.category?.component?.selector) {
             ChipComponentType.FACETS.component -> {
                 listBucket = if (viewModel.searchQuery.isNotEmpty())
@@ -461,7 +460,7 @@ class CreateComponentsSheet : BottomSheetDialogFragment(), MavericksView {
                         )
                     }
                 }
-            }
+            }*/
     }
 
     private fun showCalendar(isFrom: Boolean) {

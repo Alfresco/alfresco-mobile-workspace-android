@@ -1,4 +1,4 @@
-package com.alfresco.content.listview
+package com.alfresco.content.component
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +26,7 @@ data class DatePickerBuilder(
     val toDate: String = "",
     val isFrom: Boolean = false,
     var dateFormat: String = "",
-    var isTask: Boolean = false,
+    var isFutureDate: Boolean = false,
     var onSuccess: DatePickerOnSuccess? = null,
     var onFailure: DatePickerOnFailure? = null
 ) {
@@ -92,18 +92,23 @@ data class DatePickerBuilder(
     private fun getValidators(): ArrayList<CalendarConstraints.DateValidator> {
         val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
         var endDate = MaterialDatePicker.todayInUtcMilliseconds()
+        var requiredEndDate = false
         if (isFrom) {
-            if (toDate.isNotEmpty())
+            if (toDate.isNotEmpty()) {
                 toDate.getDateFromString()?.let { date ->
                     endDate = Date(date.time.plus(addOneDay)).time
                 }
+                requiredEndDate = true
+            }
         } else {
-            if (fromDate.isNotEmpty())
+            if (fromDate.isNotEmpty()) {
                 fromDate.getDateFromString()?.let { date ->
                     validators.add(DateValidatorPointForward.from(date.time))
                 }
+                requiredEndDate = !isFutureDate
+            }
         }
-        if (!isTask)
+        if (requiredEndDate)
             validators.add(DateValidatorPointBackward.before(endDate))
 
         return validators

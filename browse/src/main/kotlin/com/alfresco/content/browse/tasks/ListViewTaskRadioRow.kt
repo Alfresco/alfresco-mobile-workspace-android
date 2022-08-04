@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.alfresco.content.common.databinding.ViewRadioListRowBinding
+import com.alfresco.content.component.databinding.ViewRadioListRowBinding
 import com.alfresco.content.data.FilterOptions
 import com.alfresco.content.getLocalizedName
 

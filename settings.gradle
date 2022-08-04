@@ -21,6 +21,7 @@ include ':viewer-text'
 include ':viewer-media'
 include ':shareextension'
 include ':move'
+include ':component'
 include ':app'
 
 // Enable Gradle's version catalog support

@@ -1,4 +1,4 @@
-package com.alfresco.content.search.components
+package com.alfresco.content.component
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,26 +7,25 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.alfresco.content.component.databinding.ViewCheckListRowBinding
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.models.Options
-import com.alfresco.content.search.databinding.ViewRadioListRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-internal class ListViewRadioRow @JvmOverloads constructor(
+internal class ListViewFacetCheckRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private val binding = ViewRadioListRowBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ViewCheckListRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp
-    fun setData(options: Options) {
-        binding.title.text = context.getLocalizedName(options.name ?: "")
+    fun setData(options: ComponentOptions) {
+        binding.title.text = String.format(context.getString(R.string.label_count_format_integer), context.getLocalizedName(options.label), options.count)
     }
 
     @ModelProp
     fun setOptionSelected(isSelected: Boolean) {
-        binding.radioButton.isChecked = isSelected
+        binding.checkBox.isChecked = isSelected
     }
 
     @CallbackProp

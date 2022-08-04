@@ -1,7 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
 
 android {
     defaultConfig {
@@ -19,13 +22,11 @@ kapt {
 }
 
 dependencies {
+
     implementation project(':base')
     implementation project(':common')
     implementation project(':data')
-    implementation project(':mimetype')
     implementation project(':theme')
-    implementation project(':listview')
-    implementation project(':component')
 
     implementation libs.alfresco.content
 
@@ -33,7 +34,6 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.swiperefreshlayout
 
     implementation libs.google.material
 

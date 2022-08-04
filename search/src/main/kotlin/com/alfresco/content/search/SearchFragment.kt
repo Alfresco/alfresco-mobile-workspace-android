@@ -22,6 +22,8 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.FilterChip
+import com.alfresco.content.component.ComponentBuilder
+import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
@@ -33,7 +35,6 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.search.components.ComponentBuilder
 import com.alfresco.content.search.components.ComponentMetaData
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
@@ -412,11 +413,19 @@ class SearchFragment : Fragment(), MavericksView {
         searchChipCategory: SearchChipCategory
     ) = withContext(dispatcher) {
         suspendCoroutine {
-            ComponentBuilder(context, searchChipCategory)
-                .onApply { name, query ->
+            val componentData = if (searchChipCategory.facets == null) ComponentData.with(
+                searchChipCategory.category,
+                searchChipCategory.selectedName, searchChipCategory.selectedQuery
+            )
+            else ComponentData.with(
+                searchChipCategory.facets,
+                searchChipCategory.selectedName, searchChipCategory.selectedQuery
+            )
+            ComponentBuilder(context, componentData)
+                .onApply { name, query, queryMap ->
                     executeContinuation(it, name, query)
                 }
-                .onReset { name, query ->
+                .onReset { name, query, queryMap ->
                     executeContinuation(it, name, query)
                 }
                 .onCancel {

@@ -1,4 +1,4 @@
-package com.alfresco.content.search.components
+package com.alfresco.content.component
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,13 +7,11 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.alfresco.content.data.Buckets
+import com.alfresco.content.component.databinding.ViewCheckListRowBinding
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.search.R
-import com.alfresco.content.search.databinding.ViewCheckListRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-internal class ListViewFacetCheckRow @JvmOverloads constructor(
+internal class ListViewCheckRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -21,13 +19,8 @@ internal class ListViewFacetCheckRow @JvmOverloads constructor(
     private val binding = ViewCheckListRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp
-    fun setData(options: Buckets) {
-        val label = options.label ?: ""
-        if (options.metrics == null) {
-            binding.title.text = String.format(context.getString(R.string.label_count_format_integer), context.getLocalizedName(label), options.count)
-        } else {
-            binding.title.text = String.format(context.getString(R.string.label_count_format_string), context.getLocalizedName(label), options.metrics?.get(0)?.value?.count)
-        }
+    fun setData(options: ComponentOptions) {
+        binding.title.text = context.getLocalizedName(options.label ?: "")
     }
 
     @ModelProp

@@ -42,5 +42,5 @@
 
     <string name="title_transfers">Overdrachten</string>
 
-    <string name="account_not_configured">Deze account is niet geconfigureerd voor de "Process Services". Neem contact op met de beheerder.</string>
+    <string name="account_not_configured">Deze account is niet geconfigureerd voor de "Process Services".</string>
 </resources>

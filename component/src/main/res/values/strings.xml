@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+2
+    <string name="search_hint">Search</string>
+    <string name="advance_search_title">Advance search</string>
+    <string name="hint_range_from">From</string>
+    <string name="hint_range_to">To</string>
+    <string name="hint_range_from_date">From Date</string>
+    <string name="hint_range_to_date">To Date</string>
+    <string name="component_number_range_invalid_input">From value should be less than To value</string>
+    <string name="component_action_reset">Reset</string>
+    <string name="component_action_apply">Apply</string>
+    <string name="component_action_cancel">Cancel</string>
+    <string name="component_number_range_empty">Required value</string>
     <string name="size_end_kb">%1$s (KB)</string>
+    <string name="date_format_new" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
     <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>

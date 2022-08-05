@@ -1,4 +1,4 @@
-package com.alfresco.content
+package com.alfresco.content.component
 
 import android.content.Context
 import android.util.AttributeSet

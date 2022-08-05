@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Zoeken</string>
+    <string name="advance_search_title">Geavanceerd zoeken</string>
+    <string name="hint_range_from">Van</string>
+    <string name="hint_range_to">Tot</string>
+    <string name="hint_range_from_date">Van-datum</string>
+    <string name="hint_range_to_date">Tot-datum</string>
+    <string name="component_number_range_invalid_input">Van-waarde moet kleiner zijn dan Tot-waarde</string>
+    <string name="component_action_reset">Opnieuw instellen</string>
+    <string name="component_action_apply">Toepassen</string>
+    <string name="component_action_cancel">Annuleren</string>
+    <string name="component_number_range_empty">Vereiste waarde</string>
+    <string name="size_end_kb">%1$s (kB)</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Suche</string>
+    <string name="advance_search_title">Erweiterte Suche</string>
+    <string name="hint_range_from">Von</string>
+    <string name="hint_range_to">Bis</string>
+    <string name="hint_range_from_date">Von-Datum</string>
+    <string name="hint_range_to_date">Bis-Datum</string>
+    <string name="component_number_range_invalid_input">Der „Von“ Wert muss kleiner als der „Bis“ Wert sein</string>
+    <string name="component_action_reset">Zurücksetzen</string>
+    <string name="component_action_apply">Anwenden</string>
+    <string name="component_action_cancel">Abbrechen</string>
+    <string name="component_number_range_empty">Erforderlicher Wert</string>
+    <string name="size_end_kb">%1$s (KB)</string>
+</resources>

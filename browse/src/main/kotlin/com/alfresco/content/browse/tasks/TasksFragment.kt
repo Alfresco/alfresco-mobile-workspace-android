@@ -9,10 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.FilterChip
 import com.alfresco.content.browse.R
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.FilterChip
+import com.alfresco.content.component.listViewSortChips
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
@@ -92,7 +94,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     private fun onChipClicked(data: TaskFilterData, chipView: View) {
         hideSoftInput()
-        if (chipView.isPressed && recyclerViewFilters.isEnabled) {
+        if (recyclerViewFilters.isEnabled) {
             AnalyticsManager().taskFiltersEvent(data.name ?: "")
             recyclerViewFilters.isEnabled = false
             withState(viewModel) { state ->
@@ -135,7 +137,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         }
     }
 
-    private fun executeContinuation(continuation: Continuation<FilterMetaData?>, name: String, query: String, queryMap: Map<String, String>) {
-        continuation.resume(FilterMetaData(name = name, query = query, queryMap = queryMap))
+    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String, queryMap: Map<String, String>) {
+        continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
     }
 }

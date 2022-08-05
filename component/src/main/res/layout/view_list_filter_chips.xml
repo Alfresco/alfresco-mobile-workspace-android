@@ -6,7 +6,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.alfresco.content.FilterChip
+        <com.alfresco.content.component.FilterChip
             android:id="@+id/chip"
             style="@style/Widget.Alfresco.Chip.Choice"
             android:layout_width="wrap_content"

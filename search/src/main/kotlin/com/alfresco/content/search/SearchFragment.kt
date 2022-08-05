@@ -21,9 +21,12 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
-import com.alfresco.content.FilterChip
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.FilterChip
+import com.alfresco.content.component.listViewFilterChips
+import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
@@ -35,7 +38,6 @@ import com.alfresco.content.data.emptyFilters
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.search.components.ComponentMetaData
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
 import kotlin.coroutines.Continuation
@@ -369,7 +371,7 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun onContextualChipClicked(data: SearchChipCategory, chipView: View) {
-        if (chipView.isPressed && binding.recyclerViewChips.isEnabled) {
+        if (binding.recyclerViewChips.isEnabled) {
             binding.recyclerViewChips.isEnabled = false
             withState(viewModel) { state ->
                 val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked)
@@ -385,7 +387,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun onChipClicked(data: SearchChipCategory, chipView: View) = withState(viewModel) {
         hideSoftInput()
-        if (chipView.isPressed && binding.recyclerViewChips.isEnabled) {
+        if (binding.recyclerViewChips.isEnabled) {
             binding.recyclerViewChips.isEnabled = false
             withState(viewModel) { state ->
                 viewModel.updateSelected(state, data, true)

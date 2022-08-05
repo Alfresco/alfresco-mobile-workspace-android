@@ -42,16 +42,7 @@
 
     <string name="title_transfers">Transfers</string>
 
-    <string name="account_not_configured">This account is not configured on the process services. Please contact to administrator.</string>
-
-    <string name="filter_active">Active</string>
-    <string name="filter_completed">Completed</string>
-    <string name="sort_due_date">Due date</string>
-    <string name="sort_priority">Priority</string>
-    <string name="sort_assigned">Assigned</string>
-    <string name="due_date_asc">Due-Asc</string>
-    <string name="due_date_desc">Due-Desc</string>
+    <string name="account_not_configured">This account is not configured on the process services.</string>
     <string name="account">Account</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

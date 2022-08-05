@@ -1,4 +1,4 @@
-package com.alfresco.content.search
+package com.alfresco.content.component
 
 import android.content.Context
 import android.text.InputFilter
@@ -9,58 +9,43 @@ import android.widget.FrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.component.databinding.ViewListSortChipsBinding
+import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.search.databinding.ViewListFilterChipsBinding
 
 /**
- * Generated Model View for the Advance Filter Chips
+ * Generated Model View for the Task sort chips
  */
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
-class ListViewFilterChips @JvmOverloads constructor(
+class ListViewSortChips @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val chipTextDisplayLimit = 30
-    private val binding = ViewListFilterChipsBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ViewListSortChipsBinding.inflate(LayoutInflater.from(context), this)
 
     /**
-     * Bind the capture item data to the view
+     * Binding the TaskSortData type data to chip
      */
     @ModelProp
-    fun setData(dataObj: SearchChipCategory) {
+    fun setData(dataObj: TaskFilterData) {
         binding.chip.uncheck(false)
+        binding.chip.text = dataObj.selectedName.ifEmpty { dataObj.name }
 
-        if (dataObj.category?.id == SearchFilter.Contextual.toString()) {
-            binding.chip.isChecked = true
-        }
-
-        when (dataObj.category?.component?.selector) {
-            ChipComponentType.TEXT.component -> {
+        when (dataObj.selector) {
+            ComponentType.TEXT.value -> {
                 if (dataObj.selectedName.length > chipTextDisplayLimit) {
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(chipTextDisplayLimit.plus(3)))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
                 binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit)
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
-            }
-            ChipComponentType.FACETS.component -> {
-                if (dataObj.selectedName.isNotEmpty()) {
-                    binding.chip.text = dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",")
-                } else {
-                    val replacedString = dataObj.facets?.label?.replace(" ", ".") ?: ""
-                    val localizedName = context.getLocalizedName(replacedString)
-                    if (localizedName == replacedString)
-                        binding.chip.text = dataObj.facets?.label?.wrapWithLimit(chipTextDisplayLimit) ?: ""
-                    else
-                        binding.chip.text = localizedName.wrapWithLimit(chipTextDisplayLimit)
-                }
+                else context.getLocalizedName(dataObj.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
             }
             else -> {
                 binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",")
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
+                else context.getLocalizedName(dataObj.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
             }
         }
 

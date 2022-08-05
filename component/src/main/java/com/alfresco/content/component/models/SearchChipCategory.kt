@@ -1,6 +1,7 @@
-package com.alfresco.content.search
+package com.alfresco.content.component.models
 
 import android.os.Parcelable
+import com.alfresco.content.component.ComponentType
 import com.alfresco.content.data.Facets
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.models.CategoriesItem
@@ -69,7 +70,7 @@ data class SearchChipCategory(
         fun withDefaultFacet(data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    null, Component(null, ChipComponentType.FACETS.component),
+                    null, Component(null, ComponentType.FACETS.value),
                     data.label, data.label, null
                 ),
                 facets = data,
@@ -96,7 +97,7 @@ data class SearchChipCategory(
         fun withFilterCountZero(data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    null, Component(null, ChipComponentType.FACETS.component),
+                    null, Component(null, ComponentType.FACETS.value),
                     data.label, data.label, null
                 ),
                 facets = Facets.filterZeroCount(data),

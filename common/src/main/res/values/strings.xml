@@ -3,18 +3,4 @@
     <string name="permission_rationale_title">Permissions needed</string>
     <string name="permission_rationale_positive">OK</string>
     <string name="permission_rationale_negative">Cancel</string>
-
-    <string name="search_hint">Search</string>
-    <string name="advance_search_title">Advance search</string>
-    <string name="hint_range_from">From</string>
-    <string name="hint_range_to">To</string>
-    <string name="hint_range_from_date">From Date</string>
-    <string name="hint_range_to_date">To Date</string>
-    <string name="component_number_range_invalid_input">From value should be less than To value</string>
-    <string name="component_action_reset">Reset</string>
-    <string name="component_action_apply">Apply</string>
-    <string name="component_action_cancel">Cancel</string>
-    <string name="component_number_range_empty">Required value</string>
-    <string name="date_format_new" translatable="false">%1$s-%2$s-%3$s</string>
-
 </resources>

@@ -7,6 +7,8 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
+import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.ComponentViewModel
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.TaskFiltersPayload
 import com.alfresco.content.data.TaskRepository
@@ -89,11 +91,11 @@ class TasksViewModel(
         list.filter { it.isSelected }.forEach {
             when (it.name?.lowercase()) {
                 "due date" -> {
-                    if (it.selectedQueryMap.containsKey(FilterCreateViewModel.DUE_BEFORE))
-                        taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[FilterCreateViewModel.DUE_BEFORE])
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE))
+                        taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_BEFORE])
 
-                    if (it.selectedQueryMap.containsKey(FilterCreateViewModel.DUE_AFTER))
-                        taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[FilterCreateViewModel.DUE_AFTER])
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER))
+                        taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
                 }
                 "status" -> {
                     taskFiltersPayload.state = it.selectedQuery
@@ -129,7 +131,7 @@ class TasksViewModel(
     /**
      * update the filter result
      */
-    fun updateChipFilterResult(state: TasksViewState, model: TaskFilterData, metaData: FilterMetaData): MutableList<TaskFilterData> {
+    fun updateChipFilterResult(state: TasksViewState, model: TaskFilterData, metaData: ComponentMetaData): MutableList<TaskFilterData> {
         val list = mutableListOf<TaskFilterData>()
 
         state.listSortDataChips.forEach { obj ->

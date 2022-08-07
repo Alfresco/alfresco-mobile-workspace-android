@@ -1,4 +1,4 @@
-package com.alfresco.content.browse.tasks
+package com.alfresco.content.browse.tasks.list
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized

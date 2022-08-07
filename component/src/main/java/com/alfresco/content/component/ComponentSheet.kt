@@ -241,22 +241,26 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
-                if (state.parent?.selector == ComponentType.DATE_RANGE.value) {
-                    when {
-                        viewModel.fromDate.isEmpty() -> {
-                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
-                        }
-                        viewModel.toDate.isEmpty() -> {
-                            binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
-                        }
-                        else -> {
+                when (state.parent?.selector) {
+                    ComponentType.DATE_RANGE.value -> {
+                        if (viewModel.fromDate.isEmpty()) binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                        else if (viewModel.toDate.isEmpty()) binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
+                        else {
                             onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
                             dismiss()
                         }
                     }
-                } else {
-                    onApply?.invoke(state.parent?.selectedName ?: "", state.parent?.selectedQuery ?: "", state.parent?.selectedQueryMap ?: mapOf())
-                    dismiss()
+                    ComponentType.DATE_RANGE_FUTURE.value -> {
+                        if (viewModel.fromDate.isEmpty() && viewModel.toDate.isEmpty()) binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                        else {
+                            onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
+                            dismiss()
+                        }
+                    }
+                    else -> {
+                        onApply?.invoke(state.parent?.selectedName ?: "", state.parent?.selectedQuery ?: "", state.parent?.selectedQueryMap ?: mapOf())
+                        dismiss()
+                    }
                 }
             }
         }

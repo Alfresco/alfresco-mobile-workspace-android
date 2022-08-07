@@ -23,7 +23,6 @@ class ListViewSortChips @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val chipTextDisplayLimit = 30
     private val binding = ViewListSortChipsBinding.inflate(LayoutInflater.from(context), this)
 
     /**
@@ -40,39 +39,16 @@ class ListViewSortChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(chipTextDisplayLimit.plus(3)))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit)
-                else context.getLocalizedName(dataObj.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
+                else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
             else -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",")
-                else context.getLocalizedName(dataObj.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
+                else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
         }
 
         binding.chip.isChecked = dataObj.isSelected
-    }
-
-    private fun String.wrapWithLimit(limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
-        if (this.length <= limit && delimiter == null)
-            return this
-
-        if (delimiter != null) {
-            if (this.contains(delimiter)) {
-                val splitStringArray = this.split(delimiter)
-                val chip1stString = splitStringArray[0]
-                if (chip1stString.length > limit) {
-                    return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(chipTextDisplayLimit, multipleValue = true), splitStringArray.size.minus(1))
-                }
-                return context.getString(R.string.name_truncate_in_end, chip1stString, splitStringArray.size.minus(1))
-            } else {
-                return this.wrapWithLimit(chipTextDisplayLimit)
-            }
-        }
-
-        return if (multipleValue)
-            context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
-        else
-            context.getString(R.string.name_truncate_end, this.take(chipTextDisplayLimit))
     }
 
     /**

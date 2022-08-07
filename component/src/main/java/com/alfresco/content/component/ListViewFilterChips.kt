@@ -24,7 +24,6 @@ class ListViewFilterChips @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val chipTextDisplayLimit = 30
     private val binding = ViewListFilterChipsBinding.inflate(LayoutInflater.from(context), this)
 
     /**
@@ -44,51 +43,28 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(chipTextDisplayLimit.plus(3)))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit)
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
+                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
             ComponentType.FACETS.value -> {
                 if (dataObj.selectedName.isNotEmpty()) {
-                    binding.chip.text = dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",")
+                    binding.chip.text = dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
                 } else {
                     val replacedString = dataObj.facets?.label?.replace(" ", ".") ?: ""
                     val localizedName = context.getLocalizedName(replacedString)
                     if (localizedName == replacedString)
-                        binding.chip.text = dataObj.facets?.label?.wrapWithLimit(chipTextDisplayLimit) ?: ""
+                        binding.chip.text = dataObj.facets?.label?.wrapWithLimit(context, chipTextDisplayLimit) ?: ""
                     else
-                        binding.chip.text = localizedName.wrapWithLimit(chipTextDisplayLimit)
+                        binding.chip.text = localizedName.wrapWithLimit(context, chipTextDisplayLimit)
                 }
             }
             else -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(chipTextDisplayLimit, ",")
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
+                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
         }
 
         binding.chip.isChecked = dataObj.isSelected
-    }
-
-    private fun String.wrapWithLimit(limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
-        if (this.length <= limit && delimiter == null)
-            return this
-
-        if (delimiter != null) {
-            if (this.contains(delimiter)) {
-                val splitStringArray = this.split(delimiter)
-                val chip1stString = splitStringArray[0]
-                if (chip1stString.length > limit) {
-                    return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(chipTextDisplayLimit, multipleValue = true), splitStringArray.size.minus(1))
-                }
-                return context.getString(R.string.name_truncate_in_end, chip1stString, splitStringArray.size.minus(1))
-            } else {
-                return this.wrapWithLimit(chipTextDisplayLimit)
-            }
-        }
-
-        return if (multipleValue)
-            context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
-        else
-            context.getString(R.string.name_truncate_end, this.take(chipTextDisplayLimit))
     }
 
     /**

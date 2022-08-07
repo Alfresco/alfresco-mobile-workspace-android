@@ -1,6 +1,7 @@
-package com.alfresco.content.browse.tasks
+package com.alfresco.content.browse.tasks.list
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,6 +11,8 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.tasks.TaskViewerActivity
+import com.alfresco.content.browse.tasks.detail.TaskDetailsArgs
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -18,6 +21,7 @@ import com.alfresco.content.component.listViewSortChips
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.listview.tasks.TaskListFragment
@@ -85,7 +89,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 id(sortDataObj.name)
                 data(sortDataObj)
                 clickListener { model, _, chipView, _ ->
-
                     onChipClicked(model.data(), chipView)
                 }
             }
@@ -137,7 +140,17 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         }
     }
 
-    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String, queryMap: Map<String, String>) {
-        continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
+    private fun executeContinuation(
+        continuation: Continuation<ComponentMetaData?>,
+        name: String,
+        query: String,
+        queryMap: Map<String, String>
+    ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
+
+    override fun onItemClicked(entry: TaskEntry) {
+        startActivity(
+            Intent(requireActivity(), TaskViewerActivity::class.java)
+                .putExtra(TaskDetailsArgs.TASK_ID, entry.id)
+        )
     }
 }

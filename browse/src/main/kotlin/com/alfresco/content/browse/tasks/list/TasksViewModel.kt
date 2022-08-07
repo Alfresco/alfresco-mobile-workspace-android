@@ -1,4 +1,4 @@
-package com.alfresco.content.browse.tasks
+package com.alfresco.content.browse.tasks.list
 
 import android.content.Context
 import com.airbnb.mvrx.Fail

@@ -67,7 +67,7 @@ class ComponentViewModel(
     }
 
     /**
-     * update the value for number range
+     * update the value for date range
      */
     fun updateFormatDateRange() = withState { state ->
 
@@ -116,7 +116,7 @@ class ComponentViewModel(
      */
     fun updateSingleComponentData(name: String) =
         setState {
-            val query = parent?.properties?.field + ":'$name'"
+            val query = if (parent?.properties?.field != null) parent.properties.field + ":'$name'" else name
             copy(parent = ComponentData.with(parent, name, query))
         }
 

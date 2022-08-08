@@ -5,6 +5,9 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.TaskEntry
 
+/**
+ * Marked as TaskDetailViewState class
+ */
 data class TaskDetailViewState(
     val taskID: String,
     val request: Async<TaskEntry> = Uninitialized,
@@ -13,9 +16,10 @@ data class TaskDetailViewState(
 
     constructor(args: TaskDetailsArgs) : this(args.taskID)
 
-    fun update(
-        response: TaskEntry?
-    ): TaskDetailViewState {
+    /**
+     * update the taskDetailObj params after getting the response from server.
+     */
+    fun update(response: TaskEntry?): TaskDetailViewState {
         if (response == null) return this
 
         return copy(taskDetailObj = response)

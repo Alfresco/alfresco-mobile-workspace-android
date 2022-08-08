@@ -8,6 +8,10 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.alfresco.content.getLocalizedName
 
+/**
+ * setup the Text Component
+ * @param state
+ */
 fun ComponentSheet.setupTextComponent(state: ComponentState) {
     binding.parentView.addView(binding.frameText)
     binding.textComponent.componentParent.visibility = View.VISIBLE
@@ -18,14 +22,21 @@ fun ComponentSheet.setupTextComponent(state: ComponentState) {
     state.parent?.selectedName?.length?.let { length -> binding.textComponent.nameInput.setSelection(length) }
     binding.textComponent.nameInputLayout.editText?.addTextChangedListener(nameInputTextWatcher)
 }
-
+/**
+ * setup the CheckList Component
+ * @param viewModel
+ */
 fun ComponentSheet.setupCheckListComponent(viewModel: ComponentViewModel) {
     binding.parentView.addView(binding.frameCheckList)
     viewModel.buildCheckListModel()
     binding.checkListComponent.componentParent.visibility = View.VISIBLE
     binding.checkListComponent.recyclerView.setController(epoxyCheckListController)
 }
-
+/**
+ * setup the RadioList Component
+ * @param state
+ * @param viewModel
+ */
 fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: ComponentViewModel) {
     binding.parentView.addView(binding.frameRadio)
     viewModel.buildSingleDataModel()
@@ -34,7 +45,11 @@ fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: Com
     binding.radioListComponent.radioParent.visibility = View.VISIBLE
     binding.radioListComponent.recyclerView.setController(epoxyRadioListController)
 }
-
+/**
+ * setup the NumberRange Component
+ * @param state
+ * @param viewModel
+ */
 fun ComponentSheet.setupNumberRangeComponent(state: ComponentState, viewModel: ComponentViewModel) {
     binding.parentView.addView(binding.frameNumberRange)
     binding.title.text = requireContext().getString(R.string.size_end_kb, binding.title.text.toString())
@@ -52,7 +67,11 @@ fun ComponentSheet.setupNumberRangeComponent(state: ComponentState, viewModel: C
     binding.numberRangeComponent.fromInputLayout.editText?.addTextChangedListener(numberFromInputTextWatcher)
     binding.numberRangeComponent.toInputLayout.editText?.addTextChangedListener(numberToInputTextWatcher)
 }
-
+/**
+ * setup the Slider Component
+ * @param state
+ * @param viewModel
+ */
 fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: ComponentViewModel) {
     binding.parentView.addView(binding.frameSlider)
     binding.sliderComponent.componentParent.visibility = View.VISIBLE
@@ -77,7 +96,11 @@ fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: Compon
 
     binding.sliderComponent.slider.addOnChangeListener(sliderChangeListener)
 }
-
+/**
+ * setup the DateRange Component
+ * @param state
+ * @param viewModel
+ */
 fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: ComponentViewModel) {
 
     binding.parentView.addView(binding.frameDateRange)
@@ -111,7 +134,11 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
     binding.dateRangeComponent.fromInputLayout.editText?.addTextChangedListener(fromInputTextWatcher)
     binding.dateRangeComponent.toInputLayout.editText?.addTextChangedListener(toInputTextWatcher)
 }
-
+/**
+ * setup the Facet Component
+ * @param state
+ * @param viewModel
+ */
 @SuppressLint("ClickableViewAccessibility")
 fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: ComponentViewModel) {
 

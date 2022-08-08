@@ -6,6 +6,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.ActivityTaskViewerBinding
 
+/**
+ * Marked as TaskViewerActivity class
+ */
 class TaskViewerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTaskViewerBinding

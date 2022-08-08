@@ -103,7 +103,8 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         override fun afterTextChanged(s: Editable?) {
-            setSearchQuery(s.toString().trim())
+            viewModel.searchQuery = s.toString().trim().replace("\\s+".toRegex(), " ").trim()
+            viewModel.searchBucket(searchText = viewModel.searchQuery)
         }
     }
 
@@ -233,11 +234,6 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         }
     }
 
-    private fun setSearchQuery(query: String) {
-        viewModel.searchQuery = cleanupSearchQuery(query)
-        viewModel.searchBucket(searchText = viewModel.searchQuery)
-    }
-
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
             withState(viewModel) { state ->
@@ -276,10 +272,6 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         viewModel.onSearchComplete = {
             epoxyCheckFacetListController.requestModelBuild()
         }
-    }
-
-    private fun cleanupSearchQuery(query: String): String {
-        return query.replace("\\s+".toRegex(), " ").trim()
     }
 
     override fun invalidate() = withState(viewModel) { state ->

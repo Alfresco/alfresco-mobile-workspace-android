@@ -5,6 +5,9 @@ import com.alfresco.content.models.Options
 import com.alfresco.content.models.Settings
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as ComponentProperties class
+ */
 @Parcelize
 data class ComponentProperties(
     val field: String? = "",
@@ -25,14 +28,15 @@ data class ComponentProperties(
     val unit: String? = ""
 ) : Parcelable {
     companion object {
+        /**
+         * return the ComponentProperties obj after getting the component Settings from server
+         */
         fun with(settings: Settings?): ComponentProperties {
             return ComponentProperties(
                 field = settings?.field ?: "",
                 pattern = settings?.pattern ?: "",
                 placeholder = settings?.placeholder ?: "",
-                pageSize = settings?.pageSize ?: 0,
                 operator = settings?.operator ?: "",
-                options = settings?.options ?: emptyList(),
                 min = settings?.min ?: 0,
                 max = settings?.max ?: 0,
                 step = settings?.step ?: 0,
@@ -40,8 +44,6 @@ data class ComponentProperties(
                 format = settings?.format ?: "",
                 dateFormat = settings?.dateFormat ?: "",
                 maxDate = settings?.maxDate ?: "",
-                allowUpdateOnChange = settings?.allowUpdateOnChange ?: false,
-                hideDefaultAction = settings?.hideDefaultAction ?: false,
                 unit = settings?.unit ?: ""
             )
         }

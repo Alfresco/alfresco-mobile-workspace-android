@@ -7,7 +7,7 @@ import com.alfresco.content.models.CategoriesItem
 import kotlinx.parcelize.Parcelize
 
 /**
- * Marked as ComponentFilterData class
+ * Marked as ComponentData class
  */
 @Parcelize
 data class ComponentData(
@@ -23,6 +23,13 @@ data class ComponentData(
     val selectedQueryMap: Map<String, String> = mapOf()
 ) : Parcelable {
     companion object {
+
+        /**
+         * update the ComponentData obj after getting the result (name and query) from filters
+         * @param category
+         * @param name
+         * @param query
+         */
         fun with(category: CategoriesItem?, name: String, query: String): ComponentData {
             return ComponentData(
                 id = category?.id ?: "",
@@ -35,6 +42,12 @@ data class ComponentData(
             )
         }
 
+        /**
+         * update the ComponentData obj after getting the result (name and query) from filters
+         * @param facets
+         * @param name
+         * @param query
+         */
         fun with(facets: Facets?, name: String, query: String): ComponentData {
             return ComponentData(
                 id = facets?.hashCode().toString(),
@@ -46,6 +59,10 @@ data class ComponentData(
             )
         }
 
+        /**
+         * Gets the data from TaskFilterData and return as ComponentData obj
+         * @param taskFilterData
+         */
         fun with(taskFilterData: TaskFilterData): ComponentData {
             return ComponentData(
                 id = taskFilterData.id.toString(),
@@ -61,7 +78,10 @@ data class ComponentData(
         }
 
         /**
-         * update and returns the searchChipCategory
+         * update the name and query in the existing ComponentData obj
+         * @param componentData
+         * @param name
+         * @param query
          */
         fun with(componentData: ComponentData?, name: String, query: String): ComponentData {
             return ComponentData(
@@ -79,7 +99,7 @@ data class ComponentData(
         }
 
         /**
-         * update the TaskFilterData obj after getting the result from filters
+         * update the name and queryMap in the existing ComponentData obj
          * @param obj
          * @param selectedName
          * @param selectedQueryMap

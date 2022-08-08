@@ -118,6 +118,9 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
+    /**
+     * It will get executed if user tap on any task.
+     */
     abstract fun onItemClicked(entry: TaskEntry)
 
     override fun invalidate() = withState(viewModel) { state ->

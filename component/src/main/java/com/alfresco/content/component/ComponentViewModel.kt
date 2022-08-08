@@ -7,8 +7,6 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.kBToByte
 import com.alfresco.content.getLocalizedName
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * Mark as ComponentState class
@@ -241,17 +239,4 @@ class ComponentViewModel(
             state: ComponentState
         ) = ComponentViewModel(viewModelContext.activity(), state)
     }
-}
-
-/**
- * returns formatted date string for query
- */
-fun String.getQueryFormat(): String {
-
-    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
-    if (date != null)
-        return formatter.format(date)
-
-    return this
 }

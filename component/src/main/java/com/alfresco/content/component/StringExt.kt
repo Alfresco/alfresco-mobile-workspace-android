@@ -1,9 +1,14 @@
 package com.alfresco.content.component
 
 import android.content.Context
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 const val chipTextDisplayLimit = 30
 
+/**
+ * returns the formatted text string as per chip display conditions
+ */
 fun String.wrapWithLimit(context: Context, limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
     if (this.length <= limit && delimiter == null)
         return this
@@ -25,4 +30,17 @@ fun String.wrapWithLimit(context: Context, limit: Int, delimiter: String? = null
         context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
     else
         context.getString(R.string.name_truncate_end, this.take(chipTextDisplayLimit))
+}
+
+/**
+ * returns formatted date string for query
+ */
+fun String.getQueryFormat(): String {
+
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
+    if (date != null)
+        return formatter.format(date)
+
+    return this
 }

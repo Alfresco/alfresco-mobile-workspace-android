@@ -4,6 +4,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.alfresco.content.listview.R
 
+/**
+ * Marked as TaskPriority enum class
+ */
 enum class TaskPriority(val value: String) {
     LOW("low"),
     MEDIUM("medium"),
@@ -18,6 +21,9 @@ private fun getTaskPriority(priority: String): TaskPriority {
     }
 }
 
+/**
+ * update the priority view as per high,medium and low
+ */
 fun TextView.updatePriorityView(priority: String) {
     when (getTaskPriority(priority)) {
         TaskPriority.LOW -> {

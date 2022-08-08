@@ -150,7 +150,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override fun onItemClicked(entry: TaskEntry) {
         startActivity(
             Intent(requireActivity(), TaskViewerActivity::class.java)
-                .putExtra(TaskDetailsArgs.TASK_ID, entry.id)
+                .putExtra(TaskDetailsArgs.TASK_OBJ, entry)
         )
     }
 }

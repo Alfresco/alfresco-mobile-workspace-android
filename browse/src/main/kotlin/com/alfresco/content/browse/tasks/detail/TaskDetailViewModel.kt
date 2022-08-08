@@ -28,7 +28,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getTaskDetails.asFlow(
-                state.taskID
+                state.taskDetailObj?.id ?: ""
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())

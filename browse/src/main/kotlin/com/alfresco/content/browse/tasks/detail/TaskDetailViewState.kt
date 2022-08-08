@@ -9,12 +9,11 @@ import com.alfresco.content.data.TaskEntry
  * Marked as TaskDetailViewState class
  */
 data class TaskDetailViewState(
-    val taskID: String,
-    val request: Async<TaskEntry> = Uninitialized,
-    val taskDetailObj: TaskEntry? = null
+    val taskDetailObj: TaskEntry? = null,
+    val request: Async<TaskEntry> = Uninitialized
 ) : MavericksState {
 
-    constructor(args: TaskDetailsArgs) : this(args.taskID)
+    constructor(args: TaskDetailsArgs) : this(taskDetailObj = args.taskObj)
 
     /**
      * update the taskDetailObj params after getting the response from server.

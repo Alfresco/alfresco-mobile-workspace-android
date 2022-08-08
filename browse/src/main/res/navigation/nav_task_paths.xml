@@ -9,8 +9,8 @@
         android:id="@+id/taskDetails"
         android:name="com.alfresco.content.browse.tasks.detail.TaskDetailFragment">
         <argument
-            android:name="taskID"
-            app:argType="string" />
+            android:name="taskObj"
+            app:argType="com.alfresco.content.data.TaskEntry" />
     </fragment>
 
 </navigation>

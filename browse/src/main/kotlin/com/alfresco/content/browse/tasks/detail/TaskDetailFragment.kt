@@ -27,17 +27,17 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TaskDetailsArgs(
-    val taskID: String
+    val taskObj: TaskEntry?
 ) : Parcelable {
     companion object {
-        const val TASK_ID = "taskID"
+        const val TASK_OBJ = "taskObj"
 
         /**
          * return the TaskDetailsArgs obj
          */
         fun with(args: Bundle): TaskDetailsArgs {
             return TaskDetailsArgs(
-                args.getString(TASK_ID, "")
+                args.getParcelable(TASK_OBJ)
             )
         }
     }
@@ -80,8 +80,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
 
     override fun invalidate() = withState(viewModel) { state ->
 
-        binding.loadingAnimation.isVisible =
-            state.request is Loading && state.taskDetailObj == null
+        binding.loading.isVisible = state.request is Loading && state.taskDetailObj != null
 
         setData(state.taskDetailObj)
     }

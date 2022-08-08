@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -24,7 +24,9 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp">
+                android:layout_height="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/loading"
@@ -40,7 +42,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
-                android:ellipsize="start"
+                android:ellipsize="end"
                 android:letterSpacing="0.01"
                 android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceBody1"
@@ -51,7 +53,7 @@
                 tools:text="Title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_due_date"
+                android:id="@+id/cl_due_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -77,16 +79,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="start"
+                    android:ellipsize="end"
                     android:letterSpacing="0.03"
-                    android:text="@string/title_due_to_date"
                     android:minWidth="120dp"
-                    android:textColor="?attr/colorControlNormal"
                     android:singleLine="true"
+                    android:text="@string/title_due_to_date"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_due_date"
                     app:layout_constraintStart_toEndOf="@+id/icon_due_date"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_due_date_value"
@@ -104,7 +106,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_priority"
+                android:id="@+id/cl_priority"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -113,7 +115,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_due_date">
+                app:layout_constraintTop_toBottomOf="@id/cl_due_date">
 
                 <ImageView
                     android:id="@+id/icon_priority"
@@ -130,16 +132,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="start"
+                    android:ellipsize="end"
                     android:letterSpacing="0"
-                android:textColor="?attr/colorControlNormal"
-                    android:text="@string/title_priority"
                     android:minWidth="120dp"
                     android:singleLine="true"
+                    android:text="@string/title_priority"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_priority"
                     app:layout_constraintStart_toEndOf="@id/icon_priority"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_priority_value"
@@ -161,7 +163,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_assigned"
+                android:id="@+id/cl_assigned"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -170,7 +172,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_priority">
+                app:layout_constraintTop_toBottomOf="@id/cl_priority">
 
                 <ImageView
                     android:id="@+id/icon_assigned"
@@ -187,13 +189,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="start"
+                    android:ellipsize="end"
                     android:letterSpacing="0"
-                    android:textColor="?attr/colorControlNormal"
                     android:minWidth="120dp"
                     android:singleLine="true"
                     android:text="@string/title_assigned"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_assigned"
                     app:layout_constraintStart_toEndOf="@id/icon_assigned"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -214,7 +216,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_status"
+                android:id="@+id/cl_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -223,7 +225,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_assigned">
+                app:layout_constraintTop_toBottomOf="@id/cl_assigned">
 
                 <ImageView
                     android:id="@+id/icon_status"
@@ -240,13 +242,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="start"
+                    android:ellipsize="end"
                     android:letterSpacing="0"
-                    android:textColor="?attr/colorControlNormal"
                     android:minWidth="120dp"
-                    android:text="@string/title_status"
                     android:singleLine="true"
+                    android:text="@string/title_status"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_status"
                     app:layout_constraintStart_toEndOf="@id/icon_status"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -267,7 +269,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_identifier"
+                android:id="@+id/cl_identifier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -276,7 +278,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_status">
+                app:layout_constraintTop_toBottomOf="@id/cl_status">
 
                 <ImageView
                     android:id="@+id/icon_identifier"
@@ -293,16 +295,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="start"
-                    android:textColor="?attr/colorControlNormal"
-                    android:text="@string/title_identifier"
+                    android:ellipsize="end"
                     android:letterSpacing="0"
                     android:minWidth="120dp"
                     android:singleLine="true"
+                    android:text="@string/title_identifier"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_identifier"
                     app:layout_constraintStart_toEndOf="@id/icon_identifier"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_identifier_value"
@@ -316,6 +318,85 @@
                     app:layout_constraintStart_toEndOf="@id/tv_identifier_title"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Value" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_identifier">
+
+                <View
+                    android:id="@+id/view_comment_1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@drawable/bottom_separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <FrameLayout
+                    android:id="@+id/fl_recent_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_comment_1">
+
+                    <include layout="@layout/view_list_comment_row" />
+
+                </FrameLayout>
+
+
+                <ImageView
+                    android:id="@+id/icon_add_comment_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/icon_user_profile"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_user_comment"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_add_comment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_add_comment" />
+
+                <TextView
+                    android:id="@+id/tv_add_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:letterSpacing="0.02"
+                    android:lineSpacingExtra="3sp"
+                    android:minHeight="20dp"
+                    android:singleLine="true"
+                    android:text="@string/text_add_a_comment"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorControlNormal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/icon_add_comment_user"
+                    app:layout_constraintTop_toBottomOf="@id/fl_recent_comment" />
+
+                <View
+                    android:id="@+id/view_comment_2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bottom_separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_comment" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -55,10 +55,18 @@ data class UserDetails(
     val name: String
         get() = "$firstName $lastName"
 
+    private val firstNameInitial: String
+        get() = if (firstName.isNotEmpty()) firstName.substring(0, 1) else ""
+
+    private val lastNameInitial: String
+        get() = if (lastName.isNotEmpty()) lastName.substring(0, 1) else ""
+
+    val nameInitial = firstNameInitial + lastNameInitial
+
     companion object {
 
         /**
-         * return the Assignee obj using AssigneeInfo
+         * return the UserDetails obj using UserInfo
          */
         fun with(assigneeInfo: UserInfo): UserDetails {
             return UserDetails(

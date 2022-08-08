@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_capture"
     app:startDestination="@id/taskDetails">
 
     <fragment
         android:id="@+id/taskDetails"
+        tools:layout="@layout/fragment_task_detail"
         android:name="com.alfresco.content.browse.tasks.detail.TaskDetailFragment">
         <argument
             android:name="taskObj"
             app:argType="com.alfresco.content.data.TaskEntry" />
+        <action
+            android:id="@+id/action_taskDetails_to_nav_comments"
+            app:destination="@id/nav_comments"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_comments"
+        tools:layout="@layout/fragment_comments"
+        android:name="com.alfresco.content.browse.tasks.detail.CommentsFragment">
+
     </fragment>
 
 </navigation>

@@ -3,6 +3,8 @@ package com.alfresco.content.browse.tasks.detail
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.data.CommentEntry
+import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.TaskEntry
 
 /**
@@ -10,7 +12,9 @@ import com.alfresco.content.data.TaskEntry
  */
 data class TaskDetailViewState(
     val taskDetailObj: TaskEntry? = null,
-    val request: Async<TaskEntry> = Uninitialized
+    val listComments: List<CommentEntry> = emptyList(),
+    val request: Async<TaskEntry> = Uninitialized,
+    val requestComments: Async<ResponseComments> = Uninitialized
 ) : MavericksState {
 
     constructor(args: TaskDetailsArgs) : this(taskDetailObj = args.taskObj)
@@ -22,5 +26,10 @@ data class TaskDetailViewState(
         if (response == null) return this
 
         return copy(taskDetailObj = response)
+    }
+
+    fun update(response: ResponseComments?): TaskDetailViewState {
+        if (response == null) return this
+        return copy(listComments = response.listComments)
     }
 }

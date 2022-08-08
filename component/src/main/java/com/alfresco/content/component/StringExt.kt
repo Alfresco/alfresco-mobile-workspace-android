@@ -44,3 +44,16 @@ fun String.getQueryFormat(): String {
 
     return this
 }
+
+/**
+ * returns formatted date string for query
+ */
+fun String.getDateZoneFormat(): String {
+    println("zone date -- $this")
+    val date = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this)
+    val formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+    if (date != null)
+        return formatter.format(date)
+
+    return this
+}

@@ -110,26 +110,24 @@ class ComponentViewModel(
     }
 
     /**
-     * update single selected component option (text)
+     * update single selected component option(text and radio)
      */
-    fun updateSingleComponentData(name: String) =
+    fun updateSingleComponentData(name: String, query: String = "") {
         setState {
-            val query = if (parent?.properties?.field != null) parent.properties.field + ":'$name'" else name
-            copy(parent = ComponentData.with(parent, name, query))
-        }
+            var updatedQuery = ""
+            if (query.isNotEmpty())
+                updatedQuery = if (parent?.properties?.field != null) parent.properties.field + ":'$name'" else name
 
-    /**
-     * update single selected component option(radio)
-     */
-    fun updateSingleComponentData(name: String, query: String) =
-        setState { copy(parent = ComponentData.with(parent, name, query)) }
+            copy(parent = ComponentData.with(parent, name, updatedQuery))
+        }
+    }
 
     /**
      * copy default component data
      */
     fun copyDefaultComponentData() {
         setState {
-            val obj = parent?.options?.find { it.default ?: false }
+            val obj = parent?.options?.find { it.default }
             copy(parent = ComponentData.with(parent, context.getLocalizedName(obj?.label ?: ""), obj?.query ?: ""))
         }
     }

@@ -18,6 +18,11 @@ data class ComponentOptions(
     val count: Int = 0
 ) : Parcelable {
     companion object {
+
+        /**
+         * return the updated ComponentOptions obj by using FilterOptions obj
+         * @param filterOptions
+         */
         fun with(filterOptions: FilterOptions): ComponentOptions {
             return ComponentOptions(
                 label = filterOptions.label,
@@ -26,6 +31,10 @@ data class ComponentOptions(
             )
         }
 
+        /**
+         * return the updated ComponentOptions obj by using Buckets obj
+         * @param bucket
+         */
         fun with(bucket: Buckets): ComponentOptions {
             return ComponentOptions(
                 label = bucket.label ?: "",
@@ -34,6 +43,10 @@ data class ComponentOptions(
             )
         }
 
+        /**
+         * return the updated ComponentOptions obj by using Options obj
+         * @param options
+         */
         fun with(options: Options): ComponentOptions {
             return ComponentOptions(
                 label = options.name ?: "",

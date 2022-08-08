@@ -13,6 +13,8 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
+import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.tasks.updatePriorityView
@@ -53,6 +55,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsManager().screenViewEvent(PageView.TaskView)
         args = TaskDetailsArgs.with(requireArguments())
     }
 

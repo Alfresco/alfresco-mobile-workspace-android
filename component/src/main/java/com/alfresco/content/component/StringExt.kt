@@ -36,7 +36,6 @@ fun String.wrapWithLimit(context: Context, limit: Int, delimiter: String? = null
  * returns formatted date string for query
  */
 fun String.getQueryFormat(): String {
-
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     val date = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(this)
     if (date != null)
@@ -46,10 +45,9 @@ fun String.getQueryFormat(): String {
 }
 
 /**
- * returns formatted date string for query
+ * returns formatted date string for query zone
  */
 fun String.getDateZoneFormat(): String {
-    println("zone date -- $this")
     val date = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(this)
     val formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
     if (date != null)

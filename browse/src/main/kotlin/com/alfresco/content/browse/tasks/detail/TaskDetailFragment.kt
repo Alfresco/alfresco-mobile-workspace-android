@@ -102,8 +102,8 @@ class TaskDetailFragment : Fragment(), MavericksView {
 
     private fun setCommentData(listComments: List<CommentEntry>) {
         if (listComments.isNotEmpty()) {
-            binding.clCommentHeader.visibility = View.VISIBLE
             binding.flRecentComment.visibility = View.VISIBLE
+            binding.clCommentHeader.visibility = View.VISIBLE
             val commentObj = listComments.last()
 
             if (listComments.size > 1) {
@@ -114,6 +114,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
                 binding.tvCommentViewAll.visibility = View.GONE
                 binding.tvNoOfComments.visibility = View.GONE
             }
+
             commentViewBinding.tvUserInitial.text = commentObj.userDetails?.nameInitial
             commentViewBinding.tvName.text = commentObj.userDetails?.name
             commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_3) else "N/A"

@@ -33,6 +33,7 @@ dependencies {
     implementation project(':viewer-pdf')
     implementation project(':viewer-text')
     implementation project(':viewer')
+    implementation project(':component')
 
     implementation libs.alfresco.content
     implementation libs.alfresco.process

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string-array name="due_date_values">
-        <item>@string/due_date_asc</item>
-        <item>@string/due_date_desc</item>
-    </string-array>
-</resources>

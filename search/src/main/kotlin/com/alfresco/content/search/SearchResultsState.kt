@@ -2,6 +2,8 @@ package com.alfresco.content.search
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.component.ComponentType
+import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.Buckets
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Facets
@@ -119,7 +121,7 @@ data class SearchResultsState(
             }
             return list
         } else if (newEntries.isNotEmpty()) {
-            val updateList = list?.filter { it.category?.component?.selector != ChipComponentType.FACETS.component }?.toMutableList()
+            val updateList = list?.filter { it.category?.component?.selector != ComponentType.FACETS.value }?.toMutableList()
             facets?.forEach { facetObj ->
                 updateList?.add(SearchChipCategory.withFilterCountZero(facetObj))
             }

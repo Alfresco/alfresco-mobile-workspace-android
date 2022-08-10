@@ -7,6 +7,8 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.SearchFacetData
@@ -24,7 +26,6 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
-import com.alfresco.content.search.components.ComponentMetaData
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

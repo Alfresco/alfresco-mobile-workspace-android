@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+dependencies {
+
+    implementation project(':base')
+    implementation project(':common')
+    implementation project(':data')
+    implementation project(':theme')
+
+    implementation libs.alfresco.content
+
+    implementation libs.coroutines.core
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.navigation.fragment
+
+    implementation libs.google.material
+
+    implementation libs.mavericks
+
+    implementation libs.epoxy.core
+    kapt libs.epoxy.processor
+}

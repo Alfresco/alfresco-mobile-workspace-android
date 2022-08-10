@@ -3,7 +3,7 @@
     {
       "id": 0,
       "name": "Due date",
-      "selector": "date-range",
+      "selector": "date-range-future",
       "options": [
         {
           "label": "Due before",
@@ -24,13 +24,13 @@
       "options": [
         {
           "label": "Active",
-          "query": "state",
-          "value": ""
+          "query": "active",
+          "value": "state"
         },
         {
           "label": "Completed",
-          "query": "state",
-          "value": "completed"
+          "query": "completed",
+          "value": "state"
         }
       ]
     },

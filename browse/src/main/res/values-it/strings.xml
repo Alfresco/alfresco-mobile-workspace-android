@@ -42,5 +42,5 @@
 
     <string name="title_transfers">Trasferimenti</string>
 
-    <string name="account_not_configured">Questo account non è configurato nei "Process Services". Contattare l\'amministratore.</string>
+    <string name="account_not_configured">Questo account non è configurato nei "Process Services".</string>
 </resources>

@@ -93,7 +93,7 @@
             android:paddingHorizontal="16dp"
             android:visibility="gone">
 
-            <com.alfresco.content.FilterChip
+            <com.alfresco.content.component.FilterChip
                 android:id="@+id/chip"
                 style="@style/Widget.Alfresco.Chip.Choice"
                 android:layout_width="wrap_content"
@@ -101,21 +101,21 @@
                 android:visibility="gone"
                 tools:text="in: Folder" />
 
-            <com.alfresco.content.FilterChip
+            <com.alfresco.content.component.FilterChip
                 android:id="@+id/chip_files"
                 style="@style/Widget.Alfresco.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_chip_files" />
 
-            <com.alfresco.content.FilterChip
+            <com.alfresco.content.component.FilterChip
                 android:id="@+id/chip_folders"
                 style="@style/Widget.Alfresco.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_chip_folders" />
 
-            <com.alfresco.content.FilterChip
+            <com.alfresco.content.component.FilterChip
                 android:id="@+id/chip_libraries"
                 style="@style/Widget.Alfresco.Chip.Choice"
                 android:layout_width="wrap_content"

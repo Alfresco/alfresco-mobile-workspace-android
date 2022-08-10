@@ -21,7 +21,6 @@ data class TaskFilterData(
     val query: String? = "",
     val value: String? = "",
     val options: List<FilterOptions>? = emptyList(),
-    val selectedValue: String? = "",
     val selectedName: String = "",
     val selectedQuery: String = "",
     val selectedQueryMap: Map<String, String> = mapOf(),

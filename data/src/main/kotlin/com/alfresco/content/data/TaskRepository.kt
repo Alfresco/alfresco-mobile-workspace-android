@@ -32,8 +32,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         processService.getTaskDetails(taskID)
     )
 
+    /**
+     * execute the get comments api and returns the response as ResponseComments obj
+     */
     suspend fun getComments(taskID: String) = ResponseComments.with(
         processService.getComments(taskID)
+    )
+
+    /**
+     * execute the get contents api and returns the response as ResponseContents obj
+     */
+    suspend fun getContents(taskID: String) = ResponseContents.with(
+        processService.getContents(taskID)
     )
 
     private fun includeFilters(taskFilters: TaskFiltersPayload): RequestTaskFilters {

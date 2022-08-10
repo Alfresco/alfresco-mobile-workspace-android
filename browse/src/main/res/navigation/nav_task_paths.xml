@@ -7,21 +7,11 @@
 
     <fragment
         android:id="@+id/taskDetails"
-        tools:layout="@layout/fragment_task_detail"
-        android:name="com.alfresco.content.browse.tasks.detail.TaskDetailFragment">
+        android:name="com.alfresco.content.browse.tasks.detail.TaskDetailFragment"
+        tools:layout="@layout/fragment_task_detail">
         <argument
             android:name="taskObj"
             app:argType="com.alfresco.content.data.TaskEntry" />
-        <action
-            android:id="@+id/action_taskDetails_to_nav_comments"
-            app:destination="@id/nav_comments"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_comments"
-        tools:layout="@layout/fragment_comments"
-        android:name="com.alfresco.content.browse.tasks.detail.CommentsFragment">
-
     </fragment>
 
 </navigation>

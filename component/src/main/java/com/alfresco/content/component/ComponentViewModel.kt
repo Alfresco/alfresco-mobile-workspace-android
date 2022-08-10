@@ -5,7 +5,10 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.DATE_FORMAT_1
+import com.alfresco.content.DATE_FORMAT_2
 import com.alfresco.content.data.kBToByte
+import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.getLocalizedName
 
 /**
@@ -73,7 +76,7 @@ class ComponentViewModel(
             ComponentType.DATE_RANGE.value -> {
                 if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
                     val dateFormat = "$fromDate - $toDate"
-                    val queryFormat = "${state.parent.properties?.field}:['${fromDate.getQueryFormat()}' TO '${toDate.getQueryFormat()}']"
+                    val queryFormat = "${state.parent.properties?.field}:['${fromDate.getDateZoneFormat(DATE_FORMAT_2, DATE_FORMAT_1)}' TO '${toDate.getDateZoneFormat(DATE_FORMAT_2, DATE_FORMAT_1)}']"
                     updateSingleComponentData(dateFormat, queryFormat)
                 } else updateSingleComponentData("", "")
             }
@@ -130,29 +133,9 @@ class ComponentViewModel(
      */
     fun copyDefaultComponentData() {
         setState {
-            val obj = parent?.options?.find { it.default ?: false }
+            val obj = parent?.options?.find { it.default }
             copy(parent = ComponentData.with(parent, context.getLocalizedName(obj?.label ?: ""), obj?.query ?: ""))
         }
-    }
-
-    /**
-     * return true if the component is selected,otherwise false
-     */
-    fun isOptionSelected(state: ComponentState, options: ComponentOptions): Boolean {
-
-        if (state.parent?.selectedQuery?.isEmpty() == true)
-            return options.default
-
-        val selectedQuery = state.parent?.selectedQuery
-        if (selectedQuery?.contains(delimiters) == true) {
-            selectedQuery.split(delimiters).forEach { query ->
-                if (query == options.query)
-                    return true
-            }
-        } else {
-            return selectedQuery == options.query
-        }
-        return false
     }
 
     /**
@@ -189,32 +172,6 @@ class ComponentViewModel(
         val selectedQuery = listOptionsData.joinToString(delimiters) { it.query ?: "" }
 
         setState { copy(parent = ComponentData.with(parent, selectedName, selectedQuery)) }
-    }
-
-    /**
-     * return true if To value valid otherwise false
-     */
-    fun isToValueValid(to: String): Boolean {
-        if (to.isEmpty())
-            return true
-
-        return if (fromValue.isEmpty())
-            true
-        else
-            to.toLong() > fromValue.toLong()
-    }
-
-    /**
-     * return true if from value valid otherwise false
-     */
-    fun isFromValueValid(from: String): Boolean {
-        if (from.isEmpty())
-            return true
-
-        return if (toValue.isEmpty())
-            true
-        else
-            from.toLong() < toValue.toLong()
     }
 
     /**

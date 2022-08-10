@@ -11,6 +11,8 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.component.databinding.ViewListSortChipsBinding
 import com.alfresco.content.data.TaskFilterData
+import com.alfresco.content.data.chipTextDisplayLimit
+import com.alfresco.content.data.wrapWithLimit
 import com.alfresco.content.getLocalizedName
 
 /**

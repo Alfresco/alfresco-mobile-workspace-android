@@ -46,6 +46,7 @@
     <string name="account">Account</string>
     <string name="icon_due_date">Due date icon</string>
     <string name="icon_user_profile">User profile icon</string>
+    <string name="icon_file">File icon</string>
     <string name="icon_priority">Priority icon</string>
     <string name="icon_assigned">Assigned icon</string>
     <string name="icon_status">Status icon</string>
@@ -54,11 +55,15 @@
     <string name="status_completed">Completed</string>
     <string name="title_task_view">Task View</string>
     <string name="title_comments">Comments</string>
-    <string name="title_due_to_date">Due to date</string>
+    <string name="title_due_date">Due date</string>
     <string name="title_priority">Priority</string>
-    <string name="title_assigned">Assigned</string>
+    <string name="title_assignee">Assignee</string>
     <string name="title_status">Status</string>
     <string name="title_identifier">Identifier</string>
     <string name="text_add_a_comment">Add a comment&#8230;</string>
+    <string name="text_view_all">View all</string>
+    <string name="text_multiple_comments">%d comments</string>
+    <string name="text_attachment_files">Attachment files</string>
+    <string name="text_multiple_attachment">%d attachments</string>
 
 </resources>

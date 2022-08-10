@@ -14,7 +14,7 @@ data class TaskEntry(
     val id: String = "",
     val name: String = "",
     val assignee: UserDetails? = null,
-    val priority: String = "",
+    val priority: Int = 0,
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
@@ -32,7 +32,7 @@ data class TaskEntry(
                 name = data.name ?: "",
                 created = data.created,
                 assignee = data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
-                priority = data.priority ?: "",
+                priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration

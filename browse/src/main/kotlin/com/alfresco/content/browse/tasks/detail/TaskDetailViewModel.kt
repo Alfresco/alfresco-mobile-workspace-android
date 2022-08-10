@@ -23,6 +23,7 @@ class TaskDetailViewModel(
     init {
         getTaskDetails()
         getComments()
+        getContents()
     }
 
     private fun getTaskDetails() = withState { state ->
@@ -56,6 +57,26 @@ class TaskDetailViewModel(
                     is Fail -> copy(requestComments = Fail(it.error))
                     is Success -> {
                         update(it()).copy(requestComments = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getContents() = withState { state ->
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::getContents.asFlow(
+                state.taskDetailObj?.id ?: ""
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestContents = Loading())
+                    is Fail -> copy(requestContents = Fail(it.error))
+                    is Success -> {
+                        update(it()).copy(requestContents = Success(it()))
                     }
                     else -> {
                         this

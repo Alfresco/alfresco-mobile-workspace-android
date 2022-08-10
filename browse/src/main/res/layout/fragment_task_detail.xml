@@ -83,7 +83,7 @@
                     android:letterSpacing="0.03"
                     android:minWidth="120dp"
                     android:singleLine="true"
-                    android:text="@string/title_due_to_date"
+                    android:text="@string/title_due_date"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_due_date"
@@ -193,7 +193,7 @@
                     android:letterSpacing="0"
                     android:minWidth="120dp"
                     android:singleLine="true"
-                    android:text="@string/title_assigned"
+                    android:text="@string/title_assignee"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_assigned"
@@ -342,6 +342,49 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_comment_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_comment_1">
+
+                    <TextView
+                        android:id="@+id/tv_comment_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/title_comments"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        app:layout_constraintEnd_toStartOf="@id/tv_comment_view_all"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_view_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_view_all"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_comment_title" />
+
+                    <TextView
+                        android:id="@+id/tv_no_of_comments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:letterSpacing="0.04"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <FrameLayout
                     android:id="@+id/fl_recent_comment"
@@ -351,7 +394,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_comment_1">
+                    app:layout_constraintTop_toBottomOf="@id/cl_comment_header">
 
                     <include layout="@layout/view_list_comment_row" />
 
@@ -397,6 +440,69 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_add_comment" />
 
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_attachment_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_comment">
+
+                <TextView
+                    android:id="@+id/tv_attachment_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/text_attachment_files"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@id/tv_attachment_view_all"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_attachment_view_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_view_all"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_attachment_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_attachment_title" />
+
+                <TextView
+                    android:id="@+id/tv_no_of_attachments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:letterSpacing="0.04"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
+
+
+                <com.airbnb.epoxy.EpoxyRecyclerView
+                    android:id="@+id/recycler_view_attachments"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/color_back_attachment"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:splitMotionEvents="false"
+                    app:layoutManager="LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_no_of_attachments" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

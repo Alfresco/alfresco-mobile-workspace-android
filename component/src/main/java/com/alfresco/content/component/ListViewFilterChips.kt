@@ -12,6 +12,8 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.component.databinding.ViewListFilterChipsBinding
 import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.SearchFilter
+import com.alfresco.content.data.chipTextDisplayLimit
+import com.alfresco.content.data.wrapWithLimit
 import com.alfresco.content.getLocalizedName
 
 /**

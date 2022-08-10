@@ -11,6 +11,7 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
+import com.alfresco.content.listview.updatePriorityView
 
 /**
  * Marked as ListViewTaskRow class

@@ -6,6 +6,8 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import com.alfresco.content.component.ComponentViewModel.Companion.DUE_AFTER
+import com.alfresco.content.component.ComponentViewModel.Companion.DUE_BEFORE
 import com.alfresco.content.getLocalizedName
 
 /**
@@ -22,6 +24,7 @@ fun ComponentSheet.setupTextComponent(state: ComponentState) {
     state.parent?.selectedName?.length?.let { length -> binding.textComponent.nameInput.setSelection(length) }
     binding.textComponent.nameInputLayout.editText?.addTextChangedListener(nameInputTextWatcher)
 }
+
 /**
  * setup the CheckList Component
  * @param viewModel
@@ -32,6 +35,7 @@ fun ComponentSheet.setupCheckListComponent(viewModel: ComponentViewModel) {
     binding.checkListComponent.componentParent.visibility = View.VISIBLE
     binding.checkListComponent.recyclerView.setController(epoxyCheckListController)
 }
+
 /**
  * setup the RadioList Component
  * @param state
@@ -45,6 +49,7 @@ fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: Com
     binding.radioListComponent.radioParent.visibility = View.VISIBLE
     binding.radioListComponent.recyclerView.setController(epoxyRadioListController)
 }
+
 /**
  * setup the NumberRange Component
  * @param state
@@ -67,6 +72,7 @@ fun ComponentSheet.setupNumberRangeComponent(state: ComponentState, viewModel: C
     binding.numberRangeComponent.fromInputLayout.editText?.addTextChangedListener(numberFromInputTextWatcher)
     binding.numberRangeComponent.toInputLayout.editText?.addTextChangedListener(numberToInputTextWatcher)
 }
+
 /**
  * setup the Slider Component
  * @param state
@@ -96,6 +102,7 @@ fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: Compon
 
     binding.sliderComponent.slider.addOnChangeListener(sliderChangeListener)
 }
+
 /**
  * setup the DateRange Component
  * @param state
@@ -116,12 +123,28 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
         viewModel.dateFormat = format.replace("D", "d").replace("Y", "y")
     }
 
-    if (state.parent?.selectedName?.isNotEmpty() == true) {
-        val fromToArray = state.parent.selectedName.split("-")
-        viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
-        binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
-        viewModel.toDate = getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim())
-        binding.dateRangeComponent.toInput.setText(viewModel.toDate)
+    if (state.parent?.selector == ComponentType.DATE_RANGE.value) {
+        if (state.parent.selectedName.isNotEmpty()) {
+            val fromToArray = state.parent.selectedName.split("-")
+            viewModel.fromDate = getString(R.string.date_format, fromToArray[0].trim(), fromToArray[1].trim(), fromToArray[2].trim())
+            binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
+            viewModel.toDate = getString(R.string.date_format, fromToArray[3].trim(), fromToArray[4].trim(), fromToArray[5].trim())
+            binding.dateRangeComponent.toInput.setText(viewModel.toDate)
+        }
+    }
+
+    if (state.parent?.selector == ComponentType.DATE_RANGE_FUTURE.value) {
+        if (state.parent.selectedQueryMap.containsKey(DUE_BEFORE)) {
+            val dueBeforeArray = state.parent.selectedQueryMap[DUE_BEFORE]!!.split("-")
+            viewModel.toDate = getString(R.string.date_format_new, dueBeforeArray[0].trim(), dueBeforeArray[1].trim(), dueBeforeArray[2].trim())
+            binding.dateRangeComponent.toInput.setText(viewModel.toDate)
+        }
+
+        if (state.parent.selectedQueryMap.containsKey(DUE_AFTER)) {
+            val dueAfterArray = state.parent.selectedQueryMap[DUE_AFTER]!!.split("-")
+            viewModel.fromDate = getString(R.string.date_format_new, dueAfterArray[0].trim(), dueAfterArray[1].trim(), dueAfterArray[2].trim())
+            binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
+        }
     }
 
     binding.dateRangeComponent.fromInput.setOnFocusChangeListener { view, hasFocus ->
@@ -134,6 +157,7 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
     binding.dateRangeComponent.fromInputLayout.editText?.addTextChangedListener(fromInputTextWatcher)
     binding.dateRangeComponent.toInputLayout.editText?.addTextChangedListener(toInputTextWatcher)
 }
+
 /**
  * setup the Facet Component
  * @param state

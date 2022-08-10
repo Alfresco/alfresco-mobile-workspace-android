@@ -24,6 +24,9 @@ data class ContentEntry(
 ) : Parcelable {
 
     companion object {
+        /**
+         * return the ContentEntry obj after converting the data from ContentDataEntry obj
+         */
         fun with(data: ContentDataEntry): ContentEntry {
             return ContentEntry(
                 id = data.id ?: 0,

@@ -9,6 +9,9 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.browse.databinding.ViewListAttachmentRowBinding
 import com.alfresco.content.data.ContentEntry
 
+/**
+ * Marked as ListViewAttachmentRow class
+ */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewAttachmentRow @JvmOverloads constructor(
     context: Context,
@@ -18,6 +21,9 @@ class ListViewAttachmentRow @JvmOverloads constructor(
 
     private val binding = ViewListAttachmentRowBinding.inflate(LayoutInflater.from(context), this)
 
+    /**
+     * set the content data on list row
+     */
     @ModelProp
     fun setData(data: ContentEntry) {
         binding.tvName.text = data.name

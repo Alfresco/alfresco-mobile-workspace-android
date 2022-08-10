@@ -11,4 +11,5 @@
     <color name="color_search_filter">#212121</color>
     <color name="color_back_attachment">#EFF1F1</color>
     <color name="color_attachment_row">@color/white</color>
+    <color name="color_gray_1">#F4F4F4</color>
 </resources>

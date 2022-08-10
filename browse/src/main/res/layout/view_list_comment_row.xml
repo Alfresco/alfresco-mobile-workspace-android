@@ -43,8 +43,8 @@
             android:ellipsize="end"
             android:letterSpacing="0.04"
             android:minHeight="16dp"
-            android:textColor="@color/alfresco_gray_900_30"
             android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/color_on_surface_30"
             app:layout_constraintBottom_toBottomOf="@id/tv_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_name" />

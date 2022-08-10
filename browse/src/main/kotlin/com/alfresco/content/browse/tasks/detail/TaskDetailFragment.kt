@@ -116,6 +116,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
             }
             commentViewBinding.tvUserInitial.text = commentObj.userDetails?.nameInitial
             commentViewBinding.tvName.text = commentObj.userDetails?.name
+            commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_3) else "N/A"
             commentViewBinding.tvComment.text = commentObj.message
             commentViewBinding.tvComment.post {
                 commentViewBinding.tvComment.addReadMore()

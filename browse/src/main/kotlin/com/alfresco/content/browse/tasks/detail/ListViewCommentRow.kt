@@ -9,6 +9,9 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.data.CommentEntry
 
+/**
+ * Marked as ListViewCommentRow class
+ */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
 class ListViewCommentRow @JvmOverloads constructor(
     context: Context,
@@ -18,6 +21,9 @@ class ListViewCommentRow @JvmOverloads constructor(
 
     private val binding = ViewListCommentRowBinding.inflate(LayoutInflater.from(context), this)
 
+    /**
+     * set the comment row on list row
+     */
     @ModelProp
     fun setData(data: CommentEntry) {
         println("ListViewCommentRow.setData $data")

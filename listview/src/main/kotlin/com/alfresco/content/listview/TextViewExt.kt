@@ -3,9 +3,7 @@ package com.alfresco.content.listview
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.alfresco.content.listview.tasks.TaskPriority
@@ -49,20 +47,9 @@ fun TextView.addReadMore() {
 
         val spannable: Spannable = SpannableString(truncatedText)
 
-        val clickableSpan = object : ClickableSpan() {
-            override fun onClick(p0: View) {
-            }
-        }
-
         spannable.setSpan(
             ForegroundColorSpan(MaterialColors.getColor(this.context, R.attr.colorPrimary, Color.BLUE)),
             truncatedText.length - readMoreText.length,
-            truncatedText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannable.setSpan(
-            clickableSpan,
-            truncatedText.length - readMoreText.length + 3,
             truncatedText.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )

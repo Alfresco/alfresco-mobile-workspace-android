@@ -17,6 +17,9 @@ data class CommentEntry(
 ) : Parcelable {
 
     companion object {
+        /**
+         * return the CommentEntry obj after converting the data from CommentDataEntry obj
+         */
         fun with(data: CommentDataEntry): CommentEntry {
             return CommentEntry(
                 id = data.id ?: 0,

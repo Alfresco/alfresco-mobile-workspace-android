@@ -32,11 +32,17 @@ data class TaskDetailViewState(
         return copy(taskDetailObj = response)
     }
 
+    /**
+     * update the listComments params after getting the response from server.
+     */
     fun update(response: ResponseComments?): TaskDetailViewState {
         if (response == null) return this
         return copy(listComments = response.listComments)
     }
 
+    /**
+     * update the listContents params after getting the response from server.
+     */
     fun update(response: ResponseContents?): TaskDetailViewState {
         if (response == null) return this
         return copy(listContents = response.listContents)

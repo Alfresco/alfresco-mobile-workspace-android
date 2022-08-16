@@ -6,16 +6,16 @@
         android:id="@+id/cl_recent_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/tv_user_initial"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
             android:background="@drawable/bg_user"
             android:gravity="center"
             android:letterSpacing="0.04"
-            android:padding="4dp"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorControlNormal"
             app:layout_constraintStart_toStartOf="parent"

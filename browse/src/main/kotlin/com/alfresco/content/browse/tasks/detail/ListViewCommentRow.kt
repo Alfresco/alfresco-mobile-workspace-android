@@ -12,7 +12,7 @@ import com.alfresco.content.data.CommentEntry
 /**
  * Marked as ListViewCommentRow class
  */
-@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
+@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewCommentRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -28,6 +28,7 @@ class ListViewCommentRow @JvmOverloads constructor(
     fun setData(data: CommentEntry) {
         println("ListViewCommentRow.setData $data")
         binding.tvName.text = data.userDetails?.name
+        binding.tvUserInitial.text = data.userDetails?.nameInitial
         binding.tvComment.text = data.message
     }
 }

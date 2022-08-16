@@ -20,6 +20,8 @@ class TaskDetailViewModel(
     private val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
+    var path: TaskPath = TaskPath.TASK_DETAILS
+
     init {
         getTaskDetails()
         getComments()
@@ -46,7 +48,10 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getComments() = withState { state ->
+    /**
+     * gets all the comments from server by using give task Id.
+     */
+    fun getComments() = withState { state ->
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getComments.asFlow(

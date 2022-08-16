@@ -29,6 +29,9 @@ data class CommentEntry(
             )
         }
 
+        /**
+         * returns the CommentEntry obj by adding message
+         */
         fun addComment(message: String): CommentEntry {
             return CommentEntry(
                 message = message

@@ -93,6 +93,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute the add comment api
+     */
     fun addComment(message: String) = withState { state ->
         val list = state.listComments.toMutableList()
         val commentObj = CommentEntry.addComment(message)

@@ -28,5 +28,11 @@ data class CommentEntry(
                 userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails()
             )
         }
+
+        fun addComment(message: String): CommentEntry {
+            return CommentEntry(
+                message = message
+            )
+        }
     }
 }

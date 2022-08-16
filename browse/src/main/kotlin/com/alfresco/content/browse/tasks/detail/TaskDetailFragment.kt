@@ -67,6 +67,10 @@ class TaskDetailFragment : Fragment(), MavericksView {
         binding.tvCommentViewAll.setOnClickListener {
             taskDetailMainFragment.enterCommentsScreen()
         }
+        commentViewBinding.tvComment.setOnClickListener {
+            if (commentViewBinding.tvComment.lineCount == 4)
+                taskDetailMainFragment.enterCommentsScreen()
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

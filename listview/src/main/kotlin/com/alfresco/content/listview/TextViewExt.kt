@@ -41,10 +41,21 @@ fun TextView.addReadMore() {
     val readMoreText = "...Read more"
     val maxLineCount = 4
     if (layout.lineCount >= maxLineCount) {
-        val lineEndIndex = layout.getLineEnd(maxLineCount - 1)
+        var startCount = 0
+        val newString: StringBuilder = StringBuilder("")
+        for (i in 0 until maxLineCount) {
+            val lineEnd = layout.getLineEnd(i)
+            if (i != maxLineCount.minus(1))
+                newString.append(text.subSequence(startCount, lineEnd))
+            else {
+                if (lineEnd.minus(startCount) > readMoreText.length + 1)
+                    newString.append("${text.subSequence(startCount, lineEnd - readMoreText.length + 1).toString().replace("\n", "")}$readMoreText")
+                else newString.append("${text.subSequence(startCount, lineEnd).toString().replace("\n", "")}$readMoreText")
+            }
+            startCount = lineEnd
+        }
 
-        val truncatedText = "${text.subSequence(0, lineEndIndex - readMoreText.length + 1)}$readMoreText"
-
+        val truncatedText = newString.toString()
         val spannable: Spannable = SpannableString(truncatedText)
 
         spannable.setSpan(

@@ -10,7 +10,6 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailMainBinding
-import com.alfresco.content.browse.tasks.comments.CommentsFragment
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.ui.getDrawableForAttribute
@@ -47,12 +46,6 @@ class TaskDetailMainFragment : Fragment(), MavericksView {
     @OptIn(InternalMavericksApi::class)
     val viewModel: TaskDetailViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: FragmentTaskDetailMainBinding
-    private val taskDetailFragment by lazy {
-        childFragmentManager.findFragmentById(R.id.task_detail_fragment) as TaskDetailFragment
-    }
-    private val commentFragment by lazy {
-        childFragmentManager.findFragmentById(R.id.comment_fragment) as CommentsFragment
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,8 +84,12 @@ class TaskDetailMainFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() {
+        // TODO
     }
 
+    /**
+     * show the CommentsFragment Screen
+     */
     fun enterCommentsScreen() {
         binding.toolbar.title = resources.getString(R.string.title_comments)
         viewModel.path = TaskPath.COMMENTS
@@ -106,6 +103,9 @@ class TaskDetailMainFragment : Fragment(), MavericksView {
     }
 }
 
+/**
+ * Marked as TaskPath enum class
+ */
 enum class TaskPath {
     TASK_DETAILS,
     COMMENTS

@@ -1,7 +1,7 @@
-package com.alfresco.content.data
+package com.alfresco.content.data.payloads
 
 /**
- * Marked as TaskFilters
+ * Marked as TaskFiltersPayload
  */
 data class TaskFiltersPayload(
     val assignment: String = "involved",

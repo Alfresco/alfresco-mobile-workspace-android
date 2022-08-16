@@ -1,8 +1,11 @@
 package com.alfresco.content.data
 
+import com.alfresco.content.data.payloads.CommentPayload
+import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
+import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 
 /**
@@ -40,6 +43,13 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     )
 
     /**
+     * execute the get comments api and returns the response as ResponseComments obj
+     */
+    suspend fun addComments(taskID: String, payload: CommentPayload) = CommentEntry.with(
+        processService.addComment(taskID, includeComment(payload))
+    )
+
+    /**
      * execute the get contents api and returns the response as ResponseContents obj
      */
     suspend fun getContents(taskID: String) = ResponseContents.with(
@@ -55,6 +65,12 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             text = taskFilters.text,
             dueBefore = taskFilters.dueBefore,
             dueAfter = taskFilters.dueAfter
+        )
+    }
+
+    private fun includeComment(payload: CommentPayload): RequestComment {
+        return RequestComment(
+            message = payload.message
         )
     }
 

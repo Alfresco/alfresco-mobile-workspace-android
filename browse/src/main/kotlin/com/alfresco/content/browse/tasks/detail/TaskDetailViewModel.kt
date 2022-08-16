@@ -7,7 +7,9 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
 
@@ -82,6 +84,33 @@ class TaskDetailViewModel(
                     is Fail -> copy(requestContents = Fail(it.error))
                     is Success -> {
                         update(it()).copy(requestContents = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun addComment(message: String) = withState { state ->
+        val list = state.listComments.toMutableList()
+        val commentObj = CommentEntry.addComment(message)
+        list.add(commentObj)
+
+        setState { copy(listComments = list) }
+
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::addComments.asFlow(
+                state.taskDetailObj?.id ?: "", CommentPayload.with(message)
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestAddComment = Loading())
+                    is Fail -> copy(requestAddComment = Fail(it.error))
+                    is Success -> {
+                        getComments()
+                        copy(requestAddComment = Success(it()))
                     }
                     else -> {
                         this

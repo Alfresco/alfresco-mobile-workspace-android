@@ -10,8 +10,8 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentViewModel
 import com.alfresco.content.data.TaskFilterData
-import com.alfresco.content.data.TaskFiltersPayload
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow

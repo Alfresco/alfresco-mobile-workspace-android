@@ -13,7 +13,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
-import com.alfresco.content.browse.tasks.detail.TaskPath
 import com.alfresco.content.browse.tasks.detail.listViewCommentRow
 import com.alfresco.content.simpleController
 
@@ -26,10 +25,6 @@ class CommentsFragment : Fragment(), MavericksView {
     private lateinit var binding: FragmentCommentsBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,11 +36,6 @@ class CommentsFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.path = TaskPath.COMMENTS
-
-        binding.refreshLayout.setOnRefreshListener {
-            viewModel.getComments()
-        }
 
         binding.recyclerView.setController(epoxyController)
 
@@ -58,6 +48,19 @@ class CommentsFragment : Fragment(), MavericksView {
                 }
             }
         })
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.getComments()
+        }
+
+        binding.iconSend.setOnClickListener {
+            val message = binding.commentInput.text.toString().trim()
+            viewModel.addComment(message)
+            binding.commentInput.setText("")
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

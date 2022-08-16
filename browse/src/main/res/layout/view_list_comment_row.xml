@@ -10,9 +10,8 @@
 
         <TextView
             android:id="@+id/tv_user_initial"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_user"
             android:gravity="center"
             android:letterSpacing="0.04"
@@ -56,6 +55,7 @@
             android:layout_marginStart="16dp"
             android:letterSpacing="0.04"
             android:minHeight="32dp"
+            android:singleLine="false"
             android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_user_initial"

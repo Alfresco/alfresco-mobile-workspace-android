@@ -8,6 +8,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
 
@@ -19,6 +20,8 @@ class TaskDetailViewModel(
     val context: Context,
     private val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
+
+    var path: TaskPath = TaskPath.TASK_DETAILS
 
     init {
         getTaskDetails()
@@ -46,7 +49,10 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getComments() = withState { state ->
+    /**
+     * gets all the comments from server by using give task Id.
+     */
+    fun getComments() = withState { state ->
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getComments.asFlow(
@@ -77,6 +83,30 @@ class TaskDetailViewModel(
                     is Fail -> copy(requestContents = Fail(it.error))
                     is Success -> {
                         update(it()).copy(requestContents = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the add comment api
+     */
+    fun addComment(message: String) = withState { state ->
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::addComments.asFlow(
+                state.taskDetailObj?.id ?: "", CommentPayload.with(message)
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestAddComment = Loading())
+                    is Fail -> copy(requestAddComment = Fail(it.error))
+                    is Success -> {
+                        getComments()
+                        copy(requestAddComment = Success(it()))
                     }
                     else -> {
                         this

@@ -28,5 +28,16 @@ data class CommentEntry(
                 userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails()
             )
         }
+
+        /**
+         * returns the CommentEntry obj by adding message
+         */
+        fun addComment(message: String, userDetails: UserDetails): CommentEntry {
+            return CommentEntry(
+                message = message,
+                userDetails = userDetails,
+                created = ZonedDateTime.now()
+            )
+        }
     }
 }

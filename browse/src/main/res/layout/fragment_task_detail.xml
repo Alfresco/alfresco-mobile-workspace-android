@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_separator" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,9 +36,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
-                android:ellipsize="end"
                 android:letterSpacing="0.01"
-                android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -390,7 +382,7 @@
                     android:id="@+id/fl_recent_comment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="28dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -417,7 +409,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="12dp"
                     android:ellipsize="end"
                     android:letterSpacing="0.02"
                     android:lineSpacingExtra="3sp"
@@ -449,7 +441,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_comment">
@@ -473,6 +464,7 @@
                     android:text="@string/text_view_all"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorPrimary"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/tv_attachment_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_attachment_title" />
@@ -484,6 +476,7 @@
                     android:layout_marginTop="10dp"
                     android:letterSpacing="0.04"
                     android:textAppearance="?attr/textAppearanceCaption"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
 
@@ -498,11 +491,25 @@
                     android:paddingEnd="10dp"
                     android:paddingBottom="10dp"
                     android:splitMotionEvents="false"
+                    android:visibility="gone"
                     app:layoutManager="LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_no_of_attachments" />
+
+                <TextView
+                    android:id="@+id/tv_no_attached_files"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textAlignment="center"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/color_on_surface_60"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -32,9 +32,11 @@ data class CommentEntry(
         /**
          * returns the CommentEntry obj by adding message
          */
-        fun addComment(message: String): CommentEntry {
+        fun addComment(message: String, userDetails: UserDetails): CommentEntry {
             return CommentEntry(
-                message = message
+                message = message,
+                userDetails = userDetails,
+                created = ZonedDateTime.now()
             )
         }
     }

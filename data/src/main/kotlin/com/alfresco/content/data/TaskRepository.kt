@@ -14,6 +14,7 @@ import com.alfresco.process.models.RequestTaskFilters
 class TaskRepository(val session: Session = SessionManager.requireSession) {
 
     private val context get() = session.context
+    val userEmail get() = session.account.email
 
     private val processService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)

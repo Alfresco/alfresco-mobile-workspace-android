@@ -42,7 +42,7 @@ data class TaskEntry(
 }
 
 /**
- * Marked as Assignee class
+ * Marked as UserDetails class
  */
 @Parcelize
 data class UserDetails(
@@ -61,7 +61,7 @@ data class UserDetails(
     private val lastNameInitial: String
         get() = if (lastName.isNotEmpty()) lastName.substring(0, 1) else ""
 
-    val nameInitial = firstNameInitial + lastNameInitial
+    val nameInitial = (firstNameInitial + lastNameInitial).uppercase()
 
     companion object {
 

@@ -14,6 +14,7 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.browse.tasks.detail.listViewCommentRow
+import com.alfresco.content.hideSoftInput
 import com.alfresco.content.simpleController
 
 /**
@@ -57,6 +58,7 @@ class CommentsFragment : Fragment(), MavericksView {
         }
 
         binding.iconSend.setOnClickListener {
+            hideSoftInput()
             val message = binding.commentInput.text.toString().trim()
             viewModel.addComment(message)
             binding.commentInput.setText("")

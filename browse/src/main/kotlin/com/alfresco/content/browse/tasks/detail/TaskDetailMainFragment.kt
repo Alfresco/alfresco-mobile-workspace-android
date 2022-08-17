@@ -10,6 +10,8 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailMainBinding
+import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.ui.getDrawableForAttribute
@@ -91,6 +93,7 @@ class TaskDetailMainFragment : Fragment(), MavericksView {
      * show the CommentsFragment Screen
      */
     fun enterCommentsScreen() {
+        AnalyticsManager().screenViewEvent(PageView.Comments)
         binding.toolbar.title = resources.getString(R.string.title_comments)
         viewModel.path = TaskPath.COMMENTS
         binding.taskDetailFragment.visibility = View.GONE
@@ -98,6 +101,7 @@ class TaskDetailMainFragment : Fragment(), MavericksView {
     }
 
     private fun enterTaskDetailScreen() {
+        AnalyticsManager().screenViewEvent(PageView.TaskView)
         binding.toolbar.title = resources.getString(R.string.title_task_view)
         viewModel.path = TaskPath.TASK_DETAILS
     }

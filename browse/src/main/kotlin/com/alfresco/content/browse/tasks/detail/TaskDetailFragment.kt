@@ -16,9 +16,7 @@ import com.alfresco.content.DATE_FORMAT_3
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
-import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
-import com.alfresco.content.data.PageView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.addReadMore
@@ -38,7 +36,6 @@ class TaskDetailFragment : Fragment(), MavericksView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AnalyticsManager().screenViewEvent(PageView.TaskView)
         taskDetailMainFragment = this.parentFragment as TaskDetailMainFragment
     }
 
@@ -127,7 +124,19 @@ class TaskDetailFragment : Fragment(), MavericksView {
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
         if (state.listContents.isNotEmpty()) {
+            binding.recyclerViewAttachments.visibility = View.VISIBLE
+            binding.tvNoAttachedFiles.visibility = View.GONE
             binding.clAttachmentHeader.visibility = View.VISIBLE
+
+            if (state.listContents.size > 1)
+                binding.tvNoOfAttachments.visibility = View.VISIBLE
+            else binding.tvNoOfAttachments.visibility = View.GONE
+
+            if (state.listContents.size > 4)
+                binding.tvAttachmentViewAll.visibility = View.VISIBLE
+            else
+                binding.tvAttachmentViewAll.visibility = View.GONE
+
             binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
 
             state.listContents.take(4).forEach { obj ->
@@ -136,6 +145,12 @@ class TaskDetailFragment : Fragment(), MavericksView {
                     data(obj)
                 }
             }
-        } else binding.clAttachmentHeader.visibility = View.GONE
+        } else {
+            binding.recyclerViewAttachments.visibility = View.GONE
+            binding.tvAttachmentViewAll.visibility = View.GONE
+            binding.tvNoOfAttachments.visibility = View.GONE
+            binding.tvNoAttachedFiles.visibility = View.VISIBLE
+            binding.tvNoAttachedFiles.text = getString(R.string.no_attached_files)
+        }
     }
 }

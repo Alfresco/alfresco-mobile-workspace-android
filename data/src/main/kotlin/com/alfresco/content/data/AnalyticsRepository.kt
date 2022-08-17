@@ -124,6 +124,7 @@ enum class PageView(val value: String) {
     ShareExtension("page_view_share_extension"),
     Transfers("page_view_transfers"),
     TaskView("page_view_task_view"),
+    Comments("page_view_task_comments"),
     None("none")
 }
 

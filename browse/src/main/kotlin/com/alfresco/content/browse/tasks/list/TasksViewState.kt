@@ -6,7 +6,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
-import com.alfresco.content.data.TaskFiltersPayload
+import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.listview.tasks.TaskListViewState
 
 /**

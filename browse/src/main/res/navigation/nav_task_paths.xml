@@ -12,12 +12,21 @@
         <action
             android:id="@+id/action_nav_task_detail_to_nav_comments"
             app:destination="@id/nav_comments"/>
+
+        <action
+            android:id="@+id/action_nav_task_detail_to_nav_attached_files"
+            app:destination="@id/nav_attached_files"/>
     </fragment>
 
     <fragment
         android:id="@+id/nav_comments"
         android:name="com.alfresco.content.browse.tasks.comments.CommentsFragment"
         tools:layout="@layout/fragment_comments"/>
+
+    <fragment
+        android:id="@+id/nav_attached_files"
+        android:name="com.alfresco.content.browse.tasks.attachments.AttachedFilesFragment"
+        tools:layout="@layout/fragment_attached_files"/>
 
 
 </navigation>

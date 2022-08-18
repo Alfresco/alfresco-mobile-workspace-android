@@ -17,6 +17,7 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
+import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.PageView
@@ -73,6 +74,9 @@ class TaskDetailFragment : Fragment(), MavericksView {
         commentViewBinding.tvComment.setOnClickListener {
             if (commentViewBinding.tvComment.lineCount == 4)
                 navigateToCommentScreen()
+        }
+        binding.tvAttachmentViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
         }
     }
 

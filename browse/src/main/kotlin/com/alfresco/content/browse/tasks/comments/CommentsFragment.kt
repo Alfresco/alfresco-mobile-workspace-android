@@ -1,28 +1,34 @@
 package com.alfresco.content.browse.tasks.comments
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.parentFragmentViewModel
+import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.browse.tasks.detail.listViewCommentRow
+import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.simpleController
+import com.alfresco.ui.getDrawableForAttribute
+import com.google.android.material.textfield.TextInputEditText
 
 /**
  * Marked as CommentsFragment class
  */
 class CommentsFragment : Fragment(), MavericksView {
 
-    val viewModel: TaskDetailViewModel by parentFragmentViewModel()
+    val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentCommentsBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
@@ -38,11 +44,19 @@ class CommentsFragment : Fragment(), MavericksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        AnalyticsManager().screenViewEvent(PageView.Comments)
+
+        binding.toolbar.apply {
+            navigationContentDescription = getString(R.string.label_navigation_back)
+            navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
+            setNavigationOnClickListener { requireActivity().onBackPressed() }
+            title = resources.getString(R.string.title_comments)
+        }
+
         binding.recyclerView.setController(epoxyController)
 
         epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                println("CommentsFragment.onItemRangeInserted")
                 if (positionStart == 0) {
                     // @see: https://github.com/airbnb/epoxy/issues/224
                     binding.recyclerView.layoutManager?.scrollToPosition(0)
@@ -66,8 +80,15 @@ class CommentsFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        println("CommentsFragment.invalidate")
+
         if (state.requestComments.complete) {
             binding.refreshLayout.isRefreshing = false
+        }
+
+        if (viewModel.isAddComment) {
+            showKeyboard(binding.commentInput)
+            viewModel.isAddComment = false
         }
 
         epoxyController.requestModelBuild()
@@ -78,6 +99,13 @@ class CommentsFragment : Fragment(), MavericksView {
         } else {
             binding.tvNoOfComments.visibility = View.GONE
         }
+    }
+
+    private fun showKeyboard(edt: TextInputEditText) {
+        edt.requestFocus()
+        val imm: InputMethodManager =
+            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(edt, 0)
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->

@@ -34,6 +34,7 @@ class CommentsFragment : Fragment(), MavericksView {
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentCommentsBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
+    private var isScrolled = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,16 +98,19 @@ class CommentsFragment : Fragment(), MavericksView {
         })
 
         requireActivity().window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
+            println("CommentsFragment.setListeners 1")
             if (isAdded) {
                 val r = Rect()
                 requireActivity().window.decorView.getWindowVisibleDisplayFrame(r)
                 val height = requireActivity().window.decorView.height
-                if (height - r.bottom > height * 0.1399) {
+                if (height - r.bottom > height * 0.1399 && !isScrolled) {
+                    println("CommentsFragment.setListeners 2")
                     // keyboard is open
                     withState(viewModel) { state ->
                         binding.recyclerView.scrollToPosition(state.listComments.size - 1)
                     }
-                }
+                    isScrolled = true
+                } else isScrolled = false
             }
         }
     }

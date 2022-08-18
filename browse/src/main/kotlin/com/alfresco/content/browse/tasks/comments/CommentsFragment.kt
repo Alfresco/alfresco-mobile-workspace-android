@@ -1,7 +1,10 @@
 package com.alfresco.content.browse.tasks.comments
 
 import android.app.Activity
+import android.graphics.Rect
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +66,7 @@ class CommentsFragment : Fragment(), MavericksView {
                 }
             }
         })
+        updateSendIconView(binding.commentInput.text.toString())
         setListeners()
     }
 
@@ -77,11 +81,47 @@ class CommentsFragment : Fragment(), MavericksView {
             viewModel.addComment(message)
             binding.commentInput.setText("")
         }
+
+        binding.commentInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // no-op
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                updateSendIconView(s.toString())
+            }
+        })
+
+        requireActivity().window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
+            if (isAdded) {
+                val r = Rect()
+                requireActivity().window.decorView.getWindowVisibleDisplayFrame(r)
+                val height = requireActivity().window.decorView.height
+                if (height - r.bottom > height * 0.1399) {
+                    // keyboard is open
+                    withState(viewModel) { state ->
+                        binding.recyclerView.scrollToPosition(state.listComments.size - 1)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateSendIconView(text: String) {
+        if (text.isEmpty()) {
+            binding.iconSend.isSaveEnabled = false
+            binding.iconSend.setImageResource(R.drawable.icon_send_disabled)
+        } else {
+            binding.iconSend.isEnabled = true
+            binding.iconSend.setImageResource(R.drawable.icon_send)
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        println("CommentsFragment.invalidate")
-
         if (state.requestComments.complete) {
             binding.refreshLayout.isRefreshing = false
         }

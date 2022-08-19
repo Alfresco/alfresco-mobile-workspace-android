@@ -18,6 +18,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
+import com.alfresco.content.browse.tasks.detail.listViewCommentRow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput

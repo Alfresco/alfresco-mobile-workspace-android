@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.tasks.attachments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +11,23 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentAttachedFilesBinding
+import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.ContentEntry
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
+import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 
 /**
  * Marked as AttachedFilesFragment class
  */
-class AttachedFilesFragment : Fragment(), MavericksView {
+class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentAttachedFilesBinding
@@ -61,6 +67,8 @@ class AttachedFilesFragment : Fragment(), MavericksView {
         binding.refreshLayout.setOnRefreshListener {
             viewModel.getComments()
         }
+
+        viewModel.setListener(this)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -85,11 +93,25 @@ class AttachedFilesFragment : Fragment(), MavericksView {
                 listViewAttachmentRow {
                     id(obj.id)
                     data(obj)
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                 }
             }
-            binding.recyclerView.post {
-                binding.recyclerView.scrollToPosition(state.listContents.size - 1)
-            }
         }
+    }
+
+    private fun onItemClicked(contentEntry: ContentEntry) {
+        viewModel.execute(ActionOpenWith(Entry.convertTaskEntryToEntry(contentEntry)))
+    }
+
+    override fun onEntryCreated(entry: Entry) {
+        if (isAdded)
+            entry.mimeType?.let {
+                startActivity(
+                    Intent(requireActivity(), LocalPreviewActivity::class.java)
+                        .putExtra(LocalPreviewActivity.KEY_PATH, entry.path)
+                        .putExtra(LocalPreviewActivity.KEY_MIME_TYPE, it)
+                        .putExtra(LocalPreviewActivity.KEY_TITLE, entry.name)
+                )
+            }
     }
 }

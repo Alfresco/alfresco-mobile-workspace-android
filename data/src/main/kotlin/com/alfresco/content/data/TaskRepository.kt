@@ -7,6 +7,7 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
+import java.io.File
 
 /**
  * Marked as TaskRepository class
@@ -28,6 +29,12 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             includeFilters(filters)
         )
     )
+
+    fun contentUri(entry: Entry): String {
+        return "https://mobileapps.envalfresco.com/activiti-app/app/rest/content/${entry.id}/raw"
+    }
+
+    fun getHttpClient() = session.getHttpClient()
 
     /**
      * execute the task details api and returns the response as TaskDataEntry obj
@@ -73,6 +80,10 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         return RequestComment(
             message = payload.message
         )
+    }
+
+    fun getFileStorage(fileName: String): File {
+        return File(session.uploadDir, fileName)
     }
 
     /**

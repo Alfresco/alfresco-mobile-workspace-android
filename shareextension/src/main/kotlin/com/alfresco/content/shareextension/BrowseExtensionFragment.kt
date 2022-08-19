@@ -69,7 +69,7 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
-    override fun onFolderCreated(entry: Entry) {
+    override fun onEntryCreated(entry: Entry) {
         if (isAdded)
             onItemClicked(entry)
     }

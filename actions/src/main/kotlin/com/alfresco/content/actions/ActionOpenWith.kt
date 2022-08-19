@@ -9,6 +9,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.download.ContentDownloader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,6 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.OkHttpClient
 
 data class ActionOpenWith(
     override var entry: Entry,
@@ -37,18 +39,31 @@ data class ActionOpenWith(
             fetchRemoteFile(context)
         }
 
-        showFileChooserDialog(context, target)
-
-        return entry
+        return if (!entry.isProcessService) {
+            showFileChooserDialog(context, target)
+            entry
+        } else Entry.updateDownloadEntry(entry, target.path)
     }
 
     private suspend fun fetchRemoteFile(context: Context): File {
         val deferredDialog = showProgressDialogAsync(context)
 
-        val uri = BrowseRepository().contentUri(entry)
-        val output = File(context.cacheDir, entry.name)
+        val uri: String
+        val client: OkHttpClient?
+        val output: File
+
+        if (entry.isProcessService) {
+            uri = TaskRepository().contentUri(entry)
+            client = TaskRepository().getHttpClient()
+            output = TaskRepository().getFileStorage(entry.name)
+        } else {
+            uri = BrowseRepository().contentUri(entry)
+            client = null
+            output = File(context.cacheDir, entry.name)
+        }
+
         val deferredDownload = GlobalScope.async(Dispatchers.IO) {
-            ContentDownloader.downloadFileTo(uri, output.path)
+            ContentDownloader.downloadFileTo(uri, output.path, client)
         }
         this.deferredDownload.compareAndSet(null, deferredDownload)
 

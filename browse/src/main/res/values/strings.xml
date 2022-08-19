@@ -68,5 +68,6 @@
     <string name="no_attached_files">No Attached Files</string>
     <string name="empty_no_due_date">No due date</string>
     <string name="title_attached_files">Attached files</string>
+    <string name="text_complete">Complete</string>
 
 </resources>

@@ -13,5 +13,5 @@ dependencies {
 
     implementation libs.coroutines.core
     implementation libs.androidx.appcompat
-    implementation libs.okhttp.core
+    api libs.okhttp.core
 }

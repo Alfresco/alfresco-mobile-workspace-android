@@ -89,6 +89,14 @@ class Session(
         return retrofit.create(service)
     }
 
+    fun getHttpClient(): OkHttpClient {
+        return OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+    }
+
     /**
      * it creates the retrofit builder to access the process service apis
      */

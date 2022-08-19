@@ -9,8 +9,8 @@
     <color name="colorPriorityMedium">#FFDBCA</color>
     <color name="colorPriorityHigh">#FFDAD4</color>
     <color name="color_search_filter">@color/white</color>
-    <color name="color_back_attachment">#1FFFFFFF</color>
-    <color name="color_attachment_row">#B3FFFFFF</color>
+    <color name="color_back_attachment">#00000000</color>
+    <color name="color_attachment_row">#0A0A0A</color>
     <color name="color_bg_initial">#1FFFFFFF</color>
     <color name="color_text_initial">#FFFFFF</color>
 </resources>

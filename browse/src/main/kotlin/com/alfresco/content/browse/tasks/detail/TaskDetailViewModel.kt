@@ -21,7 +21,7 @@ class TaskDetailViewModel(
     private val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
-    var path: TaskPath = TaskPath.TASK_DETAILS
+    var isAddComment = false
 
     init {
         getTaskDetails()
@@ -33,7 +33,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getTaskDetails.asFlow(
-                state.taskDetailObj?.id ?: ""
+                state.parent?.id ?: ""
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -56,7 +56,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getComments.asFlow(
-                state.taskDetailObj?.id ?: ""
+                state.parent?.id ?: ""
             ).execute {
                 when (it) {
                     is Loading -> copy(requestComments = Loading())
@@ -76,7 +76,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getContents.asFlow(
-                state.taskDetailObj?.id ?: ""
+                state.parent?.id ?: ""
             ).execute {
                 when (it) {
                     is Loading -> copy(requestContents = Loading())
@@ -99,7 +99,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::addComments.asFlow(
-                state.taskDetailObj?.id ?: "", CommentPayload.with(message)
+                state.parent?.id ?: "", CommentPayload.with(message)
             ).execute {
                 when (it) {
                     is Loading -> copy(requestAddComment = Loading())
@@ -121,6 +121,6 @@ class TaskDetailViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: TaskDetailViewState
-        ) = TaskDetailViewModel(state, viewModelContext.activity, TaskRepository())
+        ) = TaskDetailViewModel(state, viewModelContext.activity(), TaskRepository())
     }
 }

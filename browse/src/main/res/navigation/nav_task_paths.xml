@@ -3,16 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_capture"
-    app:startDestination="@id/nav_task_detail_main">
+    app:startDestination="@id/nav_task_detail">
 
     <fragment
-        android:id="@+id/nav_task_detail_main"
-        android:name="com.alfresco.content.browse.tasks.detail.TaskDetailMainFragment"
-        tools:layout="@layout/fragment_task_detail_main">
-        <argument
-            android:name="taskObj"
-            app:argType="com.alfresco.content.data.TaskEntry" />
+        android:id="@+id/nav_task_detail"
+        android:name="com.alfresco.content.browse.tasks.detail.TaskDetailFragment"
+        tools:layout="@layout/fragment_task_detail">
+        <action
+            android:id="@+id/action_nav_task_detail_to_nav_comments"
+            app:destination="@id/nav_comments"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_comments"
+        android:name="com.alfresco.content.browse.tasks.comments.CommentsFragment"
+        tools:layout="@layout/fragment_comments"/>
 
 
 </navigation>

@@ -6,6 +6,7 @@ import java.util.Locale
 const val DATE_FORMAT_1 = "yyyy-MM-dd"
 const val DATE_FORMAT_2 = "dd-MMM-yyyy"
 const val DATE_FORMAT_3 = "dd MMM,yyyy"
+const val DATE_FORMAT_4 = "dd MMM yyyy"
 
 /**
  * returns formatted date string for query zone

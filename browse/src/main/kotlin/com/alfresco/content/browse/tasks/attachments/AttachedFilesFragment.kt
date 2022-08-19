@@ -45,7 +45,7 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsManager().screenViewEvent(PageView.Comments)
+        AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
 
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)

@@ -33,6 +33,9 @@ class ListViewAttachmentRow @JvmOverloads constructor(
         binding.iconFile.setImageDrawable(ResourcesCompat.getDrawable(resources, MimeType.with(data.mimeType).icon, context.theme))
     }
 
+    /**
+     * list row click listener
+     */
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)

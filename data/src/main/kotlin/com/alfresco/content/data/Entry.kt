@@ -354,7 +354,10 @@ data class Entry(
             ).withOfflineStatus()
         }
 
-        fun convertTaskEntryToEntry(contentEntry: ContentEntry): Entry {
+        /**
+         * return the Entry obj by using the contentEntry obj.
+         */
+        fun convertContentEntryToEntry(contentEntry: ContentEntry): Entry {
             return Entry(
                 id = contentEntry.id.toString(),
                 name = contentEntry.name,
@@ -363,6 +366,9 @@ data class Entry(
             )
         }
 
+        /**
+         * update entry after downloading content from process services.
+         */
         fun updateDownloadEntry(entry: Entry, path: String): Entry {
             return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path)
         }

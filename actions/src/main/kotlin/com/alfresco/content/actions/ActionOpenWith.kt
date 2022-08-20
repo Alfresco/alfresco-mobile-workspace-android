@@ -55,7 +55,7 @@ data class ActionOpenWith(
         if (entry.isProcessService) {
             uri = TaskRepository().contentUri(entry)
             client = TaskRepository().getHttpClient()
-            output = TaskRepository().getFileStorage(entry.name)
+            output = TaskRepository().getContentDirectory(entry.name)
         } else {
             uri = BrowseRepository().contentUri(entry)
             client = null

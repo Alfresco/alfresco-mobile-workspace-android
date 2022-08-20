@@ -30,6 +30,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     )
 
+    /**
+     * returns the content uri to fetch the content data from server
+     */
     fun contentUri(entry: Entry): String {
         return "https://mobileapps.envalfresco.com/activiti-app/app/rest/content/${entry.id}/raw"
     }
@@ -82,8 +85,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
-    fun getFileStorage(fileName: String): File {
-        return File(session.uploadDir, fileName)
+    /**
+     * return the content dir storage file to save the downloading content from server
+     */
+    fun getContentDirectory(fileName: String): File {
+        return File(session.contentDir, fileName)
     }
 
     /**

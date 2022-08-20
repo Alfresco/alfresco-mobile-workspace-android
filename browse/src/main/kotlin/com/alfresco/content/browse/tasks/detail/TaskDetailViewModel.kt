@@ -125,8 +125,14 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute "open with" action to download the content data
+     */
     fun execute(action: Action) = action.execute(context, GlobalScope)
 
+    /**
+     * adding listener to update the View after downloading the content
+     */
     fun setListener(listener: EntryListener) {
         this.entryListener = listener
     }

@@ -157,6 +157,8 @@ class Session(
     val uploadDir: File =
         createIfMissing(File(filesDir, UPLOAD_DIR))
 
+    val contentDir: File = createIfMissing(File(filesDir, CONTENT_DIR))
+
     private fun createIfMissing(dir: File): File {
         if (!dir.exists()) {
             dir.mkdir()
@@ -167,5 +169,6 @@ class Session(
     private companion object {
         const val CAPTURE_DIR = "capture"
         const val UPLOAD_DIR = "upload"
+        const val CONTENT_DIR = "content"
     }
 }

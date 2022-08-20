@@ -100,7 +100,7 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun onItemClicked(contentEntry: ContentEntry) {
-        viewModel.execute(ActionOpenWith(Entry.convertTaskEntryToEntry(contentEntry)))
+        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
     }
 
     override fun onEntryCreated(entry: Entry) {

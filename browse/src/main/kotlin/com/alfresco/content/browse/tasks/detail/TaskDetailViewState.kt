@@ -13,7 +13,7 @@ import com.alfresco.content.data.TaskEntry
  * Marked as TaskDetailViewState class
  */
 data class TaskDetailViewState(
-    val taskDetailObj: TaskEntry? = null,
+    val parent: TaskEntry?,
     val listComments: List<CommentEntry> = emptyList(),
     val listContents: List<ContentEntry> = emptyList(),
     val request: Async<TaskEntry> = Uninitialized,
@@ -22,15 +22,14 @@ data class TaskDetailViewState(
     val requestAddComment: Async<CommentEntry> = Uninitialized
 ) : MavericksState {
 
-    constructor(args: TaskDetailsArgs) : this(taskDetailObj = args.taskObj)
-
+    constructor(target: TaskEntry) : this(parent = target)
     /**
      * update the taskDetailObj params after getting the response from server.
      */
     fun update(response: TaskEntry?): TaskDetailViewState {
         if (response == null) return this
 
-        return copy(taskDetailObj = response)
+        return copy(parent = response)
     }
 
     /**

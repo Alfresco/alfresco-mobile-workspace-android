@@ -38,6 +38,8 @@ fun TextView.updatePriorityView(priority: Int) {
  * It adds the read more text if line exceeds more than 4 lines
  */
 fun TextView.addReadMore() {
+    if (layout == null)
+        return
     val readMoreText = "...Read more"
     val maxLineCount = 4
     if (layout.lineCount >= maxLineCount) {

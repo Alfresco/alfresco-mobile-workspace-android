@@ -8,11 +8,11 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.tasks.TaskViewerActivity
-import com.alfresco.content.browse.tasks.detail.TaskDetailsArgs
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -150,7 +150,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override fun onItemClicked(entry: TaskEntry) {
         startActivity(
             Intent(requireActivity(), TaskViewerActivity::class.java)
-                .putExtra(TaskDetailsArgs.TASK_OBJ, entry)
+                .putExtra(Mavericks.KEY_ARG, entry)
         )
     }
 }

@@ -37,6 +37,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         return "https://mobileapps.envalfresco.com/activiti-app/app/rest/content/${entry.id}/raw"
     }
 
+    /**
+     * return the OkHttpClient obj which is getting from Session class
+     */
     fun getHttpClient() = session.getHttpClient()
 
     /**

@@ -89,6 +89,9 @@ class Session(
         return retrofit.create(service)
     }
 
+    /**
+     * return the OkHttpClient obj
+     */
     fun getHttpClient(): OkHttpClient {
         return OkHttpClient()
             .newBuilder()

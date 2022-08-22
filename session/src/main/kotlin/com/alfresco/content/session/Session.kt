@@ -169,9 +169,10 @@ class Session(
         return dir
     }
 
-    fun isFileExists(dir: File): Boolean {
-        return dir.exists()
-    }
+    /**
+     * return true if file exists on device otherwise false
+     */
+    fun isFileExists(dir: File): Boolean = dir.exists()
 
     private companion object {
         const val CAPTURE_DIR = "capture"

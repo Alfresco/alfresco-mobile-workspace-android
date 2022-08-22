@@ -75,7 +75,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         }
     }
 
-    override fun onFolderCreated(entry: Entry) {
+    override fun onEntryCreated(entry: Entry) {
         TODO("Not yet implemented")
     }
 

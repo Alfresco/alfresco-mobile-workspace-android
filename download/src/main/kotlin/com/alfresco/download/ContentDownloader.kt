@@ -22,10 +22,10 @@ object ContentDownloader {
 
     const val FILE_PROVIDER_AUTHORITY = "com.alfresco.content.fileprovider"
 
-    suspend fun downloadFileTo(uri: String, outputPath: String) {
+    suspend fun downloadFileTo(uri: String, outputPath: String, httpClient: OkHttpClient? = null) {
         Logger.d("Downloading: $uri to: $outputPath")
         val req = Request.Builder().get().url(uri).build()
-        val client = OkHttpClient()
+        val client = httpClient ?: OkHttpClient()
         client.newCall(req).downloadAndSaveTo(File(outputPath))
     }
 

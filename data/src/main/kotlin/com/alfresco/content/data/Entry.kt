@@ -69,6 +69,7 @@ data class Entry(
     val isExtension: Boolean = false,
     val totalCount: Int = 0,
     val isTotalEntry: Boolean = false,
+    val isProcessService: Boolean = false,
     @Transient
     val parentPaths: MutableList<String> = mutableListOf()
 ) : Parcelable {
@@ -351,6 +352,25 @@ data class Entry(
                 canDelete = false,
                 isTrashed = true
             ).withOfflineStatus()
+        }
+
+        /**
+         * return the Entry obj by using the contentEntry obj.
+         */
+        fun convertContentEntryToEntry(contentEntry: ContentEntry): Entry {
+            return Entry(
+                id = contentEntry.id.toString(),
+                name = contentEntry.name,
+                mimeType = contentEntry.mimeType,
+                isProcessService = true
+            )
+        }
+
+        /**
+         * update entry after downloading content from process services.
+         */
+        fun updateDownloadEntry(entry: Entry, path: String): Entry {
+            return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path)
         }
 
         private fun PathInfo.formattedString(): String? {

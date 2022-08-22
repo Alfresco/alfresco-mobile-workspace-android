@@ -31,4 +31,10 @@ class LocalPreviewActivity : AppCompatActivity() {
             fragment.arguments = intent.extras
         }
     }
+
+    companion object {
+        const val KEY_PATH = "path"
+        const val KEY_MIME_TYPE = "mimeType"
+        const val KEY_TITLE = "title"
+    }
 }

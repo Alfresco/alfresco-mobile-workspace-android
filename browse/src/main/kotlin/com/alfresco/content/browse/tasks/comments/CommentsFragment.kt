@@ -18,7 +18,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
-import com.alfresco.content.browse.tasks.detail.listViewCommentRow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput
@@ -98,13 +97,11 @@ class CommentsFragment : Fragment(), MavericksView {
         })
 
         requireActivity().window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
-            println("CommentsFragment.setListeners 1")
             if (isAdded) {
                 val r = Rect()
                 requireActivity().window.decorView.getWindowVisibleDisplayFrame(r)
                 val height = requireActivity().window.decorView.height
                 if (height - r.bottom > height * 0.1399 && !isScrolled) {
-                    println("CommentsFragment.setListeners 2")
                     // keyboard is open
                     withState(viewModel) { state ->
                         binding.recyclerView.scrollToPosition(state.listComments.size - 1)

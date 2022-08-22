@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.tasks.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +15,23 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
+import com.alfresco.content.browse.preview.LocalPreviewActivity
+import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_MIME_TYPE
+import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_PATH
+import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_TITLE
+import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
+import com.alfresco.content.data.ContentEntry
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getDateZoneFormat
+import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addReadMore
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.simpleController
@@ -30,7 +40,7 @@ import com.alfresco.ui.getDrawableForAttribute
 /**
  * Marked as TaskDetailFragment class
  */
-class TaskDetailFragment : Fragment(), MavericksView {
+class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentTaskDetailBinding
@@ -63,6 +73,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
     }
 
     private fun setListeners() {
+        viewModel.setListener(this)
         binding.tvAddComment.setOnClickListener {
             viewModel.isAddComment = true
             navigateToCommentScreen()
@@ -73,6 +84,9 @@ class TaskDetailFragment : Fragment(), MavericksView {
         commentViewBinding.tvComment.setOnClickListener {
             if (commentViewBinding.tvComment.lineCount == 4)
                 navigateToCommentScreen()
+        }
+        binding.tvAttachmentViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
         }
     }
 
@@ -156,6 +170,7 @@ class TaskDetailFragment : Fragment(), MavericksView {
                 listViewAttachmentRow {
                     id(obj.id)
                     data(obj)
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                 }
             }
         } else {
@@ -165,5 +180,21 @@ class TaskDetailFragment : Fragment(), MavericksView {
             binding.tvNoAttachedFilesError.visibility = View.VISIBLE
             binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
         }
+    }
+
+    private fun onItemClicked(contentEntry: ContentEntry) {
+        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
+    }
+
+    override fun onEntryCreated(entry: Entry) {
+        if (isAdded)
+            entry.mimeType?.let {
+                startActivity(
+                    Intent(requireActivity(), LocalPreviewActivity::class.java)
+                        .putExtra(KEY_PATH, entry.path)
+                        .putExtra(KEY_MIME_TYPE, it)
+                        .putExtra(KEY_TITLE, entry.name)
+                )
+            }
     }
 }

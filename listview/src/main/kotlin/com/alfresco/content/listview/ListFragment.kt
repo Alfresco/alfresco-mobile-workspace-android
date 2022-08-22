@@ -64,7 +64,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     private val _sharedFlow = MutableSharedFlow<Entry>()
     val sharedFlow = _sharedFlow.asSharedFlow()
-    private var folderListener: FolderCreatedListener? = null
+    private var folderListener: EntryListener? = null
 
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
@@ -88,7 +88,7 @@ abstract class ListViewModel<S : ListViewState>(
     private fun onCreateFolder(entry: Entry) = entry.run {
         refresh()
         if (entry.isFolder)
-            folderListener?.onFolderCreated(entry)
+            folderListener?.onEntryCreated(entry)
     }
 
     private fun onMove(entry: Entry) = entry.run {
@@ -112,7 +112,7 @@ abstract class ListViewModel<S : ListViewState>(
     /**
      * Set the listener to be notified when a new folder created and move to created folder sceen
      */
-    fun setListener(listener: FolderCreatedListener) {
+    fun setListener(listener: EntryListener) {
         folderListener = listener
     }
 
@@ -130,7 +130,7 @@ abstract class ListViewModel<S : ListViewState>(
  * Mark as ListFragment
  */
 abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: Int = R.layout.fragment_list) :
-    Fragment(layoutID), MavericksView, FolderCreatedListener {
+    Fragment(layoutID), MavericksView, EntryListener {
     abstract val viewModel: VM
 
     lateinit var loadingAnimation: View

@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/icon_file"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_file_pdf_40"
+                android:layout_marginStart="12dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_name" />

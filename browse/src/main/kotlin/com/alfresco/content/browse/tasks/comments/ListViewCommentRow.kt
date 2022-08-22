@@ -1,4 +1,4 @@
-package com.alfresco.content.browse.tasks.detail
+package com.alfresco.content.browse.tasks.comments
 
 import android.content.Context
 import android.util.AttributeSet

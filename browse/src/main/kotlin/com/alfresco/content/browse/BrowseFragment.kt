@@ -174,10 +174,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
         if (entry.isUpload)
             entry.mimeType?.let {
-                findNavController().navigateToLocalPreview(
-                    it,
-                    entry.path.toString(), entry.name
-                )
+                findNavController().navigateToLocalPreview(it, entry.path.toString(), entry.name)
             }
         else
             findNavController().navigateTo(entry)
@@ -215,7 +212,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    override fun onFolderCreated(entry: Entry) {
+    override fun onEntryCreated(entry: Entry) {
         if (isAdded)
             onItemClicked(entry)
     }

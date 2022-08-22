@@ -90,6 +90,17 @@ class Session(
     }
 
     /**
+     * return the OkHttpClient obj
+     */
+    fun getHttpClient(): OkHttpClient {
+        return OkHttpClient()
+            .newBuilder()
+            .addInterceptor(authInterceptor)
+            .addOptionalInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    /**
      * it creates the retrofit builder to access the process service apis
      */
     fun <T> createProcessService(service: Class<T>): T {
@@ -149,6 +160,8 @@ class Session(
     val uploadDir: File =
         createIfMissing(File(filesDir, UPLOAD_DIR))
 
+    val contentDir: File = createIfMissing(File(filesDir, CONTENT_DIR))
+
     private fun createIfMissing(dir: File): File {
         if (!dir.exists()) {
             dir.mkdir()
@@ -156,8 +169,14 @@ class Session(
         return dir
     }
 
+    /**
+     * return true if file exists on device otherwise false
+     */
+    fun isFileExists(dir: File): Boolean = dir.exists()
+
     private companion object {
         const val CAPTURE_DIR = "capture"
         const val UPLOAD_DIR = "upload"
+        const val CONTENT_DIR = "content"
     }
 }

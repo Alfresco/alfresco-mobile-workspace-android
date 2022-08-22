@@ -69,8 +69,8 @@ exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", versi
 exoplayer-ui = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoplayer" }
 
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.0.0"
-firebase-crashlytics-core = "com.google.firebase:firebase-crashlytics-ktx:18.0.0"
-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.6.1"
+firebase-crashlytics-core = "com.google.firebase:firebase-crashlytics-ktx:18.2.11"
+firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.9.0"
 
 google-material = "com.google.android.material:material:1.6.1"
 

@@ -51,7 +51,7 @@ fun TextView.addReadMore() {
                 newString.append(text.subSequence(startCount, lineEnd))
             else {
                 if (lineEnd.minus(startCount) > readMoreText.length + 1)
-                    newString.append("${text.subSequence(startCount, lineEnd - readMoreText.length + 1).toString().replace("\n", "")}$readMoreText")
+                    newString.append("${text.subSequence(startCount, lineEnd - (readMoreText.length + 1)).toString().replace("\n", "")}$readMoreText")
                 else newString.append("${text.subSequence(startCount, lineEnd).toString().replace("\n", "")}$readMoreText")
             }
             startCount = lineEnd
@@ -69,6 +69,6 @@ fun TextView.addReadMore() {
 
         setText(spannable, TextView.BufferType.SPANNABLE)
 
-        maxLines = maxLineCount
+        maxLines = 5
     }
 }

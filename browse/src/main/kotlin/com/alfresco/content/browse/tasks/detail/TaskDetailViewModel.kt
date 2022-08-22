@@ -9,11 +9,13 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
+import java.io.File
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -128,7 +130,12 @@ class TaskDetailViewModel(
     /**
      * execute "open with" action to download the content data
      */
-    fun execute(action: Action) = action.execute(context, GlobalScope)
+    fun execute(action: Action) {
+        val file = File(repository.session.contentDir, action.entry.name)
+        if (repository.session.isFileExists(file)) {
+            entryListener?.onEntryCreated(Entry.updateDownloadEntry(action.entry, file.path))
+        } else action.execute(context, GlobalScope)
+    }
 
     /**
      * adding listener to update the View after downloading the content

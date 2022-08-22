@@ -169,6 +169,10 @@ class Session(
         return dir
     }
 
+    fun isFileExists(dir: File): Boolean {
+        return dir.exists()
+    }
+
     private companion object {
         const val CAPTURE_DIR = "capture"
         const val UPLOAD_DIR = "upload"

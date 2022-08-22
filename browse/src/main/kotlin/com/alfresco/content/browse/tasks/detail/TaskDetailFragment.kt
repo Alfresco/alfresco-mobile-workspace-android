@@ -183,6 +183,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun onItemClicked(contentEntry: ContentEntry) {
+
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
     }
 

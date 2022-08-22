@@ -75,6 +75,7 @@ firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2
 google-material = "com.google.android.material:material:1.6.1"
 
 google-playservices-location = "com.google.android.gms:play-services-location:20.0.0"
+google-playservices-basement = "com.google.android.gms:play-services-basement:18.1.0"
 
 google-services-gradle = "com.google.gms:google-services:4.3.13"
 

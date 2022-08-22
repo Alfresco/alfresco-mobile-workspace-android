@@ -116,6 +116,7 @@ dependencies {
 
     playStoreImplementation libs.firebase.analytics
     playStoreImplementation libs.firebase.crashlytics.core
+    playStoreImplementation libs.google.playservices.basement
 
     // Testing
     testImplementation libs.junit

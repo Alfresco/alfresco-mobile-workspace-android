@@ -76,7 +76,7 @@ google-material = "com.google.android.material:material:1.6.1"
 
 google-playservices-location = "com.google.android.gms:play-services-location:20.0.0"
 
-google-services-gradle = "com.google.gms:google-services:4.3.8"
+google-services-gradle = "com.google.gms:google-services:4.3.13"
 
 gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.38.0"
 

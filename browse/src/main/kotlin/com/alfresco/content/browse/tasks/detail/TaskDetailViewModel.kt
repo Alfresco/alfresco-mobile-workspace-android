@@ -153,6 +153,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * update the task list after complete the task
+     */
     fun updateTaskList() {
         viewModelScope.launch {
             EventBus.default.send(UpdateTasksData(isRefresh = true))

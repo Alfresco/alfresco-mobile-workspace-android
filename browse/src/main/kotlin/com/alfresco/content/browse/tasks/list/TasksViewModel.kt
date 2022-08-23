@@ -31,7 +31,10 @@ class TasksViewModel(
     init {
         setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
         fetchInitial()
-        viewModelScope.on<UpdateTasksData> { fetchInitial() }
+        viewModelScope.on<UpdateTasksData> {
+            if (it.isRefresh)
+                fetchInitial()
+        }
     }
 
     override fun refresh() = fetchInitial()
@@ -188,4 +191,7 @@ class TasksViewModel(
     }
 }
 
+/**
+ * Mark as UpdateTasksData data class
+ */
 data class UpdateTasksData(val isRefresh: Boolean)

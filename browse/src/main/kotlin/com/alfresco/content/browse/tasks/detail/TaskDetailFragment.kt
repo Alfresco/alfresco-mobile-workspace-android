@@ -88,6 +88,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.tvAttachmentViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
         }
+
+        binding.completeButton.setOnClickListener {
+            binding.completeButton.isEnabled = false
+            viewModel.completeTask()
+        }
     }
 
     private fun navigateToCommentScreen() {
@@ -98,11 +103,21 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
-                (state.requestContents is Loading && state.listContents.isEmpty())
+                (state.requestContents is Loading && state.listContents.isEmpty()) ||
+                (state.requestCompleteTask is Loading)
 
         setData(state.parent)
 
         setCommentData(state.listComments)
+
+        if (state.request.complete)
+            binding.completeButton.visibility = if (state.parent?.endDate == null) View.VISIBLE else View.GONE
+
+        if (state.requestCompleteTask.complete) {
+            if (state.requestCompleteTask.invoke()?.code() != 200)
+                binding.completeButton.isEnabled = true
+            else requireActivity().onBackPressed()
+        }
 
         if (state.requestContents.complete)
             epoxyAttachmentController.requestModelBuild()

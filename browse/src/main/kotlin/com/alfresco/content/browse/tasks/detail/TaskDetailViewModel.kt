@@ -128,6 +128,30 @@ class TaskDetailViewModel(
     }
 
     /**
+     * execute the complete task api
+     */
+    fun completeTask() = withState { state ->
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::completeTask.asFlow(
+                state.parent?.id ?: ""
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestCompleteTask = Loading())
+                    is Fail -> copy(requestCompleteTask = Fail(it.error))
+                    is Success -> {
+                        getComments()
+                        copy(requestCompleteTask = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * execute "open with" action to download the content data
      */
     fun execute(action: Action) {

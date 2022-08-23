@@ -81,9 +81,8 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.tvCommentViewAll.setOnClickListener {
             navigateToCommentScreen()
         }
-        commentViewBinding.tvComment.setOnClickListener {
-            if (commentViewBinding.tvComment.lineCount == 4)
-                navigateToCommentScreen()
+        commentViewBinding.clRecentComment.setOnClickListener {
+            navigateToCommentScreen()
         }
         binding.tvAttachmentViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)

@@ -69,5 +69,9 @@
     <string name="empty_no_due_date">No due date</string>
     <string name="title_attached_files">Attached files</string>
     <string name="text_complete">Complete</string>
+    <string name="dialog_title_complete_task">Complete Task</string>
+    <string name="dialog_message_complete_task">Do you want to complete the task?</string>
+    <string name="dialog_negative_button_complete_task">Cancel</string>
+    <string name="dialog_positive_button_complete_task">Complete</string>
 
 </resources>

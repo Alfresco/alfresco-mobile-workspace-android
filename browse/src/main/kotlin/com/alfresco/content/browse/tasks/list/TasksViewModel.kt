@@ -15,6 +15,7 @@ import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.on
 import java.text.SimpleDateFormat
 import kotlinx.coroutines.launch
 
@@ -30,6 +31,7 @@ class TasksViewModel(
     init {
         setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
         fetchInitial()
+        viewModelScope.on<UpdateTasksData> { fetchInitial() }
     }
 
     override fun refresh() = fetchInitial()
@@ -185,3 +187,5 @@ class TasksViewModel(
         ) = TasksViewModel(state, viewModelContext.activity, TaskRepository())
     }
 }
+
+data class UpdateTasksData(val isRefresh: Boolean)

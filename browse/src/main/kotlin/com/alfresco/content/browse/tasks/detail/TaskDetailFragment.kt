@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,8 @@ import com.alfresco.content.listview.addReadMore
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 /**
  * Marked as TaskDetailFragment class
@@ -46,6 +49,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private lateinit var binding: FragmentTaskDetailBinding
     private lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
+    private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,8 +93,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         }
 
         binding.completeButton.setOnClickListener {
-            binding.completeButton.isEnabled = false
-            viewModel.completeTask()
+            taskCompletePrompt()
         }
     }
 
@@ -109,13 +112,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         setCommentData(state.listComments)
 
-        if (state.request.complete)
-            binding.completeButton.visibility = if (state.parent?.endDate == null) View.VISIBLE else View.GONE
+        binding.completeButton.visibility = if (state.parent?.endDate == null) View.VISIBLE else View.GONE
 
-        if (state.requestCompleteTask.complete) {
-            if (state.requestCompleteTask.invoke()?.code() != 200)
-                binding.completeButton.isEnabled = true
-            else requireActivity().onBackPressed()
+        if (state.requestCompleteTask.invoke()?.code() == 200) {
+            viewModel.updateTaskList()
+            requireActivity().onBackPressed()
         }
 
         if (state.requestContents.complete)
@@ -159,6 +160,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvStatusValue.text = if (dataObj.endDate == null) getString(R.string.status_active) else getString(R.string.status_completed)
             binding.tvIdentifierValue.text = dataObj.id
+
+            if (dataObj.endDate != null) {
+                binding.tvAddComment.visibility = View.GONE
+                binding.iconAddCommentUser.visibility = View.GONE
+            }
         }
     }
 
@@ -198,6 +204,20 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     private fun onItemClicked(contentEntry: ContentEntry) {
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
+    }
+
+    private fun taskCompletePrompt() {
+        val oldDialog = taskCompleteConfirmationDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_complete_task))
+            .setMessage(getString(R.string.dialog_message_complete_task))
+            .setNegativeButton(getString(R.string.dialog_negative_button_complete_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_complete_task)) { _, _ ->
+                viewModel.completeTask()
+            }
+            .show()
+        taskCompleteConfirmationDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: Entry) {

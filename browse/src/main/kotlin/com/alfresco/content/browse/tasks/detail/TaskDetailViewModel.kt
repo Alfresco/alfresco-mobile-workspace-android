@@ -9,11 +9,13 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
+import com.alfresco.content.browse.tasks.list.UpdateTasksData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import java.io.File
 import kotlinx.coroutines.GlobalScope
@@ -140,7 +142,7 @@ class TaskDetailViewModel(
                     is Loading -> copy(requestCompleteTask = Loading())
                     is Fail -> copy(requestCompleteTask = Fail(it.error))
                     is Success -> {
-                        getComments()
+
                         copy(requestCompleteTask = Success(it()))
                     }
                     else -> {
@@ -148,6 +150,12 @@ class TaskDetailViewModel(
                     }
                 }
             }
+        }
+    }
+
+    fun updateTaskList() {
+        viewModelScope.launch {
+            EventBus.default.send(UpdateTasksData(isRefresh = true))
         }
     }
 

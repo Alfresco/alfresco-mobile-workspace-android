@@ -67,6 +67,14 @@ class CommentsFragment : Fragment(), MavericksView {
             }
         })
         updateSendIconView(binding.commentInput.text.toString())
+
+        withState(viewModel) { state ->
+            when {
+                state.parent?.endDate != null -> binding.clAddComment.visibility = View.GONE
+                else -> binding.clAddComment.visibility = View.VISIBLE
+            }
+        }
+
         setListeners()
     }
 

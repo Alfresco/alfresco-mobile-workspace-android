@@ -49,15 +49,19 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
+    private var viewLayout: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTaskDetailBinding.inflate(inflater, container, false)
-        commentViewBinding = ViewListCommentRowBinding.bind(binding.root)
-        return binding.root
+        if (viewLayout == null) {
+            binding = FragmentTaskDetailBinding.inflate(inflater, container, false)
+            commentViewBinding = ViewListCommentRowBinding.bind(binding.root)
+            viewLayout = binding.root
+        }
+        return viewLayout as View
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

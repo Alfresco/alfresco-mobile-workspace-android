@@ -55,7 +55,7 @@ data class ActionOpenWith(
         if (entry.isProcessService) {
             uri = TaskRepository().contentUri(entry)
             client = TaskRepository().getHttpClient()
-            output = TaskRepository().getContentDirectory(entry.name)
+            output = TaskRepository().getContentDirectory(entry.fileName)
         } else {
             uri = BrowseRepository().contentUri(entry)
             client = null
@@ -110,6 +110,7 @@ data class ActionOpenWith(
                     .setNegativeButton(
                         context.getString(R.string.action_open_with_cancel)
                     ) { _, _ ->
+
                         deferredDownload.get()?.cancel()
                     }
                     .setCancelable(false)

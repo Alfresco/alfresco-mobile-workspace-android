@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.tasks.comments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
+import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput
@@ -67,9 +69,15 @@ class CommentsFragment : Fragment(), MavericksView {
             }
         })
         updateSendIconView(binding.commentInput.text.toString())
+
+        withState(viewModel) { state ->
+            binding.clAddComment.visibility = if (viewModel.isTaskCompleted(state)) View.GONE else View.VISIBLE
+        }
+
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.refreshLayout.setOnRefreshListener {
             viewModel.getComments()
@@ -109,6 +117,11 @@ class CommentsFragment : Fragment(), MavericksView {
                     isScrolled = true
                 } else isScrolled = false
             }
+        }
+
+        binding.recyclerView.setOnTouchListener { _, _ ->
+            hideSoftInput()
+            false
         }
     }
 

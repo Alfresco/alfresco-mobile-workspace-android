@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,13 +30,14 @@ import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
-import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addReadMore
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 /**
  * Marked as TaskDetailFragment class
@@ -46,6 +48,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private lateinit var binding: FragmentTaskDetailBinding
     private lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
+    private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,12 +84,15 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.tvCommentViewAll.setOnClickListener {
             navigateToCommentScreen()
         }
-        commentViewBinding.tvComment.setOnClickListener {
-            if (commentViewBinding.tvComment.lineCount == 4)
-                navigateToCommentScreen()
+        commentViewBinding.clRecentComment.setOnClickListener {
+            navigateToCommentScreen()
         }
         binding.tvAttachmentViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
+        }
+
+        binding.completeButton.setOnClickListener {
+            taskCompletePrompt()
         }
     }
 
@@ -98,11 +104,19 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
-                (state.requestContents is Loading && state.listContents.isEmpty())
+                (state.requestContents is Loading && state.listContents.isEmpty()) ||
+                (state.requestCompleteTask is Loading)
 
-        setData(state.parent)
+        setData(state)
 
         setCommentData(state.listComments)
+
+        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
+
+        if (state.requestCompleteTask.invoke()?.code() == 200) {
+            viewModel.updateTaskList()
+            requireActivity().onBackPressed()
+        }
 
         if (state.requestContents.complete)
             epoxyAttachmentController.requestModelBuild()
@@ -136,15 +150,22 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
-    private fun setData(dataObj: TaskEntry?) {
+    private fun setData(state: TaskDetailViewState) {
+        val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTaskTitle.text = dataObj.name
             binding.tvDueDateValue.text =
                 if (dataObj.dueDate != null) dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else requireContext().getString(R.string.empty_no_due_date)
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
-            binding.tvStatusValue.text = if (dataObj.endDate == null) getString(R.string.status_active) else getString(R.string.status_completed)
             binding.tvIdentifierValue.text = dataObj.id
+
+            binding.tvStatusValue.text = if (viewModel.isTaskCompleted(state)) {
+                binding.tvAddComment.visibility = View.GONE
+                binding.iconAddCommentUser.visibility = View.GONE
+                if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
+                getString(R.string.status_completed)
+            } else getString(R.string.status_active)
         }
     }
 
@@ -184,6 +205,20 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     private fun onItemClicked(contentEntry: ContentEntry) {
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
+    }
+
+    private fun taskCompletePrompt() {
+        val oldDialog = taskCompleteConfirmationDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_complete_task))
+            .setMessage(getString(R.string.dialog_message_complete_task))
+            .setNegativeButton(getString(R.string.dialog_negative_button_complete_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_complete_task)) { _, _ ->
+                viewModel.completeTask()
+            }
+            .show()
+        taskCompleteConfirmationDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: Entry) {

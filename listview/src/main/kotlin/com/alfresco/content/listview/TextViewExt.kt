@@ -41,7 +41,9 @@ fun TextView.addReadMore() {
     if (layout == null)
         return
     val readMoreText = "...Read more"
+    val readMoreTextWithoutSpaces = "...Readmore"
     val maxLineCount = 4
+    val hasSpaces = text.contains(" ")
     if (layout.lineCount >= maxLineCount) {
         var startCount = 0
         val newString: StringBuilder = StringBuilder("")
@@ -50,9 +52,10 @@ fun TextView.addReadMore() {
             if (i != maxLineCount.minus(1))
                 newString.append(text.subSequence(startCount, lineEnd))
             else {
-                if (lineEnd.minus(startCount) > readMoreText.length + 1)
-                    newString.append("${text.subSequence(startCount, lineEnd - (readMoreText.length + 1)).toString().replace("\n", "")}$readMoreText")
-                else newString.append("${text.subSequence(startCount, lineEnd).toString().replace("\n", "")}$readMoreText")
+                if (lineEnd.minus(startCount) > readMoreText.length + 1) {
+                    newString.append(text.subSequence(startCount, lineEnd - (readMoreText.length + 1)).toString().replace("\n", ""))
+                    newString.append(if (hasSpaces) readMoreText else readMoreTextWithoutSpaces)
+                } else newString.append("${text.subSequence(startCount, lineEnd).toString().replace("\n", "")}$readMoreText")
             }
             startCount = lineEnd
         }
@@ -62,13 +65,13 @@ fun TextView.addReadMore() {
 
         spannable.setSpan(
             ForegroundColorSpan(MaterialColors.getColor(this.context, R.attr.colorPrimary, Color.BLUE)),
-            truncatedText.length - readMoreText.length,
+            truncatedText.length - readMoreText.length.minus(3),
             truncatedText.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
         setText(spannable, TextView.BufferType.SPANNABLE)
 
-        maxLines = 5
+        maxLines = maxLineCount
     }
 }

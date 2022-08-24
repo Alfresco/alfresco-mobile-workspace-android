@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.tasks.comments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
@@ -78,6 +79,7 @@ class CommentsFragment : Fragment(), MavericksView {
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.refreshLayout.setOnRefreshListener {
             viewModel.getComments()
@@ -117,6 +119,11 @@ class CommentsFragment : Fragment(), MavericksView {
                     isScrolled = true
                 } else isScrolled = false
             }
+        }
+
+        binding.recyclerView.setOnTouchListener { _, _ ->
+            hideSoftInput()
+            return@setOnTouchListener false
         }
     }
 

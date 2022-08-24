@@ -27,6 +27,9 @@ fun TaskDetailViewModel.execute(action: Action) {
     } else action.execute(context, GlobalScope)
 }
 
+/**
+ * returns true if the endDate is empty and the assignee user is same as loggedIn user otherwise false
+ */
 fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean {
 
     return state.parent?.endDate == null && state.parent?.assignee?.email == repository.userEmail

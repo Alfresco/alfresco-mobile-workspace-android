@@ -125,6 +125,7 @@ class CommentsFragment : Fragment(), MavericksView {
             hideSoftInput()
             return@setOnTouchListener false
         }
+
     }
 
     private fun updateSendIconView(text: String) {

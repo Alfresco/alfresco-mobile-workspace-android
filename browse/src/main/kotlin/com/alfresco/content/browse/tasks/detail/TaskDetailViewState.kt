@@ -8,6 +8,7 @@ import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.ResponseContents
 import com.alfresco.content.data.TaskEntry
+import retrofit2.Response
 
 /**
  * Marked as TaskDetailViewState class
@@ -19,7 +20,8 @@ data class TaskDetailViewState(
     val request: Async<TaskEntry> = Uninitialized,
     val requestComments: Async<ResponseComments> = Uninitialized,
     val requestContents: Async<ResponseContents> = Uninitialized,
-    val requestAddComment: Async<CommentEntry> = Uninitialized
+    val requestAddComment: Async<CommentEntry> = Uninitialized,
+    val requestCompleteTask: Async<Response<Unit>> = Uninitialized
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)

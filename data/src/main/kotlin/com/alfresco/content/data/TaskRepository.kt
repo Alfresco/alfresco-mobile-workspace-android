@@ -70,6 +70,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         processService.getContents(taskID)
     )
 
+    /**
+     * execute the get complete task api and returns the response as Unit obj
+     */
+    suspend fun completeTask(taskID: String) = processService.completeTask(taskID)
+
     private fun includeFilters(taskFilters: TaskFiltersPayload): RequestTaskFilters {
         return RequestTaskFilters(
             assignment = taskFilters.assignment,

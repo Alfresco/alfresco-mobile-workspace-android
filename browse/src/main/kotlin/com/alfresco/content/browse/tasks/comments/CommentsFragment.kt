@@ -19,6 +19,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentCommentsBinding
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
+import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput
@@ -70,10 +71,7 @@ class CommentsFragment : Fragment(), MavericksView {
         updateSendIconView(binding.commentInput.text.toString())
 
         withState(viewModel) { state ->
-            when {
-                state.parent?.endDate != null -> binding.clAddComment.visibility = View.GONE
-                else -> binding.clAddComment.visibility = View.VISIBLE
-            }
+            binding.clAddComment.visibility = if (viewModel.isTaskCompleted(state)) View.GONE else View.VISIBLE
         }
 
         setListeners()

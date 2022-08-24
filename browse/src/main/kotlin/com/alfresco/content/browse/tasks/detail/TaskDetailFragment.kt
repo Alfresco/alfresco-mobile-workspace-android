@@ -30,7 +30,6 @@ import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
-import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addReadMore
@@ -108,7 +107,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
                 (state.requestCompleteTask is Loading)
 
-        setData(state.parent)
+        setData(state)
 
         setCommentData(state.listComments)
 
@@ -151,20 +150,22 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
-    private fun setData(dataObj: TaskEntry?) {
+    private fun setData(state: TaskDetailViewState) {
+        val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTaskTitle.text = dataObj.name
             binding.tvDueDateValue.text =
                 if (dataObj.dueDate != null) dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else requireContext().getString(R.string.empty_no_due_date)
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
-            binding.tvStatusValue.text = if (dataObj.endDate == null) getString(R.string.status_active) else getString(R.string.status_completed)
             binding.tvIdentifierValue.text = dataObj.id
 
-            if (dataObj.endDate != null) {
+            binding.tvStatusValue.text = if (viewModel.isTaskCompleted(state)) {
                 binding.tvAddComment.visibility = View.GONE
                 binding.iconAddCommentUser.visibility = View.GONE
-            }
+                if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
+                getString(R.string.status_completed)
+            } else getString(R.string.status_active)
         }
     }
 

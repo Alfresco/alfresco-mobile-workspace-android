@@ -40,10 +40,9 @@ fun TextView.updatePriorityView(priority: Int) {
 fun TextView.addReadMore() {
     if (layout == null)
         return
-    val readMoreText = "...Read more"
-    val readMoreTextWithoutSpaces = "...Readmore"
-    val maxLineCount = 4
+    val readMoreText = context.getString(R.string.text_read_more_space)
     val hasSpaces = text.contains(" ")
+    val maxLineCount = if (hasSpaces) 4 else 3
     if (layout.lineCount >= maxLineCount) {
         var startCount = 0
         val newString: StringBuilder = StringBuilder("")
@@ -54,7 +53,7 @@ fun TextView.addReadMore() {
             else {
                 if (lineEnd.minus(startCount) > readMoreText.length + 1) {
                     newString.append(text.subSequence(startCount, lineEnd - (readMoreText.length + 1)).toString().replace("\n", ""))
-                    newString.append(if (hasSpaces) readMoreText else readMoreTextWithoutSpaces)
+                    newString.append(readMoreText)
                 } else newString.append("${text.subSequence(startCount, lineEnd).toString().replace("\n", "")}$readMoreText")
             }
             startCount = lineEnd
@@ -72,6 +71,6 @@ fun TextView.addReadMore() {
 
         setText(spannable, TextView.BufferType.SPANNABLE)
 
-        maxLines = maxLineCount
+        maxLines = 4
     }
 }

@@ -7,18 +7,12 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
-import com.alfresco.content.browse.tasks.list.UpdateTasksData
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
-import com.alfresco.events.EventBus
 import com.alfresco.events.on
-import java.io.File
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -27,11 +21,11 @@ import kotlinx.coroutines.launch
 class TaskDetailViewModel(
     state: TaskDetailViewState,
     val context: Context,
-    private val repository: TaskRepository
+    val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
     var isAddComment = false
-    private var entryListener: EntryListener? = null
+    var entryListener: EntryListener? = null
 
     init {
         getTaskDetails()
@@ -151,25 +145,6 @@ class TaskDetailViewModel(
                 }
             }
         }
-    }
-
-    /**
-     * update the task list after complete the task
-     */
-    fun updateTaskList() {
-        viewModelScope.launch {
-            EventBus.default.send(UpdateTasksData(isRefresh = true))
-        }
-    }
-
-    /**
-     * execute "open with" action to download the content data
-     */
-    fun execute(action: Action) {
-        val file = File(repository.session.contentDir, action.entry.name)
-        if (repository.session.isFileExists(file)) {
-            entryListener?.onEntryCreated(Entry.updateDownloadEntry(action.entry, file.path))
-        } else action.execute(context, GlobalScope)
     }
 
     /**

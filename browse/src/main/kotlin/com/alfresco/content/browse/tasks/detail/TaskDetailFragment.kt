@@ -112,7 +112,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         setCommentData(state.listComments)
 
-        binding.completeButton.visibility = if (state.parent?.endDate == null) View.VISIBLE else View.GONE
+        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
         if (state.requestCompleteTask.invoke()?.code() == 200) {
             viewModel.updateTaskList()

@@ -6,10 +6,11 @@
     <string name="offline_status_error">Synchroniseren mislukt</string>
     <string name="extension_upload_button">Uploaden</string>
     <string name="move_button">Verplaatsen</string>
-    <string name="upload_file_text_multiple">%d bestand(en) uploaden</string>
-    <string name="upload_complete_text_multiple">Uploaden van %d bestand(en) voltooid</string>
+    <string name="upload_file_text_multiple">%d bestanden uploaden</string>
+    <string name="upload_complete_text_multiple">Uploaden van %d bestanden is voltooid</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="priority_low">Laag</string>
-    <string name="priority_medium">Middle</string>
+    <string name="priority_medium">Gemiddeld</string>
     <string name="priority_high">Hoog</string>
+    <string name="priority_none">N.v.t.</string>
 </resources>

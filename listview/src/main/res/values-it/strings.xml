@@ -2,14 +2,15 @@
 <resources>
     <string name="list_loading_message">Caricamento in corso&#8230;</string>
 
-    <string name="offline_status_in_progress">Sincronizzo...</string>
+    <string name="offline_status_in_progress">Sincronizzazione in corso&#8230;</string>
     <string name="offline_status_error">Sincronizzazione non riuscita</string>
     <string name="extension_upload_button">Carica</string>
     <string name="move_button">Sposta</string>
-    <string name="upload_file_text_multiple">Caricamento in corso di %d file</string>
-    <string name="upload_complete_text_multiple">Caricamento completato di %d file</string>
+    <string name="upload_file_text_multiple">Carico %d file</string>
+    <string name="upload_complete_text_multiple">Caricamento di %d file terminato</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="priority_low">Bassa</string>
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
+    <string name="priority_none">N/D</string>
 </resources>

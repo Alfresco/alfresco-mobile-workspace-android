@@ -19,15 +19,15 @@
 
     <string name="recent_empty_title">No hay ficheros recientes</string>
     <string name="recent_empty_message">Los ficheros que vea y edite se mostrarán aquí.</string>
-    <string name="tasks_empty_title">No se encontró ninguna tarea</string>
-    <string name="tasks_empty_message">Crear una nueva tarea fácil de encontrar más adelante</string>
+    <string name="tasks_empty_title">No se encontraron tareas</string>
+    <string name="tasks_empty_message">Puede crear una tarea nueva que desee encontrar con facilidad más adelante.</string>
     <string name="favorite_files_empty_title">No hay ficheros ni carpetas favoritos</string>
     <string name="favorite_sites_empty_title">No hay bibliotecas favoritas</string>
     <string name="favorites_empty_message">Parece que no ha añadido nada.</string>
     <string name="folder_empty_title">La carpeta está vacía</string>
     <string name="folder_empty_upload_title">¡Carga completada!</string>
     <string name="folder_empty_message">Parece que todavía \nno hay contenido.</string>
-    <string name="folder_empty_upload_message">No quedan ficheros para cargar. Verifique los ficheros en sus respectivas carpetas.</string>
+    <string name="folder_empty_upload_message">No quedan ficheros para cargar. Vea que los ficheros estén en sus respectivas carpetas.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizar todo</string>
@@ -42,5 +42,30 @@
 
     <string name="title_transfers">Transferencias</string>
 
-    <string name="account_not_configured">Esta cuenta no está configurada en "Process Services".</string>
+    <string name="account_not_configured">Esta cuenta no está configurada en "Process Services"</string>
+    <string name="account">Cuenta</string>
+    <string name="icon_due_date">Icono de fecha de vencimiento</string>
+    <string name="icon_user_profile">Icono de perfil de usuario</string>
+    <string name="icon_file">Icono de fichero</string>
+    <string name="icon_priority">Icono de prioridad</string>
+    <string name="icon_assigned">Icono de usuario asignado</string>
+    <string name="icon_status">Icono de estado</string>
+    <string name="icon_identifier">Icono de identificador</string>
+    <string name="status_active">Activo</string>
+    <string name="status_completed">Completada</string>
+    <string name="title_task_view">Ver tarea</string>
+    <string name="title_comments">Comentarios</string>
+    <string name="title_due_date">Fecha de vencimiento</string>
+    <string name="title_priority">Prioridad</string>
+    <string name="title_assignee">Usuario asignado</string>
+    <string name="title_status">Estado</string>
+    <string name="title_identifier">Identificador</string>
+    <string name="text_add_a_comment">Añadir un comentario...</string>
+    <string name="text_view_all">Ver todo</string>
+    <string name="text_multiple_comments">%d comentarios</string>
+    <string name="text_attached_files">Ficheros adjuntos</string>
+    <string name="text_multiple_attachment">%d adjuntos</string>
+    <string name="no_attached_files">No hay ficheros adjuntos</string>
+    <string name="empty_no_due_date">Sin fecha de vencimiento</string>
+
 </resources>

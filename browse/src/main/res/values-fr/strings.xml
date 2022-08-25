@@ -20,7 +20,7 @@
     <string name="recent_empty_title">Aucun fichier récent</string>
     <string name="recent_empty_message">Les fichiers consultés et\nmodifiés apparaîtront ici.</string>
     <string name="tasks_empty_title">Aucune tâche trouvée</string>
-    <string name="tasks_empty_message">Créer une tâche facile à retrouver plus tard.</string>
+    <string name="tasks_empty_message">Créez une nouvelle tâche que vous pouvez facilement retrouver plus tard.</string>
     <string name="favorite_files_empty_title">Aucun fichier ou dossier favori</string>
     <string name="favorite_sites_empty_title">Aucune bibliothèque favorite</string>
     <string name="favorites_empty_message">Il semble que vous n\'ayez\nrien ajouté.</string>
@@ -42,5 +42,30 @@
 
     <string name="title_transfers">Transferts</string>
 
-    <string name="account_not_configured">Ce compte n\'est pas configuré dans "Process Services".</string>
+    <string name="account_not_configured">Ce compte n\'est pas configuré sur \'Process Services\'.</string>
+    <string name="account">Compte</string>
+    <string name="icon_due_date">Icône de la date d\'échéance</string>
+    <string name="icon_user_profile">Icône du profil d\'utilisateur</string>
+    <string name="icon_file">Icône du fichier</string>
+    <string name="icon_priority">Icône de priorité</string>
+    <string name="icon_assigned">Icône assignée</string>
+    <string name="icon_status">Icône du statut</string>
+    <string name="icon_identifier">Icône d\'identificateur</string>
+    <string name="status_active">Actif</string>
+    <string name="status_completed">Terminé</string>
+    <string name="title_task_view">Affichage de la tâche</string>
+    <string name="title_comments">Commentaires</string>
+    <string name="title_due_date">Date d\'échéance</string>
+    <string name="title_priority">Priorité</string>
+    <string name="title_assignee">Personne assignée</string>
+    <string name="title_status">Statut</string>
+    <string name="title_identifier">Identifiant</string>
+    <string name="text_add_a_comment">Ajoutez un commentaire&#8230;</string>
+    <string name="text_view_all">Afficher tout</string>
+    <string name="text_multiple_comments">%d commentaires</string>
+    <string name="text_attached_files">Fichiers joints</string>
+    <string name="text_multiple_attachment">%d pièces jointes</string>
+    <string name="no_attached_files">Aucun fichier joint</string>
+    <string name="empty_no_due_date">Aucune date d\'échéance</string>
+
 </resources>

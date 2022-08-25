@@ -7,9 +7,10 @@
     <string name="extension_upload_button">Cargar</string>
     <string name="move_button">Mover</string>
     <string name="upload_file_text_multiple">Cargando %d fichero(s)</string>
-    <string name="upload_complete_text_multiple">Se han cargado %d fichero(s)</string>
+    <string name="upload_complete_text_multiple">Finalizada la carga de %d fichero(s)</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="priority_low">Baja</string>
-    <string name="priority_medium">Media</string>
+    <string name="priority_medium">Mediano</string>
     <string name="priority_high">Alta</string>
+    <string name="priority_none">NA</string>
 </resources>

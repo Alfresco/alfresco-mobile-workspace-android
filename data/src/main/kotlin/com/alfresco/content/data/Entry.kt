@@ -89,6 +89,9 @@ data class Entry(
     val hasOfflineStatus: Boolean
         get() = offlineStatus != OfflineStatus.UNDEFINED
 
+    val fileName: String
+        get() = "$id-$name"
+
     // TODO: move to repository level
     fun withOfflineStatus(): Entry {
         val offline = OfflineRepository().fetchOfflineEntry(this)

@@ -16,6 +16,7 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentAttachedFilesBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
+import com.alfresco.content.browse.tasks.detail.execute
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry

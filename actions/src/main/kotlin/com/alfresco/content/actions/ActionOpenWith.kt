@@ -70,6 +70,7 @@ data class ActionOpenWith(
         try {
             deferredDownload.await()
         } catch (ex: Exception) {
+            output.delete()
             deferredDialog.cancel()
             throw ex
         }
@@ -110,7 +111,6 @@ data class ActionOpenWith(
                     .setNegativeButton(
                         context.getString(R.string.action_open_with_cancel)
                     ) { _, _ ->
-
                         deferredDownload.get()?.cancel()
                     }
                     .setCancelable(false)

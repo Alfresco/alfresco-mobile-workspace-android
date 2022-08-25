@@ -102,6 +102,7 @@ enum class EventName(val value: String) {
     Restore("event_restore"),
     OpenWith("event_open_with"),
     TaskFilterReset("event_reset"),
+    TaskComplete("event_task_complete"),
     None("event_none")
 }
 

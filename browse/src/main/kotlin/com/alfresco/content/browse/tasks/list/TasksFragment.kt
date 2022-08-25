@@ -48,7 +48,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        visibleFilters(true)
         actionReset.setOnClickListener {
             AnalyticsManager().taskFiltersEvent(EventName.TaskFilterReset.value)
             resetAllFilters()

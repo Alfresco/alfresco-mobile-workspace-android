@@ -267,60 +267,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_end_date"
-                android:layout_width="0dp"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_status">
-
-                <ImageView
-                    android:id="@+id/icon_end_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/icon_status"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_task_status"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_end_date_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
-                    android:text="@string/title_end_date"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    android:textColor="?attr/colorControlNormal"
-                    app:layout_constraintBottom_toBottomOf="@id/icon_end_date"
-                    app:layout_constraintStart_toEndOf="@id/icon_end_date"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_end_date_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    app:layout_constraintBottom_toBottomOf="@id/icon_end_date"
-                    app:layout_constraintStart_toEndOf="@id/tv_end_date_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_identifier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -330,7 +276,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_end_date">
+                app:layout_constraintTop_toBottomOf="@id/cl_status">
 
                 <ImageView
                     android:id="@+id/icon_identifier"

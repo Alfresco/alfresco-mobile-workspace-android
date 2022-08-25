@@ -165,14 +165,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvIdentifierValue.text = dataObj.id
 
             if (viewModel.isTaskCompleted(state)) {
-                binding.clEndDate.visibility = View.VISIBLE
                 binding.tvAddComment.visibility = View.GONE
                 binding.iconAddCommentUser.visibility = View.GONE
                 if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
                 binding.tvStatusValue.text = getString(R.string.status_completed)
-                binding.tvEndDateValue.text = dataObj.endDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
             } else {
-                binding.clEndDate.visibility = View.GONE
                 binding.tvStatusValue.text = getString(R.string.status_active)
             }
         }

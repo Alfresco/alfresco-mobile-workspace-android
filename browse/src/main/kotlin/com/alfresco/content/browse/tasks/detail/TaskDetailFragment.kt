@@ -2,6 +2,7 @@ package com.alfresco.content.browse.tasks.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,6 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
-import com.alfresco.content.listview.addReadMore
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
@@ -132,6 +132,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.clCommentHeader.visibility = View.VISIBLE
             val commentObj = listComments.last()
 
+            commentViewBinding.tvComment.maxLines = 4
+            commentViewBinding.tvComment.ellipsize = TextUtils.TruncateAt.END
+
             if (listComments.size > 1) {
                 binding.tvCommentViewAll.visibility = View.VISIBLE
                 binding.tvNoOfComments.visibility = View.VISIBLE
@@ -145,9 +148,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             commentViewBinding.tvName.text = commentObj.userDetails?.name
             commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else ""
             commentViewBinding.tvComment.text = commentObj.message
-            commentViewBinding.tvComment.post {
-                commentViewBinding.tvComment.addReadMore()
-            }
         } else {
             binding.clCommentHeader.visibility = View.GONE
             binding.flRecentComment.visibility = View.GONE
@@ -164,18 +164,23 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
 
-            binding.tvStatusValue.text = if (viewModel.isTaskCompleted(state)) {
+            if (viewModel.isTaskCompleted(state)) {
+                binding.clEndDate.visibility = View.VISIBLE
                 binding.tvAddComment.visibility = View.GONE
                 binding.iconAddCommentUser.visibility = View.GONE
                 if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
-                getString(R.string.status_completed)
-            } else getString(R.string.status_active)
+                binding.tvStatusValue.text = getString(R.string.status_completed)
+                binding.tvEndDateValue.text = dataObj.endDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
+            } else {
+                binding.clEndDate.visibility = View.GONE
+                binding.tvStatusValue.text = getString(R.string.status_active)
+            }
         }
     }
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
-        binding.tvAttachedFilesTitle.visibility = View.VISIBLE
         if (state.listContents.isNotEmpty()) {
+            binding.tvAttachedFilesTitle.visibility = View.VISIBLE
             binding.recyclerViewAttachments.visibility = View.VISIBLE
             binding.tvNoAttachedFilesError.visibility = View.GONE
             binding.clAttachmentHeader.visibility = View.VISIBLE
@@ -202,8 +207,13 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.recyclerViewAttachments.visibility = View.GONE
             binding.tvAttachmentViewAll.visibility = View.GONE
             binding.tvNoOfAttachments.visibility = View.GONE
-            binding.tvNoAttachedFilesError.visibility = View.VISIBLE
-            binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+            if (!viewModel.isTaskCompleted(state)) {
+                binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+            } else {
+                binding.tvAttachedFilesTitle.visibility - View.GONE
+                binding.tvNoAttachedFilesError.visibility = View.GONE
+            }
         }
     }
 

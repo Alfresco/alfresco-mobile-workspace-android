@@ -42,6 +42,14 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         params.putString(Parameters.EventName.value, eventName.lowercase())
         repository.logEvent(eventName.lowercase(), params)
     }
+    /**
+     * analytics for task complete
+     */
+    fun taskEvent(eventName: EventName) {
+        val params = repository.defaultParams()
+        params.putString(Parameters.EventName.value, eventName.value.lowercase())
+        repository.logEvent(eventName.value.lowercase(), params)
+    }
 
     /**
      * analytics for theme change

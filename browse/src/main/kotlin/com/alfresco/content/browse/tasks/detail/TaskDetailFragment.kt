@@ -30,6 +30,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
@@ -226,6 +227,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             .setMessage(getString(R.string.dialog_message_complete_task))
             .setNegativeButton(getString(R.string.dialog_negative_button_complete_task), null)
             .setPositiveButton(getString(R.string.dialog_positive_button_complete_task)) { _, _ ->
+                AnalyticsManager().taskEvent(EventName.TaskComplete)
                 viewModel.completeTask()
             }
             .show()

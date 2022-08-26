@@ -139,7 +139,6 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
 
     private fun epoxyController() = simpleController(viewModel) { state ->
         if (state.taskEntries.isEmpty() && state.request.complete) {
-            visibleFilters(false)
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
@@ -148,7 +147,6 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                 message(args.third)
             }
         } else if (state.taskEntries.isNotEmpty()) {
-            visibleFilters(true)
             state.taskEntries.forEach {
                 listViewTaskRow {
                     id(it.id)

@@ -13,12 +13,12 @@
     <string name="nav_title_browse_extension">Enregistrer dans Alfresco</string>
 
     <string name="sign_out_confirmation_title">Déconnexion</string>
-    <string name="sign_out_confirmation_message">Voulez-vous vraiment vous déconnecter \?</string>
+    <string name="sign_out_confirmation_message">Voulez-vous vraiment vous déconnecter ?</string>
     <string name="sign_out_confirmation_positive">Oui</string>
     <string name="sign_out_confirmation_negative">Annuler</string>
 
     <string name="settings_sign_out">Déconnexion</string>
-    <string name="settings_version">Version de l\\\'application %1$s</string>
+    <string name="settings_version">Version de l\'application %1$s</string>
 
     <string name="settings_theme_title">Thème</string>
     <string-array name="settings_theme_labels">
@@ -27,7 +27,7 @@
         <item>Paramètres système par défaut</item>
     </string-array>
 
-    <string name="auth_error_wrong_credentials">Nom d\\\'utilisateur ou mot de passe incorrect.</string>
+    <string name="auth_error_wrong_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
     <string name="settings_sync_network_title">Mettre à jour les fichiers hors ligne en utilisant</string>
     <string name="share_limit_message">Impossible de partager plus de 50 éléments multimédias</string>
     <string name="no_type">Pas de type</string>

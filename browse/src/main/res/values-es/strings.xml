@@ -67,5 +67,12 @@
     <string name="text_multiple_attachment">%d adjuntos</string>
     <string name="no_attached_files">No hay ficheros adjuntos</string>
     <string name="empty_no_due_date">Sin fecha de vencimiento</string>
+    <string name="title_attached_files">Ficheros adjuntos</string>
+    <string name="text_complete">Por completar</string>
+    <string name="dialog_title_complete_task">Completar tarea</string>
+    <string name="dialog_message_complete_task">¿Está seguro de que desea completar la tarea?</string>
+    <string name="dialog_negative_button_complete_task">Cancelar</string>
+    <string name="dialog_positive_button_complete_task">Confirmar</string>
+    <string name="icon_send_description">Botón Enviar</string>
 
 </resources>

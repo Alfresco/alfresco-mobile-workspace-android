@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="list_loading_message">Chargement&#8230;</string>
+    <string name="list_loading_message">Chargement...</string>
 
-    <string name="offline_status_in_progress">Synchronisation&#8230;</string>
+    <string name="offline_status_in_progress">Synchronisation...</string>
     <string name="offline_status_error">La synchronisation a échoué</string>
     <string name="extension_upload_button">Importer</string>
     <string name="move_button">Déplacer</string>
@@ -13,4 +13,5 @@
     <string name="priority_medium">Moyenne</string>
     <string name="priority_high">Élevée</string>
     <string name="priority_none">NA</string>
+    <string name="text_read_more_space">...En savoir plus</string>
 </resources>

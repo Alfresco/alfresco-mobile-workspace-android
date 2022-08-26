@@ -3,15 +3,12 @@ package com.alfresco.content.browse.tasks.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.browse.R
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -41,11 +38,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override val viewModel: TasksViewModel by fragmentViewModel()
     private val epoxyControllerFilters: AsyncEpoxyController by lazy { epoxyControllerFilters() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         actionReset.setOnClickListener {
@@ -53,10 +45,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
             resetAllFilters()
         }
         recyclerViewFilters.setController(epoxyControllerFilters)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_tasks, menu)
     }
 
     private fun resetAllFilters() = withState(viewModel) { state ->
@@ -76,7 +64,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        visibleFilters(viewModel.addFilters(state))
         super.invalidate()
         epoxyControllerFilters.requestModelBuild()
         if (state.page == 0)

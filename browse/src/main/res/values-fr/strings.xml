@@ -35,7 +35,7 @@
     <string name="offline_empty_title">Aucun contenu hors ligne</string>
     <string name="offline_empty_message">Le contenu disponible hors ligne\ns\'affichera ici.</string>
 
-    <string name="offline_sync_unavailable_title">Utiliser les données mobiles?</string>
+    <string name="offline_sync_unavailable_title">Utiliser les données mobiles ?</string>
     <string name="offline_sync_unavailable_message">Vos réglages seront remplacés et des données mobiles seront utilisées pour le téléchargement. Sinon, le téléchargement aura lieu plus tard lorsque la connexion Wi-Fi sera disponible.</string>
     <string name="offline_sync_unavailable_positive">Oui</string>
     <string name="offline_sync_unavailable_negative">Plus tard</string>
@@ -67,5 +67,12 @@
     <string name="text_multiple_attachment">%d pièces jointes</string>
     <string name="no_attached_files">Aucun fichier joint</string>
     <string name="empty_no_due_date">Aucune date d\'échéance</string>
+    <string name="title_attached_files">Fichiers joints</string>
+    <string name="text_complete">A terminer</string>
+    <string name="dialog_title_complete_task">Terminer la tâche</string>
+    <string name="dialog_message_complete_task">Etes-vous sûr de vouloir terminer la tâche ?</string>
+    <string name="dialog_negative_button_complete_task">Annuler</string>
+    <string name="dialog_positive_button_complete_task">Confirmer</string>
+    <string name="icon_send_description">Bouton Envoyer</string>
 
 </resources>

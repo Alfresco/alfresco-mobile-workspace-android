@@ -19,6 +19,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
@@ -27,6 +28,10 @@ import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
 import com.alfresco.content.simpleController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Mark as TaskListViewState interface
@@ -111,11 +116,12 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         })
     }
 
-    /**
-     * show filters only on task screen only
-     */
-    fun visibleFilters(isVisible: Boolean) {
-        parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
+    private fun visibleFilters(isVisible: Boolean) {
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     /**
@@ -138,8 +144,11 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.taskEntries.isEmpty() && state.request.complete) {
+        if (state.request.complete && state.request is Fail) {
             visibleFilters(false)
+        }
+        if (state.taskEntries.isEmpty() && state.request.complete) {
+            if (state.request is Success) visibleFilters(true)
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")

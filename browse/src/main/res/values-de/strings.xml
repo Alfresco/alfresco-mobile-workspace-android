@@ -20,7 +20,7 @@
     <string name="recent_empty_title">Keine aktuellen Dateien</string>
     <string name="recent_empty_message">Hier werden Dateien\naufgeführt, die Sie anzeigen und bearbeiten.</string>
     <string name="tasks_empty_title">Keine Aufgaben gefunden</string>
-    <string name="tasks_empty_message">Erstellen Sie eine neue Aufgabe, die Sie später einfach wiederfinden können.</string>
+    <string name="tasks_empty_message">Erstellen Sie eine neue Aufgabe, die Sie später leicht wiederfinden möchten.</string>
     <string name="favorite_files_empty_title">Keine Dateien oder Ordner als Favoriten</string>
     <string name="favorite_sites_empty_title">Keine Bibliotheken als Favoriten</string>
     <string name="favorites_empty_message">Sie haben scheinbar noch\nnichts hinzugefügt.</string>
@@ -42,5 +42,30 @@
 
     <string name="title_transfers">Übertragungen</string>
 
-    <string name="account_not_configured">Dieses Konto ist nicht für "Process Services" konfiguriert.</string>
+    <string name="account_not_configured">Dieses\u0020Konto\u0020ist\u0020nicht\u0020in\u0020\u0020„Process\u0020Services“\u0020konfiguriert.</string>
+    <string name="account">Account</string>
+    <string name="icon_due_date">Symbol für Fälligkeitsdatum</string>
+    <string name="icon_user_profile">Symbol für Benutzerprofil</string>
+    <string name="icon_file">Symbol für Datei</string>
+    <string name="icon_priority">Symbol für Priorität</string>
+    <string name="icon_assigned">Zugewiesenes Symbol</string>
+    <string name="icon_status">Symbol für Status</string>
+    <string name="icon_identifier">Symbol für Identifikator</string>
+    <string name="status_active">Aktiv</string>
+    <string name="status_completed">Abgeschlossen</string>
+    <string name="title_task_view">Aufgabenansicht</string>
+    <string name="title_comments">Kommentare</string>
+    <string name="title_due_date">Fälligkeitsdatum</string>
+    <string name="title_priority">Priorität</string>
+    <string name="title_assignee">Zugewiesener Benutzer</string>
+    <string name="title_status">Status</string>
+    <string name="title_identifier">Identifikator</string>
+    <string name="text_add_a_comment">Einen Kommentar hinzufügen...</string>
+    <string name="text_view_all">Alle anzeigen</string>
+    <string name="text_multiple_comments">%d Kommentare</string>
+    <string name="text_attached_files">Angehängte Dateien</string>
+    <string name="text_multiple_attachment">%d Anhänge</string>
+    <string name="no_attached_files">Keine angehängten Dateien</string>
+    <string name="empty_no_due_date">Kein Fälligkeitsdatum</string>
+
 </resources>

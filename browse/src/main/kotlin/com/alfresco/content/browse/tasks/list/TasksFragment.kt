@@ -48,7 +48,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        visibleFilters(true)
         actionReset.setOnClickListener {
             AnalyticsManager().taskFiltersEvent(EventName.TaskFilterReset.value)
             resetAllFilters()
@@ -77,6 +76,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        visibleFilters(viewModel.addFilters(state))
         super.invalidate()
         epoxyControllerFilters.requestModelBuild()
         if (state.page == 0)

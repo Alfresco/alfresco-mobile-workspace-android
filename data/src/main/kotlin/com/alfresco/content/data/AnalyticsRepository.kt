@@ -104,6 +104,7 @@ enum class EventName(val value: String) {
     SCAN_DOCUMENTS("event_scan_documents"),
     DISCARD_CAPTURE("event_discard_capture"),
     TaskFilterReset("event_reset"),
+    TaskComplete("event_task_complete"),
     None("event_none")
 }
 

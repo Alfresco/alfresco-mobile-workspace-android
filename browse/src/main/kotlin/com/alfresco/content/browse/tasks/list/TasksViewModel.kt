@@ -172,6 +172,18 @@ class TasksViewModel(
         return list
     }
 
+    /**
+     * returns true if any filter chip is selected and entries are empty, also if filter chip is not selected and entries are not empty otherwise false
+     */
+    fun addFilters(state: TasksViewState): Boolean {
+        val obj = state.listSortDataChips.find { it.isSelected }
+        if (obj != null)
+            return true
+        if (state.taskEntries.isNotEmpty())
+            return true
+        return false
+    }
+
     private fun getZoneFormattedDate(dateString: String?): String {
 
         if (dateString.isNullOrEmpty()) return ""

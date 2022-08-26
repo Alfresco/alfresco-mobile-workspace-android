@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Transfers</string>
 
-    <string name="account_not_configured">This account is not configured on the process services.</string>
+    <string name="account_not_configured">Tasks are not enabled for this account.</string>
     <string name="account">Account</string>
     <string name="icon_due_date">Due date icon</string>
     <string name="icon_user_profile">User profile icon</string>
@@ -59,6 +59,7 @@
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
     <string name="title_status">Status</string>
+    <string name="title_end_date">End date</string>
     <string name="title_identifier">Identifier</string>
     <string name="text_add_a_comment">Add a comment&#8230;</string>
     <string name="text_view_all">View all</string>
@@ -70,8 +71,9 @@
     <string name="title_attached_files">Attached files</string>
     <string name="text_complete">Complete</string>
     <string name="dialog_title_complete_task">Complete Task</string>
-    <string name="dialog_message_complete_task">Are you sure you want to complete the task?</string>
+    <string name="dialog_message_complete_task">Are you sure you want to complete this task? You will no longer be able to make any changes.</string>
     <string name="dialog_negative_button_complete_task">Cancel</string>
     <string name="dialog_positive_button_complete_task">Confirm</string>
+    <string name="icon_send_description">Send Button</string>
 
 </resources>

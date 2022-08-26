@@ -70,6 +70,7 @@ data class ActionOpenWith(
         try {
             deferredDownload.await()
         } catch (ex: Exception) {
+            output.delete()
             deferredDialog.cancel()
             throw ex
         }

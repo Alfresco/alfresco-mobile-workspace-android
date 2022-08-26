@@ -76,6 +76,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        visibleFilters(viewModel.addFilters(state))
         super.invalidate()
         epoxyControllerFilters.requestModelBuild()
         if (state.page == 0)

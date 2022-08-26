@@ -67,5 +67,12 @@
     <string name="text_multiple_attachment">%d allegati</string>
     <string name="no_attached_files">Nessun file allegato</string>
     <string name="empty_no_due_date">Nessuna scadenza</string>
+    <string name="title_attached_files">File allegati</string>
+    <string name="text_complete">Per completare</string>
+    <string name="dialog_title_complete_task">Completa compito</string>
+    <string name="dialog_message_complete_task">Completare il compito?</string>
+    <string name="dialog_negative_button_complete_task">Annulla</string>
+    <string name="dialog_positive_button_complete_task">Conferma</string>
+    <string name="icon_send_description">Pulsante Invia</string>
 
 </resources>

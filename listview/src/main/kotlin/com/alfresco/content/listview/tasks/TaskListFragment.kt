@@ -68,19 +68,6 @@ abstract class TaskListViewModel<S : TaskListViewState>(
      * it executes when no data found and api returns failure
      */
     abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
-
-    fun isEmptyData(state: S): Boolean {
-        if (state.request.complete) {
-            if (state.taskEntries.isEmpty())
-                return true
-            if (state.taskEntries.isNotEmpty() && state.request is Fail) {
-                setState { copy(_entries = emptyList()) as S }
-                return true
-            }
-        }
-
-        return false
-    }
 }
 
 /**

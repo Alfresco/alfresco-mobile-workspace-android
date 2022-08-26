@@ -152,8 +152,12 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        if (viewModel.isEmptyData(state)) {
-            if (state.request is Fail) visibleFilters(false)
+        if (state.taskEntries.isEmpty() && state.request.complete) {
+            GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    if (state.request is Fail) visibleFilters(false) else visibleFilters(true)
+                }
+            }
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")

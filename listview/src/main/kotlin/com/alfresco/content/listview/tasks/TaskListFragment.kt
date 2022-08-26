@@ -27,6 +27,10 @@ import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
 import com.alfresco.content.simpleController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Mark as TaskListViewState interface
@@ -64,6 +68,19 @@ abstract class TaskListViewModel<S : TaskListViewState>(
      * it executes when no data found and api returns failure
      */
     abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
+
+    fun isEmptyData(state: S): Boolean {
+        if (state.request.complete) {
+            if (state.taskEntries.isEmpty())
+                return true
+            if (state.taskEntries.isNotEmpty() && state.request is Fail) {
+                setState { copy(_entries = emptyList()) as S }
+                return true
+            }
+        }
+
+        return false
+    }
 }
 
 /**
@@ -111,10 +128,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         })
     }
 
-    /**
-     * show filters only on task screen only
-     */
-    fun visibleFilters(isVisible: Boolean) {
+    private fun visibleFilters(isVisible: Boolean) {
         parentFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -138,8 +152,8 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.taskEntries.isEmpty() && state.request.complete) {
-            visibleFilters(false)
+        if (viewModel.isEmptyData(state)) {
+            if (state.request is Fail) visibleFilters(false)
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
@@ -148,7 +162,11 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                 message(args.third)
             }
         } else if (state.taskEntries.isNotEmpty()) {
-            visibleFilters(true)
+            GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    visibleFilters(true)
+                }
+            }
             state.taskEntries.forEach {
                 listViewTaskRow {
                     id(it.id)

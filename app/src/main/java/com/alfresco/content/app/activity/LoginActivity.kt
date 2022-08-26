@@ -34,7 +34,6 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                     navigateToExtension()
                 else navigateToMain()
             } catch (ex: Exception) {
-                AnalyticsManager().apiTracker(APIEvent.Login, false)
                 onError(R.string.auth_error_wrong_credentials)
             }
         }

@@ -68,19 +68,6 @@ abstract class TaskListViewModel<S : TaskListViewState>(
      * it executes when no data found and api returns failure
      */
     abstract fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int>
-
-    fun isEmptyData(state: S): Boolean {
-        if (state.request.complete) {
-            if (state.taskEntries.isEmpty())
-                return true
-            if (state.taskEntries.isNotEmpty() && state.request is Fail) {
-                setState { copy(_entries = emptyList()) as S }
-                return true
-            }
-        }
-
-        return false
-    }
 }
 
 /**
@@ -152,8 +139,12 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        if (viewModel.isEmptyData(state)) {
-            if (state.request is Fail) visibleFilters(false)
+        if (state.taskEntries.isEmpty() && state.request.complete) {
+            GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    if (state.request is Fail) visibleFilters(false) else visibleFilters(true)
+                }
+            }
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")

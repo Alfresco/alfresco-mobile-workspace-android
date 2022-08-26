@@ -40,12 +40,14 @@ class ActionBarController(private val layout: ActionBarLayout) {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            println("ActionBarController.setupActionBar $destination")
             val isTopLevelDestination = matchDestinations(
                 destination,
                 appBarConfiguration.topLevelDestinations
             )
-            if (isTopLevelDestination && (destination.label != layout.context.getString(R.string.nav_title_tasks))) {
-                layout.collapse(false)
+
+            if (isTopLevelDestination) {
+                layout.collapse(false, destination.label == layout.context.getString(R.string.nav_title_tasks))
             } else {
                 layout.expand(false)
             }

@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -17,8 +18,10 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
     FrameLayout(context, attrs) {
 
     lateinit var toolbar: Toolbar
+    lateinit var taskToolbar: Toolbar
     lateinit var background: MaterialShapeView
     lateinit var profileView: ProfileIconView
+    lateinit var tvSearchTitle: TextView
 
     private lateinit var expandedView: View
     private lateinit var collapsedView: View
@@ -31,10 +34,12 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         super.onFinishInflate()
 
         toolbar = findViewById(R.id.expanded_toolbar)
+        taskToolbar = findViewById(R.id.task_toolbar)
         background = findViewById(R.id.toolbar_back)
         expandedView = toolbar
         collapsedView = findViewById(R.id.collapsed_toolbar)
         profileView = findViewById(R.id.profile_icon)
+        tvSearchTitle = findViewById(R.id.tv_search_title)
 
         originalRadius = background.radius
         originalTopMargin = (background.layoutParams as MarginLayoutParams).topMargin
@@ -57,12 +62,24 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         expandedView.visibility = View.VISIBLE
     }
 
-    fun collapse(animated: Boolean) {
+    fun collapse(animated: Boolean, isTaskScreen: Boolean = false) {
         if (animated) {
             TransitionManager.beginDelayedTransition(this, makeTransition())
         }
 
-        background.radius = originalRadius
+        if (isTaskScreen) {
+            background.visibility = View.GONE
+            tvSearchTitle.visibility = View.GONE
+            taskToolbar.apply {
+                visibility = VISIBLE
+                title = context.getString(R.string.nav_title_tasks)
+            }
+        } else {
+            taskToolbar.visibility = View.GONE
+            tvSearchTitle.visibility = View.VISIBLE
+            background.visibility = View.VISIBLE
+            background.radius = originalRadius
+        }
 
         val params = background.layoutParams as MarginLayoutParams
         params.marginStart = originalHorizontalMargin

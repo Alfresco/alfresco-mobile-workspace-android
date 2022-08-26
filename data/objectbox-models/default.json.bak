@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "15:3113908618782441744",
+      "lastPropertyId": "16:84855644780396979",
       "name": "Entry",
       "properties": [
         {
@@ -82,6 +82,11 @@
         {
           "id": "15:3113908618782441744",
           "name": "isTotalEntry",
+          "type": 1
+        },
+        {
+          "id": "16:84855644780396979",
+          "name": "isProcessService",
           "type": 1
         }
       ],

@@ -12,4 +12,9 @@
     <string name="component_action_cancel">Annuleren</string>
     <string name="component_number_range_empty">Vereiste waarde</string>
     <string name="size_end_kb">%1$s (kB)</string>
+    <string name="filter.task.due.date">Vervaldatum</string>
+    <string name="filter.task.status">Status</string>
+    <string name="filter.task.name">Taaknaam</string>
+    <string name="filter.option.active">Actief</string>
+    <string name="filter.option.completed">Voltooid</string>
 </resources>

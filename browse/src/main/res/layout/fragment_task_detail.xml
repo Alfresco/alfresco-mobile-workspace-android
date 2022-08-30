@@ -62,6 +62,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_task_title">
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_vertical_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_vertical_60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".5" />
+
+
                 <ImageView
                     android:id="@+id/icon_due_date"
                     android:layout_width="wrap_content"
@@ -69,253 +84,193 @@
                     android:contentDescription="@string/icon_due_date"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_task_calendar"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_20"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_due_date_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="end"
+                    android:layout_marginEnd="8dp"
                     android:letterSpacing="0.03"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
                     android:text="@string/title_due_date"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_due_date"
-                    app:layout_constraintStart_toEndOf="@+id/icon_due_date"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_60"
+                    app:layout_constraintStart_toEndOf="@+id/gl_vertical_20"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_due_date_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_due_date"
-                    app:layout_constraintStart_toEndOf="@+id/tv_due_date_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_priority"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_due_date">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
+                    app:layout_constraintTop_toTopOf="@id/icon_due_date" />
 
                 <ImageView
                     android:id="@+id/icon_priority"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/icon_priority"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_task_priority"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_20"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/icon_due_date" />
 
                 <TextView
                     android:id="@+id/tv_priority_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="end"
+                    android:layout_marginEnd="8dp"
                     android:letterSpacing="0"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
                     android:text="@string/title_priority"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_priority"
-                    app:layout_constraintStart_toEndOf="@id/icon_priority"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_60"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_20"
+                    app:layout_constraintTop_toTopOf="@id/icon_priority" />
 
                 <TextView
                     android:id="@+id/tv_priority_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
+                    android:layout_marginStart="8dp"
                     android:paddingStart="12dp"
                     android:paddingTop="6dp"
                     android:paddingEnd="12dp"
+                    app:layout_constraintHorizontal_bias="0"
                     android:paddingBottom="6dp"
-                    android:singleLine="true"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_priority"
-                    app:layout_constraintStart_toEndOf="@id/tv_priority_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_assigned"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_priority">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
+                    app:layout_constraintTop_toTopOf="@id/icon_priority" />
 
                 <ImageView
                     android:id="@+id/icon_assigned"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/icon_assigned"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_task_user"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_20"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/icon_priority" />
 
                 <TextView
                     android:id="@+id/tv_assigned_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="end"
+                    android:layout_marginEnd="8dp"
                     android:letterSpacing="0"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
                     android:text="@string/title_assignee"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_assigned"
-                    app:layout_constraintStart_toEndOf="@id/icon_assigned"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_60"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_20"
+                    app:layout_constraintTop_toTopOf="@id/icon_assigned" />
 
                 <TextView
                     android:id="@+id/tv_assigned_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_assigned"
-                    app:layout_constraintStart_toEndOf="@id/tv_assigned_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_status"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_assigned">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
+                    app:layout_constraintTop_toTopOf="@id/icon_assigned" />
 
                 <ImageView
                     android:id="@+id/icon_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/icon_status"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_task_status"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_20"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/icon_assigned" />
 
                 <TextView
                     android:id="@+id/tv_status_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="end"
+                    android:layout_marginEnd="8dp"
                     android:letterSpacing="0"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
                     android:text="@string/title_status"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_status"
-                    app:layout_constraintStart_toEndOf="@id/icon_status"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_60"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_20"
+                    app:layout_constraintTop_toTopOf="@id/icon_status" />
 
                 <TextView
                     android:id="@+id/tv_status_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_status"
-                    app:layout_constraintStart_toEndOf="@id/tv_status_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_identifier"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_status">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
+                    app:layout_constraintTop_toTopOf="@id/icon_status" />
 
                 <ImageView
                     android:id="@+id/icon_identifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:contentDescription="@string/icon_identifier"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_task_identifier"
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_20"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/icon_status" />
 
                 <TextView
                     android:id="@+id/tv_identifier_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="end"
                     android:letterSpacing="0"
-                    android:minWidth="120dp"
-                    android:singleLine="true"
                     android:text="@string/title_identifier"
+                    android:layout_marginEnd="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_identifier"
-                    app:layout_constraintStart_toEndOf="@id/icon_identifier"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@id/gl_vertical_60"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_20"
+                    app:layout_constraintTop_toTopOf="@id/icon_identifier" />
 
                 <TextView
                     android:id="@+id/tv_identifier_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_identifier"
-                    app:layout_constraintStart_toEndOf="@id/tv_identifier_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Value" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
+                    app:layout_constraintTop_toTopOf="@id/icon_identifier" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -329,7 +284,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_identifier">
+                app:layout_constraintTop_toBottomOf="@id/cl_due_date">
 
                 <View
                     android:id="@+id/view_comment_1"
@@ -417,11 +372,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:ellipsize="end"
                     android:letterSpacing="0.02"
                     android:lineSpacingExtra="3sp"
                     android:minHeight="20dp"
-                    android:singleLine="true"
                     android:text="@string/text_add_a_comment"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorControlNormal"
@@ -455,13 +408,11 @@
                 app:layout_constraintTop_toBottomOf="@id/cl_comment">
 
                 <TextView
-                    android:id="@+id/tv_attached_files_title"
+                    android:id="@+id/tv_attached_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_attached_files"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textSize="20sp"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/tv_attachment_view_all"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -474,9 +425,9 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorPrimary"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_attached_files_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_attached_title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_attached_files_title" />
+                    app:layout_constraintTop_toTopOf="@id/tv_attached_title" />
 
                 <TextView
                     android:id="@+id/tv_no_of_attachments"
@@ -487,7 +438,7 @@
                     android:textAppearance="?attr/textAppearanceCaption"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_attached_files_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_attached_title" />
 
                 <com.airbnb.epoxy.EpoxyRecyclerView
                     android:id="@+id/recycler_view_attachments"
@@ -516,7 +467,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_attached_files_title" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_attached_title" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

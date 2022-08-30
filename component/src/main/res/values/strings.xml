@@ -16,4 +16,11 @@
     <string name="date_format_new" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
     <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="filter.task.due.date">Due date</string>
+    <string name="filter.task.status">Status</string>
+    <string name="filter.task.name">Task Name</string>
+    <string name="filter.option.active">Active</string>
+    <string name="filter.option.completed">Completed</string>
+    <string name="filter.option.due.before">Due Before</string>
+    <string name="filter.option.due.after">Due After</string>
 </resources>

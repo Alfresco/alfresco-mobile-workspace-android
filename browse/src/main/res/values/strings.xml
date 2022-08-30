@@ -59,7 +59,6 @@
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
     <string name="title_status">Status</string>
-    <string name="title_end_date">End date</string>
     <string name="title_identifier">Identifier</string>
     <string name="text_add_a_comment">Add a comment&#8230;</string>
     <string name="text_view_all">View all</string>

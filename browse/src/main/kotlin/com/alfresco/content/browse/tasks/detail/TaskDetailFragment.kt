@@ -178,10 +178,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
         if (state.listContents.isNotEmpty()) {
-            binding.tvAttachedFilesTitle.visibility = View.VISIBLE
-            binding.recyclerViewAttachments.visibility = View.VISIBLE
             binding.tvNoAttachedFilesError.visibility = View.GONE
-            binding.clAttachmentHeader.visibility = View.VISIBLE
+            binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+            binding.recyclerViewAttachments.visibility = View.VISIBLE
 
             if (state.listContents.size > 1)
                 binding.tvNoOfAttachments.visibility = View.VISIBLE
@@ -206,10 +205,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvAttachmentViewAll.visibility = View.GONE
             binding.tvNoOfAttachments.visibility = View.GONE
             if (!viewModel.isTaskCompleted(state)) {
+                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                 binding.tvNoAttachedFilesError.visibility = View.VISIBLE
                 binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
             } else {
-                binding.tvAttachedFilesTitle.visibility - View.GONE
+                binding.tvAttachedTitle.text = ""
                 binding.tvNoAttachedFilesError.visibility = View.GONE
             }
         }

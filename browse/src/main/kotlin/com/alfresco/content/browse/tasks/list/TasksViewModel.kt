@@ -12,6 +12,7 @@ import com.alfresco.content.component.ComponentViewModel
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.TaskFiltersPayload
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
@@ -94,18 +95,18 @@ class TasksViewModel(
     fun applyFilters(list: List<TaskFilterData>) {
         val taskFiltersPayload = TaskFiltersPayload()
         list.filter { it.isSelected }.forEach {
-            when (it.name?.lowercase()) {
-                "due date" -> {
+            when (context.getLocalizedName(it.name?.lowercase() ?: "")) {
+                context.getString(R.string.filter_task_due_date) -> {
                     if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE))
                         taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_BEFORE])
 
                     if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER))
                         taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
                 }
-                "status" -> {
+                context.getString(R.string.filter_task_status) -> {
                     taskFiltersPayload.state = it.selectedQuery
                 }
-                "task name" -> {
+                context.getString(R.string.filter_task_name) -> {
                     taskFiltersPayload.text = it.selectedQuery
                 }
             }

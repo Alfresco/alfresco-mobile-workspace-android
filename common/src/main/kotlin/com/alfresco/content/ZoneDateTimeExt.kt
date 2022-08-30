@@ -13,7 +13,7 @@ const val DATE_FORMAT_4 = "dd MMM yyyy"
  */
 fun String.getDateZoneFormat(currentFormat: String, convertFormat: String): String {
     val date = SimpleDateFormat(currentFormat, Locale.ENGLISH).parse(this)
-    val formatter = SimpleDateFormat(convertFormat, Locale.ENGLISH)
+    val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
     if (date != null)
         return formatter.format(date)
     return this

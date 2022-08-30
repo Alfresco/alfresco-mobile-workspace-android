@@ -12,4 +12,9 @@
     <string name="component_action_cancel">Cancelar</string>
     <string name="component_number_range_empty">Valor requerido</string>
     <string name="size_end_kb">%1$s (KB)</string>
+    <string name="filter.task.due.date">Fecha de vencimiento</string>
+    <string name="filter.task.status">Estado</string>
+    <string name="filter.task.name">Nombre de la tarea</string>
+    <string name="filter.option.active">Activo</string>
+    <string name="filter.option.completed">Completada</string>
 </resources>

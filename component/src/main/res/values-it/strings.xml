@@ -12,4 +12,9 @@
     <string name="component_action_cancel">Annulla</string>
     <string name="component_number_range_empty">Valore obbligatorio</string>
     <string name="size_end_kb">%1$s (KB)</string>
+    <string name="filter.task.due.date">Scadenza</string>
+    <string name="filter.task.status">Stato</string>
+    <string name="filter.task.name">Nome compito</string>
+    <string name="filter.option.active">Attivo</string>
+    <string name="filter.option.completed">Completato</string>
 </resources>

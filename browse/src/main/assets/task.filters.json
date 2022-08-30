@@ -2,16 +2,16 @@
   "filters": [
     {
       "id": 0,
-      "name": "Due date",
+      "name": "filter.task.due.date",
       "selector": "date-range-future",
       "options": [
         {
-          "label": "Due before",
+          "label": "filter.option.due.before",
           "query": "dueBefore",
           "value": ""
         },
         {
-          "label": "Due After",
+          "label": "filter.option.due.after",
           "query": "dueAfter",
           "value": ""
         }
@@ -19,16 +19,16 @@
     },
     {
       "id": 1,
-      "name": "Status",
+      "name": "filter.task.status",
       "selector": "radio",
       "options": [
         {
-          "label": "Active",
+          "label": "filter.option.active",
           "query": "active",
           "value": "state"
         },
         {
-          "label": "Completed",
+          "label": "filter.option.completed",
           "query": "completed",
           "value": "state"
         }
@@ -36,7 +36,7 @@
     },
     {
       "id": 2,
-      "name": "Task Name",
+      "name": "filter.task.name",
       "selector": "text",
       "query": "text",
       "value": ""

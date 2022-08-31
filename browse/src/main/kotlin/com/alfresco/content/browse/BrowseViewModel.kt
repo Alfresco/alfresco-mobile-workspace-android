@@ -164,7 +164,7 @@ class BrowseViewModel(
         }
     }
 
-    private suspend fun fetchNode(path: String, item: String?): Flow<Entry?> = if (item == null) {
+    private suspend fun fetchNode(path: String, item: String?): Flow<Entry?> = if (item.isNullOrEmpty()) {
         flowOf(null)
     } else {
         when (path) {

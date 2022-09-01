@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Trasferimenti</string>
 
-    <string name="account_not_configured">Questo account non è configurato in Process Services.</string>
+    <string name="account_not_configured">I compiti non sono abilitati per questo account.</string>
     <string name="account">Account</string>
     <string name="icon_due_date">Icona scadenza</string>
     <string name="icon_user_profile">Icona profilo utente</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">File allegati</string>
     <string name="text_complete">Per completare</string>
     <string name="dialog_title_complete_task">Completa compito</string>
-    <string name="dialog_message_complete_task">Completare il compito?</string>
+    <string name="dialog_message_complete_task">Vuoi completare il compito? Non potrai più apportare modifiche.</string>
     <string name="dialog_negative_button_complete_task">Annulla</string>
     <string name="dialog_positive_button_complete_task">Conferma</string>
     <string name="icon_send_description">Pulsante Invia</string>

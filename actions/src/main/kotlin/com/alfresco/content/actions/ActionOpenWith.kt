@@ -27,7 +27,8 @@ data class ActionOpenWith(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_open_with,
     override val title: Int = R.string.action_open_with_title,
-    override val eventName: EventName = EventName.OpenWith
+    override val eventName: EventName = EventName.OpenWith,
+    val hasChooser: Boolean = false
 ) : Action {
 
     private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)
@@ -42,7 +43,14 @@ data class ActionOpenWith(
         return if (!entry.isProcessService) {
             showFileChooserDialog(context, target)
             entry
-        } else Entry.updateDownloadEntry(entry, target.path)
+        } else {
+            var path = target.path
+            if (hasChooser) {
+                showFileChooserDialog(context, target)
+                path = ""
+            }
+            Entry.updateDownloadEntry(entry, path)
+        }
     }
 
     private suspend fun fetchRemoteFile(context: Context): File {
@@ -111,7 +119,6 @@ data class ActionOpenWith(
                     .setNegativeButton(
                         context.getString(R.string.action_open_with_cancel)
                     ) { _, _ ->
-
                         deferredDownload.get()?.cancel()
                     }
                     .setCancelable(false)

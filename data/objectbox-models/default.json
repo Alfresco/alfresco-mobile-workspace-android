@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "16:84855644780396979",
+      "lastPropertyId": "17:126023913419070141",
       "name": "Entry",
       "properties": [
         {
@@ -87,6 +87,11 @@
         {
           "id": "16:84855644780396979",
           "name": "isProcessService",
+          "type": 1
+        },
+        {
+          "id": "17:126023913419070141",
+          "name": "isDocFile",
           "type": 1
         }
       ],

@@ -22,6 +22,7 @@ import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.listview.EntryListener
+import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 
@@ -101,18 +102,14 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun onItemClicked(contentEntry: ContentEntry) {
-        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
+        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     override fun onEntryCreated(entry: Entry) {
         if (isAdded)
-            entry.mimeType?.let {
-                startActivity(
-                    Intent(requireActivity(), LocalPreviewActivity::class.java)
-                        .putExtra(LocalPreviewActivity.KEY_PATH, entry.path)
-                        .putExtra(LocalPreviewActivity.KEY_MIME_TYPE, it)
-                        .putExtra(LocalPreviewActivity.KEY_TITLE, entry.name)
-                )
-            }
+            startActivity(
+                Intent(requireActivity(), LocalPreviewActivity::class.java)
+                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry)
+            )
     }
 }

@@ -3,7 +3,10 @@ package com.alfresco.content.browse.preview
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.alfresco.content.actions.Action
 import com.alfresco.content.browse.databinding.ActivityLocalPreviewBinding
+import com.alfresco.content.data.Entry
 
 /**
  * Mark as Preview Activity
@@ -22,7 +25,15 @@ class LocalPreviewActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        title = intent.extras?.getString("title")
+        title = if (intent.extras?.containsKey(KEY_ENTRY_OBJ) == true) {
+            (intent.extras?.getParcelable(KEY_ENTRY_OBJ) as Entry?)?.name
+        } else intent.extras?.getString("title")
+
+        Action.showActionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content),
+            binding.bottomView
+        )
     }
 
     override fun onAttachFragment(fragment: Fragment) {
@@ -34,6 +45,7 @@ class LocalPreviewActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_PATH = "path"
+        const val KEY_ENTRY_OBJ = "entryObj"
         const val KEY_MIME_TYPE = "mimeType"
         const val KEY_TITLE = "title"
     }

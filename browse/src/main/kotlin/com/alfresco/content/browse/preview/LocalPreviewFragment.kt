@@ -2,15 +2,23 @@ package com.alfresco.content.browse.preview
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentLocalPreviewBinding
+import com.alfresco.content.data.Entry
+import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.content.viewer.image.ImagePreviewProvider
@@ -22,11 +30,13 @@ import com.alfresco.content.viewer.text.TextPreviewProvider
  * Mark as LocalPreviewArgs
  */
 data class LocalPreviewArgs(
+    val entry: Entry? = null,
     val path: String,
     val title: String,
     val mimeType: String
 ) {
     companion object {
+        private const val ENTRY_OBJ_KEY = "entryObj"
         private const val PATH_KEY = "path"
         private const val TITLE_KEY = "title"
         private const val MIME_TYPE_KEY = "mimeType"
@@ -35,11 +45,20 @@ data class LocalPreviewArgs(
          * returns the LocalPreviewArgs obj
          */
         fun with(args: Bundle): LocalPreviewArgs {
-            return LocalPreviewArgs(
-                args.getString(PATH_KEY, ""),
-                args.getString(TITLE_KEY, ""),
-                args.getString(MIME_TYPE_KEY, "")
-            )
+            if (args.containsKey(ENTRY_OBJ_KEY)) {
+                val entry = args.getParcelable(ENTRY_OBJ_KEY) as Entry?
+                return LocalPreviewArgs(
+                    entry,
+                    path = entry?.path ?: "",
+                    title = entry?.name ?: "",
+                    mimeType = entry?.mimeType ?: ""
+                )
+            } else
+                return LocalPreviewArgs(
+                    path = args.getString(PATH_KEY, ""),
+                    title = args.getString(TITLE_KEY, ""),
+                    mimeType = args.getString(MIME_TYPE_KEY, "")
+                )
         }
     }
 }
@@ -47,8 +66,10 @@ data class LocalPreviewArgs(
 /**
  * Mark as LocalPreviewFragment
  */
-class LocalPreviewFragment : Fragment() {
-
+class LocalPreviewFragment : Fragment(), MavericksView {
+    private lateinit var args: LocalPreviewArgs
+    @OptIn(InternalMavericksApi::class)
+    private val viewModel: LocalPreviewViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: FragmentLocalPreviewBinding
 
     override fun onCreateView(
@@ -60,14 +81,37 @@ class LocalPreviewFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        args = LocalPreviewArgs.with(requireArguments())
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = LocalPreviewArgs.with(requireArguments())
         configureViewer(args)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        withState(viewModel) { state ->
+            if (state.entry?.isProcessService == true)
+                inflater.inflate(R.menu.menu_preview, menu)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.download -> {
+                viewModel.execute()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun configureViewer(argsLocal: LocalPreviewArgs) {
+        requireActivity().invalidateOptionsMenu()
         binding.title.text = argsLocal.title
         val type = MimeType.with(argsLocal.mimeType)
         binding.icon.setImageDrawable(
@@ -104,4 +148,7 @@ class LocalPreviewFragment : Fragment() {
             TextPreviewProvider.isMimeTypeSupported(mimeType) -> TextPreviewProvider
             else -> null
         }?.createViewer()
+
+    override fun invalidate() {
+    }
 }

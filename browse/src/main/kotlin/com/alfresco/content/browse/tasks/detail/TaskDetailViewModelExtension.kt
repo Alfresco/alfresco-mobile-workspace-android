@@ -22,7 +22,7 @@ fun TaskDetailViewModel.updateTaskList() {
  */
 fun TaskDetailViewModel.execute(action: Action) {
     val file = File(repository.session.contentDir, action.entry.fileName)
-    if (repository.session.isFileExists(file) && file.length() != 0L) {
+    if (!action.entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
         entryListener?.onEntryCreated(Entry.updateDownloadEntry(action.entry, file.path))
     } else action.execute(context, GlobalScope)
 }

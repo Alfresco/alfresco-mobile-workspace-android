@@ -9,16 +9,26 @@ import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.data.Entry
 import kotlinx.coroutines.GlobalScope
 
+/**
+ * Marked as LocalPreviewState data class
+ */
 data class LocalPreviewState(
     val entry: Entry?
 ) : MavericksState {
     constructor(args: LocalPreviewArgs) : this(entry = args.entry)
 }
 
+/**
+ * Marked as LocalPreviewViewModel class
+ */
 class LocalPreviewViewModel(
     state: LocalPreviewState,
     val context: Context
 ) : MavericksViewModel<LocalPreviewState>(state) {
+
+    /**
+     * execute to download the files
+     */
     fun execute() = withState { state ->
         state.entry?.let {
             val action = ActionOpenWith(it, hasChooser = true)

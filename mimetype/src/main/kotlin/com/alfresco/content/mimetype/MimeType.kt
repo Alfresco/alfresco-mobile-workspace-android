@@ -178,6 +178,9 @@ enum class MimeType(val icon: Int) {
                 }
         }
 
+        /**
+         * returns true if it's doc file otherwise false
+         */
         fun isDocFile(type: String?): Boolean {
             return when (with(type)) {
                 AUDIO, IMAGE, VIDEO, PDF -> false

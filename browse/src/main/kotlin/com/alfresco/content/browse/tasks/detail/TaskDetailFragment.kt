@@ -22,9 +22,7 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
-import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_MIME_TYPE
-import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_PATH
-import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_TITLE
+import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
@@ -35,6 +33,7 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.updatePriorityView
+import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -216,7 +215,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun onItemClicked(contentEntry: ContentEntry) {
-        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry)))
+        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     private fun taskCompletePrompt() {
@@ -236,13 +235,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     override fun onEntryCreated(entry: Entry) {
         if (isAdded)
-            entry.mimeType?.let {
-                startActivity(
-                    Intent(requireActivity(), LocalPreviewActivity::class.java)
-                        .putExtra(KEY_PATH, entry.path)
-                        .putExtra(KEY_MIME_TYPE, it)
-                        .putExtra(KEY_TITLE, entry.name)
-                )
-            }
+            startActivity(
+                Intent(requireActivity(), LocalPreviewActivity::class.java)
+                    .putExtra(KEY_ENTRY_OBJ, entry)
+            )
     }
 }

@@ -32,7 +32,8 @@ class TaskDetailViewModel(
         getComments()
         getContents()
         viewModelScope.on<ActionOpenWith> {
-            entryListener?.onEntryCreated(it.entry)
+            if (!it.entry.path.isNullOrEmpty())
+                entryListener?.onEntryCreated(it.entry)
         }
     }
 

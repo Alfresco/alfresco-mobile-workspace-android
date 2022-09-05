@@ -1,6 +1,7 @@
 package com.alfresco.content.browse.preview
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,16 +26,18 @@ import com.alfresco.content.viewer.image.ImagePreviewProvider
 import com.alfresco.content.viewer.media.MediaPreviewProvider
 import com.alfresco.content.viewer.pdf.PdfPreviewProvider
 import com.alfresco.content.viewer.text.TextPreviewProvider
+import kotlinx.parcelize.Parcelize
 
 /**
  * Mark as LocalPreviewArgs
  */
+@Parcelize
 data class LocalPreviewArgs(
     val entry: Entry? = null,
     val path: String,
     val title: String,
     val mimeType: String
-) {
+) : Parcelable {
     companion object {
         private const val ENTRY_OBJ_KEY = "entryObj"
         private const val PATH_KEY = "path"
@@ -111,7 +114,7 @@ class LocalPreviewFragment : Fragment(), MavericksView {
     }
 
     private fun configureViewer(argsLocal: LocalPreviewArgs) {
-        requireActivity().invalidateOptionsMenu()
+//        requireActivity().invalidateOptionsMenu()
         binding.title.text = argsLocal.title
         val type = MimeType.with(argsLocal.mimeType)
         binding.icon.setImageDrawable(

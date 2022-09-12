@@ -24,13 +24,6 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
             .putExtra(Intent.EXTRA_MIME_TYPES, input)
     }
 
-    override fun getSynchronousResult(
-        context: Context,
-        input: Array<String>?
-    ): SynchronousResult<List<Uri>>? {
-        return null
-    }
-
     override fun parseResult(resultCode: Int, intent: Intent?): List<Uri> {
         return if (intent == null || resultCode != Activity.RESULT_OK) {
             emptyList()

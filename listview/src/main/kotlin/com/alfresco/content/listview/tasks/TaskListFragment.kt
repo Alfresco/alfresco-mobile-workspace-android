@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +88,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var recyclerViewFilters: EpoxyRecyclerView
     lateinit var parentFilters: LinearLayout
     lateinit var topLoadingIndicator: View
+    lateinit var clParent: CoordinatorLayout
     lateinit var actionReset: ImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,6 +102,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         parentFilters = view.findViewById(R.id.parent_filters)
         topLoadingIndicator = view.findViewById(R.id.loading)
         actionReset = view.findViewById(R.id.action_reset)
+        clParent = view.findViewById(R.id.cl_parent)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()

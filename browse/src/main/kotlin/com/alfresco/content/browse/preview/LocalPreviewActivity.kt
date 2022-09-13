@@ -44,9 +44,6 @@ class LocalPreviewActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val KEY_PATH = "path"
         const val KEY_ENTRY_OBJ = "entryObj"
-        const val KEY_MIME_TYPE = "mimeType"
-        const val KEY_TITLE = "title"
     }
 }

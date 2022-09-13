@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.databinding.DialogCreateLayoutBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-internal typealias CreateFolderSuccessCallback = (String, String) -> Unit
-internal typealias CreateFolderCancelCallback = () -> Unit
+internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
+internal typealias CreateTaskCancelCallback = () -> Unit
 
-class CreateFolderDialog : DialogFragment() {
+class CreateTaskDialog : DialogFragment() {
 
     private val binding: DialogCreateLayoutBinding by lazy {
         DialogCreateLayoutBinding.inflate(LayoutInflater.from(requireContext()), null, false)
@@ -26,21 +26,19 @@ class CreateFolderDialog : DialogFragment() {
         (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
     }
 
-    var onSuccess: CreateFolderSuccessCallback? = null
-    var onCancel: CreateFolderCancelCallback? = null
-    var isUpdate: Boolean = false
+    var onSuccess: CreateTaskSuccessCallback? = null
+    var onCancel: CreateTaskCancelCallback? = null
     var name: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(if (isUpdate) R.string.action_rename_file_folder else R.string.action_create_folder))
+            .setTitle(getString(R.string.action_create_folder))
             .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
                 onCancel?.invoke()
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                if (isUpdate) getString(R.string.action_file_folder_save)
-                else getString(R.string.action_folder_create)
+                getString(R.string.action_folder_create)
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),
@@ -52,7 +50,7 @@ class CreateFolderDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-
+        binding.nameInput.maxLines = 255
         binding.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -66,13 +64,8 @@ class CreateFolderDialog : DialogFragment() {
                 validateInput(s.toString())
             }
         })
-        if (isUpdate && !name.isNullOrEmpty()) {
-            binding.nameInput.setText(name)
-            positiveButton.isEnabled = true
-        } else {
-            // Default disabled
-            positiveButton.isEnabled = false
-        }
+        // Default disabled
+        positiveButton.isEnabled = false
     }
 
     private fun validateInput(title: String) {
@@ -97,7 +90,6 @@ class CreateFolderDialog : DialogFragment() {
 
     data class Builder(
         val context: Context,
-        val updateValue: Boolean,
         val name: String? = null,
         var onSuccess: CreateFolderSuccessCallback? = null,
         var onCancel: CreateFolderCancelCallback? = null
@@ -118,7 +110,6 @@ class CreateFolderDialog : DialogFragment() {
             CreateFolderDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel
-                isUpdate = this@Builder.updateValue
                 name = this@Builder.name
             }.show(fragmentManager, CreateFolderDialog::class.java.simpleName)
         }

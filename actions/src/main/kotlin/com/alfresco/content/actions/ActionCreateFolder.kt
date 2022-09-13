@@ -5,6 +5,7 @@ import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
+import com.alfresco.content.data.ParentEntry
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
@@ -27,20 +28,15 @@ data class ActionCreateFolder(
         suspendCoroutine {
             CreateFolderDialog.Builder(context, false, entry.name)
                 .onSuccess { title, description ->
-                    it.resume(CreateFolderMetadata(title, description))
+                    it.resume(CreateMetadata(title, description))
                 }
                 .onCancel { it.resume(null) }
                 .show()
         }
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_create_folder_toast, entry.name)
-
-    private data class CreateFolderMetadata(
-        val name: String,
-        val description: String
-    )
 }

@@ -44,6 +44,7 @@
     <string name="action_create_folder_toast">%s was created</string>
 
     <string name="action_create_folder">New Folder</string>
+    <string name="action_create_task">Create Task</string>
     <string name="action_folder_cancel">Cancel</string>
     <string name="action_folder_create">Create</string>
 

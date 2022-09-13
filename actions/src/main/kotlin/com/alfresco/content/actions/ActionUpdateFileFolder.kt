@@ -5,6 +5,7 @@ import android.view.View
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
+import com.alfresco.content.data.ParentEntry
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -44,7 +45,7 @@ data class ActionUpdateFileFolder(
         }
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_rename_file_folder_toast, entry.name)

@@ -70,6 +70,9 @@ abstract class TaskListViewModel<S : TaskListViewState>(
         folderListener?.onEntryCreated(entry)
     }
 
+    /**
+     * Set the listener to be notified when a new task created and move to task detail screen
+     */
     fun setListener(listener: EntryListener) {
         folderListener = listener
     }

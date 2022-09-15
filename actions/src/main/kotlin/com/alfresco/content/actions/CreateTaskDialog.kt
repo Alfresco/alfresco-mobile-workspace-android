@@ -17,7 +17,7 @@ internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
 internal typealias CreateTaskCancelCallback = () -> Unit
 
 /**
- * Marked as CreateTaskDialog
+ * Mark as CreateTaskDialog class
  */
 class CreateTaskDialog : DialogFragment() {
 
@@ -91,6 +91,9 @@ class CreateTaskDialog : DialogFragment() {
         }
     }
 
+    /**
+     * Builder to build the create task dialog
+     */
     data class Builder(
         val context: Context,
         val name: String? = null,
@@ -98,12 +101,21 @@ class CreateTaskDialog : DialogFragment() {
         var onCancel: CreateTaskCancelCallback? = null
     ) {
 
+        /**
+         * success callback if create the task
+         */
         fun onSuccess(callback: CreateTaskSuccessCallback?) =
             apply { this.onSuccess = callback }
 
+        /**
+         * cancel callback if dismiss the dialog
+         */
         fun onCancel(callback: CreateTaskCancelCallback?) =
             apply { this.onCancel = callback }
 
+        /**
+         * It will show the create task dialog
+         */
         fun show() {
             val fragmentManager = when (context) {
                 is AppCompatActivity -> context.supportFragmentManager

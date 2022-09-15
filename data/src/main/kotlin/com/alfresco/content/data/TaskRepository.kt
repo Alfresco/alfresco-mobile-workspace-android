@@ -106,6 +106,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     fun getTaskFiltersJSON(): TaskFiltersJson = getModelFromStringJSON(getJsonDataFromAsset(context, TASK_FILTERS_JSON) ?: "")
 
+    /**
+     * It will call the api to create the task and return the TaskEntry type obj
+     */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
             processService.createTask(

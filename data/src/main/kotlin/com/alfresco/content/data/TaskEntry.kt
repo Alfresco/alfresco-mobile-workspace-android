@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
 data class TaskEntry(
     val id: String = "",
     val name: String = "",
+    val description: String = "",
     val assignee: UserDetails? = null,
     val priority: Int = 0,
     val created: ZonedDateTime? = null,
@@ -29,6 +30,7 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
+                description = data.description ?: "",
                 created = data.created,
                 assignee = data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
                 priority = data.priority?.toInt() ?: 0,

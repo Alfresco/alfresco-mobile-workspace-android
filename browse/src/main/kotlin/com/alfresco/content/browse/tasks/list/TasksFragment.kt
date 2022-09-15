@@ -14,6 +14,7 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionCreateTask
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.component.ComponentBuilder
@@ -24,6 +25,7 @@ import com.alfresco.content.component.listViewSortChips
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.hideSoftInput
@@ -62,6 +64,13 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override fun onResume() {
         super.onResume()
         AnalyticsManager().screenViewEvent(PageView.Tasks)
+    }
+
+    override fun onEntryCreated(entry: ParentEntry) {
+        if (isAdded) {
+            onItemClicked(entry as TaskEntry)
+            resetAllFilters()
+        }
     }
 
     private fun scrollToTop() {
@@ -153,7 +162,9 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
             }
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
-//                showCreateSheet()
+                val action = ActionCreateTask(TaskEntry())
+                AnalyticsManager().taskEvent(action.eventName)
+                viewModel.execute(requireContext(), action)
             }
         }
 

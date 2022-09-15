@@ -6,6 +6,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.actions.Action
 import com.alfresco.content.browse.R
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentViewModel
@@ -18,6 +19,7 @@ import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import java.text.SimpleDateFormat
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -182,6 +184,8 @@ class TasksViewModel(
 
         return currentFormat.parse(dateString)?.let { zonedFormat.format(it) } ?: ""
     }
+
+    fun execute(requireContext: Context, action: Action) = action.execute(requireContext, GlobalScope)
 
     companion object : MavericksViewModelFactory<TasksViewModel, TasksViewState> {
 

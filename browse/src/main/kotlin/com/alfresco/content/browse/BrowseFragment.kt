@@ -25,6 +25,7 @@ import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
@@ -212,8 +213,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
-            onItemClicked(entry)
+            onItemClicked(entry as Entry)
     }
 }

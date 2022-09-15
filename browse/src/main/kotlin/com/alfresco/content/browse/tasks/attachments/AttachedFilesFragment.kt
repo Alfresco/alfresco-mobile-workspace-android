@@ -21,6 +21,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
@@ -105,11 +106,11 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
             startActivity(
                 Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry)
+                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry)
             )
     }
 }

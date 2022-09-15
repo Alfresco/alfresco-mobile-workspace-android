@@ -16,6 +16,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
 internal typealias CreateTaskCancelCallback = () -> Unit
 
+/**
+ * Marked as CreateTaskDialog
+ */
 class CreateTaskDialog : DialogFragment() {
 
     private val binding: DialogCreateLayoutBinding by lazy {
@@ -32,13 +35,13 @@ class CreateTaskDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.action_create_folder))
+            .setTitle(getString(R.string.action_create_task))
             .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
                 onCancel?.invoke()
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                getString(R.string.action_folder_create)
+                getString(R.string.action_task_next)
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),
@@ -69,12 +72,12 @@ class CreateTaskDialog : DialogFragment() {
     }
 
     private fun validateInput(title: String) {
-        val isValid = isFolderNameValid(title)
+        val isValid = isTaskNameValid(title)
         val isEmpty = title.isEmpty()
 
         binding.nameInputLayout.error = when {
-            !isValid -> resources.getString(R.string.action_folder_name_invalid_chars)
-            isEmpty -> resources.getString(R.string.action_folder_name_empty)
+            !isValid -> resources.getString(R.string.action_task_name_invalid_chars)
+            isEmpty -> resources.getString(R.string.action_task_name_empty)
             else -> null
         }
 
@@ -82,7 +85,7 @@ class CreateTaskDialog : DialogFragment() {
     }
 
     private companion object {
-        fun isFolderNameValid(filename: String): Boolean {
+        fun isTaskNameValid(filename: String): Boolean {
             val reservedChars = "?:\"*|/\\<>\u0000"
             return filename.all { c -> reservedChars.indexOf(c) == -1 }
         }
@@ -91,14 +94,14 @@ class CreateTaskDialog : DialogFragment() {
     data class Builder(
         val context: Context,
         val name: String? = null,
-        var onSuccess: CreateFolderSuccessCallback? = null,
-        var onCancel: CreateFolderCancelCallback? = null
+        var onSuccess: CreateTaskSuccessCallback? = null,
+        var onCancel: CreateTaskCancelCallback? = null
     ) {
 
-        fun onSuccess(callback: CreateFolderSuccessCallback?) =
+        fun onSuccess(callback: CreateTaskSuccessCallback?) =
             apply { this.onSuccess = callback }
 
-        fun onCancel(callback: CreateFolderCancelCallback?) =
+        fun onCancel(callback: CreateTaskCancelCallback?) =
             apply { this.onCancel = callback }
 
         fun show() {
@@ -107,11 +110,11 @@ class CreateTaskDialog : DialogFragment() {
                 is Fragment -> context.childFragmentManager
                 else -> throw IllegalArgumentException()
             }
-            CreateFolderDialog().apply {
+            CreateTaskDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel
                 name = this@Builder.name
-            }.show(fragmentManager, CreateFolderDialog::class.java.simpleName)
+            }.show(fragmentManager, CreateTaskDialog::class.java.simpleName)
         }
     }
 }

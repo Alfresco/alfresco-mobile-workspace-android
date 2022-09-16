@@ -83,7 +83,6 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private lateinit var binding: FragmentSearchBinding
-
     private lateinit var searchView: SearchView
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 

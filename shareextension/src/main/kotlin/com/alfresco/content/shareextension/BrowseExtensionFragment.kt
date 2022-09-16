@@ -12,6 +12,7 @@ import com.alfresco.content.browse.BrowseArgs
 import com.alfresco.content.browse.BrowseViewModel
 import com.alfresco.content.browse.BrowseViewState
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateToContextualSearch
@@ -69,9 +70,9 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
-            onItemClicked(entry)
+            onItemClicked(entry as Entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->

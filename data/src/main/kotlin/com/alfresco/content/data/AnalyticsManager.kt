@@ -78,8 +78,6 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         params.putString(Parameters.FacetName.value, name)
         params.putString(Parameters.EventName.value, EventName.SearchFacets.value.lowercase())
         repository.logEvent(EventName.SearchFacets.value.lowercase(), params)
-        params.putString(Parameters.EventName.value, EventName.SearchFacets.value)
-        repository.logEvent(EventName.SearchFacets.value, params)
     }
 
     /**
@@ -109,6 +107,7 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
      */
     fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "") {
         val apiTrackName = if (status) "${apiName.value}_success".lowercase() else "${apiName.value}_fail".lowercase()
+
         val params = repository.defaultParams()
         params.putString(Parameters.EventName.value, apiTrackName)
         params.putBoolean(Parameters.Success.value, status)

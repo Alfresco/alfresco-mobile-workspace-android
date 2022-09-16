@@ -110,7 +110,7 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     /**
-     * Set the listener to be notified when a new folder created and move to created folder sceen
+     * Set the listener to be notified when a new folder created and move to created folder screen
      */
     fun setListener(listener: EntryListener) {
         folderListener = listener

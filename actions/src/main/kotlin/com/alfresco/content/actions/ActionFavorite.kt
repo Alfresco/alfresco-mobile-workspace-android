@@ -5,6 +5,7 @@ import android.view.View
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.ParentEntry
 
 data class ActionAddFavorite(
     override val entry: Entry,
@@ -19,7 +20,7 @@ data class ActionAddFavorite(
         return entry.copy(isFavorite = true)
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_add_favorite_toast)
@@ -42,7 +43,7 @@ data class ActionRemoveFavorite(
         return entry.copy(isFavorite = false)
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(view, anchorView, R.string.action_remove_favorite_toast)

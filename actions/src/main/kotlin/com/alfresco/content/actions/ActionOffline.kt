@@ -6,6 +6,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OfflineStatus
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.kotlin.ellipsize
 
 data class ActionAddOffline(
@@ -22,7 +23,7 @@ data class ActionAddOffline(
         return res.copy(offlineStatus = OfflineStatus.UNDEFINED)
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(
@@ -44,7 +45,7 @@ data class ActionRemoveOffline(
     override suspend fun execute(context: Context) =
         repository.removeFromSync(entry)
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(

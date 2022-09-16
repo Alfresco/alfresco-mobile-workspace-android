@@ -149,11 +149,11 @@
                     android:paddingStart="12dp"
                     android:paddingTop="6dp"
                     android:paddingEnd="12dp"
-                    app:layout_constraintHorizontal_bias="0"
                     android:paddingBottom="6dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toBottomOf="@id/icon_priority"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@id/gl_vertical_60"
                     app:layout_constraintTop_toTopOf="@id/icon_priority" />
 
@@ -250,9 +250,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
                     android:letterSpacing="0"
                     android:text="@string/title_identifier"
-                    android:layout_marginEnd="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="?attr/colorControlNormal"
                     app:layout_constraintBottom_toBottomOf="@id/icon_identifier"

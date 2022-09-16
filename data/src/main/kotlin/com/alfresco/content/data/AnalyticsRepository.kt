@@ -105,6 +105,7 @@ enum class EventName(val value: String) {
     DISCARD_CAPTURE("event_discard_capture"),
     TaskFilterReset("event_reset"),
     TaskComplete("event_task_complete"),
+    CreateTask("event_create_task"),
     None("event_none")
 }
 

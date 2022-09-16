@@ -46,12 +46,13 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                 actionListLoading { id("loading") }
             }
             state.actions.forEach {
+                val entry = it.entry as Entry
                 actionListRow {
                     id(it.title)
                     action(it)
                     clickListener { _ ->
-                        AnalyticsManager().fileActionEvent(it.entry.mimeType ?: "",
-                            it.entry.name.substringAfterLast(".", ""),
+                        AnalyticsManager().fileActionEvent(entry.mimeType ?: "",
+                            entry.name.substringAfterLast(".", ""),
                             it.eventName)
                         viewModel.execute(it)
                         dismiss()

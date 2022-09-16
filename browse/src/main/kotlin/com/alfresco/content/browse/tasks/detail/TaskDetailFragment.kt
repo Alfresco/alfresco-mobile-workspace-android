@@ -3,10 +3,12 @@ package com.alfresco.content.browse.tasks.detail
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -163,13 +165,28 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
+            binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
             if (viewModel.isTaskCompleted(state)) {
                 binding.tvAddComment.visibility = View.GONE
                 binding.iconAddCommentUser.visibility = View.GONE
+                binding.iconCompleted.visibility = View.VISIBLE
+                binding.tvCompletedTitle.visibility = View.VISIBLE
+                binding.tvCompletedValue.visibility = View.VISIBLE
                 if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
-                binding.tvStatusValue.text = getString(R.string.status_completed)
+                binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
+                (binding.iconDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+                }
+                binding.tvStatusValue.visibility = View.GONE
             } else {
+                binding.iconCompleted.visibility = View.GONE
+                binding.tvCompletedTitle.visibility = View.GONE
+                binding.tvCompletedValue.visibility = View.GONE
+                (binding.iconDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
+                }
+                binding.tvStatusValue.visibility = View.VISIBLE
                 binding.tvStatusValue.text = getString(R.string.status_active)
             }
         }

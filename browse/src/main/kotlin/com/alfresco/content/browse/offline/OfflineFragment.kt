@@ -13,6 +13,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
@@ -32,7 +33,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         fab = null
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         TODO("Not yet implemented")
     }
 

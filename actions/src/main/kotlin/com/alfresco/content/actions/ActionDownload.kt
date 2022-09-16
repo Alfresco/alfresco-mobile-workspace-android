@@ -16,6 +16,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.ParentEntry
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.coroutines.cancellation.CancellationException
@@ -131,7 +132,7 @@ data class ActionDownload(
         dm?.enqueue(request) ?: throw CancellationException("Missing DownloadManager service.")
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         toastMessage.let { Action.showToast(view, anchorView, it) }

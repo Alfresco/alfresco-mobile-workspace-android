@@ -7,8 +7,8 @@ import androidx.annotation.StringRes
 import com.alfresco.Logger
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
@@ -18,13 +18,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 interface Action {
-    val entry: Entry
+    val entry: ParentEntry
     val icon: Int
     val title: Int
     val eventName: EventName
 
-    suspend fun execute(context: Context): Entry
-    fun copy(_entry: Entry): Action
+    suspend fun execute(context: Context): ParentEntry
+    fun copy(_entry: ParentEntry): Action
 
     fun execute(
         context: Context,

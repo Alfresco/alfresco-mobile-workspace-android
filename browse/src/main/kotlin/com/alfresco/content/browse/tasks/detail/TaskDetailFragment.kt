@@ -32,6 +32,7 @@ import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.updatePriorityView
@@ -250,11 +251,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         taskCompleteConfirmationDialog = WeakReference(dialog)
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
             startActivity(
                 Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(KEY_ENTRY_OBJ, entry)
+                    .putExtra(KEY_ENTRY_OBJ, entry as Entry)
             )
     }
 }

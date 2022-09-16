@@ -73,7 +73,7 @@ data class Entry(
     val isProcessService: Boolean = false,
     @Transient
     val parentPaths: MutableList<String> = mutableListOf()
-) : Parcelable {
+) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
         get() = offlineStatus == OfflineStatus.SYNCED

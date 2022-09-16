@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
@@ -53,7 +55,10 @@ class CreateTaskDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.nameInput.maxLines = 255
+
+        binding.nameInput.filters = arrayOf<InputFilter>(LengthFilter(255))
+        binding.descriptionInput.filters = arrayOf<InputFilter>(LengthFilter(500))
+
         binding.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op

@@ -5,18 +5,16 @@
     android:layout_height="wrap_content"
     android:visibility="gone">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_input_layout"
+    <TextView
+        android:id="@+id/tv_task_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:letterSpacing="0.01"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorControlNormal"
+        android:textSize="16sp" />
 
 </FrameLayout>

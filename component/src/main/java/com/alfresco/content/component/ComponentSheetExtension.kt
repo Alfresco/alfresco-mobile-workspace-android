@@ -11,18 +11,18 @@ import com.alfresco.content.component.ComponentViewModel.Companion.DUE_BEFORE
 import com.alfresco.content.getLocalizedName
 
 /**
- * setup the Text Component
+ * setup the SingleInputText Component
  * @param state
  */
-fun ComponentSheet.setupTextComponent(state: ComponentState) {
-    binding.parentView.addView(binding.frameText)
-    binding.textComponent.componentParent.visibility = View.VISIBLE
-    binding.textComponent.nameInput.isFocusableInTouchMode = true
-    binding.textComponent.nameInput.requestFocus()
-    binding.textComponent.nameInputLayout.hint = requireContext().getLocalizedName(state.parent?.properties?.placeholder ?: "")
-    binding.textComponent.nameInput.setText(state.parent?.selectedName)
-    state.parent?.selectedName?.length?.let { length -> binding.textComponent.nameInput.setSelection(length) }
-    binding.textComponent.nameInputLayout.editText?.addTextChangedListener(nameInputTextWatcher)
+fun ComponentSheet.setupSingleInputTextComponent(state: ComponentState) {
+    binding.parentView.addView(binding.frameSingleInputText)
+    binding.singleInputTextComponent.componentParent.visibility = View.VISIBLE
+    binding.singleInputTextComponent.nameInput.isFocusableInTouchMode = true
+    binding.singleInputTextComponent.nameInput.requestFocus()
+    binding.singleInputTextComponent.nameInputLayout.hint = requireContext().getLocalizedName(state.parent?.properties?.placeholder ?: "")
+    binding.singleInputTextComponent.nameInput.setText(state.parent?.selectedName)
+    state.parent?.selectedName?.length?.let { length -> binding.singleInputTextComponent.nameInput.setSelection(length) }
+    binding.singleInputTextComponent.nameInputLayout.editText?.addTextChangedListener(nameInputTextWatcher)
 }
 
 /**
@@ -178,6 +178,21 @@ fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: Compone
 
     binding.facetCheckListComponent.recyclerView.setController(epoxyCheckFacetListController)
     binding.facetCheckListComponent.searchInputLayout.editText?.addTextChangedListener(searchInputTextWatcher)
+}
+
+/**
+ * setup the Text Component
+ * @param state
+ */
+fun ComponentSheet.setupTextComponent(state: ComponentState) {
+    binding.parentView.addView(binding.frameText)
+
+    binding.textComponent.tvTaskDescription.text = state.parent?.value ?: ""
+
+    binding.bottomView.visibility = View.GONE
+    binding.separator.visibility = View.GONE
+    binding.bottomSeparator.visibility = View.GONE
+    binding.textComponent.componentParent.visibility = View.VISIBLE
 }
 
 private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): LinearLayout.LayoutParams {

@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.tasks.detail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
@@ -26,6 +28,10 @@ import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.component.ComponentBuilder
+import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.ComponentType
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
@@ -35,12 +41,20 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
+import com.alfresco.content.listview.addReadMore
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Marked as TaskDetailFragment class
@@ -53,6 +67,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,7 +112,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.tvAttachmentViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
         }
-
         binding.completeButton.setOnClickListener {
             taskCompletePrompt()
         }
@@ -167,6 +181,12 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
+
+            binding.tvTaskDescription.addReadMore(requireContext().getString(R.string.text_view_all)) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    showComponentSheetDialog(requireContext(), ComponentData(value = dataObj.description, selector = ComponentType.VIEW_TEXT.value))
+                }
+            }
 
             if (viewModel.isTaskCompleted(state)) {
                 binding.tvAddComment.visibility = View.GONE
@@ -257,5 +277,29 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 Intent(requireActivity(), LocalPreviewActivity::class.java)
                     .putExtra(KEY_ENTRY_OBJ, entry as Entry)
             )
+    }
+
+    private suspend fun showComponentSheetDialog(
+        context: Context,
+        componentData: ComponentData
+    ) = withContext(dispatcher) {
+        suspendCoroutine {
+
+            ComponentBuilder(context, componentData)
+                .onApply { name, query, _ ->
+                    executeContinuation(it, name, query)
+                }
+                .onReset { name, query, _ ->
+                    executeContinuation(it, name, query)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
+    }
+
+    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+        continuation.resume(ComponentMetaData(name = name, query = query))
     }
 }

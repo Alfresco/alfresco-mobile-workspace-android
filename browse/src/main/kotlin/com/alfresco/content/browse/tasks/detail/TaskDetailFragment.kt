@@ -164,7 +164,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
-            binding.tvTaskDescription.text = dataObj.description
 
             if (viewModel.isTaskCompleted(state)) {
                 binding.tvAddComment.visibility = View.GONE

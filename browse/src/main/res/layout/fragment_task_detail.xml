@@ -50,24 +50,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
 
-            <TextView
-                android:id="@+id/tv_task_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginEnd="16dp"
-                android:letterSpacing="0.01"
-                android:maxLines="4"
-                android:ellipsize="end"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorControlNormal"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_task_title"
-                tools:text="Title" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_due_date"
                 android:layout_width="0dp"
@@ -78,7 +60,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_task_description">
+                app:layout_constraintTop_toBottomOf="@id/tv_task_title">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/gl_vertical_20"

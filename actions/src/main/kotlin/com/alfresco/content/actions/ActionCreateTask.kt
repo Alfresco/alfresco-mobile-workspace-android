@@ -2,6 +2,7 @@ package com.alfresco.content.actions
 
 import android.content.Context
 import android.view.View
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
@@ -23,6 +24,7 @@ data class ActionCreateTask(
 ) : Action {
     override suspend fun execute(context: Context): TaskEntry {
         val result = showCreateTaskDialog(context) ?: throw CancellationException("User Cancellation")
+        AnalyticsManager().taskEvent(eventName)
         return TaskRepository().createTask(result.name, result.description)
     }
 

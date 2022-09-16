@@ -163,7 +163,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
                 val action = ActionCreateTask(TaskEntry())
-                AnalyticsManager().taskEvent(action.eventName)
                 viewModel.execute(requireContext(), action)
             }
         }

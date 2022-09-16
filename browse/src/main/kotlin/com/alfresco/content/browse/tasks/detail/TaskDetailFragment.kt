@@ -41,7 +41,7 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.getDateZoneFormat
 import com.alfresco.content.listview.EntryListener
-import com.alfresco.content.listview.addReadMore
+import com.alfresco.content.listview.addTextViewPrefix
 import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
@@ -182,7 +182,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
-            binding.tvTaskDescription.addReadMore(requireContext().getString(R.string.text_view_all)) {
+            binding.tvTaskDescription.addTextViewPrefix(requireContext().getString(R.string.text_view_all)) {
                 viewLifecycleOwner.lifecycleScope.launch {
                     showComponentSheetDialog(requireContext(), ComponentData(value = dataObj.description, selector = ComponentType.VIEW_TEXT.value))
                 }
@@ -199,6 +199,8 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 (binding.iconDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                     topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
                 }
+                binding.iconStatus.visibility = View.GONE
+                binding.tvStatusTitle.visibility = View.GONE
                 binding.tvStatusValue.visibility = View.GONE
             } else {
                 binding.iconCompleted.visibility = View.GONE
@@ -207,6 +209,8 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 (binding.iconDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                     topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
                 }
+                binding.iconStatus.visibility = View.VISIBLE
+                binding.tvStatusTitle.visibility = View.VISIBLE
                 binding.tvStatusValue.visibility = View.VISIBLE
                 binding.tvStatusValue.text = getString(R.string.status_active)
             }

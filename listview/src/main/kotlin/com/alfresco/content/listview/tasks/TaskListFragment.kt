@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -21,13 +22,16 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionCreateTask
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary
 import com.alfresco.content.listview.listViewPageLoading
 import com.alfresco.content.simpleController
+import com.alfresco.events.on
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -55,6 +59,24 @@ abstract class TaskListViewModel<S : TaskListViewState>(
     initialState: S
 ) : MavericksViewModel<S>(initialState) {
 
+    private var folderListener: EntryListener? = null
+
+    init {
+        viewModelScope.on<ActionCreateTask> { onCreateTask(it.entry) }
+    }
+
+    private fun onCreateTask(entry: TaskEntry) {
+        refresh()
+        folderListener?.onEntryCreated(entry)
+    }
+
+    /**
+     * Set the listener to be notified when a new task created and move to task detail screen
+     */
+    fun setListener(listener: EntryListener) {
+        folderListener = listener
+    }
+
     /**
      * it executes on pull to refresh
      */
@@ -75,7 +97,7 @@ abstract class TaskListViewModel<S : TaskListViewState>(
  * Mark as TaskListFragment class
  */
 abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState>(layoutID: Int = R.layout.fragment_task_list) :
-    Fragment(layoutID), MavericksView {
+    Fragment(layoutID), MavericksView, EntryListener {
     abstract val viewModel: VM
 
     lateinit var loadingAnimation: View
@@ -87,6 +109,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var recyclerViewFilters: EpoxyRecyclerView
     lateinit var parentFilters: LinearLayout
     lateinit var topLoadingIndicator: View
+    lateinit var clParent: CoordinatorLayout
     lateinit var actionReset: ImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,11 +123,13 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         parentFilters = view.findViewById(R.id.parent_filters)
         topLoadingIndicator = view.findViewById(R.id.loading)
         actionReset = view.findViewById(R.id.action_reset)
+        clParent = view.findViewById(R.id.cl_parent)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
         }
         recyclerView.setController(epoxyController)
+        viewModel.setListener(this)
 
         epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

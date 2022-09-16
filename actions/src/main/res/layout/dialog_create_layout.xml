@@ -7,14 +7,14 @@
     android:paddingHorizontal="?attr/dialogPreferredPadding">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/folder_name_input_layout"
+        android:id="@+id/name_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="@string/action_folder_name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/folder_name_input"
+            android:id="@+id/name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text" />
@@ -22,14 +22,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/folder_description_input_layout"
+        android:id="@+id/description_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="@string/capture_description_hint">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/folder_description_input"
+            android:id="@+id/description_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text" />

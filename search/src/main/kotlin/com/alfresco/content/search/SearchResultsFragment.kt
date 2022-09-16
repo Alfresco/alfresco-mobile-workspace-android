@@ -11,6 +11,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
@@ -75,7 +76,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         }
     }
 
-    override fun onEntryCreated(entry: Entry) {
+    override fun onEntryCreated(entry: ParentEntry) {
         TODO("Not yet implemented")
     }
 

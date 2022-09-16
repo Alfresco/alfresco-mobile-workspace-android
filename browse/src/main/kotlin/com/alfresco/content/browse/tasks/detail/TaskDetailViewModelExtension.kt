@@ -21,9 +21,10 @@ fun TaskDetailViewModel.updateTaskList() {
  * execute "open with" action to download the content data
  */
 fun TaskDetailViewModel.execute(action: Action) {
-    val file = File(repository.session.contentDir, action.entry.fileName)
-    if (!action.entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
-        entryListener?.onEntryCreated(Entry.updateDownloadEntry(action.entry, file.path))
+    val entry = action.entry as Entry
+    val file = File(repository.session.contentDir, entry.fileName)
+    if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
+        entryListener?.onEntryCreated(Entry.updateDownloadEntry(entry, file.path))
     } else action.execute(context, GlobalScope)
 }
 

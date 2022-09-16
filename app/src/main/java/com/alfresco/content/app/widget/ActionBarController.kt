@@ -40,7 +40,6 @@ class ActionBarController(private val layout: ActionBarLayout) {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            println("ActionBarController.setupActionBar $destination")
             val isTopLevelDestination = matchDestinations(
                 destination,
                 appBarConfiguration.topLevelDestinations

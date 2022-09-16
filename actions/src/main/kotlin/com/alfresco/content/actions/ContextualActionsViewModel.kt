@@ -53,10 +53,11 @@ internal class ContextualActionsViewModel(
 
     private fun updateState(action: Action) {
         setState {
+            val entry = action.entry as Entry
             ContextualActionsState(
-                action.entry,
-                makeActions(action.entry),
-                makeTopActions(action.entry)
+                entry,
+                makeActions(entry),
+                makeTopActions(entry)
             )
         }
     }

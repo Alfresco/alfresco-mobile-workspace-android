@@ -3,12 +3,19 @@ package com.alfresco.content.browse.tasks.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.setMargins
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Mavericks
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionCreateTask
+import com.alfresco.content.browse.R
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -18,11 +25,13 @@ import com.alfresco.content.component.listViewSortChips
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.listview.tasks.TaskListFragment
 import com.alfresco.content.simpleController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -57,6 +66,13 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         AnalyticsManager().screenViewEvent(PageView.Tasks)
     }
 
+    override fun onEntryCreated(entry: ParentEntry) {
+        if (isAdded) {
+            onItemClicked(entry as TaskEntry)
+            resetAllFilters()
+        }
+    }
+
     private fun scrollToTop() {
         if (isResumed) {
             recyclerView.layoutManager?.scrollToPosition(0)
@@ -68,6 +84,10 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         epoxyControllerFilters.requestModelBuild()
         if (state.page == 0)
             scrollToTop()
+
+        if (state.request is Success) {
+            clParent.addView(makeFab(requireContext()))
+        }
     }
 
     private fun epoxyControllerFilters() = simpleController(viewModel) { state ->
@@ -126,6 +146,26 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 .show()
         }
     }
+
+    private fun makeFab(context: Context) =
+        FloatingActionButton(context).apply {
+            layoutParams = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.BOTTOM or Gravity.END
+                // TODO: define margins
+                setMargins(
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                        .toInt()
+                )
+            }
+            setImageResource(R.drawable.ic_add_fab)
+            setOnClickListener {
+                val action = ActionCreateTask(TaskEntry())
+                viewModel.execute(requireContext(), action)
+            }
+        }
 
     private fun executeContinuation(
         continuation: Continuation<ComponentMetaData?>,

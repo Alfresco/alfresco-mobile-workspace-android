@@ -6,6 +6,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.kotlin.ellipsize
@@ -46,7 +47,7 @@ data class ActionDelete(
         }
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(
@@ -68,7 +69,7 @@ data class ActionRestore(
         return entry
     }
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(
@@ -116,7 +117,7 @@ data class ActionDeleteForever(
 
     private suspend inline fun delete(entry: Entry) = TrashCanRepository().deleteForeverEntry(entry)
 
-    override fun copy(_entry: Entry): Action = copy(entry = _entry)
+    override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
         Action.showToast(

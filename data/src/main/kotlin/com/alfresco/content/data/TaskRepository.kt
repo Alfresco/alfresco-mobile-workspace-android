@@ -7,6 +7,7 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
+import com.alfresco.process.models.TaskBodyCreate
 import java.io.File
 
 /**
@@ -104,4 +105,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * Get TaskFilterDataModel from the internal storage or from assets
      */
     fun getTaskFiltersJSON(): TaskFiltersJson = getModelFromStringJSON(getJsonDataFromAsset(context, TASK_FILTERS_JSON) ?: "")
+
+    /**
+     * It will call the api to create the task and return the TaskEntry type obj
+     */
+    suspend fun createTask(name: String, description: String): TaskEntry {
+        return TaskEntry.with(
+            processService.createTask(
+                TaskBodyCreate(
+                    name = name,
+                    description = description
+                )
+            )
+        )
+    }
 }

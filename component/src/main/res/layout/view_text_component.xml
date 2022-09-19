@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/componentParent"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_input_layout"
+    <LinearLayout
+        android:id="@+id/componentParent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name_input"
+        <TextView
+            android:id="@+id/tv_task_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:letterSpacing="0.01"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textSize="20sp"
+            android:textStyle="" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/tv_task_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.01"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="16sp" />
 
-</FrameLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

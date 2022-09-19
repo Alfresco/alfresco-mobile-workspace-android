@@ -54,6 +54,17 @@
 
 
         <FrameLayout
+            android:id="@+id/frameSingleInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <include
+                android:id="@+id/singleInputTextComponent"
+                layout="@layout/view_single_input_text_component" />
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/frameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,6 +145,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/bottom_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"

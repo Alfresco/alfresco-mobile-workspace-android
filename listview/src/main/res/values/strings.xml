@@ -14,4 +14,5 @@
     <string name="priority_high">High</string>
     <string name="priority_none">NA</string>
     <string name="text_read_more_space">...Read more</string>
+    <string name="text_view">...Read more</string>
 </resources>

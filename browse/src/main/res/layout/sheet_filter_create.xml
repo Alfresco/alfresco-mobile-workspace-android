@@ -60,8 +60,8 @@
             android:layout_marginTop="8dp">
 
             <include
-                android:id="@+id/textComponent"
-                layout="@layout/view_text_component" />
+                android:id="@+id/singleInputTextComponent"
+                layout="@layout/view_single_input_text_component" />
         </FrameLayout>
 
         <FrameLayout

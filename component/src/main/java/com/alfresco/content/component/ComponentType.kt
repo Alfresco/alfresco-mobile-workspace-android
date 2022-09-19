@@ -6,6 +6,7 @@ package com.alfresco.content.component
 enum class ComponentType(val value: String) {
 
     TEXT("text"),
+    VIEW_TEXT("view-text"),
     CHECK_LIST("check-list"),
     SLIDER("slider"),
     NUMBER_RANGE("number-range"),

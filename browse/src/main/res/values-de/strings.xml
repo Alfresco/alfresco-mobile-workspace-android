@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Übertragungen</string>
 
-    <string name="account_not_configured">Dieses Konto ist nicht in „Process Services“ konfiguriert.</string>
+    <string name="account_not_configured">Aufgaben sind für diesen Account nicht aktiviert.</string>
     <string name="account">Account</string>
     <string name="icon_due_date">Symbol für Fälligkeitsdatum</string>
     <string name="icon_user_profile">Symbol für Benutzerprofil</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">Angehängte Dateien</string>
     <string name="text_complete">Abgeschlossen</string>
     <string name="dialog_title_complete_task">Aufgabe abschließen</string>
-    <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen?</string>
+    <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
     <string name="dialog_negative_button_complete_task">Abbrechen</string>
     <string name="dialog_positive_button_complete_task">Bestätigen</string>
     <string name="icon_send_description">Schaltfläche „Senden“</string>

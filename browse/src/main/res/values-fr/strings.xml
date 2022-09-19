@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Transferts</string>
 
-    <string name="account_not_configured">Ce compte n\'est pas configuré sur \'Process Services\'.</string>
+    <string name="account_not_configured">Les tâches ne sont pas activées pour ce compte.</string>
     <string name="account">Compte</string>
     <string name="icon_due_date">Icône de la date d\'échéance</string>
     <string name="icon_user_profile">Icône du profil d\'utilisateur</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">Fichiers joints</string>
     <string name="text_complete">A terminer</string>
     <string name="dialog_title_complete_task">Terminer la tâche</string>
-    <string name="dialog_message_complete_task">Etes-vous sûr de vouloir terminer la tâche ?</string>
+    <string name="dialog_message_complete_task">Etes-vous sûr de vouloir terminer la tâche ? Vous ne pourrez plus faire de modifications.</string>
     <string name="dialog_negative_button_complete_task">Annuler</string>
     <string name="dialog_positive_button_complete_task">Confirmer</string>
     <string name="icon_send_description">Bouton Envoyer</string>

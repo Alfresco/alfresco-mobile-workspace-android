@@ -1,11 +1,13 @@
 package com.alfresco.content
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.textfield.TextInputEditText
 
 inline fun <reified T : Context> Context.findBaseContext(): T? {
     var ctx: Context? = this
@@ -30,6 +32,15 @@ fun FragmentActivity.hideSoftInput() {
 }
 
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
+
+/**
+ * show keyboard
+ */
+fun Context.showKeyboard(edt: TextInputEditText) {
+    edt.requestFocus()
+    val imm: InputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(edt, 0)
+}
 
 /**
  * @return the localised string from string.xml if found otherwise the same name

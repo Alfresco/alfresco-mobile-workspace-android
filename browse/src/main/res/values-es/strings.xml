@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Transferencias</string>
 
-    <string name="account_not_configured">Esta cuenta no está configurada en "Process Services"</string>
+    <string name="account_not_configured">Las tareas no están habilitadas para esta cuenta</string>
     <string name="account">Cuenta</string>
     <string name="icon_due_date">Icono de fecha de vencimiento</string>
     <string name="icon_user_profile">Icono de perfil de usuario</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">Ficheros adjuntos</string>
     <string name="text_complete">Por completar</string>
     <string name="dialog_title_complete_task">Completar tarea</string>
-    <string name="dialog_message_complete_task">¿Está seguro de que desea completar la tarea?</string>
+    <string name="dialog_message_complete_task">¿Está seguro de que desea completar la tarea? Ya no podrá realizar ningún cambio.</string>
     <string name="dialog_negative_button_complete_task">Cancelar</string>
     <string name="dialog_positive_button_complete_task">Confirmar</string>
     <string name="icon_send_description">Botón Enviar</string>

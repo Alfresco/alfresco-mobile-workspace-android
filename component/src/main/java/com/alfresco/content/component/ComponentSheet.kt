@@ -206,7 +206,8 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             binding.title.text = localizedName
 
         when (val selector = state.parent?.selector) {
-            ComponentType.TEXT.value -> setupTextComponent(state)
+            ComponentType.TEXT.value -> setupSingleInputTextComponent(state)
+            ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
             ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
             ComponentType.RADIO.value -> setupRadioListComponent(state, viewModel)
             ComponentType.NUMBER_RANGE.value -> setupNumberRangeComponent(state, viewModel)

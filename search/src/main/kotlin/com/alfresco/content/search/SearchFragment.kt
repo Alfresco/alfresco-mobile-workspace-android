@@ -425,10 +425,10 @@ class SearchFragment : Fragment(), MavericksView {
                 searchChipCategory.selectedName, searchChipCategory.selectedQuery
             )
             ComponentBuilder(context, componentData)
-                .onApply { name, query, queryMap ->
+                .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
                 }
-                .onReset { name, query, queryMap ->
+                .onReset { name, query, _ ->
                     executeContinuation(it, name, query)
                 }
                 .onCancel {

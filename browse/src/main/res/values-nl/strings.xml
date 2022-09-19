@@ -42,7 +42,7 @@
 
     <string name="title_transfers">Overdrachten</string>
 
-    <string name="account_not_configured">Dit account is niet geconfigureerd in „Process Services“.</string>
+    <string name="account_not_configured">Taken zijn niet ingeschakeld voor dit account.</string>
     <string name="account">Account</string>
     <string name="icon_due_date">Pictogram Vervaldatum</string>
     <string name="icon_user_profile">Pictogram Gebruikersprofiel</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">Bijgevoegde bestanden</string>
     <string name="text_complete">Voltooien</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
-    <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien?</string>
+    <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>
     <string name="dialog_negative_button_complete_task">Annuleren</string>
     <string name="dialog_positive_button_complete_task">Bevestigen</string>
     <string name="icon_send_description">Knop Verzenden</string>

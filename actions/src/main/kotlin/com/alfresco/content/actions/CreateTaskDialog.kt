@@ -4,8 +4,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -53,7 +56,8 @@ class CreateTaskDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.nameInput.maxLines = 255
+        binding.nameInput.filters = arrayOf<InputFilter>(LengthFilter(255))
+        binding.descriptionInput.filters = arrayOf<InputFilter>(LengthFilter(500))
         binding.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // no-op
@@ -67,28 +71,23 @@ class CreateTaskDialog : DialogFragment() {
                 validateInput(s.toString())
             }
         })
+
         // Default disabled
         positiveButton.isEnabled = false
+
+        binding.nameInput.requestFocus()
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     private fun validateInput(title: String) {
-        val isValid = isTaskNameValid(title)
         val isEmpty = title.isEmpty()
 
         binding.nameInputLayout.error = when {
-            !isValid -> resources.getString(R.string.action_task_name_invalid_chars)
             isEmpty -> resources.getString(R.string.action_task_name_empty)
             else -> null
         }
 
-        positiveButton.isEnabled = isValid && !isEmpty
-    }
-
-    private companion object {
-        fun isTaskNameValid(filename: String): Boolean {
-            val reservedChars = "?:\"*|/\\<>\u0000"
-            return filename.all { c -> reservedChars.indexOf(c) == -1 }
-        }
+        positiveButton.isEnabled = !isEmpty
     }
 
     /**

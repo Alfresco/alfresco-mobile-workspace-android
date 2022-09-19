@@ -1,7 +1,6 @@
 package com.alfresco.content.browse.tasks.comments
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
@@ -9,7 +8,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -23,9 +21,9 @@ import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.hideSoftInput
+import com.alfresco.content.showKeyboard
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
-import com.google.android.material.textfield.TextInputEditText
 
 /**
  * Marked as CommentsFragment class
@@ -141,7 +139,7 @@ class CommentsFragment : Fragment(), MavericksView {
         }
 
         if (viewModel.isAddComment) {
-            showKeyboard(binding.commentInput)
+            requireContext().showKeyboard(binding.commentInput)
             viewModel.isAddComment = false
         }
 
@@ -153,13 +151,6 @@ class CommentsFragment : Fragment(), MavericksView {
         } else {
             binding.tvNoOfComments.visibility = View.GONE
         }
-    }
-
-    private fun showKeyboard(edt: TextInputEditText) {
-        edt.requestFocus()
-        val imm: InputMethodManager =
-            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(edt, 0)
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->

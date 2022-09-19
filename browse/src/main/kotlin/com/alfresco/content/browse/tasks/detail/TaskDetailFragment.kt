@@ -184,7 +184,14 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
             binding.tvTaskDescription.addTextViewPrefix(requireContext().getString(R.string.text_view_all)) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    showComponentSheetDialog(requireContext(), ComponentData(value = dataObj.description, selector = ComponentType.VIEW_TEXT.value))
+                    showComponentSheetDialog(
+                        requireContext(), ComponentData(
+                            name = requireContext().getString(R.string.task_title),
+                            query = dataObj.name,
+                            value = dataObj.description,
+                            selector = ComponentType.VIEW_TEXT.value
+                        )
+                    )
                 }
             }
 

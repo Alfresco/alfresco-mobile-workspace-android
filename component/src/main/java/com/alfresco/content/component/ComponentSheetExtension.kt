@@ -186,11 +186,10 @@ fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: Compone
  */
 fun ComponentSheet.setupTextComponent(state: ComponentState) {
     binding.parentView.addView(binding.frameText)
-
+    binding.textComponent.tvTaskTitle.text = state.parent?.query ?: ""
     binding.textComponent.tvTaskDescription.text = state.parent?.value ?: ""
 
     binding.bottomView.visibility = View.GONE
-    binding.separator.visibility = View.GONE
     binding.bottomSeparator.visibility = View.GONE
     binding.textComponent.componentParent.visibility = View.VISIBLE
 }

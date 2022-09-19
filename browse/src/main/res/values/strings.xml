@@ -76,5 +76,6 @@
     <string name="icon_send_description">Send Button</string>
     <string name="empty_description">No description</string>
     <string name="icon_completed">Completed icon</string>
+    <string name="task_title">Task</string>
 
 </resources>

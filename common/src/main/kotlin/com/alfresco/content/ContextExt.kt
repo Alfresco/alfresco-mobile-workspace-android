@@ -33,6 +33,9 @@ fun FragmentActivity.hideSoftInput() {
 
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 
+/**
+ * show keyboard
+ */
 fun Context.showKeyboard(edt: TextInputEditText) {
     edt.requestFocus()
     val imm: InputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

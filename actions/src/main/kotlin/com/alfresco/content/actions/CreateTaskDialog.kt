@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.databinding.DialogCreateLayoutBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-
 internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
 internal typealias CreateTaskCancelCallback = () -> Unit
 
@@ -54,7 +53,6 @@ class CreateTaskDialog : DialogFragment() {
             }
             .setView(binding.root)
             .show()
-
 
     override fun onStart() {
         super.onStart()

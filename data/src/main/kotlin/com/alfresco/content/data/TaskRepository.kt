@@ -116,7 +116,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     name = name,
                     description = description
                 )
-            )
+            ), true
         )
     }
 }

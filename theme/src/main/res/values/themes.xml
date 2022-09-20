@@ -73,6 +73,12 @@
         <item name="android:navigationBarColor">#2D2D2D</item>
     </style>
 
+    <style name="Theme.Alfresco.toolbar" parent="Base.V21.Theme.Alfresco">
+        <item name="actionMenuTextColor">@color/alfresco_blue_700</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="Base.Theme.Alfresco" parent="Base.V21.Theme.Alfresco" />
 
     <style name="Base.Theme.Alfresco.Dark" parent="Base.V21.Theme.Alfresco.Dark" />

@@ -71,8 +71,8 @@
     <string name="text_complete">Voltooien</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
     <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>
-    <string name="dialog_negative_button_complete_task">Annuleren</string>
-    <string name="dialog_positive_button_complete_task">Bevestigen</string>
+    <string name="dialog_negative_button_task">Annuleren</string>
+    <string name="dialog_positive_button_task">Bevestigen</string>
     <string name="icon_send_description">Knop Verzenden</string>
 
 </resources>

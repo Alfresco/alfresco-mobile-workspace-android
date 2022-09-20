@@ -70,6 +70,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
+    private var saveProgressConfirmationDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -100,7 +101,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
-            setNavigationOnClickListener { requireActivity().onBackPressed() }
+            setNavigationOnClickListener {
+                if (viewModel.hasTaskEditMode)
+                    saveProgressPrompt()
+                else requireActivity().onBackPressed()
+            }
             title = resources.getString(R.string.title_task_view)
         }
         binding.recyclerViewAttachments.setController(epoxyAttachmentController)
@@ -142,6 +147,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun updateTaskDetailUI(isEdit: Boolean) {
+        viewModel.hasTaskEditMode = isEdit
         if (isEdit) {
             binding.iconTitleEdit.visibility = View.VISIBLE
             binding.iconDueDateClear.visibility = View.VISIBLE
@@ -326,13 +332,27 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.dialog_title_complete_task))
             .setMessage(getString(R.string.dialog_message_complete_task))
-            .setNegativeButton(getString(R.string.dialog_negative_button_complete_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_complete_task)) { _, _ ->
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
                 AnalyticsManager().taskEvent(EventName.TaskComplete)
                 viewModel.completeTask()
             }
             .show()
         taskCompleteConfirmationDialog = WeakReference(dialog)
+    }
+
+    private fun saveProgressPrompt() {
+        val oldDialog = saveProgressConfirmationDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_save_progress))
+            .setMessage(getString(R.string.dialog_message_save_progress))
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                requireActivity().onBackPressed()
+            }
+            .show()
+        saveProgressConfirmationDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

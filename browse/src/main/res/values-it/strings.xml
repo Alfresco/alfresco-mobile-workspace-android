@@ -71,8 +71,8 @@
     <string name="text_complete">Per completare</string>
     <string name="dialog_title_complete_task">Completa compito</string>
     <string name="dialog_message_complete_task">Vuoi completare il compito? Non potrai più apportare modifiche.</string>
-    <string name="dialog_negative_button_complete_task">Annulla</string>
-    <string name="dialog_positive_button_complete_task">Conferma</string>
+    <string name="dialog_negative_button_task">Annulla</string>
+    <string name="dialog_positive_button_task">Conferma</string>
     <string name="icon_send_description">Pulsante Invia</string>
 
 </resources>

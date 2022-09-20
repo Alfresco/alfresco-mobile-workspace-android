@@ -71,8 +71,8 @@
     <string name="text_complete">Abgeschlossen</string>
     <string name="dialog_title_complete_task">Aufgabe abschließen</string>
     <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
-    <string name="dialog_negative_button_complete_task">Abbrechen</string>
-    <string name="dialog_positive_button_complete_task">Bestätigen</string>
+    <string name="dialog_negative_button_task">Abbrechen</string>
+    <string name="dialog_positive_button_task">Bestätigen</string>
     <string name="icon_send_description">Schaltfläche „Senden“</string>
 
 </resources>

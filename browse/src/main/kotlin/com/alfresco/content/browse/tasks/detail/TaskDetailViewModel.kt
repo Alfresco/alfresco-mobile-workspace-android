@@ -25,6 +25,7 @@ class TaskDetailViewModel(
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
     var isAddComment = false
+    var hasTaskEditMode = false
     var entryListener: EntryListener? = null
 
     init {

@@ -697,7 +697,7 @@
         android:layout_marginStart="@dimen/list_layout_margin_button"
         android:layout_marginEnd="@dimen/list_layout_margin_button"
         android:layout_marginBottom="@dimen/list_layout_margin_button"
-        android:text="@string/text_complete"
+        android:text="@string/text_mark_as_complete"
         android:visibility="gone" />
 
 </RelativeLayout>

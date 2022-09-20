@@ -69,7 +69,6 @@
     <string name="empty_no_due_date">No due date</string>
     <string name="title_attached_files">Attached files</string>
     <string name="text_complete">Complete</string>
-    <string name="text_complete">Complete</string>
     <string name="dialog_title_complete_task">Complete Task</string>
     <string name="dialog_message_complete_task">Are you sure you want to complete this task? You will no longer be able to make any changes.</string>
     <string name="dialog_negative_button_task">Cancel</string>

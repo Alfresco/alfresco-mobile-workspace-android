@@ -56,7 +56,7 @@ interface Action {
             AnalyticsManager().apiTracker(APIEvent.NewFolder, status)
     }
 
-    fun showToast(view: View, anchorView: View? = null)
+    fun showToast(view: View, anchorView: View? = null) {}
 
     fun maxFileNameInToast(view: View) =
         view.context.resources.getInteger(R.integer.action_toast_file_name_max_length)

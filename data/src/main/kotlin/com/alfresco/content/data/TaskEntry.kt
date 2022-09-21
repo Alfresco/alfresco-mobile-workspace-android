@@ -42,6 +42,9 @@ data class TaskEntry(
             )
         }
 
+        /**
+         * updating the task name and description into existing object
+         */
         fun updateTaskNameDescription(
             data: TaskEntry,
             name: String,

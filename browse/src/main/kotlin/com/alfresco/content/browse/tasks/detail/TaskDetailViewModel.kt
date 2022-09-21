@@ -154,6 +154,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute the update task detail api
+     */
     fun updateTaskDetails() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {

@@ -34,7 +34,7 @@ data class ActionUpdateFileFolder(
     }
 
     private suspend fun showCreateFolderDialog(context: Context) = withContext(Dispatchers.Main) {
-        suspendCoroutine<CreateFolderMetadata?> {
+        suspendCoroutine {
             val name = if (entry.isFile) entry.name.nameAndExtension().first else entry.name
             CreateFolderDialog.Builder(context, true, name)
                 .onSuccess { title, description ->

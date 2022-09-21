@@ -67,6 +67,6 @@
 
     <string name="action_rename_file_folder">Umbenennen</string>
     <string name="action_rename_file_folder_toast">%s wurde umbenannt</string>
-    <string name="action_file_folder_save">Speichern</string>
+    <string name="action_text_save">Speichern</string>
 
 </resources>

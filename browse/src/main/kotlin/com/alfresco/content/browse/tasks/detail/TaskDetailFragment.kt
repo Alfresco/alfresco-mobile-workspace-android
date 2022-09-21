@@ -25,6 +25,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.actions.ActionOpenWith
+import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
@@ -70,7 +71,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
-    private var saveProgressConfirmationDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -102,9 +102,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
-                if (viewModel.hasTaskEditMode)
-                    saveProgressPrompt()
-                else requireActivity().onBackPressed()
+                requireActivity().onBackPressed()
             }
             title = resources.getString(R.string.title_task_view)
         }
@@ -137,9 +135,10 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 true
             }
             R.id.action_done -> {
+                AnalyticsManager().taskEvent(EventName.UpdateTaskDetails)
                 item.isVisible = false
-                updateTaskDetailUI(false)
                 menuDetail.findItem(R.id.action_edit).isVisible = true
+                updateTaskDetailUI(false)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -150,13 +149,13 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         viewModel.hasTaskEditMode = isEdit
         if (isEdit) {
             binding.iconTitleEdit.visibility = View.VISIBLE
-            binding.iconDueDateClear.visibility = View.VISIBLE
+            binding.iconDueDateEditClear.visibility = View.VISIBLE
             binding.iconPriorityEdit.visibility = View.VISIBLE
             binding.iconAssignedEdit.visibility = View.VISIBLE
             binding.completeButton.isEnabled = false
         } else {
             binding.iconTitleEdit.visibility = View.GONE
-            binding.iconDueDateClear.visibility = View.INVISIBLE
+            binding.iconDueDateEditClear.visibility = View.INVISIBLE
             binding.iconPriorityEdit.visibility = View.INVISIBLE
             binding.iconAssignedEdit.visibility = View.INVISIBLE
             binding.completeButton.isEnabled = true
@@ -181,6 +180,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.completeButton.setOnClickListener {
             taskCompletePrompt()
         }
+        binding.iconTitleEdit.setOnClickListener {
+            withState(viewModel) { state ->
+                viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
+            }
+        }
     }
 
     private fun navigateToCommentScreen() {
@@ -200,9 +204,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
-        if (state.requestCompleteTask.invoke()?.code() == 200) {
-            viewModel.updateTaskList()
-            requireActivity().onBackPressed()
+        when {
+            state.requestCompleteTask.invoke()?.code() == 200 -> {
+                viewModel.updateTaskList()
+                requireActivity().onBackPressed()
+            }
         }
 
         if (state.requestContents.complete)
@@ -241,8 +247,19 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTaskTitle.text = dataObj.name
-            binding.tvDueDateValue.text =
-                if (dataObj.dueDate != null) dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else requireContext().getString(R.string.empty_no_due_date)
+            if (dataObj.dueDate != null) {
+                binding.tvDueDateValue.text = dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
+                binding.iconDueDateEditClear.apply {
+                    contentDescription = context.getString(R.string.icon_due_date_clear)
+                    setImageResource(R.drawable.ic_clear)
+                }
+            } else {
+                binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
+                binding.iconDueDateEditClear.apply {
+                    contentDescription = context.getString(R.string.icon_due_date_edit)
+                    setImageResource(R.drawable.ic_edit)
+                }
+            }
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
@@ -339,20 +356,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             .show()
         taskCompleteConfirmationDialog = WeakReference(dialog)
-    }
-
-    private fun saveProgressPrompt() {
-        val oldDialog = saveProgressConfirmationDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_title_save_progress))
-            .setMessage(getString(R.string.dialog_message_save_progress))
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                requireActivity().onBackPressed()
-            }
-            .show()
-        saveProgressConfirmationDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

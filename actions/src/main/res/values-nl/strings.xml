@@ -66,6 +66,6 @@
 
     <string name="action_rename_file_folder">Naam wijzigen</string>
     <string name="action_rename_file_folder_toast">Naam van %s is gewijzigd</string>
-    <string name="action_file_folder_save">Opslaan</string>
+    <string name="action_text_save">Opslaan</string>
 
 </resources>

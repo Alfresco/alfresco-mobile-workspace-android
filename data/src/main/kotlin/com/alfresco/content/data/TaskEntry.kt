@@ -41,5 +41,26 @@ data class TaskEntry(
                 isNewTaskCreated = isNewTaskCreated
             )
         }
+
+        /**
+         * updating the task name and description into existing object
+         */
+        fun updateTaskNameDescription(
+            data: TaskEntry,
+            name: String,
+            description: String
+        ): TaskEntry {
+            return TaskEntry(
+                id = data.id,
+                name = name,
+                description = description,
+                created = data.created,
+                assignee = data.assignee,
+                priority = data.priority,
+                endDate = data.endDate,
+                dueDate = data.dueDate,
+                duration = data.duration
+            )
+        }
     }
 }

@@ -160,6 +160,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                         .toInt()
                 )
             }
+            contentDescription = context.getString(R.string.text_create_task)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
                 val action = ActionCreateTask(TaskEntry())

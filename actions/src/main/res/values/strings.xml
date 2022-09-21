@@ -72,9 +72,10 @@
 
     <string name="action_rename_file_folder">Rename</string>
     <string name="action_rename_file_folder_toast">%s was renamed</string>
-    <string name="action_file_folder_save">Save</string>
+    <string name="action_text_save">Save</string>
     <string name="action_menu_edit">Edit</string>
     <string name="action_menu_done">Done</string>
+    <string name="action_update_task_name_description">Name &amp; Description</string>
 
     <string name="action_scan_title">Scan documents</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>

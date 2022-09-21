@@ -67,7 +67,8 @@
 
     <string name="action_rename_file_folder">Rinomina</string>
     <string name="action_rename_file_folder_toast">%s è stato rinominato</string>
-    <string name="action_file_folder_save">Salva</string>
+    <string name="action_text_save">Salva</string>
+
     <string name="action_scan_title">Acquisisci i documenti</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
     <string name="action_upload_scan_documents_toast">Documento pianificato per il caricamento.</string>

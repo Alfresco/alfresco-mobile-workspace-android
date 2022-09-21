@@ -67,7 +67,8 @@
 
     <string name="action_rename_file_folder">Renommer</string>
     <string name="action_rename_file_folder_toast">%s a été renommé</string>
-    <string name="action_file_folder_save">Enregistrer</string>
+    <string name="action_text_save">Enregistrer</string>
+
     <string name="action_scan_title">Scanner les documents</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
     <string name="action_upload_scan_documents_toast">Document prévu pour l\'importation.</string>

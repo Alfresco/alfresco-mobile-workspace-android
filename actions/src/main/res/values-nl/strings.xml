@@ -67,7 +67,8 @@
 
     <string name="action_rename_file_folder">Naam wijzigen</string>
     <string name="action_rename_file_folder_toast">Naam van %s is gewijzigd</string>
-    <string name="action_file_folder_save">Opslaan</string>
+    <string name="action_text_save">Opslaan</string>
+
     <string name="action_scan_title">Documenten scannen</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
     <string name="action_upload_scan_documents_toast">Document gepland om te uploaden.</string>

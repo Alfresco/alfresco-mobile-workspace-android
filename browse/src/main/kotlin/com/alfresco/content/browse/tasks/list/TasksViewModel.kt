@@ -21,6 +21,7 @@ import com.alfresco.events.on
 import java.text.SimpleDateFormat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Marked as TasksViewModel class
@@ -179,7 +180,7 @@ class TasksViewModel(
 
         if (dateString.isNullOrEmpty()) return ""
 
-        val currentFormat = SimpleDateFormat("dd-MMM-yy")
+        val currentFormat = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
         val zonedFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
         return currentFormat.parse(dateString)?.let { zonedFormat.format(it) } ?: ""

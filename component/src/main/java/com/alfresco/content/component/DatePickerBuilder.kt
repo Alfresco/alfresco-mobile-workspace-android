@@ -131,7 +131,7 @@ data class DatePickerBuilder(
     }
 
     private fun getFormatDate(currentTime: Date): String {
-        return SimpleDateFormat(dateFormat, Locale.getDefault(Locale.Category.DISPLAY)).format(currentTime)
+        return SimpleDateFormat(dateFormat, Locale.ENGLISH).format(currentTime)
     }
 
     private fun String.getDateFromString(): Date? {

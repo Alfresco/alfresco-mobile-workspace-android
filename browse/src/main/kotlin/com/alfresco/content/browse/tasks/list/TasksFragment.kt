@@ -82,8 +82,8 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
         epoxyControllerFilters.requestModelBuild()
-        if (state.page == 0)
-            scrollToTop()
+//        if (state.page == 0)
+//            scrollToTop()
 
         if (state.request is Success) {
             clParent.addView(makeFab(requireContext()))

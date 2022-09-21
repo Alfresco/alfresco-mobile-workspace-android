@@ -39,7 +39,7 @@ class CreateFolderDialog : DialogFragment() {
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                if (isUpdate) getString(R.string.action_file_folder_save)
+                if (isUpdate) getString(R.string.action_text_save)
                 else getString(R.string.action_folder_create)
             ) { _, _ ->
                 onSuccess?.invoke(

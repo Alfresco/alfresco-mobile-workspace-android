@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.databinding.DialogCreateLayoutBinding
+import com.alfresco.content.data.TaskEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
@@ -34,17 +35,18 @@ class CreateTaskDialog : DialogFragment() {
 
     var onSuccess: CreateTaskSuccessCallback? = null
     var onCancel: CreateTaskCancelCallback? = null
-    var name: String? = null
-
+    var isUpdate: Boolean = false
+    var taskEntry: TaskEntry? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.action_create_task))
+            .setTitle(getString(if (isUpdate) R.string.action_update_task_name_description else R.string.action_create_task))
             .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
                 onCancel?.invoke()
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                getString(R.string.action_task_next)
+                if (isUpdate) getString(R.string.action_text_save)
+                else getString(R.string.action_task_next)
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),
@@ -74,7 +76,14 @@ class CreateTaskDialog : DialogFragment() {
 
         // Default disabled
         positiveButton.isEnabled = false
-
+        if (isUpdate && taskEntry?.name != null) {
+            binding.nameInput.setText(taskEntry?.name)
+            positiveButton.isEnabled = true
+        } else {
+            // Default disabled
+            positiveButton.isEnabled = false
+        }
+        binding.descriptionInput.setText(taskEntry?.description)
         binding.nameInput.requestFocus()
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
@@ -95,7 +104,8 @@ class CreateTaskDialog : DialogFragment() {
      */
     data class Builder(
         val context: Context,
-        val name: String? = null,
+        val isUpdate: Boolean,
+        val taskEntry: TaskEntry? = null,
         var onSuccess: CreateTaskSuccessCallback? = null,
         var onCancel: CreateTaskCancelCallback? = null
     ) {
@@ -124,7 +134,8 @@ class CreateTaskDialog : DialogFragment() {
             CreateTaskDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel
-                name = this@Builder.name
+                isUpdate = this@Builder.isUpdate
+                taskEntry = this@Builder.taskEntry
             }.show(fragmentManager, CreateTaskDialog::class.java.simpleName)
         }
     }

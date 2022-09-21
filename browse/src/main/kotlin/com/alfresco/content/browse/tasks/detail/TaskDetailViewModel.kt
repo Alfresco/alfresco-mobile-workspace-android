@@ -7,12 +7,15 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
+import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -35,6 +38,9 @@ class TaskDetailViewModel(
         viewModelScope.on<ActionOpenWith> {
             if (!it.entry.path.isNullOrEmpty())
                 entryListener?.onEntryCreated(it.entry)
+        }
+        viewModelScope.on<ActionUpdateNameDescription> {
+            setState { copy(parent = it.entry) }
         }
     }
 
@@ -138,8 +144,28 @@ class TaskDetailViewModel(
                     is Loading -> copy(requestCompleteTask = Loading())
                     is Fail -> copy(requestCompleteTask = Fail(it.error))
                     is Success -> {
-
                         copy(requestCompleteTask = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateTaskDetails() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::updateTaskDetails.asFlow(
+                state.parent
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestUpdateTask = Loading())
+                    is Fail -> copy(requestUpdateTask = Fail(it.error))
+                    is Success -> {
+                        copy(requestUpdateTask = Success(it()))
                     }
                     else -> {
                         this
@@ -155,6 +181,11 @@ class TaskDetailViewModel(
     fun setListener(listener: EntryListener) {
         this.entryListener = listener
     }
+
+    /**
+     * It will execute while showing the dialog to update task name and description.
+     */
+    fun execute(action: Action) = action.execute(context, GlobalScope)
 
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 

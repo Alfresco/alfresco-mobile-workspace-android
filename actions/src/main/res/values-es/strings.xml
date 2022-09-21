@@ -66,6 +66,6 @@
 
     <string name="action_rename_file_folder">Cambiar nombre</string>
     <string name="action_rename_file_folder_toast">Se ha cambiado el nombre de %s</string>
-    <string name="action_file_folder_save">Guardar</string>
+    <string name="action_text_save">Guardar</string>
 
 </resources>

@@ -6,7 +6,6 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.data.TaskRepository
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -14,23 +13,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Mark as ActionCreateTask class
+ * Mark as ActionUpdateNameDescription class
  */
-data class ActionCreateTask(
+data class ActionUpdateNameDescription(
     override var entry: TaskEntry,
     override val icon: Int = R.drawable.ic_action_create_folder,
-    override val title: Int = R.string.action_create_task,
-    override val eventName: EventName = EventName.CreateTask
+    override val title: Int = R.string.action_update_task_name_description,
+    override val eventName: EventName = EventName.UpdateTaskNameDescription
 ) : Action {
     override suspend fun execute(context: Context): TaskEntry {
         val result = showCreateTaskDialog(context) ?: throw CancellationException("User Cancellation")
         AnalyticsManager().taskEvent(eventName)
-        return TaskRepository().createTask(result.name, result.description)
+        return TaskEntry.updateTaskNameDescription(entry, result.name, result.description)
     }
 
     private suspend fun showCreateTaskDialog(context: Context) = withContext(Dispatchers.Main) {
         suspendCoroutine {
-            CreateTaskDialog.Builder(context, false, entry)
+            CreateTaskDialog.Builder(context, true, entry)
                 .onSuccess { title, description ->
                     it.resume(CreateMetadata(title, description))
                 }
@@ -41,6 +40,6 @@ data class ActionCreateTask(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as TaskEntry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_create_folder_toast, entry.name)
+    override fun showToast(view: View, anchorView: View?) {
+    }
 }

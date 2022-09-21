@@ -20,11 +20,13 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.actions.ActionOpenWith
+import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
@@ -140,6 +142,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 item.isVisible = false
                 updateTaskDetailUI(false)
                 menuDetail.findItem(R.id.action_edit).isVisible = true
+                viewModel.updateTaskDetails()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -181,6 +184,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.completeButton.setOnClickListener {
             taskCompletePrompt()
         }
+        binding.iconTitleEdit.setOnClickListener {
+            withState(viewModel) { state ->
+                viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
+            }
+        }
     }
 
     private fun navigateToCommentScreen() {
@@ -192,7 +200,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
-                (state.requestCompleteTask is Loading)
+                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading)
 
         setData(state)
 
@@ -200,9 +208,14 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
         binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
-        if (state.requestCompleteTask.invoke()?.code() == 200) {
-            viewModel.updateTaskList()
-            requireActivity().onBackPressed()
+        when {
+            state.requestCompleteTask.invoke()?.code() == 200 -> {
+                viewModel.updateTaskList()
+                requireActivity().onBackPressed()
+            }
+            state.requestUpdateTask is Success -> {
+                viewModel.updateTaskList()
+            }
         }
 
         if (state.requestContents.complete)

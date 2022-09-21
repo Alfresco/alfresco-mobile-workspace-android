@@ -21,3 +21,12 @@ fun getTaskPriority(priority: Int): TaskPriority {
         else -> TaskPriority.NONE
     }
 }
+
+fun getTaskPriority(priority: TaskPriority): Int {
+    return when (priority) {
+        TaskPriority.LOW -> 3
+        TaskPriority.MEDIUM -> 7
+        TaskPriority.HIGH -> 10
+        else -> -1
+    }
+}

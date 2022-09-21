@@ -19,9 +19,9 @@ import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import java.text.SimpleDateFormat
+import java.util.Locale
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 /**
  * Marked as TasksViewModel class

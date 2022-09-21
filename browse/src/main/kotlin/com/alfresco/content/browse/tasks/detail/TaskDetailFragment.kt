@@ -139,9 +139,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 true
             }
             R.id.action_done -> {
-                item.isVisible = false
-                updateTaskDetailUI(false)
-                menuDetail.findItem(R.id.action_edit).isVisible = true
                 viewModel.updateTaskDetails()
                 true
             }
@@ -153,13 +150,13 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         viewModel.hasTaskEditMode = isEdit
         if (isEdit) {
             binding.iconTitleEdit.visibility = View.VISIBLE
-            binding.iconDueDateClear.visibility = View.VISIBLE
+            binding.iconDueDateEditClear.visibility = View.VISIBLE
             binding.iconPriorityEdit.visibility = View.VISIBLE
             binding.iconAssignedEdit.visibility = View.VISIBLE
             binding.completeButton.isEnabled = false
         } else {
             binding.iconTitleEdit.visibility = View.GONE
-            binding.iconDueDateClear.visibility = View.INVISIBLE
+            binding.iconDueDateEditClear.visibility = View.INVISIBLE
             binding.iconPriorityEdit.visibility = View.INVISIBLE
             binding.iconAssignedEdit.visibility = View.INVISIBLE
             binding.completeButton.isEnabled = true
@@ -214,6 +211,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 requireActivity().onBackPressed()
             }
             state.requestUpdateTask is Success -> {
+                menuDetail.findItem(R.id.action_done).isVisible = false
+                menuDetail.findItem(R.id.action_edit).isVisible = true
+                updateTaskDetailUI(false)
                 viewModel.updateTaskList()
             }
         }
@@ -254,8 +254,19 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTaskTitle.text = dataObj.name
-            binding.tvDueDateValue.text =
-                if (dataObj.dueDate != null) dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else requireContext().getString(R.string.empty_no_due_date)
+            if (dataObj.dueDate != null) {
+                binding.tvDueDateValue.text = dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
+                binding.iconDueDateEditClear.apply {
+                    contentDescription = context.getString(R.string.icon_due_date_clear)
+                    setImageResource(R.drawable.ic_clear)
+                }
+            } else {
+                binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
+                binding.iconDueDateEditClear.apply {
+                    contentDescription = context.getString(R.string.icon_due_date_edit)
+                    setImageResource(R.drawable.ic_edit)
+                }
+            }
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id

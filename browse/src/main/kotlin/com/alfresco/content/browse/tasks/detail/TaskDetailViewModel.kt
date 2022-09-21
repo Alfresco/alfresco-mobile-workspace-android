@@ -155,30 +155,6 @@ class TaskDetailViewModel(
     }
 
     /**
-     * execute the update task detail api
-     */
-    fun updateTaskDetails() = withState { state ->
-        requireNotNull(state.parent)
-        viewModelScope.launch {
-            // Fetch tasks detail data
-            repository::updateTaskDetails.asFlow(
-                state.parent
-            ).execute {
-                when (it) {
-                    is Loading -> copy(requestUpdateTask = Loading())
-                    is Fail -> copy(requestUpdateTask = Fail(it.error))
-                    is Success -> {
-                        copy(requestUpdateTask = Success(it()))
-                    }
-                    else -> {
-                        this
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * adding listener to update the View after downloading the content
      */
     fun setListener(listener: EntryListener) {

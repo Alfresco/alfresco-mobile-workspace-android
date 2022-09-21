@@ -119,19 +119,4 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             ), true
         )
     }
-
-    /**
-     * It will call the api to update the task api and return the TaskEntry obj
-     */
-    suspend fun updateTaskDetails(taskEntry: TaskEntry): TaskEntry {
-        return TaskEntry.with(
-            processService.updateTask(
-                taskEntry.id,
-                TaskBodyCreate(
-                    name = taskEntry.name,
-                    description = taskEntry.description
-                )
-            ), true
-        )
-    }
 }

@@ -18,7 +18,6 @@ data class TaskDetailViewState(
     val listComments: List<CommentEntry> = emptyList(),
     val listContents: List<ContentEntry> = emptyList(),
     val request: Async<TaskEntry> = Uninitialized,
-    val requestUpdateTask: Async<TaskEntry> = Uninitialized,
     val requestComments: Async<ResponseComments> = Uninitialized,
     val requestContents: Async<ResponseContents> = Uninitialized,
     val requestAddComment: Async<CommentEntry> = Uninitialized,

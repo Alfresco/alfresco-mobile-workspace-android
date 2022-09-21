@@ -104,7 +104,7 @@ enum class EventName(val value: String) {
     TaskFilterReset("event_reset"),
     TaskComplete("event_task_complete"),
     CreateTask("event_create_task"),
-    UpdateTaskNameDescription("event_update_task_name_description"),
+    UpdateTaskDetails("event_update_task_details"),
     None("event_none")
 }
 

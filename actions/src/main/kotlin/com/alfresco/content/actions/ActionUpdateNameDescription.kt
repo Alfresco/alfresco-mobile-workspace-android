@@ -19,7 +19,7 @@ data class ActionUpdateNameDescription(
     override var entry: TaskEntry,
     override val icon: Int = R.drawable.ic_action_create_folder,
     override val title: Int = R.string.action_update_task_name_description,
-    override val eventName: EventName = EventName.UpdateTaskNameDescription
+    override val eventName: EventName = EventName.None
 ) : Action {
     override suspend fun execute(context: Context): TaskEntry {
         val result = showCreateTaskDialog(context) ?: throw CancellationException("User Cancellation")

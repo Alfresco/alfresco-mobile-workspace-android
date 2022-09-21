@@ -139,6 +139,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 true
             }
             R.id.action_done -> {
+                AnalyticsManager().taskEvent(EventName.UpdateTaskDetails)
                 viewModel.updateTaskDetails()
                 true
             }

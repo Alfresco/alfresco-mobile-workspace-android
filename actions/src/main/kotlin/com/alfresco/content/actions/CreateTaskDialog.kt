@@ -74,14 +74,12 @@ class CreateTaskDialog : DialogFragment() {
             }
         })
 
-        // Default disabled
-        positiveButton.isEnabled = false
         if (isUpdate && taskEntry?.name != null) {
             binding.nameInput.setText(taskEntry?.name)
             positiveButton.isEnabled = true
         } else {
             // Default disabled
-            positiveButton.isEnabled = false
+            positiveButton.isEnabled = binding.nameInput.text.toString().isNotEmpty()
         }
         binding.descriptionInput.setText(taskEntry?.description)
         binding.nameInput.requestFocus()

@@ -86,5 +86,6 @@
     <string name="text_mark_as_complete">Mark as complete</string>
     <string name="icon_assignee_edit">Edit assignee icon</string>
     <string name="icon_name_description_edit">Edit name &amp; description icon</string>
+    <string name="text_create_task">Create task</string>
 
 </resources>

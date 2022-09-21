@@ -71,11 +71,17 @@
     <string name="text_complete">Complete</string>
     <string name="dialog_title_complete_task">Complete Task</string>
     <string name="dialog_message_complete_task">Are you sure you want to complete this task? You will no longer be able to make any changes.</string>
-    <string name="dialog_negative_button_complete_task">Cancel</string>
-    <string name="dialog_positive_button_complete_task">Confirm</string>
+    <string name="dialog_negative_button_task">Cancel</string>
+    <string name="dialog_positive_button_task">Confirm</string>
     <string name="icon_send_description">Send Button</string>
     <string name="empty_description">No description</string>
     <string name="icon_completed">Completed icon</string>
     <string name="task_title">Task</string>
+    <string name="icon_priority_edit">Edit priority icon</string>
+    <string name="icon_due_date_clear">Clear due date icon</string>
+    <string name="suffix_view_all">&#8230;View all</string>
+    <string name="dialog_title_save_progress">Task Progress</string>
+    <string name="dialog_message_save_progress">Do you want to save progress?</string>
+    <string name="text_mark_as_complete">Mark as complete</string>
 
 </resources>

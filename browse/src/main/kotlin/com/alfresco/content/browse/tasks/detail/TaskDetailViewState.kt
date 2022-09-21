@@ -25,6 +25,7 @@ data class TaskDetailViewState(
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)
+
     /**
      * update the taskDetailObj params after getting the response from server.
      */

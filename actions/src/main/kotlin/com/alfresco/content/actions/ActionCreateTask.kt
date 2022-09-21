@@ -1,7 +1,6 @@
 package com.alfresco.content.actions
 
 import android.content.Context
-import android.view.View
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
@@ -40,7 +39,4 @@ data class ActionCreateTask(
     }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as TaskEntry)
-
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_create_folder_toast, entry.name)
 }

@@ -61,7 +61,7 @@ fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {
         )
         spannable.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(context, R.color.alfresco_blue_700)),
-            truncatedText.length - prefix.length,
+            truncatedText.length - prefix.length.minus(1),
             truncatedText.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )

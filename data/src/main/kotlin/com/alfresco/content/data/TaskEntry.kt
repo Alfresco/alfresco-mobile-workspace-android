@@ -18,7 +18,8 @@ data class TaskEntry(
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
-    val duration: Long? = null
+    val duration: Long? = null,
+    val isNewTaskCreated: Boolean = false
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -26,7 +27,7 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using TaskDataEntry
          */
-        fun with(data: TaskDataEntry): TaskEntry {
+        fun with(data: TaskDataEntry, isNewTaskCreated: Boolean = false): TaskEntry {
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
@@ -36,7 +37,8 @@ data class TaskEntry(
                 priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
-                duration = data.duration
+                duration = data.duration,
+                isNewTaskCreated = isNewTaskCreated
             )
         }
     }

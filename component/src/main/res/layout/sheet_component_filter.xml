@@ -65,14 +65,14 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/frameText"
+            android:id="@+id/frame_title_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
 
             <include
-                android:id="@+id/textComponent"
-                layout="@layout/view_text_component" />
+                android:id="@+id/titleDescriptionComponent"
+                layout="@layout/view_title_description_component" />
         </FrameLayout>
 
         <FrameLayout

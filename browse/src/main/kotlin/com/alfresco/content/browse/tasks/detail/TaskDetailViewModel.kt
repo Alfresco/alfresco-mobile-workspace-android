@@ -10,6 +10,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
@@ -165,6 +166,13 @@ class TaskDetailViewModel(
      * It will execute while showing the dialog to update task name and description.
      */
     fun execute(action: Action) = action.execute(context, GlobalScope)
+
+    fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
+        setState {
+            requireNotNull(this.parent)
+            copy(parent = TaskEntry.updateTaskDueDate(this.parent, formattedDate, isClearDueDate))
+        }
+    }
 
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 

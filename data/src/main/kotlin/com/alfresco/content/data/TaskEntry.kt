@@ -18,9 +18,13 @@ data class TaskEntry(
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
+    val formattedDueDate: String? = null,
     val duration: Long? = null,
     val isNewTaskCreated: Boolean = false
 ) : ParentEntry(), Parcelable {
+
+    val localDueDate: String?
+        get() = formattedDueDate ?: dueDate?.toLocalDate()?.toString()
 
     companion object {
 
@@ -59,7 +63,26 @@ data class TaskEntry(
                 priority = data.priority,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
-                duration = data.duration
+                duration = data.duration,
+                formattedDueDate = data.formattedDueDate
+            )
+        }
+
+        /**
+         * updating the task due date into existing object
+         */
+        fun updateTaskDueDate(data: TaskEntry, formattedDueDate: String?, isClearDueDate: Boolean): TaskEntry {
+            return TaskEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                created = data.created,
+                assignee = data.assignee,
+                priority = data.priority,
+                endDate = data.endDate,
+                dueDate = if (isClearDueDate) null else data.dueDate,
+                duration = data.duration,
+                formattedDueDate = formattedDueDate
             )
         }
     }

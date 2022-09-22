@@ -16,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
@@ -25,7 +24,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.actions.ActionOpenWith
-import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
@@ -44,7 +42,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
-import com.alfresco.content.getDateZoneFormat
+import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addTextViewPrefix
 import com.alfresco.content.listview.updatePriorityView
@@ -67,8 +65,8 @@ import kotlinx.coroutines.withContext
 class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
-    private lateinit var binding: FragmentTaskDetailBinding
-    private lateinit var commentViewBinding: ViewListCommentRowBinding
+    lateinit var binding: FragmentTaskDetailBinding
+    lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
@@ -145,52 +143,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
-    private fun updateTaskDetailUI(isEdit: Boolean) {
-        viewModel.hasTaskEditMode = isEdit
-        if (isEdit) {
-            binding.iconTitleEdit.visibility = View.VISIBLE
-            binding.iconDueDateEditClear.visibility = View.VISIBLE
-            binding.iconPriorityEdit.visibility = View.VISIBLE
-            binding.iconAssignedEdit.visibility = View.VISIBLE
-            binding.completeButton.isEnabled = false
-        } else {
-            binding.iconTitleEdit.visibility = View.GONE
-            binding.iconDueDateEditClear.visibility = View.INVISIBLE
-            binding.iconPriorityEdit.visibility = View.INVISIBLE
-            binding.iconAssignedEdit.visibility = View.INVISIBLE
-            binding.completeButton.isEnabled = true
-        }
-    }
-
-    private fun setListeners() {
-        viewModel.setListener(this)
-        binding.tvAddComment.setOnClickListener {
-            viewModel.isAddComment = true
-            navigateToCommentScreen()
-        }
-        binding.tvCommentViewAll.setOnClickListener {
-            navigateToCommentScreen()
-        }
-        commentViewBinding.clRecentComment.setOnClickListener {
-            navigateToCommentScreen()
-        }
-        binding.tvAttachmentViewAll.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
-        }
-        binding.completeButton.setOnClickListener {
-            taskCompletePrompt()
-        }
-        binding.iconTitleEdit.setOnClickListener {
-            withState(viewModel) { state ->
-                viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
-            }
-        }
-    }
-
-    private fun navigateToCommentScreen() {
-        findNavController().navigate(R.id.action_nav_task_detail_to_nav_comments)
-    }
-
     override fun invalidate() = withState(viewModel) { state ->
 
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
@@ -235,7 +187,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
             commentViewBinding.tvUserInitial.text = commentObj.userDetails?.nameInitial
             commentViewBinding.tvName.text = commentObj.userDetails?.name
-            commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else ""
+            commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
             commentViewBinding.tvComment.text = commentObj.message
         } else {
             binding.clCommentHeader.visibility = View.GONE
@@ -247,19 +199,15 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTaskTitle.text = dataObj.name
-            if (dataObj.dueDate != null) {
-                binding.tvDueDateValue.text = dataObj.dueDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
-                binding.iconDueDateEditClear.apply {
-                    contentDescription = context.getString(R.string.icon_due_date_clear)
-                    setImageResource(R.drawable.ic_clear)
-                }
+            if (dataObj.localDueDate != null) {
+                binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
             } else {
                 binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
-                binding.iconDueDateEditClear.apply {
-                    contentDescription = context.getString(R.string.icon_due_date_edit)
-                    setImageResource(R.drawable.ic_edit)
-                }
             }
+
+            if (viewModel.hasTaskEditMode)
+                updateTaskDetailUI(true)
+
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.text = dataObj.assignee?.name
             binding.tvIdentifierValue.text = dataObj.id
@@ -283,7 +231,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 binding.iconAddCommentUser.visibility = View.GONE
                 binding.clCompleted.visibility = View.VISIBLE
                 if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
-                binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4)
+                binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
 
                 (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                     topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
@@ -343,7 +291,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
-    private fun taskCompletePrompt() {
+    internal fun taskCompletePrompt() {
         val oldDialog = taskCompleteConfirmationDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())

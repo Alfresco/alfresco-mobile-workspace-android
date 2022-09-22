@@ -8,7 +8,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_2
 import com.alfresco.content.data.kBToByte
-import com.alfresco.content.getDateZoneFormat
+import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 
 /**
@@ -76,7 +76,8 @@ class ComponentViewModel(
             ComponentType.DATE_RANGE.value -> {
                 if ((fromDate.isNotEmpty() && toDate.isNotEmpty())) {
                     val dateFormat = "$fromDate - $toDate"
-                    val queryFormat = "${state.parent.properties?.field}:['${fromDate.getDateZoneFormat(DATE_FORMAT_2, DATE_FORMAT_1)}' TO '${toDate.getDateZoneFormat(DATE_FORMAT_2, DATE_FORMAT_1)}']"
+
+                    val queryFormat = "${state.parent.properties?.field}:['${fromDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}' TO '${toDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}']"
                     updateSingleComponentData(dateFormat, queryFormat)
                 } else updateSingleComponentData("", "")
             }

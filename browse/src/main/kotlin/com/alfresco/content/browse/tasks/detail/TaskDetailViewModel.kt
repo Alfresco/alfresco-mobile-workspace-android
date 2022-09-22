@@ -167,6 +167,9 @@ class TaskDetailViewModel(
      */
     fun execute(action: Action) = action.execute(context, GlobalScope)
 
+    /**
+     * update the formatted date and local date in the existing TaskEntry obj.
+     */
     fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
         setState {
             requireNotNull(this.parent)

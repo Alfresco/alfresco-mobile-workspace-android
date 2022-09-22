@@ -207,6 +207,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
         when (val selector = state.parent?.selector) {
             ComponentType.TEXT.value -> setupSingleInputTextComponent(state)
+            ComponentType.TASK_PRIORITY.value -> setupTaskPriorityComponent(state)
             ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
             ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
             ComponentType.RADIO.value -> setupRadioListComponent(state, viewModel)

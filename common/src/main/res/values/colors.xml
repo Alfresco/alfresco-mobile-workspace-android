@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_burnt_orange">#3DC95100</color>
+    <color name="color_carnelian">#3DBA1B1B</color>
+    <color name="color_green">#3D00754A</color>
+    <color name="colorPriorityLow">#003A02</color>
+    <color name="colorPriorityMedium">#6A3C00</color>
+    <color name="colorPriorityHigh">#680003</color>
+    <color name="colorBlue">#2A7DE1</color>
+    <color name="colorResetPriority">#A9ACAC</color>
+    <color name="colorGray1">#212121</color>
+</resources>

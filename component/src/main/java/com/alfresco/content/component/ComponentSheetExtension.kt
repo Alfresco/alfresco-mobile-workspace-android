@@ -6,6 +6,8 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import com.alfresco.content.DefaultPriority
+import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_AFTER
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_BEFORE
 import com.alfresco.content.getLocalizedName
@@ -192,6 +194,30 @@ fun ComponentSheet.setupTextComponent(state: ComponentState) {
     binding.bottomView.visibility = View.GONE
     binding.bottomSeparator.visibility = View.GONE
     binding.titleDescriptionComponent.componentParent.visibility = View.VISIBLE
+}
+
+/**
+ * setup the Task Priority Component
+ * @param state
+ */
+fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
+    binding.parentView.addView(binding.frameTaskPriority)
+    binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(DefaultPriority.LOW.value)
+    binding.taskPriorityComponent.tvPriorityLow.setOnClickListener {
+        binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(DefaultPriority.LOW.value)
+        binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
+        binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
+    }
+    binding.taskPriorityComponent.tvPriorityMedium.setOnClickListener {
+        binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
+        binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(DefaultPriority.MEDIUM.value)
+        binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
+    }
+    binding.taskPriorityComponent.tvPriorityHigh.setOnClickListener {
+        binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
+        binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
+        binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(DefaultPriority.HIGH.value)
+    }
 }
 
 private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): LinearLayout.LayoutParams {

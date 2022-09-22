@@ -74,16 +74,16 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     }
 
     private fun scrollToTop() {
-        if (isResumed) {
+        if (isResumed && viewModel.scrollToTop) {
             recyclerView.layoutManager?.scrollToPosition(0)
+            viewModel.scrollToTop = false
         }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
         epoxyControllerFilters.requestModelBuild()
-        if (state.page == 0)
-            scrollToTop()
+        scrollToTop()
 
         if (state.request is Success) {
             clParent.addView(makeFab(requireContext()))

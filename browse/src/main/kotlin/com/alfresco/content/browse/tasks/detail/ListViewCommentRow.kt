@@ -10,7 +10,7 @@ import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.data.CommentEntry
-import com.alfresco.content.getDateZoneFormat
+import com.alfresco.content.getFormattedDate
 
 /**
  * Marked as ListViewCommentRow class
@@ -32,6 +32,6 @@ class ListViewCommentRow @JvmOverloads constructor(
         binding.tvName.text = data.userDetails?.name
         binding.tvUserInitial.text = data.userDetails?.nameInitial
         binding.tvComment.text = data.message
-        binding.tvDate.text = if (data.created != null) data.created?.toLocalDate().toString().getDateZoneFormat(DATE_FORMAT_1, DATE_FORMAT_4) else ""
+        binding.tvDate.text = if (data.created != null) data.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
     }
 }

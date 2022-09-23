@@ -7,10 +7,12 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.alfresco.content.DefaultPriority
+import com.alfresco.content.TaskPriority
 import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_AFTER
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_BEFORE
 import com.alfresco.content.getLocalizedName
+import com.alfresco.content.getTaskPriority
 
 /**
  * setup the SingleInputText Component
@@ -202,22 +204,41 @@ fun ComponentSheet.setupTextComponent(state: ComponentState) {
  */
 fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
     binding.parentView.addView(binding.frameTaskPriority)
-    binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(DefaultPriority.LOW.value)
+    viewModel.priority = state.parent?.query?.toInt() ?: 0
+    when (getTaskPriority(viewModel.priority)) {
+        TaskPriority.LOW -> {
+            binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(viewModel.priority)
+        }
+        TaskPriority.MEDIUM -> {
+            binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(viewModel.priority)
+        }
+        TaskPriority.HIGH -> {
+            binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(viewModel.priority)
+        }
+        else -> {}
+    }
+
     binding.taskPriorityComponent.tvPriorityLow.setOnClickListener {
-        binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(DefaultPriority.LOW.value)
+        viewModel.priority = DefaultPriority.LOW.value
+        binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(viewModel.priority)
         binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
     }
     binding.taskPriorityComponent.tvPriorityMedium.setOnClickListener {
+        viewModel.priority = DefaultPriority.MEDIUM.value
         binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
-        binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(DefaultPriority.MEDIUM.value)
+        binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(viewModel.priority)
         binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
     }
     binding.taskPriorityComponent.tvPriorityHigh.setOnClickListener {
+        viewModel.priority = DefaultPriority.HIGH.value
         binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
-        binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(DefaultPriority.HIGH.value)
+        binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(viewModel.priority)
     }
+
+    binding.bottomView.visibility = View.GONE
+    binding.bottomSeparator.visibility = View.GONE
 }
 
 private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): LinearLayout.LayoutParams {

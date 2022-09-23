@@ -10,6 +10,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
+import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.CommentPayload
@@ -174,6 +175,13 @@ class TaskDetailViewModel(
         setState {
             requireNotNull(this.parent)
             copy(parent = TaskEntry.updateTaskDueDate(this.parent, formattedDate, isClearDueDate))
+        }
+    }
+
+    fun updatePriority(result: ComponentMetaData) {
+        setState {
+            requireNotNull(this.parent)
+            copy(parent = TaskEntry.updateTaskPriority(this.parent, result.query?.toInt() ?: 0))
         }
     }
 

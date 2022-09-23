@@ -14,7 +14,7 @@ data class TaskEntry(
     val name: String = "",
     val description: String? = null,
     val assignee: UserDetails? = null,
-    val priority: Int = 0,
+    var priority: Int = 0,
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
@@ -83,6 +83,21 @@ data class TaskEntry(
                 dueDate = if (isClearDueDate) null else data.dueDate,
                 duration = data.duration,
                 formattedDueDate = formattedDueDate
+            )
+        }
+
+        fun updateTaskPriority(data: TaskEntry, priority: Int): TaskEntry {
+            return TaskEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                created = data.created,
+                assignee = data.assignee,
+                priority = priority,
+                endDate = data.endDate,
+                dueDate = data.dueDate,
+                duration = data.duration,
+                formattedDueDate = data.formattedDueDate
             )
         }
     }

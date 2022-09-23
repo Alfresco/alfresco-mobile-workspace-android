@@ -80,14 +80,17 @@ internal fun TaskDetailFragment.setListeners() {
         withState(viewModel) { state ->
             val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
-                showComponentSheetDialog(
+                val result = showComponentSheetDialog(
                     requireContext(), ComponentData(
                         name = requireContext().getString(R.string.title_priority),
-                        query = dataObj?.name,
-                        value = dataObj?.description,
+                        query = dataObj?.priority.toString(),
                         selector = ComponentType.TASK_PRIORITY.value
                     )
                 )
+
+                if (result != null) {
+                    viewModel.updatePriority(result)
+                }
             }
         }
     }

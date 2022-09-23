@@ -169,7 +169,7 @@ class TaskDetailViewModel(
     fun execute(action: Action) = action.execute(context, GlobalScope)
 
     /**
-     * update the formatted date and local date in the existing TaskEntry obj.
+     * update the formatted date and local date in the existing TaskEntry obj and update the UI.
      */
     fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
         setState {
@@ -178,6 +178,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * update the priority in the existing TaskEntry obj and update the UI.
+     */
     fun updatePriority(result: ComponentMetaData) {
         setState {
             requireNotNull(this.parent)

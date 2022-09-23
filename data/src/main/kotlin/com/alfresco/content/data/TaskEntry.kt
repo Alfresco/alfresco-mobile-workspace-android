@@ -86,6 +86,9 @@ data class TaskEntry(
             )
         }
 
+        /**
+         * updating the task priority into existing object
+         */
         fun updateTaskPriority(data: TaskEntry, priority: Int): TaskEntry {
             return TaskEntry(
                 id = data.id,

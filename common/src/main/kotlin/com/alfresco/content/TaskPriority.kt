@@ -11,6 +11,9 @@ enum class TaskPriority(val value: String) {
     NONE("none")
 }
 
+/**
+ * Marked as DefaultPriority enum class
+ */
 enum class DefaultPriority(val value: Int) {
     LOW(3),
     MEDIUM(7),

@@ -4,4 +4,8 @@
     <string name="permission_rationale_positive">OK</string>
     <string name="permission_rationale_negative">Annulla</string>
     <string name="label_navigation_back">Pulsante Indietro</string>
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="priority_none">N/A</string>
 </resources>

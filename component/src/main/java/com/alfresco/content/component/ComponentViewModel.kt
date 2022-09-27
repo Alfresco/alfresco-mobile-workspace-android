@@ -37,6 +37,7 @@ class ComponentViewModel(
     var dateFormat = ""
     var delimiters = ""
     var searchQuery = ""
+    var priority: Int = -1
 
     init {
         updateComponentType()

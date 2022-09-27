@@ -14,5 +14,6 @@ enum class ComponentType(val value: String) {
     DATE_RANGE_FUTURE("date-range-future"),
     RADIO("radio"),
     FACETS("facets"),
+    TASK_PRIORITY("task-priority"),
     None("none")
 }

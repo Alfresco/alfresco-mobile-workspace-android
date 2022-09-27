@@ -32,12 +32,16 @@ class TasksViewModel(
     private val repository: TaskRepository
 ) : TaskListViewModel<TasksViewState>(state) {
 
+    var scrollToTop = false
+
     init {
         setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
         fetchInitial()
         viewModelScope.on<UpdateTasksData> {
-            if (it.isRefresh)
+            if (it.isRefresh) {
+                scrollToTop = true
                 fetchInitial()
+            }
         }
     }
 

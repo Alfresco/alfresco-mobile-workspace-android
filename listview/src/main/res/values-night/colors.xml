@@ -2,12 +2,6 @@
 <resources>
 
     <color name="color_cancel_secondary">#0DFFFFFF</color>
-    <color name="color_burnt_orange">#7B2F00</color>
-    <color name="color_carnelian">#930006</color>
-    <color name="color_green">#005231</color>
-    <color name="colorPriorityLow">#91F7BE</color>
-    <color name="colorPriorityMedium">#FFDBCA</color>
-    <color name="colorPriorityHigh">#FFDAD4</color>
     <color name="color_search_filter">@color/white</color>
     <color name="color_back_attachment">#00000000</color>
     <color name="color_attachment_row">#0A0A0A</color>

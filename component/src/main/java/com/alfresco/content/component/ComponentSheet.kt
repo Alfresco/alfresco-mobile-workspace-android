@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  */
 class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
-    private val viewModel: ComponentViewModel by fragmentViewModel()
+    internal val viewModel: ComponentViewModel by fragmentViewModel()
 
     lateinit var binding: SheetComponentFilterBinding
     var onApply: ComponentApplyCallback? = null
@@ -171,10 +171,19 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         dialog?.setOnCancelListener {
-            onCancel?.invoke()
+            cancelSheet()
         }
         setupComponents()
         setListeners()
+    }
+
+    private fun cancelSheet() = withState(viewModel) { state ->
+        when (state.parent?.selector) {
+            ComponentType.TASK_PRIORITY.value -> {
+                onApply?.invoke("", viewModel.priority.toString(), mapOf())
+            }
+            else -> onCancel?.invoke()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -207,6 +216,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
         when (val selector = state.parent?.selector) {
             ComponentType.TEXT.value -> setupSingleInputTextComponent(state)
+            ComponentType.TASK_PRIORITY.value -> setupTaskPriorityComponent(state)
             ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
             ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
             ComponentType.RADIO.value -> setupRadioListComponent(state, viewModel)
@@ -266,7 +276,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             dismiss()
         }
         binding.cancelButton.setOnClickListener {
-            onCancel?.invoke()
+            cancelSheet()
             dismiss()
         }
 

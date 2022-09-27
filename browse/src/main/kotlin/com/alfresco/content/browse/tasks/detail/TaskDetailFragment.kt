@@ -314,7 +314,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             )
     }
 
-    private suspend fun showComponentSheetDialog(
+    internal suspend fun showComponentSheetDialog(
         context: Context,
         componentData: ComponentData
     ) = withContext(dispatcher) {

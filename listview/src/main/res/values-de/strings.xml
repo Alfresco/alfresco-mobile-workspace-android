@@ -9,9 +9,5 @@
     <string name="upload_file_text_multiple">Hochladen von %d Dateien wird ausgeführt</string>
     <string name="upload_complete_text_multiple">Hochladen von %d Dateien abgeschlossen</string>
     <string name="upload_percentage_text">%.1f%%</string>
-    <string name="priority_low">Niedrig</string>
-    <string name="priority_medium">Mittel</string>
-    <string name="priority_high">Hoch</string>
-    <string name="priority_none">NV</string>
     <string name="text_read_more_space">...Mehr lesen</string>
 </resources>

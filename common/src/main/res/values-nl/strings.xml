@@ -4,4 +4,8 @@
     <string name="permission_rationale_positive">OK</string>
     <string name="permission_rationale_negative">Annuleren</string>
     <string name="label_navigation_back">Knop Terug</string>
+    <string name="priority_low">Laag</string>
+    <string name="priority_medium">Gemiddeld</string>
+    <string name="priority_high">Hoog</string>
+    <string name="priority_none">N.v.t.</string>
 </resources>

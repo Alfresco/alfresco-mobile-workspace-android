@@ -4,4 +4,8 @@
     <string name="permission_rationale_positive">Ok</string>
     <string name="permission_rationale_negative">Annuler</string>
     <string name="label_navigation_back">Bouton Retour</string>
+    <string name="priority_low">Basse</string>
+    <string name="priority_medium">Moyenne</string>
+    <string name="priority_high">Élevée</string>
+    <string name="priority_none">NA</string>
 </resources>

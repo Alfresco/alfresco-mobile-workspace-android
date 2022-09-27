@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_burnt_orange">#7B2F00</color>
+    <color name="color_carnelian">#930006</color>
+    <color name="color_green">#005231</color>
+    <color name="colorPriorityLow">#91F7BE</color>
+    <color name="colorPriorityMedium">#FFDBCA</color>
+    <color name="colorPriorityHigh">#FFDAD4</color>
+</resources>

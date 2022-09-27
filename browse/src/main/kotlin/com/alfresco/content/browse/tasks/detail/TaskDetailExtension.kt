@@ -9,6 +9,8 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
+import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
@@ -73,6 +75,24 @@ internal fun TaskDetailFragment.setListeners() {
     }
     binding.iconDueDateEdit.setOnClickListener {
         formatDateAndShowCalendar()
+    }
+    binding.iconPriorityEdit.setOnClickListener {
+        withState(viewModel) { state ->
+            val dataObj = state.parent
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = showComponentSheetDialog(
+                    requireContext(), ComponentData(
+                        name = requireContext().getString(R.string.title_priority),
+                        query = dataObj?.priority.toString(),
+                        selector = ComponentType.TASK_PRIORITY.value
+                    )
+                )
+
+                if (result != null) {
+                    viewModel.updatePriority(result)
+                }
+            }
+        }
     }
 }
 

@@ -248,3 +248,8 @@ private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): 
     val calculatedHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, minVisibleItem * 48f, context.resources.displayMetrics).toInt()
     return LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, calculatedHeight)
 }
+
+private fun ComponentSheet.cancelPriorityDialog() {
+    onApply?.invoke("", viewModel.priority.toString(), mapOf())
+    dismiss()
+}

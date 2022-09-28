@@ -80,6 +80,9 @@ class SearchUserComponentViewModel(
         }
     }
 
+    /**
+     * update the params on the basis of name or email to search the user.
+     */
     fun setSearchQuery(term: String) {
         params = if (searchByName)
             params.copy(name = term, email = "")

@@ -18,6 +18,9 @@ data class SearchUserComponentState(
 ) : MavericksState {
     constructor(target: TaskEntry) : this(parent = target)
 
+    /**
+     * update search user entries after fetch the result from server.
+     */
     fun updateUserEntries(response: ResponseUserList?): SearchUserComponentState {
         if (response == null) return this
         val users = response.listUser

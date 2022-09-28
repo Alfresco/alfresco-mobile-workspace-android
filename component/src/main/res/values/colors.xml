@@ -4,4 +4,6 @@
     <color name="color_search_filter">#212121</color>
     <color name="color_view_line">#1F212121</color>
     <color name="color_component_secondary">#0D212328</color>
+    <color name="alfresco_gray_radio_text_color">@color/alfresco_gray_900</color>
+    <color name="alfresco_gray_radio_text_color_60">@color/alfresco_gray_900_60</color>
 </resources>

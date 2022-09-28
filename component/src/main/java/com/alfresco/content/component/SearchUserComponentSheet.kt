@@ -71,8 +71,8 @@ class SearchUserComponentSheet : ParentComponentSheet() {
             if (button.isPressed) {
                 viewModel.searchByName = true
                 binding.searchByEmail.isChecked = false
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900))
-                binding.searchByEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900_60))
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
+                binding.searchByEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
                 setSearchQuery(binding.searchView.query.toString())
             }
         }
@@ -81,14 +81,14 @@ class SearchUserComponentSheet : ParentComponentSheet() {
             if (button.isPressed) {
                 viewModel.searchByName = false
                 binding.searchByName.isChecked = false
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900))
-                binding.searchByName.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900_60))
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
+                binding.searchByName.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
                 setSearchQuery(binding.searchView.query.toString())
             }
         }
     }
 
-    fun setSearchQuery(query: String) {
+    private fun setSearchQuery(query: String) {
         val term = cleanupSearchQuery(query)
         scrollToTop()
         viewModel.setSearchQuery(term)

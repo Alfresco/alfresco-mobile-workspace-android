@@ -285,11 +285,6 @@ class ComponentSheet : ParentComponentSheet() {
         }
     }
 
-    internal fun cancelPriorityDialog() {
-        onApply?.invoke("", viewModel.priority.toString(), mapOf())
-        dismiss()
-    }
-
     private fun epoxyCheckListController() = simpleController(viewModel) { state ->
         if (state.parent?.options?.isNotEmpty() == true)
             state.parent.options.forEach { option ->

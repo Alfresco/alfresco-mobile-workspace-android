@@ -1,10 +1,13 @@
 package com.alfresco.content.data
 
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
+import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
@@ -20,6 +23,10 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
 
     private val processService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)
+    }
+
+    private val sharedPrefs: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(context)
     }
 
     /**
@@ -107,6 +114,33 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     fun getTaskFiltersJSON(): TaskFiltersJson = getModelFromStringJSON(getJsonDataFromAsset(context, TASK_FILTERS_JSON) ?: "")
 
     /**
+     * executes the Api to fetch the user profile and save the local data in preferences
+     */
+    suspend fun getProcessUserProfile() {
+        val acsUserEmail = session.account.email
+        val processUserEmail = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "")
+        if (acsUserEmail != processUserEmail) {
+            val processUser = processService.getProfile()
+            saveProcessUserDetails(processUser)
+        }
+    }
+
+    private fun saveProcessUserDetails(processUser: ProfileData) {
+        val editor = sharedPrefs.edit()
+        editor.putString(KEY_PROCESS_USER_ID, processUser.id?.toString() ?: "")
+        editor.putString(KEY_PROCESS_USER_EMAIL, processUser.email ?: "")
+        editor.putString(KEY_PROCESS_USER_FULL_NAME, processUser.fullname ?: "")
+        editor.apply()
+    }
+
+    /**
+     * returns the userID of APS user
+     */
+    fun getProcessUserId(): String {
+        return sharedPrefs.getString(KEY_PROCESS_USER_ID, "") ?: ""
+    }
+
+    /**
      * It will call the api to create the task and return the TaskEntry type obj
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
@@ -118,5 +152,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 )
             ), true
         )
+    }
+
+    companion object {
+        const val KEY_PROCESS_USER_ID = "process_user_id"
+        const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"
+        const val KEY_PROCESS_USER_EMAIL = "process_user_email"
     }
 }

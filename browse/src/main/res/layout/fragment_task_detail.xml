@@ -9,6 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:title="@string/title_task_view"
         android:background="@drawable/bottom_separator"
         android:theme="@style/Theme.Alfresco.toolbar" />
 

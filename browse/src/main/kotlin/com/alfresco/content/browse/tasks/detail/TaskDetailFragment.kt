@@ -35,6 +35,7 @@ import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentType
+import com.alfresco.content.component.SearchUserComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
@@ -321,6 +322,26 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         suspendCoroutine {
 
             ComponentBuilder(context, componentData)
+                .onApply { name, query, _ ->
+                    executeContinuation(it, name, query)
+                }
+                .onReset { name, query, _ ->
+                    executeContinuation(it, name, query)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
+    }
+
+    internal suspend fun showSearchUserComponentDialog(
+        context: Context,
+        componentData: ComponentData
+    ) = withContext(dispatcher) {
+        suspendCoroutine {
+
+            SearchUserComponentBuilder(context, componentData)
                 .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
                 }

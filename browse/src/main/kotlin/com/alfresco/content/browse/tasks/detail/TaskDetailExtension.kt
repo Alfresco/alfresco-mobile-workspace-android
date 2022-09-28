@@ -94,6 +94,20 @@ internal fun TaskDetailFragment.setListeners() {
             }
         }
     }
+    binding.iconAssignedEdit.setOnClickListener {
+        withState(viewModel) { state ->
+            val dataObj = state.parent
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = showSearchUserComponentDialog(
+                    requireContext(), ComponentData(
+                        name = requireContext().getString(R.string.title_priority),
+                        query = dataObj?.priority.toString(),
+                        selector = ComponentType.TASK_PRIORITY.value
+                    )
+                )
+            }
+        }
+    }
 }
 
 private fun TaskDetailFragment.formatDateAndShowCalendar() {

@@ -36,7 +36,6 @@ class SearchUserComponentSheet : ParentComponentSheet() {
         savedInstanceState: Bundle?
     ): View {
         binding = SheetComponentSearchUserBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
         return binding.root
     }
 

@@ -43,6 +43,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addTextViewPrefix
@@ -337,11 +338,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
 
     internal suspend fun showSearchUserComponentDialog(
         context: Context,
-        componentData: ComponentData
+        taskEntry: TaskEntry
     ) = withContext(dispatcher) {
         suspendCoroutine {
 
-            SearchUserComponentBuilder(context, componentData)
+            SearchUserComponentBuilder(context, taskEntry)
                 .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
                 }

@@ -115,6 +115,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * It will call the api to search the user by name or email and returns the ResponseUserList type obj
+     */
     suspend fun searchUser(name: String, email: String): ResponseUserList {
         return ResponseUserList.with(
             processService.searchUser(filter = name, email = email)

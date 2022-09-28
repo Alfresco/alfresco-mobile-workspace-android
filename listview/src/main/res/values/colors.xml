@@ -5,7 +5,5 @@
     <color name="color_search_filter">#212121</color>
     <color name="color_back_attachment">#EFF1F1</color>
     <color name="color_attachment_row">@color/white</color>
-    <color name="color_bg_initial">#1F212121</color>
-    <color name="color_text_initial">#262626</color>
     <color name="color_gray_30">@color/alfresco_gray_900_30</color>
 </resources>

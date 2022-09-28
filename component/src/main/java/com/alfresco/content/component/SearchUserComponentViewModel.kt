@@ -4,24 +4,27 @@ import android.content.Context
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
-import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.ResponseUserList
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.coroutines.asFlow
+import java.util.concurrent.CancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
 /**
- * Mark as SearchUserComponentState class
+ * Marked as SearchUserParams class
  */
-data class SearchUserComponentState(
-    val parent: ComponentData?,
-    val requestUser: Async<ResponseUserList> = Uninitialized
-) : MavericksState
+data class SearchUserParams(
+    val name: String = "",
+    val email: String = ""
+)
 
 /**
  * Mark as SearchUserComponentViewModel class
@@ -31,31 +34,63 @@ class SearchUserComponentViewModel(
     stateChipCreate: SearchUserComponentState,
     private val repository: TaskRepository
 ) : MavericksViewModel<SearchUserComponentState>(stateChipCreate) {
+    private val liveSearchUserEvents: MutableStateFlow<SearchUserParams>
+    private val searchUserEvents: MutableStateFlow<SearchUserParams>
+    private var params: SearchUserParams
+    var searchByName = true
 
-    fun getUserByName(name: String) = fetchUser(name = name)
+    init {
+        params = SearchUserParams()
+        liveSearchUserEvents = MutableStateFlow(params)
+        searchUserEvents = MutableStateFlow(params)
 
-    fun getUserByEmail(email: String) = fetchUser(email = email)
-
-    private fun fetchUser(name: String = "", email: String = "") {
         viewModelScope.launch {
-            // Fetch process user
-            repository::searchUser.asFlow(name, email).execute {
-                when (it) {
-                    is Loading -> copy(requestUser = Loading())
-                    is Fail -> copy(requestUser = Fail(it.error))
-                    is Success -> {
-                        copy(requestUser = Success(it()))
-                    }
-                    else -> {
-                        this
-                    }
+
+            merge(
+                liveSearchUserEvents.debounce(DEFAULT_DEBOUNCE_TIME),
+                searchUserEvents
+            ).filter {
+                it.name.length >= MIN_QUERY_LENGTH || it.email.length >= MIN_QUERY_LENGTH
+            }.executeOnLatest({
+                repository.searchUser(it.name, it.email)
+            }) {
+                if (it is Loading) {
+                    copy(requestUser = it)
+                } else {
+                    updateUserEntries(it()).copy(requestUser = it)
                 }
             }
         }
     }
 
-    companion object : MavericksViewModelFactory<SearchUserComponentViewModel, SearchUserComponentState> {
+    private suspend fun <T, V> Flow<T>.executeOnLatest(
+        action: suspend (value: T) -> V,
+        stateReducer: SearchUserComponentState.(Async<V>) -> SearchUserComponentState
+    ) {
+        collectLatest {
+            setState { stateReducer(Loading()) }
+            try {
+                val result = action(it)
+                setState { stateReducer(Success(result)) }
+            } catch (e: CancellationException) {
+                // No-op
+            } catch (e: Throwable) {
+                setState { stateReducer(Fail(e)) }
+            }
+        }
+    }
 
+    fun setSearchQuery(term: String) {
+        params = if (searchByName)
+            params.copy(name = term, email = "")
+        else params.copy(name = "", email = term)
+
+        liveSearchUserEvents.value = params
+    }
+
+    companion object : MavericksViewModelFactory<SearchUserComponentViewModel, SearchUserComponentState> {
+        const val MIN_QUERY_LENGTH = 1
+        const val DEFAULT_DEBOUNCE_TIME = 300L
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchUserComponentState

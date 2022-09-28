@@ -23,4 +23,6 @@
     <string name="filter.option.completed">Completed</string>
     <string name="filter.option.due.before">Due Before</string>
     <string name="filter.option.due.after">Due After</string>
+    <string name="text_by_name">By Name</string>
+    <string name="text_by_email">By E-mail</string>
 </resources>

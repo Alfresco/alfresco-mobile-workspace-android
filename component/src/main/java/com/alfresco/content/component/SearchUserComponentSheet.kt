@@ -8,9 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
+import com.alfresco.content.hideSoftInput
+import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -21,8 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class SearchUserComponentSheet : ParentComponentSheet() {
 
     internal val viewModel: SearchUserComponentViewModel by fragmentViewModel()
-    private lateinit var searchView: SearchView
     lateinit var binding: SheetComponentSearchUserBinding
+    private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +46,61 @@ class SearchUserComponentSheet : ParentComponentSheet() {
         binding.toolbar.apply {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener { dismiss() }
+        }
+        binding.recyclerView.setController(epoxyController)
+        binding.searchView.requestFocus()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (isResumed) {
+                    setSearchQuery(newText ?: "")
+                }
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                hideSoftInput()
+                return true
+            }
+        })
+
+        binding.searchByName.setOnCheckedChangeListener { button, _ ->
+            if (button.isPressed) {
+                viewModel.searchByName = true
+                binding.searchByEmail.isChecked = false
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900))
+                binding.searchByEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900_60))
+                setSearchQuery(binding.searchView.query.toString())
+            }
+        }
+
+        binding.searchByEmail.setOnCheckedChangeListener { button, _ ->
+            if (button.isPressed) {
+                viewModel.searchByName = false
+                binding.searchByName.isChecked = false
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900))
+                binding.searchByName.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_900_60))
+                setSearchQuery(binding.searchView.query.toString())
+            }
+        }
+    }
+
+    fun setSearchQuery(query: String) {
+        val term = cleanupSearchQuery(query)
+        scrollToTop()
+        viewModel.setSearchQuery(term)
+    }
+
+    private fun cleanupSearchQuery(query: String): String {
+        return query.replace("\\s+".toRegex(), " ").trim()
+    }
+
+    private fun scrollToTop() {
+        if (isResumed) {
+            binding.recyclerView.layoutManager?.scrollToPosition(0)
         }
     }
 
@@ -74,5 +135,17 @@ class SearchUserComponentSheet : ParentComponentSheet() {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        binding.loading.isVisible = state.requestUser is Loading
+
+        epoxyController.requestModelBuild()
+    }
+
+    private fun epoxyController() = simpleController(viewModel) { state ->
+        state.listUser.forEach { item ->
+            listViewUserRow {
+                id(item.id)
+                data(item)
+            }
+        }
     }
 }

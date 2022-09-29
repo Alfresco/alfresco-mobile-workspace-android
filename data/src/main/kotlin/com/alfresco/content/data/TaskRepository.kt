@@ -19,7 +19,7 @@ import java.io.File
 class TaskRepository(val session: Session = SessionManager.requireSession) {
 
     private val context get() = session.context
-    val userEmail get() = session.account.email
+    val acsUserEmail get() = session.account.email
 
     private val processService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)
@@ -129,15 +129,35 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         val editor = sharedPrefs.edit()
         editor.putString(KEY_PROCESS_USER_ID, processUser.id?.toString() ?: "")
         editor.putString(KEY_PROCESS_USER_EMAIL, processUser.email ?: "")
+        editor.putString(KEY_PROCESS_USER_FIRST_NAME, processUser.firstName ?: "")
+        editor.putString(KEY_PROCESS_USER_LAST_NAME, processUser.lastName ?: "")
         editor.putString(KEY_PROCESS_USER_FULL_NAME, processUser.fullname ?: "")
+        editor.apply()
+    }
+
+    /**
+     * clear the process user detail from shared preferences
+     */
+    fun clearAPSData() {
+        val editor = sharedPrefs.edit()
+        editor.remove(KEY_PROCESS_USER_ID)
+        editor.remove(KEY_PROCESS_USER_FIRST_NAME)
+        editor.remove(KEY_PROCESS_USER_LAST_NAME)
+        editor.remove(KEY_PROCESS_USER_EMAIL)
+        editor.remove(KEY_PROCESS_USER_FULL_NAME)
         editor.apply()
     }
 
     /**
      * returns the userID of APS user
      */
-    fun getProcessUserId(): String {
-        return sharedPrefs.getString(KEY_PROCESS_USER_ID, "") ?: ""
+    fun getAPSUser(): UserDetails {
+        return UserDetails(
+            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "")?.toInt() ?: 0,
+            email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
+            firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
+            lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: ""
+        )
     }
 
     /**
@@ -161,6 +181,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"
         const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"
+        const val KEY_PROCESS_USER_FIRST_NAME = "process_user_first_name"
+        const val KEY_PROCESS_USER_LAST_NAME = "process_user_last_name"
         const val KEY_PROCESS_USER_EMAIL = "process_user_email"
     }
 }

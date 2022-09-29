@@ -44,6 +44,7 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.data.UserDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addTextViewPrefix
@@ -211,7 +212,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 updateTaskDetailUI(true)
 
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
-            binding.tvAssignedValue.text = dataObj.assignee?.name
+            binding.tvAssignedValue.apply {
+                if (viewModel.getAPSUser().id.toString() == dataObj.id) {
+                    text = dataObj.assignee?.let { UserDetails.with(it).name }
+                } else text = dataObj.assignee?.name
+            }
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
@@ -343,11 +348,8 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         suspendCoroutine {
 
             SearchUserComponentBuilder(context, taskEntry)
-                .onApply { name, query, _ ->
-                    executeContinuation(it, name, query)
-                }
-                .onReset { name, query, _ ->
-                    executeContinuation(it, name, query)
+                .onApply { userDetails ->
+                    it.resume(userDetails)
                 }
                 .onCancel {
                     it.resume(null)

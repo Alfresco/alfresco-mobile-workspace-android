@@ -6,10 +6,10 @@ import com.alfresco.process.models.ResultUserList
  * Marked as ResponseUserList class
  */
 data class ResponseUserList(
-    val size: Int,
-    val total: Int,
-    val start: Int,
-    val listUser: List<UserDetails>
+    val size: Int = 0,
+    val total: Int = 0,
+    val start: Int = 0,
+    val listUser: List<UserDetails> = emptyList()
 ) {
     companion object {
 

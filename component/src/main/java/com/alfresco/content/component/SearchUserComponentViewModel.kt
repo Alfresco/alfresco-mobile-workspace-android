@@ -8,7 +8,9 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.ResponseUserList
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserDetails
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,8 +46,11 @@ class SearchUserComponentViewModel(
         liveSearchUserEvents = MutableStateFlow(params)
         searchUserEvents = MutableStateFlow(params)
 
-        viewModelScope.launch {
+        setState {
+            copy(listUser = listOf(getLoggedInUser()))
+        }
 
+        viewModelScope.launch {
             merge(
                 liveSearchUserEvents.debounce(DEFAULT_DEBOUNCE_TIME),
                 searchUserEvents
@@ -57,7 +62,11 @@ class SearchUserComponentViewModel(
                 if (it is Loading) {
                     copy(requestUser = it)
                 } else {
-                    updateUserEntries(it()).copy(requestUser = it)
+                    if (params.name.isEmpty() && params.email.isEmpty())
+                        updateUserEntries(ResponseUserList(), getLoggedInUser()).copy(requestUser = it)
+                    else {
+                        updateUserEntries(it(), getLoggedInUser()).copy(requestUser = it)
+                    }
                 }
             }
         }
@@ -90,6 +99,8 @@ class SearchUserComponentViewModel(
 
         liveSearchUserEvents.value = params
     }
+
+    private fun getLoggedInUser() = UserDetails.with(repository.getAPSUser())
 
     companion object : MavericksViewModelFactory<SearchUserComponentViewModel, SearchUserComponentState> {
         const val MIN_QUERY_LENGTH = 1

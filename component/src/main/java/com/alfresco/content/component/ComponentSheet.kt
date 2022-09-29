@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.component.databinding.SheetComponentFilterBinding
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.simpleController
-import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.slider.Slider
@@ -26,14 +24,11 @@ import kotlinx.coroutines.launch
 /**
  * Marked as ComponentSheet class
  */
-class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
+class ComponentSheet : ParentComponentSheet() {
 
     internal val viewModel: ComponentViewModel by fragmentViewModel()
 
     lateinit var binding: SheetComponentFilterBinding
-    var onApply: ComponentApplyCallback? = null
-    var onReset: ComponentResetCallback? = null
-    var onCancel: ComponentCancelCallback? = null
 
     val epoxyCheckListController: AsyncEpoxyController by lazy { epoxyCheckListController() }
     val epoxyRadioListController: AsyncEpoxyController by lazy { epoxyRadioListController() }
@@ -171,19 +166,10 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         dialog?.setOnCancelListener {
-            cancelSheet()
+            onCancel?.invoke()
         }
         setupComponents()
         setListeners()
-    }
-
-    private fun cancelSheet() = withState(viewModel) { state ->
-        when (state.parent?.selector) {
-            ComponentType.TASK_PRIORITY.value -> {
-                onApply?.invoke("", viewModel.priority.toString(), mapOf())
-            }
-            else -> onCancel?.invoke()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -276,7 +262,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             dismiss()
         }
         binding.cancelButton.setOnClickListener {
-            cancelSheet()
+            onCancel?.invoke()
             dismiss()
         }
 

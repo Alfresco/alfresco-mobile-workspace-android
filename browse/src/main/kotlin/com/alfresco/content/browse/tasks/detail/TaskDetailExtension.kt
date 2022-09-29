@@ -94,6 +94,16 @@ internal fun TaskDetailFragment.setListeners() {
             }
         }
     }
+    binding.iconAssignedEdit.setOnClickListener {
+        withState(viewModel) { state ->
+            requireNotNull(state.parent)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = showSearchUserComponentDialog(
+                    requireContext(), state.parent
+                )
+            }
+        }
+    }
 }
 
 private fun TaskDetailFragment.formatDateAndShowCalendar() {

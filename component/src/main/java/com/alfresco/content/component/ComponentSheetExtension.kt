@@ -223,18 +223,21 @@ fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
         binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(viewModel.priority)
         binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
+        cancelPriorityDialog()
     }
     binding.taskPriorityComponent.tvPriorityMedium.setOnClickListener {
         viewModel.priority = DefaultPriority.MEDIUM.value
         binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(viewModel.priority)
         binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(-1)
+        cancelPriorityDialog()
     }
     binding.taskPriorityComponent.tvPriorityHigh.setOnClickListener {
         viewModel.priority = DefaultPriority.HIGH.value
         binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(-1)
         binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(viewModel.priority)
+        cancelPriorityDialog()
     }
 
     binding.bottomView.visibility = View.GONE
@@ -244,4 +247,9 @@ fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
 private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): LinearLayout.LayoutParams {
     val calculatedHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, minVisibleItem * 48f, context.resources.displayMetrics).toInt()
     return LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, calculatedHeight)
+}
+
+private fun ComponentSheet.cancelPriorityDialog() {
+    onApply?.invoke("", viewModel.priority.toString(), mapOf())
+    dismiss()
 }

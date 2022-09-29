@@ -36,6 +36,7 @@ class TasksViewModel(
 
     init {
         setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
+        fetchUserProfile()
         fetchInitial()
         viewModelScope.on<UpdateTasksData> {
             if (it.isRefresh) {
@@ -93,6 +94,13 @@ class TasksViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private fun fetchUserProfile() {
+        viewModelScope.launch {
+            // Fetch tasks data
+            repository.getProcessUserProfile()
         }
     }
 

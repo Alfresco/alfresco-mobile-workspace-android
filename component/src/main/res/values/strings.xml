@@ -25,4 +25,5 @@
     <string name="filter.option.due.after">Due After</string>
     <string name="text_by_name">By Name</string>
     <string name="text_by_email">By E-mail</string>
+    <string name="text_back_button">Back Button</string>
 </resources>

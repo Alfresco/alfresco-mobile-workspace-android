@@ -51,6 +51,7 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
         binding.toolbar.apply {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener { dismiss() }
+            navigationContentDescription = context.getString(R.string.text_back_button)
         }
         binding.recyclerView.setController(epoxyController)
         binding.searchView.requestFocus()

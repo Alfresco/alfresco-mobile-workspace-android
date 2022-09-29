@@ -12,11 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.simpleController
+import com.alfresco.ui.BottomSheetDialogFragment
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,10 +26,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 /**
  * Marked as SearchUserComponentSheet class
  */
-class SearchUserComponentSheet : ParentComponentSheet() {
+class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     internal val viewModel: SearchUserComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentSearchUserBinding
+
+    var onApply: SearchUserComponentApplyCallback? = null
+    var onCancel: SearchUserComponentCancelCallback? = null
+
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
     override fun onCreateView(
@@ -144,6 +150,10 @@ class SearchUserComponentSheet : ParentComponentSheet() {
             listViewUserRow {
                 id(item.id)
                 data(item)
+                clickListener { model, _, _, _ ->
+                    onApply?.invoke(model.data())
+                    dismiss()
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.component.databinding.ViewListUserRowBinding
@@ -21,5 +22,13 @@ internal class ListViewUserRow @JvmOverloads constructor(
     fun setData(dataObj: UserDetails) {
         binding.tvUserInitial.text = dataObj.nameInitial
         binding.tvName.text = dataObj.name
+    }
+
+    /**
+     * set clickListener to the list item
+     */
+    @CallbackProp
+    fun setClickListener(listener: OnClickListener?) {
+        binding.clUserParent.setOnClickListener(listener)
     }
 }

@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.component.databinding.SheetComponentFilterBinding
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.simpleController
+import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.slider.Slider
@@ -24,11 +26,14 @@ import kotlinx.coroutines.launch
 /**
  * Marked as ComponentSheet class
  */
-class ComponentSheet : ParentComponentSheet() {
+class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     internal val viewModel: ComponentViewModel by fragmentViewModel()
-
     lateinit var binding: SheetComponentFilterBinding
+
+    var onApply: ComponentApplyCallback? = null
+    var onReset: ComponentResetCallback? = null
+    var onCancel: ComponentCancelCallback? = null
 
     val epoxyCheckListController: AsyncEpoxyController by lazy { epoxyCheckListController() }
     val epoxyRadioListController: AsyncEpoxyController by lazy { epoxyRadioListController() }

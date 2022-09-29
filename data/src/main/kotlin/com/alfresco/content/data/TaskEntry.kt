@@ -103,5 +103,20 @@ data class TaskEntry(
                 formattedDueDate = data.formattedDueDate
             )
         }
+
+        fun updateAssignee(data: TaskEntry, assignee: UserDetails): TaskEntry {
+            return TaskEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                created = data.created,
+                assignee = assignee,
+                priority = data.priority,
+                endDate = data.endDate,
+                dueDate = data.dueDate,
+                duration = data.duration,
+                formattedDueDate = data.formattedDueDate
+            )
+        }
     }
 }

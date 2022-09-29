@@ -21,6 +21,7 @@ import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
+import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -58,6 +59,7 @@ class MainActivityViewModel(
     private fun init(context: Context, session: Session) {
         AnalyticsManager(session).appLaunch()
         session.onSignedOut {
+            TaskRepository().clearAPSData()
             setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
 

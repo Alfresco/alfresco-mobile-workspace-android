@@ -17,6 +17,7 @@ import com.alfresco.content.app.widget.AccountPreference
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
@@ -88,6 +89,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Extra cleanup before removing the account
         SearchRepository().clearRecentSearch()
         OfflineRepository().cleanup()
+        TaskRepository().clearAPSData()
 
         // Actual account removal
         val weakRef = WeakReference(requireActivity())

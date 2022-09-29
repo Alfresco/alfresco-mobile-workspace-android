@@ -21,9 +21,12 @@ data class SearchUserComponentState(
     /**
      * update search user entries after fetch the result from server.
      */
-    fun updateUserEntries(response: ResponseUserList?): SearchUserComponentState {
+    fun updateUserEntries(response: ResponseUserList?, userDetails: UserDetails): SearchUserComponentState {
         if (response == null) return this
-        val users = response.listUser
-        return copy(listUser = users)
+        requireNotNull(parent)
+
+        val filterUser = response.listUser.filter { it.id != parent.assignee?.id }.filter { it.id != userDetails.id }.toMutableList()
+        filterUser.add(0, UserDetails.with(userDetails))
+        return copy(listUser = filterUser)
     }
 }

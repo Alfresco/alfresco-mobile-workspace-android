@@ -101,6 +101,9 @@ internal fun TaskDetailFragment.setListeners() {
                 val result = showSearchUserComponentDialog(
                     requireContext(), state.parent
                 )
+                if (result != null) {
+                    viewModel.updateAssignee(result)
+                }
             }
         }
     }

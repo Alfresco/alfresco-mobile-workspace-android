@@ -6,9 +6,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.Mavericks
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.data.UserDetails
 
-internal typealias SearchUserComponentApplyCallback = (String, String, Map<String, String>) -> Unit
-internal typealias SearchUserComponentResetCallback = (String, String, Map<String, String>) -> Unit
+internal typealias SearchUserComponentApplyCallback = (UserDetails) -> Unit
 internal typealias SearchUserComponentCancelCallback = () -> Unit
 
 /**
@@ -18,7 +18,6 @@ data class SearchUserComponentBuilder(
     val context: Context,
     val taskEntry: TaskEntry,
     var onApply: SearchUserComponentApplyCallback? = null,
-    var onReset: SearchUserComponentResetCallback? = null,
     var onCancel: SearchUserComponentCancelCallback? = null
 ) {
 
@@ -27,12 +26,6 @@ data class SearchUserComponentBuilder(
      */
     fun onApply(callback: SearchUserComponentApplyCallback?) =
         apply { this.onApply = callback }
-
-    /**
-     * Filter sheet reset callback
-     */
-    fun onReset(callback: SearchUserComponentResetCallback?) =
-        apply { this.onReset = callback }
 
     /**
      * Filter sheet cancel callback
@@ -54,7 +47,6 @@ data class SearchUserComponentBuilder(
         SearchUserComponentSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to taskEntry)
             onApply = this@SearchUserComponentBuilder.onApply
-            onReset = this@SearchUserComponentBuilder.onReset
             onCancel = this@SearchUserComponentBuilder.onCancel
         }.show(fragmentManager, SearchUserComponentSheet::class.java.simpleName)
     }

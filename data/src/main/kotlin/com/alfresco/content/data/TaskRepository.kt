@@ -135,6 +135,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         editor.apply()
     }
 
+    /**
+     * clear the process user detail from shared preferences
+     */
     fun clearAPSData() {
         val editor = sharedPrefs.edit()
         editor.remove(KEY_PROCESS_USER_ID)

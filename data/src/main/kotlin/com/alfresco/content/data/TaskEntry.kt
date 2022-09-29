@@ -104,6 +104,9 @@ data class TaskEntry(
             )
         }
 
+        /**
+         * updating the task assignee into existing object
+         */
         fun updateAssignee(data: TaskEntry, assignee: UserDetails): TaskEntry {
             return TaskEntry(
                 id = data.id,

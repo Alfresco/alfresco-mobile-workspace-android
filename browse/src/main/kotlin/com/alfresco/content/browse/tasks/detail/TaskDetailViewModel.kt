@@ -189,6 +189,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * update the assignee in the existing TaskEntry obj and update the UI.
+     */
     fun updateAssignee(result: UserDetails) {
         setState {
             requireNotNull(this.parent)
@@ -196,6 +199,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * returns the current logged in APS user profile data
+     */
     fun getAPSUser() = repository.getAPSUser()
 
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {

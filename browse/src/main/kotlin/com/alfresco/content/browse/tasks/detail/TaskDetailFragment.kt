@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
@@ -72,6 +73,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     lateinit var commentViewBinding: ViewListCommentRowBinding
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
+    private var discardTaskDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -103,7 +105,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
-                requireActivity().onBackPressed()
+                if (viewModel.hasTaskEditMode)
+                    discardTaskPrompt()
+                else requireActivity().onBackPressed()
             }
             title = resources.getString(R.string.title_task_view)
         }
@@ -130,6 +134,9 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit -> {
+                withState(viewModel) { state ->
+                    println("Task entry obj equals :: ${state.parent.hashCode()}  ${state.taskEntry.hashCode()}")
+                }
                 item.isVisible = false
                 updateTaskDetailUI(true)
                 menuDetail.findItem(R.id.action_done).isVisible = true
@@ -137,9 +144,24 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             R.id.action_done -> {
                 AnalyticsManager().taskEvent(EventName.UpdateTaskDetails)
-                item.isVisible = false
-                menuDetail.findItem(R.id.action_edit).isVisible = true
-                updateTaskDetailUI(false)
+                withState(viewModel) { state ->
+                    if (viewModel.isTaskDetailsChanged(state)) {
+                        viewModel.isExecutingUpdateDetails = true
+                        viewModel.updateTaskDetails()
+                    }
+
+                    if (viewModel.isTaskAssigneeChanged(state)) {
+                        viewModel.isExecutingAssignUser = true
+                        viewModel.assignUser()
+                    }
+
+                    if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                        item.isVisible = false
+                        menuDetail.findItem(R.id.action_edit).isVisible = true
+                        updateTaskDetailUI(false)
+                    }
+                }
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -151,7 +173,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
-                (state.requestCompleteTask is Loading)
+                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading)
 
         setData(state)
 
@@ -163,6 +185,16 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             state.requestCompleteTask.invoke()?.code() == 200 -> {
                 viewModel.updateTaskList()
                 requireActivity().onBackPressed()
+            }
+            state.requestUpdateTask is Success -> {
+                if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                    menuDetail.findItem(R.id.action_done).isVisible = false
+                    menuDetail.findItem(R.id.action_edit).isVisible = true
+                    updateTaskDetailUI(false)
+                    viewModel.copyEntry(state.parent)
+                    viewModel.resetUpdateTaskRequest()
+                    viewModel.updateTaskList()
+                }
             }
         }
 
@@ -311,6 +343,20 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             .show()
         taskCompleteConfirmationDialog = WeakReference(dialog)
+    }
+
+    private fun discardTaskPrompt() {
+        val oldDialog = discardTaskDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_discard_task))
+            .setMessage(getString(R.string.dialog_message_discard_task))
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                requireActivity().onBackPressed()
+            }
+            .show()
+        discardTaskDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

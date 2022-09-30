@@ -15,9 +15,11 @@ import retrofit2.Response
  */
 data class TaskDetailViewState(
     val parent: TaskEntry?,
+    val taskEntry: TaskEntry? = null,
     val listComments: List<CommentEntry> = emptyList(),
     val listContents: List<ContentEntry> = emptyList(),
     val request: Async<TaskEntry> = Uninitialized,
+    val requestUpdateTask: Async<TaskEntry> = Uninitialized,
     val requestComments: Async<ResponseComments> = Uninitialized,
     val requestContents: Async<ResponseContents> = Uninitialized,
     val requestAddComment: Async<CommentEntry> = Uninitialized,

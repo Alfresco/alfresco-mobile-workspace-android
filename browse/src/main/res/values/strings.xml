@@ -87,5 +87,7 @@
     <string name="icon_assignee_edit">Edit assignee icon</string>
     <string name="icon_name_description_edit">Edit name &amp; description icon</string>
     <string name="text_create_task">Create task</string>
+    <string name="dialog_title_discard_task">Discard</string>
+    <string name="dialog_message_discard_task">Edit Task will be discarded if you exit.</string>
 
 </resources>

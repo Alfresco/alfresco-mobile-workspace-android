@@ -29,8 +29,8 @@ import kotlinx.coroutines.launch
 class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     internal val viewModel: ComponentViewModel by fragmentViewModel()
-
     lateinit var binding: SheetComponentFilterBinding
+
     var onApply: ComponentApplyCallback? = null
     var onReset: ComponentResetCallback? = null
     var onCancel: ComponentCancelCallback? = null

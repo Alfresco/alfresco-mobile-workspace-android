@@ -35,6 +35,7 @@ import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentType
+import com.alfresco.content.component.SearchUserComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.ContentEntry
@@ -42,6 +43,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.data.UserDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addTextViewPrefix
@@ -209,7 +212,11 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 updateTaskDetailUI(true)
 
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
-            binding.tvAssignedValue.text = dataObj.assignee?.name
+            binding.tvAssignedValue.apply {
+                if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
+                    text = dataObj.assignee?.let { UserDetails.with(it).name }
+                } else text = dataObj.assignee?.name
+            }
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
@@ -326,6 +333,23 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                 }
                 .onReset { name, query, _ ->
                     executeContinuation(it, name, query)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
+    }
+
+    internal suspend fun showSearchUserComponentDialog(
+        context: Context,
+        taskEntry: TaskEntry
+    ) = withContext(dispatcher) {
+        suspendCoroutine {
+
+            SearchUserComponentBuilder(context, taskEntry)
+                .onApply { userDetails ->
+                    it.resume(userDetails)
                 }
                 .onCancel {
                     it.resume(null)

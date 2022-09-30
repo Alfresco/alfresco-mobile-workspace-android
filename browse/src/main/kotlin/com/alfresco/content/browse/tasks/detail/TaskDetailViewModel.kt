@@ -13,6 +13,7 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserDetails
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
@@ -187,6 +188,21 @@ class TaskDetailViewModel(
             copy(parent = TaskEntry.updateTaskPriority(this.parent, result.query?.toInt() ?: 0))
         }
     }
+
+    /**
+     * update the assignee in the existing TaskEntry obj and update the UI.
+     */
+    fun updateAssignee(result: UserDetails) {
+        setState {
+            requireNotNull(this.parent)
+            copy(parent = TaskEntry.updateAssignee(this.parent, result))
+        }
+    }
+
+    /**
+     * returns the current logged in APS user profile data
+     */
+    fun getAPSUser() = repository.getAPSUser()
 
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 

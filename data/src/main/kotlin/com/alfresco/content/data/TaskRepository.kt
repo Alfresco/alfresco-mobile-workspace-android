@@ -1,10 +1,13 @@
 package com.alfresco.content.data
 
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
+import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
@@ -16,10 +19,14 @@ import java.io.File
 class TaskRepository(val session: Session = SessionManager.requireSession) {
 
     private val context get() = session.context
-    val userEmail get() = session.account.email
+    val acsUserEmail get() = session.account.email
 
     private val processService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)
+    }
+
+    private val sharedPrefs: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(context)
     }
 
     /**
@@ -107,16 +114,75 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     fun getTaskFiltersJSON(): TaskFiltersJson = getModelFromStringJSON(getJsonDataFromAsset(context, TASK_FILTERS_JSON) ?: "")
 
     /**
+     * executes the Api to fetch the user profile and save the local data in preferences
+     */
+    suspend fun getProcessUserProfile() {
+        val acsUserEmail = session.account.email
+        val processUserEmail = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "")
+        if (acsUserEmail != processUserEmail) {
+            val processUser = processService.getProfile()
+            saveProcessUserDetails(processUser)
+        }
+    }
+
+    private fun saveProcessUserDetails(processUser: ProfileData) {
+        val editor = sharedPrefs.edit()
+        editor.putString(KEY_PROCESS_USER_ID, processUser.id?.toString() ?: "")
+        editor.putString(KEY_PROCESS_USER_EMAIL, processUser.email ?: "")
+        editor.putString(KEY_PROCESS_USER_FIRST_NAME, processUser.firstName ?: "")
+        editor.putString(KEY_PROCESS_USER_LAST_NAME, processUser.lastName ?: "")
+        editor.putString(KEY_PROCESS_USER_FULL_NAME, processUser.fullname ?: "")
+        editor.apply()
+    }
+
+    /**
+     * clear the process user detail from shared preferences
+     */
+    fun clearAPSData() {
+        val editor = sharedPrefs.edit()
+        editor.remove(KEY_PROCESS_USER_ID)
+        editor.remove(KEY_PROCESS_USER_FIRST_NAME)
+        editor.remove(KEY_PROCESS_USER_LAST_NAME)
+        editor.remove(KEY_PROCESS_USER_EMAIL)
+        editor.remove(KEY_PROCESS_USER_FULL_NAME)
+        editor.apply()
+    }
+
+    /**
+     * returns the userID of APS user
+     */
+    fun getAPSUser(): UserDetails {
+        return UserDetails(
+            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "")?.toInt() ?: 0,
+            email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
+            firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
+            lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: ""
+        )
+    }
+
+    /**
      * It will call the api to create the task and return the TaskEntry type obj
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
-            processService.createTask(
-                TaskBodyCreate(
-                    name = name,
-                    description = description
-                )
-            ), true
+            processService.createTask(TaskBodyCreate(name = name, description = description)), true
         )
+    }
+
+    /**
+     * It will call the api to search the user by name or email and returns the ResponseUserList type obj
+     */
+    suspend fun searchUser(name: String, email: String): ResponseUserList {
+        return ResponseUserList.with(
+            processService.searchUser(filter = name, email = email)
+        )
+    }
+
+    companion object {
+        const val KEY_PROCESS_USER_ID = "process_user_id"
+        const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"
+        const val KEY_PROCESS_USER_FIRST_NAME = "process_user_first_name"
+        const val KEY_PROCESS_USER_LAST_NAME = "process_user_last_name"
+        const val KEY_PROCESS_USER_EMAIL = "process_user_email"
     }
 }

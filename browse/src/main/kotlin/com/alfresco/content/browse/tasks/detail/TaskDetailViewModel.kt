@@ -6,7 +6,9 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
@@ -15,6 +17,7 @@ import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserDetails
 import com.alfresco.content.data.payloads.CommentPayload
+import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -32,6 +35,8 @@ class TaskDetailViewModel(
 
     var isAddComment = false
     var hasTaskEditMode = false
+    var isExecutingUpdateDetails = false
+    var isExecutingAssignUser = false
     var entryListener: EntryListener? = null
 
     init {
@@ -42,10 +47,21 @@ class TaskDetailViewModel(
             if (!it.entry.path.isNullOrEmpty())
                 entryListener?.onEntryCreated(it.entry)
         }
+        copyEntry(state.parent)
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry) }
         }
     }
+
+    /**
+     * copy the task entry obj.
+     */
+    fun copyEntry(_taskEntry: TaskEntry?) = setState { copy(taskEntry = _taskEntry) }
+
+    /**
+     * uninitialized the requestUpdateTask
+     */
+    fun resetUpdateTaskRequest() = setState { copy(requestUpdateTask = Uninitialized) }
 
     private fun getTaskDetails() = withState { state ->
         viewModelScope.launch {
@@ -158,6 +174,28 @@ class TaskDetailViewModel(
     }
 
     /**
+     * If there is any change in the task assignee then it will return true otherwise false
+     */
+    fun isTaskAssigneeChanged(state: TaskDetailViewState) = state.taskEntry?.assignee?.id != state.parent?.assignee?.id
+
+    /**
+     * If there is any change in the name, description, priority or due date the it will return true otherwise false
+     */
+    fun isTaskDetailsChanged(state: TaskDetailViewState): Boolean {
+        if (state.parent?.name != state.taskEntry?.name)
+            return true
+        if (state.parent?.description != state.taskEntry?.description)
+            return true
+        if (state.parent?.priority != state.taskEntry?.priority)
+            return true
+
+        if (state.parent?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1) != state.taskEntry?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1))
+            return true
+
+        return false
+    }
+
+    /**
      * adding listener to update the View after downloading the content
      */
     fun setListener(listener: EntryListener) {
@@ -203,6 +241,56 @@ class TaskDetailViewModel(
      * returns the current logged in APS user profile data
      */
     fun getAPSUser() = repository.getAPSUser()
+
+    /**
+     * execute the update task detail api
+     */
+    fun updateTaskDetails() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::updateTaskDetails.asFlow(
+                state.parent
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestUpdateTask = Loading())
+                    is Fail -> copy(requestUpdateTask = Fail(it.error))
+                    is Success -> {
+                        isExecutingUpdateDetails = false
+                        copy(requestUpdateTask = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the assign user api
+     */
+    fun assignUser() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            // assign user to the task
+            repository::assignUser.asFlow(
+                state.parent.id, state.parent.assignee?.id.toString()
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestUpdateTask = Loading())
+                    is Fail -> copy(requestUpdateTask = Fail(it.error))
+                    is Success -> {
+                        isExecutingAssignUser = false
+                        copy(requestUpdateTask = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
 
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 

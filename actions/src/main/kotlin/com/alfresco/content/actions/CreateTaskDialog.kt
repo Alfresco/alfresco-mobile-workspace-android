@@ -46,7 +46,7 @@ class CreateTaskDialog : DialogFragment() {
             }
             .setPositiveButton(
                 if (isUpdate) getString(R.string.action_text_save)
-                else getString(R.string.action_task_next)
+                else getString(R.string.action_folder_create)
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),

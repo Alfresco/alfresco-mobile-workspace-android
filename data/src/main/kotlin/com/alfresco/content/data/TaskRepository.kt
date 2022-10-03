@@ -7,6 +7,7 @@ import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.TaskAPI
+import com.alfresco.process.models.AssignUserBody
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
@@ -175,6 +176,32 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun searchUser(name: String, email: String): ResponseUserList {
         return ResponseUserList.with(
             processService.searchUser(filter = name, email = email)
+        )
+    }
+
+    /**
+     * It will call the api to update the task api and return the TaskEntry obj
+     */
+    suspend fun updateTaskDetails(taskEntry: TaskEntry): TaskEntry {
+        return TaskEntry.with(
+            processService.updateTask(
+                taskEntry.id,
+                TaskBodyCreate(
+                    name = taskEntry.name,
+                    description = taskEntry.description,
+                    priority = taskEntry.priority.toString(),
+                    dueDate = taskEntry.formattedDueDate
+                )
+            ), true
+        )
+    }
+
+    /**
+     * It will call the api to update the task api and return the TaskEntry obj
+     */
+    suspend fun assignUser(taskID: String, assigneeID: String): TaskEntry {
+        return TaskEntry.with(
+            processService.assignUser(taskID, AssignUserBody(assignee = assigneeID))
         )
     }
 

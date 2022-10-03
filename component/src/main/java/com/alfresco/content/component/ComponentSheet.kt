@@ -171,19 +171,10 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         dialog?.setOnCancelListener {
-            cancelSheet()
+            onCancel?.invoke()
         }
         setupComponents()
         setListeners()
-    }
-
-    private fun cancelSheet() = withState(viewModel) { state ->
-        when (state.parent?.selector) {
-            ComponentType.TASK_PRIORITY.value -> {
-                onApply?.invoke("", viewModel.priority.toString(), mapOf())
-            }
-            else -> onCancel?.invoke()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -276,7 +267,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             dismiss()
         }
         binding.cancelButton.setOnClickListener {
-            cancelSheet()
+            onCancel?.invoke()
             dismiss()
         }
 

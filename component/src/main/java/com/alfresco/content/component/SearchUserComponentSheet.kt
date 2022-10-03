@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.CompoundButton
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -73,25 +74,27 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
             }
         })
 
-        binding.searchByName.setOnCheckedChangeListener { button, _ ->
-            if (button.isPressed) {
-                viewModel.searchByName = true
-                binding.searchByEmail.isChecked = false
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
-                binding.searchByEmail.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
-                setSearchQuery(binding.searchView.query.toString())
+        binding.searchByName.setOnCheckedChangeListener { button, isChecked ->
+            if (isChecked) {
+                viewModel.searchByName = isChecked
+                binding.searchByEmail.isChecked = !isChecked
+                changeTab(button, binding.searchByEmail)
             }
         }
 
-        binding.searchByEmail.setOnCheckedChangeListener { button, _ ->
-            if (button.isPressed) {
-                viewModel.searchByName = false
-                binding.searchByName.isChecked = false
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
-                binding.searchByName.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
-                setSearchQuery(binding.searchView.query.toString())
+        binding.searchByEmail.setOnCheckedChangeListener { button, isChecked ->
+            if (isChecked) {
+                viewModel.searchByName = !isChecked
+                binding.searchByName.isChecked = !isChecked
+                changeTab(button, binding.searchByName)
             }
         }
+    }
+
+    private fun changeTab(selected: CompoundButton, notSelected: CompoundButton) {
+        selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
+        notSelected.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
+        setSearchQuery(binding.searchView.query.toString())
     }
 
     private fun setSearchQuery(query: String) {

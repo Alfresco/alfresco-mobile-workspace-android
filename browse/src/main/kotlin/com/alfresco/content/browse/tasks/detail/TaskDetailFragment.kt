@@ -13,9 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
@@ -30,6 +28,7 @@ import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_ENTRY_OBJ
+import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.component.ComponentBuilder
@@ -64,7 +63,7 @@ import kotlinx.coroutines.withContext
 /**
  * Marked as TaskDetailFragment class
  */
-class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
+class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
     lateinit var binding: FragmentTaskDetailBinding
@@ -165,6 +164,10 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onConfirmDelete(contentId: String) {
+        viewModel.deleteAttachment(contentId)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -349,28 +352,6 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             .show()
         discardTaskDialog = WeakReference(dialog)
-    }
-
-    private fun deleteContentPrompt(contentEntry: ContentEntry) {
-        AnalyticsManager().taskEvent(EventName.DeleteTaskAttachment)
-        val oldDialog = deleteContentDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_title_delete_content))
-            .setMessage(contentEntry.name)
-            .setIcon(
-                ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    MimeType.with(contentEntry.mimeType).icon,
-                    requireContext().theme
-                )
-            )
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                viewModel.deleteAttachment(contentEntry.id.toString())
-            }
-            .show()
-        deleteContentDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

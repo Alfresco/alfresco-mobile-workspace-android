@@ -352,6 +352,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun deleteContentPrompt(contentEntry: ContentEntry) {
+        AnalyticsManager().taskEvent(EventName.DeleteTaskAttachment)
         val oldDialog = deleteContentDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())

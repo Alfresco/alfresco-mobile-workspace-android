@@ -24,6 +24,7 @@ import com.alfresco.content.browse.tasks.detail.execute
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.listview.EntryListener
@@ -118,6 +119,7 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
     }
 
     private fun deleteContentPrompt(contentEntry: ContentEntry) {
+        AnalyticsManager().taskEvent(EventName.DeleteTaskAttachment)
         val oldDialog = deleteContentDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())

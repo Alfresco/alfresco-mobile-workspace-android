@@ -86,7 +86,9 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         scrollToTop()
 
         if (state.request is Success) {
-            clParent.addView(makeFab(requireContext()))
+            val fabButton = makeFab(requireContext())
+            println("TasksFragment.invalidate ${fabButton.id}")
+            clParent.addView(fabButton)
         }
     }
 
@@ -160,6 +162,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                         .toInt()
                 )
             }
+            id = R.id.fab_create_task
             contentDescription = context.getString(R.string.text_create_task)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {

@@ -9,9 +9,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/title_task_view"
         android:background="@drawable/bottom_separator"
-        android:theme="@style/Theme.Alfresco.toolbar" />
+        android:theme="@style/Theme.Alfresco.toolbar"
+        app:title="@string/title_task_view" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -41,8 +41,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="32dp"
+                android:ellipsize="end"
                 android:letterSpacing="0.01"
+                android:maxLines="2"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@id/icon_title_edit"
@@ -226,7 +229,7 @@
                             android:contentDescription="@string/icon_due_date_edit"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_edit"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
 
                     </FrameLayout>
 

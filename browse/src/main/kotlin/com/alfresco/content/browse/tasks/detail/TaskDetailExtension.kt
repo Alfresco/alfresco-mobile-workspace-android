@@ -76,6 +76,9 @@ internal fun TaskDetailFragment.setListeners() {
     binding.iconDueDateEdit.setOnClickListener {
         formatDateAndShowCalendar()
     }
+    binding.tvTaskTitle.setOnClickListener {
+        showTitleDescriptionComponent()
+    }
     binding.iconPriorityEdit.setOnClickListener {
         withState(viewModel) { state ->
             val dataObj = state.parent
@@ -138,5 +141,18 @@ private fun TaskDetailFragment.showCalendar(fromDate: String) {
         result?.let { date ->
             viewModel.updateDate(date.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5))
         }
+    }
+}
+
+internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(viewModel) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        showComponentSheetDialog(
+            requireContext(), ComponentData(
+                name = requireContext().getString(R.string.task_title),
+                query = it.parent?.name,
+                value = it.parent?.description,
+                selector = ComponentType.VIEW_TEXT.value
+            )
+        )
     }
 }

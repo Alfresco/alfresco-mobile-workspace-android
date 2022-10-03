@@ -15,7 +15,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
@@ -35,7 +34,6 @@ import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
-import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.SearchUserComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
@@ -60,7 +58,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -253,16 +250,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
             binding.tvTaskDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    showComponentSheetDialog(
-                        requireContext(), ComponentData(
-                            name = requireContext().getString(R.string.task_title),
-                            query = dataObj.name,
-                            value = dataObj.description,
-                            selector = ComponentType.VIEW_TEXT.value
-                        )
-                    )
-                }
+                showTitleDescriptionComponent()
             }
 
             if (viewModel.isTaskCompleted(state)) {

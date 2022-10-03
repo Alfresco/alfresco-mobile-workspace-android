@@ -53,8 +53,14 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * copy the task entry obj.
+     */
     fun copyEntry(_taskEntry: TaskEntry?) = setState { copy(taskEntry = _taskEntry) }
 
+    /**
+     * uninitialized the requestUpdateTask
+     */
     fun resetUpdateTaskRequest() = setState { copy(requestUpdateTask = Uninitialized) }
 
     private fun getTaskDetails() = withState { state ->
@@ -167,8 +173,14 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * If there is any change in the task assignee then it will return true otherwise false
+     */
     fun isTaskAssigneeChanged(state: TaskDetailViewState) = state.taskEntry?.assignee?.id != state.parent?.assignee?.id
 
+    /**
+     * If there is any change in the name, description, priority or due date the it will return true otherwise false
+     */
     fun isTaskDetailsChanged(state: TaskDetailViewState): Boolean {
         if (state.parent?.name != state.taskEntry?.name)
             return true

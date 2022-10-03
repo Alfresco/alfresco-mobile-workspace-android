@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -71,6 +72,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
+    private var deleteContentDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -170,7 +172,8 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
-                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading)
+                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
+                (state.requestDeleteContent is Loading)
 
         setData(state)
 
@@ -297,6 +300,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                     id(obj.id)
                     data(obj)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         } else {
@@ -345,6 +349,27 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
             }
             .show()
         discardTaskDialog = WeakReference(dialog)
+    }
+
+    private fun deleteContentPrompt(contentEntry: ContentEntry) {
+        val oldDialog = deleteContentDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_title_delete_content))
+            .setMessage(contentEntry.name)
+            .setIcon(
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    MimeType.with(contentEntry.mimeType).icon,
+                    requireContext().theme
+                )
+            )
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                viewModel.deleteAttachment(contentEntry.id.toString())
+            }
+            .show()
+        deleteContentDialog = WeakReference(dialog)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

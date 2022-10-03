@@ -292,6 +292,26 @@ class TaskDetailViewModel(
         }
     }
 
+    fun deleteAttachment(contentId: String) = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            // assign user to the task
+            repository::deleteContent.asFlow(contentId).execute {
+                when (it) {
+                    is Loading -> copy(requestDeleteContent = Loading())
+                    is Fail -> copy(requestDeleteContent = Fail(it.error))
+                    is Success -> {
+                        getContents()
+                        copy(requestDeleteContent = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 
         override fun create(

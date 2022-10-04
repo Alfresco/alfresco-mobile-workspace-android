@@ -13,6 +13,8 @@ import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserDetails
@@ -283,6 +285,33 @@ class TaskDetailViewModel(
                     is Success -> {
                         isExecutingAssignUser = false
                         copy(requestUpdateTask = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the delete content api
+     */
+    fun deleteAttachment(contentId: String) = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            // assign user to the task
+            repository::deleteContent.asFlow(contentId).execute {
+                when (it) {
+                    is Loading -> copy(requestDeleteContent = Loading())
+                    is Fail -> {
+                        AnalyticsManager().apiTracker(APIEvent.DeleteTaskAttachment, false)
+                        copy(requestDeleteContent = Fail(it.error))
+                    }
+                    is Success -> {
+                        getContents()
+                        AnalyticsManager().apiTracker(APIEvent.DeleteTaskAttachment, true)
+                        copy(requestDeleteContent = Success(it()))
                     }
                     else -> {
                         this

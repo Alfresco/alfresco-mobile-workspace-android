@@ -105,6 +105,7 @@ enum class EventName(val value: String) {
     TaskComplete("event_task_complete"),
     CreateTask("event_create_task"),
     UpdateTaskDetails("event_update_task_details"),
+    DeleteTaskAttachment("event_delete_task_attachment"),
     None("event_none")
 }
 
@@ -136,6 +137,7 @@ enum class PageView(val value: String) {
 enum class APIEvent(val value: String) {
     NewFolder("event_api_new_folder"),
     UploadFiles("event_api_upload_files"),
+    DeleteTaskAttachment("event_api_delete_task_attachment"),
     Login("event_api_login")
 }
 

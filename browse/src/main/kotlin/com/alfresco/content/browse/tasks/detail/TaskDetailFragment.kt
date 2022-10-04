@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
@@ -29,6 +28,7 @@ import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_ENTRY_OBJ
+import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.component.ComponentBuilder
@@ -63,7 +63,7 @@ import kotlinx.coroutines.withContext
 /**
  * Marked as TaskDetailFragment class
  */
-class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
+class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
     lateinit var binding: FragmentTaskDetailBinding
@@ -71,6 +71,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
+    private var deleteContentDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -165,12 +166,17 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
+    override fun onConfirmDelete(contentId: String) {
+        viewModel.deleteAttachment(contentId)
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
 
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
-                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading)
+                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
+                (state.requestDeleteContent is Loading)
 
         setData(state)
 
@@ -297,6 +303,7 @@ class TaskDetailFragment : Fragment(), MavericksView, EntryListener {
                     id(obj.id)
                     data(obj)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         } else {

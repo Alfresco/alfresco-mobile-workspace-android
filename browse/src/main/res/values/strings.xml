@@ -89,5 +89,7 @@
     <string name="text_create_task">Create task</string>
     <string name="dialog_title_discard_task">Discard</string>
     <string name="dialog_message_discard_task">Do you want to discard the changes?</string>
+    <string name="icon_delete_attachment">Icon delete attachment</string>
+    <string name="dialog_title_delete_content">Delete a file?</string>
 
 </resources>

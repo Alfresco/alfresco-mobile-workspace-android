@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -15,8 +16,8 @@ import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentAttachedFilesBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
+import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
-import com.alfresco.content.browse.tasks.detail.execute
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
@@ -30,7 +31,7 @@ import com.alfresco.ui.getDrawableForAttribute
 /**
  * Marked as AttachedFilesFragment class
  */
-class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
+class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentAttachedFilesBinding
@@ -74,7 +75,14 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
         viewModel.setListener(this)
     }
 
+    override fun onConfirmDelete(contentId: String) {
+        viewModel.deleteAttachment(contentId)
+    }
+
     override fun invalidate() = withState(viewModel) { state ->
+
+        binding.loading.isVisible = state.requestDeleteContent is Loading
+
         if (state.requestContents.complete) {
             binding.refreshLayout.isRefreshing = false
         }
@@ -87,6 +95,8 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
         } else {
             binding.tvNoOfAttachments.visibility = View.GONE
         }
+
+        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
@@ -97,6 +107,7 @@ class AttachedFilesFragment : Fragment(), MavericksView, EntryListener {
                     id(obj.id)
                     data(obj)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         }

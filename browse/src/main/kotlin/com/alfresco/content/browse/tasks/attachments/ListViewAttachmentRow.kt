@@ -40,4 +40,12 @@ class ListViewAttachmentRow @JvmOverloads constructor(
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
     }
+
+    /**
+     * delete icon click listener
+     */
+    @CallbackProp
+    fun setDeleteContentClickListener(listener: OnClickListener?) {
+        setOnClickListener(listener)
+    }
 }

@@ -205,6 +205,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * It will call the api to delete the raw content and return the Response<Unit>
+     */
+    suspend fun deleteContent(contentId: String) = processService.deleteRawContent(contentId)
+
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"
         const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"

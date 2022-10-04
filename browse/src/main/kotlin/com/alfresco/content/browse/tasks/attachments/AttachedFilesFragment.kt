@@ -95,6 +95,8 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         } else {
             binding.tvNoOfAttachments.visibility = View.GONE
         }
+
+        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->

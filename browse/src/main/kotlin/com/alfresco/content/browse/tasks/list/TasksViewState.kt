@@ -13,7 +13,7 @@ import com.alfresco.content.listview.tasks.TaskListViewState
  * Marked as TasksViewState class
  */
 data class TasksViewState(
-    val parent: Entry? = null,
+    val parent: TaskEntry? = null,
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,

@@ -71,7 +71,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
-    private var deleteContentDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu

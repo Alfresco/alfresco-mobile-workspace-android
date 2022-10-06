@@ -2,8 +2,8 @@ package com.alfresco.content.data
 
 import android.os.Parcelable
 import com.alfresco.process.models.TaskDataEntry
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
+import java.time.ZonedDateTime
 
 /**
  * Marked as TaskEntry class
@@ -18,6 +18,7 @@ data class TaskEntry(
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
+    val involvedPeople: List<UserDetails> = listOf(),
     val formattedDueDate: String? = null,
     val duration: Long? = null,
     val isNewTaskCreated: Boolean = false
@@ -42,6 +43,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople?.map { UserDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated
             )
         }
@@ -64,6 +66,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }
@@ -82,6 +85,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = if (isClearDueDate) null else data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = formattedDueDate
             )
         }
@@ -100,6 +104,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }
@@ -118,6 +123,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }

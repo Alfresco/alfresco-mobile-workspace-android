@@ -91,5 +91,7 @@
     <string name="dialog_message_discard_task">Do you want to discard the changes?</string>
     <string name="icon_delete_attachment">Icon delete attachment</string>
     <string name="dialog_title_delete_content">Delete a file?</string>
+    <string name="text_add_attachments">Add attachments</string>
+    <string name="icon_add_attachment">Add attachment icon</string>
 
 </resources>

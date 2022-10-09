@@ -2,7 +2,6 @@ package com.alfresco.content.browse.tasks.list
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData

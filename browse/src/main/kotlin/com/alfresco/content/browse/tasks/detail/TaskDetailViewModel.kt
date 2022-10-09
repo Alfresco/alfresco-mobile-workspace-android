@@ -49,6 +49,7 @@ class TaskDetailViewModel(
             if (!it.entry.path.isNullOrEmpty())
                 entryListener?.onEntryCreated(it.entry)
         }
+        println("TaskDetailViewModel.copyEntry 1")
         copyEntry(state.parent)
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry) }
@@ -58,7 +59,11 @@ class TaskDetailViewModel(
     /**
      * copy the task entry obj.
      */
-    fun copyEntry(_taskEntry: TaskEntry?) = setState { copy(taskEntry = _taskEntry) }
+    fun copyEntry(_taskEntry: TaskEntry?) = setState {
+        println("TaskDetailViewModel.copyEntry ${this.parent.hashCode()} == ${this.taskEntry.hashCode()}")
+        val taskEntry = TaskEntry()
+        copy(taskEntry = TaskEntry().with(_taskEntry))
+    }
 
     /**
      * uninitialized the requestUpdateTask

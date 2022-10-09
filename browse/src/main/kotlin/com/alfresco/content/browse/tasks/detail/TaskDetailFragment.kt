@@ -102,9 +102,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
-                if (viewModel.hasTaskEditMode)
-                    discardTaskPrompt()
-                else requireActivity().onBackPressed()
+                withState(viewModel) { state ->
+                    if (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))
+                        discardTaskPrompt()
+                    else requireActivity().onBackPressed()
+                }
             }
             title = resources.getString(R.string.title_task_view)
         }
@@ -131,9 +133,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit -> {
-                withState(viewModel) { state ->
-                    println("Task entry obj equals :: ${state.parent.hashCode()}  ${state.taskEntry.hashCode()}")
-                }
                 item.isVisible = false
                 updateTaskDetailUI(true)
                 menuDetail.findItem(R.id.action_done).isVisible = true
@@ -193,6 +192,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     menuDetail.findItem(R.id.action_done).isVisible = false
                     menuDetail.findItem(R.id.action_edit).isVisible = true
                     updateTaskDetailUI(false)
+                    println("TaskDetailViewModel.copyEntry 2")
                     viewModel.copyEntry(state.parent)
                     viewModel.resetUpdateTaskRequest()
                     viewModel.updateTaskList()

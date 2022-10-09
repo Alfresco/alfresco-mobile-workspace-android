@@ -2,8 +2,8 @@ package com.alfresco.content.data
 
 import android.os.Parcelable
 import com.alfresco.process.models.TaskDataEntry
-import kotlinx.parcelize.Parcelize
 import java.time.ZonedDateTime
+import kotlinx.parcelize.Parcelize
 
 /**
  * Marked as TaskEntry class
@@ -26,6 +26,26 @@ data class TaskEntry(
 
     val localDueDate: String?
         get() = formattedDueDate ?: dueDate?.toLocalDate()?.toString()
+
+    /**
+     * return the TaskEntry obj using TaskDataEntry
+     */
+    fun with(data: TaskEntry?): TaskEntry {
+        return TaskEntry(
+            id = data?.id ?: "",
+            name = data?.name ?: "",
+            description = data?.description,
+            assignee = data?.assignee,
+            priority = data?.priority ?: 0,
+            created = data?.created,
+            endDate = data?.endDate,
+            dueDate = data?.dueDate,
+            involvedPeople = data?.involvedPeople ?: emptyList(),
+            formattedDueDate = data?.formattedDueDate,
+            duration = data?.duration,
+            isNewTaskCreated = data?.isNewTaskCreated ?: false
+        )
+    }
 
     companion object {
 

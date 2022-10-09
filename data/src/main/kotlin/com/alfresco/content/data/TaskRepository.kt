@@ -117,16 +117,21 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * executes the Api to fetch the user profile and save the local data in preferences
      */
-    suspend fun getProcessUserProfile() {
+    suspend fun getProcessUserProfile() = processService.getProfile()
+
+    /**
+     * If the ACS and APS users are same then it will return true otherwise false
+     */
+    fun isAcsAndApsSameUser(): Boolean {
         val acsUserEmail = session.account.email
         val processUserEmail = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "")
-        if (acsUserEmail != processUserEmail) {
-            val processUser = processService.getProfile()
-            saveProcessUserDetails(processUser)
-        }
+        return acsUserEmail == processUserEmail
     }
 
-    private fun saveProcessUserDetails(processUser: ProfileData) {
+    /**
+     * It will save the APS user profile data on shared preferences.
+     */
+    fun saveProcessUserDetails(processUser: ProfileData) {
         val editor = sharedPrefs.edit()
         editor.putString(KEY_PROCESS_USER_ID, processUser.id?.toString() ?: "")
         editor.putString(KEY_PROCESS_USER_EMAIL, processUser.email ?: "")

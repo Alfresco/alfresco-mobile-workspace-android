@@ -192,7 +192,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     menuDetail.findItem(R.id.action_done).isVisible = false
                     menuDetail.findItem(R.id.action_edit).isVisible = true
                     updateTaskDetailUI(false)
-                    println("TaskDetailViewModel.copyEntry 2")
                     viewModel.copyEntry(state.parent)
                     viewModel.resetUpdateTaskRequest()
                     viewModel.updateTaskList()

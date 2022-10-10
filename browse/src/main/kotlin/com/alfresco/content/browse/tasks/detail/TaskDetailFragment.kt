@@ -246,7 +246,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.apply {
-                if (viewModel.getAPSUser().id.toString() == dataObj.id) {
+                if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
                     text = dataObj.assignee?.let { UserDetails.with(it).name }
                 } else text = dataObj.assignee?.name
             }

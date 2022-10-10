@@ -12,6 +12,7 @@ import com.alfresco.content.models.ResultNode
 import com.alfresco.content.models.SharedLink
 import com.alfresco.content.models.Site
 import com.alfresco.content.models.SiteRole
+import com.alfresco.process.models.ContentDataEntry
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -19,11 +20,11 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
-import java.time.Instant
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
+import java.time.Instant
+import java.time.ZonedDateTime
 
 /**
  * Generic data model representing all types of objects.
@@ -72,7 +73,18 @@ data class Entry(
     val isDocFile: Boolean = false,
     val isProcessService: Boolean = false,
     @Transient
-    val parentPaths: MutableList<String> = mutableListOf()
+    val parentPaths: MutableList<String> = mutableListOf(),
+    /*APS content data*/
+    @Convert(converter = BoxDateConverter::class, dbType = Long::class)
+    val created: ZonedDateTime? = null,
+    @Transient
+    val userDetails: UserDetails? = null,
+    val isRelatedContent: Boolean? = false,
+    val isContentAvailable: Boolean? = false,
+    val hasLink: Boolean? = false,
+    val simpleType: String? = "",
+    val previewStatus: String? = "",
+    val thumbnailStatus: String? = ""
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -361,13 +373,31 @@ data class Entry(
         /**
          * return the Entry obj by using the contentEntry obj.
          */
-        fun convertContentEntryToEntry(contentEntry: ContentEntry, isDocFile: Boolean): Entry {
+        fun convertContentEntryToEntry(contentEntry: Entry, isDocFile: Boolean): Entry {
             return Entry(
-                id = contentEntry.id.toString(),
+                id = contentEntry.id,
                 name = contentEntry.name,
                 mimeType = contentEntry.mimeType,
                 isProcessService = true,
                 isDocFile = isDocFile
+            )
+        }
+
+        /**
+         * return the ContentEntry obj after converting the data from ContentDataEntry obj
+         */
+        fun with(data: ContentDataEntry): Entry {
+            return Entry(
+                id = data.id?.toString() ?: "",
+                name = data.name ?: "",
+                created = data.created,
+                userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails(),
+                isRelatedContent = data.relatedContent,
+                isContentAvailable = data.contentAvailable,
+                mimeType = data.mimeType,
+                simpleType = data.simpleType,
+                previewStatus = data.previewStatus,
+                thumbnailStatus = data.thumbnailStatus
             )
         }
 

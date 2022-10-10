@@ -19,7 +19,6 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
@@ -113,7 +112,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         }
     }
 
-    private fun onItemClicked(contentEntry: ContentEntry) {
+    private fun onItemClicked(contentEntry: Entry) {
         viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 

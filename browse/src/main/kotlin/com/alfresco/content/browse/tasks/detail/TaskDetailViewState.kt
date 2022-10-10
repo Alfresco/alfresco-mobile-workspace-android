@@ -4,7 +4,7 @@ import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.CommentEntry
-import com.alfresco.content.data.ContentEntry
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.ResponseContents
 import com.alfresco.content.data.TaskEntry
@@ -17,7 +17,7 @@ data class TaskDetailViewState(
     val parent: TaskEntry?,
     val taskEntry: TaskEntry? = null,
     val listComments: List<CommentEntry> = emptyList(),
-    val listContents: List<ContentEntry> = emptyList(),
+    val listContents: List<Entry> = emptyList(),
     val request: Async<TaskEntry> = Uninitialized,
     val requestUpdateTask: Async<TaskEntry> = Uninitialized,
     val requestComments: Async<ResponseComments> = Uninitialized,

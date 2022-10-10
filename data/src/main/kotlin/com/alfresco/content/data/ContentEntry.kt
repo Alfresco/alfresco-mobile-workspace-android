@@ -1,13 +1,17 @@
+
 package com.alfresco.content.data
 
-import android.os.Parcelable
+/*import android.os.Parcelable
 import com.alfresco.process.models.ContentDataEntry
+import io.objectbox.annotation.Entity
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 
+*/
 /**
  * Marked as ContentEntry class
- */
+ *//*
+
 @Parcelize
 data class ContentEntry(
     val id: Int = 0,
@@ -24,9 +28,11 @@ data class ContentEntry(
 ) : Parcelable {
 
     companion object {
-        /**
+        */
+/**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj
-         */
+         *//*
+
         fun with(data: ContentDataEntry): ContentEntry {
             return ContentEntry(
                 id = data.id ?: 0,
@@ -43,3 +49,4 @@ data class ContentEntry(
         }
     }
 }
+*/

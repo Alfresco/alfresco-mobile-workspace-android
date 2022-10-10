@@ -9,7 +9,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.browse.databinding.ViewListAttachmentRowBinding
-import com.alfresco.content.data.ContentEntry
+import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 
 /**
@@ -28,7 +28,7 @@ class ListViewAttachmentRow @JvmOverloads constructor(
      * set the content data on list row
      */
     @ModelProp
-    fun setData(data: ContentEntry) {
+    fun setData(data: Entry) {
         binding.tvName.text = data.name
         binding.iconFile.setImageDrawable(ResourcesCompat.getDrawable(resources, MimeType.with(data.mimeType).icon, context.theme))
     }

@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import com.alfresco.process.models.ResultContents
+import kotlin.math.E
 
 /**
  * Marked as ResponseContents class
@@ -9,7 +10,7 @@ data class ResponseContents(
     val size: Int,
     val total: Int,
     val start: Int,
-    val listContents: List<ContentEntry>
+    val listContents: List<Entry>
 ) {
     companion object {
 
@@ -21,7 +22,7 @@ data class ResponseContents(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listContents = raw.data?.map { ContentEntry.with(it) } ?: emptyList()
+                listContents = raw.data?.map { Entry.with(it) } ?: emptyList()
             )
         }
     }

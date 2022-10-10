@@ -31,6 +31,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         val oldDialog = deleteContentDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
             .setTitle(getString(R.string.dialog_title_delete_content))
             .setMessage(contentEntry.name)
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)

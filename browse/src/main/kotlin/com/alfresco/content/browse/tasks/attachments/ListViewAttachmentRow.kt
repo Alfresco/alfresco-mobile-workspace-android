@@ -46,6 +46,6 @@ class ListViewAttachmentRow @JvmOverloads constructor(
      */
     @CallbackProp
     fun setDeleteContentClickListener(listener: OnClickListener?) {
-        setOnClickListener(listener)
+        binding.deleteContentButton.setOnClickListener(listener)
     }
 }

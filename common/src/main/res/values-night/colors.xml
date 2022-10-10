@@ -7,5 +7,6 @@
     <color name="colorPriorityMedium">#FFDBCA</color>
     <color name="colorPriorityHigh">#FFDAD4</color>
     <color name="color_bg_initial">#1FFFFFFF</color>
-    <color name="color_text_initial">#FFFFFF</color>
+    <color name="color_text_initial">@android:color/white</color>
+    <color name="colorGray1">@android:color/white</color>
 </resources>

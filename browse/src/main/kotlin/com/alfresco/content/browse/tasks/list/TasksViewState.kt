@@ -2,7 +2,6 @@ package com.alfresco.content.browse.tasks.list
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
@@ -13,7 +12,7 @@ import com.alfresco.content.listview.tasks.TaskListViewState
  * Marked as TasksViewState class
  */
 data class TasksViewState(
-    val parent: Entry? = null,
+    val parent: TaskEntry? = null,
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,

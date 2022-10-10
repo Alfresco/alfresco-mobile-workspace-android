@@ -35,7 +35,7 @@ data class TaskDetailViewState(
     fun update(response: TaskEntry?): TaskDetailViewState {
         if (response == null) return this
 
-        return copy(parent = response)
+        return copy(parent = response, taskEntry = response)
     }
 
     /**

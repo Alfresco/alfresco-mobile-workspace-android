@@ -16,6 +16,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.common.isValidEmail
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.simpleController
@@ -99,6 +100,13 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setSearchQuery(query: String) {
         val term = cleanupSearchQuery(query)
+        if (!viewModel.searchByName) {
+            if (term.isValidEmail())
+                executeSearch(term)
+        } else executeSearch(term)
+    }
+
+    private fun executeSearch(term: String) {
         scrollToTop()
         viewModel.setSearchQuery(term)
     }

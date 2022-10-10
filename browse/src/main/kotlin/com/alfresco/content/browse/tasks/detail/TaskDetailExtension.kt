@@ -14,6 +14,7 @@ import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.listview.isEllipsized
 import com.alfresco.content.parseDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -77,7 +78,8 @@ internal fun TaskDetailFragment.setListeners() {
         formatDateAndShowCalendar()
     }
     binding.tvTaskTitle.setOnClickListener {
-        showTitleDescriptionComponent()
+        if (binding.tvTaskTitle.isEllipsized())
+            showTitleDescriptionComponent()
     }
     binding.iconPriorityEdit.setOnClickListener {
         withState(viewModel) { state ->

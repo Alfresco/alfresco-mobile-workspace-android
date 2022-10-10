@@ -98,9 +98,23 @@ class TasksViewModel(
     }
 
     private fun fetchUserProfile() {
+        if (!repository.isAcsAndApsSameUser())
+            return
         viewModelScope.launch {
-            // Fetch tasks data
-            repository.getProcessUserProfile()
+            // Fetch APS user profile data
+            repository::getProcessUserProfile.execute {
+                when (it) {
+                    is Loading -> copy(requestProfile = Loading())
+                    is Fail -> copy(requestProfile = Fail(it.error))
+                    is Success -> {
+                        repository.saveProcessUserDetails(it())
+                        copy(requestProfile = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
         }
     }
 

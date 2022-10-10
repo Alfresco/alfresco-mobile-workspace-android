@@ -7,6 +7,7 @@ import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.payloads.TaskFiltersPayload
 import com.alfresco.content.listview.tasks.TaskListViewState
+import com.alfresco.process.models.ProfileData
 
 /**
  * Marked as TasksViewState class
@@ -16,6 +17,7 @@ data class TasksViewState(
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,
+    val requestProfile: Async<ProfileData> = Uninitialized,
     val baseTaskEntries: List<TaskEntry> = emptyList(),
     val listSortDataChips: List<TaskFilterData> = emptyList(),
     val filterParams: TaskFiltersPayload = TaskFiltersPayload(),

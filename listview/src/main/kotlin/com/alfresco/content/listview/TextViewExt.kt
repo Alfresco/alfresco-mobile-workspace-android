@@ -40,6 +40,8 @@ fun TextView.updatePriorityView(priority: Int) {
     }
 }
 
+fun TextView.isEllipsized() = layout.text.toString() != text.toString()
+
 /**
  * It adds the read more text if line exceeds more than 4 lines
  */

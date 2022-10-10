@@ -39,6 +39,7 @@ class CreateTaskDialog : DialogFragment() {
     var taskEntry: TaskEntry? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
             .setTitle(getString(if (isUpdate) R.string.action_update_task_name_description else R.string.action_create_task))
             .setNegativeButton(getString(R.string.action_folder_cancel)) { _, _ ->
                 onCancel?.invoke()

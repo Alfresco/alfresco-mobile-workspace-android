@@ -23,6 +23,7 @@ import com.alfresco.ui.BottomSheetDialogFragment
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.util.regex.Pattern
 
 /**
  * Marked as SearchUserComponentSheet class
@@ -99,8 +100,28 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setSearchQuery(query: String) {
         val term = cleanupSearchQuery(query)
+        if (!viewModel.searchByName) {
+            if (isValidString(term))
+                executeSearch(term)
+        } else executeSearch(term)
+    }
+
+    private fun executeSearch(term: String) {
         scrollToTop()
         viewModel.setSearchQuery(term)
+    }
+
+    private fun isValidString(str: String): Boolean {
+        val emailAddressPattern = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+        )
+        return emailAddressPattern.matcher(str).matches()
     }
 
     private fun cleanupSearchQuery(query: String): String {

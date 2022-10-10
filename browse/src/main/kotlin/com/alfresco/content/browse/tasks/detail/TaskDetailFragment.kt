@@ -344,6 +344,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         val oldDialog = discardTaskDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
             .setTitle(getString(R.string.dialog_title_discard_task))
             .setMessage(getString(R.string.dialog_message_discard_task))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)

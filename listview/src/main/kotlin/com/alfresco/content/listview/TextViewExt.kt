@@ -40,6 +40,9 @@ fun TextView.updatePriorityView(priority: Int) {
     }
 }
 
+/**
+ * It will return true if textview has ellipsized at end otherwise false
+ */
 fun TextView.isEllipsized() = layout.text.toString() != text.toString()
 
 /**

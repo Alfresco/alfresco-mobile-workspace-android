@@ -89,7 +89,7 @@ class TaskDetailViewModel(
     }
 
     /**
-     * gets all the comments from server by using give task Id.
+     * gets all the comments from server by using given task Id.
      */
     fun getComments() = withState { state ->
         viewModelScope.launch {
@@ -111,7 +111,10 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getContents() = withState { state ->
+    /**
+     * gets all the attachments from server by using given task Id.
+     */
+    fun getContents() = withState { state ->
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getContents.asFlow(
@@ -141,7 +144,7 @@ class TaskDetailViewModel(
         repo.removeCompletedUploads(taskId)
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeProcessUploads(taskId)
+        observeUploadsJob = repo.observeUploads(taskId)
             .execute {
                 if (it is Success) {
                     updateUploads(it())

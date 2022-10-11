@@ -233,11 +233,13 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             }
         }
 
+        val multipartBody = MultipartBody.Part.createFormData("file", local.name, filePart)
+
         return Entry.with(
             processService.uploadRawContent(
                 local.parentId,
-                filePart
-            )
+                multipartBody
+            ), local.parentId
         )
     }
 

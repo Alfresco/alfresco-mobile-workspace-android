@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -38,7 +39,7 @@ class ListViewAttachmentRow @JvmOverloads constructor(
 
         configureOfflineStatus(data)
 
-        binding.deleteContentButton.isVisible = actionButtonVisibility(data)
+        binding.deleteContentButton.visibility = if (actionButtonVisibility(data)) View.VISIBLE else View.INVISIBLE
     }
 
     private fun configureOfflineStatus(entry: Entry) {

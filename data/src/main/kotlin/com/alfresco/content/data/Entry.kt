@@ -386,9 +386,10 @@ data class Entry(
         /**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj
          */
-        fun with(data: ContentDataEntry): Entry {
+        fun with(data: ContentDataEntry, parentId: String? = null): Entry {
             return Entry(
                 id = data.id?.toString() ?: "",
+                parentId = parentId,
                 name = data.name ?: "",
                 created = data.created,
                 userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails(),
@@ -397,7 +398,8 @@ data class Entry(
                 mimeType = data.mimeType,
                 simpleType = data.simpleType,
                 previewStatus = data.previewStatus,
-                thumbnailStatus = data.thumbnailStatus
+                thumbnailStatus = data.thumbnailStatus,
+                isProcessService = true
             )
         }
 

@@ -25,7 +25,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.actions.ActionOpenWith
-import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
@@ -403,10 +402,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 }
                 .show()
         }
-    }
-
-    internal fun showCreateSheet() = withState(viewModel) {
-        CreateActionsSheet.with(Entry.defaultAPSEntry(it.parent?.id)).show(childFragmentManager, null)
     }
 
     private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {

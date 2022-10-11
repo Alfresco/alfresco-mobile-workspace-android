@@ -42,38 +42,31 @@
                 android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@id/fl_action_icon"
+                app:layout_constraintEnd_toStartOf="@id/offline_icon"
                 app:layout_constraintStart_toEndOf="@id/icon_file"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/fl_action_icon"
+            <ImageView
+                android:id="@+id/offline_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_offline_status_in_progress_anim"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/delete_content_button"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/delete_content_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/icon_delete_attachment"
+                android:src="@drawable/ic_delete"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/offline_icon"
-                    android:layout_marginStart="6dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:src="@drawable/ic_offline_status_synced" />
-
-                <ImageView
-                    android:id="@+id/delete_content_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="@string/icon_delete_attachment"
-                    android:src="@drawable/ic_delete" />
-
-            </FrameLayout>
-
-
-
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

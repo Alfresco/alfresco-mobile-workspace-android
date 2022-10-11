@@ -82,7 +82,9 @@ internal fun TaskDetailFragment.setListeners() {
             showTitleDescriptionComponent()
     }
     binding.clAddAttachment.setOnClickListener {
-        showCreateSheet()
+        withState(viewModel) {
+            showCreateSheet(it)
+        }
     }
     binding.iconPriorityEdit.setOnClickListener {
         withState(viewModel) { state ->

@@ -3,7 +3,9 @@ package com.alfresco.content.browse.tasks
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.tasks.detail.TaskDetailViewState
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
@@ -40,6 +42,10 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
             }
             .show()
         deleteContentDialog = WeakReference(dialog)
+    }
+
+    internal fun showCreateSheet(state: TaskDetailViewState) {
+        CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
     }
 }
 

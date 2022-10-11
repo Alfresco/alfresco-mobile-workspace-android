@@ -3,6 +3,8 @@ package com.alfresco.content.browse.tasks.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -280,23 +282,26 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     }
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
+        val handler = Handler(Looper.getMainLooper())
         if (state.listContents.isNotEmpty()) {
-            binding.tvNoAttachedFilesError.visibility = View.GONE
-            binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-            binding.recyclerViewAttachments.visibility = View.VISIBLE
+            handler.post {
+                binding.tvNoAttachedFilesError.visibility = View.GONE
+                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                binding.recyclerViewAttachments.visibility = View.VISIBLE
 
-            if (state.listContents.size > 1)
-                binding.tvNoOfAttachments.visibility = View.VISIBLE
-            else binding.tvNoOfAttachments.visibility = View.GONE
+                if (state.listContents.size > 1)
+                    binding.tvNoOfAttachments.visibility = View.VISIBLE
+                else binding.tvNoOfAttachments.visibility = View.GONE
 
-            if (state.listContents.size > 4)
-                binding.tvAttachmentViewAll.visibility = View.VISIBLE
-            else
-                binding.tvAttachmentViewAll.visibility = View.GONE
+                if (state.listContents.size > 4)
+                    binding.tvAttachmentViewAll.visibility = View.VISIBLE
+                else
+                    binding.tvAttachmentViewAll.visibility = View.GONE
 
-            binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+            }
 
-            state.listContents.take(4).forEach { obj ->
+            state.listContents.reversed().take(4).forEach { obj ->
                 listViewAttachmentRow {
                     id(obj.id)
                     data(obj)
@@ -305,16 +310,18 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 }
             }
         } else {
-            binding.recyclerViewAttachments.visibility = View.GONE
-            binding.tvAttachmentViewAll.visibility = View.GONE
-            binding.tvNoOfAttachments.visibility = View.GONE
-            if (!viewModel.isTaskCompleted(state)) {
-                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                binding.tvNoAttachedFilesError.visibility = View.VISIBLE
-                binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
-            } else {
-                binding.tvAttachedTitle.text = ""
-                binding.tvNoAttachedFilesError.visibility = View.GONE
+            handler.post {
+                binding.recyclerViewAttachments.visibility = View.GONE
+                binding.tvAttachmentViewAll.visibility = View.GONE
+                binding.tvNoOfAttachments.visibility = View.GONE
+                if (!viewModel.isTaskCompleted(state)) {
+                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                    binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+                } else {
+                    binding.tvAttachedTitle.text = ""
+                    binding.tvNoAttachedFilesError.visibility = View.GONE
+                }
             }
         }
     }

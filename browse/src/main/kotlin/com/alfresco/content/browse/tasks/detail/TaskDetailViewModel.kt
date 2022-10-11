@@ -121,6 +121,7 @@ class TaskDetailViewModel(
                     is Loading -> copy(requestContents = Loading())
                     is Fail -> copy(requestContents = Fail(it.error))
                     is Success -> {
+                        observeUploads(parent?.id)
                         update(it()).copy(requestContents = Success(it()))
                     }
                     else -> {
@@ -140,14 +141,14 @@ class TaskDetailViewModel(
         repo.removeCompletedUploads(taskId)
 
         observeUploadsJob?.cancel()
-        /*observeUploadsJob = repo.observeProcessUploads(taskId)
+        observeUploadsJob = repo.observeProcessUploads(taskId)
             .execute {
                 if (it is Success) {
                     updateUploads(it())
                 } else {
                     this
                 }
-            }*/
+            }
     }
 
     /**

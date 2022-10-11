@@ -1,7 +1,6 @@
 package com.alfresco.content.data
 
 import com.alfresco.process.models.ResultContents
-import kotlin.math.E
 
 /**
  * Marked as ResponseContents class

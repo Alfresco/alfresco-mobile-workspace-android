@@ -15,6 +15,7 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserDetails
@@ -24,6 +25,7 @@ import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -35,6 +37,7 @@ class TaskDetailViewModel(
     val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
+    private var observeUploadsJob: Job? = null
     var isAddComment = false
     var hasTaskEditMode = false
     var isExecutingUpdateDetails = false
@@ -126,6 +129,25 @@ class TaskDetailViewModel(
                 }
             }
         }
+    }
+
+    private fun observeUploads(taskId: String?) {
+        if (taskId == null) return
+
+        val repo = OfflineRepository()
+
+        // On refresh clean completed uploads
+        repo.removeCompletedUploads(taskId)
+
+        observeUploadsJob?.cancel()
+        /*observeUploadsJob = repo.observeProcessUploads(taskId)
+            .execute {
+                if (it is Success) {
+                    updateUploads(it())
+                } else {
+                    this
+                }
+            }*/
     }
 
     /**

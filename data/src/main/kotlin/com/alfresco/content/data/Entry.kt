@@ -20,11 +20,11 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
+import java.time.Instant
+import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
-import java.time.Instant
-import java.time.ZonedDateTime
 
 /**
  * Generic data model representing all types of objects.
@@ -406,6 +406,10 @@ data class Entry(
          */
         fun updateDownloadEntry(entry: Entry, path: String): Entry {
             return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path, isProcessService = entry.isProcessService)
+        }
+
+        fun defaultAPSEntry(taskId: String?): Entry {
+            return Entry(isProcessService = true, parentId = taskId)
         }
 
         private fun PathInfo.formattedString(): String? {

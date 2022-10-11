@@ -213,7 +213,8 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         parentId: String,
         name: String,
         description: String,
-        mimeType: String
+        mimeType: String,
+        isProcessService: Boolean
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
         val entry = Entry(
@@ -223,7 +224,8 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             mimeType = mimeType,
             properties = mapOf("cm:description" to description),
             isUpload = true,
-            offlineStatus = OfflineStatus.PENDING
+            offlineStatus = OfflineStatus.PENDING,
+            isProcessService = isProcessService
         )
 
         clearData()
@@ -246,6 +248,21 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             val query = box.query()
                 .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
                 .equal(Entry_.isUpload, true)
+                .order(Entry_.name)
+                .build()
+            val subscription = query.subscribe()
+                .observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
+        }
+
+    fun observeProcessUploads(parentId: String): Flow<List<Entry>> =
+        callbackFlow {
+            val query = box.query()
+                .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                .equal(Entry_.isUpload, true)
+                .equal(Entry_.isProcessService, true)
                 .order(Entry_.name)
                 .build()
             val subscription = query.subscribe()

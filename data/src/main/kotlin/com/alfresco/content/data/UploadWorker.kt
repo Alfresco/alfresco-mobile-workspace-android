@@ -34,7 +34,7 @@ class UploadWorker(
                 status = true,
                 size = "${file.length().div(1024).div(1024)} MB"
             )
-            val res = BrowseRepository().createEntry(entry, file)
+            val res = if (entry.isProcessService) TaskRepository().createEntry(entry, file) else BrowseRepository().createEntry(entry, file)
             file.delete() // TODO: what if delete fails?
             repository.update(
                 entry.copyWithMetadata(res)

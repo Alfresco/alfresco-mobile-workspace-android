@@ -35,10 +35,11 @@ data class ActionCaptureMedia(
                     result.map { item ->
                         repository.scheduleForUpload(
                             item.uri.toString(),
-                            entry.id,
+                            if (entry.isProcessService) entry.parentId ?: "" else entry.id,
                             item.filename,
                             item.description,
-                            item.mimeType
+                            item.mimeType,
+                            entry.isProcessService
                         )
                     }
                     repository.setTotalTransferSize(result.size)

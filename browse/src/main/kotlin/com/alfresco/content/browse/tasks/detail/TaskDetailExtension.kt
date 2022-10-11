@@ -81,6 +81,9 @@ internal fun TaskDetailFragment.setListeners() {
         if (binding.tvTaskTitle.isEllipsized())
             showTitleDescriptionComponent()
     }
+    binding.clAddAttachment.setOnClickListener {
+        showCreateSheet()
+    }
     binding.iconPriorityEdit.setOnClickListener {
         withState(viewModel) { state ->
             val dataObj = state.parent

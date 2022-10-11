@@ -13,6 +13,11 @@ import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import java.io.File
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * Marked as TaskRepository class
@@ -214,6 +219,27 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * It will call the api to delete the raw content and return the Response<Unit>
      */
     suspend fun deleteContent(contentId: String) = processService.deleteRawContent(contentId)
+
+    suspend fun createEntry(local: Entry, file: File): Entry {
+        // TODO: Support creating empty entries and folders
+        requireNotNull(local.parentId)
+        requireNotNull(local.mimeType)
+
+        val filePart = file.asRequestBody(local.mimeType.toMediaTypeOrNull())
+        val properties = mutableMapOf<String, RequestBody>()
+        for ((k, v) in local.properties) {
+            if (v.isNotEmpty()) {
+                properties[k] = v.toRequestBody(MultipartBody.FORM)
+            }
+        }
+
+        return Entry.with(
+            processService.uploadRawContent(
+                local.parentId,
+                filePart
+            )
+        )
+    }
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

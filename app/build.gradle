@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.alfresco.content.app"
         versionCode envOrDef('VERSION_CODE', '1') as Integer
-        versionName "1.4"
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

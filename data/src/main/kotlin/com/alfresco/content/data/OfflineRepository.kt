@@ -61,7 +61,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * updating the total transfer count
      */
     fun updateTransferSize(size: Int) {
-        val list = box.query().equal(Entry_.isTotalEntry, true).build().find()
+        val list = box.query().equal(Entry_.isTotalEntry, true).equal(Entry_.isProcessService, false).build().find()
         if (list.isEmpty()) {
             val entry = Entry(totalCount = size, isTotalEntry = true)
             entry.also { box.put(it) }
@@ -78,6 +78,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun getTotalTransfersSize(): Int {
         val list = box.query()
             .equal(Entry_.isTotalEntry, true)
+            .equal(Entry_.isProcessService, false)
             .build()
             .find()
         return if (list.isEmpty()) 0 else list[0].totalCount
@@ -135,6 +136,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box.query()
             .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)
+            .equal(Entry_.isProcessService, false)
             .build()
             .find()
 
@@ -244,26 +246,12 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .find()
 
-    fun observeUploads(parentId: String): Flow<List<Entry>> =
+    fun observeUploads(parentId: String, isProcessService: Boolean = false): Flow<List<Entry>> =
         callbackFlow {
             val query = box.query()
                 .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
                 .equal(Entry_.isUpload, true)
-                .order(Entry_.name)
-                .build()
-            val subscription = query.subscribe()
-                .observer {
-                    trySendBlocking(it)
-                }
-            awaitClose { subscription.cancel() }
-        }
-
-    fun observeProcessUploads(parentId: String): Flow<List<Entry>> =
-        callbackFlow {
-            val query = box.query()
-                .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-                .equal(Entry_.isUpload, true)
-                .equal(Entry_.isProcessService, true)
+                .equal(Entry_.isProcessService, isProcessService)
                 .order(Entry_.name)
                 .build()
             val subscription = query.subscribe()

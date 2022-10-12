@@ -1,36 +1,12 @@
 package com.alfresco.content.browse.tasks
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.alfresco.content.actions.Action
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.ActivityTaskViewerBinding
-import com.alfresco.content.data.TaskEntry
-import kotlinx.parcelize.Parcelize
-
-/**
- * Mark as TaskDetailsArgs class
- */
-@Parcelize
-data class TaskDetailsArgs(
-    val taskObj: TaskEntry?
-) : Parcelable {
-    companion object {
-        const val TASK_OBJ = "taskObj"
-
-        /**
-         * return the TaskDetailsArgs obj
-         */
-        fun with(args: Bundle): TaskDetailsArgs {
-            return TaskDetailsArgs(
-                args.getParcelable(TASK_OBJ)
-            )
-        }
-    }
-}
 
 /**
  * Marked as TaskViewerActivity class
@@ -59,6 +35,6 @@ class TaskViewerActivity : AppCompatActivity() {
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
         findViewById(android.R.id.content),
-        binding.navHostFragment
+        binding.bottomView
     )
 }

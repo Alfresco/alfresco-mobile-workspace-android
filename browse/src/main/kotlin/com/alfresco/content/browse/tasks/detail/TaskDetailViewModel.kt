@@ -144,7 +144,7 @@ class TaskDetailViewModel(
         repo.removeCompletedUploads(taskId)
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(taskId)
+        observeUploadsJob = repo.observeUploads(taskId, true)
             .execute {
                 if (it is Success) {
                     updateUploads(it())

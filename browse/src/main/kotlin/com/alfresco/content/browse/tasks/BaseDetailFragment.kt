@@ -47,6 +47,10 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
     internal fun showCreateSheet(state: TaskDetailViewState) {
         CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
     }
+
+    fun stableId(entry: Entry): String =
+        if (entry.isUpload) entry.boxId.toString()
+        else entry.id
 }
 
 /**

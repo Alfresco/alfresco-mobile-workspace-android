@@ -126,8 +126,8 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
                         .toInt()
                 )
             }
-            id = R.id.fab_create_task
-            contentDescription = context.getString(R.string.text_create_task)
+            id = R.id.fab_add_attachments
+            contentDescription = context.getString(R.string.text_add_attachments)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
                 showCreateSheet(state)
@@ -139,7 +139,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         if (state.listContents.isNotEmpty()) {
             state.listContents.reversed().forEach { obj ->
                 listViewAttachmentRow {
-                    id(obj.id)
+                    id(stableId(obj))
                     data(obj)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
@@ -149,7 +149,8 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
     }
 
     private fun onItemClicked(contentEntry: Entry) {
-        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+        if (!contentEntry.isUpload)
+            viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

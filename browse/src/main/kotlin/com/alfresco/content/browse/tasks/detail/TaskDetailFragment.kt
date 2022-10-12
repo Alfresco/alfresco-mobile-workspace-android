@@ -284,6 +284,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         val handler = Handler(Looper.getMainLooper())
         if (state.listContents.isNotEmpty()) {
             handler.post {
+                binding.clAddAttachment.visibility = View.VISIBLE
                 binding.tvNoAttachedFilesError.visibility = View.GONE
                 binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                 binding.recyclerViewAttachments.visibility = View.VISIBLE
@@ -296,6 +297,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     binding.tvAttachmentViewAll.visibility = View.VISIBLE
                 else
                     binding.tvAttachmentViewAll.visibility = View.GONE
+
+                binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state)
 
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             }
@@ -314,10 +317,12 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvAttachmentViewAll.visibility = View.GONE
                 binding.tvNoOfAttachments.visibility = View.GONE
                 if (!viewModel.isTaskCompleted(state)) {
+                    binding.clAddAttachment.visibility = View.VISIBLE
                     binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                     binding.tvNoAttachedFilesError.visibility = View.VISIBLE
                     binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
                 } else {
+                    binding.clAddAttachment.visibility = View.GONE
                     binding.tvAttachedTitle.text = ""
                     binding.tvNoAttachedFilesError.visibility = View.GONE
                 }

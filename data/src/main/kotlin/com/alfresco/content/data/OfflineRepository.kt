@@ -162,7 +162,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         context: Context,
         contentUri: Uri,
         parentId: String,
-        isExtension: Boolean = false
+        isProcessService: Boolean = false
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -184,7 +184,8 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             type = Entry.Type.FILE,
             mimeType = mimeType,
             isUpload = true,
-            offlineStatus = OfflineStatus.PENDING
+            offlineStatus = OfflineStatus.PENDING,
+            isProcessService = isProcessService
         )
 
         clearData()

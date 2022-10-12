@@ -12,8 +12,6 @@ buildscript {
         classpath libs.google.services.gradle
         classpath libs.firebase.crashlytics.gradle
 
-        classpath libs.dokka
-
         classpath libs.spotless
         classpath libs.gradleVersionsPlugin
         classpath libs.gradleLicensePlugin

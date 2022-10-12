@@ -25,10 +25,15 @@ data class ActionUploadFiles(
 
     override suspend fun execute(context: Context): Entry {
         val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
-        if (result.count() > 0) {
+        if (result.isNotEmpty()) {
             withContext(Dispatchers.IO) {
                 result.map {
-                    repository.scheduleContentForUpload(context, it, entry.id)
+                    repository.scheduleContentForUpload(
+                        context,
+                        it,
+                        if (entry.isProcessService) entry.parentId ?: "" else entry.id,
+                        entry.isProcessService
+                    )
                 }
                 repository.setTotalTransferSize(result.size)
             }

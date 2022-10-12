@@ -3,7 +3,6 @@ package com.alfresco.content.actions
 import android.content.Context
 import android.view.View
 import com.alfresco.content.ContentPickerFragment
-import com.alfresco.content.ContentSinglePickerFragment
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
@@ -22,8 +21,7 @@ data class ActionUploadMedia(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val result = if (entry.isProcessService) ContentSinglePickerFragment.pickItems(context, MIME_TYPES)
-        else ContentPickerFragment.pickItems(context, MIME_TYPES)
+        val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
         if (result.isNotEmpty()) {
             withContext(Dispatchers.IO) {
                 result.map {

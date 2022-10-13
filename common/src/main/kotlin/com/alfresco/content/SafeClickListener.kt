@@ -3,6 +3,9 @@ package com.alfresco.content
 import android.os.SystemClock
 import android.view.View
 
+/**
+ * Marked as SafeClickListener class
+ */
 class SafeClickListener(
     private var defaultInterval: Int = 1000,
     private val onSafeCLick: (View) -> Unit

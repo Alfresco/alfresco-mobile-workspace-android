@@ -64,6 +64,9 @@ fun Context.getLocalizedName(name: String): String {
         name
 }
 
+/**
+ * avoiding the multiple click listener on view
+ */
 fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
     val safeClickListener = SafeClickListener {
         onSafeClick(it)

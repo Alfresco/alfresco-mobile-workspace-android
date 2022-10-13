@@ -50,7 +50,8 @@ internal class ActionCreateViewModel(
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
 
-        actions.add(ActionCreateFolder(parent))
+        if (!parent.isProcessService)
+            actions.add(ActionCreateFolder(parent))
         actions.add(ActionCaptureMedia(parent))
         actions.add(ActionUploadMedia(parent))
         actions.add(ActionUploadFiles(parent))

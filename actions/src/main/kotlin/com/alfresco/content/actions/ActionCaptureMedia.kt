@@ -16,7 +16,7 @@ data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
     override val title: Int = R.string.action_capture_media_title,
-    override val eventName: EventName = EventName.CreateMedia
+    override val eventName: EventName = if (entry.isProcessService) EventName.TaskCreateMedia else EventName.CreateMedia
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -35,10 +35,11 @@ data class ActionCaptureMedia(
                     result.map { item ->
                         repository.scheduleForUpload(
                             item.uri.toString(),
-                            entry.id,
+                            if (entry.isProcessService) entry.parentId ?: "" else entry.id,
                             item.filename,
                             item.description,
-                            item.mimeType
+                            item.mimeType,
+                            entry.isProcessService
                         )
                     }
                     repository.setTotalTransferSize(result.size)

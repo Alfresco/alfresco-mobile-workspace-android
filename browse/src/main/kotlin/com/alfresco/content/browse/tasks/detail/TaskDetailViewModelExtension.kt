@@ -39,6 +39,8 @@ fun TaskDetailViewModel.isTaskCompleted(state: TaskDetailViewState): Boolean = s
 fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean {
     if (isTaskCompleted(state))
         return false
+    if (hasTaskEditMode)
+        return true
     return if (state.parent?.assignee?.id == repository.getAPSUser().id) true
     else state.parent?.involvedPeople?.find { it.id == repository.getAPSUser().id } != null
 }

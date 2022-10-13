@@ -98,7 +98,7 @@ class TasksViewModel(
     }
 
     private fun fetchUserProfile() {
-        if (!repository.isAcsAndApsSameUser())
+        if (repository.isAcsAndApsSameUser())
             return
         viewModelScope.launch {
             // Fetch APS user profile data

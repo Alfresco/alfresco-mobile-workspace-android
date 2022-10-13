@@ -18,17 +18,22 @@ data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
     override val title: Int = R.string.action_upload_files_title,
-    override val eventName: EventName = EventName.UploadFiles
+    override val eventName: EventName = if (entry.isProcessService) EventName.TaskUploadFiles else EventName.UploadFiles
 ) : Action {
 
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
         val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
-        if (result.count() > 0) {
+        if (result.isNotEmpty()) {
             withContext(Dispatchers.IO) {
                 result.map {
-                    repository.scheduleContentForUpload(context, it, entry.id)
+                    repository.scheduleContentForUpload(
+                        context,
+                        it,
+                        if (entry.isProcessService) entry.parentId ?: "" else entry.id,
+                        entry.isProcessService
+                    )
                 }
                 repository.setTotalTransferSize(result.size)
             }

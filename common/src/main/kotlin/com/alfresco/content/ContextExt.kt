@@ -3,6 +3,7 @@ package com.alfresco.content
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
@@ -31,6 +32,12 @@ fun FragmentActivity.hideSoftInput() {
     }
 }
 
+/**
+ * hiding the keyboard
+ */
+fun View.hideSoftInput() =
+    context.getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(this.windowToken, 0)
+
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 
 /**
@@ -55,4 +62,14 @@ fun Context.getLocalizedName(name: String): String {
         getString(stringResource)
     else
         name
+}
+
+/**
+ * avoiding the multiple click listener on view
+ */
+fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
+    val safeClickListener = SafeClickListener {
+        onSafeClick(it)
+    }
+    setOnClickListener(safeClickListener)
 }

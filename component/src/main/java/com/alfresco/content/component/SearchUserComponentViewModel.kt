@@ -8,6 +8,8 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ResponseUserList
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserDetails
@@ -61,7 +63,11 @@ class SearchUserComponentViewModel(
             }) {
                 if (it is Loading) {
                     copy(requestUser = it)
+                } else if (it is Fail) {
+                    AnalyticsManager().apiTracker(APIEvent.SearchUser, false)
+                    copy(requestUser = it)
                 } else {
+                    AnalyticsManager().apiTracker(APIEvent.SearchUser, true)
                     if (params.name.isEmpty() && params.email.isEmpty())
                         updateUserEntries(ResponseUserList(), getLoggedInUser()).copy(requestUser = it)
                     else {

@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "16:84855644780396979",
+      "lastPropertyId": "24:1637492034211641451",
       "name": "Entry",
       "properties": [
         {
@@ -88,6 +88,46 @@
           "id": "16:84855644780396979",
           "name": "isProcessService",
           "type": 1
+        },
+        {
+          "id": "17:126023913419070141",
+          "name": "isDocFile",
+          "type": 1
+        },
+        {
+          "id": "18:8263111529915995246",
+          "name": "created",
+          "type": 6
+        },
+        {
+          "id": "19:6511970044195698565",
+          "name": "isRelatedContent",
+          "type": 1
+        },
+        {
+          "id": "20:5798697496813929526",
+          "name": "isContentAvailable",
+          "type": 1
+        },
+        {
+          "id": "21:6506031465201668896",
+          "name": "hasLink",
+          "type": 1
+        },
+        {
+          "id": "22:1887984767305798776",
+          "name": "simpleType",
+          "type": 9
+        },
+        {
+          "id": "23:5394114922466070829",
+          "name": "previewStatus",
+          "type": 9
+        },
+        {
+          "id": "24:1637492034211641451",
+          "name": "thumbnailStatus",
+          "type": 9
         }
       ],
       "relations": []

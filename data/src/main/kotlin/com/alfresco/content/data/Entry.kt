@@ -410,6 +410,9 @@ data class Entry(
             return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path, isProcessService = entry.isProcessService)
         }
 
+        /**
+         * return the default APS content entry obj
+         */
         fun defaultAPSEntry(taskId: String?): Entry {
             return Entry(isProcessService = true, parentId = taskId)
         }

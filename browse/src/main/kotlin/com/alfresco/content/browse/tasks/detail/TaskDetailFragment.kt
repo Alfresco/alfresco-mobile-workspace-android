@@ -303,9 +303,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             }
 
-            val filteredList = state.listContents.filter { it.isUpload } + state.listContents.filter { !it.isUpload }.take(4)
-
-            filteredList.forEach { obj ->
+            state.listContents.take(4).forEach { obj ->
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)

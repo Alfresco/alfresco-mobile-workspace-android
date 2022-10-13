@@ -246,6 +246,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .find()
 
+    /**
+     * returns the list of uploads which is being uploaded on the server.
+     */
     fun observeUploads(parentId: String, isProcessService: Boolean = false): Flow<List<Entry>> =
         callbackFlow {
             val query = box.query()

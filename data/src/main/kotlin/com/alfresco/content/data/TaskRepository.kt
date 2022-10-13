@@ -220,6 +220,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun deleteContent(contentId: String) = processService.deleteRawContent(contentId)
 
+    /**
+     * It will call the api to upload the raw content on process services.
+     */
     suspend fun createEntry(local: Entry, file: File): Entry {
         // TODO: Support creating empty entries and folders
         requireNotNull(local.parentId)

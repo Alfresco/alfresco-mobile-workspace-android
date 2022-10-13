@@ -48,6 +48,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
     }
 
+    /**
+     * return the stable id of uploading contents
+     */
     fun stableId(entry: Entry): String =
         if (entry.isUpload) entry.boxId.toString()
         else entry.id

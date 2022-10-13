@@ -56,9 +56,11 @@ data class TaskDetailViewState(
         if (response == null) return this
 
         return copyIncludingUploads(response.listContents, uploads)
-//        return copy(listContents = response.listContents)
     }
 
+    /**
+     * updating the uploads entries with the server entries.
+     */
     fun updateUploads(uploads: List<Entry>): TaskDetailViewState {
         // Merge data only after at least the first page loaded
         // [parent] is a good enough flag for the initial load.

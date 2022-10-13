@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -33,13 +32,11 @@ fun FragmentActivity.hideSoftInput() {
     }
 }
 
-fun View.hideSoftInput() {
-    val imm: InputMethodManager? = this.context.getSystemService()
-    val currentFocus = this
-    if (currentFocus != null && imm != null) {
-        imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-    }
-}
+/**
+ * hiding the keyboard
+ */
+fun View.hideSoftInput() =
+    context.getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(this.windowToken, 0)
 
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 

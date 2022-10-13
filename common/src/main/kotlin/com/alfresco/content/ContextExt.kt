@@ -3,7 +3,9 @@ package com.alfresco.content
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,6 +28,14 @@ inline fun <reified T : Context> Context.findBaseContext(): T? {
 fun FragmentActivity.hideSoftInput() {
     val imm: InputMethodManager? = getSystemService()
     val currentFocus = currentFocus
+    if (currentFocus != null && imm != null) {
+        imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+    }
+}
+
+fun View.hideSoftInput() {
+    val imm: InputMethodManager? = this.context.getSystemService()
+    val currentFocus = this
     if (currentFocus != null && imm != null) {
         imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     }

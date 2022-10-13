@@ -1,9 +1,11 @@
 package com.alfresco.content.component
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -60,6 +62,7 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -70,7 +73,7 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                hideSoftInput()
+                binding.searchView.hideSoftInput()
                 return true
             }
         })
@@ -89,6 +92,11 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
                 binding.searchByName.isChecked = !isChecked
                 changeTab(button, binding.searchByName)
             }
+        }
+        binding.recyclerView.setOnTouchListener { view, event ->
+            if (view != null && event.action == MotionEvent.ACTION_MOVE)
+                view.hideSoftInput()
+            false
         }
     }
 

@@ -9,8 +9,6 @@ import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.ResponseContents
 import com.alfresco.content.data.TaskEntry
-import com.alfresco.kotlin.FilenameComparator
-import com.alfresco.list.merge
 import retrofit2.Response
 
 /**
@@ -29,8 +27,7 @@ data class TaskDetailViewState(
     val requestContents: Async<ResponseContents> = Uninitialized,
     val requestAddComment: Async<CommentEntry> = Uninitialized,
     val requestCompleteTask: Async<Response<Unit>> = Uninitialized,
-    val requestDeleteContent: Async<Response<Unit>> = Uninitialized,
-    val hasMoreItems: Boolean = false
+    val requestDeleteContent: Async<Response<Unit>> = Uninitialized
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)
@@ -58,7 +55,7 @@ data class TaskDetailViewState(
     fun update(response: ResponseContents?): TaskDetailViewState {
         if (response == null) return this
 
-        return copyIncludingUploads(response.listContents, uploads, false)
+        return copyIncludingUploads(response.listContents, uploads)
 //        return copy(listContents = response.listContents)
     }
 
@@ -66,7 +63,7 @@ data class TaskDetailViewState(
         // Merge data only after at least the first page loaded
         // [parent] is a good enough flag for the initial load.
         return if (parent != null) {
-            copyIncludingUploads(baseEntries, uploads, hasMoreItems)
+            copyIncludingUploads(baseEntries, uploads)
         } else {
             copy(uploads = uploads)
         }
@@ -74,34 +71,21 @@ data class TaskDetailViewState(
 
     private fun copyIncludingUploads(
         entries: List<Entry>,
-        uploads: List<Entry>,
-        hasMoreItems: Boolean
+        uploads: List<Entry>
     ): TaskDetailViewState {
         val mixedUploads = uploads.transformCompletedUploads()
-        val mergedEntries = mergeInUploads(entries, mixedUploads, !hasMoreItems)
+        val mergedEntries = mergeInUploads(entries, mixedUploads)
         val baseEntries = mergedEntries.filter { !it.isUpload }
 
         return copy(
             listContents = mergedEntries,
             baseEntries = baseEntries,
-            uploads = uploads,
-            hasMoreItems = hasMoreItems
+            uploads = uploads
         )
     }
 
-    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
-        return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
-            if (left.isFolder || right.isFolder) {
-                val cmp = right.isFolder.compareTo(left.isFolder)
-                if (cmp == 0) {
-                    FilenameComparator.compare(left.name, right.name)
-                } else {
-                    cmp
-                }
-            } else {
-                FilenameComparator.compare(left.name, right.name)
-            }
-        }.distinctBy { if (it.id.isEmpty()) it.boxId else it.id }
+    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>): List<Entry> {
+        return (uploads + base).distinctBy { if (it.id.isEmpty()) it.boxId else it.id }
     }
 
     /*

@@ -45,6 +45,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
     }
 
     internal fun showCreateSheet(state: TaskDetailViewState) {
+        AnalyticsManager().taskEvent(EventName.UploadTaskAttachment)
         CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
     }
 

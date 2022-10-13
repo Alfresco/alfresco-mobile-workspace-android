@@ -30,7 +30,7 @@ class UploadWorker(
             repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
             val file = repository.contentFile(entry)
             AnalyticsManager().apiTracker(
-                APIEvent.UploadFiles,
+                if (entry.isProcessService) APIEvent.UploadTaskAttachment else APIEvent.UploadFiles,
                 status = true,
                 size = "${file.length().div(1024).div(1024)} MB"
             )

@@ -18,7 +18,7 @@ data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
     override val title: Int = R.string.action_upload_files_title,
-    override val eventName: EventName = EventName.UploadFiles
+    override val eventName: EventName = if (entry.isProcessService) EventName.TaskUploadFiles else EventName.UploadFiles
 ) : Action {
 
     private val repository = OfflineRepository()

@@ -307,9 +307,13 @@ class TaskDetailViewModel(
             ).execute {
                 when (it) {
                     is Loading -> copy(requestUpdateTask = Loading())
-                    is Fail -> copy(requestUpdateTask = Fail(it.error))
+                    is Fail -> {
+                        AnalyticsManager().apiTracker(APIEvent.AssignUser, false)
+                        copy(requestUpdateTask = Fail(it.error))
+                    }
                     is Success -> {
                         isExecutingAssignUser = false
+                        AnalyticsManager().apiTracker(APIEvent.AssignUser, true)
                         copy(requestUpdateTask = Success(it()))
                     }
                     else -> {

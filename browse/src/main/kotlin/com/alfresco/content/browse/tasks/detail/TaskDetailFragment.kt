@@ -134,6 +134,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit -> {
+                AnalyticsManager().taskEvent(EventName.EditTask)
                 item.isVisible = false
                 updateTaskDetailUI(true)
                 menuDetail.findItem(R.id.action_done).isVisible = true
@@ -153,6 +154,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     }
 
                     if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                        AnalyticsManager().taskEvent(EventName.DoneTask)
                         item.isVisible = false
                         menuDetail.findItem(R.id.action_edit).isVisible = true
                         updateTaskDetailUI(false)
@@ -190,6 +192,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             }
             state.requestUpdateTask is Success -> {
                 if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                    AnalyticsManager().taskEvent(EventName.DoneTask)
                     menuDetail.findItem(R.id.action_done).isVisible = false
                     menuDetail.findItem(R.id.action_edit).isVisible = true
                     updateTaskDetailUI(false)

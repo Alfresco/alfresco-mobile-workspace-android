@@ -77,6 +77,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
                 }
             }
         })
+        viewModel.getContents()
         binding.refreshLayout.setOnRefreshListener {
             viewModel.getContents()
         }
@@ -137,7 +138,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
     private fun epoxyController() = simpleController(viewModel) { state ->
 
         if (state.listContents.isNotEmpty()) {
-            state.listContents.reversed().forEach { obj ->
+            state.listContents.forEach { obj ->
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)

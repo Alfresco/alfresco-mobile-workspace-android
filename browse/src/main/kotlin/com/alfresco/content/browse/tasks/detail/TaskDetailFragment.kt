@@ -335,7 +335,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
-            viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     internal fun taskCompletePrompt() {

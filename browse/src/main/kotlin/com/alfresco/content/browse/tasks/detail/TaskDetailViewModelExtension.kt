@@ -20,7 +20,7 @@ fun TaskDetailViewModel.updateTaskList() {
 /**
  * execute "open with" action to download the content data
  */
-fun TaskDetailViewModel.execute(action: Action) {
+fun TaskDetailViewModel.executePreview(action: Action) {
     val entry = action.entry as Entry
     val file = File(repository.session.contentDir, entry.fileName)
     if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {

@@ -250,9 +250,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.apply {
-                if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
-                    text = dataObj.assignee?.let { UserDetails.with(it).name }
-                } else text = dataObj.assignee?.name
+                text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
+                    dataObj.assignee?.let { UserDetails.with(it).name }
+                } else dataObj.assignee?.name
             }
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description

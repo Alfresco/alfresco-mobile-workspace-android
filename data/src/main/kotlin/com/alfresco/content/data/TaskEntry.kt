@@ -32,13 +32,14 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using TaskDataEntry
          */
-        fun with(data: TaskDataEntry, isNewTaskCreated: Boolean = false): TaskEntry {
+        fun with(data: TaskDataEntry, apsUser: UserDetails? = null, isNewTaskCreated: Boolean = false): TaskEntry {
+            val isAssigneeUser = apsUser?.id == data.assignee?.id
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
                 description = data.description,
                 created = data.created,
-                assignee = data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
+                assignee = if (isAssigneeUser) apsUser?.let { UserDetails.with(it) } else data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
                 priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,

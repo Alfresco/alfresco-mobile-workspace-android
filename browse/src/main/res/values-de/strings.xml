@@ -56,8 +56,6 @@
     <string name="title_task_view">Aufgabenansicht</string>
     <string name="title_comments">Kommentare</string>
     <string name="title_due_date">Fälligkeitsdatum</string>
-    <string name="title_priority">Priorität</string>
-    <string name="title_assignee">Zugewiesener Benutzer</string>
     <string name="title_status">Status</string>
     <string name="title_identifier">Identifikator</string>
     <string name="text_add_a_comment">Einen Kommentar hinzufügen...</string>

@@ -56,8 +56,6 @@
     <string name="title_task_view">Ver tarea</string>
     <string name="title_comments">Comentarios</string>
     <string name="title_due_date">Fecha de vencimiento</string>
-    <string name="title_priority">Prioridad</string>
-    <string name="title_assignee">Usuario asignado</string>
     <string name="title_status">Estado</string>
     <string name="title_identifier">Identificador</string>
     <string name="text_add_a_comment">Añadir un comentario...</string>

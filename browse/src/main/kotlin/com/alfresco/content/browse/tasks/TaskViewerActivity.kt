@@ -34,7 +34,7 @@ class TaskViewerActivity : AppCompatActivity() {
 
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
-        findViewById(android.R.id.content),
+        binding.root,
         binding.bottomView
     )
 }

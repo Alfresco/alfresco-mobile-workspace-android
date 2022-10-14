@@ -56,8 +56,6 @@
     <string name="title_task_view">Visualizzazione compito</string>
     <string name="title_comments">Commenti</string>
     <string name="title_due_date">Scadenza</string>
-    <string name="title_priority">Priorità</string>
-    <string name="title_assignee">Assegnatario</string>
     <string name="title_status">Stato</string>
     <string name="title_identifier">Identificativo</string>
     <string name="text_add_a_comment">Aggiungere un commento&#8230;</string>

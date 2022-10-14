@@ -56,8 +56,6 @@
     <string name="title_task_view">Affichage de la tâche</string>
     <string name="title_comments">Commentaires</string>
     <string name="title_due_date">Date d\'échéance</string>
-    <string name="title_priority">Priorité</string>
-    <string name="title_assignee">Personne assignée</string>
     <string name="title_status">Statut</string>
     <string name="title_identifier">Identifiant</string>
     <string name="text_add_a_comment">Ajoutez un commentaire&#8230;</string>

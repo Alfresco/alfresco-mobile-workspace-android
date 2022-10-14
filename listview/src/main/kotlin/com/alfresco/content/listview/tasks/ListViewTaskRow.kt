@@ -33,6 +33,11 @@ class ListViewTaskRow @JvmOverloads constructor(
     fun setData(entry: TaskEntry) {
         binding.title.text = entry.name
         binding.subtitle.text = entry.assignee?.name
+        val accessibilityText = context.getString(
+            R.string.accessibility_text_task_row, entry.name,
+            entry.assignee?.name, getTaskPriority(entry.priority).value
+        )
+        binding.parent.contentDescription = accessibilityText
 
         binding.tvPriority.updatePriorityView(entry.priority)
     }

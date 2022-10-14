@@ -27,6 +27,7 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewState
+import com.alfresco.content.browse.tasks.detail.executePreview
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
@@ -151,7 +152,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
-            viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

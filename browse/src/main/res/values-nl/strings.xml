@@ -56,8 +56,6 @@
     <string name="title_task_view">Taakweergave</string>
     <string name="title_comments">Opmerkingen</string>
     <string name="title_due_date">Vervaldatum</string>
-    <string name="title_priority">Prioriteit</string>
-    <string name="title_assignee">Toegewezen persoon</string>
     <string name="title_status">Status</string>
     <string name="title_identifier">Identificatie</string>
     <string name="text_add_a_comment">Een opmerking toevoegen&#8230;</string>

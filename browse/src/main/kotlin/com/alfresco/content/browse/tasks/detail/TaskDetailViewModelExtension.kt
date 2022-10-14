@@ -20,7 +20,7 @@ fun TaskDetailViewModel.updateTaskList() {
 /**
  * execute "open with" action to download the content data
  */
-fun TaskDetailViewModel.execute(action: Action) {
+fun TaskDetailViewModel.executePreview(action: Action) {
     val entry = action.entry as Entry
     val file = File(repository.session.contentDir, entry.fileName)
     if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
@@ -41,6 +41,5 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
         return false
     if (hasTaskEditMode)
         return true
-    return if (state.parent?.assignee?.id == repository.getAPSUser().id) true
-    else state.parent?.involvedPeople?.find { it.id == repository.getAPSUser().id } != null
+    return state.parent?.assignee?.id == repository.getAPSUser().id
 }

@@ -41,7 +41,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun getTasks(filters: TaskFiltersPayload) = ResponseList.with(
         processService.taskList(
             includeFilters(filters)
-        )
+        ), getAPSUser()
     )
 
     /**
@@ -164,7 +164,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     fun getAPSUser(): UserDetails {
         return UserDetails(
-            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "")?.toInt() ?: 0,
+            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "0")?.toInt() ?: 0,
             email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
             firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
             lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: ""
@@ -176,7 +176,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
-            processService.createTask(TaskBodyCreate(name = name, description = description)), true
+            processService.createTask(TaskBodyCreate(name = name, description = description)), isNewTaskCreated = true
         )
     }
 
@@ -202,7 +202,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     priority = taskEntry.priority.toString(),
                     dueDate = taskEntry.formattedDueDate
                 )
-            ), true
+            ), isNewTaskCreated = true
         )
     }
 

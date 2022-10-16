@@ -18,6 +18,7 @@ data class TaskEntry(
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
+    val involvedPeople: List<UserDetails> = listOf(),
     val formattedDueDate: String? = null,
     val duration: Long? = null,
     val isNewTaskCreated: Boolean = false
@@ -31,17 +32,19 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using TaskDataEntry
          */
-        fun with(data: TaskDataEntry, isNewTaskCreated: Boolean = false): TaskEntry {
+        fun with(data: TaskDataEntry, apsUser: UserDetails? = null, isNewTaskCreated: Boolean = false): TaskEntry {
+            val isAssigneeUser = apsUser?.id == data.assignee?.id
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
                 description = data.description,
                 created = data.created,
-                assignee = data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
+                assignee = if (isAssigneeUser) apsUser?.let { UserDetails.with(it) } else data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
                 priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople?.map { UserDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated
             )
         }
@@ -64,6 +67,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }
@@ -82,6 +86,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = if (isClearDueDate) null else data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = formattedDueDate
             )
         }
@@ -100,6 +105,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }
@@ -118,6 +124,7 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                involvedPeople = data.involvedPeople,
                 formattedDueDate = data.formattedDueDate
             )
         }

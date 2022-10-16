@@ -108,6 +108,12 @@ enum class EventName(val value: String) {
     CreateTask("event_create_task"),
     UpdateTaskDetails("event_update_task_details"),
     DeleteTaskAttachment("event_delete_task_attachment"),
+    EditTask("event_edit_task"),
+    DoneTask("event_done_task"),
+    UploadTaskAttachment("event_upload_task_attachment"),
+    TaskUploadMedia("event_task_upload_photos_or_videos"),
+    TaskCreateMedia("event_task_take_a_photo_or_video"),
+    TaskUploadFiles("event_task_upload_files"),
     None("event_none")
 }
 
@@ -139,8 +145,11 @@ enum class PageView(val value: String) {
 enum class APIEvent(val value: String) {
     NewFolder("event_api_new_folder"),
     UploadFiles("event_api_upload_files"),
+    UploadTaskAttachment("event_api_upload_task_attachment"),
+    Login("event_api_login"),
     DeleteTaskAttachment("event_api_delete_task_attachment"),
-    Login("event_api_login")
+    AssignUser("event_api_assign_user"),
+    SearchUser("event_api_search_user")
 }
 
 /**

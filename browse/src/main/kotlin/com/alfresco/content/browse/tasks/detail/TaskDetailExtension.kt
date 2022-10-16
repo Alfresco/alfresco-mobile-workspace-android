@@ -14,7 +14,9 @@ import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.listview.isEllipsized
 import com.alfresco.content.parseDate
+import com.alfresco.content.setSafeOnClickListener
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
@@ -45,41 +47,47 @@ internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(
 
 internal fun TaskDetailFragment.setListeners() {
     viewModel.setListener(this)
-    binding.tvAddComment.setOnClickListener {
+    binding.tvAddComment.setSafeOnClickListener {
         viewModel.isAddComment = true
         navigateToCommentScreen()
     }
-    binding.tvCommentViewAll.setOnClickListener {
+    binding.tvCommentViewAll.setSafeOnClickListener {
         navigateToCommentScreen()
     }
-    commentViewBinding.clRecentComment.setOnClickListener {
+    commentViewBinding.clRecentComment.setSafeOnClickListener {
         navigateToCommentScreen()
     }
-    binding.tvAttachmentViewAll.setOnClickListener {
+    binding.tvAttachmentViewAll.setSafeOnClickListener {
         findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
     }
-    binding.completeButton.setOnClickListener {
+    binding.completeButton.setSafeOnClickListener {
         taskCompletePrompt()
     }
-    binding.iconTitleEdit.setOnClickListener {
+    binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
         }
     }
-    binding.tvDueDateValue.setOnClickListener {
+    binding.tvDueDateValue.setSafeOnClickListener {
         if (viewModel.hasTaskEditMode)
             formatDateAndShowCalendar()
     }
-    binding.iconDueDateClear.setOnClickListener {
+    binding.iconDueDateClear.setSafeOnClickListener {
         viewModel.updateDate(null, true)
     }
-    binding.iconDueDateEdit.setOnClickListener {
+    binding.iconDueDateEdit.setSafeOnClickListener {
         formatDateAndShowCalendar()
     }
-    binding.tvTaskTitle.setOnClickListener {
-        showTitleDescriptionComponent()
+    binding.tvTaskTitle.setSafeOnClickListener {
+        if (binding.tvTaskTitle.isEllipsized())
+            showTitleDescriptionComponent()
     }
-    binding.iconPriorityEdit.setOnClickListener {
+    binding.clAddAttachment.setSafeOnClickListener {
+        withState(viewModel) {
+            showCreateSheet(it)
+        }
+    }
+    binding.iconPriorityEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
@@ -97,7 +105,7 @@ internal fun TaskDetailFragment.setListeners() {
             }
         }
     }
-    binding.iconAssignedEdit.setOnClickListener {
+    binding.iconAssignedEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {

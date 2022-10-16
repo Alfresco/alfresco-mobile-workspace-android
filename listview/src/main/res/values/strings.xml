@@ -10,4 +10,7 @@
     <string name="upload_complete_text_multiple">%d file(s) finished uploading</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="text_read_more_space">...Read more</string>
+    <string name="title_priority">Priority</string>
+    <string name="title_assignee">Assignee</string>
+    <string name="accessibility_text_task_row">Title: %s Assignee: %s Priority %s</string>
 </resources>

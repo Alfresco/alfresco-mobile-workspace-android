@@ -15,6 +15,7 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserDetails
@@ -24,6 +25,7 @@ import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -35,6 +37,7 @@ class TaskDetailViewModel(
     val repository: TaskRepository
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
+    private var observeUploadsJob: Job? = null
     var isAddComment = false
     var hasTaskEditMode = false
     var isExecutingUpdateDetails = false
@@ -86,7 +89,7 @@ class TaskDetailViewModel(
     }
 
     /**
-     * gets all the comments from server by using give task Id.
+     * gets all the comments from server by using given task Id.
      */
     fun getComments() = withState { state ->
         viewModelScope.launch {
@@ -108,7 +111,10 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getContents() = withState { state ->
+    /**
+     * gets all the attachments from server by using given task Id.
+     */
+    fun getContents() = withState { state ->
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getContents.asFlow(
@@ -118,6 +124,7 @@ class TaskDetailViewModel(
                     is Loading -> copy(requestContents = Loading())
                     is Fail -> copy(requestContents = Fail(it.error))
                     is Success -> {
+                        observeUploads(parent?.id)
                         update(it()).copy(requestContents = Success(it()))
                     }
                     else -> {
@@ -126,6 +133,25 @@ class TaskDetailViewModel(
                 }
             }
         }
+    }
+
+    private fun observeUploads(taskId: String?) {
+        if (taskId == null) return
+
+        val repo = OfflineRepository()
+
+        // On refresh clean completed uploads
+        repo.removeCompletedUploads(taskId)
+
+        observeUploadsJob?.cancel()
+        observeUploadsJob = repo.observeUploads(taskId, true)
+            .execute {
+                if (it is Success) {
+                    updateUploads(it())
+                } else {
+                    this
+                }
+            }
     }
 
     /**
@@ -281,9 +307,13 @@ class TaskDetailViewModel(
             ).execute {
                 when (it) {
                     is Loading -> copy(requestUpdateTask = Loading())
-                    is Fail -> copy(requestUpdateTask = Fail(it.error))
+                    is Fail -> {
+                        AnalyticsManager().apiTracker(APIEvent.AssignUser, false)
+                        copy(requestUpdateTask = Fail(it.error))
+                    }
                     is Success -> {
                         isExecutingAssignUser = false
+                        AnalyticsManager().apiTracker(APIEvent.AssignUser, true)
                         copy(requestUpdateTask = Success(it()))
                     }
                     else -> {

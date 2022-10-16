@@ -86,9 +86,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         scrollToTop()
 
         if (state.request is Success) {
-            val fabButton = makeFab(requireContext())
-            println("TasksFragment.invalidate ${fabButton.id}")
-            clParent.addView(fabButton)
+            clParent.addView(makeFab(requireContext()))
         }
     }
 

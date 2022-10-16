@@ -13,6 +13,11 @@ import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import java.io.File
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * Marked as TaskRepository class
@@ -36,7 +41,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun getTasks(filters: TaskFiltersPayload) = ResponseList.with(
         processService.taskList(
             includeFilters(filters)
-        )
+        ), getAPSUser()
     )
 
     /**
@@ -117,16 +122,21 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * executes the Api to fetch the user profile and save the local data in preferences
      */
-    suspend fun getProcessUserProfile() {
+    suspend fun getProcessUserProfile() = processService.getProfile()
+
+    /**
+     * If the ACS and APS users are same then it will return true otherwise false
+     */
+    fun isAcsAndApsSameUser(): Boolean {
         val acsUserEmail = session.account.email
         val processUserEmail = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "")
-        if (acsUserEmail != processUserEmail) {
-            val processUser = processService.getProfile()
-            saveProcessUserDetails(processUser)
-        }
+        return acsUserEmail == processUserEmail
     }
 
-    private fun saveProcessUserDetails(processUser: ProfileData) {
+    /**
+     * It will save the APS user profile data on shared preferences.
+     */
+    fun saveProcessUserDetails(processUser: ProfileData) {
         val editor = sharedPrefs.edit()
         editor.putString(KEY_PROCESS_USER_ID, processUser.id?.toString() ?: "")
         editor.putString(KEY_PROCESS_USER_EMAIL, processUser.email ?: "")
@@ -154,7 +164,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     fun getAPSUser(): UserDetails {
         return UserDetails(
-            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "")?.toInt() ?: 0,
+            id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "0")?.toInt() ?: 0,
             email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
             firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
             lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: ""
@@ -166,7 +176,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
-            processService.createTask(TaskBodyCreate(name = name, description = description)), true
+            processService.createTask(TaskBodyCreate(name = name, description = description)), isNewTaskCreated = true
         )
     }
 
@@ -192,7 +202,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     priority = taskEntry.priority.toString(),
                     dueDate = taskEntry.formattedDueDate
                 )
-            ), true
+            ), isNewTaskCreated = true
         )
     }
 
@@ -209,6 +219,32 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * It will call the api to delete the raw content and return the Response<Unit>
      */
     suspend fun deleteContent(contentId: String) = processService.deleteRawContent(contentId)
+
+    /**
+     * It will call the api to upload the raw content on process services.
+     */
+    suspend fun createEntry(local: Entry, file: File): Entry {
+        // TODO: Support creating empty entries and folders
+        requireNotNull(local.parentId)
+        requireNotNull(local.mimeType)
+
+        val filePart = file.asRequestBody(local.mimeType.toMediaTypeOrNull())
+        val properties = mutableMapOf<String, RequestBody>()
+        for ((k, v) in local.properties) {
+            if (v.isNotEmpty()) {
+                properties[k] = v.toRequestBody(MultipartBody.FORM)
+            }
+        }
+
+        val multipartBody = MultipartBody.Part.createFormData("file", local.name, filePart)
+
+        return Entry.with(
+            processService.uploadRawContent(
+                local.parentId,
+                multipartBody
+            ), local.parentId
+        )
+    }
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

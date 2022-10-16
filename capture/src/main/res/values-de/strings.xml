@@ -3,8 +3,8 @@
     <string name="close_button_alt">Schließen</string>
     <string name="capture_button_alt">Aufnehmen</string>
     <string name="switch_camera_button_alt">Kamera wechseln</string>
-    <string name="gallery_button_alt">Galerie</string>
-    <string name="flash_button_alt">Blitzlichtmodus</string>
+    <string name="gallery_button_alt">Gallerie</string>
+    <string name="flash_button_alt">Blitzlicht-Modus</string>
 
     <string name="capture_mode_photo">Foto</string>
     <string name="capture_mode_video">Video</string>
@@ -19,7 +19,7 @@
 
     <string name="capture_nav_save_title">Vorschau</string>
 
-    <string name="camera_flash_auto">Automatisch</string>
+    <string name="camera_flash_auto">Audio</string>
     <string name="camera_flash_on">An</string>
     <string name="camera_flash_off">Aus</string>
 

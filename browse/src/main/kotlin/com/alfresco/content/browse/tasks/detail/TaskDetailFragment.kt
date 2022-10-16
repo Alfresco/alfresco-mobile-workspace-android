@@ -3,6 +3,8 @@ package com.alfresco.content.browse.tasks.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -37,7 +39,6 @@ import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.SearchUserComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
-import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
@@ -71,7 +72,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var taskCompleteConfirmationDialog = WeakReference<AlertDialog>(null)
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
-    private var deleteContentDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
     private lateinit var menuDetail: Menu
@@ -103,9 +103,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
-                if (viewModel.hasTaskEditMode)
-                    discardTaskPrompt()
-                else requireActivity().onBackPressed()
+                withState(viewModel) { state ->
+                    if (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))
+                        discardTaskPrompt()
+                    else requireActivity().onBackPressed()
+                }
             }
             title = resources.getString(R.string.title_task_view)
         }
@@ -132,9 +134,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit -> {
-                withState(viewModel) { state ->
-                    println("Task entry obj equals :: ${state.parent.hashCode()}  ${state.taskEntry.hashCode()}")
-                }
+                AnalyticsManager().taskEvent(EventName.EditTask)
                 item.isVisible = false
                 updateTaskDetailUI(true)
                 menuDetail.findItem(R.id.action_done).isVisible = true
@@ -154,6 +154,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     }
 
                     if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                        AnalyticsManager().taskEvent(EventName.DoneTask)
                         item.isVisible = false
                         menuDetail.findItem(R.id.action_edit).isVisible = true
                         updateTaskDetailUI(false)
@@ -191,6 +192,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             }
             state.requestUpdateTask is Success -> {
                 if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                    AnalyticsManager().taskEvent(EventName.DoneTask)
                     menuDetail.findItem(R.id.action_done).isVisible = false
                     menuDetail.findItem(R.id.action_edit).isVisible = true
                     updateTaskDetailUI(false)
@@ -248,9 +250,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.apply {
-                if (viewModel.getAPSUser().id.toString() == dataObj.id) {
-                    text = dataObj.assignee?.let { UserDetails.with(it).name }
-                } else text = dataObj.assignee?.name
+                text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
+                    dataObj.assignee?.let { UserDetails.with(it).name }
+                } else dataObj.assignee?.name
             }
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
@@ -282,47 +284,58 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     }
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
+        val handler = Handler(Looper.getMainLooper())
         if (state.listContents.isNotEmpty()) {
-            binding.tvNoAttachedFilesError.visibility = View.GONE
-            binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-            binding.recyclerViewAttachments.visibility = View.VISIBLE
+            handler.post {
+                binding.clAddAttachment.visibility = View.VISIBLE
+                binding.tvNoAttachedFilesError.visibility = View.GONE
+                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                binding.recyclerViewAttachments.visibility = View.VISIBLE
 
-            if (state.listContents.size > 1)
-                binding.tvNoOfAttachments.visibility = View.VISIBLE
-            else binding.tvNoOfAttachments.visibility = View.GONE
+                if (state.listContents.size > 1)
+                    binding.tvNoOfAttachments.visibility = View.VISIBLE
+                else binding.tvNoOfAttachments.visibility = View.GONE
 
-            if (state.listContents.size > 4)
-                binding.tvAttachmentViewAll.visibility = View.VISIBLE
-            else
-                binding.tvAttachmentViewAll.visibility = View.GONE
+                if (state.listContents.size > 4)
+                    binding.tvAttachmentViewAll.visibility = View.VISIBLE
+                else
+                    binding.tvAttachmentViewAll.visibility = View.GONE
 
-            binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state)
+
+                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+            }
 
             state.listContents.take(4).forEach { obj ->
                 listViewAttachmentRow {
-                    id(obj.id)
+                    id(stableId(obj))
                     data(obj)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         } else {
-            binding.recyclerViewAttachments.visibility = View.GONE
-            binding.tvAttachmentViewAll.visibility = View.GONE
-            binding.tvNoOfAttachments.visibility = View.GONE
-            if (!viewModel.isTaskCompleted(state)) {
-                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                binding.tvNoAttachedFilesError.visibility = View.VISIBLE
-                binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
-            } else {
-                binding.tvAttachedTitle.text = ""
-                binding.tvNoAttachedFilesError.visibility = View.GONE
+            handler.post {
+                binding.recyclerViewAttachments.visibility = View.GONE
+                binding.tvAttachmentViewAll.visibility = View.GONE
+                binding.tvNoOfAttachments.visibility = View.GONE
+                if (!viewModel.isTaskCompleted(state)) {
+                    binding.clAddAttachment.visibility = View.VISIBLE
+                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                    binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+                } else {
+                    binding.clAddAttachment.visibility = View.GONE
+                    binding.tvAttachedTitle.text = ""
+                    binding.tvNoAttachedFilesError.visibility = View.GONE
+                }
             }
         }
     }
 
-    private fun onItemClicked(contentEntry: ContentEntry) {
-        viewModel.execute(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+    private fun onItemClicked(contentEntry: Entry) {
+        if (!contentEntry.isUpload)
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
     }
 
     internal fun taskCompletePrompt() {
@@ -344,6 +357,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         val oldDialog = discardTaskDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
             .setTitle(getString(R.string.dialog_title_discard_task))
             .setMessage(getString(R.string.dialog_message_discard_task))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)

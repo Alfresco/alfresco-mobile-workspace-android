@@ -40,7 +40,8 @@ data class ActionScanDocument(
                             entry.id,
                             item.filename,
                             item.description,
-                            item.mimeType
+                            item.mimeType,
+                            entry.isProcessService
                         )
                     }
                     repository.setTotalTransferSize(result.size)

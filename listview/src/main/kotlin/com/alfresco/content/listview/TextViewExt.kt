@@ -41,6 +41,11 @@ fun TextView.updatePriorityView(priority: Int) {
 }
 
 /**
+ * It will return true if textview has ellipsized at end otherwise false
+ */
+fun TextView.isEllipsized() = layout.text.toString() != text.toString()
+
+/**
  * It adds the read more text if line exceeds more than 4 lines
  */
 fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {

@@ -12,7 +12,7 @@
     <string name="auth_help_overlay_title">Hilfe</string>
     <string name="auth_help_identity_body">
         <![CDATA[<h1>Verbindung mit Alfresco</h1>
-        <h6>Alfresco Content Services-URL</h6>
+    <h6>Alfresco Content Services-URL</h6>
     <p>Sie können die URL Ihrer Alfresco Content Services-Instanz eingeben. Dabei müssen Sie zur Authentifizierung Ihren Benutzernamen und das Passwort eingeben.</p>
     <h6>SSO-Anmeldung</h6>
     <p>Sie können die URL Ihres Alfresco Identity Management Service eingeben, um sich beim Identitätsanbieter Ihres Unternehmens zu authentifizieren.</p>

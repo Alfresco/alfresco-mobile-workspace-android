@@ -20,7 +20,7 @@ fun TaskDetailViewModel.updateTaskList() {
 /**
  * execute "open with" action to download the content data
  */
-fun TaskDetailViewModel.execute(action: Action) {
+fun TaskDetailViewModel.executePreview(action: Action) {
     val entry = action.entry as Entry
     val file = File(repository.session.contentDir, entry.fileName)
     if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
@@ -36,5 +36,10 @@ fun TaskDetailViewModel.isTaskCompleted(state: TaskDetailViewState): Boolean = s
 /**
  * returns true if the endDate is empty and the assignee user is same as loggedIn user otherwise false
  */
-fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean =
-    !isTaskCompleted(state) && state.parent?.assignee?.email == repository.acsUserEmail
+fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean {
+    if (isTaskCompleted(state))
+        return false
+    if (hasTaskEditMode)
+        return true
+    return state.parent?.assignee?.id == repository.getAPSUser().id
+}

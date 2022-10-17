@@ -153,6 +153,10 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
             viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+        else startActivity(
+            Intent(requireActivity(), LocalPreviewActivity::class.java)
+                .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
+        )
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

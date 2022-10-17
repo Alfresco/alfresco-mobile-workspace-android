@@ -339,9 +339,8 @@ class TaskDetailViewModel(
                         copy(requestDeleteContent = Fail(it.error))
                     }
                     is Success -> {
-                        getContents()
                         AnalyticsManager().apiTracker(APIEvent.DeleteTaskAttachment, true)
-                        copy(requestDeleteContent = Success(it()))
+                        updateDelete(contentId).copy(requestDeleteContent = Success(it()))
                     }
                     else -> {
                         this

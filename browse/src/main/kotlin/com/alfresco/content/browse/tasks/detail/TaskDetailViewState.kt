@@ -104,6 +104,9 @@ data class TaskDetailViewState(
             }
         }
 
+    /**
+     * removed the delete entry from existing content list.
+     */
     fun updateDelete(contentId: String): TaskDetailViewState {
         val filterList = listContents.filter { it.id != contentId }
         return copy(listContents = filterList)

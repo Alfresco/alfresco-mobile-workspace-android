@@ -10,6 +10,4 @@
     <string name="upload_complete_text_multiple">Hochladen von %d Dateien abgeschlossen</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="text_read_more_space">...Mehr lesen</string>
-    <string name="title_priority">Priorität</string>
-    <string name="title_assignee">Zugewiesener Benutzer</string>
 </resources>

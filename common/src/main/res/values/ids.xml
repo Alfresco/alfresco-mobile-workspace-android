@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="fab_create_task" type="id" />
-    <item name="fab_add_attachments" type="id" />
 </resources>

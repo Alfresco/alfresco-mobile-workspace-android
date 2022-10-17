@@ -200,7 +200,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     name = taskEntry.name,
                     description = taskEntry.description,
                     priority = taskEntry.priority.toString(),
-                    dueDate = taskEntry.formattedDueDate
+                    dueDate = taskEntry.formattedDueDate ?: ""
                 )
             ), isNewTaskCreated = true
         )

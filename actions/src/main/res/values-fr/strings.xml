@@ -44,12 +44,17 @@
     <string name="action_create_folder_toast">%s a été créée</string>
 
     <string name="action_create_folder">Nouveau dossier</string>
+    <string name="action_create_task">Nouvelle tâche</string>
     <string name="action_folder_cancel">Annuler</string>
     <string name="action_folder_create">Créer</string>
+    <string name="action_task_next">Suivant</string>
 
     <string name="action_folder_name_hint">Nom</string>
     <string name="action_folder_name_invalid_chars">Le nom du dossier ne peut pas contenir les caractères suivants : ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Le nom du dossier ne peut pas être vide.</string>
+
+    <string name="action_task_name_invalid_chars">Le nom de la tâche ne peut pas contenir les caractères suivants : ?:"*|/\\&lt;&gt;</string>
+    <string name="action_task_name_empty">Le nom de la tâche ne peut pas être vide.</string>
 
     <string name="action_upload_files_title">Importer des fichiers</string>
 
@@ -62,10 +67,13 @@
     <string name="share_files_failure_permissions">Pour partager des fichiers, activez les autorisations de stockage en lecture.</string>
 
     <string name="action_move_title">Déplacer</string>
-    <string name="action_move_toast">%s a été déplacé avec succès</string>
+    <string name="action_move_toast">%s a bien été déplacé</string>
 
     <string name="action_rename_file_folder">Renommer</string>
     <string name="action_rename_file_folder_toast">%s a été renommé</string>
     <string name="action_text_save">Enregistrer</string>
+    <string name="action_menu_edit">Modifier</string>
+    <string name="action_menu_done">Terminé</string>
+    <string name="action_update_task_name_description">Nom et description</string>
 
 </resources>

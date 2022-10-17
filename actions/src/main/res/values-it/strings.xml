@@ -44,28 +44,36 @@
     <string name="action_create_folder_toast">%s è stato creato</string>
 
     <string name="action_create_folder">Nuova cartella</string>
+    <string name="action_create_task">Nuovo compito</string>
     <string name="action_folder_cancel">Annulla</string>
     <string name="action_folder_create">Crea</string>
+    <string name="action_task_next">Successivo</string>
 
     <string name="action_folder_name_hint">Nome</string>
     <string name="action_folder_name_invalid_chars">Il nome della cartella non può contenere i caratteri seguenti: ?:"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Il nome della cartella non può essere vuoto.</string>
 
+    <string name="action_task_name_invalid_chars">Il nome del compito non può contenere i caratteri seguenti: ?:"*|/\\&lt;&gt;</string>
+    <string name="action_task_name_empty">Il nome del compito non può essere vuoto.</string>
+
     <string name="action_upload_files_title">Carica file</string>
 
     <!-- Upload queue dialog -->
     <string name="action_upload_queue_title">Carica</string>
-    <string name="action_upload_queue_subtitle">Caricamento in coda. Tenere traccia dello stato nell\'app mobile.</string>
+    <string name="action_upload_queue_subtitle">Il caricamento è in coda. Tieni traccia dello stato nell\'app mobile.</string>
     <string name="action_upload_queue_ok_button">OK</string>
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
     <string name="share_files_failure_permissions">Per condividere i file, abilitare le autorizzazioni di lettura per lo spazio di archiviazione.</string>
 
     <string name="action_move_title">Sposta</string>
-    <string name="action_move_toast">%s è stato correttamente spostato</string>
+    <string name="action_move_toast">Lo spostamento di %s è stato completato.</string>
 
     <string name="action_rename_file_folder">Rinomina</string>
-    <string name="action_rename_file_folder_toast">%s è stato rinominato</string>
+    <string name="action_rename_file_folder_toast">%s è stata rinominata</string>
     <string name="action_text_save">Salva</string>
+    <string name="action_menu_edit">Modifica</string>
+    <string name="action_menu_done">Completato</string>
+    <string name="action_update_task_name_description">Nome e descrizione</string>
 
 </resources>

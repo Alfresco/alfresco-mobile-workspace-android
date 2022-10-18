@@ -27,5 +27,6 @@
     <string name="capture_failure_permissions">Om media vast te leggen, schakelt u camera- en microfoonrechten in.</string>
     <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
     <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
+    <string name="error_file_size_exceed">De geselecteerde bestandsgrootte voor het uploaden mag niet meer dan dan 100 MB zijn.</string>
 
 </resources>

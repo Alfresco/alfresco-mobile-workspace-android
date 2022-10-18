@@ -43,3 +43,5 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
         return true
     return state.parent?.assignee?.id == repository.getAPSUser().id
 }
+
+fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }

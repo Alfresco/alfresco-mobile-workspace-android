@@ -9,6 +9,7 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.component.databinding.ViewListUserRowBinding
 import com.alfresco.content.data.UserDetails
+import com.alfresco.content.getLocalizedName
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 internal class ListViewUserRow @JvmOverloads constructor(
@@ -20,8 +21,8 @@ internal class ListViewUserRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(dataObj: UserDetails) {
-        binding.tvUserInitial.text = dataObj.nameInitial
-        binding.tvName.text = dataObj.name
+        binding.tvUserInitial.text = context.getLocalizedName(dataObj.nameInitial)
+        binding.tvName.text = context.getLocalizedName(dataObj.name ?: "")
     }
 
     /**

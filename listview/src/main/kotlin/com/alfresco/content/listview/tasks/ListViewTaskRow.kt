@@ -9,6 +9,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
 import com.alfresco.content.listview.updatePriorityView
@@ -32,10 +33,11 @@ class ListViewTaskRow @JvmOverloads constructor(
     @ModelProp
     fun setData(entry: TaskEntry) {
         binding.title.text = entry.name
-        binding.subtitle.text = entry.assignee?.name
+        val localizedName = context.getLocalizedName(entry.assignee?.name ?: "")
+        binding.subtitle.text = localizedName
         val accessibilityText = context.getString(
             R.string.accessibility_text_task_row, entry.name,
-            entry.assignee?.name, getTaskPriority(entry.priority).value
+            localizedName, getTaskPriority(entry.priority).value
         )
         binding.parent.contentDescription = accessibilityText
 

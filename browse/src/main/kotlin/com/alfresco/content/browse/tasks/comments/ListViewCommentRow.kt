@@ -11,6 +11,7 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 
 /**
  * Marked as ListViewCommentRow class
@@ -29,8 +30,8 @@ class ListViewCommentRow @JvmOverloads constructor(
      */
     @ModelProp
     fun setData(data: CommentEntry) {
-        binding.tvName.text = data.userDetails?.name
-        binding.tvUserInitial.text = data.userDetails?.nameInitial
+        binding.tvName.text = context.getLocalizedName(data.userDetails?.name ?: "")
+        binding.tvUserInitial.text = context.getLocalizedName(data.userDetails?.nameInitial ?: "")
         binding.tvComment.text = data.message
         binding.tvDate.text = if (data.created != null) data.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
     }

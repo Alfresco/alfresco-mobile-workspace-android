@@ -93,5 +93,6 @@
     <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
     <string name="text_add_attachments">Añadir adjuntos</string>
     <string name="icon_add_attachment">Añadir icono adjunto</string>
+    <string name="dialog_message_complete_task_files_queue">¿Está seguro de que desea completar la tarea? Una vez completada, no podrá cargar algunos ficheros ni hacer cambios.</string>
 
 </resources>

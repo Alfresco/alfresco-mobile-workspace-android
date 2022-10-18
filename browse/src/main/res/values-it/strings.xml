@@ -93,5 +93,6 @@
     <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
     <string name="text_add_attachments">Aggiungi allegati</string>
     <string name="icon_add_attachment">Icona Aggiungi allegati</string>
+    <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito? Una volta completato, non potrai caricare alcuni file né apportare modifiche.</string>
 
 </resources>

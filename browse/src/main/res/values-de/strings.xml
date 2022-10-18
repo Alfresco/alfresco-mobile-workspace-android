@@ -93,5 +93,6 @@
     <string name="dialog_title_delete_content">Eine Datei löschen?</string>
     <string name="text_add_attachments">Anhänge hinzufügen</string>
     <string name="icon_add_attachment">Symbol \'Anhang hinzufügen\'</string>
+    <string name="dialog_message_complete_task_files_queue">Sind Sie sicher, dass sie diese Aufgabe abschließen wollen? Nach dem Abschließen können keine Dateien mehr hochgeladen und keine Änderungen mehr gemacht werden.</string>
 
 </resources>

@@ -39,7 +39,7 @@ interface Action {
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
-            if ((entry as Entry).isProcessService) {
+            if ((entry as Entry).isProcessService && ex.message == ERROR_FILE_SIZE_EXCEED) {
                 bus.send(Error(context.getString(R.string.error_file_size_exceed)))
             }
         } catch (ex: Exception) {
@@ -70,6 +70,7 @@ interface Action {
     class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
+        const val ERROR_FILE_SIZE_EXCEED = "File size exceed"
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<Action>(block = showToast(view, anchorView))
             scope.on<Error> {

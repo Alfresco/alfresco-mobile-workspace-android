@@ -5,6 +5,7 @@ import android.view.View
 import androidx.documentfile.provider.DocumentFile
 import com.alfresco.content.ContentPickerFragment
 import com.alfresco.content.GetMultipleContents
+import com.alfresco.content.actions.Action.Companion.ERROR_FILE_SIZE_EXCEED
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
@@ -32,7 +33,7 @@ data class ActionUploadFiles(
                 result.forEach {
                     val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
                     if (GetMultipleContents.isFileSizeExceed(fileLength)) {
-                        throw CancellationException("User Cancellation")
+                        throw CancellationException(ERROR_FILE_SIZE_EXCEED)
                     }
                 }
             withContext(Dispatchers.IO) {

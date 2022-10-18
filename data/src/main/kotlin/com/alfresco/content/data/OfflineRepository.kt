@@ -271,6 +271,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         callbackFlow {
             val query = box.query()
                 .equal(Entry_.isUpload, true)
+                .equal(Entry_.isProcessService, false)
                 .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
                 .order(Entry_.name)
                 .build()

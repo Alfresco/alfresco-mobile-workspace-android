@@ -44,6 +44,8 @@ import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalVideo::class)

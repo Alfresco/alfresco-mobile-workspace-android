@@ -44,4 +44,7 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
     return state.parent?.assignee?.id == repository.getAPSUser().id
 }
 
+/**
+ * return true if uploading files are in queue otherwise false
+ */
 fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }

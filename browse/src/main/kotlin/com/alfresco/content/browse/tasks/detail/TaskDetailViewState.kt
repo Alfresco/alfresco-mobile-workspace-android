@@ -109,6 +109,7 @@ data class TaskDetailViewState(
      */
     fun updateDelete(contentId: String): TaskDetailViewState {
         val filterList = listContents.filter { it.id != contentId }
-        return copy(listContents = filterList)
+        val baseEntries = filterList.filter { !it.isUpload }
+        return copy(listContents = filterList, baseEntries = baseEntries)
     }
 }

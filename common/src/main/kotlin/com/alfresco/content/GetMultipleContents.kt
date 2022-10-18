@@ -4,11 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
-import java.util.ArrayList
-import java.util.LinkedHashSet
 
 /**
  * An ActivityResultContract similar to
@@ -22,7 +19,6 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
         return Intent(Intent.ACTION_GET_CONTENT)
             .addCategory(Intent.CATEGORY_OPENABLE)
             .setType("*/*")
-            .putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_FILE_SIZE)
             .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             .putExtra(Intent.EXTRA_MIME_TYPES, input)
     }
@@ -35,6 +31,12 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
 
     companion object {
         const val MAX_FILE_SIZE = 100
+
+        fun isFileSizeExceed(length: Long): Boolean {
+            val fileLength = length.div(1024L).div(1024L)
+            return fileLength > MAX_FILE_SIZE.minus(1).toLong()
+        }
+
         fun getClipDataUris(intent: Intent): List<Uri> {
             // Use a LinkedHashSet to maintain any ordering that may be
             // present in the ClipData

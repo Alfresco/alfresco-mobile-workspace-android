@@ -362,8 +362,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                             val file = File(it)
                             val length = file.length()
                             if (length > 0L) {
-                                val fileLength = length.div(1024L).div(1024L)
-                                if (fileLength <= GetMultipleContents.MAX_FILE_SIZE.minus(1).toLong()) {
+                                if (!GetMultipleContents.isFileSizeExceed(length)) {
                                     viewModel.onCaptureVideo(savedUri)
                                     navigateToSave()
                                 } else {

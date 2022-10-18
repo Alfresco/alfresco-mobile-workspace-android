@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import com.alfresco.Logger
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.events.EventBus
@@ -38,6 +39,9 @@ interface Action {
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
+            if ((entry as Entry).isProcessService) {
+                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+            }
         } catch (ex: Exception) {
             sendAnalytics(false)
             bus.send(Error(ex.message ?: ""))

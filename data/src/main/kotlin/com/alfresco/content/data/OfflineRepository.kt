@@ -302,6 +302,17 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .remove()
 
+    fun removeTaskEntries(parentId: String? = null) =
+        box.query()
+            .equal(Entry_.isProcessService, true)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                }
+            }
+            .build()
+            .remove()
+
     fun contentUri(entry: Entry): String =
         "file://${contentFile(entry).absolutePath}"
 

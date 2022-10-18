@@ -2,7 +2,9 @@ package com.alfresco.content.actions
 
 import android.content.Context
 import android.view.View
+import androidx.documentfile.provider.DocumentFile
 import com.alfresco.content.ContentPickerFragment
+import com.alfresco.content.GetMultipleContents
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
@@ -26,6 +28,13 @@ data class ActionUploadFiles(
     override suspend fun execute(context: Context): Entry {
         val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
         if (result.isNotEmpty()) {
+            if (entry.isProcessService)
+                result.forEach {
+                    val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
+                    if (GetMultipleContents.isFileSizeExceed(fileLength)) {
+                        throw CancellationException("User Cancellation")
+                    }
+                }
             withContext(Dispatchers.IO) {
                 result.map {
                     repository.scheduleContentForUpload(

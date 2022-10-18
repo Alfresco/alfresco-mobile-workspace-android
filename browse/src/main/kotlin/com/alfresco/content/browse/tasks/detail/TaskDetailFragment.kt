@@ -351,6 +351,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             .setMessage(if (filesInQueue) getString(R.string.dialog_message_complete_task_files_queue) else getString(R.string.dialog_message_complete_task))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
             .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                if (filesInQueue) {
+                    withState(viewModel) { state ->
+                        viewModel.removeTaskEntries(state)
+                    }
+                }
                 AnalyticsManager().taskEvent(EventName.TaskComplete)
                 viewModel.completeTask()
             }

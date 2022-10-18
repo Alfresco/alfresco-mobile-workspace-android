@@ -32,6 +32,9 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
     companion object {
         const val MAX_FILE_SIZE = 100
 
+        /**
+         * returns true if file exceed the 100mb length otherwise false
+         */
         fun isFileSizeExceed(length: Long): Boolean {
             val fileLength = length.div(1024L).div(1024L)
             return fileLength > MAX_FILE_SIZE.minus(1).toLong()

@@ -50,6 +50,9 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
  */
 fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }
 
+/**
+ * removing the task related entries from local database
+ */
 fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
     OfflineRepository().removeTaskEntries(state.parent?.id)
 }

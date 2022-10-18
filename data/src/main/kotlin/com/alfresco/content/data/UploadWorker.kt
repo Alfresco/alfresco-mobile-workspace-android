@@ -43,7 +43,7 @@ class UploadWorker(
             )
             true
         } catch (ex: Exception) {
-            if ((ex as HttpException).response()?.code() == 404) {
+            if ((ex as HttpException).response()?.code() == 404 && (ex as HttpException).response()?.code() == 413) {
                 repository.remove(entry)
                 file.delete()
             }

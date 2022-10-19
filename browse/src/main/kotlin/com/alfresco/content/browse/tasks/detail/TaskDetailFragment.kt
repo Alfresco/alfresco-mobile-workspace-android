@@ -75,7 +75,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
-    private lateinit var menuDetail: Menu
+    lateinit var menuDetail: Menu
 
     override fun onCreateView(
         inflater: LayoutInflater,

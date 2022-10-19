@@ -68,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:visibility="gone"
             android:layout_margin="16dp"
             android:contentDescription="@string/text_add_attachments"
             android:src="@drawable/ic_add_fab" />

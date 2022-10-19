@@ -23,6 +23,8 @@ import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit
+    menuDetail.findItem(R.id.action_edit).isVisible = !isEdit
+    menuDetail.findItem(R.id.action_done).isVisible = isEdit
     if (isEdit) {
         binding.iconTitleEdit.visibility = View.VISIBLE
         if (state.parent?.localDueDate != null) {

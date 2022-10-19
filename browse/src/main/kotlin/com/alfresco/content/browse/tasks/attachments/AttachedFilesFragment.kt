@@ -22,6 +22,7 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.browse.tasks.detail.executePreview
+import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
@@ -98,7 +99,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
             }
         }
 
-        if (state.requestContents is Success) {
+        if (state.requestContents is Success && !viewModel.isTaskCompleted(state)) {
             binding.fabAddAttachments.visibility = View.VISIBLE
             binding.fabAddAttachments.setOnClickListener {
                 showCreateSheet(state)

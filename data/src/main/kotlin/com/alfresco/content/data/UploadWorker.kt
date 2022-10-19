@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
+import retrofit2.HttpException
 
 class UploadWorker(
     appContext: Context,
@@ -26,9 +27,9 @@ class UploadWorker(
         repository.fetchPendingUploads()
 
     private suspend fun createItem(entry: Entry): Boolean {
+        val file = repository.contentFile(entry)
         return try {
             repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
-            val file = repository.contentFile(entry)
             AnalyticsManager().apiTracker(
                 if (entry.isProcessService) APIEvent.UploadTaskAttachment else APIEvent.UploadFiles,
                 status = true,
@@ -42,6 +43,10 @@ class UploadWorker(
             )
             true
         } catch (ex: Exception) {
+            if ((ex as HttpException).response()?.code() == 404 && (ex as HttpException).response()?.code() == 413) {
+                repository.remove(entry)
+                file.delete()
+            }
             Logger.e(ex)
             AnalyticsManager().apiTracker(
                 APIEvent.UploadFiles,

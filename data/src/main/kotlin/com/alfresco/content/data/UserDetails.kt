@@ -17,7 +17,7 @@ data class UserDetails(
 ) : Parcelable {
 
     val name: String
-        get() = if (isAssigneeUser) "Me" else "$firstName $lastName"
+        get() = if (isAssigneeUser) "me_title" else "$firstName $lastName"
 
     private val firstNameInitial: String
         get() = if (firstName.isNotEmpty()) firstName.substring(0, 1) else ""
@@ -25,7 +25,7 @@ data class UserDetails(
     private val lastNameInitial: String
         get() = if (lastName.isNotEmpty()) lastName.substring(0, 1) else ""
 
-    val nameInitial = if (isAssigneeUser) "M" else (firstNameInitial + lastNameInitial).uppercase()
+    val nameInitial = if (isAssigneeUser) "me_title_initial" else (firstNameInitial + lastNameInitial).uppercase()
 
     companion object {
 

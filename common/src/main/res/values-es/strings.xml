@@ -8,4 +8,6 @@
     <string name="priority_medium">Mediano</string>
     <string name="priority_high">Alta</string>
     <string name="priority_none">NA</string>
+    <string name="me_title">Yo-</string>
+    <string name="me_title_initial">Y</string>
 </resources>

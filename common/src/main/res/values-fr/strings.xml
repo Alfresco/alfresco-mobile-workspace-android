@@ -8,4 +8,6 @@
     <string name="priority_medium">Moyenne</string>
     <string name="priority_high">Élevée</string>
     <string name="priority_none">NA</string>
+    <string name="me_title">Moi</string>
+    <string name="me_title_initial">M</string>
 </resources>

@@ -61,7 +61,9 @@ internal fun TaskDetailFragment.setListeners() {
         findNavController().navigate(R.id.action_nav_task_detail_to_nav_attached_files)
     }
     binding.completeButton.setSafeOnClickListener {
-        taskCompletePrompt()
+        withState(viewModel) { state ->
+            taskCompletePrompt(viewModel.isFilesInQueue(state))
+        }
     }
     binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->

@@ -6,8 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.CallSuper
-import java.util.ArrayList
-import java.util.LinkedHashSet
 
 /**
  * An ActivityResultContract similar to
@@ -15,6 +13,7 @@ import java.util.LinkedHashSet
  * that allows specifying multiple mimeTypes.
  */
 class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
+
     @CallSuper
     override fun createIntent(context: Context, input: Array<String>): Intent {
         return Intent(Intent.ACTION_GET_CONTENT)
@@ -31,6 +30,16 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
     }
 
     companion object {
+        const val MAX_FILE_SIZE = 100
+
+        /**
+         * returns true if file exceed the 100mb length otherwise false
+         */
+        fun isFileSizeExceed(length: Long): Boolean {
+            val fileLength = length.div(1024L).div(1024L)
+            return fileLength > MAX_FILE_SIZE.minus(1).toLong()
+        }
+
         fun getClipDataUris(intent: Intent): List<Uri> {
             // Use a LinkedHashSet to maintain any ordering that may be
             // present in the ClipData

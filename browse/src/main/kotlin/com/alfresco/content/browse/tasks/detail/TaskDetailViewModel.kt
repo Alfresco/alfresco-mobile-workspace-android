@@ -124,7 +124,7 @@ class TaskDetailViewModel(
                     is Loading -> copy(requestContents = Loading())
                     is Fail -> copy(requestContents = Fail(it.error))
                     is Success -> {
-                        observeUploads(parent?.id)
+                        if (!isTaskCompleted(state)) observeUploads(parent?.id)
                         update(it()).copy(requestContents = Success(it()))
                     }
                     else -> {

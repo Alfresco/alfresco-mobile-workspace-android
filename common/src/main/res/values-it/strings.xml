@@ -8,4 +8,6 @@
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
     <string name="priority_none">N/D</string>
+    <string name="me_title">Io</string>
+    <string name="me_title_initial">I</string>
 </resources>

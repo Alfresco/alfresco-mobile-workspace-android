@@ -100,7 +100,6 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         }
 
         if (state.requestContents is Success && !viewModel.isTaskCompleted(state)) {
-            binding.recyclerView.isNestedScrollingEnabled = false
             binding.fabAddAttachments.visibility = View.VISIBLE
             binding.fabAddAttachments.setOnClickListener {
                 showCreateSheet(state)

@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             app:closeIcon="@null"
             app:iconifiedByDefault="false"
-            app:queryHint="Search"
+            app:queryHint="@string/search_hint"
             app:searchIcon="@null" />
     </androidx.appcompat.widget.Toolbar>
 

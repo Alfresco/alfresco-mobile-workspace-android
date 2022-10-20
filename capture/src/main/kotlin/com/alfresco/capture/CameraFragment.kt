@@ -39,12 +39,14 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
+import com.alfresco.content.GetMultipleContents
 import com.alfresco.content.PermissionFragment
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.lang.ref.WeakReference
 import java.util.concurrent.ExecutorService
@@ -205,7 +207,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.viewFinder.controller = cameraController
 
         // Observe zoom changes
-        cameraController?.zoomState?.observe(this) {
+        cameraController?.zoomState?.observe(viewLifecycleOwner) {
             layout.zoomTextView.text = String.format("%.1f\u00D7", it.zoomRatio)
         }
     }
@@ -382,10 +384,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
                         savedUri.path?.let {
-                            val length = File(it).length()
+                            val file = File(it)
+                            val length = file.length()
                             layout.animatePreviewHide()
                             enableShutterButton(true)
                             if (length > 0L) {
+                                if (!GetMultipleContents.isFileSizeExceed(length)) {
                                 viewModel.onCaptureVideo(savedUri)
                                 if (viewModel.isEnterprise()) {
                                     requireActivity().runOnUiThread {
@@ -393,6 +397,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                                     }
                                 } else
                                     navigateToSave()
+                                } else {
+                                    file.delete()
+                                    Snackbar.make(layout.captureDurationView, getString(R.string.error_file_size_exceed), Snackbar.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
@@ -529,10 +537,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             when {
                 LocationUtils.isLocationEnabled(requireActivity()) -> {
-                    locationData.observe(this, {
+                    locationData.observe(this) {
                         viewModel.longitude = it.longitude.toString()
                         viewModel.latitude = it.latitude.toString()
-                    })
+                    }
                 }
             }
         }

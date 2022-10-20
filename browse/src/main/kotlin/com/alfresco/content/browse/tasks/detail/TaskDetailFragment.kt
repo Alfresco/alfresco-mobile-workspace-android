@@ -46,6 +46,7 @@ import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.UserDetails
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.addTextViewPrefix
 import com.alfresco.content.listview.updatePriorityView
@@ -74,7 +75,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private var discardTaskDialog = WeakReference<AlertDialog>(null)
     private var viewLayout: View? = null
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
-    private lateinit var menuDetail: Menu
+    lateinit var menuDetail: Menu
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -225,8 +226,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvNoOfComments.visibility = View.GONE
             }
 
-            commentViewBinding.tvUserInitial.text = commentObj.userDetails?.nameInitial
-            commentViewBinding.tvName.text = commentObj.userDetails?.name
+            commentViewBinding.tvUserInitial.text = requireContext().getLocalizedName(commentObj.userDetails?.nameInitial ?: "")
+            commentViewBinding.tvName.text = requireContext().getLocalizedName(commentObj.userDetails?.name ?: "")
             commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
             commentViewBinding.tvComment.text = commentObj.message
         } else {
@@ -251,8 +252,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.apply {
                 text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
-                    dataObj.assignee?.let { UserDetails.with(it).name }
-                } else dataObj.assignee?.name
+                    requireContext().getLocalizedName(dataObj.assignee?.let { UserDetails.with(it).name } ?: "")
+                } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
             }
             binding.tvIdentifierValue.text = dataObj.id
             binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
@@ -336,16 +337,25 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
             viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+        else startActivity(
+            Intent(requireActivity(), LocalPreviewActivity::class.java)
+                .putExtra(KEY_ENTRY_OBJ, contentEntry)
+        )
     }
 
-    internal fun taskCompletePrompt() {
+    internal fun taskCompletePrompt(filesInQueue: Boolean) {
         val oldDialog = taskCompleteConfirmationDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.dialog_title_complete_task))
-            .setMessage(getString(R.string.dialog_message_complete_task))
+            .setMessage(if (filesInQueue) getString(R.string.dialog_message_complete_task_files_queue) else getString(R.string.dialog_message_complete_task))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
             .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                if (filesInQueue) {
+                    withState(viewModel) { state ->
+                        viewModel.removeTaskEntries(state)
+                    }
+                }
                 AnalyticsManager().taskEvent(EventName.TaskComplete)
                 viewModel.completeTask()
             }

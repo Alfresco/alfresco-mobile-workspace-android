@@ -8,4 +8,6 @@
     <string name="priority_medium">Gemiddeld</string>
     <string name="priority_high">Hoog</string>
     <string name="priority_none">N.v.t.</string>
+    <string name="me_title">Mij</string>
+    <string name="me_title_initial">M</string>
 </resources>

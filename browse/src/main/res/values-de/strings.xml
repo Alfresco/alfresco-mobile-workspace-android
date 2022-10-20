@@ -56,6 +56,8 @@
     <string name="title_task_view">Aufgabenansicht</string>
     <string name="title_comments">Kommentare</string>
     <string name="title_due_date">Fälligkeitsdatum</string>
+    <string name="title_priority">Priorität</string>
+    <string name="title_assignee">Zugewiesener Benutzer</string>
     <string name="title_status">Status</string>
     <string name="title_identifier">Identifikator</string>
     <string name="text_add_a_comment">Einen Kommentar hinzufügen...</string>
@@ -68,9 +70,29 @@
     <string name="title_attached_files">Angehängte Dateien</string>
     <string name="text_complete">Abgeschlossen</string>
     <string name="dialog_title_complete_task">Aufgabe abschließen</string>
-    <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
+    <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie diese Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
     <string name="dialog_negative_button_task">Abbrechen</string>
     <string name="dialog_positive_button_task">Bestätigen</string>
     <string name="icon_send_description">Schaltfläche „Senden“</string>
+    <string name="empty_description">Keine Beschreibung</string>
+    <string name="icon_completed">Abgeschlossen-Symbol</string>
+    <string name="task_title">Aufgabe</string>
+    <string name="icon_priority_edit">Symbol \'Priorität bearbeiten\'</string>
+    <string name="icon_due_date_clear">Symbol \'Fälligkeitsdatum löschen\'</string>
+    <string name="icon_due_date_edit">Symbol \'Fälligkeitsdatum bearbeiten\'</string>
+    <string name="suffix_view_all">...Alle anzeigen</string>
+    <string name="dialog_title_save_progress">Aufgabenfortschritt</string>
+    <string name="dialog_message_save_progress">Möchten Sie den Fortschritt speichern?</string>
+    <string name="text_mark_as_complete">Als abgeschlossen markieren</string>
+    <string name="icon_assignee_edit">Symbol \'Zugewiesenen Benutzer bearbeiten\'</string>
+    <string name="icon_name_description_edit">Symbol \'Name &amp; Beschreibung bearbeiten\'</string>
+    <string name="text_create_task">Aufgabe erstellen</string>
+    <string name="dialog_title_discard_task">Verwerfen</string>
+    <string name="dialog_message_discard_task">Sollen die Änderungen verworfen werden?</string>
+    <string name="icon_delete_attachment">Symbol \'Anhang löschen\'</string>
+    <string name="dialog_title_delete_content">Eine Datei löschen?</string>
+    <string name="text_add_attachments">Anhänge hinzufügen</string>
+    <string name="icon_add_attachment">Symbol \'Anhang hinzufügen\'</string>
+    <string name="dialog_message_complete_task_files_queue">Sind Sie sicher, dass sie diese Aufgabe abschließen wollen? Nach dem Abschließen können keine Dateien mehr hochgeladen und keine Änderungen mehr gemacht werden.</string>
 
 </resources>

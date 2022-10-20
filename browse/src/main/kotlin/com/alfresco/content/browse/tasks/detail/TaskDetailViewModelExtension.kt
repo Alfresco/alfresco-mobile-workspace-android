@@ -3,6 +3,7 @@ package com.alfresco.content.browse.tasks.detail
 import com.alfresco.content.actions.Action
 import com.alfresco.content.browse.tasks.list.UpdateTasksData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.events.EventBus
 import java.io.File
 import kotlinx.coroutines.GlobalScope
@@ -42,4 +43,16 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
     if (hasTaskEditMode)
         return true
     return state.parent?.assignee?.id == repository.getAPSUser().id
+}
+
+/**
+ * return true if uploading files are in queue otherwise false
+ */
+fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }
+
+/**
+ * removing the task related entries from local database
+ */
+fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
+    OfflineRepository().removeTaskEntries(state.parent?.id)
 }

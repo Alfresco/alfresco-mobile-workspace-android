@@ -14,7 +14,7 @@
     <string name="search_empty_title">Oups !</string>
     <string name="search_empty_message">Nous n\'avons pas trouvé le fichier\nque vous recherchez.</string>
 
-    <string name="default_search">Défaut</string>
+    <string name="default_search">Par défaut</string>
     <string name="app.search.radio.none">Aucun(e)</string>
     <string name="app.search.radio.all">Tout</string>
     <string name="app.search.radio.folder">Dossier</string>
@@ -41,7 +41,7 @@
     <string name="search.facet_queries.xtralarge">Très gros</string>
     <string name="search.facet_queries.xxtralarge">Énorme</string>
     <string name="earlier">Plus tôt</string>
-    <string name="lastYear">Dernière année</string>
+    <string name="lastYear">L\'année dernière</string>
     <string name="currentyear">L\'année en cours</string>
     <string name="search.facet_queries.created_this_year">Cette année</string>
     <string name="search.facet_queries.mimetype">Type MIME</string>
@@ -59,10 +59,8 @@
     <string name="app.search.radio.type">Type</string>
     <string name="app.search.file.name">Nom de fichier</string>
     <string name="app.search.text.placeholder">Saisir le nom</string>
-    <string name="category.default.search">Défaut</string>
+    <string name="category.default.search">Par défaut</string>
     <string name="category.folder">Dossier</string>
     <string name="type.facet.queries">Recherches avec filtre par type</string>
-
-    <string name="search_move_warning">Vous ne pouvez pas déplacer des fichiers vers votre propre dossier et sous-dossiers.</string>
-
+    <string name="search_move_warning">Vous ne pouvez pas déplacer le fichier vers votre propre dossier et sous-dossiers.</string>
 </resources>

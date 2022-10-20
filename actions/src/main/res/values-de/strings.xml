@@ -46,18 +46,23 @@
     <string name="action_create_folder_toast">%s wurde erstellt</string>
 
     <string name="action_create_folder">Neuer Ordner</string>
+    <string name="action_create_task">Neue Aufgabe</string>
     <string name="action_folder_cancel">Abbrechen</string>
     <string name="action_folder_create">Erstellen</string>
+    <string name="action_task_next">Weiter</string>
 
     <string name="action_folder_name_hint">Name</string>
-    <string name="action_folder_name_invalid_chars">Der Ordnername darf keines der folgenden Zeichen enthalten: ?:"*|/\\&lt;&gt;</string>
+    <string name="action_folder_name_invalid_chars">Der Ordnername darf keines der folgenden Zeichen enthalten: \?:\\"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">Der Ordnername darf nicht leer sein.</string>
+
+    <string name="action_task_name_invalid_chars">Der Aufgabenname darf keines der folgenden Zeichen enthalten: \?:\\"*|/\\&lt;&gt;</string>
+    <string name="action_task_name_empty">Der Aufgabenname darf nicht leer sein.</string>
 
     <string name="action_upload_files_title">Dateien hochladen</string>
 
     <!-- Upload queue dialog -->
     <string name="action_upload_queue_title">Hochladen</string>
-    <string name="action_upload_queue_subtitle">Das Hochladen befindet sich in der Warteschlange. Bitte verfolgen Sie den Status in der mobilen Anwendung.</string>
+    <string name="action_upload_queue_subtitle">Übertragung wird ausgeführt. Bitte verfolgen Sie den Verlauf in der mobilen Anwendung.</string>
     <string name="action_upload_queue_ok_button">OK</string>
 
     <string name="share_files_permissions_rationale">@string/share_files_failure_permissions</string>
@@ -69,9 +74,13 @@
     <string name="action_rename_file_folder">Umbenennen</string>
     <string name="action_rename_file_folder_toast">%s wurde umbenannt</string>
     <string name="action_text_save">Speichern</string>
+    <string name="action_menu_edit">Bearbeiten</string>
+    <string name="action_menu_done">Fertig</string>
+    <string name="action_update_task_name_description">Name &amp; Beschreibung</string>
 
     <string name="action_scan_title">Dokumente scannen</string>
     <string name="action_scan_failed_permissions">@string/scan_failure_permissions</string>
     <string name="action_upload_scan_documents_toast">Zum Hochladen vorgesehenes Dokument.</string>
+
 
 </resources>

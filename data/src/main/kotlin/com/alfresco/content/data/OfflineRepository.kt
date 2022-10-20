@@ -271,6 +271,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         callbackFlow {
             val query = box.query()
                 .equal(Entry_.isUpload, true)
+                .equal(Entry_.isProcessService, false)
                 .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
                 .order(Entry_.name)
                 .build()
@@ -293,6 +294,20 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box.query()
             .equal(Entry_.isUpload, true)
             .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                }
+            }
+            .build()
+            .remove()
+
+    /**
+     * remove the task entries on the basis of task ID from local db.
+     */
+    fun removeTaskEntries(parentId: String? = null) =
+        box.query()
+            .equal(Entry_.isProcessService, true)
             .apply {
                 if (parentId != null) {
                     equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)

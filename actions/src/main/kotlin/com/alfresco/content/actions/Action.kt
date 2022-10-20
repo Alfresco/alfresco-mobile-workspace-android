@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import com.alfresco.Logger
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.events.EventBus
@@ -38,6 +39,9 @@ interface Action {
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
+            if (entry is Entry && (entry as Entry).isProcessService && ex.message == ERROR_FILE_SIZE_EXCEED) {
+                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+            }
         } catch (ex: Exception) {
             sendAnalytics(false)
             bus.send(Error(ex.message ?: ""))
@@ -66,6 +70,7 @@ interface Action {
     class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
+        const val ERROR_FILE_SIZE_EXCEED = "File size exceed"
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
             scope.on<Action>(block = showToast(view, anchorView))
             scope.on<Error> {

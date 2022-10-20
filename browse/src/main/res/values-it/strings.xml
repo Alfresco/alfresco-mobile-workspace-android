@@ -27,7 +27,7 @@
     <string name="folder_empty_title">La cartella è vuota</string>
     <string name="folder_empty_upload_title">Caricamento completato!</string>
     <string name="folder_empty_message">A quanto pare qui non c\'è nulla.</string>
-    <string name="folder_empty_upload_message">Nessun\u0020altro\u0020file\u0020da\u0020caricare.\u0020Verificare\u0020che\u0020i\u0020file\u0020siano\u0020presenti\u0020\u0020nelle\u0020rispettive\u0020cartelle.</string>
+    <string name="folder_empty_upload_message">Nessun altro file da caricare. Verificare che i file siano presenti nelle rispettive cartelle.</string>
 
     <!-- Offline -->
     <string name="offline_sync_button_title">Sincronizza tutto</string>
@@ -56,6 +56,8 @@
     <string name="title_task_view">Visualizzazione compito</string>
     <string name="title_comments">Commenti</string>
     <string name="title_due_date">Scadenza</string>
+    <string name="title_priority">Priorità</string>
+    <string name="title_assignee">Assegnatario</string>
     <string name="title_status">Stato</string>
     <string name="title_identifier">Identificativo</string>
     <string name="text_add_a_comment">Aggiungere un commento&#8230;</string>
@@ -66,11 +68,31 @@
     <string name="no_attached_files">Nessun file allegato</string>
     <string name="empty_no_due_date">Nessuna scadenza</string>
     <string name="title_attached_files">File allegati</string>
-    <string name="text_complete">Per completare</string>
+    <string name="text_complete">Completato</string>
     <string name="dialog_title_complete_task">Completa compito</string>
     <string name="dialog_message_complete_task">Vuoi completare il compito? Non potrai più apportare modifiche.</string>
     <string name="dialog_negative_button_task">Annulla</string>
     <string name="dialog_positive_button_task">Conferma</string>
     <string name="icon_send_description">Pulsante Invia</string>
+    <string name="empty_description">Nessuna descrizione</string>
+    <string name="icon_completed">Icona Completato</string>
+    <string name="task_title">Compito</string>
+    <string name="icon_priority_edit">Icona Modifica priorità</string>
+    <string name="icon_due_date_clear">Icona Cancella scadenza</string>
+    <string name="icon_due_date_edit">Icona Modifica scadenza</string>
+    <string name="suffix_view_all">...Visualizza tutto</string>
+    <string name="dialog_title_save_progress">Stato di avanzamento compito</string>
+    <string name="dialog_message_save_progress">Vuoi salvare lo stato di avanzamento?</string>
+    <string name="text_mark_as_complete">Contrassegna come completato</string>
+    <string name="icon_assignee_edit">Icona Modifica assegnatario</string>
+    <string name="icon_name_description_edit">Icona Modifica nome e descrizione</string>
+    <string name="text_create_task">Crea compito</string>
+    <string name="dialog_title_discard_task">Ignora</string>
+    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
+    <string name="icon_delete_attachment">Icona Elimina allegato</string>
+    <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
+    <string name="text_add_attachments">Aggiungi allegati</string>
+    <string name="icon_add_attachment">Icona Aggiungi allegati</string>
+    <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito? Una volta completato, non potrai caricare alcuni file né apportare modifiche.</string>
 
 </resources>

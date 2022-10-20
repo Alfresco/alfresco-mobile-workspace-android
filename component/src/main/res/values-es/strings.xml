@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+2
     <string name="search_hint">Buscar</string>
     <string name="advance_search_title">Búsqueda avanzada</string>
     <string name="hint_range_from">De</string>
     <string name="hint_range_to">A</string>
     <string name="hint_range_from_date">Desde la fecha</string>
     <string name="hint_range_to_date">Hasta la fecha</string>
-    <string name="component_number_range_invalid_input">El valor De debe ser menor que el valor A</string>
-    <string name="component_action_reset">Restablecer</string>
+    <string name="component_number_range_invalid_input">El valor \'De\' debe ser menor que el valor \'A\'</string>
+    <string name="component_action_reset">Reiniciar</string>
     <string name="component_action_apply">Aplicar</string>
     <string name="component_action_cancel">Cancelar</string>
     <string name="component_number_range_empty">Valor requerido</string>
     <string name="size_end_kb">%1$s (KB)</string>
+    <string name="date_format_new" translatable="false">%1$s-%2$s-%3$s</string>
+    <string name="label_count_format_integer" translatable="false">%1$s (%2$d)</string>
+    <string name="date_format" translatable="false">%1$s-%2$s-%3$s</string>
     <string name="filter.task.due.date">Fecha de vencimiento</string>
     <string name="filter.task.status">Estado</string>
     <string name="filter.task.name">Nombre de la tarea</string>
     <string name="filter.option.active">Activo</string>
     <string name="filter.option.completed">Completada</string>
+    <string name="filter.option.due.before">Vencimiento antes de</string>
+    <string name="filter.option.due.after">Vencimiento después de</string>
+    <string name="text_by_name">Por nombre</string>
+    <string name="text_by_email">Por correo electrónico</string>
+    <string name="text_back_button">Botón Atrás</string>
 </resources>

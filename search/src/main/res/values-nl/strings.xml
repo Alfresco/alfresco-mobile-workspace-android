@@ -62,7 +62,5 @@
     <string name="category.default.search">Standaard</string>
     <string name="category.folder">Map</string>
     <string name="type.facet.queries">Facetquery\'s op basis van type</string>
-
-    <string name="search_move_warning">U kunt bestanden niet verplaatsen naar uw eigen map en submappen.</string>
-
+    <string name="search_move_warning">Verplaatsen naar eigen map en submappen is niet mogelijk.</string>
 </resources>

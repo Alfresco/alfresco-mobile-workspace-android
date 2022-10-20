@@ -63,6 +63,5 @@
     <string name="category.default.search">Standard</string>
     <string name="category.folder">Ordner</string>
     <string name="type.facet.queries">Facet-Abfragen nach Typ</string>
-
-    <string name="search_move_warning">Sie können keine Dateien in Ihren eigenen Ordner und Unterordner verschieben.</string>
+    <string name="search_move_warning">Sie können nicht in Ihren eigenen Ordner und Unterordner wechseln.</string>
 </resources>

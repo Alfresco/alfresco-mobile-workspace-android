@@ -106,6 +106,8 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
             }
         }
 
+        binding.recyclerView.isNestedScrollingEnabled = !viewModel.isTaskCompleted(state)
+
         if (state.listContents.isEmpty()) requireActivity().onBackPressed()
 
         epoxyController.requestModelBuild()

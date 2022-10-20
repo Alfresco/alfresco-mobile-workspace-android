@@ -77,7 +77,8 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        TODO("Not yet implemented")
+        if (isAdded)
+            onItemClicked(entry as Entry)
     }
 
     override fun invalidate() {

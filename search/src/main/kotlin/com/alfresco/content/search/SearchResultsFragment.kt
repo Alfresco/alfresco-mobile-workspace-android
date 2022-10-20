@@ -77,7 +77,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded && isVisible)
             onItemClicked(entry as Entry)
     }
 

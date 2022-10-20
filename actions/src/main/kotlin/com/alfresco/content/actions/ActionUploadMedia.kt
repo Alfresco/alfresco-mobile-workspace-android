@@ -39,7 +39,7 @@ data class ActionUploadMedia(
                         context,
                         it,
                         if (entry.isProcessService) entry.parentId ?: "" else entry.id,
-                        entry.isProcessService
+                        isProcessService = entry.isProcessService
                     )
                 }
                 repository.setTotalTransferSize(result.size)

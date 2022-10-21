@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+2
     <string name="search_hint">Suchen</string>
     <string name="advance_search_title">Erweiterte Suche</string>
     <string name="hint_range_from">Von</string>

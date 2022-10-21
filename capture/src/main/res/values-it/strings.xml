@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="close_button_alt">Chiudi</string>
     <string name="capture_button_alt">Acquisisci</string>
@@ -14,7 +14,7 @@
     <string name="capture_description_hint">Aggiungi descrizione</string>
     <string name="capture_delete_photo_alt">Elimina foto</string>
     <string name="capture_save_button">Salva</string>
-    <string name="capture_file_name_invalid_chars">Il nome file non può contenere i caratteri seguenti: ?:\"*|/\&lt;></string>
+    <string name="capture_file_name_invalid_chars">Il nome del file non può contenere i caratteri seguenti: ?:"*|/\\&lt;&gt;</string>
     <string name="capture_file_name_empty">Il nome file non può essere vuoto.</string>
 
     <string name="capture_nav_save_title">Anteprima</string>
@@ -33,5 +33,7 @@
 
     <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
     <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
+
+    <string name="error_file_size_exceed">La dimensione del file selezionato non può superare il limite di 100 MB per il caricamento.</string>
 
 </resources>

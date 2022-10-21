@@ -214,7 +214,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded && isVisible)
             onItemClicked(entry as Entry)
     }
 }

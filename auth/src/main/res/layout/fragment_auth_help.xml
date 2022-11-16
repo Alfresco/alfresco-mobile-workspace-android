@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
+            android:contentDescription="@string/accessibility_text_close"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:minWidth="40dp"
             android:minHeight="40dp"

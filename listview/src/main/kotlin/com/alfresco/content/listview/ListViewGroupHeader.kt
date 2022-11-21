@@ -20,5 +20,6 @@ class ListViewGroupHeader @JvmOverloads constructor(
     @TextProp
     fun setTitle(text: CharSequence) {
         binding.title.text = text
+        binding.parent.contentDescription = context.getString(R.string.accessibility_text_header, text)
     }
 }

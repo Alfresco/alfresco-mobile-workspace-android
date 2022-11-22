@@ -13,7 +13,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/accessibility_text_user_profile"/>
 
     <com.alfresco.ui.MaterialShapeView
         android:id="@+id/status"

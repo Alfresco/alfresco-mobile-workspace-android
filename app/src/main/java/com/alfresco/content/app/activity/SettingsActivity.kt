@@ -17,6 +17,7 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeActionContentDescription(getString(R.string.accessibility_text_close))
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 

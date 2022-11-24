@@ -34,7 +34,6 @@ class HelpFragment : BottomSheetDialogFragment() {
         }
 
         val closeBtn: View = view.findViewById(R.id.btnClose)
-        val titleTxt: TextView = view.findViewById(R.id.titleTxt)
         closeBtn.setOnClickListener { dismiss() }
     }
 

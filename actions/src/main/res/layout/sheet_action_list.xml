@@ -9,6 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:screenReaderFocusable="true"
         android:background="@drawable/bottom_separator">
         <include
             android:id="@+id/header"

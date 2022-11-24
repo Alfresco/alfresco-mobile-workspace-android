@@ -65,6 +65,17 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
+            when (action) {
+                is ActionDownload -> {
+                    contentDescription = getString(R.string.accessibility_text_download)
+                }
+                is ActionAddFavorite -> {
+                    contentDescription = getString(R.string.accessibility_text_add_favorite)
+                }
+                is ActionRemoveFavorite -> {
+                    contentDescription = getString(R.string.accessibility_text_remove_favorite)
+                }
+            }
             background = context.getDrawableForAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(action.icon)
             setOnClickListener {
@@ -89,6 +100,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
+            contentDescription = getString(R.string.accessibility_text_more)
             background = context.getDrawableForAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {

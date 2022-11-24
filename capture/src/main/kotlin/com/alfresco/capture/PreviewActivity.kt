@@ -20,9 +20,9 @@ class PreviewActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = intent.extras?.getString("title")
+        supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        title = intent.extras?.getString("title")
     }
 
     override fun onAttachFragment(fragment: Fragment) {

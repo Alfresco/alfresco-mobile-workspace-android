@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/parent_title"
     android:layout_height="56dp"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
@@ -12,6 +13,7 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="24dp"
+        android:importantForAccessibility="no"
         android:layout_height="24dp"
         android:scaleType="fitCenter"
         tools:ignore="ContentDescription" />
@@ -22,10 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:importantForAccessibility="no"
         android:layout_marginEnd="12dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        tools:text="Title" />
+        android:textAppearance="?attr/textAppearanceSubtitle1"/>
 
 </LinearLayout>

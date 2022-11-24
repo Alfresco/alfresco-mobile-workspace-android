@@ -17,11 +17,11 @@ class ViewerActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
+        supportActionBar?.title = intent.extras?.getString("title")
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        title = intent.extras?.getString("title")
 
         Action.showActionToasts(
             lifecycleScope,

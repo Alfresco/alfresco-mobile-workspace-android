@@ -12,9 +12,4 @@
     <string name="text_read_more_space">...Read more</string>
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
-    <string name="accessibility_text_task_row">Title: %s Assignee: %s Priority %s</string>
-    <string name="accessibility_text_simple_row">Title: %s Path: %s</string>
-    <string name="accessibility_text_simple_row_nopath">Title: %s</string>
-    <string name="accessibility_text_header">Header: %s</string>
-    <string name="accessibility_text_more">More</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.alfresco.content.actions.Action
+import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.ActivityLocalPreviewBinding
 import com.alfresco.content.data.Entry
 
@@ -23,11 +24,11 @@ class LocalPreviewActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        title = if (intent.extras?.containsKey(KEY_ENTRY_OBJ) == true) {
+        supportActionBar?.title = if (intent.extras?.containsKey(KEY_ENTRY_OBJ) == true) {
             (intent.extras?.getParcelable(KEY_ENTRY_OBJ) as Entry?)?.name
         } else intent.extras?.getString("title")
+        supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
+        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
 
         Action.showActionToasts(
             lifecycleScope,

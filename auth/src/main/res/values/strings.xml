@@ -80,6 +80,7 @@
     <string name="auth_login_app_subtitle">Tap to launch Alfresco Mobile Workspace.</string>
     <string name="auth_login_app_ok_button">Ok</string>
     <string name="accessibility_text_close">Close</string>
+    <string name="accessibility_text_back">Back</string>
 
 
 </resources>

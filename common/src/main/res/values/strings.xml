@@ -19,4 +19,5 @@
     <string name="accessibility_text_download">Download</string>
     <string name="accessibility_text_add_favorite">Add Favorite</string>
     <string name="accessibility_text_remove_favorite">Remove Favorite</string>
+    <string name="accessibility_text_create_button">Create</string>
 </resources>

@@ -194,6 +194,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                         .toInt()
                 )
             }
+            contentDescription = getString(R.string.accessibility_text_create_button)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
                 showCreateSheet()

@@ -61,6 +61,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             javaScriptEnabled = true
             @Suppress("DEPRECATION")
             saveFormData = false
+            safeBrowsingEnabled = true
         }
 
         val assetLoader = makeAssetLoader()
@@ -89,6 +90,8 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
                 return assetLoader.shouldInterceptRequest(request.url)
             }
         }
+
+        WebView.startSafeBrowsing(requireContext()) { }
 
         // Loading state is handled by pdf viewer
         loadingListener?.onContentLoaded()

@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/view_tasks_filters" />
+    <include layout="@layout/view_tasks_filters" />
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,21 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.epoxy.EpoxyRecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="com.alfresco.ui.FabAwareScrollingBehavior">
-
-                <com.airbnb.epoxy.EpoxyRecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_marginTop="32dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:splitMotionEvents="false"
-                    app:layoutManager="LinearLayoutManager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:layout_marginTop="32dp"
+                android:clipToPadding="false"
+                android:paddingBottom="64dp"
+                android:splitMotionEvents="false"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <LinearLayout
             android:id="@+id/loading_animation"

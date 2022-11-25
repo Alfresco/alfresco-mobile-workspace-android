@@ -14,8 +14,7 @@ import androidx.transition.TransitionSet
 import com.alfresco.content.app.R
 import com.alfresco.ui.MaterialShapeView
 
-class ActionBarLayout(context: Context, attrs: AttributeSet?) :
-    FrameLayout(context, attrs) {
+class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
     lateinit var toolbar: Toolbar
     lateinit var taskToolbar: Toolbar
@@ -58,6 +57,8 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         params.topMargin = -background.strokeWidth
         background.layoutParams = params
 
+        background.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+
         collapsedView.visibility = View.GONE
         expandedView.visibility = View.VISIBLE
     }
@@ -90,18 +91,20 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) :
         params.topMargin = originalTopMargin
         background.layoutParams = params
 
+        background.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+
         collapsedView.visibility = View.VISIBLE
         expandedView.visibility = View.GONE
     }
 
-    private fun makeTransition() = TransitionSet()
-        .addTransition(Fade())
-        .addTransition(ChangeBounds())
+    private fun makeTransition() = TransitionSet().addTransition(Fade()).addTransition(ChangeBounds())
 
     fun loadProfileIcon(uri: Uri) {
         profileView.loadIcon(uri)
     }
 
-    fun setOnline(value: Boolean) =
-        profileView.setOffline(!value)
+    /**
+     * set user online status
+     */
+    fun setOnline(value: Boolean) = profileView.setOffline(!value)
 }

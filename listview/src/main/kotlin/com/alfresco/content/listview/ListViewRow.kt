@@ -55,6 +55,14 @@ class ListViewRow @JvmOverloads constructor(
         configureOfflineStatus(entry)
 
         binding.moreButton.isVisible = actionButtonVisibility(entry)
+
+        val accessibilityText = if (entry.path.isNullOrEmpty())
+            context.getString(
+                R.string.accessibility_text_simple_row, entry.name
+            ) else context.getString(
+            R.string.accessibility_text_simple_row, entry.name, entry.path
+        )
+        binding.parent.contentDescription = accessibilityText
     }
 
     private fun configureOfflineStatus(entry: Entry) {

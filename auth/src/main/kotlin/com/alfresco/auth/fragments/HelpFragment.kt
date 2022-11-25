@@ -24,6 +24,7 @@ class HelpFragment : BottomSheetDialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val view = view ?: return
+        dialog?.window?.decorView?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
 
         arguments?.let {
             val messageResId = it.getInt(ARG_MESSAGE_RES_ID, -1)

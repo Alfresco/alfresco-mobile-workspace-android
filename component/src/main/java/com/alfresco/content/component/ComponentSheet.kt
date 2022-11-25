@@ -179,6 +179,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        dialog?.window?.decorView?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         view?.viewTreeObserver?.addOnGlobalLayoutListener {
             val bottomSheet =
                 (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)

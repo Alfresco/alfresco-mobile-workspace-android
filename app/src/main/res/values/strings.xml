@@ -31,6 +31,9 @@
     <string name="settings_sync_network_title">Update offline files using</string>
     <string name="share_limit_message">Can\'t share more than 50 media items</string>
     <string name="no_type">No Type</string>
+    <string name="accessibility_text_user_profile">User Profile Button</string>
+    <string name="accessibility_text_user_info">Username: %s Email: %s</string>
+    <string name="accessibility_text_close">Close</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>Wi-Fi only</item>

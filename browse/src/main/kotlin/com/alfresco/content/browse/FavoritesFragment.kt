@@ -23,6 +23,12 @@ class FavoritesFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        view.requestFocus()
+    }
+
     private class PagerAdapter(val context: Context, fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 

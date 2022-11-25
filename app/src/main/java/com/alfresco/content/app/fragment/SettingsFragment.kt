@@ -35,6 +35,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val acc = SessionManager.requireSession.account
         preferenceScreen.findPreference<AccountPreference>(resources.getString(R.string.pref_account_key))?.apply {
+            accessibilityTextUserInfo = getString(R.string.accessibility_text_user_info, acc.displayName, acc.email)
             title = acc.displayName
             summary = acc.email
             loadAny(PeopleRepository.myPicture()) {

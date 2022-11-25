@@ -86,6 +86,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
     private fun onNavigation(hasNavigation: Boolean) {
         supportActionBar?.setDisplayShowHomeEnabled(hasNavigation)
+        supportActionBar?.setHomeActionContentDescription(getString(R.string.accessibility_text_back))
         supportActionBar?.setDisplayHomeAsUpEnabled(hasNavigation)
     }
 

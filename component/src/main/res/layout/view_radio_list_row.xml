@@ -24,6 +24,7 @@
         android:id="@+id/radioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:checked="false"
         android:clickable="false"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="alfresco_blue_900">#0052AE</color>
-    <color name="alfresco_blue_700">#2A7DE1</color>
+    <color name="alfresco_blue_900">#1A43A9</color>
+<!--    <color name="alfresco_blue_700">#2A7DE1</color>-->
+    <color name="alfresco_blue_700">#1F74DB</color>
     <color name="alfresco_blue_300">#6EACFF</color>
 
     <color name="alfresco_gray_900">#212328</color>
@@ -9,6 +10,7 @@
     <color name="alfresco_gray_900_15">#26212328</color>
     <color name="alfresco_gray_900_30">#4D212328</color>
     <color name="alfresco_gray_900_60">#99212328</color>
+    <color name="alfresco_gray_900_70">#B3212328</color>
     <color name="alfresco_gray_100">#F5F5F5</color>
 
     <color name="alfresco_error">#B8082A</color>

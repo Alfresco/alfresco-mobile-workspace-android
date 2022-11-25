@@ -62,7 +62,6 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/expanded_toolbar"
         android:layout_width="match_parent"
-        android:importantForAccessibility="yes"
         android:layout_height="match_parent"
         android:visibility="gone" />
 

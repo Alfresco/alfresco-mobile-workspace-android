@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -105,6 +106,8 @@ class SearchFragment : Fragment(), MavericksView {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+        val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        supportActionBar?.setHomeActionContentDescription(requireActivity().getString(R.string.label_navigation_back))
         return binding.root
     }
 

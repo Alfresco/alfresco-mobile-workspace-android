@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
@@ -75,6 +76,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         // Contextual search only in folders/sites
         if (args.id != null) {
             setHasOptionsMenu(true)
+            val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
+            supportActionBar?.title = args.title
+            supportActionBar?.setHomeActionContentDescription(requireActivity().getString(R.string.label_navigation_back))
         }
     }
 

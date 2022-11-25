@@ -100,5 +100,8 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
         profileView.loadIcon(uri)
     }
 
+    /**
+     * set user online status
+     */
     fun setOnline(value: Boolean) = profileView.setOffline(!value)
 }

@@ -21,6 +21,7 @@ internal class ActionListRow @JvmOverloads constructor(
     @ModelProp(options = [ModelProp.Option.IgnoreRequireHashCode])
     fun setAction(action: Action) {
         binding.apply {
+            parentTitle.contentDescription = resources.getString(action.title)
             title.text = resources.getString(action.title)
             icon.setImageDrawable(ResourcesCompat.getDrawable(resources, action.icon, context.theme))
         }

@@ -13,6 +13,7 @@
     <string name="accessibility_text_task_row">Title: %s Assignee: %s Priority %s</string>
     <string name="accessibility_text_simple_row">Title: %s Path: %s</string>
     <string name="accessibility_text_title">Title: %s</string>
+    <string name="accessibility_text_folder">Folder: %s</string>
     <string name="accessibility_text_title_type">Title: %s Type: %s</string>
     <string name="accessibility_text_header">Header: %s</string>
     <string name="accessibility_text_more">More</string>

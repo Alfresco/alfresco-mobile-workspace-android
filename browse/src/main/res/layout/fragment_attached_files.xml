@@ -43,8 +43,7 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="com.alfresco.ui.FabAwareScrollingBehavior">
+            android:layout_height="wrap_content">
 
             <com.airbnb.epoxy.EpoxyRecyclerView
                 android:id="@+id/recycler_view"
@@ -52,8 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="30dp"
+                android:clipToPadding="false"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:paddingBottom="64dp"
                 android:splitMotionEvents="false"
                 app:layoutManager="LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -68,10 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:visibility="gone"
             android:layout_margin="16dp"
             android:contentDescription="@string/text_add_attachments"
-            android:src="@drawable/ic_add_fab" />
+            android:src="@drawable/ic_add_fab"
+            android:visibility="gone" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

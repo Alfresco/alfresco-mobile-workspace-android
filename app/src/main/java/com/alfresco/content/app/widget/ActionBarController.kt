@@ -19,7 +19,6 @@ class ActionBarController(private val layout: ActionBarLayout) {
         this.navController = navController
 
         activity.setSupportActionBar(layout.toolbar)
-
         activity.setupActionBarWithNavController(navController)
 
         layout.expand(false)
@@ -41,8 +40,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val isTopLevelDestination = matchDestinations(
-                destination,
-                appBarConfiguration.topLevelDestinations
+                destination, appBarConfiguration.topLevelDestinations
             )
 
             if (isTopLevelDestination) {

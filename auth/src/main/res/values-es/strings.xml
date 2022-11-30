@@ -13,18 +13,18 @@
     <string name="auth_help_identity_body">
         <![CDATA[<h1>Cómo conectarse a Alfresco</h1>
         <h6>URL de Alfresco Content Services</h6>
-    <p>Puede introducir la URL de su instancia de Alfresco Content Services. Deberá introducir su nombre de usuario y contraseña para autenticarse.</p>
-    <h6>Iniciar sesión con SSO</h6>
-    <p>Puede introducir la URL de Alfresco Identity Management Service para autenticarse con el proveedor de identidades de su organización</p>
-    <p>*Deberá indicar la URL de su instancia de Alfresco Content Services más tarde.</p>
-    <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+    	<p>Puede introducir la URL de su instancia de Alfresco Content Services. Deberá introducir su nombre de usuario y contraseña para autenticarse.</p>
+    	<h6>Iniciar sesión con SSO</h6>
+    	<p>Puede introducir la URL de Alfresco Identity Management Service para autenticarse con el proveedor de identidades de su organización</p>
+    	<p>*Deberá indicar la URL de su instancia de Alfresco Content Services más tarde.</p>
+    	<p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
     </string>
 
     <string name="auth_help_sso_body">
         <![CDATA[<h6>Ubicación del repositorio de contenido</h6>
-    <p>URL de Alfresco Content Services:</p>
-    <p>La URL de su instancia de Alfresco Content Services.</p>
-    <p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
+    	<p>URL de Alfresco Content Services:</p>
+    	<p>La URL de su instancia de Alfresco Content Services.</p>
+    	<p>Hable con su administrador de Alfresco si necesita ayuda.</p>]]>
     </string>
 
     <string name="auth_help_settings_body">
@@ -79,6 +79,8 @@
     <string name="auth_login_app_title">Sesión no disponible</string>
     <string name="auth_login_app_subtitle">Toque para iniciar Alfresco Mobile Workspace</string>
     <string name="auth_login_app_ok_button">Aceptar</string>
+    <string name="accessibility_text_close">Cerrar</string>
+    <string name="accessibility_text_back">Volver</string>
 
 
 </resources>

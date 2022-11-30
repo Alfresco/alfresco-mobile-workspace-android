@@ -35,7 +35,7 @@
     <string name="offline_empty_title">Contenido sin conexión</string>
     <string name="offline_empty_message">Contenido disponible\n sin conexión se mostrará aquí.</string>
 
-    <string name="offline_sync_unavailable_title">¿Utilizar los datos móviles?</string>
+    <string name="offline_sync_unavailable_title">¿Utilizar los datos móviles\?</string>
     <string name="offline_sync_unavailable_message">Esto anulará su configuración y se descargará a través de datos móviles esta vez. De lo contrario, la descarga comenzará más tarde después de conectarse a Wifi.</string>
     <string name="offline_sync_unavailable_positive">Sí</string>
     <string name="offline_sync_unavailable_negative">Más tarde</string>
@@ -56,8 +56,6 @@
     <string name="title_task_view">Ver tarea</string>
     <string name="title_comments">Comentarios</string>
     <string name="title_due_date">Fecha de vencimiento</string>
-    <string name="title_priority">Prioridad</string>
-    <string name="title_assignee">Usuario asignado</string>
     <string name="title_status">Estado</string>
     <string name="title_identifier">Identificador</string>
     <string name="text_add_a_comment">Añadir un comentario...</string>
@@ -70,7 +68,7 @@
     <string name="title_attached_files">Ficheros adjuntos</string>
     <string name="text_complete">Por completar</string>
     <string name="dialog_title_complete_task">Completar tarea</string>
-    <string name="dialog_message_complete_task">¿Está seguro de que desea completar esta tarea? Ya no podrá realizar ningún cambio.</string>
+    <string name="dialog_message_complete_task">¿Está seguro de que desea completar esta tarea\? Ya no podrá realizar ningún cambio.</string>
     <string name="dialog_negative_button_task">Cancelar</string>
     <string name="dialog_positive_button_task">Confirmar</string>
     <string name="icon_send_description">Botón Enviar</string>
@@ -82,17 +80,17 @@
     <string name="icon_due_date_edit">Editar el icono de la fecha de vencimiento</string>
     <string name="suffix_view_all">...Ver todo</string>
     <string name="dialog_title_save_progress">Progreso de la tarea</string>
-    <string name="dialog_message_save_progress">¿Desea guardar el progreso?</string>
+    <string name="dialog_message_save_progress">¿Desea guardar el progreso\?</string>
     <string name="text_mark_as_complete">Marcar como completado</string>
     <string name="icon_assignee_edit">Editar icono del usuario asignado</string>
     <string name="icon_name_description_edit">Editar el icono de nombre y descripción</string>
     <string name="text_create_task">Crear tarea</string>
     <string name="dialog_title_discard_task">Descartar</string>
-    <string name="dialog_message_discard_task">¿Desea descartar los cambios?</string>
+    <string name="dialog_message_discard_task">¿Desea descartar los cambios\?</string>
     <string name="icon_delete_attachment">Icono de eliminación de adjuntos</string>
-    <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
+    <string name="dialog_title_delete_content">¿Eliminar un fichero\?</string>
     <string name="text_add_attachments">Añadir adjuntos</string>
     <string name="icon_add_attachment">Añadir icono adjunto</string>
-    <string name="dialog_message_complete_task_files_queue">¿Está seguro de que desea completar la tarea? Una vez completada, no podrá cargar algunos ficheros ni hacer cambios.</string>
+    <string name="dialog_message_complete_task_files_queue">¿Está seguro de que quiere completar la tarea\? Una vez completada, algunos ficheros no se pudieron cargar y no se pueden realizar cambios.</string>
 
 </resources>

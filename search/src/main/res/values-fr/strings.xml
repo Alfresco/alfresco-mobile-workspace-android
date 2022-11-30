@@ -62,5 +62,6 @@
     <string name="category.default.search">Par défaut</string>
     <string name="category.folder">Dossier</string>
     <string name="type.facet.queries">Recherches avec filtre par type</string>
-    <string name="search_move_warning">Vous ne pouvez pas déplacer le fichier vers votre propre dossier et sous-dossiers.</string>
+    <string name="search_move_warning">Vous ne pouvez pas déplacer le fichier vers votre propre dossier et vos sous-dossiers.</string>
+    <string name="accessibility_text_reset">Réinitialiser</string>
 </resources>

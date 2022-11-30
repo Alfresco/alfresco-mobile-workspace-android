@@ -35,7 +35,7 @@
     <string name="offline_empty_title">Aucun contenu hors ligne</string>
     <string name="offline_empty_message">Le contenu disponible hors ligne\ns\'affichera ici.</string>
 
-    <string name="offline_sync_unavailable_title">Utiliser les données mobiles ?</string>
+    <string name="offline_sync_unavailable_title">Utiliser les données mobiles\?</string>
     <string name="offline_sync_unavailable_message">Vos réglages seront remplacés et des données mobiles seront utilisées pour le téléchargement. Sinon, le téléchargement aura lieu plus tard lorsque la connexion Wi-Fi sera disponible.</string>
     <string name="offline_sync_unavailable_positive">Oui</string>
     <string name="offline_sync_unavailable_negative">Plus tard</string>
@@ -56,8 +56,6 @@
     <string name="title_task_view">Affichage de la tâche</string>
     <string name="title_comments">Commentaires</string>
     <string name="title_due_date">Date d\'échéance</string>
-    <string name="title_priority">Priorité</string>
-    <string name="title_assignee">Personne assignée</string>
     <string name="title_status">Statut</string>
     <string name="title_identifier">Identifiant</string>
     <string name="text_add_a_comment">Ajoutez un commentaire&#8230;</string>
@@ -70,7 +68,7 @@
     <string name="title_attached_files">Fichiers joints</string>
     <string name="text_complete">Terminé</string>
     <string name="dialog_title_complete_task">Terminer la tâche</string>
-    <string name="dialog_message_complete_task">Voulez-vous vraiment terminer cette tâche ? Vous ne pourrez plus faire de modifications.</string>
+    <string name="dialog_message_complete_task">Voulez-vous vraiment terminer cette tâche \? Vous ne pourrez plus faire de modifications.</string>
     <string name="dialog_negative_button_task">Annuler</string>
     <string name="dialog_positive_button_task">Confirmer</string>
     <string name="icon_send_description">Bouton Envoyer</string>
@@ -82,17 +80,17 @@
     <string name="icon_due_date_edit">Icône Modifier la date d\'échéance</string>
     <string name="suffix_view_all">&#8230;Afficher tout</string>
     <string name="dialog_title_save_progress">Progression de la tâche</string>
-    <string name="dialog_message_save_progress">Voulez-vous enregistrer la progression ?</string>
+    <string name="dialog_message_save_progress">Voulez-vous enregistrer la progression \?</string>
     <string name="text_mark_as_complete">Marquer comme terminé</string>
     <string name="icon_assignee_edit">Icône Modifier la personne assignée</string>
     <string name="icon_name_description_edit">Icône Modifier le nom et la description</string>
     <string name="text_create_task">Créer une tâche</string>
     <string name="dialog_title_discard_task">Ignorer</string>
-    <string name="dialog_message_discard_task">Voulez-vous ignorer les modifications ?</string>
+    <string name="dialog_message_discard_task">Voulez-vous ignorer les modifications \?</string>
     <string name="icon_delete_attachment">Icône Supprimer la pièce jointe</string>
-    <string name="dialog_title_delete_content">Supprimer un fichier ?</string>
+    <string name="dialog_title_delete_content">Supprimer un fichier \?</string>
     <string name="text_add_attachments">Ajouter des pièces jointes</string>
     <string name="icon_add_attachment">Icône Ajouter une pièce jointe</string>
-    <string name="dialog_message_complete_task_files_queue">Voulez-vous vraiment terminer la tâche ? Une fois terminée, vous ne pourrez plus importer certains fichiers ni apporter de modifications.</string>
+    <string name="dialog_message_complete_task_files_queue">Voulez-vous vraiment terminer la tâche \? Une fois terminée, certains fichiers ne pourront plus être importés et aucun changement ne pourra être effectué.</string>
 
 </resources>

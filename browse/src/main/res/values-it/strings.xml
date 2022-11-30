@@ -35,7 +35,7 @@
     <string name="offline_empty_title">Nessun contenuto offline</string>
     <string name="offline_empty_message">Il contenuto che hai reso disponibile offline verrà visualizzato qui.</string>
 
-    <string name="offline_sync_unavailable_title">Vuoi utilizzare i dati mobili?</string>
+    <string name="offline_sync_unavailable_title">Vuoi utilizzare i dati mobili\?</string>
     <string name="offline_sync_unavailable_message">Le tue impostazioni saranno sostituite e questa volta il download verrà eseguito usando i dati mobili. Altrimenti, il download inizierà dopo la connessione alla rete Wi-Fi.</string>
     <string name="offline_sync_unavailable_positive">Sì</string>
     <string name="offline_sync_unavailable_negative">Dopo</string>
@@ -56,8 +56,6 @@
     <string name="title_task_view">Visualizzazione compito</string>
     <string name="title_comments">Commenti</string>
     <string name="title_due_date">Scadenza</string>
-    <string name="title_priority">Priorità</string>
-    <string name="title_assignee">Assegnatario</string>
     <string name="title_status">Stato</string>
     <string name="title_identifier">Identificativo</string>
     <string name="text_add_a_comment">Aggiungere un commento&#8230;</string>
@@ -70,7 +68,7 @@
     <string name="title_attached_files">File allegati</string>
     <string name="text_complete">Completato</string>
     <string name="dialog_title_complete_task">Completa compito</string>
-    <string name="dialog_message_complete_task">Vuoi completare il compito? Non potrai più apportare modifiche.</string>
+    <string name="dialog_message_complete_task">Vuoi completare il compito\? Non potrai più apportare modifiche.</string>
     <string name="dialog_negative_button_task">Annulla</string>
     <string name="dialog_positive_button_task">Conferma</string>
     <string name="icon_send_description">Pulsante Invia</string>
@@ -82,17 +80,17 @@
     <string name="icon_due_date_edit">Icona Modifica scadenza</string>
     <string name="suffix_view_all">...Visualizza tutto</string>
     <string name="dialog_title_save_progress">Stato di avanzamento compito</string>
-    <string name="dialog_message_save_progress">Vuoi salvare lo stato di avanzamento?</string>
+    <string name="dialog_message_save_progress">Vuoi salvare lo stato di avanzamento\?</string>
     <string name="text_mark_as_complete">Contrassegna come completato</string>
     <string name="icon_assignee_edit">Icona Modifica assegnatario</string>
     <string name="icon_name_description_edit">Icona Modifica nome e descrizione</string>
     <string name="text_create_task">Crea compito</string>
     <string name="dialog_title_discard_task">Ignora</string>
-    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
+    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche\?</string>
     <string name="icon_delete_attachment">Icona Elimina allegato</string>
-    <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
+    <string name="dialog_title_delete_content">Vuoi eliminare un file\?</string>
     <string name="text_add_attachments">Aggiungi allegati</string>
     <string name="icon_add_attachment">Icona Aggiungi allegati</string>
-    <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito? Una volta completato, non potrai caricare alcuni file né apportare modifiche.</string>
+    <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito\? Una volta completato, non sarà possibile caricare alcuni file né apportare modifiche.</string>
 
 </resources>

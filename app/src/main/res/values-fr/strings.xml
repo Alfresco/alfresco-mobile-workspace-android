@@ -13,7 +13,7 @@
     <string name="nav_title_browse_extension">Enregistrer dans Alfresco</string>
 
     <string name="sign_out_confirmation_title">Déconnexion</string>
-    <string name="sign_out_confirmation_message">Voulez-vous vraiment vous déconnecter ?</string>
+    <string name="sign_out_confirmation_message">Voulez-vous vraiment vous déconnecter \?</string>
     <string name="sign_out_confirmation_positive">Oui</string>
     <string name="sign_out_confirmation_negative">Annuler</string>
 
@@ -31,6 +31,9 @@
     <string name="settings_sync_network_title">Mettre à jour les fichiers hors ligne en utilisant</string>
     <string name="share_limit_message">Impossible de partager plus de 50 éléments multimédias</string>
     <string name="no_type">Pas de type</string>
+    <string name="accessibility_text_user_profile">Bouton du profil d\'utilisateur</string>
+    <string name="accessibility_text_user_info">Nom d\'utilisateur : %s E-mail : %s</string>
+    <string name="accessibility_text_close">Fermer</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>une connexion Wi-Fi uniquement</item>

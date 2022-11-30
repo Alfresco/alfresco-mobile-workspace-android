@@ -79,6 +79,8 @@
     <string name="auth_login_app_title">Sitzung nicht auffindbar</string>
     <string name="auth_login_app_subtitle">Tippen zum Starten von Alfresco Mobile Workspace</string>
     <string name="auth_login_app_ok_button">OK</string>
+    <string name="accessibility_text_close">Schließen</string>
+    <string name="accessibility_text_back">Zurück</string>
 
 
 </resources>

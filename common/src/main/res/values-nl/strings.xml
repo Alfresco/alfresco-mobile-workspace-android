@@ -3,11 +3,22 @@
     <string name="permission_rationale_title">Rechten vereist</string>
     <string name="permission_rationale_positive">OK</string>
     <string name="permission_rationale_negative">Annuleren</string>
-    <string name="label_navigation_back">Knop Terug</string>
+    <string name="label_navigation_back">Terug</string>
     <string name="priority_low">Laag</string>
     <string name="priority_medium">Gemiddeld</string>
     <string name="priority_high">Hoog</string>
     <string name="priority_none">N.v.t.</string>
-    <string name="me_title">Mij</string>
-    <string name="me_title_initial">M</string>
+    <string name="me_title">Ik</string>
+    <string name="me_title_initial">I</string>
+    <string name="accessibility_text_task_row">Titel: %s Toegewezen persoon: %s Prioriteit %s</string>
+    <string name="accessibility_text_simple_row">Titel: %s Pad: %s</string>
+    <string name="accessibility_text_title">Titel: %s</string>
+    <string name="accessibility_text_folder">Map: %s</string>
+    <string name="accessibility_text_title_type">Titel: %s Type: %s</string>
+    <string name="accessibility_text_header">Kop: %s</string>
+    <string name="accessibility_text_more">Meer</string>
+    <string name="accessibility_text_download">Downloaden</string>
+    <string name="accessibility_text_add_favorite">Favoriet toevoegen</string>
+    <string name="accessibility_text_remove_favorite">Favoriet verwijderen</string>
+    <string name="accessibility_text_create_button">Maken</string>
 </resources>

@@ -27,8 +27,7 @@ object ContentDownloader {
         val req = Request.Builder().get().url(uri).build()
         val client = httpClient ?: OkHttpClient()
         val file = File(outputPath)
-        if (file.exists())
-            client.newCall(req).downloadAndSaveTo(file)
+        client.newCall(req).downloadAndSaveTo(file)
     }
 
     suspend fun downloadFile(uri: String, outputPath: String): Flow<String> {

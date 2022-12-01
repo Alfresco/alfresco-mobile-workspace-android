@@ -56,9 +56,11 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.moreButton.isVisible = actionButtonVisibility(entry)
 
+        println("Test == name ${entry.name} path ${entry.path}")
+
         val accessibilityText = if (entry.path.isNullOrEmpty())
             context.getString(
-                R.string.accessibility_text_simple_row, entry.name
+                R.string.accessibility_text_title, entry.name
             ) else context.getString(
             R.string.accessibility_text_simple_row, entry.name, entry.path
         )

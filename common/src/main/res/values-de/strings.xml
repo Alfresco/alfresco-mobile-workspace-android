@@ -8,7 +8,7 @@
     <string name="priority_medium">Mittel</string>
     <string name="priority_high">Hoch</string>
     <string name="priority_none">NV</string>
-    <string name="me_title">Ich</string>
+    <string name="me_title">Mich</string>
     <string name="me_title_initial">M</string>
     <string name="accessibility_text_task_row">Titel: %s Benutzer: %s Priorität %s</string>
     <string name="accessibility_text_simple_row">Titel: %s Pfad: %s</string>

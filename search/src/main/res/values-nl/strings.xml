@@ -63,4 +63,5 @@
     <string name="category.folder">Map</string>
     <string name="type.facet.queries">Facetquery\'s op basis van type</string>
     <string name="search_move_warning">Verplaatsen naar eigen map en submappen is niet mogelijk.</string>
+    <string name="accessibility_text_reset">Opnieuw instellen</string>
 </resources>

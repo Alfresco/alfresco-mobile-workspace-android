@@ -13,7 +13,7 @@
     <string name="nav_title_browse_extension">Speichern für Alfresco</string>
 
     <string name="sign_out_confirmation_title">Abmelden</string>
-    <string name="sign_out_confirmation_message">Möchten Sie sich wirklich abmelden?</string>
+    <string name="sign_out_confirmation_message">Möchten Sie sich wirklich abmelden\?</string>
     <string name="sign_out_confirmation_positive">Ja</string>
     <string name="sign_out_confirmation_negative">Abbrechen</string>
 
@@ -31,6 +31,9 @@
     <string name="settings_sync_network_title">Offlinedateien aktualisieren mithilfe von</string>
     <string name="share_limit_message">Mehr als 50 einzelne Mediendateien können nicht freigegeben werden.</string>
     <string name="no_type">Ohne Typ</string>
+    <string name="accessibility_text_user_profile">Schaltfläche „Benutzerprofil“</string>
+    <string name="accessibility_text_user_info">Benutzername: %s E-Mail: %s</string>
+    <string name="accessibility_text_close">Schließen</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>Nur WLAN</item>

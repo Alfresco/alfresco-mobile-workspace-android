@@ -13,7 +13,7 @@
     <string name="nav_title_browse_extension">Guardar en Alfresco</string>
 
     <string name="sign_out_confirmation_title">Cerrar sesión</string>
-    <string name="sign_out_confirmation_message">¿Seguro que desea cerrar sesión?</string>
+    <string name="sign_out_confirmation_message">¿Seguro que desea cerrar sesión\?</string>
     <string name="sign_out_confirmation_positive">Sí</string>
     <string name="sign_out_confirmation_negative">Cancelar</string>
 
@@ -31,6 +31,9 @@
     <string name="settings_sync_network_title">Actualizar ficheros sin conexión usando</string>
     <string name="share_limit_message">No se pueden compartir más de 50 elementos multimedia</string>
     <string name="no_type">Sin tipo</string>
+    <string name="accessibility_text_user_profile">Botón de perfil de usuario</string>
+    <string name="accessibility_text_user_info">Nombre de usuario: %s Correo electrónico: %s</string>
+    <string name="accessibility_text_close">Cerrar</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>Sólo wifi</item>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="list_loading_message">Cargando&#8230;</string>
 
@@ -11,4 +10,6 @@
     <string name="upload_complete_text_multiple">Finalizada la carga de %d fichero(s)</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="text_read_more_space">...Leer más</string>
+    <string name="title_priority">Prioridad</string>
+    <string name="title_assignee">Usuario asignado</string>
 </resources>

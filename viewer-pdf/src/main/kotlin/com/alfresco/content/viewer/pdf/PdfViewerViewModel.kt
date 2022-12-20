@@ -41,7 +41,7 @@ class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerSt
         }
 
     fun viewerUrl(state: PdfViewerState) =
-        "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
+        if (state.uri.contains("#/preview")) state.uri else "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
 
     fun localDir(state: PdfViewerState) =
         if (state.uri.isLocalPath()) {

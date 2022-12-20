@@ -35,6 +35,14 @@ class ViewerViewModel(
             try {
                 if (state.mode == "local") {
                     loadContent(state.id, OfflineContentLoader(offlineRepository))
+                } else if (state.mode == "share") {
+                    setState {
+                        copy(
+                            ready = true,
+                            viewerUri = "https://mobileapps.envalfresco.com/#/preview/s/h-4u8gmGQcqI7xG7m0Nfwg",
+                            viewerMimeType = "application/pdf"
+                        )
+                    }
                 } else {
                     loadContent(state.id, RemoteContentLoader(browseRepository, renditionRepository))
                 }

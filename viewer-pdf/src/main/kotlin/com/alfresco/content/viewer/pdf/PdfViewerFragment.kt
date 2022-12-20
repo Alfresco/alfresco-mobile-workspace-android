@@ -61,6 +61,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             javaScriptEnabled = true
             @Suppress("DEPRECATION")
             saveFormData = false
+            domStorageEnabled = true
         }
 
         val assetLoader = makeAssetLoader()

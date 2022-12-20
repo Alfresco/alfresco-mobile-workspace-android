@@ -3,6 +3,7 @@ package com.alfresco.content.app.activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity(), MavericksView {
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+
+        navController.navigate(Uri.parse("alfresco://content/view/share/12345678/preview?title=xyz.jpg"))
     }
 
     private fun configure() = withState(viewModel) { state ->

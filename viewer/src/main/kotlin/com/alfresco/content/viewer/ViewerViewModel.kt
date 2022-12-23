@@ -25,12 +25,18 @@ class ViewerViewModel(
     state: ViewerState
 ) : MavericksViewModel<ViewerState>(state) {
 
-    private val offlineRepository = OfflineRepository()
-    private val browseRepository = BrowseRepository()
-    private val renditionRepository = RenditionRepository()
-    private val analyticsManager = AnalyticsManager()
+    private lateinit var offlineRepository : OfflineRepository
+    private lateinit  var browseRepository : BrowseRepository
+    private lateinit  var renditionRepository : RenditionRepository
+    private lateinit  var analyticsManager : AnalyticsManager
 
     init {
+        if (state.mode!="share"){
+           offlineRepository = OfflineRepository()
+            browseRepository = BrowseRepository()
+            renditionRepository = RenditionRepository()
+            analyticsManager = AnalyticsManager()
+        }
         viewModelScope.launch {
             try {
                 if (state.mode == "local") {

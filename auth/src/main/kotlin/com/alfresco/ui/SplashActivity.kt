@@ -10,10 +10,17 @@ import com.alfresco.android.aims.R
 abstract class SplashActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
+    private var externalData = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val extData = intent.data.toString()
+        externalData = if (extData.contains("androidamw:///")) {
+            extData
+        } else {
+            ""
+        }
         setContentView(R.layout.activity_alfresco_splash)
     }
 
@@ -35,6 +42,10 @@ abstract class SplashActivity : AppCompatActivity() {
 
     private fun goToMain() {
         val i = getMainIntent()
+        if (externalData.isNotEmpty()) {
+            i.putExtra(KEY_MODE, "share")
+            i.putExtra(KEY_URL, externalData.substringAfter("androidamw:///"))
+        }
         startActivity(i)
         overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out)
         finish()
@@ -44,5 +55,7 @@ abstract class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val DISPLAY_TIMEOUT = 100L
+        const val KEY_MODE = "remote"
+        const val KEY_URL = "url"
     }
 }

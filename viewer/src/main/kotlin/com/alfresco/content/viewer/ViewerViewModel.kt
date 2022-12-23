@@ -39,7 +39,7 @@ class ViewerViewModel(
                     setState {
                         copy(
                             ready = true,
-                            viewerUri = "https://mobileapps.envalfresco.com/#/preview/s/h-4u8gmGQcqI7xG7m0Nfwg",
+                            viewerUri = state.id,
                             viewerMimeType = "application/pdf"
                         )
                     }

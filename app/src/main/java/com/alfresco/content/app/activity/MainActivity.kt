@@ -3,7 +3,6 @@ package com.alfresco.content.app.activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +20,7 @@ import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.viewer.ViewerActivity
 import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,20 +43,29 @@ class MainActivity : AppCompatActivity(), MavericksView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Check login during creation for faster transition on startup
-        if (viewModel.requiresLogin) {
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
+        if (intent.extras?.containsKey(com.alfresco.ui.SplashActivity.KEY_MODE) == true) {
+            val mode = intent.extras?.getString(com.alfresco.ui.SplashActivity.KEY_MODE, "") ?: ""
+            val url = intent.extras?.getString(com.alfresco.ui.SplashActivity.KEY_URL, "") ?: ""
+            startActivity(
+                Intent(this, ViewerActivity::class.java).putExtra("id", url).putExtra("mode", mode).putExtra("title", "Preview")
+            )
+//            navController.navigate(Uri.parse("alfresco://content/view/${mode}/${url}/preview?title=xyz.jpg"))
             finish()
         } else {
-            configure()
+
+            // Check login during creation for faster transition on startup
+            if (viewModel.requiresLogin) {
+                val i = Intent(this, LoginActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                configure()
+            }
         }
 
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-
-        navController.navigate(Uri.parse("alfresco://content/view/share/12345678/preview?title=xyz.jpg"))
     }
 
     private fun configure() = withState(viewModel) { state ->
@@ -93,14 +102,10 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.auth_signed_out_title))
-            .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
-            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
+        val dialog = MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.auth_signed_out_title)).setMessage(resources.getString(R.string.auth_signed_out_subtitle))
+            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null).setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
                 navigateToReLogin()
-            }
-            .show()
+            }.show()
         signedOutDialog = WeakReference(dialog)
     }
 
@@ -116,17 +121,10 @@ class MainActivity : AppCompatActivity(), MavericksView {
     }
 
     private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        findViewById(android.R.id.content),
-        bottomNav
+        lifecycleScope, findViewById(android.R.id.content), bottomNav
     )
 
-    private fun setupDownloadNotifications() =
-        DownloadMonitor
-            .smallIcon(R.drawable.ic_notification_small)
-            .tint(primaryColor(this))
-            .observe(this)
+    private fun setupDownloadNotifications() = DownloadMonitor.smallIcon(R.drawable.ic_notification_small).tint(primaryColor(this)).observe(this)
 
-    private fun primaryColor(context: Context) =
-        context.getColorForAttribute(R.attr.colorPrimary)
+    private fun primaryColor(context: Context) = context.getColorForAttribute(R.attr.colorPrimary)
 }

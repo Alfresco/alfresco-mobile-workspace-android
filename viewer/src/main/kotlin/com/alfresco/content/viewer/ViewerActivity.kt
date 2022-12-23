@@ -1,6 +1,7 @@
 package com.alfresco.content.viewer
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,9 @@ class ViewerActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        if (intent.extras?.getString("mode") == "share")
+            binding.parentActionBarList.visibility = View.GONE
 
         Action.showActionToasts(
             lifecycleScope,

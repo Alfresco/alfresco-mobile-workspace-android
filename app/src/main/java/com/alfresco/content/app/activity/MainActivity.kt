@@ -3,6 +3,7 @@ package com.alfresco.content.app.activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
+import com.alfresco.auth.ui.observe
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
@@ -21,6 +23,10 @@ import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.viewer.ViewerActivity
+import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.KEY_FOLDER
+import com.alfresco.content.viewer.ViewerArgs.Companion.MODE_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.TITLE_KEY
 import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,36 +42,79 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
-    private lateinit var actionBarController: ActionBarController
+    private var actionBarController: ActionBarController? = null
     private var signedOutDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (intent.extras?.containsKey(com.alfresco.ui.SplashActivity.KEY_MODE) == true) {
-            val mode = intent.extras?.getString(com.alfresco.ui.SplashActivity.KEY_MODE, "") ?: ""
-            val url = intent.extras?.getString(com.alfresco.ui.SplashActivity.KEY_URL, "") ?: ""
-            startActivity(
-                Intent(this, ViewerActivity::class.java).putExtra("id", url).putExtra("mode", mode).putExtra("title", "Preview")
-            )
-//            navController.navigate(Uri.parse("alfresco://content/view/${mode}/${url}/preview?title=xyz.jpg"))
-            finish()
-        } else {
+        observe(viewModel.navigationMode, ::navigateTo)
 
-            // Check login during creation for faster transition on startup
-            if (viewModel.requiresLogin) {
-                val i = Intent(this, LoginActivity::class.java)
-                startActivity(i)
-                finish()
-            } else {
-                configure()
-            }
-        }
+        viewModel.handleDataIntent(
+            intent.extras?.getString(MODE_KEY, ""),
+            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false
+        )
+
+        // Check login during creation for faster transition on startup
 
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+    }
+
+    private fun navigateTo(mode: MainActivityViewModel.NavigationMode) {
+        val data = Triple(
+            intent.extras?.getString(ID_KEY, "") ?: "",
+            intent.extras?.getString(MODE_KEY, "") ?: "",
+            "Preview"
+        )
+
+        when (mode) {
+            MainActivityViewModel.NavigationMode.FOLDER -> {
+                println("MainActivity.navigateTo redirecting ${SessionManager.requireSession}")
+                navController.navigate(
+                    Uri.parse(
+                        "alfresco://content/browsemenu/${
+                            intent.extras?.getString(
+                                MODE_KEY,
+                                ""
+                            )
+                        }/${
+                            intent.extras?.getString(
+                                ID_KEY,
+                                ""
+                            )
+                        }?title=Preview"
+                    )
+                )
+            }
+            MainActivityViewModel.NavigationMode.FILE -> navigateToViewer(data)
+            MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin()
+            MainActivityViewModel.NavigationMode.DEFAULT -> {
+                if (viewModel.requiresLogin) {
+                    navigateToLogin()
+                } else {
+                    configure()
+                }
+            }
+        }
+    }
+
+    private fun navigateToViewer(data: Triple<String, String, String>) {
+        startActivity(
+            Intent(this, ViewerActivity::class.java)
+                .putExtra(ID_KEY, data.first)
+                .putExtra(MODE_KEY, data.second)
+                .putExtra(TITLE_KEY, data.third)
+        )
+        finish()
+    }
+
+    private fun navigateToLogin() {
+        val i = Intent(this, LoginActivity::class.java)
+        startActivity(i)
+        finish()
     }
 
     private fun configure() = withState(viewModel) { state ->
@@ -75,7 +124,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
         val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupActionBar(this, navController, appBarConfiguration)
+        actionBarController?.setupActionBar(this, navController, appBarConfiguration)
 
         bottomNav.setupWithNavController(navController)
 
@@ -85,16 +134,17 @@ class MainActivity : AppCompatActivity(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+
         if (state.requiresReLogin) {
             if (state.isOnline) {
                 showSignedOutPrompt()
             }
         } else {
             // Only when logged in otherwise triggers re-login prompts
-            actionBarController.setProfileIcon(viewModel.profileIcon)
+            actionBarController?.setProfileIcon(viewModel.profileIcon)
         }
-
-        actionBarController.setOnline(state.isOnline)
+        if (actionBarController != null)
+            actionBarController?.setOnline(state.isOnline)
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()

@@ -25,14 +25,14 @@ class ViewerViewModel(
     state: ViewerState
 ) : MavericksViewModel<ViewerState>(state) {
 
-    private lateinit var offlineRepository : OfflineRepository
-    private lateinit  var browseRepository : BrowseRepository
-    private lateinit  var renditionRepository : RenditionRepository
-    private lateinit  var analyticsManager : AnalyticsManager
+    private lateinit var offlineRepository: OfflineRepository
+    private lateinit var browseRepository: BrowseRepository
+    private lateinit var renditionRepository: RenditionRepository
+    private lateinit var analyticsManager: AnalyticsManager
 
     init {
-        if (state.mode!="share"){
-           offlineRepository = OfflineRepository()
+        if (state.mode != "share") {
+            offlineRepository = OfflineRepository()
             browseRepository = BrowseRepository()
             renditionRepository = RenditionRepository()
             analyticsManager = AnalyticsManager()
@@ -72,9 +72,11 @@ class ViewerViewModel(
                     viewerMimeType = mimeType
                 )
             }
-            analyticsManager.previewFile(mimeType ?: "",
+            analyticsManager.previewFile(
+                mimeType ?: "",
                 entry.name.substringAfterLast(".", ""),
-                true)
+                true
+            )
         } else {
             val rendition = loader.rendition(entry)
             analyticsManager.previewFile(

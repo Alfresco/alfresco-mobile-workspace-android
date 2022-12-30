@@ -49,7 +49,21 @@
     <fragment
         android:id="@+id/nav_browse"
         android:name="com.alfresco.content.browse.menu.BrowseMenuFragment"
-        android:label="@string/nav_title_browse" />
+        android:label="@string/nav_title_browse" >
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+        <deepLink app:uri="alfresco://content/browsemenu/{mode}/{id}?title={title}" />
+    </fragment>
 
     <activity
         android:id="@+id/nav_settings"

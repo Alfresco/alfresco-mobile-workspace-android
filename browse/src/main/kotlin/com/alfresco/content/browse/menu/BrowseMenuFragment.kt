@@ -35,12 +35,17 @@ class BrowseMenuFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            if (!it.getString(MODE_KEY).isNullOrEmpty())
-                navigateTo(
-                    getString(R.string.nav_path_my_files), it.getString(TITLE_KEY, ""), PageView.PersonalFiles,
-                    it.getString(ID_KEY, "")
-                )
+        requireActivity().intent?.let {
+            it.extras?.let { bundle ->
+                if (!bundle.getString(MODE_KEY).isNullOrEmpty()) {
+                    navigateTo(
+                        getString(R.string.nav_path_my_files), bundle.getString(TITLE_KEY, "Preview"), PageView.PersonalFiles,
+                        bundle.getString(ID_KEY, "")
+                    )
+                    it.removeExtra(ID_KEY)
+                    it.removeExtra(MODE_KEY)
+                }
+            }
         }
     }
 

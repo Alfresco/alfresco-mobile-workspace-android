@@ -75,7 +75,6 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
                 request: WebResourceRequest?
             ): Boolean {
                 // Open URIs in external browser
-                println("PdfViewerFragment.shouldOverrideUrlLoading ${request?.url}")
                 startActivity(Intent(Intent.ACTION_VIEW, request?.url))
                 return true
             }
@@ -136,10 +135,6 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
     private fun loadContent() =
         withState(viewModel) {
             val targetUrl = viewModel.viewerUrl(it)
-
-            println("PdfViewerFragment.loadContent target == $targetUrl")
-            println("PdfViewerFragment.loadContent web == ${webView.url}")
-
             if (webView.url != targetUrl) {
                 webView.loadUrl(targetUrl)
             }

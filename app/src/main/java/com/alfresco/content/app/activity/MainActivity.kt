@@ -3,7 +3,6 @@ package com.alfresco.content.app.activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -72,8 +71,9 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
         when (mode) {
             MainActivityViewModel.NavigationMode.FOLDER -> {
-                println("MainActivity.navigateTo redirecting ${SessionManager.requireSession}")
-                navController.navigate(
+                bottomNav.selectedItemId = R.id.nav_browse
+
+                /*navController.navigate(
                     Uri.parse(
                         "alfresco://content/browsemenu/${
                             intent.extras?.getString(
@@ -87,13 +87,13 @@ class MainActivity : AppCompatActivity(), MavericksView {
                             )
                         }?title=Preview"
                     )
-                )
+                )*/
             }
             MainActivityViewModel.NavigationMode.FILE -> navigateToViewer(data)
-            MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin()
+            MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin(data)
             MainActivityViewModel.NavigationMode.DEFAULT -> {
                 if (viewModel.requiresLogin) {
-                    navigateToLogin()
+                    navigateToLogin(data)
                 } else {
                     configure()
                 }
@@ -111,8 +111,9 @@ class MainActivity : AppCompatActivity(), MavericksView {
         finish()
     }
 
-    private fun navigateToLogin() {
+    private fun navigateToLogin(data: Triple<String, String, String>) {
         val i = Intent(this, LoginActivity::class.java)
+        intent.extras?.let { i.putExtras(it) }
         startActivity(i)
         finish()
     }
@@ -167,6 +168,8 @@ class MainActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
+        i.putExtra(ID_KEY, intent.extras?.getString(ID_KEY, ""))
+        i.putExtra(MODE_KEY, intent.extras?.getString(MODE_KEY, ""))
         startActivity(i)
     }
 

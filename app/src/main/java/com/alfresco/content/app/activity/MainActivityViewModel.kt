@@ -77,8 +77,8 @@ class MainActivityViewModel(
         // Update connectivity status
         viewModelScope.launch {
             ConnectivityTracker.networkAvailable.execute {
-                    copy(isOnline = it() == true)
-                }
+                copy(isOnline = it() == true)
+            }
         }
 
         // Cleanup unused db entries
@@ -121,7 +121,7 @@ class MainActivityViewModel(
                     val session = SessionManager.currentSession ?: return@launch
                     session.ticket = AuthenticationRepository().fetchTicket()
                     success = true
-                    mode?.let {
+                    if (!mode.isNullOrEmpty()) {
                         if (!isFolder) _navigationMode.value = NavigationMode.FILE
                         else _navigationMode.value = NavigationMode.FOLDER
                     }

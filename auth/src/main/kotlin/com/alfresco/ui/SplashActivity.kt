@@ -30,25 +30,22 @@ abstract class SplashActivity : AppCompatActivity() {
     private fun getEntryIdFromShareURL(): String {
         isPreview = false
         isRemoteFolder = false
-        // ///https://mobileapps.envalfresco.com/#/preview/s/8ljHcqjSQ1ObHJFPMhXeJA
-        // ///https://mobileapps.envalfresco.com/#/personal-files/a7422279-ba45-4be1-8e3a-6afc1c462481
-        // ///https://mobileapps.envalfresco.com/#/personal-files/a7422279-ba45-4be1-8e3a-6afc1c462481/(viewer:view/2f86c9ed-5e9c-4de8-b7b1-e12921322d1c)?location=%2Fpersonal-files%2Fa7422279-ba45-4be1-8e3a-6afc1c462481
         val extData = intent.data.toString()
 
-        if (!extData.contains("androidamw:///")) return ""
+        if (!extData.contains(SCHEME)) return ""
 
-        if (extData.contains("#/preview")) {
+        if (extData.contains(IDENTIFIER_PREVIEW)) {
             isPreview = true
-            return extData.substringAfter("androidamw:///").substringBeforeLast("#Intent")
+            return extData.substringAfter(SCHEME)
         }
 
-        if (!extData.contains("#/personal-files")) return ""
+        if (!extData.contains(IDENTIFIER_PERSONAL_FILES)) return ""
 
-        return if (extData.contains("viewer:view")) {
-            extData.substringAfter("viewer:view/").substringBefore(")")
+        return if (extData.contains(IDENTIFIER_VIEWER)) {
+            extData.substringAfter(IDENTIFIER_VIEWER).substringBefore(DELIMITER_BRACKET)
         } else {
             isRemoteFolder = true
-            extData.substringAfter("#/personal-files/").substringBefore("/")
+            extData.substringAfter(IDENTIFIER_PERSONAL_FILES).substringBefore(DELIMITER_FORWARD_SLASH)
         }
     }
 
@@ -64,6 +61,7 @@ abstract class SplashActivity : AppCompatActivity() {
     private fun goToMain() {
         val i = getMainIntent()
         if (entryId.isNotEmpty()) {
+            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             i.putExtra(MODE_KEY, if (isPreview) VALUE_SHARE else VALUE_REMOTE)
             i.putExtra(KEY_FOLDER, isRemoteFolder)
             i.putExtra(ID_KEY, entryId)
@@ -82,5 +80,11 @@ abstract class SplashActivity : AppCompatActivity() {
         private const val VALUE_REMOTE = "remote"
         private const val VALUE_SHARE = "share"
         private const val KEY_FOLDER = "folder"
+        const val SCHEME = "androidamw:///"
+        const val IDENTIFIER_PREVIEW = "#/preview"
+        const val IDENTIFIER_VIEWER = "viewer:view/"
+        const val IDENTIFIER_PERSONAL_FILES = "#/personal-files/"
+        const val DELIMITER_BRACKET = ")"
+        const val DELIMITER_FORWARD_SLASH = "/"
     }
 }

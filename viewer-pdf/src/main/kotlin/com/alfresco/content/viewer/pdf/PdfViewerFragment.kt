@@ -76,8 +76,6 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             ): Boolean {
                 // Open URIs in external browser
                 println("PdfViewerFragment.shouldOverrideUrlLoading ${request?.url}")
-//                if (request?.url?.toString()?.contains("#/preview") == true)
-//                    return false
                 startActivity(Intent(Intent.ACTION_VIEW, request?.url))
                 return true
             }

@@ -23,6 +23,9 @@ class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerSt
         Uri.parse(state.uri).authority ?: ""
     }
 
+    /**
+     * returns the base url.
+     */
     fun baseUrl(state: PdfViewerState) = if (state.uri.isLocalPath()) {
         "https://${WebViewAssetLoader.DEFAULT_DOMAIN}"
     } else {
@@ -30,6 +33,9 @@ class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerSt
         "${docUri.scheme}://${docUri.authority}"
     }
 
+    /**
+     * returns the asset url
+     */
     fun assetUrl(state: PdfViewerState) = if (state.uri.isLocalPath()) {
         val filename = state.uri.filename()
         "https://${WebViewAssetLoader.DEFAULT_DOMAIN}/$RESERVED_FILES_PATH/$filename"
@@ -37,8 +43,14 @@ class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerSt
         state.uri
     }
 
+    /**
+     * returns the viewer url
+     */
     fun viewerUrl(state: PdfViewerState) = if (state.uri.contains("#/preview")) state.uri.replace("/aca", "") else "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
 
+    /**
+     * it returns true if uri is from local directories otherwise false
+     */
     fun localDir(state: PdfViewerState) = if (state.uri.isLocalPath()) {
         requireNotNull(state.uri.parentFile())
     } else {

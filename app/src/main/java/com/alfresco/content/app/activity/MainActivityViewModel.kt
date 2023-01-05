@@ -134,10 +134,16 @@ class MainActivityViewModel(
         }
     }
 
+    /**
+     * Mark as NavigationMode enum
+     */
     enum class NavigationMode {
         FOLDER, FILE, LOGIN, DEFAULT
     }
 
+    /**
+     * it will handle the intent which will come from the shareable link.
+     */
     fun handleDataIntent(mode: String?, isFolder: Boolean) {
         this.mode = mode
         this.isFolder = isFolder

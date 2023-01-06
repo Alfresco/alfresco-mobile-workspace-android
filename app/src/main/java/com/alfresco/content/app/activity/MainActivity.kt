@@ -72,33 +72,24 @@ class MainActivity : AppCompatActivity(), MavericksView {
         when (mode) {
             MainActivityViewModel.NavigationMode.FOLDER -> {
                 bottomNav.selectedItemId = R.id.nav_browse
-
-                /*navController.navigate(
-                    Uri.parse(
-                        "alfresco://content/browsemenu/${
-                            intent.extras?.getString(
-                                MODE_KEY,
-                                ""
-                            )
-                        }/${
-                            intent.extras?.getString(
-                                ID_KEY,
-                                ""
-                            )
-                        }?title=Preview"
-                    )
-                )*/
             }
-            MainActivityViewModel.NavigationMode.FILE -> navigateToViewer(data)
+            MainActivityViewModel.NavigationMode.FILE -> {
+                removeShareData()
+                checkLogin(data)
+                navigateToViewer(data)
+            }
             MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin(data)
-            MainActivityViewModel.NavigationMode.DEFAULT -> {
-                if (viewModel.requiresLogin) {
-                    navigateToLogin(data)
-                } else {
-                    configure()
-                }
-            }
+            MainActivityViewModel.NavigationMode.DEFAULT -> checkLogin(data)
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        println("MainActivity.onNewIntent $intent")
+        viewModel.handleDataIntent(
+            intent?.extras?.getString(MODE_KEY, ""),
+            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false
+        )
     }
 
     private fun navigateToViewer(data: Triple<String, String, String>) {
@@ -108,7 +99,19 @@ class MainActivity : AppCompatActivity(), MavericksView {
                 .putExtra(MODE_KEY, data.second)
                 .putExtra(TITLE_KEY, data.third)
         )
-        finish()
+    }
+
+    private fun checkLogin(data: Triple<String, String, String>) {
+        if (viewModel.requiresLogin) {
+            navigateToLogin(data)
+        } else {
+            configure()
+        }
+    }
+
+    private fun removeShareData() {
+        intent.replaceExtras(Bundle())
+        intent.data = null
     }
 
     private fun navigateToLogin(data: Triple<String, String, String>) {

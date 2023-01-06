@@ -16,7 +16,10 @@ abstract class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        entryId = getEntryIdFromShareURL()
+        if (intent.data != null && intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0) {
+            // Handle the url passed through the intent
+            entryId = getEntryIdFromShareURL()
+        }
         setContentView(R.layout.activity_alfresco_splash)
     }
 
@@ -79,7 +82,7 @@ abstract class SplashActivity : AppCompatActivity() {
         private const val MODE_KEY = "mode"
         private const val VALUE_REMOTE = "remote"
         private const val VALUE_SHARE = "share"
-        private const val KEY_FOLDER = "folder"
+        const val KEY_FOLDER = "folder"
         const val SCHEME = "androidamw:///"
         const val IDENTIFIER_PREVIEW = "#/preview"
         const val IDENTIFIER_VIEWER = "viewer:view/"

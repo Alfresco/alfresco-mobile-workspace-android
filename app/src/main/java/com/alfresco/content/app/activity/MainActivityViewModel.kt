@@ -121,7 +121,7 @@ class MainActivityViewModel(
                     val session = SessionManager.currentSession ?: return@launch
                     session.ticket = AuthenticationRepository().fetchTicket()
                     success = true
-                    if (!mode.isNullOrEmpty()) {
+                    if (!mode.isNullOrEmpty() && mode.equals("remote")) {
                         if (!isFolder) _navigationMode.value = NavigationMode.FILE
                         else _navigationMode.value = NavigationMode.FOLDER
                     }

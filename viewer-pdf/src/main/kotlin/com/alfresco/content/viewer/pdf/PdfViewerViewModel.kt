@@ -17,38 +17,45 @@ data class PdfViewerState(
 
 class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerState>(state) {
 
-    fun assetDomain(state: PdfViewerState): String =
-        if (state.uri.isLocalPath()) {
-            WebViewAssetLoader.DEFAULT_DOMAIN
-        } else {
-            Uri.parse(state.uri).authority ?: ""
-        }
+    fun assetDomain(state: PdfViewerState): String = if (state.uri.isLocalPath()) {
+        WebViewAssetLoader.DEFAULT_DOMAIN
+    } else {
+        Uri.parse(state.uri).authority ?: ""
+    }
 
-    fun baseUrl(state: PdfViewerState) =
-        if (state.uri.isLocalPath()) {
-            "https://${WebViewAssetLoader.DEFAULT_DOMAIN}"
-        } else {
-            val docUri = Uri.parse(state.uri)
-            "${docUri.scheme}://${docUri.authority}"
-        }
+    /**
+     * returns the base url.
+     */
+    fun baseUrl(state: PdfViewerState) = if (state.uri.isLocalPath()) {
+        "https://${WebViewAssetLoader.DEFAULT_DOMAIN}"
+    } else {
+        val docUri = Uri.parse(state.uri)
+        "${docUri.scheme}://${docUri.authority}"
+    }
 
-    fun assetUrl(state: PdfViewerState) =
-        if (state.uri.isLocalPath()) {
-            val filename = state.uri.filename()
-            "https://${WebViewAssetLoader.DEFAULT_DOMAIN}/$RESERVED_FILES_PATH/$filename"
-        } else {
-            state.uri
-        }
+    /**
+     * returns the asset url
+     */
+    fun assetUrl(state: PdfViewerState) = if (state.uri.isLocalPath()) {
+        val filename = state.uri.filename()
+        "https://${WebViewAssetLoader.DEFAULT_DOMAIN}/$RESERVED_FILES_PATH/$filename"
+    } else {
+        state.uri
+    }
 
-    fun viewerUrl(state: PdfViewerState) =
-        "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
+    /**
+     * returns the viewer url
+     */
+    fun viewerUrl(state: PdfViewerState) = if (state.uri.contains("#/preview")) state.uri.replace("/aca", "") else "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
 
-    fun localDir(state: PdfViewerState) =
-        if (state.uri.isLocalPath()) {
-            requireNotNull(state.uri.parentFile())
-        } else {
-            null
-        }
+    /**
+     * it returns true if uri is from local directories otherwise false
+     */
+    fun localDir(state: PdfViewerState) = if (state.uri.isLocalPath()) {
+        requireNotNull(state.uri.parentFile())
+    } else {
+        null
+    }
 
     companion object {
         const val RESERVED_ASSETS_PATH = "--assets--"

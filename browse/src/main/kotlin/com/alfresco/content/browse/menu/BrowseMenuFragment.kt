@@ -15,6 +15,9 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.navigateToFolder
 import com.alfresco.content.navigateToKnownPath
+import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.MODE_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.TITLE_KEY
 
 class BrowseMenuFragment : Fragment(), MavericksView {
 
@@ -28,6 +31,22 @@ class BrowseMenuFragment : Fragment(), MavericksView {
     ): View {
         binding = FragmentBrowseMenuBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().intent?.let {
+            it.extras?.let { bundle ->
+                if (!bundle.getString(MODE_KEY).isNullOrEmpty()) {
+                    navigateTo(
+                        getString(R.string.nav_path_my_files), bundle.getString(TITLE_KEY, "Preview"), PageView.PersonalFiles,
+                        bundle.getString(ID_KEY, "")
+                    )
+                    it.removeExtra(ID_KEY)
+                    it.removeExtra(MODE_KEY)
+                }
+            }
+        }
     }
 
     override fun invalidate() = withState(viewModel) {
@@ -53,10 +72,9 @@ class BrowseMenuFragment : Fragment(), MavericksView {
         AnalyticsManager().screenViewEvent(PageView.Browse)
     }
 
-    private fun navigateTo(path: String, title: String, pageView: PageView) {
+    private fun navigateTo(path: String, title: String, pageView: PageView, nodeId: String = viewModel.getMyFilesNodeId()) {
         AnalyticsManager().screenViewEvent(pageView)
         if (path == getString(R.string.nav_path_my_files)) {
-            val nodeId = viewModel.getMyFilesNodeId()
             findNavController().navigateToFolder(nodeId, title)
         } else {
             findNavController().navigateToKnownPath(path, title)

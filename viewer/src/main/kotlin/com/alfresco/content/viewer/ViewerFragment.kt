@@ -30,9 +30,12 @@ data class ViewerArgs(
     val mode: String
 ) : Parcelable {
     companion object {
-        private const val ID_KEY = "id"
-        private const val TITLE_KEY = "title"
-        private const val MODE_KEY = "mode"
+        const val ID_KEY = "id"
+        const val TITLE_KEY = "title"
+        const val MODE_KEY = "mode"
+        const val VALUE_REMOTE = "remote"
+        const val VALUE_SHARE = "share"
+        const val KEY_FOLDER = "folder"
 
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(

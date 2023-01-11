@@ -143,6 +143,7 @@ class ViewerFragment : Fragment(), MavericksView {
     ) {
         val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
+            println("Viewer URI == $viewerUri")
             val args = ChildViewerArgs(
                 viewerUri,
                 mimeType

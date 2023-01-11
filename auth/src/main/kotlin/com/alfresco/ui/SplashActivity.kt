@@ -64,7 +64,8 @@ abstract class SplashActivity : AppCompatActivity() {
     private fun goToMain() {
         val i = getMainIntent()
         if (entryId.isNotEmpty()) {
-            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            i.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+//            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             i.putExtra(MODE_KEY, if (isPreview) VALUE_SHARE else VALUE_REMOTE)
             i.putExtra(KEY_FOLDER, isRemoteFolder)
             i.putExtra(ID_KEY, entryId)

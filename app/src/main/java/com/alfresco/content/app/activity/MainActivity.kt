@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
     private var actionBarController: ActionBarController? = null
     private var signedOutDialog = WeakReference<AlertDialog>(null)
+    private var isNewIntent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
             }
             MainActivityViewModel.NavigationMode.FILE -> {
                 removeShareData()
-                checkLogin(data)
+                if (!isNewIntent) checkLogin(data)
                 navigateToViewer(data)
             }
             MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin(data)
@@ -85,7 +86,9 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        println("MainActivity.onNewIntent $intent")
+        this.intent = intent
+        isNewIntent = true
+        println("MainActivity.onNewIntent 1 ${intent?.extras}")
         viewModel.handleDataIntent(
             intent?.extras?.getString(MODE_KEY, ""),
             intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false
@@ -93,6 +96,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
     }
 
     private fun navigateToViewer(data: Triple<String, String, String>) {
+        println("MainActivity.onNewIntent 2 ${data.first} == ${data.second} == ${data.third}")
         startActivity(
             Intent(this, ViewerActivity::class.java)
                 .putExtra(ID_KEY, data.first)

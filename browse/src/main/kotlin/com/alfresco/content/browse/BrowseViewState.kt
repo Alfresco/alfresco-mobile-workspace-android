@@ -18,6 +18,7 @@ data class BrowseViewState(
     val nodeId: String?,
     val moveId: String,
     val parent: Entry? = null,
+    val title: String? = null,
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
@@ -48,7 +49,7 @@ data class BrowseViewState(
             pageEntries
         }
 
-        return copyIncludingUploads(newEntries, uploads, response.pagination.hasMoreItems)
+        return copyIncludingUploads(newEntries, uploads, response.pagination.hasMoreItems).copy(title = response.source?.name)
     }
 
     fun updateUploads(uploads: List<Entry>): BrowseViewState {

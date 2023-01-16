@@ -105,6 +105,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                     viewModel.resetTransferData()
             }
 
+            state.title?.let {
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = it
+            }
+
             if (viewModel.canAddItems(state)) {
                 (view as ViewGroup).addView(makeFab(requireContext()))
             }

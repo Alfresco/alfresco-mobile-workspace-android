@@ -3,13 +3,15 @@ package com.alfresco.content.data
 data class ResponsePaging(
     val entries: List<Entry>,
     val pagination: Pagination,
+    val source: Source? = null,
     val facetContext: FacetContext? = null
 ) {
     companion object {
         fun with(raw: com.alfresco.content.models.NodeChildAssociationPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),
-                Pagination.with(raw.list!!.pagination!!)
+                Pagination.with(raw.list!!.pagination!!),
+                Source.with(raw.list?.source)
             )
         }
 
@@ -27,7 +29,7 @@ data class ResponsePaging(
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                FacetContext.with(raw.list?.context)
+                facetContext = FacetContext.with(raw.list?.context)
             )
         }
 
@@ -38,7 +40,7 @@ data class ResponsePaging(
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                FacetContext.with(raw.list?.context)
+                facetContext = FacetContext.with(raw.list?.context)
             )
         }
 

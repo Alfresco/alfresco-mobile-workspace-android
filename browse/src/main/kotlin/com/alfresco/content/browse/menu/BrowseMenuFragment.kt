@@ -17,7 +17,6 @@ import com.alfresco.content.navigateToFolder
 import com.alfresco.content.navigateToKnownPath
 import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
 import com.alfresco.content.viewer.ViewerArgs.Companion.MODE_KEY
-import com.alfresco.content.viewer.ViewerArgs.Companion.TITLE_KEY
 
 class BrowseMenuFragment : Fragment(), MavericksView {
 
@@ -39,7 +38,7 @@ class BrowseMenuFragment : Fragment(), MavericksView {
             it.extras?.let { bundle ->
                 if (!bundle.getString(MODE_KEY).isNullOrEmpty()) {
                     navigateTo(
-                        getString(R.string.nav_path_my_files), bundle.getString(TITLE_KEY, "Preview"), PageView.PersonalFiles,
+                        getString(R.string.nav_path_my_files), "", PageView.PersonalFiles,
                         bundle.getString(ID_KEY, "")
                     )
                     it.removeExtra(ID_KEY)

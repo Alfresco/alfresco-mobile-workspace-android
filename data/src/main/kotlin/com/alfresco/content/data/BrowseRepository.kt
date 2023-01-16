@@ -49,7 +49,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 folderId,
                 skipCount,
                 maxItems,
-                include = extraFields()
+                include = extraFields(),
+                includeSource = true
             )
         )
 

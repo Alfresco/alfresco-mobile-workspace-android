@@ -88,7 +88,6 @@ class MainActivity : AppCompatActivity(), MavericksView {
         super.onNewIntent(intent)
         this.intent = intent
         isNewIntent = true
-        println("MainActivity.onNewIntent 1 ${intent?.extras}")
         viewModel.handleDataIntent(
             intent?.extras?.getString(MODE_KEY, ""),
             intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false
@@ -96,7 +95,6 @@ class MainActivity : AppCompatActivity(), MavericksView {
     }
 
     private fun navigateToViewer(data: Triple<String, String, String>) {
-        println("MainActivity.onNewIntent 2 ${data.first} == ${data.second} == ${data.third}")
         startActivity(
             Intent(this, ViewerActivity::class.java)
                 .putExtra(ID_KEY, data.first)
@@ -177,6 +175,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         i.putExtra(ID_KEY, intent.extras?.getString(ID_KEY, ""))
         i.putExtra(MODE_KEY, intent.extras?.getString(MODE_KEY, ""))
+        i.putExtra(KEY_FOLDER, intent.extras?.getBoolean(KEY_FOLDER, false))
         startActivity(i)
     }
 

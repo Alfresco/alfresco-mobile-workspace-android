@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         i.putExtra(ID_KEY, intent.extras?.getString(ID_KEY, ""))
         i.putExtra(MODE_KEY, intent.extras?.getString(MODE_KEY, ""))
+        i.putExtra(KEY_FOLDER, intent.extras?.getBoolean(KEY_FOLDER, false))
         startActivity(i)
     }
 

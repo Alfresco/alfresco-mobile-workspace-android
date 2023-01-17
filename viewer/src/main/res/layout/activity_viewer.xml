@@ -26,6 +26,7 @@
         android:backgroundTint="?attr/separatorColor" />
 
     <com.alfresco.ui.MaterialShapeView
+        android:id="@+id/parent_action_bar_list"
         style="?attr/bottomNavigationStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

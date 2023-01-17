@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.airbnb.mvrx.MavericksState
@@ -26,6 +28,8 @@ import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.viewer.ViewerArgs.Companion.VALUE_REMOTE
+import com.alfresco.content.viewer.ViewerArgs.Companion.VALUE_SHARE
 import com.alfresco.events.on
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -48,6 +52,10 @@ class MainActivityViewModel(
     private var refreshTicketJob: Job? = null
     private var syncService: SyncService? = null
     var readPermission: Boolean = false
+    private val _navigationMode = MutableLiveData<NavigationMode>()
+    val navigationMode: LiveData<NavigationMode> get() = _navigationMode
+    private var mode: String? = null
+    private var isFolder: Boolean = false
 
     init {
         // Start a new session
@@ -69,11 +77,9 @@ class MainActivityViewModel(
 
         // Update connectivity status
         viewModelScope.launch {
-            ConnectivityTracker
-                .networkAvailable
-                .execute {
-                    copy(isOnline = it() == true)
-                }
+            ConnectivityTracker.networkAvailable.execute {
+                copy(isOnline = it() == true)
+            }
         }
 
         // Cleanup unused db entries
@@ -85,12 +91,11 @@ class MainActivityViewModel(
         OfflineRepository(session).removeCompletedUploads()
     }
 
-    private fun configureSync(context: Context, coroutineScope: CoroutineScope) =
-        SyncService(context, coroutineScope).also { service ->
-            coroutineScope.on<ActionAddOffline> { service.sync() }
-            coroutineScope.on<ActionRemoveOffline> { service.sync() }
-            coroutineScope.on<ActionCaptureMedia> { service.upload() }
-            coroutineScope.on<ActionScanDocument> { service.upload() }
+    private fun configureSync(context: Context, coroutineScope: CoroutineScope) = SyncService(context, coroutineScope).also { service ->
+        coroutineScope.on<ActionAddOffline> { service.sync() }
+        coroutineScope.on<ActionRemoveOffline> { service.sync() }
+        coroutineScope.on<ActionCaptureMedia> { service.upload() }
+        coroutineScope.on<ActionScanDocument> { service.upload() }
             coroutineScope.on<ActionUploadMedia> { service.upload() }
             coroutineScope.on<ActionSyncNow> { service.syncNow(it.overrideNetwork) }
             coroutineScope.on<TransferSyncNow> { service.upload() }
@@ -99,8 +104,7 @@ class MainActivityViewModel(
     val requiresLogin: Boolean
         get() = SessionManager.currentSession == null
 
-    val profileIcon: Uri =
-        PeopleRepository.myPicture()
+    val profileIcon: Uri = PeopleRepository.myPicture()
 
     override fun onCleared() {
         super.onCleared()
@@ -119,12 +123,41 @@ class MainActivityViewModel(
                     val session = SessionManager.currentSession ?: return@launch
                     session.ticket = AuthenticationRepository().fetchTicket()
                     success = true
+                    if (!mode.isNullOrEmpty() && mode.equals("remote")) {
+                        if (!isFolder) _navigationMode.value = NavigationMode.FILE
+                        else _navigationMode.value = NavigationMode.FOLDER
+                    }
                 } catch (_: Exception) {
                     delay(60 * 1000L)
                 }
             }
             syncService?.uploadIfNeeded()
             syncService?.syncIfNeeded()
+        }
+    }
+
+    /**
+     * Mark as NavigationMode enum
+     */
+    enum class NavigationMode {
+        FOLDER, FILE, LOGIN, DEFAULT
+    }
+
+    /**
+     * it will handle the intent which will come from the shareable link.
+     */
+    fun handleDataIntent(mode: String?, isFolder: Boolean) {
+        this.mode = mode
+        this.isFolder = isFolder
+        when (mode) {
+            VALUE_SHARE -> {
+                _navigationMode.value = NavigationMode.FILE
+            }
+            VALUE_REMOTE -> {
+                if (requiresLogin) _navigationMode.value = NavigationMode.LOGIN
+                else _navigationMode.value = NavigationMode.DEFAULT
+            }
+            else -> _navigationMode.value = NavigationMode.DEFAULT
         }
     }
 

@@ -62,6 +62,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             @Suppress("DEPRECATION")
             saveFormData = false
             safeBrowsingEnabled = true
+            domStorageEnabled = true
         }
 
         val assetLoader = makeAssetLoader()
@@ -137,7 +138,6 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
     private fun loadContent() =
         withState(viewModel) {
             val targetUrl = viewModel.viewerUrl(it)
-
             if (webView.url != targetUrl) {
                 webView.loadUrl(targetUrl)
             }

@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -23,9 +24,6 @@ import com.alfresco.content.viewer.common.LoadingListener
 import com.alfresco.content.viewer.databinding.ViewerBinding
 import kotlinx.parcelize.Parcelize
 
-/**
- * Marked as ViewerArgs data class
- */
 @Parcelize
 data class ViewerArgs(
     val id: String,
@@ -33,29 +31,25 @@ data class ViewerArgs(
     val mode: String
 ) : Parcelable {
     companion object {
-        private const val ID_KEY = "id"
-        private const val TITLE_KEY = "title"
-        private const val MODE_KEY = "mode"
+        const val ID_KEY = "id"
+        const val TITLE_KEY = "title"
+        const val MODE_KEY = "mode"
+        const val VALUE_REMOTE = "remote"
+        const val VALUE_SHARE = "share"
+        const val KEY_FOLDER = "folder"
 
-        /**
-         * returns the ViewerArgs obj after adding the ID_KEY, TITLE_KEY, MODE_KEY from arguments
-         */
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(
-                args.getString(ID_KEY, ""),
-                args.getString(TITLE_KEY, ""),
-                args.getString(MODE_KEY, "")
+                args.getString(ID_KEY, ""), args.getString(TITLE_KEY, ""), args.getString(MODE_KEY, "")
             )
         }
     }
 }
 
-/**
- * Marked as ViewerFragment class
- */
 class ViewerFragment : Fragment(), MavericksView {
 
     private lateinit var args: ViewerArgs
+
     @OptIn(InternalMavericksApi::class)
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: ViewerBinding
@@ -90,8 +84,7 @@ class ViewerFragment : Fragment(), MavericksView {
         super.onAttachFragment(childFragment)
 
         if (childFragment is ChildViewerFragment) {
-            this.childFragment = childFragment
-                .apply {
+            this.childFragment = childFragment.apply {
                     loadingListener = viewerLoadingListener
                 }
         }
@@ -104,7 +97,10 @@ class ViewerFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.title.text = args.title
+        if (state.entry?.name != null) {
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = state.entry.name
+            binding.title.text = state.entry.name
+        } else binding.title.text = args.title
         val type = MimeType.with(state.entry?.mimeType)
         binding.icon.setImageDrawable(
             ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
@@ -117,8 +113,7 @@ class ViewerFragment : Fragment(), MavericksView {
         if (state.ready) {
             if (state.viewerMimeType != null && state.viewerUri != null) {
                 configureViewer(
-                    state.viewerUri,
-                    state.viewerMimeType
+                    state.viewerUri, state.viewerMimeType
                 )
                 show(Status.LoadingPreview)
             } else {
@@ -137,10 +132,7 @@ class ViewerFragment : Fragment(), MavericksView {
         val fragment = ContextualActionsBarFragment().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.action_list_bar, fragment)
-            .commit()
+        parentFragmentManager.beginTransaction().replace(R.id.action_list_bar, fragment).commit()
     }
 
     private fun configureViewer(
@@ -149,17 +141,15 @@ class ViewerFragment : Fragment(), MavericksView {
     ) {
         val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
+            println("Viewer URI == $viewerUri")
             val args = ChildViewerArgs(
-                viewerUri,
-                mimeType
+                viewerUri, mimeType
             )
             val fragment = ViewerRegistry.previewProvider(mimeType)?.createViewer()
             requireNotNull(fragment)
             fragment.arguments = bundleOf(Mavericks.KEY_ARG to args)
 
-            childFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, fragment, tag)
-                .commit()
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, fragment, tag).commit()
         }
     }
 
@@ -200,10 +190,6 @@ class ViewerFragment : Fragment(), MavericksView {
     }
 
     private enum class Status {
-        LoadingMetadata,
-        PreparingPreview,
-        LoadingPreview,
-        PreviewLoaded,
-        NotSupported
+        LoadingMetadata, PreparingPreview, LoadingPreview, PreviewLoaded, NotSupported
     }
 }

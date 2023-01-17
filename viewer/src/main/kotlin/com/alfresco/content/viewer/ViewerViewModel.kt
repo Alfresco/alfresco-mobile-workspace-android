@@ -25,16 +25,30 @@ class ViewerViewModel(
     state: ViewerState
 ) : MavericksViewModel<ViewerState>(state) {
 
-    private val offlineRepository = OfflineRepository()
-    private val browseRepository = BrowseRepository()
-    private val renditionRepository = RenditionRepository()
-    private val analyticsManager = AnalyticsManager()
+    private lateinit var offlineRepository: OfflineRepository
+    private lateinit var browseRepository: BrowseRepository
+    private lateinit var renditionRepository: RenditionRepository
+    private lateinit var analyticsManager: AnalyticsManager
 
     init {
+        if (state.mode != "share") {
+            offlineRepository = OfflineRepository()
+            browseRepository = BrowseRepository()
+            renditionRepository = RenditionRepository()
+            analyticsManager = AnalyticsManager()
+        }
         viewModelScope.launch {
             try {
                 if (state.mode == "local") {
                     loadContent(state.id, OfflineContentLoader(offlineRepository))
+                } else if (state.mode == "share") {
+                    setState {
+                        copy(
+                            ready = true,
+                            viewerUri = state.id,
+                            viewerMimeType = "application/pdf"
+                        )
+                    }
                 } else {
                     loadContent(state.id, RemoteContentLoader(browseRepository, renditionRepository))
                 }
@@ -58,9 +72,11 @@ class ViewerViewModel(
                     viewerMimeType = mimeType
                 )
             }
-            analyticsManager.previewFile(mimeType ?: "",
+            analyticsManager.previewFile(
+                mimeType ?: "",
                 entry.name.substringAfterLast(".", ""),
-                true)
+                true
+            )
         } else {
             val rendition = loader.rendition(entry)
             analyticsManager.previewFile(

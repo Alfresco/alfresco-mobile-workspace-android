@@ -19,12 +19,18 @@ import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.DiscoveryService
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.activity.LoginViewModel.Companion.DISTRIBUTION_VERSION
+import com.alfresco.auth.ui.observe
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.viewer.ViewerActivity
+import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.KEY_FOLDER
+import com.alfresco.content.viewer.ViewerArgs.Companion.MODE_KEY
+import com.alfresco.content.viewer.ViewerArgs.Companion.TITLE_KEY
 import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,26 +49,87 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
-    private lateinit var actionBarController: ActionBarController
+    private var actionBarController: ActionBarController? = null
     private var signedOutDialog = WeakReference<AlertDialog>(null)
+    private var isNewIntent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        observe(viewModel.navigationMode, ::navigateTo)
+
+        viewModel.handleDataIntent(
+            intent.extras?.getString(MODE_KEY, ""),
+            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false
+        )
+
         // Check login during creation for faster transition on startup
-        if (viewModel.requiresLogin) {
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            finish()
-        } else {
-            lifecycleScope.launch { checkDistribution() }
-            configure()
-        }
 
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+    }
+
+    private fun navigateTo(mode: MainActivityViewModel.NavigationMode) {
+        val data = Triple(
+            intent.extras?.getString(ID_KEY, "") ?: "",
+            intent.extras?.getString(MODE_KEY, "") ?: "",
+            "Preview"
+        )
+
+        when (mode) {
+            MainActivityViewModel.NavigationMode.FOLDER -> {
+                bottomNav.selectedItemId = R.id.nav_browse
+            }
+            MainActivityViewModel.NavigationMode.FILE -> {
+                removeShareData()
+                if (!isNewIntent) checkLogin(data)
+                navigateToViewer(data)
+            }
+            MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin(data)
+            MainActivityViewModel.NavigationMode.DEFAULT -> checkLogin(data)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        isNewIntent = true
+        viewModel.handleDataIntent(
+            intent?.extras?.getString(MODE_KEY, ""),
+            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false
+        )
+    }
+
+    private fun navigateToViewer(data: Triple<String, String, String>) {
+        startActivity(
+            Intent(this, ViewerActivity::class.java)
+                .putExtra(ID_KEY, data.first)
+                .putExtra(MODE_KEY, data.second)
+                .putExtra(TITLE_KEY, data.third)
+        )
+    }
+
+    private fun checkLogin(data: Triple<String, String, String>) {
+        if (viewModel.requiresLogin) {
+            navigateToLogin(data)
+        } else {
+            lifecycleScope.launch { checkDistribution() }
+            configure()
+        }
+    }
+
+    private fun removeShareData() {
+        intent.replaceExtras(Bundle())
+        intent.data = null
+    }
+
+    private fun navigateToLogin(data: Triple<String, String, String>) {
+        val i = Intent(this, LoginActivity::class.java)
+        intent.extras?.let { i.putExtras(it) }
+        startActivity(i)
+        finish()
     }
 
     private suspend fun checkDistribution() {
@@ -96,7 +163,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
 
         val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupActionBar(this, navController, appBarConfiguration)
+        actionBarController?.setupActionBar(this, navController, appBarConfiguration)
 
         bottomNav.setupWithNavController(navController)
 
@@ -106,16 +173,17 @@ class MainActivity : AppCompatActivity(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+
         if (state.requiresReLogin) {
             if (state.isOnline) {
                 showSignedOutPrompt()
             }
         } else {
             // Only when logged in otherwise triggers re-login prompts
-            actionBarController.setProfileIcon(viewModel.profileIcon)
+            actionBarController?.setProfileIcon(viewModel.profileIcon)
         }
-
-        actionBarController.setOnline(state.isOnline)
+        if (actionBarController != null)
+            actionBarController?.setOnline(state.isOnline)
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
@@ -123,14 +191,10 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.auth_signed_out_title))
-            .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
-            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
+        val dialog = MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.auth_signed_out_title)).setMessage(resources.getString(R.string.auth_signed_out_subtitle))
+            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null).setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
                 navigateToReLogin()
-            }
-            .show()
+            }.show()
         signedOutDialog = WeakReference(dialog)
     }
 
@@ -142,6 +206,9 @@ class MainActivity : AppCompatActivity(), MavericksView {
         i.putExtra(LoginViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
+        i.putExtra(ID_KEY, intent.extras?.getString(ID_KEY, ""))
+        i.putExtra(MODE_KEY, intent.extras?.getString(MODE_KEY, ""))
+        i.putExtra(KEY_FOLDER, intent.extras?.getBoolean(KEY_FOLDER, false))
         startActivity(i)
     }
 
@@ -151,12 +218,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         bottomNav
     )
 
-    private fun setupDownloadNotifications() =
-        DownloadMonitor
-            .smallIcon(R.drawable.ic_notification_small)
-            .tint(primaryColor(this))
-            .observe(this)
+    private fun setupDownloadNotifications() = DownloadMonitor.smallIcon(R.drawable.ic_notification_small).tint(primaryColor(this)).observe(this)
 
-    private fun primaryColor(context: Context) =
-        context.getColorForAttribute(R.attr.colorPrimary)
+    private fun primaryColor(context: Context) = context.getColorForAttribute(R.attr.colorPrimary)
 }

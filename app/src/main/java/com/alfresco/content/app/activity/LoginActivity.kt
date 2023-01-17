@@ -74,6 +74,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
 
     private fun navigateToMain() {
         val i = Intent(this, MainActivity::class.java)
+        intent.extras?.let { i.putExtras(it) }
         i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(i)
         finish()

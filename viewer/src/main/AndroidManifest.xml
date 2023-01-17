@@ -6,6 +6,7 @@
     <application>
         <activity
             android:name=".ViewerActivity"
+            android:hardwareAccelerated="true"
             android:configChanges="orientation|screenSize" />
     </application>
 </manifest>

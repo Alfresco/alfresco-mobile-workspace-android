@@ -144,8 +144,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
         bottomNav.setOnItemSelectedListener { item ->
             // In order to get the expected behavior, you have to call default Navigation method manually
             NavigationUI.onNavDestinationSelected(item, navController)
-
-            return@setOnItemSelectedListener true
+            true
         }
     }
 

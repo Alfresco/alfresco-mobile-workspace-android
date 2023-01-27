@@ -13,6 +13,7 @@ import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import java.io.File
+import java.net.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -48,7 +49,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * returns the content uri to fetch the content data from server
      */
     fun contentUri(entry: Entry): String {
-        return "https://mobileapps.envalfresco.com/activiti-app/app/rest/content/${entry.id}/raw"
+        val baseUrl = SessionManager.currentSession?.baseUrl
+        return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/app/rest/content/${entry.id}/raw"
     }
 
     /**

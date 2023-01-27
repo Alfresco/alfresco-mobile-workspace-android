@@ -7,11 +7,11 @@ data class ResponsePaging(
     val facetContext: FacetContext? = null
 ) {
     companion object {
-        fun with(raw: com.alfresco.content.models.NodeChildAssociationPaging): ResponsePaging {
+        fun with(raw: com.alfresco.content.models.NodeChildAssociationPaging, email: String? = null): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                Source.with(raw.list?.source)
+                Source.with(raw.list?.source, email)
             )
         }
 

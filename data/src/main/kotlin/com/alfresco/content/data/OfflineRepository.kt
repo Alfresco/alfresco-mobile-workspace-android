@@ -109,15 +109,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 }
             }.order(Entry_.name).build()
 
-    fun offlineSearch(name: String/*, isFile: Boolean, isFolder: Boolean*/): List<Entry> =
+    fun offlineSearch(name: String): List<Entry> =
         box.query()
             .apply {
                 contains(Entry_.name, name, StringOrder.CASE_INSENSITIVE)
                 equal(Entry_.isOffline, true)
-                /*if (isFile)
-                    equal(Entry_.type, Entry.Type.FILE.name, StringOrder.CASE_INSENSITIVE)
-                if (isFolder)
-                    equal(Entry_.type, Entry.Type.FOLDER.name, StringOrder.CASE_INSENSITIVE)*/
             }.order(Entry_.name).build().find()
 
     internal fun fetchTopLevelOfflineEntries() =

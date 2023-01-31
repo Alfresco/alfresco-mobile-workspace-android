@@ -97,7 +97,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             )
         )
 
-    suspend fun offlineSearch(name: String, filters: SearchFilters): ResponsePaging {
+    fun offlineSearch(name: String, filters: SearchFilters): ResponsePaging {
         val isFile = filters.contains(SearchFilter.Files)
         val isFolder = filters.contains(SearchFilter.Folders)
         val list = if (isFile && isFolder)

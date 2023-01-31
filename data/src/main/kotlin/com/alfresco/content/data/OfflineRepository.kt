@@ -37,7 +37,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box = ObjectBox.boxStore.boxFor()
     }
 
-    fun entry(id: String): Entry? = box.query().equal(Entry_.id, id, StringOrder.CASE_SENSITIVE).build().findFirst()
+    fun entry(id: String): Entry? =
+        box.query()
+            .equal(Entry_.id, id, StringOrder.CASE_SENSITIVE)
+            .build()
+            .findFirst()
 
     fun markForSync(entry: Entry) = update(entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING))
 
@@ -51,7 +55,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * updating the total transfer count
      */
     fun updateTransferSize(size: Int) {
-        val list = box.query().equal(Entry_.isTotalEntry, true).equal(Entry_.isProcessService, false).build().find()
+        val list = box.query()
+            .equal(Entry_.isTotalEntry, true)
+            .equal(Entry_.isProcessService, false)
+            .build()
+            .find()
         if (list.isEmpty()) {
             val entry = Entry(totalCount = size, isTotalEntry = true)
             entry.also { box.put(it) }
@@ -66,41 +74,71 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * returns the transfer size count
      */
     fun getTotalTransfersSize(): Int {
-        val list = box.query().equal(Entry_.isTotalEntry, true).equal(Entry_.isProcessService, false).build().find()
+        val list = box.query()
+            .equal(Entry_.isTotalEntry, true)
+            .equal(Entry_.isProcessService, false)
+            .build()
+            .find()
         return if (list.isEmpty()) 0 else list[0].totalCount
     }
 
     fun offlineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
         val query = offlineEntriesQuery(parentId)
         val subscription = query.subscribe().observer { data ->
-                val count = data.count().toLong()
-                trySendBlocking(
-                    ResponsePaging(
-                        data, Pagination(
-                            count, false, 0, count, count
-                        )
+            val count = data.count().toLong()
+            trySendBlocking(
+                ResponsePaging(
+                    data, Pagination(
+                        count, false, 0, count, count
                     )
                 )
-            }
+            )
+        }
         awaitClose { subscription.cancel() }
     }
 
-    private fun offlineEntriesQuery(parentId: String?) = box.query().apply {
-            if (parentId != null) {
-                equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-                // Exclude uploads from synced folders
-                equal(Entry_.isUpload, false)
-            } else {
+    private fun offlineEntriesQuery(parentId: String?) =
+        box.query()
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                    // Exclude uploads from synced folders
+                    equal(Entry_.isUpload, false)
+                } else {
+                    equal(Entry_.isOffline, true)
+                }
+            }.order(Entry_.name).build()
+
+    /**
+     * returns the list offline entries from local database
+     */
+    fun offlineSearch(name: String): List<Entry> =
+        box.query()
+            .apply {
+                contains(Entry_.name, name, StringOrder.CASE_INSENSITIVE)
                 equal(Entry_.isOffline, true)
-            }
-        }.order(Entry_.name).build()
+            }.order(Entry_.name).build().find()
 
-    internal fun fetchTopLevelOfflineEntries() = box.query().equal(Entry_.isOffline, true).build().find()
+    internal fun fetchTopLevelOfflineEntries() =
+        box.query()
+            .equal(Entry_.isOffline, true)
+            .build()
+            .find()
 
-    internal fun fetchAllOfflineEntries() = box.query().notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE).equal(Entry_.isUpload, false).build().find()
+    internal fun fetchAllOfflineEntries() =
+        box.query()
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.isUpload, false)
+            .build()
+            .find()
 
     private fun fetchAllTransferEntries() =
-        box.query().notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE).equal(Entry_.isUpload, true).equal(Entry_.isProcessService, false).build().find()
+        box.query()
+            .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.isProcessService, false)
+            .build()
+            .find()
 
     internal fun fetchOfflineEntry(target: Entry) = entry(target.id)
 
@@ -200,16 +238,26 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         File(srcPath).renameTo(dest)
     }
 
-    internal fun fetchPendingUploads() = box.query().equal(Entry_.isUpload, true).notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE).build().find()
+    internal fun fetchPendingUploads() =
+        box.query()
+            .equal(Entry_.isUpload, true)
+            .notEqual(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
+            .build()
+            .find()
 
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
     fun observeUploads(parentId: String, isProcessService: Boolean = false): Flow<List<Entry>> = callbackFlow {
-        val query = box.query().equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE).equal(Entry_.isUpload, true).equal(Entry_.isProcessService, isProcessService).order(Entry_.name).build()
+        val query = box.query()
+            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.isProcessService, isProcessService)
+            .order(Entry_.name)
+            .build()
         val subscription = query.subscribe().observer {
-                trySendBlocking(it)
-            }
+            trySendBlocking(it)
+        }
         awaitClose { subscription.cancel() }
     }
 
@@ -217,30 +265,52 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      * observer for transfer uploads
      */
     fun observeTransferUploads(): Flow<List<Entry>> = callbackFlow {
-        val query = box.query().equal(Entry_.isUpload, true).equal(Entry_.isProcessService, false).equal(Entry_.id, "", StringOrder.CASE_SENSITIVE).order(Entry_.name).build()
+        val query = box.query()
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.isProcessService, false)
+            .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
+            .order(Entry_.name)
+            .build()
         val subscription = query.subscribe().observer {
-                trySendBlocking(it)
-            }
+            trySendBlocking(it)
+        }
         awaitClose { subscription.cancel() }
     }
 
-    // Removes a completed upload with id
-    fun removeUpload(id: String) = box.query().equal(Entry_.id, id, StringOrder.CASE_SENSITIVE).equal(Entry_.isUpload, true).build().remove()
+    /**
+     * Removes a completed upload with id
+     */
+    fun removeUpload(id: String) =
+        box.query()
+            .equal(Entry_.id, id, StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.isUpload, true)
+            .build()
+            .remove()
 
-    fun removeCompletedUploads(parentId: String? = null) = box.query().equal(Entry_.isUpload, true).equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE).apply {
-            if (parentId != null) {
-                equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            }
-        }.build().remove()
+    /**
+     * Removes all the completed upload entries from database.
+     */
+    fun removeCompletedUploads(parentId: String? = null) =
+        box.query()
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                }
+            }.build().remove()
 
     /**
      * remove the task entries on the basis of task ID from local db.
      */
-    fun removeTaskEntries(parentId: String? = null) = box.query().equal(Entry_.isProcessService, true).apply {
-            if (parentId != null) {
-                equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            }
-        }.build().remove()
+    fun removeTaskEntries(parentId: String? = null) =
+        box.query()
+            .equal(Entry_.isProcessService, true)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                }
+            }.build().remove()
 
     fun contentUri(entry: Entry): String = "file://${contentFile(entry).absolutePath}"
 

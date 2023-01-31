@@ -97,6 +97,9 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             )
         )
 
+    /**
+     * returns the ResponsePaging obj after filtering the data on the basis of files and folders
+     */
     fun offlineSearch(name: String, filters: SearchFilters): ResponsePaging {
         val isFile = filters.contains(SearchFilter.Files)
         val isFolder = filters.contains(SearchFilter.Folders)

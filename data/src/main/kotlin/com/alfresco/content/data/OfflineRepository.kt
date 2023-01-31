@@ -109,6 +109,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
                 }
             }.order(Entry_.name).build()
 
+    /**
+     * returns the list offline entries from local database
+     */
     fun offlineSearch(name: String): List<Entry> =
         box.query()
             .apply {
@@ -274,7 +277,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         awaitClose { subscription.cancel() }
     }
 
-    // Removes a completed upload with id
+    /**
+     * Removes a completed upload with id
+     */
     fun removeUpload(id: String) =
         box.query()
             .equal(Entry_.id, id, StringOrder.CASE_SENSITIVE)
@@ -282,6 +287,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .remove()
 
+    /**
+     * Removes all the completed upload entries from database.
+     */
     fun removeCompletedUploads(parentId: String? = null) =
         box.query()
             .equal(Entry_.isUpload, true)

@@ -25,6 +25,16 @@ data class ResponsePaging(
             )
         }
 
+        /**
+         * return the response with updated extension value
+         */
+        fun with(entries: List<Entry>): ResponsePaging {
+            return ResponsePaging(
+                entries,
+                Pagination.empty()
+            )
+        }
+
         fun with(raw: com.alfresco.content.models.ResultSetPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),

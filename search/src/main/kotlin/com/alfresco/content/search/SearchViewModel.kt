@@ -18,6 +18,7 @@ import com.alfresco.content.data.SearchFacetQueries
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.data.emptySearchFacetFields
 import com.alfresco.content.data.emptySearchFacetIntervals
@@ -26,6 +27,7 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
+import com.alfresco.content.network.ConnectivityTracker
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,19 +86,22 @@ class SearchViewModel(
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                if (state.isExtension)
-                    repository.search(
-                        it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
-                    )
+                if (canSearchOverCurrentNetwork())
+                    if (state.isExtension)
+                        repository.search(
+                            it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
+                        )
+                    else
+                        repository.search(
+                            it.terms, it.contextId, it.filters, it.advanceSearchFilter,
+                            SearchFacetData(
+                                searchFacetFields = it.listFacetFields,
+                                searchFacetQueries = it.listFacetQueries,
+                                searchFacetIntervals = it.listFacetIntervals
+                            ), it.skipCount, it.maxItems
+                        )
                 else
-                    repository.search(
-                        it.terms, it.contextId, it.filters, it.advanceSearchFilter,
-                        SearchFacetData(
-                            searchFacetFields = it.listFacetFields,
-                            searchFacetQueries = it.listFacetQueries,
-                            searchFacetIntervals = it.listFacetIntervals
-                        ), it.skipCount, it.maxItems
-                    )
+                    repository.offlineSearch(it.terms, it.filters)
             }) {
                 if (it is Loading) {
                     copy(request = it)
@@ -176,6 +181,8 @@ class SearchViewModel(
      * true if search filters available otherwise false
      */
     fun isShowAdvanceFilterView(list: List<SearchItem>?): Boolean {
+        if (!canSearchOverCurrentNetwork())
+            return false
         return !list.isNullOrEmpty()
     }
 
@@ -400,6 +407,10 @@ class SearchViewModel(
             searchEvents.value = params
         }
     }
+
+    private fun canSearchOverCurrentNetwork() =
+        Settings(context).canSyncOverMeteredNetwork ||
+                !ConnectivityTracker.isActiveNetworkMetered(context)
 
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)

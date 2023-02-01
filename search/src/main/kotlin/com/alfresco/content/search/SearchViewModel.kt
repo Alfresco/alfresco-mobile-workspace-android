@@ -107,7 +107,7 @@ class SearchViewModel(
                             ), it.skipCount, it.maxItems
                         )
                 else
-                    repository.offlineSearch(it.terms, it.filters)
+                    repository.offlineSearch(it.terms)
             }) {
                 if (it is Loading) {
                     copy(request = it)

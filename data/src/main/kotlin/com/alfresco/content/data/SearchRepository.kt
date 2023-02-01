@@ -111,7 +111,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
             offlineRepository.offlineSearch(name).filter { it.isFolder }
         else emptyList()
 
-        return ResponsePaging.with(list)
+        return ResponsePaging.with(offlineRepository.offlineSearch(name))
     }
 
     private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {

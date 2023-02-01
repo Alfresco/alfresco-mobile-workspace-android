@@ -18,6 +18,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
@@ -130,6 +134,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
+            binding.recyclerViewChips.visibility = View.VISIBLE
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
                 binding.parentAdvanceSearch.visibility = View.VISIBLE
                 binding.chipGroup.visibility = View.GONE
@@ -143,9 +148,30 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        if (state.isOnline) {
+            disableOfflineSearch()
+        } else {
+            enableOfflineSearch()
+        }
         setSearchFilterLocalizedName(state)
         epoxyController.requestModelBuild()
     }
+
+    private fun disableOfflineSearch() {
+        TransitionManager.beginDelayedTransition(binding.offlineBanner, makeTransition())
+        binding.offlineBanner.visibility = View.GONE
+        setAdvanceSearchFiltersData()
+    }
+
+    private fun enableOfflineSearch() {
+        TransitionManager.beginDelayedTransition(binding.offlineBanner, makeTransition())
+        binding.recyclerViewChips.visibility = View.GONE
+        binding.parentAdvanceSearch.visibility = View.GONE
+        binding.chipGroup.visibility = View.GONE
+        binding.offlineBanner.visibility = View.VISIBLE
+    }
+
+    private fun makeTransition() = TransitionSet().addTransition(Fade()).addTransition(ChangeBounds())
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)

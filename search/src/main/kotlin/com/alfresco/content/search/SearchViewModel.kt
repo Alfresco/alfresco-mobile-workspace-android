@@ -78,8 +78,14 @@ class SearchViewModel(
 
         setState { copy(listSearchFilters = appConfigModel.search) }
 
+        // Update connectivity status
         viewModelScope.launch {
+            ConnectivityTracker.networkAvailable.execute {
+                copy(isOnline = it() == true)
+            }
+        }
 
+        viewModelScope.launch {
             merge(
                 liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
                 searchEvents
@@ -181,8 +187,6 @@ class SearchViewModel(
      * true if search filters available otherwise false
      */
     fun isShowAdvanceFilterView(list: List<SearchItem>?): Boolean {
-        if (!canSearchOverCurrentNetwork())
-            return false
         return !list.isNullOrEmpty()
     }
 

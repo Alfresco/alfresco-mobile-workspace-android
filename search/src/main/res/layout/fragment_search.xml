@@ -127,28 +127,6 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/offline_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="8dp"
-        android:background="?attr/separatorColor"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_uploading_files"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="8dp"
-            android:text="@string/message_you_are_offline"
-            android:textColor="?attr/colorPrimary" />
-
-    </RelativeLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

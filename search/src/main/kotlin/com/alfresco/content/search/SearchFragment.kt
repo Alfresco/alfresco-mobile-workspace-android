@@ -18,10 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.transition.ChangeBounds
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
@@ -134,7 +130,6 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
-            binding.recyclerViewChips.visibility = View.VISIBLE
             if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
                 binding.parentAdvanceSearch.visibility = View.VISIBLE
                 binding.chipGroup.visibility = View.GONE
@@ -158,20 +153,19 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun disableOfflineSearch() {
-        TransitionManager.beginDelayedTransition(binding.offlineBanner, makeTransition())
-        binding.offlineBanner.visibility = View.GONE
         setAdvanceSearchFiltersData()
     }
 
     private fun enableOfflineSearch() {
-        TransitionManager.beginDelayedTransition(binding.offlineBanner, makeTransition())
-        binding.recyclerViewChips.visibility = View.GONE
-        binding.parentAdvanceSearch.visibility = View.GONE
-        binding.chipGroup.visibility = View.GONE
-        binding.offlineBanner.visibility = View.VISIBLE
+        withState(viewModel) { state ->
+            if (state.selectedFilterIndex == -1) {
+                val index = viewModel.getOfflineFilterIndex(state.listSearchFilters)
+                viewModel.copyFilterIndex(index)
+                binding.rlDropDownSearch.setOnClickListener(null)
+                applyAdvanceFilters(index, state.listSearchCategoryChips?.toMutableList() ?: mutableListOf())
+            }
+        }
     }
-
-    private fun makeTransition() = TransitionSet().addTransition(Fade()).addTransition(ChangeBounds())
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
@@ -256,7 +250,13 @@ class SearchFragment : Fragment(), MavericksView {
         withState(viewModel) { state ->
             var index = state.selectedFilterIndex
             if (state.selectedFilterIndex == -1) {
-                index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                if (!viewModel.canSearchOverCurrentNetwork()) {
+                    binding.actionDown.visibility = View.GONE
+                    index = viewModel.getOfflineFilterIndex(state.listSearchFilters)
+                } else {
+                    binding.actionDown.visibility = View.VISIBLE
+                    index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                }
                 viewModel.copyFilterIndex(index)
             }
             when (searchFilters?.get(index)?.resetButton) {
@@ -286,7 +286,8 @@ class SearchFragment : Fragment(), MavericksView {
                 searchFilterPopup.dismiss()
             }
         }
-        binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        if (viewModel.canSearchOverCurrentNetwork())
+            binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
         binding.actionReset.setOnClickListener { resetAllFilters() }
     }
 

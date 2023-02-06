@@ -161,6 +161,7 @@ class SearchFragment : Fragment(), MavericksView {
             if (state.selectedFilterIndex == -1) {
                 val index = viewModel.getOfflineFilterIndex(state.listSearchFilters)
                 viewModel.copyFilterIndex(index)
+                binding.actionDown.visibility = View.GONE
                 binding.rlDropDownSearch.setOnClickListener(null)
                 applyAdvanceFilters(index, state.listSearchCategoryChips?.toMutableList() ?: mutableListOf())
             }

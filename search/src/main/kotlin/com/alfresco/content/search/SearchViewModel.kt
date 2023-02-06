@@ -122,7 +122,7 @@ class SearchViewModel(
      * returns the all available search filters
      */
     fun getSearchFilterList(): List<SearchItem>? {
-        return appConfigModel.search
+        return if (!canSearchOverCurrentNetwork()) appConfigModel.search else appConfigModel.search?.filter { it.name?.lowercase() != "CATEGORY.OFFLINE".lowercase() }
     }
 
     /**
@@ -152,14 +152,17 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.default == true }) ?: -1
     }
 
+    /**
+     * returns the offline filter index otherwise -1
+     */
     fun getOfflineFilterIndex(list: List<SearchItem>?): Int {
-        return list?.indexOf(list.find { it.name?.lowercase() == "offline" }) ?: -1
+        return list?.indexOf(list.find { it.name?.lowercase() == "CATEGORY.OFFLINE".lowercase() }) ?: -1
     }
 
     /**
      * updated the search chip for relative filter by selecting it from dropdown
      */
-    fun updateSearchChipCategoryList(index: Int) = withState { state ->
+    private fun updateSearchChipCategoryList(index: Int) = withState { state ->
         val list = mutableListOf<SearchChipCategory>()
 
         getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
@@ -422,6 +425,9 @@ class SearchViewModel(
         }
     }
 
+    /**
+     * returns true if device has active network connection otherwise false
+     */
     fun canSearchOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
                 !ConnectivityTracker.isActiveNetworkMetered(context)

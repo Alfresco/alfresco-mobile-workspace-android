@@ -159,9 +159,6 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.name?.lowercase() == "CATEGORY.OFFLINE".lowercase() }) ?: -1
     }
 
-    /**
-     * updated the search chip for relative filter by selecting it from dropdown
-     */
     private fun updateSearchChipCategoryList(index: Int) = withState { state ->
         val list = mutableListOf<SearchChipCategory>()
 

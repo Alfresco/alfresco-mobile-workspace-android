@@ -100,17 +100,16 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     /**
      * returns the ResponsePaging obj after filtering the data on the basis of files and folders
      */
-    fun offlineSearch(name: String, filters: SearchFilters): ResponsePaging {
-        val isFile = filters.contains(SearchFilter.Files)
-        val isFolder = filters.contains(SearchFilter.Folders)
-        val list = if (isFile && isFolder)
+    fun offlineSearch(name: String, listFacetFields: AdvanceSearchFilters): ResponsePaging {
+        val folderSearchData = listFacetFields.find { it.query.contains("cm:folder") }
+        val fileSearchData = listFacetFields.find { it.query.contains("cm:content") }
+        val list = if (fileSearchData != null && folderSearchData != null)
             offlineRepository.offlineSearch(name)
-        else if (isFile)
-            offlineRepository.offlineSearch(name).filter { it.isFile }
-        else if (isFolder)
+        else if (folderSearchData != null)
             offlineRepository.offlineSearch(name).filter { it.isFolder }
-        else emptyList()
-
+        else if (fileSearchData != null)
+            offlineRepository.offlineSearch(name).filter { it.isFile }
+        else offlineRepository.offlineSearch(name)
         return ResponsePaging.with(list)
     }
 

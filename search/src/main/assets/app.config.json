@@ -597,6 +597,39 @@
         ]
       },
       "name": "CATEGORY.FOLDER"
+    },
+    {
+      "name": "CATEGORY.OFFLINE",
+      "resetButton": true,
+      "categories": [
+        {
+          "id": "queryType",
+          "name": "APP.SEARCH.RADIO.TYPE",
+          "enabled": true,
+          "component": {
+            "selector": "radio",
+            "settings": {
+              "field": null,
+              "pageSize": 5,
+              "options": [
+                {
+                  "name": "APP.SEARCH.RADIO.ALL",
+                  "value": "TYPE:'cm:folder' OR TYPE:'cm:content'",
+                  "default": true
+                },
+                {
+                  "name": "APP.SEARCH.RADIO.FOLDER",
+                  "value": "TYPE:'cm:folder'"
+                },
+                {
+                  "name": "APP.SEARCH.RADIO.DOCUMENT",
+                  "value": "TYPE:'cm:content'"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ],
   "search-headers": {

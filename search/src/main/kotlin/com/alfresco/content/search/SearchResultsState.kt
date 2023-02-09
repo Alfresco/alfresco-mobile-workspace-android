@@ -26,7 +26,7 @@ data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-
+    val isOnline: Boolean = true,
     val selectedFilterIndex: Int = -1,
     val listSearchFilters: List<SearchItem>? = emptyList(),
     val listSearchCategoryChips: List<SearchChipCategory>? = emptyList(),

@@ -51,7 +51,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 maxItems,
                 include = extraFields(),
                 includeSource = true
-            )
+            ), session.account.email
         )
 
     /**

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.InternalMavericksApi
@@ -170,6 +171,12 @@ class MainActivity : AppCompatActivity(), MavericksView {
         setupActionToasts()
         MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
+
+        bottomNav.setOnItemSelectedListener { item ->
+            // In order to get the expected behavior, you have to call default Navigation method manually
+            NavigationUI.onNavDestinationSelected(item, navController)
+            true
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

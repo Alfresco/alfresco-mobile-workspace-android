@@ -41,7 +41,6 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
-import java.lang.IllegalArgumentException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -144,8 +143,29 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+        if (state.isOnline) {
+            disableOfflineSearch()
+        } else {
+            enableOfflineSearch()
+        }
         setSearchFilterLocalizedName(state)
         epoxyController.requestModelBuild()
+    }
+
+    private fun disableOfflineSearch() {
+        setAdvanceSearchFiltersData()
+    }
+
+    private fun enableOfflineSearch() {
+        withState(viewModel) { state ->
+            if (state.selectedFilterIndex == -1) {
+                val index = viewModel.getOfflineFilterIndex(state.listSearchFilters)
+                viewModel.copyFilterIndex(index)
+                binding.actionDown.visibility = View.GONE
+                binding.rlDropDownSearch.setOnClickListener(null)
+                applyAdvanceFilters(index, state.listSearchCategoryChips?.toMutableList() ?: mutableListOf())
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -231,7 +251,13 @@ class SearchFragment : Fragment(), MavericksView {
         withState(viewModel) { state ->
             var index = state.selectedFilterIndex
             if (state.selectedFilterIndex == -1) {
-                index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                if (!viewModel.canSearchOverCurrentNetwork()) {
+                    binding.actionDown.visibility = View.GONE
+                    index = viewModel.getOfflineFilterIndex(state.listSearchFilters)
+                } else {
+                    binding.actionDown.visibility = View.VISIBLE
+                    index = viewModel.getDefaultSearchFilterIndex(state.listSearchFilters)
+                }
                 viewModel.copyFilterIndex(index)
             }
             when (searchFilters?.get(index)?.resetButton) {
@@ -261,7 +287,8 @@ class SearchFragment : Fragment(), MavericksView {
                 searchFilterPopup.dismiss()
             }
         }
-        binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        if (viewModel.canSearchOverCurrentNetwork())
+            binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
         binding.actionReset.setOnClickListener { resetAllFilters() }
     }
 

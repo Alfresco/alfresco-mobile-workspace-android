@@ -79,6 +79,8 @@
     <string name="auth_login_app_title">Session non disponible</string>
     <string name="auth_login_app_subtitle">Appuyez sur pour lancer Alfresco Mobile Workspace.</string>
     <string name="auth_login_app_ok_button">Ok</string>
+    <string name="accessibility_text_close">Fermer</string>
+    <string name="accessibility_text_back">Retour</string>
 
 
 </resources>

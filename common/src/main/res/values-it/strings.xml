@@ -1,13 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_rationale_title">Autorizzazioni necessarie</string>
     <string name="permission_rationale_positive">OK</string>
     <string name="permission_rationale_negative">Annulla</string>
-    <string name="label_navigation_back">Pulsante Indietro</string>
+    <string name="label_navigation_back">Indietro</string>
     <string name="priority_low">Bassa</string>
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
     <string name="priority_none">N/D</string>
-    <string name="me_title">Io</string>
-    <string name="me_title_initial">I</string>
+    <string name="me_title">Me stesso</string>
+    <string name="me_title_initial">M</string>
+    <string name="accessibility_text_task_row">Titolo: %s Assegnatario: %s Priorità %s</string>
+    <string name="accessibility_text_simple_row">Titolo: %s Percorso: %s</string>
+    <string name="accessibility_text_title">Titolo: %s</string>
+    <string name="accessibility_text_folder">Cartella: %s</string>
+    <string name="accessibility_text_title_type">Titolo: %s Tipo: %s</string>
+    <string name="accessibility_text_header">Intestazione: %s</string>
+    <string name="accessibility_text_more">Altro</string>
+    <string name="accessibility_text_download">Scarica</string>
+    <string name="accessibility_text_add_favorite">Aggiungi a Preferiti</string>
+    <string name="accessibility_text_remove_favorite">Rimuovi da Preferiti</string>
+    <string name="accessibility_text_create_button">Crea</string>
 </resources>

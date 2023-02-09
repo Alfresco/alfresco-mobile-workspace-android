@@ -18,6 +18,7 @@ import com.alfresco.content.data.SearchFacetQueries
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.data.emptySearchFacetFields
 import com.alfresco.content.data.emptySearchFacetIntervals
@@ -26,6 +27,7 @@ import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
+import com.alfresco.content.network.ConnectivityTracker
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,7 +67,7 @@ class SearchViewModel(
 
         appConfigModel = repository.getAppConfig()
         // TODO: move search params to state object
-        val defaultIndex = appConfigModel.search?.indexOfFirst { it.default == true }
+        val defaultIndex = getDefaultIndex(state)
         params = SearchParams(
             "", state.contextId, defaultFilters(state), defaultAdvanceFilters(state),
             defaultFacetQueries(defaultIndex), defaultFacetIntervals(defaultIndex),
@@ -76,27 +78,36 @@ class SearchViewModel(
 
         setState { copy(listSearchFilters = appConfigModel.search) }
 
+        // Update connectivity status
         viewModelScope.launch {
+            ConnectivityTracker.networkAvailable.execute {
+                copy(isOnline = it() == true, selectedFilterIndex = -1)
+            }
+        }
 
+        viewModelScope.launch {
             merge(
                 liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
                 searchEvents
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                if (state.isExtension)
-                    repository.search(
-                        it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
-                    )
+                if (canSearchOverCurrentNetwork())
+                    if (state.isExtension)
+                        repository.search(
+                            it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
+                        )
+                    else
+                        repository.search(
+                            it.terms, it.contextId, it.filters, it.advanceSearchFilter,
+                            SearchFacetData(
+                                searchFacetFields = it.listFacetFields,
+                                searchFacetQueries = it.listFacetQueries,
+                                searchFacetIntervals = it.listFacetIntervals
+                            ), it.skipCount, it.maxItems
+                        )
                 else
-                    repository.search(
-                        it.terms, it.contextId, it.filters, it.advanceSearchFilter,
-                        SearchFacetData(
-                            searchFacetFields = it.listFacetFields,
-                            searchFacetQueries = it.listFacetQueries,
-                            searchFacetIntervals = it.listFacetIntervals
-                        ), it.skipCount, it.maxItems
-                    )
+                    repository.offlineSearch(it.terms, it.advanceSearchFilter)
             }) {
                 if (it is Loading) {
                     copy(request = it)
@@ -111,7 +122,7 @@ class SearchViewModel(
      * returns the all available search filters
      */
     fun getSearchFilterList(): List<SearchItem>? {
-        return appConfigModel.search
+        return if (!canSearchOverCurrentNetwork()) appConfigModel.search else appConfigModel.search?.filter { it.name?.lowercase() != "CATEGORY.OFFLINE".lowercase() }
     }
 
     /**
@@ -142,9 +153,13 @@ class SearchViewModel(
     }
 
     /**
-     * updated the search chip for relative filter by selecting it from dropdown
+     * returns the offline filter index otherwise -1
      */
-    fun updateSearchChipCategoryList(index: Int) = withState { state ->
+    fun getOfflineFilterIndex(list: List<SearchItem>?): Int {
+        return list?.indexOf(list.find { it.name?.lowercase() == "CATEGORY.OFFLINE".lowercase() }) ?: -1
+    }
+
+    private fun updateSearchChipCategoryList(index: Int) = withState { state ->
         val list = mutableListOf<SearchChipCategory>()
 
         getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
@@ -219,18 +234,24 @@ class SearchViewModel(
         val list = emptyAdvanceFilters()
         if (state.isContextual)
             list.add(AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name))
-        val index = appConfigModel.search?.indexOfFirst { it.default == true }
-        if (index != null)
+        val index = getDefaultIndex(state)
+        if (index != null && index != -1)
             list.addAll(initAdvanceFilters(index))
         return list
     }
+
+    private fun getDefaultIndex(state: SearchResultsState) =
+        if (canSearchOverCurrentNetwork())
+            appConfigModel.search?.indexOfFirst { it.default == true }
+        else
+            getDefaultSearchFilterIndex(state.listSearchFilters)
 
     /**
      * return the default facet fields list from app config json using the index
      */
     fun defaultFacetFields(index: Int?): SearchFacetFields {
         val list = emptySearchFacetFields()
-        if (index != null) {
+        if (index != null && index != -1) {
             appConfigModel.search?.get(index)?.facetFields?.fields?.toMutableList()?.let {
                 list.addAll(it)
             }
@@ -243,7 +264,7 @@ class SearchViewModel(
      */
     fun defaultFacetQueries(index: Int?): SearchFacetQueries {
         val list = emptySearchFacetQueries()
-        if (index != null) {
+        if (index != null && index != -1) {
             appConfigModel.search?.get(index)?.facetQueries?.queries?.toMutableList()?.let {
                 list.addAll(it)
             }
@@ -256,7 +277,7 @@ class SearchViewModel(
      */
     fun defaultFacetIntervals(index: Int?): SearchFacetIntervals {
         val list = emptySearchFacetIntervals()
-        if (index != null) {
+        if (index != null && index != -1) {
             appConfigModel.search?.get(index)?.facetIntervals?.intervals?.toMutableList()?.let {
                 list.addAll(it)
             }
@@ -400,6 +421,13 @@ class SearchViewModel(
             searchEvents.value = params
         }
     }
+
+    /**
+     * returns true if device has active network connection otherwise false
+     */
+    fun canSearchOverCurrentNetwork() =
+        Settings(context).canSyncOverMeteredNetwork ||
+                !ConnectivityTracker.isActiveNetworkMetered(context)
 
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)

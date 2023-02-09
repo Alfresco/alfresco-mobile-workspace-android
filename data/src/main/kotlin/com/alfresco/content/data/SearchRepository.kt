@@ -28,6 +28,10 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         session.createService(SearchApi::class.java)
     }
 
+    private val offlineRepository: OfflineRepository by lazy {
+        OfflineRepository()
+    }
+
     private val queryService: QueriesApi by lazy {
         session.createService(QueriesApi::class.java)
     }
@@ -92,6 +96,22 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 includeFrom(filters)
             )
         )
+
+    /**
+     * returns the ResponsePaging obj after filtering the data on the basis of files and folders
+     */
+    fun offlineSearch(name: String, listFacetFields: AdvanceSearchFilters): ResponsePaging {
+        val folderSearchData = listFacetFields.find { it.query.contains("cm:folder") }
+        val fileSearchData = listFacetFields.find { it.query.contains("cm:content") }
+        val list = if (fileSearchData != null && folderSearchData != null)
+            offlineRepository.offlineSearch(name)
+        else if (folderSearchData != null)
+            offlineRepository.offlineSearch(name).filter { it.isFolder }
+        else if (fileSearchData != null)
+            offlineRepository.offlineSearch(name).filter { it.isFile }
+        else offlineRepository.offlineSearch(name)
+        return ResponsePaging.with(list)
+    }
 
     private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {
         val isContextual = advanceSearchFilters.find {

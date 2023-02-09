@@ -79,6 +79,8 @@
     <string name="auth_login_app_title">Sessie niet beschikbaar</string>
     <string name="auth_login_app_subtitle">Tik om Alfresco Mobile Workspace te starten.</string>
     <string name="auth_login_app_ok_button">OK</string>
+    <string name="accessibility_text_close">Sluiten</string>
+    <string name="accessibility_text_back">Terug</string>
 
 
 </resources>

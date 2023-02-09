@@ -31,6 +31,9 @@
     <string name="settings_sync_network_title">Offlinebestanden bijwerken met</string>
     <string name="share_limit_message">Kan niet meer dan 50 media-items delen</string>
     <string name="no_type">Geen type</string>
+    <string name="accessibility_text_user_profile">Knop Gebruikersprofiel</string>
+    <string name="accessibility_text_user_info">Gebruikersnaam: %s E-mailadres: %s</string>
+    <string name="accessibility_text_close">Sluiten</string>
 
     <string-array name="settings_sync_network_value_labels">
         <item>Alleen Wi-Fi</item>

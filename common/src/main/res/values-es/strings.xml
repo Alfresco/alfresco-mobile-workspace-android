@@ -1,13 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_rationale_title">Se necesitan permisos</string>
     <string name="permission_rationale_positive">Aceptar</string>
     <string name="permission_rationale_negative">Cancelar</string>
-    <string name="label_navigation_back">Botón Atrás</string>
+    <string name="label_navigation_back">Volver</string>
     <string name="priority_low">Baja</string>
     <string name="priority_medium">Mediano</string>
     <string name="priority_high">Alta</string>
     <string name="priority_none">NA</string>
-    <string name="me_title">Yo-</string>
+    <string name="me_title">Yo</string>
     <string name="me_title_initial">Y</string>
+    <string name="accessibility_text_task_row">Título: %s Asignado: %s Prioridad %s</string>
+    <string name="accessibility_text_simple_row">Título: %s Ruta: %s</string>
+    <string name="accessibility_text_title">Título: %s</string>
+    <string name="accessibility_text_folder">Carpeta: %s</string>
+    <string name="accessibility_text_title_type">Título: %s Tipo: %s</string>
+    <string name="accessibility_text_header">Encabezado: %s</string>
+    <string name="accessibility_text_more">Más</string>
+    <string name="accessibility_text_download">Descargar</string>
+    <string name="accessibility_text_add_favorite">Añadir Favorito</string>
+    <string name="accessibility_text_remove_favorite">Eliminar Favorito</string>
+    <string name="accessibility_text_create_button">Crear</string>
 </resources>

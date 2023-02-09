@@ -35,7 +35,7 @@
     <string name="offline_empty_title">Geen offlinecontent</string>
     <string name="offline_empty_message">Content die u offline beschikbaar maakt,\nwordt hier weergegeven.</string>
 
-    <string name="offline_sync_unavailable_title">Mobiele gegevens gebruiken?</string>
+    <string name="offline_sync_unavailable_title">Mobiele gegevens gebruiken\?</string>
     <string name="offline_sync_unavailable_message">Hiermee worden uw instellingen overschreven en vindt het downloaden deze keer plaats via een mobiele gegevens. Anders begint het downloaden later nadat verbinding is gemaakt met Wi-Fi.</string>
     <string name="offline_sync_unavailable_positive">Ja</string>
     <string name="offline_sync_unavailable_negative">Later</string>
@@ -70,7 +70,7 @@
     <string name="title_attached_files">Bijgevoegde bestanden</string>
     <string name="text_complete">Voltooien</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
-    <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>
+    <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien\? U kunt geen wijzigingen meer aanbrengen.</string>
     <string name="dialog_negative_button_task">Annuleren</string>
     <string name="dialog_positive_button_task">Bevestigen</string>
     <string name="icon_send_description">Knop Verzenden</string>
@@ -82,17 +82,17 @@
     <string name="icon_due_date_edit">Pictogram Vervaldatum bewerken</string>
     <string name="suffix_view_all">...Alle weergeven</string>
     <string name="dialog_title_save_progress">Voortgang van de taak</string>
-    <string name="dialog_message_save_progress">Wilt u de voortgang opslaan?</string>
+    <string name="dialog_message_save_progress">Wilt u de voortgang opslaan\?</string>
     <string name="text_mark_as_complete">Als voltooid markeren</string>
     <string name="icon_assignee_edit">Pictogram Toegewezen persoon bewerken</string>
     <string name="icon_name_description_edit">Pictogram Naam &amp; beschrijving bewerken</string>
     <string name="text_create_task">Taak creëren</string>
     <string name="dialog_title_discard_task">Negeren</string>
-    <string name="dialog_message_discard_task">Wilt u de wijzigingen negeren?</string>
+    <string name="dialog_message_discard_task">Wilt u de wijzigingen negeren\?</string>
     <string name="icon_delete_attachment">Pictogram Bijlage verwijderen</string>
-    <string name="dialog_title_delete_content">Bestand verwijderen?</string>
+    <string name="dialog_title_delete_content">Bestand verwijderen\?</string>
     <string name="text_add_attachments">Bijlagen toevoegen</string>
     <string name="icon_add_attachment">Pictogram Bijlage toevoegen</string>
-    <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien? Nadat de taak is voltooid, kunt u sommige bestanden niet uploaden en kunt u geen wijzigingen aanbrengen.</string>
+    <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien\? Nadat de taak is voltooid, kunnen sommige bestanden niet worden geüpload en kunnen geen wijzigingen worden aangebracht.</string>
 
 </resources>

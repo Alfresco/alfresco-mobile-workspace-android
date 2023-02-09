@@ -10,4 +10,6 @@
     <string name="upload_complete_text_multiple">%d fichier(s) a terminé l\'importation</string>
     <string name="upload_percentage_text">%.1f%%</string>
     <string name="text_read_more_space">...En savoir plus</string>
+    <string name="title_priority">Priorité</string>
+    <string name="title_assignee">Personne assignée</string>
 </resources>

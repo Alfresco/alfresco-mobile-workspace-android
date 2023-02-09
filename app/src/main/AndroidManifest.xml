@@ -22,7 +22,6 @@
             android:launchMode="singleInstance"
             android:logo="@drawable/ic_launcher_foreground"
             android:windowSoftInputMode="adjustResize">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -31,10 +30,10 @@
 
                 <data android:mimeType="*/*" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activity.SplashActivity"
+            android:exported="true"
             android:theme="@style/Theme.Alfresco.Splash"
             android:exported="true">
             <intent-filter>
@@ -42,13 +41,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="androidamw" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.SettingsActivity" />
-        <activity android:name="com.alfresco.auth.pkce.RedirectUriReceiverActivity"
+        <activity android:name=".activity.SettingsActivity" /><activity
+            android:name="com.alfresco.auth.pkce.RedirectUriReceiverActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -65,11 +72,9 @@
         <activity
             android:name="com.alfresco.content.browse.preview.LocalPreviewActivity"
             android:configChanges="orientation|screenSize" />
-
         <activity
             android:name=".activity.MoveActivity"
             android:windowSoftInputMode="adjustNothing" />
-
     </application>
 
 </manifest>

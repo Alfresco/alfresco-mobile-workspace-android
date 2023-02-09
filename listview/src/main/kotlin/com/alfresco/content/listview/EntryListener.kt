@@ -10,5 +10,5 @@ interface EntryListener {
     /**
      * It will get called once new entry created.
      */
-    fun onEntryCreated(entry: ParentEntry)
+    fun onEntryCreated(entry: ParentEntry) {}
 }

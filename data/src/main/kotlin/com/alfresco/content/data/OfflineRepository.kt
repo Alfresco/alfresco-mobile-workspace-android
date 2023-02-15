@@ -116,8 +116,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box.query()
             .apply {
                 contains(Entry_.name, name, StringOrder.CASE_INSENSITIVE)
-                notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
-                equal(Entry_.isUpload, false)
+                equal(Entry_.isOffline, true)
             }.order(Entry_.name).build().find()
 
     internal fun fetchTopLevelOfflineEntries() =

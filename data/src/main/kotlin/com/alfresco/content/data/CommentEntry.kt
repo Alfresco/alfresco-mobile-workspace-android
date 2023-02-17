@@ -26,7 +26,7 @@ data class CommentEntry(
                 message = data.message ?: "",
                 created = data.created,
                 userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails()
-            )
+            ).withAssignData()
         }
 
         /**
@@ -39,5 +39,14 @@ data class CommentEntry(
                 created = ZonedDateTime.now()
             )
         }
+    }
+
+    private fun withAssignData(): CommentEntry {
+        val apsUser = TaskRepository().getAPSUser()
+        return if (apsUser.id == this.userDetails?.id) {
+            copy(
+                userDetails = this.userDetails.let { UserDetails.with(it) }
+            )
+        } else this
     }
 }

@@ -136,8 +136,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
 
         val response = service.createNode(
             nodeId = requireNotNull(parentId),
-            nodeBodyCreate = nodeBodyCreate,
-            autoRename = true
+            nodeBodyCreate = nodeBodyCreate
         )
 
         return Entry.with(response.entry)

@@ -51,7 +51,13 @@ interface Action {
         } catch (ex: kotlin.Exception) {
             sendAnalytics(false)
             Logger.e(ex)
-            bus.send(Error(context.getString(R.string.action_generic_error)))
+            when (title) {
+                R.string.action_create_folder -> {
+                    if (ex.message?.contains("409") == true)
+                        bus.send(Error(context.getString(R.string.error_duplicate_folder)))
+                }
+                else -> bus.send(Error(context.getString(R.string.action_generic_error)))
+            }
         }
     }
 

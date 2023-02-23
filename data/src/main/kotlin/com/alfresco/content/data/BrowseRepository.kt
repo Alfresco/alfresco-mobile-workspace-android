@@ -127,7 +127,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
-    suspend fun createFolder(name: String, description: String, parentId: String?): Entry {
+    suspend fun createFolder(name: String, description: String, parentId: String?, autoRename: Boolean = true): Entry {
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
             nodeType = "cm:folder",
@@ -137,7 +137,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         val response = service.createNode(
             nodeId = requireNotNull(parentId),
             nodeBodyCreate = nodeBodyCreate,
-            autoRename = true
+            autoRename = autoRename
         )
 
         return Entry.with(response.entry)

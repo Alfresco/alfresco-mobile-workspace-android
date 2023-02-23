@@ -16,6 +16,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.Logger
 import com.alfresco.auth.activity.LoginViewModel
+import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionExtension
 import com.alfresco.content.actions.ActionPermission
 import com.alfresco.content.activityViewModel
@@ -51,6 +52,9 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         ActionPermission.showActionPermissionToasts(
             lifecycleScope,
             findViewById(android.R.id.content)
+        )
+        Action.showActionToasts(
+            lifecycleScope, findViewById(android.R.id.content)
         )
 
         executePermission(this, GlobalScope)

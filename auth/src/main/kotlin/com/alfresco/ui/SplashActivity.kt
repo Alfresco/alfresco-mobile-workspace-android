@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.alfresco.android.aims.R
+import java.net.URLDecoder
 
 abstract class SplashActivity : AppCompatActivity() {
 
@@ -33,7 +34,7 @@ abstract class SplashActivity : AppCompatActivity() {
     private fun getEntryIdFromShareURL(): String {
         isPreview = false
         isRemoteFolder = false
-        val extData = intent.data.toString()
+        val extData = URLDecoder.decode(intent.data.toString(), "UTF-8")
 
         if (!extData.contains(SCHEME)) return ""
 
@@ -85,9 +86,9 @@ abstract class SplashActivity : AppCompatActivity() {
         private const val VALUE_SHARE = "share"
         const val KEY_FOLDER = "folder"
         const val SCHEME = "androidamw:///"
-        const val IDENTIFIER_PREVIEW = "#/preview"
+        const val IDENTIFIER_PREVIEW = "/preview"
         const val IDENTIFIER_VIEWER = "viewer:view/"
-        const val IDENTIFIER_PERSONAL_FILES = "#/personal-files/"
+        const val IDENTIFIER_PERSONAL_FILES = "/personal-files/"
         const val DELIMITER_BRACKET = ")"
         const val DELIMITER_FORWARD_SLASH = "/"
     }

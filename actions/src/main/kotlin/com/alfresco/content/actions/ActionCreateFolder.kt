@@ -21,7 +21,7 @@ data class ActionCreateFolder(
 
     override suspend fun execute(context: Context): Entry {
         val result = showCreateFolderDialog(context) ?: throw CancellationException("User Cancellation")
-        return BrowseRepository().createFolder(result.name, result.description, entry.id)
+        return BrowseRepository().createFolder(result.name, result.description, entry.id, false)
     }
 
     private suspend fun showCreateFolderDialog(context: Context) = withContext(Dispatchers.Main) {

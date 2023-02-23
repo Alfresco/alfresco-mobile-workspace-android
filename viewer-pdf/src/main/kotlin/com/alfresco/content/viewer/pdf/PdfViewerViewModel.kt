@@ -46,7 +46,7 @@ class PdfViewerViewModel(state: PdfViewerState) : MavericksViewModel<PdfViewerSt
     /**
      * returns the viewer url
      */
-    fun viewerUrl(state: PdfViewerState) = if (state.uri.contains("#/preview")) state.uri.replace("/aca", "") else "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
+    fun viewerUrl(state: PdfViewerState) = if (state.uri.contains("#/preview")) state.uri.replace("/aca", "").plus("?mobileapps=true") else "${baseUrl(state)}/$RESERVED_ASSETS_PATH/viewer.html"
 
     /**
      * it returns true if uri is from local directories otherwise false

@@ -143,10 +143,12 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        if (state.isOnline) {
-            disableOfflineSearch()
-        } else {
-            enableOfflineSearch()
+        if (!state.isExtension) {
+            if (state.isOnline) {
+                disableOfflineSearch()
+            } else {
+                enableOfflineSearch()
+            }
         }
         setSearchFilterLocalizedName(state)
         epoxyController.requestModelBuild()

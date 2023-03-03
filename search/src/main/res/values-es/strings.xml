@@ -64,4 +64,5 @@
     <string name="type.facet.queries">Consultas con filtros por tipo</string>
     <string name="search_move_warning">no puede mover a su propia carpeta y subcarpetas.</string>
     <string name="accessibility_text_reset">Reiniciar</string>
+    <string name="category.offline">Sin conexión</string>
 </resources>

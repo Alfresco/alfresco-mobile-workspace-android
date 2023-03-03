@@ -64,4 +64,5 @@
     <string name="type.facet.queries">Query con filtro per tipo</string>
     <string name="search_move_warning">Impossibile passare alla cartella personale e relative sottocartelle.</string>
     <string name="accessibility_text_reset">Reimposta</string>
+    <string name="category.offline">Offline</string>
 </resources>

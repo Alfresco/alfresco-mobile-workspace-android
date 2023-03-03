@@ -64,6 +64,5 @@
     <string name="type.facet.queries">Type facet queries</string>
     <string name="search_move_warning">you cannot move to own and subfolders.</string>
     <string name="accessibility_text_reset">Reset</string>
-    <string name="message_you_are_offline">You\'re Offline</string>
     <string name="category.offline">Offline</string>
 </resources>

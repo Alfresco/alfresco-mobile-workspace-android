@@ -64,4 +64,5 @@
     <string name="type.facet.queries">Recherches avec filtre par type</string>
     <string name="search_move_warning">Vous ne pouvez pas déplacer le fichier vers votre propre dossier et vos sous-dossiers.</string>
     <string name="accessibility_text_reset">Réinitialiser</string>
+    <string name="category.offline">Hors ligne</string>
 </resources>

@@ -63,6 +63,6 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
     }
 
     override fun onItemClicked(entry: ProcessEntry) {
-        //TODO
+        // TODO
     }
 }

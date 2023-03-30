@@ -247,7 +247,7 @@ class SearchFragment : Fragment(), MavericksView {
                 items.add(requireContext().getLocalizedName(name))
             }
         }
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_search_filter_pop_up, items)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_filter_pop_up, items)
         searchFilterPopup.setAdapter(adapter)
 
         withState(viewModel) { state ->

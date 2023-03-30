@@ -11,8 +11,8 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.alfresco.content.listview.tasks.TaskPriority
-import com.alfresco.content.listview.tasks.getTaskPriority
+import com.alfresco.content.TaskPriority
+import com.alfresco.content.getTaskPriority
 
 typealias TextViewCallback = ((isClicked: Boolean) -> Unit)?
 

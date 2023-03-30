@@ -3,13 +3,15 @@ package com.alfresco.content.data
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.payloads.CommentPayload
-import com.alfresco.content.data.payloads.TaskFiltersPayload
+import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
+import com.alfresco.process.models.RequestProcessInstances
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import java.io.File
@@ -28,8 +30,12 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     private val context get() = session.context
     val acsUserEmail get() = session.account.email
 
-    private val processService: TaskAPI by lazy {
+    private val tasksService: TaskAPI by lazy {
         session.createProcessService(TaskAPI::class.java)
+    }
+
+    private val processesService: ProcessAPI by lazy {
+        session.createProcessService(ProcessAPI::class.java)
     }
 
     private val sharedPrefs: SharedPreferences by lazy {
@@ -39,9 +45,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * execute the task list api and returns the response as ResponseList obj
      */
-    suspend fun getTasks(filters: TaskFiltersPayload) = ResponseList.with(
-        processService.taskList(
-            includeFilters(filters)
+    suspend fun getTasks(filters: TaskProcessFiltersPayload) = ResponseList.with(
+        tasksService.taskList(
+            includeTaskFilters(filters)
+        ), getAPSUser()
+    )
+
+    /**
+     * execute the task list api and returns the response as ResponseList obj
+     */
+    suspend fun getProcesses(filters: TaskProcessFiltersPayload) = ResponseList.with(
+        processesService.processInstances(
+            includeProcessFilters(filters)
         ), getAPSUser()
     )
 
@@ -62,36 +77,36 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * execute the task details api and returns the response as TaskDataEntry obj
      */
     suspend fun getTaskDetails(taskID: String) = TaskEntry.with(
-        processService.getTaskDetails(taskID)
+        tasksService.getTaskDetails(taskID)
     )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
     suspend fun getComments(taskID: String) = ResponseComments.with(
-        processService.getComments(taskID)
+        tasksService.getComments(taskID)
     )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
     suspend fun addComments(taskID: String, payload: CommentPayload) = CommentEntry.with(
-        processService.addComment(taskID, includeComment(payload))
+        tasksService.addComment(taskID, includeComment(payload))
     )
 
     /**
      * execute the get contents api and returns the response as ResponseContents obj
      */
     suspend fun getContents(taskID: String) = ResponseContents.with(
-        processService.getContents(taskID)
+        tasksService.getContents(taskID)
     )
 
     /**
      * execute the get complete task api and returns the response as Unit obj
      */
-    suspend fun completeTask(taskID: String) = processService.completeTask(taskID)
+    suspend fun completeTask(taskID: String) = tasksService.completeTask(taskID)
 
-    private fun includeFilters(taskFilters: TaskFiltersPayload): RequestTaskFilters {
+    private fun includeTaskFilters(taskFilters: TaskProcessFiltersPayload): RequestTaskFilters {
         return RequestTaskFilters(
             assignment = taskFilters.assignment,
             sort = taskFilters.sort,
@@ -100,6 +115,13 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             text = taskFilters.text,
             dueBefore = taskFilters.dueBefore,
             dueAfter = taskFilters.dueAfter
+        )
+    }
+
+    private fun includeProcessFilters(taskFilters: TaskProcessFiltersPayload): RequestProcessInstances {
+        return RequestProcessInstances(
+            sort = taskFilters.sort,
+            state = taskFilters.state
         )
     }
 
@@ -124,7 +146,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * executes the Api to fetch the user profile and save the local data in preferences
      */
-    suspend fun getProcessUserProfile() = processService.getProfile()
+    suspend fun getProcessUserProfile() = tasksService.getProfile()
 
     /**
      * If the ACS and APS users are same then it will return true otherwise false
@@ -178,7 +200,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
-            processService.createTask(TaskBodyCreate(name = name, description = description)), isNewTaskCreated = true
+            tasksService.createTask(TaskBodyCreate(name = name, description = description)), isNewTaskCreated = true
         )
     }
 
@@ -187,7 +209,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun searchUser(name: String, email: String): ResponseUserList {
         return ResponseUserList.with(
-            processService.searchUser(filter = name, email = email)
+            tasksService.searchUser(filter = name, email = email)
         )
     }
 
@@ -196,7 +218,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun updateTaskDetails(taskEntry: TaskEntry): TaskEntry {
         return TaskEntry.with(
-            processService.updateTask(
+            tasksService.updateTask(
                 taskEntry.id,
                 TaskBodyCreate(
                     name = taskEntry.name,
@@ -213,14 +235,14 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun assignUser(taskID: String, assigneeID: String): TaskEntry {
         return TaskEntry.with(
-            processService.assignUser(taskID, AssignUserBody(assignee = assigneeID))
+            tasksService.assignUser(taskID, AssignUserBody(assignee = assigneeID))
         )
     }
 
     /**
      * It will call the api to delete the raw content and return the Response<Unit>
      */
-    suspend fun deleteContent(contentId: String) = processService.deleteRawContent(contentId)
+    suspend fun deleteContent(contentId: String) = tasksService.deleteRawContent(contentId)
 
     /**
      * It will call the api to upload the raw content on process services.
@@ -241,7 +263,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         val multipartBody = MultipartBody.Part.createFormData("file", local.name, filePart)
 
         return Entry.with(
-            processService.uploadRawContent(
+            tasksService.uploadRawContent(
                 local.parentId,
                 multipartBody
             ), local.parentId

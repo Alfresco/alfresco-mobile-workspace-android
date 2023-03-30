@@ -93,4 +93,7 @@
     <string name="icon_add_attachment">Add attachment icon</string>
     <string name="dialog_message_complete_task_files_queue">Are you sure you want to complete the task? Once completed, some files could not be uploaded and no changes can be made.</string>
 
+    <string name="workflows_empty_title">No Workflows Found</string>
+    <string name="workflows_empty_message">Start a new workflow that you want to easily find later.</string>
+
 </resources>

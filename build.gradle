@@ -16,6 +16,8 @@ buildscript {
         classpath libs.gradleVersionsPlugin
         classpath libs.gradleLicensePlugin
 
+        classpath libs.dokka
+
     }
 }
 

@@ -12,7 +12,7 @@ import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentViewModel
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.payloads.TaskFiltersPayload
+import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
@@ -53,7 +53,7 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                TaskFiltersPayload.updateFilters(state.filterParams, newPage)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, newPage)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -81,7 +81,7 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                TaskFiltersPayload.updateFilters(state.filterParams)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -122,7 +122,7 @@ class TasksViewModel(
      * this method makes the payload filter for task api and execute it.
      */
     fun applyFilters(list: List<TaskFilterData>) {
-        val taskFiltersPayload = TaskFiltersPayload()
+        val taskFiltersPayload = TaskProcessFiltersPayload()
         list.filter { it.isSelected }.forEach {
             when (context.getLocalizedName(it.name?.lowercase() ?: "")) {
                 context.getString(R.string.filter_task_due_date) -> {

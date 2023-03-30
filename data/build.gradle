@@ -25,7 +25,8 @@ dependencies {
 
     implementation libs.alfresco.content
     implementation libs.alfresco.contentKtx
-    implementation libs.alfresco.process
+//    implementation libs.alfresco.process
+    implementation project(':process')
 
     implementation libs.androidx.preference
     api libs.androidx.work

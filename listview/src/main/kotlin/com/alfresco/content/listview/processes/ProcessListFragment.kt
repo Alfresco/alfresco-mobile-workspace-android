@@ -12,10 +12,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseList
@@ -23,6 +25,10 @@ import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.simpleController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Mark as ProcessListViewState interface
@@ -132,7 +138,11 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
+        if (state.request.complete && state.request is Fail) {
+            visibleFilters(false)
+        }
         if (state.processEntries.isEmpty() && state.request.complete) {
+            if (state.request is Success) visibleFilters(true)
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
@@ -141,6 +151,7 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
                 message(args.third)
             }
         } else if (state.processEntries.isNotEmpty()) {
+            visibleFilters(true)
             state.processEntries.forEach {
                 listViewProcessRow {
                     id(it.id)
@@ -148,6 +159,14 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
                     clickListener { model, _, _, _ -> }
                     compact(state.isCompact)
                 }
+            }
+        }
+    }
+
+    private fun visibleFilters(isVisible: Boolean) {
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                rlFilters.visibility = if (isVisible) View.VISIBLE else View.GONE
             }
         }
     }

@@ -34,7 +34,7 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
 
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
-        filterTitle.text = viewModel.filterName
+        filterTitle.text = requireContext().getLocalizedName(viewModel.filterName)
         rlFilters.contentDescription = getString(R.string.text_filter_option, viewModel.filterName)
     }
 

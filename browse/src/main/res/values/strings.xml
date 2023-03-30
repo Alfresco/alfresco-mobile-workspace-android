@@ -98,5 +98,6 @@
     <string name="title_tasks">Tasks</string>
     <string name="title_workflows">Workflows</string>
     <string name="text_filter_option">Filter Option %s</string>
+    <string name="workflows_account_not_configured">Workflows are not enabled for this account.</string>
 
 </resources>

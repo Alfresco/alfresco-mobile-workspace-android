@@ -52,9 +52,9 @@ data class TaskProcessFiltersPayload(
 /**
  * Marked as ProcessFilters
  */
-enum class ProcessFilters {
-    All,
-    Running,
-    Active,
-    Completed
+enum class ProcessFilters(val filter: String) {
+    All("filter.option.all"),
+    Running("running"),
+    Active("filter.option.active"),
+    Completed("filter.option.completed")
 }

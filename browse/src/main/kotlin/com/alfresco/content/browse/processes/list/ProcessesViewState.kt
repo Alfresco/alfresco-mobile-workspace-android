@@ -1,45 +1,41 @@
-package com.alfresco.content.browse.tasks.list
+package com.alfresco.content.browse.processes.list
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseList
-import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
-import com.alfresco.content.listview.tasks.TaskListViewState
-import com.alfresco.process.models.ProfileData
+import com.alfresco.content.listview.processes.ProcessListViewState
 
 /**
  * Marked as TasksViewState class
  */
-data class TasksViewState(
-    val parent: TaskEntry? = null,
-    override val taskEntries: List<TaskEntry> = emptyList(),
+data class ProcessesViewState(
+    val parent: ProcessEntry? = null,
     override val hasMoreItems: Boolean = false,
+    override val processEntries: List<ProcessEntry> = emptyList(),
     override val request: Async<ResponseList> = Uninitialized,
-    val requestProfile: Async<ProfileData> = Uninitialized,
-    val baseTaskEntries: List<TaskEntry> = emptyList(),
-    val listSortDataChips: List<TaskFilterData> = emptyList(),
+    val baseTaskEntries: List<ProcessEntry> = emptyList(),
     val filterParams: TaskProcessFiltersPayload = TaskProcessFiltersPayload(),
     val loadItemsCount: Int = 0,
     val page: Int = 0
-) : TaskListViewState {
+) : ProcessListViewState {
 
     override val isCompact = false
 
-    override fun copy(_entries: List<TaskEntry>) = copy(taskEntries = _entries)
+    override fun copy(_entries: List<ProcessEntry>) = copy(processEntries = _entries)
 
     /**
      * update the latest response
      */
     fun update(
         response: ResponseList?
-    ): TasksViewState {
+    ): ProcessesViewState {
         if (response == null) return this
 
         val totalLoadCount: Int
 
-        val taskPageEntries = response.listTask
+        val taskPageEntries = response.listProcesses
 
         val newTaskEntries = if (response.start != 0) {
             totalLoadCount = loadItemsCount.plus(response.size)
@@ -50,7 +46,7 @@ data class TasksViewState(
         }
 
         return copy(
-            taskEntries = newTaskEntries,
+            processEntries = newTaskEntries,
             baseTaskEntries = newTaskEntries,
             loadItemsCount = totalLoadCount,
             hasMoreItems = totalLoadCount < response.total

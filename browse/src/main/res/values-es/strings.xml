@@ -92,5 +92,5 @@
     <string name="text_add_attachments">Añadir adjuntos</string>
     <string name="icon_add_attachment">Añadir icono adjunto</string>
     <string name="dialog_message_complete_task_files_queue">¿Está seguro de que quiere completar la tarea\? Una vez completada, algunos ficheros no se pudieron cargar y no se pueden realizar cambios.</string>
-
+    <string name="title_tasks">Tareas</string>
 </resources>

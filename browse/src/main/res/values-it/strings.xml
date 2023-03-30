@@ -92,5 +92,5 @@
     <string name="text_add_attachments">Aggiungi allegati</string>
     <string name="icon_add_attachment">Icona Aggiungi allegati</string>
     <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito\? Una volta completato, non sarà possibile caricare alcuni file né apportare modifiche.</string>
-
+    <string name="title_tasks">Compiti</string>
 </resources>

@@ -92,5 +92,5 @@
     <string name="text_add_attachments">Bijlagen toevoegen</string>
     <string name="icon_add_attachment">Pictogram Bijlage toevoegen</string>
     <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien\? Nadat de taak is voltooid, kunnen sommige bestanden niet worden geüpload en kunnen geen wijzigingen worden aangebracht.</string>
-
+    <string name="title_tasks">Taken</string>
 </resources>

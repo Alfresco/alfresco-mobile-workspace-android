@@ -47,8 +47,8 @@ class TaskProcessFragment : Fragment() {
 
         override fun getPageTitle(position: Int) =
             when (position) {
-                0 -> "Tasks"
-                else -> "Workflows"
+                0 -> context.getString(R.string.title_tasks)
+                else -> context.getString(R.string.title_workflows)
             }
     }
 }

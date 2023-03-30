@@ -35,6 +35,7 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
         filterTitle.text = viewModel.filterName
+        rlFilters.contentDescription = "Filter Option ${viewModel.filterName}"
     }
 
     private fun setupDropDown() {

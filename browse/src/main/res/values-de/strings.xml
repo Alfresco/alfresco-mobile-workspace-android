@@ -92,5 +92,5 @@
     <string name="text_add_attachments">Anhänge hinzufügen</string>
     <string name="icon_add_attachment">Symbol \'Anhang hinzufügen\'</string>
     <string name="dialog_message_complete_task_files_queue">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen\? Nach Abschluss der Aufgabe können einige Dateien nicht hochgeladen werden und es können keine Änderungen vorgenommen werden.</string>
-
+    <string name="title_tasks">Aufgaben</string>
 </resources>

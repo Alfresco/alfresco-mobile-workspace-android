@@ -14,7 +14,7 @@ import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListProcessRowBinding
 
 /**
- * Marked as ListViewTaskRow class
+ * Marked as ListViewProcessRow class
  */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewProcessRow @JvmOverloads constructor(
@@ -34,6 +34,10 @@ class ListViewProcessRow @JvmOverloads constructor(
         binding.title.text = entry.name
         val localizedName = context.getLocalizedName(entry.startedBy?.name ?: "")
         binding.subtitle.text = localizedName
+        val accessibilityText = context.getString(
+            R.string.accessibility_text_process_row, entry.name, localizedName
+        )
+        binding.parent.contentDescription = accessibilityText
     }
 
     /**

@@ -23,8 +23,14 @@
       "selector": "radio",
       "options": [
         {
+          "label": "filter.option.all",
+          "query": "all",
+          "value": "state"
+        },
+        {
           "label": "filter.option.active",
           "query": "active",
+          "default": true,
           "value": "state"
         },
         {

@@ -10,5 +10,6 @@ import kotlinx.parcelize.Parcelize
 data class FilterOptions(
     val label: String = "",
     val query: String = "",
-    val value: String = ""
+    val value: String = "",
+    val default: Boolean = false
 ) : Parcelable

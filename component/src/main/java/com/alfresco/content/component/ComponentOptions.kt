@@ -27,7 +27,8 @@ data class ComponentOptions(
             return ComponentOptions(
                 label = filterOptions.label,
                 query = filterOptions.query,
-                value = filterOptions.value
+                value = filterOptions.value,
+                default = filterOptions.default
             )
         }
 

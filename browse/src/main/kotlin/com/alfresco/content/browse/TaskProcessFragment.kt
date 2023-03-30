@@ -12,6 +12,9 @@ import androidx.viewpager.widget.ViewPager
 import com.alfresco.content.browse.processes.list.ProcessesFragment
 import com.alfresco.content.browse.tasks.list.TasksFragment
 
+/**
+ * Marked as TaskProcessFragment
+ */
 class TaskProcessFragment : Fragment() {
 
     override fun onCreateView(

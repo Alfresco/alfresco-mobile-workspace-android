@@ -30,7 +30,7 @@ class ProcessesViewModel(
         ProcessFilters.Completed.name to ProcessFilters.Completed.name
     )
 
-    var filterName: String = ProcessFilters.All.name
+    var filterName: String = ProcessFilters.Active.name
     var filterValue: String = ""
 
     init {
@@ -96,6 +96,9 @@ class ProcessesViewModel(
         }
     }
 
+    /**
+     * Filter applied and execute api
+     */
     fun applyFilters(key: String?) {
         key?.let {
             filterName = it

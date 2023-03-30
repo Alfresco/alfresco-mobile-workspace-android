@@ -49,6 +49,10 @@ data class TaskProcessFiltersPayload(
     }
 }
 
+
+/**
+ * Marked as ProcessFilters
+ */
 enum class ProcessFilters {
     All,
     Running,

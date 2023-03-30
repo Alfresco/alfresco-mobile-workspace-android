@@ -30,6 +30,10 @@ data class ProcessEntry(
 ) : ParentEntry(), Parcelable {
 
     companion object {
+
+        /**
+         * return the ProcessEntry using ProcessInstanceEntry
+         */
         fun with(data: ProcessInstanceEntry, apsUser: UserDetails? = null): ProcessEntry {
             val isAssigneeUser = apsUser?.id == data.startedBy?.id
             return ProcessEntry(

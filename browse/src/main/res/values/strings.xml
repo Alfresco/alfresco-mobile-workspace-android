@@ -97,5 +97,6 @@
     <string name="workflows_empty_message">Start a new workflow that you want to easily find later.</string>
     <string name="title_tasks">Tasks</string>
     <string name="title_workflows">Workflows</string>
+    <string name="text_filter_option">Filter Option %s</string>
 
 </resources>

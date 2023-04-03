@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
+
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskRepository
+
 
 /**
  * Marked as ActionStartProcess
@@ -19,12 +21,12 @@ data class ActionStartProcess(
     private val repository: TaskRepository = TaskRepository()
 
     override suspend fun execute(context: Context): Entry {
-
         return entry
     }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun showToast(view: View, anchorView: View?) =
+
         Action.showToast(view, anchorView, R.string.action_workflow_started)
 }

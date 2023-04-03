@@ -11,6 +11,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCaptureMedia
@@ -22,6 +23,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.network.ConnectivityTracker
@@ -33,6 +35,7 @@ import com.alfresco.events.on
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -55,6 +58,7 @@ class MainActivityViewModel(
     val navigationMode: LiveData<NavigationMode> get() = _navigationMode
     private var mode: String? = null
     private var isFolder: Boolean = false
+    var isProcessEnabled: ((Boolean) -> Unit)? = null
 
     init {
         // Start a new session
@@ -84,6 +88,33 @@ class MainActivityViewModel(
         // Cleanup unused db entries
         cleanupStorage(session)
         syncService = configureSync(context, viewModelScope)
+    }
+
+    /**
+     * It executes the system properties APIs to determine APS is enabled or not for the loggedIn user.
+     */
+    fun checkIfAPSEnabled() {
+        if (!Settings(context).isProcessEnabled)
+            fetchAPSSystemProperties()
+    }
+
+    private fun fetchAPSSystemProperties() {
+        viewModelScope.launch {
+            TaskRepository()::fetchAPSSystemProperties
+                .asFlow()
+                .execute {
+                when (it) {
+                    is Success -> {
+                        isProcessEnabled?.invoke(true)
+                        this
+                    }
+                    else -> {
+                        isProcessEnabled?.invoke(false)
+                        this
+                    }
+                }
+            }
+        }
     }
 
     private fun cleanupStorage(session: Session) {

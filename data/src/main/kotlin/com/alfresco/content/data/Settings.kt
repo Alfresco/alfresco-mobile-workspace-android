@@ -20,7 +20,8 @@ class Settings(
 
     private val listener =
         SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-            AnalyticsManager().theme(prefs.getString(key, "") ?: "")
+            if (key != IS_PROCESS_ENABLED_KEY)
+                AnalyticsManager().theme(prefs.getString(key, "") ?: "")
             preferenceChangedFlow.tryEmit(key)
         }
 
@@ -59,6 +60,8 @@ class Settings(
     val canSyncOverMeteredNetwork: Boolean
         get() = syncNetwork == SyncNetwork.Mobile
 
+    val isProcessEnabled = sharedPref.getBoolean(IS_PROCESS_ENABLED_KEY, false)
+
     enum class Theme {
         Light,
         Dark,
@@ -68,5 +71,9 @@ class Settings(
     enum class SyncNetwork {
         Wifi,
         Mobile
+    }
+
+    companion object {
+        const val IS_PROCESS_ENABLED_KEY = "is_process_enabled"
     }
 }

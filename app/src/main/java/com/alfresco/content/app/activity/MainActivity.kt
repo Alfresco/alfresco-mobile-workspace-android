@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
@@ -21,6 +22,7 @@ import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.viewer.ViewerActivity
 import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
@@ -62,6 +64,19 @@ class MainActivity : AppCompatActivity(), MavericksView {
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+
+        viewModel.isProcessEnabled = {
+            println("MainActivity.onCreate APS Enabled $it")
+            val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val editor = sharedPrefs.edit()
+            editor.putBoolean(IS_PROCESS_ENABLED_KEY, it)
+            editor.apply()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.checkIfAPSEnabled()
     }
 
     private fun navigateTo(mode: MainActivityViewModel.NavigationMode) {

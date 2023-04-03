@@ -9,10 +9,13 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.Settings
+import com.alfresco.content.data.TaskRepository
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 internal class ContextualActionsViewModel(
@@ -68,6 +71,8 @@ internal class ContextualActionsViewModel(
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
+    private fun fetchAPSSystemProperties() = TaskRepository()::fetchAPSSystemProperties.asFlow()
+
     fun <T : Action> execute(actionClass: Class<T>) {
         withState { st ->
             st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(context, GlobalScope)
@@ -93,6 +98,7 @@ internal class ContextualActionsViewModel(
     private fun defaultActionsFor(entry: Entry) =
         listOf(
             externalActionsFor(entry),
+            if (Settings(context).isProcessEnabled) actionsProcesses(entry) else listOf(),
             favoriteActionFor(entry),
             renameMoveActionFor(entry),
             offlineActionFor(entry),
@@ -107,6 +113,9 @@ internal class ContextualActionsViewModel(
             externalActionsFor(entry),
             offlineActionFor(entry)
         ).flatten()
+
+    private fun actionsProcesses(entry: Entry): List<Action> =
+        listOf(ActionStartProcess(entry))
 
     private fun offlineActionFor(entry: Entry) =
         if (!entry.isFile && !entry.isFolder) {

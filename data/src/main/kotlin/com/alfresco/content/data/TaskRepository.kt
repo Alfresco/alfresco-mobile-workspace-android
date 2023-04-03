@@ -3,6 +3,7 @@ package com.alfresco.content.data
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.payloads.CommentPayload
+import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -269,6 +270,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             ), local.parentId
         )
     }
+
+    suspend fun fetchAPSSystemProperties() = SystemPropertiesEntry.with(processesService.getSystemProperties())
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

@@ -7,6 +7,9 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.ParentEntry
 
+/**
+ * Marked as ActionStartProcess
+ */
 data class ActionStartProcess(
     override val entry: Entry,
     override val icon: Int = R.drawable.ic_favorite,

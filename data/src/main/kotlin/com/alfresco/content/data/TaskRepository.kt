@@ -271,6 +271,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * It will call the system properties APIs on process services
+     */
     suspend fun fetchAPSSystemProperties() = SystemPropertiesEntry.with(processesService.getSystemProperties())
 
     companion object {

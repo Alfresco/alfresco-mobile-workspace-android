@@ -90,6 +90,9 @@ class MainActivityViewModel(
         syncService = configureSync(context, viewModelScope)
     }
 
+    /**
+     * It executes the system properties APIs to determine APS is enabled or not for the loggedIn user.
+     */
     fun checkIfAPSEnabled() {
         if (!Settings(context).isProcessEnabled)
             fetchAPSSystemProperties()

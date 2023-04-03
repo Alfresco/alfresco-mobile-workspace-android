@@ -113,6 +113,7 @@ enum class EventName(val value: String) {
     TaskCreateMedia("event_task_take_a_photo_or_video"),
     TaskUploadFiles("event_task_upload_files"),
     CANCEL("event_cancel"),
+    StartWorkflow("start_workflow"),
     None("event_none")
 }
 

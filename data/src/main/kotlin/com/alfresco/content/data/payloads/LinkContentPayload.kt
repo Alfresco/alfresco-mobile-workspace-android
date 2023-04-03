@@ -12,6 +12,10 @@ data class LinkContentPayload(
     val name: String = ""
 ) {
     companion object {
+
+        /**
+         * returns the LinkContentPayload as obj
+         */
         fun with(entry: Entry): LinkContentPayload {
             return LinkContentPayload(
                 source = "alfresco-1-adw-contentAlfresco",

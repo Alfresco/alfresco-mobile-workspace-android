@@ -5,6 +5,9 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 
+/**
+ * Marked as ProcessDefinitionsState
+ */
 data class ProcessDefinitionsState(
     val entry: Entry,
     val list: List<String> = emptyList(),

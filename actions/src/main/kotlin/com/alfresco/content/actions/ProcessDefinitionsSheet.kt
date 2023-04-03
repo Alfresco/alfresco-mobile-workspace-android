@@ -14,6 +14,9 @@ import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.ui.BottomSheetDialogFragment
 
+/**
+ * Marked as ProcessDefinitionsSheet
+ */
 class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
 
     private val viewModel: ProcessDefinitionsViewModel by fragmentViewModel()
@@ -40,6 +43,9 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     companion object {
+        /**
+         * returns the instance of ProcessDefinitionsSheet with attached entry as bundle
+         */
         fun with(entry: Entry) = ProcessDefinitionsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }

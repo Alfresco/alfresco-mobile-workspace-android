@@ -278,6 +278,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun fetchAPSSystemProperties() = SystemPropertiesEntry.with(processesService.getSystemProperties())
 
+    /**
+     * It will execute the api to link ADW content with Processes
+     */
     suspend fun linkADWContentToProcess(linkContentPayload: LinkContentPayload) =
         Entry.with(processesService.linkContentToProcess(
             includeLinkContent(linkContentPayload)

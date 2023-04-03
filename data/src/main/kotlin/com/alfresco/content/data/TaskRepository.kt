@@ -3,6 +3,7 @@ package com.alfresco.content.data
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.payloads.CommentPayload
+import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.session.Session
@@ -12,6 +13,7 @@ import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
+import com.alfresco.process.models.RequestLinkContent
 import com.alfresco.process.models.RequestProcessInstances
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
@@ -275,6 +277,20 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * It will call the system properties APIs on process services
      */
     suspend fun fetchAPSSystemProperties() = SystemPropertiesEntry.with(processesService.getSystemProperties())
+
+    suspend fun linkADWContentToProcess(linkContentPayload: LinkContentPayload) =
+        Entry.with(processesService.linkContentToProcess(
+            includeLinkContent(linkContentPayload)
+        ))
+
+    private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {
+        return RequestLinkContent(
+            source = payload.source,
+            sourceId = payload.sourceId,
+            mimeType = payload.mimeType,
+            name = payload.name
+        )
+    }
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

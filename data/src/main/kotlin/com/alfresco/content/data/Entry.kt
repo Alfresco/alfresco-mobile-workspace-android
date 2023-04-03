@@ -83,6 +83,8 @@ data class Entry(
     val isContentAvailable: Boolean? = false,
     val hasLink: Boolean? = false,
     val simpleType: String? = "",
+    val source: String? = "",
+    val sourceId: String? = "",
     val previewStatus: String? = "",
     val thumbnailStatus: String? = ""
 ) : ParentEntry(), Parcelable {
@@ -397,6 +399,8 @@ data class Entry(
                 isContentAvailable = data.contentAvailable,
                 mimeType = data.mimeType,
                 simpleType = data.simpleType,
+                source = data.source,
+                sourceId = data.sourceId,
                 previewStatus = data.previewStatus,
                 thumbnailStatus = data.thumbnailStatus,
                 isProcessService = true

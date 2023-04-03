@@ -10,7 +10,6 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.Settings
-import com.alfresco.content.data.TaskRepository
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
@@ -70,8 +69,6 @@ internal class ContextualActionsViewModel(
             Entry.Type.SITE -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
-
-    private fun fetchAPSSystemProperties() = TaskRepository()::fetchAPSSystemProperties.asFlow()
 
     fun <T : Action> execute(actionClass: Class<T>) {
         withState { st ->

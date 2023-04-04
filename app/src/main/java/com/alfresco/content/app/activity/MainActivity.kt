@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity(), MavericksView {
                 showSignedOutPrompt()
             }
         } else {
+            viewModel.checkIfAPSEnabled()
             // Only when logged in otherwise triggers re-login prompts
             actionBarController?.setProfileIcon(viewModel.profileIcon)
         }

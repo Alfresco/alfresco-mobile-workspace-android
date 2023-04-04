@@ -94,7 +94,7 @@ class MainActivityViewModel(
      * It executes the system properties APIs to determine APS is enabled or not for the loggedIn user.
      */
     fun checkIfAPSEnabled() {
-        if (!Settings(context).isProcessEnabled)
+        if (SessionManager.currentSession != null && !Settings(context).isProcessEnabled)
             fetchAPSSystemProperties()
     }
 
@@ -103,17 +103,17 @@ class MainActivityViewModel(
             TaskRepository()::fetchAPSSystemProperties
                 .asFlow()
                 .execute {
-                when (it) {
-                    is Success -> {
-                        isProcessEnabled?.invoke(true)
-                        this
-                    }
-                    else -> {
-                        isProcessEnabled?.invoke(false)
-                        this
+                    when (it) {
+                        is Success -> {
+                            isProcessEnabled?.invoke(true)
+                            this
+                        }
+                        else -> {
+                            isProcessEnabled?.invoke(false)
+                            this
+                        }
                     }
                 }
-            }
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
@@ -107,8 +108,11 @@ class MainActivityViewModel(
                             isProcessEnabled?.invoke(true)
                             this
                         }
-                        else -> {
+                        is Fail -> {
                             isProcessEnabled?.invoke(false)
+                            this
+                        }
+                        else -> {
                             this
                         }
                     }

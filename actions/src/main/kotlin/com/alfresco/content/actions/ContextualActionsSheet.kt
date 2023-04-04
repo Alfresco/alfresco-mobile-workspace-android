@@ -52,10 +52,15 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(it.title)
                     action(it)
                     clickListener { _ ->
-                        AnalyticsManager().fileActionEvent(entry.mimeType ?: "",
+                        AnalyticsManager().fileActionEvent(
+                            entry.mimeType ?: "",
                             entry.name.substringAfterLast(".", ""),
-                            it.eventName)
-                        viewModel.execute(it)
+                            it.eventName
+                        )
+                        if (it is ActionStartProcess)
+                            ProcessDefinitionsSheet.with(entry).show(parentFragmentManager, null)
+                        else
+                            viewModel.execute(it)
                         dismiss()
                     }
                 }

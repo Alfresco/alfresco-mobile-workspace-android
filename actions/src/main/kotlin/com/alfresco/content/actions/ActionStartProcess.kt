@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.View
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
-
 import com.alfresco.content.data.ParentEntry
-import com.alfresco.content.data.TaskRepository
-
 
 /**
  * Marked as ActionStartProcess
@@ -18,7 +15,6 @@ data class ActionStartProcess(
     override val title: Int = R.string.action_start_workflow,
     override val eventName: EventName = EventName.StartWorkflow
 ) : Action {
-    private val repository: TaskRepository = TaskRepository()
 
     override suspend fun execute(context: Context): Entry {
         return entry

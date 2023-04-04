@@ -2,6 +2,9 @@ package com.alfresco.content.data
 
 import com.alfresco.process.models.ProcessDefinitionEntry
 
+/**
+ * Marked as ProcessDefinitionDataEntry
+ */
 data class ProcessDefinitionDataEntry(
     val id: Int? = null,
     val defaultAppId: String? = null,
@@ -14,6 +17,10 @@ data class ProcessDefinitionDataEntry(
     val tenantId: Int? = null
 ) {
     companion object {
+
+        /**
+         * return ProcessDefinitionDataEntry by using ProcessDefinitionEntry
+         */
         fun with(raw: ProcessDefinitionEntry): ProcessDefinitionDataEntry {
             return ProcessDefinitionDataEntry(
                 id = raw.id,

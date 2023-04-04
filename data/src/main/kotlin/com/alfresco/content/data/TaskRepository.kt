@@ -297,6 +297,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
+    /**
+     * execute process definitions apis and filter published process
+     */
     suspend fun processDefinitions() = ResponseListProcessDefinitions.with(processesService.processDefinitions())
 
     companion object {

@@ -282,9 +282,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * It will execute the api to link ADW content with Processes
      */
     suspend fun linkADWContentToProcess(linkContentPayload: LinkContentPayload) =
-        Entry.with(processesService.linkContentToProcess(
-            includeLinkContent(linkContentPayload)
-        ))
+        Entry.with(
+            processesService.linkContentToProcess(
+                includeLinkContent(linkContentPayload)
+            )
+        )
 
     private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {
         return RequestLinkContent(
@@ -294,6 +296,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             name = payload.name
         )
     }
+
+    suspend fun processDefinitions() = ResponseListProcessDefinitions.with(processesService.processDefinitions())
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

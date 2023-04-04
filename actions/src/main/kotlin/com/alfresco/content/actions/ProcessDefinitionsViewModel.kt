@@ -1,7 +1,6 @@
 package com.alfresco.content.actions
 
 import android.content.Context
-import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
@@ -10,6 +9,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.coroutines.asFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 internal class ProcessDefinitionsViewModel(
@@ -23,16 +24,21 @@ internal class ProcessDefinitionsViewModel(
 
     private fun buildModel() = withState { state ->
         viewModelScope.launch {
-            linkContentToProcess(state.entry).execute {
+            processDefinitions().zip(linkContentToProcess(state.entry)) { requestProcess, requestContent ->
+                Pair(requestProcess, requestContent)
+            }.execute {
                 when (it) {
                     is Success -> {
-                        copy(linkContent = it)
-                    }
-                    is Fail -> {
-                        copy(linkContent = it)
+                        ProcessDefinitionsState(
+                            entry = state.entry,
+                            listProcessDefinitions = it().first.listProcessDefinitions
+                        )
                     }
                     else -> {
-                        copy(linkContent = it)
+                        ProcessDefinitionsState(
+                            entry = state.entry,
+                            listProcessDefinitions = null
+                        )
                     }
                 }
             }
@@ -40,6 +46,8 @@ internal class ProcessDefinitionsViewModel(
     }
 
     private fun linkContentToProcess(entry: Entry) = TaskRepository()::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry))
+
+    private fun processDefinitions() = TaskRepository()::processDefinitions.asFlow()
 
     companion object : MavericksViewModelFactory<ProcessDefinitionsViewModel, ProcessDefinitionsState> {
         override fun create(

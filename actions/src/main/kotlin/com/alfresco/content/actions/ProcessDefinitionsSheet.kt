@@ -39,6 +39,16 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
         }
 
         binding.recyclerView.withModels {
+            if (state.listProcessDefinitions == null) {
+                actionListLoading { id("loading") }
+            }
+            state.listProcessDefinitions?.forEach {
+                listRowProcessDefinitions {
+                    id(it.id)
+                    processDefinition(it)
+                    clickListener { _, _, _, _ -> dismiss() }
+                }
+            }
         }
     }
 

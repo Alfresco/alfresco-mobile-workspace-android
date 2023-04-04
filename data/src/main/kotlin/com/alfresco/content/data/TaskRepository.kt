@@ -2,6 +2,7 @@ package com.alfresco.content.data
 
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
@@ -183,6 +184,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         editor.remove(KEY_PROCESS_USER_LAST_NAME)
         editor.remove(KEY_PROCESS_USER_EMAIL)
         editor.remove(KEY_PROCESS_USER_FULL_NAME)
+        editor.remove(IS_PROCESS_ENABLED_KEY)
         editor.apply()
     }
 

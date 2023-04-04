@@ -23,7 +23,6 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
-import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.network.ConnectivityTracker
@@ -94,7 +93,7 @@ class MainActivityViewModel(
      * It executes the system properties APIs to determine APS is enabled or not for the loggedIn user.
      */
     fun checkIfAPSEnabled() {
-        if (!Settings(context).isProcessEnabled)
+        if (SessionManager.currentSession != null)
             fetchAPSSystemProperties()
     }
 
@@ -103,17 +102,17 @@ class MainActivityViewModel(
             TaskRepository()::fetchAPSSystemProperties
                 .asFlow()
                 .execute {
-                when (it) {
-                    is Success -> {
-                        isProcessEnabled?.invoke(true)
-                        this
-                    }
-                    else -> {
-                        isProcessEnabled?.invoke(false)
-                        this
+                    when (it) {
+                        is Success -> {
+                            isProcessEnabled?.invoke(true)
+                            this
+                        }
+                        else -> {
+                            isProcessEnabled?.invoke(false)
+                            this
+                        }
                     }
                 }
-            }
         }
     }
 

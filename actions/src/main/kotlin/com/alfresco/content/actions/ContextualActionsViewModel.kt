@@ -96,7 +96,7 @@ internal class ContextualActionsViewModel(
         listOf(
             externalActionsFor(entry),
             favoriteActionFor(entry),
-            if (Settings(context).isProcessEnabled) actionsProcesses(entry) else listOf(),
+            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             renameMoveActionFor(entry),
             offlineActionFor(entry),
             deleteActionFor(entry)

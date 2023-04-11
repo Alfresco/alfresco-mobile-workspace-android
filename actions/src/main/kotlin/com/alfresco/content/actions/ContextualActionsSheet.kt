@@ -15,6 +15,8 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.ui.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ContextualActionsViewModel by fragmentViewModel()
@@ -27,6 +29,21 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     ): View {
         binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog?.window?.decorView?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        view?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                BottomSheetBehavior.from<View>(it).apply {
+                    val peekAmount = 1.0
+                    peekHeight = ((it.parent as View).height * peekAmount).toInt()
+                }
+            }
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

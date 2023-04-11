@@ -13,6 +13,8 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.Entry
 import com.alfresco.ui.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * Marked as ProcessDefinitionsSheet
@@ -29,6 +31,22 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
     ): View {
         binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog?.window?.setTitle(" ")
+        dialog?.window?.decorView?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        view?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                BottomSheetBehavior.from<View>(it).apply {
+                    val peekAmount = 1.0
+                    peekHeight = ((it.parent as View).height * peekAmount).toInt()
+                }
+            }
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->

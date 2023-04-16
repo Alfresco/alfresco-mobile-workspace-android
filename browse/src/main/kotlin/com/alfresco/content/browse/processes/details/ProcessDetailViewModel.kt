@@ -6,6 +6,9 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.TaskRepository
 
+/**
+ * Marked as ProcessDetailViewModel
+ */
 class ProcessDetailViewModel(
     state: ProcessDetailViewState,
     val context: Context,

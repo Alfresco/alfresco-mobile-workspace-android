@@ -16,6 +16,9 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.ui.getDrawableForAttribute
 
+/**
+ * Marked as ProcessDetailFragment
+ */
 class ProcessDetailFragment : Fragment(), MavericksView {
 
     lateinit var binding: FragmentTaskDetailBinding

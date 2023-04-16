@@ -27,6 +27,7 @@ import com.alfresco.content.actions.ActionDelete
 import com.alfresco.content.actions.ActionMoveFilesFolders
 import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRemoveOffline
+import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.data.Entry
@@ -75,6 +76,12 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
+        viewModelScope.on<ActionStartProcess> { onStartProcess(it.entry) }
+    }
+
+    private fun onStartProcess(entry: Entry) = entry.run {
+        if (entry.isFile)
+            folderListener?.onProcessStart(entry)
     }
 
     private fun onDelete(entry: Entry) = entry.run {

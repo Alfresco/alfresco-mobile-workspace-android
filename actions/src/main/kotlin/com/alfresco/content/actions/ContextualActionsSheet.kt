@@ -74,10 +74,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                             entry.name.substringAfterLast(".", ""),
                             it.eventName
                         )
-                        if (it is ActionStartProcess)
-                            ProcessDefinitionsSheet.with(entry).show(parentFragmentManager, null)
-                        else
-                            viewModel.execute(it)
+                        viewModel.execute(it)
                         dismiss()
                     }
                 }

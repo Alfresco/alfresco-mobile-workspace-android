@@ -33,6 +33,8 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_EN
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.common.addTextViewPrefix
+import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -48,8 +50,6 @@ import com.alfresco.content.data.UserDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.EntryListener
-import com.alfresco.content.listview.addTextViewPrefix
-import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute

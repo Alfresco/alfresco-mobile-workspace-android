@@ -137,6 +137,7 @@ enum class PageView(val value: String) {
     Comments("page_view_task_comments"),
     AttachedFiles("page_view_attached_files"),
     Workflows("page_view_workflows"),
+    WorkflowView("page_view_workflow_view"),
     None("none")
 }
 

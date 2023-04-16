@@ -9,12 +9,12 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
+import com.alfresco.content.common.isEllipsized
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
-import com.alfresco.content.listview.isEllipsized
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import kotlin.coroutines.resume

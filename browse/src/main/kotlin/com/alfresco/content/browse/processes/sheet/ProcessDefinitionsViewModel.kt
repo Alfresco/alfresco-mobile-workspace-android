@@ -1,4 +1,4 @@
-package com.alfresco.content.actions
+package com.alfresco.content.browse.processes.sheet
 
 import android.content.Context
 import com.airbnb.mvrx.MavericksViewModel

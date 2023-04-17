@@ -33,6 +33,8 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_EN
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.common.addTextViewPrefix
+import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -48,8 +50,6 @@ import com.alfresco.content.data.UserDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.EntryListener
-import com.alfresco.content.listview.addTextViewPrefix
-import com.alfresco.content.listview.updatePriorityView
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
@@ -239,7 +239,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private fun setData(state: TaskDetailViewState) {
         val dataObj = state.parent
         if (dataObj != null) {
-            binding.tvTaskTitle.text = dataObj.name
+            binding.tvTitle.text = dataObj.name
             if (dataObj.localDueDate != null) {
                 binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
             } else {
@@ -256,9 +256,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
             }
             binding.tvIdentifierValue.text = dataObj.id
-            binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
+            binding.tvDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
-            binding.tvTaskDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
+            binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
                 showTitleDescriptionComponent()
             }
 

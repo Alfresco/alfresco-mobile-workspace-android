@@ -11,4 +11,9 @@ interface EntryListener {
      * It will get called once new entry created.
      */
     fun onEntryCreated(entry: ParentEntry) {}
+
+    /**
+     * It will get called on tap of start workflow on the option list
+     */
+    fun onProcessStart(entry: ParentEntry) {}
 }

@@ -28,4 +28,9 @@
         android:name="com.alfresco.content.browse.tasks.attachments.AttachedFilesFragment"
         tools:layout="@layout/fragment_attached_files" />
 
+    <fragment
+        android:id="@+id/nav_process_details"
+        android:name="com.alfresco.content.browse.processes.details.ProcessDetailFragment"
+        tools:layout="@layout/fragment_task_detail"/>
+
 </navigation>

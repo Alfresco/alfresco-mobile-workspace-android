@@ -23,6 +23,7 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.actions.MoveResultContract.Companion.MOVE_ID_KEY
+import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
@@ -225,5 +226,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded && isVisible)
             onItemClicked(entry as Entry)
+    }
+
+    override fun onProcessStart(entry: ParentEntry) {
+        if (isAdded && isVisible)
+            ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
     }
 }

@@ -23,4 +23,7 @@
     <string name="accessibility_text_create_button">Create</string>
     <string name="error_duplicate_folder">There\'s already a folder with this name. Try a different name.</string>
     <string name="accessibility_text_process_row">Title: %s Assignee: %s</string>
+    <string name="individual_title">Individual</string>
+    <string name="group_title">Group</string>
+    <string name="warning_message_uploading_in_progress">The upload is currently in progress. Do you want to continue without uploading?</string>
 </resources>

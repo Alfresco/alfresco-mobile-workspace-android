@@ -1,10 +1,13 @@
 package com.alfresco.content.data
 
+import android.os.Parcelable
 import com.alfresco.process.models.ProcessDefinitionEntry
+import kotlinx.parcelize.Parcelize
 
 /**
  * Marked as ProcessDefinitionDataEntry
  */
+@Parcelize
 data class ProcessDefinitionDataEntry(
     val id: Int? = null,
     val defaultAppId: String? = null,
@@ -15,7 +18,7 @@ data class ProcessDefinitionDataEntry(
     val icon: String? = null,
     val deploymentId: String? = null,
     val tenantId: Int? = null
-) {
+) : ParentEntry(), Parcelable {
     companion object {
 
         /**

@@ -22,8 +22,8 @@ internal fun ProcessDetailFragment.showStartFormView() {
 
 internal fun ProcessDetailFragment.setInitData() = withState(viewModel) { state ->
     val dataEntry = state.entry
-    binding.tvTaskTitle.text = dataEntry.name
-    binding.tvTaskDescription.text = dataEntry.description
+    binding.tvTitle.text = dataEntry.name
+    binding.tvDescription.text = dataEntry.description
     binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
     binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
     binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)

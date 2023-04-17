@@ -82,8 +82,8 @@ internal fun TaskDetailFragment.setListeners() {
     binding.iconDueDateEdit.setSafeOnClickListener {
         formatDateAndShowCalendar()
     }
-    binding.tvTaskTitle.setSafeOnClickListener {
-        if (binding.tvTaskTitle.isEllipsized())
+    binding.tvTitle.setSafeOnClickListener {
+        if (binding.tvTitle.isEllipsized())
             showTitleDescriptionComponent()
     }
     binding.clAddAttachment.setSafeOnClickListener {

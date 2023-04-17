@@ -239,7 +239,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     private fun setData(state: TaskDetailViewState) {
         val dataObj = state.parent
         if (dataObj != null) {
-            binding.tvTaskTitle.text = dataObj.name
+            binding.tvTitle.text = dataObj.name
             if (dataObj.localDueDate != null) {
                 binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
             } else {
@@ -256,9 +256,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
             }
             binding.tvIdentifierValue.text = dataObj.id
-            binding.tvTaskDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
+            binding.tvDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
 
-            binding.tvTaskDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
+            binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
                 showTitleDescriptionComponent()
             }
 

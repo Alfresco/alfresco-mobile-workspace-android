@@ -41,7 +41,7 @@ class SearchUserComponentViewModel(
     private val liveSearchUserEvents: MutableStateFlow<SearchUserParams>
     private val searchUserEvents: MutableStateFlow<SearchUserParams>
     private var params: SearchUserParams
-    var searchByName = true
+    var searchByNameOrIndividual = true
 
     init {
         params = SearchUserParams()
@@ -99,7 +99,7 @@ class SearchUserComponentViewModel(
      * update the params on the basis of name or email to search the user.
      */
     fun setSearchQuery(term: String) {
-        params = if (searchByName)
+        params = if (searchByNameOrIndividual)
             params.copy(name = term, email = "")
         else params.copy(name = "", email = term)
 

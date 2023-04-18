@@ -30,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 /**
  * Marked as SearchUserComponentSheet class
  */
-class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
+class SearchUserAndGroupComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     internal val viewModel: SearchUserComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentSearchUserBinding

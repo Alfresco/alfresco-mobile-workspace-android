@@ -4,6 +4,7 @@ import androidx.core.view.isVisible
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.common.updatePriorityView
+import com.alfresco.content.setSafeOnClickListener
 
 internal fun ProcessDetailFragment.showStartFormView() {
     binding.clStatus.isVisible = false
@@ -29,4 +30,15 @@ internal fun ProcessDetailFragment.setInitData() = withState(viewModel) { state 
     binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
     binding.completeButton.text = getString(R.string.title_start_workflow)
     binding.tvPriorityValue.updatePriorityView(3)
+}
+
+internal fun ProcessDetailFragment.setListeners() {
+    binding.iconAssignedEdit.setSafeOnClickListener {
+        withState(viewModel) { state ->
+            requireNotNull(state.entry)
+            val result = showSearchUserComponentDialog(
+                requireContext(), state.parent
+            )
+        }
+    }
 }

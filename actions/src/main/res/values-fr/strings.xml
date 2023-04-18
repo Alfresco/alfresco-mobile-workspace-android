@@ -75,5 +75,8 @@
     <string name="action_menu_edit">Modifier</string>
     <string name="action_menu_done">Terminé</string>
     <string name="action_update_task_name_description">Nom et description</string>
+    <string name="action_start_workflow">Démarrer un workflow</string>
+    <string name="action_workflow_started">Le workflow a été démarré</string>
+    <string name="title_select_workflow">Sélectionner le workflow</string>
 
 </resources>

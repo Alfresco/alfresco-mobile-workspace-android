@@ -10,7 +10,7 @@
     <string name="priority_none">NV</string>
     <string name="me_title">Mich</string>
     <string name="me_title_initial">M</string>
-    <string name="accessibility_text_task_row">Titel: %s Benutzer: %s Priorität %s</string>
+    <string name="accessibility_text_task_row">Titel: %s Zugewiesener Benutzer: %s Priorität %s</string>
     <string name="accessibility_text_simple_row">Titel: %s Pfad: %s</string>
     <string name="accessibility_text_title">Titel: %s</string>
     <string name="accessibility_text_folder">Ordner: %s</string>
@@ -21,4 +21,9 @@
     <string name="accessibility_text_add_favorite">Favorit hinzufügen</string>
     <string name="accessibility_text_remove_favorite">Favorit entfernen</string>
     <string name="accessibility_text_create_button">Erstellen</string>
+    <string name="error_duplicate_folder">Es gibt bereits einen Ordner mit diesem Namen. Versuchen Sie es mit einem anderen Namen.</string>
+    <string name="accessibility_text_process_row">Titel: %s Zugewiesener Benutzer: %s</string>
+    <string name="individual_title">Einzelperson</string>
+    <string name="group_title">Gruppe</string>
+    <string name="warning_message_uploading_in_progress">Der Hochladevorgang wird gerade durchgeführt. Möchten Sie ohne Upload fortfahren?</string>
 </resources>

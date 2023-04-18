@@ -26,4 +26,5 @@
     <string name="text_by_name">Per nome</string>
     <string name="text_by_email">Per e-mail</string>
     <string name="text_back_button">Pulsante Indietro</string>
+    <string name="filter.option.all">Tutti</string>
 </resources>

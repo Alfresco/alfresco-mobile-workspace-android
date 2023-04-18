@@ -75,5 +75,8 @@
     <string name="action_menu_edit">Modifica</string>
     <string name="action_menu_done">Completato</string>
     <string name="action_update_task_name_description">Nome e descrizione</string>
+    <string name="action_start_workflow">Avvia workflow</string>
+    <string name="action_workflow_started">Il workflow è stato avviato</string>
+    <string name="title_select_workflow">Seleziona workflow</string>
 
 </resources>

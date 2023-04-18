@@ -1,6 +1,6 @@
 <resources>
     <string name="auth_app_name">Auth Library</string>
-    <string name="auth_copyright_notice">© 2023 Alfresco Software, Inc. Todos los derechos reservados.</string>
+    <string name="auth_copyright_notice">© 2023 Hyland Software, Inc. y sus afiliados. Todos los derechos reservados.</string>
 
     <string name="auth_connect_field_hint">Conectar a</string>
     <string name="auth_connect_button">Conectar</string>

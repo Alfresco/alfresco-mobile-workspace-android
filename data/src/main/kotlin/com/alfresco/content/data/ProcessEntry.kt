@@ -60,6 +60,9 @@ data class ProcessEntry(
             )
         }
 
+        /**
+         * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
+         */
         fun with(data: RuntimeProcessDefinitionDataEntry): ProcessEntry {
             return ProcessEntry(
                 id = data.id?.toString() ?: "",
@@ -95,6 +98,10 @@ data class ProcessEntry(
                 priority = priority
             )
         }
+
+        /**
+         * updating the due date into existing object
+         */
 
         fun updateDueDate(data: ProcessEntry, formattedDate: String?): ProcessEntry {
             return ProcessEntry(

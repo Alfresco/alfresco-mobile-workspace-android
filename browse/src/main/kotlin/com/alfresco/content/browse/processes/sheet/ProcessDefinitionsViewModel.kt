@@ -31,7 +31,7 @@ internal class ProcessDefinitionsViewModel(
                     is Success -> {
                         ProcessDefinitionsState(
                             entry = state.entry,
-                            listProcessDefinitions = it().first.listProcessDefinitions
+                            listProcessDefinitions = it().first.listRuntimeProcessDefinitions
                         )
                     }
                     else -> {

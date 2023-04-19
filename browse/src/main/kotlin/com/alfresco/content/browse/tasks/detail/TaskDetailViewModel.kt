@@ -54,7 +54,7 @@ class TaskDetailViewModel(
         }
         copyEntry(state.parent)
         viewModelScope.on<ActionUpdateNameDescription> {
-            setState { copy(parent = it.entry) }
+            setState { copy(parent = it.entry as TaskEntry) }
         }
     }
 

@@ -99,7 +99,7 @@ internal fun TaskDetailFragment.setListeners() {
                     requireContext(), ComponentData(
                         name = requireContext().getString(R.string.title_priority),
                         query = dataObj?.priority.toString(),
-                        selector = ComponentType.TASK_PRIORITY.value
+                        selector = ComponentType.TASK_PROCESS_PRIORITY.value
                     )
                 )
 

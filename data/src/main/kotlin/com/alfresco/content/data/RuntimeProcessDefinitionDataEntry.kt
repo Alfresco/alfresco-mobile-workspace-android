@@ -1,14 +1,14 @@
 package com.alfresco.content.data
 
 import android.os.Parcelable
-import com.alfresco.process.models.ProcessDefinitionEntry
+import com.alfresco.process.models.RuntimeProcessDefinitionEntry
 import kotlinx.parcelize.Parcelize
 
 /**
- * Marked as ProcessDefinitionDataEntry
+ * Marked as RuntimeProcessDefinitionDataEntry
  */
 @Parcelize
-data class ProcessDefinitionDataEntry(
+data class RuntimeProcessDefinitionDataEntry(
     val id: Int? = null,
     val defaultAppId: String? = null,
     val name: String? = null,
@@ -22,10 +22,10 @@ data class ProcessDefinitionDataEntry(
     companion object {
 
         /**
-         * return ProcessDefinitionDataEntry by using ProcessDefinitionEntry
+         * return RuntimeProcessDefinitionDataEntry by using RuntimeProcessDefinitionEntry
          */
-        fun with(raw: ProcessDefinitionEntry): ProcessDefinitionDataEntry {
-            return ProcessDefinitionDataEntry(
+        fun with(raw: RuntimeProcessDefinitionEntry): RuntimeProcessDefinitionDataEntry {
+            return RuntimeProcessDefinitionDataEntry(
                 id = raw.id,
                 defaultAppId = raw.defaultAppId,
                 name = raw.name,

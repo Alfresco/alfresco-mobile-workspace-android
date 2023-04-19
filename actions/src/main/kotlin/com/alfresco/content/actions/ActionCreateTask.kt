@@ -29,7 +29,7 @@ data class ActionCreateTask(
 
     private suspend fun showCreateTaskDialog(context: Context) = withContext(Dispatchers.Main) {
         suspendCoroutine {
-            CreateTaskDialog.Builder(context, false, entry)
+            CreateTaskDialog.Builder(context, false, CreateMetadata(entry.name, entry.description ?: ""))
                 .onSuccess { title, description ->
                     it.resume(CreateMetadata(title, description))
                 }

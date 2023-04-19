@@ -17,6 +17,7 @@ import com.alfresco.content.actions.listRowProcessDefinitions
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ProcessEntry
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -70,9 +71,10 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(it.id)
                     processDefinition(it)
                     clickListener { model, _, _, _ ->
+                        val processEntry = ProcessEntry.with(model.processDefinition())
                         startActivity(
                             Intent(requireActivity(), ProcessDetailActivity::class.java)
-                                .putExtra(Mavericks.KEY_ARG, model.processDefinition())
+                                .putExtra(Mavericks.KEY_ARG, processEntry)
                         )
                         dismiss()
                     }

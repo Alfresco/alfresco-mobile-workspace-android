@@ -1,27 +1,27 @@
 package com.alfresco.content.data
 
-import com.alfresco.process.models.ResultListProcessDefinitions
+import com.alfresco.process.models.ResultListRuntimeProcessDefinitions
 
 /**
- * Marked as ResponseList class
+ * Marked as ResponseListProcessDefinitions class
  */
 data class ResponseListProcessDefinitions(
     val size: Int,
     val total: Int,
     val start: Int,
-    val listProcessDefinitions: List<ProcessDefinitionDataEntry> = emptyList()
+    val listRuntimeProcessDefinitions: List<RuntimeProcessDefinitionDataEntry> = emptyList()
 ) {
     companion object {
 
         /**
-         * return the ResponseList obj using ResultList
+         * return the ResponseListProcessDefinitions obj using ResultListRuntimeProcessDefinitions
          */
-        fun with(raw: ResultListProcessDefinitions): ResponseListProcessDefinitions {
+        fun with(raw: ResultListRuntimeProcessDefinitions): ResponseListProcessDefinitions {
             return ResponseListProcessDefinitions(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listProcessDefinitions = raw.data?.filter { it.deploymentId != null }?.map { ProcessDefinitionDataEntry.with(it) } ?: emptyList()
+                listRuntimeProcessDefinitions = raw.data?.filter { it.deploymentId != null }?.map { RuntimeProcessDefinitionDataEntry.with(it) } ?: emptyList()
             )
         }
     }

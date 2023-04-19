@@ -41,7 +41,7 @@ class SearchUserGroupComponentViewModel(
 ) : MavericksViewModel<SearchUserGroupComponentState>(stateChipCreate) {
     private val liveSearchUserEvents: MutableStateFlow<SearchUserGroupParams>
     private val searchUserEvents: MutableStateFlow<SearchUserGroupParams>
-    private var params: SearchUserGroupParams
+    var params: SearchUserGroupParams
     var searchByNameOrIndividual = true
     var canSearchGroups = false
 

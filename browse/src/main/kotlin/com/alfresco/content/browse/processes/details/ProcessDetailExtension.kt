@@ -107,7 +107,7 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
     }
 }
 
-fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
+internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
     if (state.entry.formattedDueDate.isNullOrEmpty()) {
         binding.iconDueDateClear.isVisible = false
         binding.iconDueDateEdit.isVisible = true

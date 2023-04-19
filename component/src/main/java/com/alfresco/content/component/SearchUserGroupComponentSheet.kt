@@ -21,7 +21,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.common.isValidEmail
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -116,17 +115,6 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         } else executeSearch(term)
     }
 
-    private fun executeSearch(term: String) {
-        scrollToTop()
-        viewModel.setSearchQuery(term)
-    }
-
-    private fun scrollToTop() {
-        if (isResumed) {
-            binding.recyclerView.layoutManager?.scrollToPosition(0)
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         view?.viewTreeObserver?.addOnGlobalLayoutListener {
@@ -169,18 +157,5 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         }
 
         epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        state.listUserGroup.forEach { item ->
-            listViewUserRow {
-                id(item.id)
-                data(item)
-                clickListener { model, _, _, _ ->
-                    onApply?.invoke(model.data())
-                    dismiss()
-                }
-            }
-        }
     }
 }

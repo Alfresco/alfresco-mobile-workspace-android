@@ -78,7 +78,7 @@ data class Entry(
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val created: ZonedDateTime? = null,
     @Transient
-    val userDetails: UserDetails? = null,
+    val userGroupDetails: UserGroupDetails? = null,
     val isRelatedContent: Boolean? = false,
     val isContentAvailable: Boolean? = false,
     val hasLink: Boolean? = false,
@@ -394,7 +394,7 @@ data class Entry(
                 parentId = parentId,
                 name = data.name ?: "",
                 created = data.created,
-                userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails(),
+                userGroupDetails = data.createdBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
                 isRelatedContent = data.relatedContent,
                 isContentAvailable = data.contentAvailable,
                 mimeType = data.mimeType,

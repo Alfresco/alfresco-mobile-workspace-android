@@ -19,9 +19,13 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
+import com.alfresco.content.component.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 import com.alfresco.ui.getDrawableForAttribute
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -70,6 +74,7 @@ class ProcessDetailFragment : Fragment(), MavericksView {
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = false
         setData(state)
+        updateUI(state)
     }
 
     private fun setData(state: ProcessDetailViewState) {
@@ -82,6 +87,13 @@ class ProcessDetailFragment : Fragment(), MavericksView {
         binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
         binding.completeButton.text = getString(R.string.title_start_workflow)
         binding.tvPriorityValue.updatePriorityView(state.entry.priority)
+        binding.tvAssignedValue.apply {
+            text = if (dataEntry.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
+                requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: "")
+            } else if (dataEntry.startedBy?.groupName?.isNotEmpty() == true)
+                requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: "")
+            else requireContext().getLocalizedName(dataEntry.startedBy?.name ?: "")
+        }
     }
 
     internal suspend fun showComponentSheetDialog(
@@ -106,5 +118,22 @@ class ProcessDetailFragment : Fragment(), MavericksView {
 
     private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
         continuation.resume(ComponentMetaData(name = name, query = query))
+    }
+
+    internal suspend fun showSearchUserGroupComponentDialog(
+        context: Context,
+        processEntry: ProcessEntry
+    ) = withContext(dispatcher) {
+        suspendCoroutine {
+
+            SearchUserGroupComponentBuilder(context, processEntry)
+                .onApply { userDetails ->
+                    it.resume(userDetails)
+                }
+                .onCancel {
+                    it.resume(null)
+                }
+                .show()
+        }
     }
 }

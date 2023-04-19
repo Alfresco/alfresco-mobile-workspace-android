@@ -9,6 +9,7 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 
@@ -39,10 +40,20 @@ class ProcessDetailViewModel(
     /**
      * update the formatted date in the existing ProcessEntry obj and update the UI.
      */
-    fun updateDate(formattedDate: String?) {
+    fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
         setState {
             requireNotNull(this.entry)
-            copy(entry = ProcessEntry.updateDueDate(this.entry, formattedDate))
+            copy(entry = ProcessEntry.updateDueDate(this.entry, formattedDate, isClearDueDate))
+        }
+    }
+
+    /**
+     * update the assignee in the existing ProcessEntry obj and update the UI.
+     */
+    fun updateAssignee(result: UserGroupDetails) {
+        setState {
+            requireNotNull(this.entry)
+            copy(entry = ProcessEntry.updateAssignee(this.entry, result))
         }
     }
 
@@ -50,6 +61,11 @@ class ProcessDetailViewModel(
      * It will execute while showing the dialog to update task name and description.
      */
     fun execute(action: Action) = action.execute(context, GlobalScope)
+
+    /**
+     * returns the current logged in APS user profile data
+     */
+    fun getAPSUser() = repository.getAPSUser()
 
     companion object : MavericksViewModelFactory<ProcessDetailViewModel, ProcessDetailViewState> {
 

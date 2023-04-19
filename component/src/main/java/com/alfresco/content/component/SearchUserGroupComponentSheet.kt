@@ -21,18 +21,17 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.common.isValidEmail
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
 import com.alfresco.content.hideSoftInput
-import com.alfresco.content.simpleController
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
- * Marked as SearchUserComponentSheet class
+ * Marked as SearchUserGroupComponentSheet class
  */
-class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
+class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
-    internal val viewModel: SearchUserComponentViewModel by fragmentViewModel()
+    internal val viewModel: SearchUserGroupComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentSearchUserBinding
 
     var onApply: SearchUserComponentApplyCallback? = null
@@ -78,19 +77,19 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
             }
         })
 
-        binding.searchByName.setOnCheckedChangeListener { button, isChecked ->
+        binding.searchByNameOrIndividual.setOnCheckedChangeListener { button, isChecked ->
             if (isChecked) {
-                viewModel.searchByName = isChecked
-                binding.searchByEmail.isChecked = !isChecked
-                changeTab(button, binding.searchByEmail)
+                viewModel.searchByNameOrIndividual = isChecked
+                binding.searchByEmailOrGroups.isChecked = !isChecked
+                changeTab(button, binding.searchByEmailOrGroups)
             }
         }
 
-        binding.searchByEmail.setOnCheckedChangeListener { button, isChecked ->
+        binding.searchByEmailOrGroups.setOnCheckedChangeListener { button, isChecked ->
             if (isChecked) {
-                viewModel.searchByName = !isChecked
-                binding.searchByName.isChecked = !isChecked
-                changeTab(button, binding.searchByName)
+                viewModel.searchByNameOrIndividual = !isChecked
+                binding.searchByNameOrIndividual.isChecked = !isChecked
+                changeTab(button, binding.searchByNameOrIndividual)
             }
         }
         binding.recyclerView.setOnTouchListener { view, event ->
@@ -107,26 +106,13 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun setSearchQuery(query: String) {
-        val term = cleanupSearchQuery(query)
-        if (!viewModel.searchByName) {
-            if (term.isValidEmail())
+        val term = query.replace("\\s+".toRegex(), " ").trim()
+        if (!viewModel.searchByNameOrIndividual) {
+            if (!viewModel.canSearchGroups && term.isValidEmail())
+                executeSearch(term)
+            else
                 executeSearch(term)
         } else executeSearch(term)
-    }
-
-    private fun executeSearch(term: String) {
-        scrollToTop()
-        viewModel.setSearchQuery(term)
-    }
-
-    private fun cleanupSearchQuery(query: String): String {
-        return query.replace("\\s+".toRegex(), " ").trim()
-    }
-
-    private fun scrollToTop() {
-        if (isResumed) {
-            binding.recyclerView.layoutManager?.scrollToPosition(0)
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -162,19 +148,14 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestUser is Loading
 
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        state.listUser.forEach { item ->
-            listViewUserRow {
-                id(item.id)
-                data(item)
-                clickListener { model, _, _, _ ->
-                    onApply?.invoke(model.data())
-                    dismiss()
-                }
-            }
+        if (viewModel.canSearchGroups) {
+            binding.searchByNameOrIndividual.text = getString(R.string.individual_title)
+            binding.searchByEmailOrGroups.text = getString(R.string.group_title)
+        } else {
+            binding.searchByNameOrIndividual.text = getString(R.string.text_by_name)
+            binding.searchByEmailOrGroups.text = getString(R.string.text_by_email)
         }
+
+        epoxyController.requestModelBuild()
     }
 }

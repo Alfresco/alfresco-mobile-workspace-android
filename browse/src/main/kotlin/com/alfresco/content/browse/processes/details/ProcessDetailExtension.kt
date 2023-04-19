@@ -8,6 +8,7 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
+import com.alfresco.content.common.isEllipsized
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
@@ -23,7 +24,6 @@ internal fun ProcessDetailFragment.showStartFormView() {
     binding.clStatus.isVisible = false
     binding.clIdentifier.isVisible = false
     binding.clComment.isVisible = false
-
     binding.iconTitleEdit.isVisible = true
     binding.iconDueDateEdit.isVisible = true
     binding.iconPriorityEdit.isVisible = true
@@ -40,10 +40,19 @@ internal fun ProcessDetailFragment.setListeners() {
             viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.entry)))
         }
     }
+    binding.tvTitle.setSafeOnClickListener {
+        if (binding.tvTitle.isEllipsized())
+            showTitleDescriptionComponent()
+    }
+    binding.tvDueDateValue.setSafeOnClickListener {
+        formatDateAndShowCalendar()
+    }
     binding.iconDueDateEdit.setSafeOnClickListener {
         formatDateAndShowCalendar()
     }
-
+    binding.iconDueDateClear.setSafeOnClickListener {
+        viewModel.updateDate(null, true)
+    }
     binding.iconPriorityEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             val dataObj = state.entry
@@ -58,6 +67,19 @@ internal fun ProcessDetailFragment.setListeners() {
 
                 if (result != null) {
                     viewModel.updatePriority(result)
+                }
+            }
+        }
+    }
+    binding.iconAssignedEdit.setSafeOnClickListener {
+        withState(viewModel) { state ->
+            requireNotNull(state.entry)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = showSearchUserGroupComponentDialog(
+                    requireContext(), state.entry
+                )
+                if (result != null) {
+                    viewModel.updateAssignee(result)
                 }
             }
         }
@@ -85,9 +107,32 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
     }
 }
 
+internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
+    if (state.entry.formattedDueDate.isNullOrEmpty()) {
+        binding.iconDueDateClear.isVisible = false
+        binding.iconDueDateEdit.isVisible = true
+    } else {
+        binding.iconDueDateEdit.isVisible = false
+        binding.iconDueDateClear.isVisible = true
+    }
+}
+
 private fun ProcessDetailFragment.formatDateAndShowCalendar() {
     withState(viewModel) { state ->
         val parseDate = state.entry.formattedDueDate?.parseDate(DATE_FORMAT_1)
         showCalendar(parseDate?.formatDate(DATE_FORMAT_4, parseDate) ?: "")
+    }
+}
+
+internal fun ProcessDetailFragment.showTitleDescriptionComponent() = withState(viewModel) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        showComponentSheetDialog(
+            requireContext(), ComponentData(
+                name = requireContext().getString(R.string.title_start_workflow),
+                query = it.entry.name,
+                value = it.entry.description,
+                selector = ComponentType.VIEW_TEXT.value
+            )
+        )
     }
 }

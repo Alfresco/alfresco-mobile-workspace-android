@@ -13,12 +13,12 @@ data class TaskEntry(
     val id: String = "",
     val name: String = "",
     val description: String? = null,
-    val assignee: UserDetails? = null,
+    val assignee: UserGroupDetails? = null,
     var priority: Int = 0,
     val created: ZonedDateTime? = null,
     val endDate: ZonedDateTime? = null,
     val dueDate: ZonedDateTime? = null,
-    val involvedPeople: List<UserDetails> = listOf(),
+    val involvedPeople: List<UserGroupDetails> = listOf(),
     val formattedDueDate: String? = null,
     val duration: Long? = null,
     val isNewTaskCreated: Boolean = false
@@ -32,19 +32,19 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using TaskDataEntry
          */
-        fun with(data: TaskDataEntry, apsUser: UserDetails? = null, isNewTaskCreated: Boolean = false): TaskEntry {
+        fun with(data: TaskDataEntry, apsUser: UserGroupDetails? = null, isNewTaskCreated: Boolean = false): TaskEntry {
             val isAssigneeUser = apsUser?.id == data.assignee?.id
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
                 description = data.description,
                 created = data.created,
-                assignee = if (isAssigneeUser) apsUser?.let { UserDetails.with(it) } else data.assignee?.let { UserDetails.with(it) } ?: UserDetails(),
+                assignee = if (isAssigneeUser) apsUser?.let { UserGroupDetails.with(it) } else data.assignee?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
                 priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
-                involvedPeople = data.involvedPeople?.map { UserDetails.with(it) } ?: emptyList(),
+                involvedPeople = data.involvedPeople?.map { UserGroupDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated
             )
         }
@@ -113,7 +113,7 @@ data class TaskEntry(
         /**
          * updating the task assignee into existing object
          */
-        fun updateAssignee(data: TaskEntry, assignee: UserDetails): TaskEntry {
+        fun updateAssignee(data: TaskEntry, assignee: UserGroupDetails): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,

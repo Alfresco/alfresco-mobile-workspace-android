@@ -13,7 +13,7 @@ data class CommentEntry(
     val id: Int = 0,
     val message: String = "",
     val created: ZonedDateTime? = null,
-    val userDetails: UserDetails? = null
+    val userGroupDetails: UserGroupDetails? = null
 ) : Parcelable {
 
     companion object {
@@ -25,17 +25,17 @@ data class CommentEntry(
                 id = data.id ?: 0,
                 message = data.message ?: "",
                 created = data.created,
-                userDetails = data.createdBy?.let { UserDetails.with(it) } ?: UserDetails()
+                userGroupDetails = data.createdBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails()
             ).withAssignData()
         }
 
         /**
          * returns the CommentEntry obj by adding message
          */
-        fun addComment(message: String, userDetails: UserDetails): CommentEntry {
+        fun addComment(message: String, userGroupDetails: UserGroupDetails): CommentEntry {
             return CommentEntry(
                 message = message,
-                userDetails = userDetails,
+                userGroupDetails = userGroupDetails,
                 created = ZonedDateTime.now()
             )
         }
@@ -43,9 +43,9 @@ data class CommentEntry(
 
     private fun withAssignData(): CommentEntry {
         val apsUser = TaskRepository().getAPSUser()
-        return if (apsUser.id == this.userDetails?.id) {
+        return if (apsUser.id == this.userGroupDetails?.id) {
             copy(
-                userDetails = this.userDetails.let { UserDetails.with(it) }
+                userGroupDetails = this.userGroupDetails.let { UserGroupDetails.with(it) }
             )
         } else this
     }

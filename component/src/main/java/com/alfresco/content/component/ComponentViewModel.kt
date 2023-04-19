@@ -26,7 +26,7 @@ class ComponentViewModel(
     stateChipCreate: ComponentState
 ) : MavericksViewModel<ComponentState>(stateChipCreate) {
 
-    private var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
+    var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
     private var isFacetComponent: Boolean = false
     var onSearchComplete: ((List<ComponentOptions>) -> Unit)? = null
     var searchComponentList: List<ComponentOptions> = emptyList()

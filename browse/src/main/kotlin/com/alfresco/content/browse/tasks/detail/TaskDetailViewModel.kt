@@ -18,7 +18,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.UserDetails
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
@@ -258,7 +258,7 @@ class TaskDetailViewModel(
     /**
      * update the assignee in the existing TaskEntry obj and update the UI.
      */
-    fun updateAssignee(result: UserDetails) {
+    fun updateAssignee(result: UserGroupDetails) {
         setState {
             requireNotNull(this.parent)
             copy(parent = TaskEntry.updateAssignee(this.parent, result))

@@ -30,8 +30,8 @@ class ListViewCommentRow @JvmOverloads constructor(
      */
     @ModelProp
     fun setData(data: CommentEntry) {
-        binding.tvName.text = context.getLocalizedName(data.userDetails?.name ?: "")
-        binding.tvUserInitial.text = context.getLocalizedName(data.userDetails?.nameInitial ?: "")
+        binding.tvName.text = context.getLocalizedName(data.userGroupDetails?.name ?: "")
+        binding.tvUserInitial.text = context.getLocalizedName(data.userGroupDetails?.nameInitial ?: "")
         binding.tvComment.text = data.message
         binding.tvDate.text = if (data.created != null) data.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
     }

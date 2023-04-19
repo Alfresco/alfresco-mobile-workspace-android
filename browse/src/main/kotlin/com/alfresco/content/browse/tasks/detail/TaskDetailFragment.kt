@@ -38,7 +38,7 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
-import com.alfresco.content.component.SearchUserComponentBuilder
+import com.alfresco.content.component.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.Entry
@@ -46,7 +46,7 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.data.UserDetails
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.EntryListener
@@ -226,8 +226,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvNoOfComments.visibility = View.GONE
             }
 
-            commentViewBinding.tvUserInitial.text = requireContext().getLocalizedName(commentObj.userDetails?.nameInitial ?: "")
-            commentViewBinding.tvName.text = requireContext().getLocalizedName(commentObj.userDetails?.name ?: "")
+            commentViewBinding.tvUserInitial.text = requireContext().getLocalizedName(commentObj.userGroupDetails?.nameInitial ?: "")
+            commentViewBinding.tvName.text = requireContext().getLocalizedName(commentObj.userGroupDetails?.name ?: "")
             commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
             commentViewBinding.tvComment.text = commentObj.message
         } else {
@@ -252,7 +252,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             binding.tvPriorityValue.updatePriorityView(dataObj.priority)
             binding.tvAssignedValue.apply {
                 text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
-                    requireContext().getLocalizedName(dataObj.assignee?.let { UserDetails.with(it).name } ?: "")
+                    requireContext().getLocalizedName(dataObj.assignee?.let { UserGroupDetails.with(it).name } ?: "")
                 } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
             }
             binding.tvIdentifierValue.text = dataObj.id
@@ -412,7 +412,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     ) = withContext(dispatcher) {
         suspendCoroutine {
 
-            SearchUserComponentBuilder(context, taskEntry)
+            SearchUserGroupComponentBuilder(context, taskEntry)
                 .onApply { userDetails ->
                     it.resume(userDetails)
                 }

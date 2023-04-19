@@ -10,9 +10,10 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.ResponseUserList
+import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ResponseUserGroupList
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.UserDetails
+import com.alfresco.content.data.UserGroupDetails
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,31 +26,33 @@ import kotlinx.coroutines.launch
 /**
  * Marked as SearchUserParams class
  */
-data class SearchUserParams(
-    val name: String = "",
-    val email: String = ""
+data class SearchUserGroupParams(
+    val nameOrIndividual: String = "",
+    val emailOrGroups: String = ""
 )
 
 /**
  * Mark as SearchUserComponentViewModel class
  */
-class SearchUserComponentViewModel(
+class SearchUserGroupComponentViewModel(
     val context: Context,
-    stateChipCreate: SearchUserComponentState,
+    stateChipCreate: SearchUserGroupComponentState,
     private val repository: TaskRepository
-) : MavericksViewModel<SearchUserComponentState>(stateChipCreate) {
-    private val liveSearchUserEvents: MutableStateFlow<SearchUserParams>
-    private val searchUserEvents: MutableStateFlow<SearchUserParams>
-    private var params: SearchUserParams
-    var searchByName = true
+) : MavericksViewModel<SearchUserGroupComponentState>(stateChipCreate) {
+    private val liveSearchUserEvents: MutableStateFlow<SearchUserGroupParams>
+    private val searchUserEvents: MutableStateFlow<SearchUserGroupParams>
+    var params: SearchUserGroupParams
+    var searchByNameOrIndividual = true
+    var canSearchGroups = false
 
     init {
-        params = SearchUserParams()
+        params = SearchUserGroupParams()
         liveSearchUserEvents = MutableStateFlow(params)
         searchUserEvents = MutableStateFlow(params)
 
         setState {
-            copy(listUser = listOf(getLoggedInUser()))
+            canSearchGroups = parent is ProcessEntry
+            copy(listUserGroup = listOf(getLoggedInUser()))
         }
 
         viewModelScope.launch {
@@ -57,9 +60,12 @@ class SearchUserComponentViewModel(
                 liveSearchUserEvents.debounce(DEFAULT_DEBOUNCE_TIME),
                 searchUserEvents
             ).filter {
-                it.name.length >= MIN_QUERY_LENGTH || it.email.length >= MIN_QUERY_LENGTH
+                it.nameOrIndividual.length >= MIN_QUERY_LENGTH || it.emailOrGroups.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                repository.searchUser(it.name, it.email)
+                if (canSearchGroups && it.emailOrGroups.isNotEmpty())
+                    repository.searchGroups(it.emailOrGroups)
+                else
+                    repository.searchUser(it.nameOrIndividual, it.emailOrGroups)
             }) {
                 if (it is Loading) {
                     copy(requestUser = it)
@@ -68,10 +74,10 @@ class SearchUserComponentViewModel(
                     copy(requestUser = it)
                 } else {
                     AnalyticsManager().apiTracker(APIEvent.SearchUser, true)
-                    if (params.name.isEmpty() && params.email.isEmpty())
-                        updateUserEntries(ResponseUserList(), getLoggedInUser()).copy(requestUser = it)
+                    if (params.nameOrIndividual.isEmpty() && params.emailOrGroups.isEmpty())
+                        updateUserGroupEntries(ResponseUserGroupList(), getLoggedInUser()).copy(requestUser = it)
                     else {
-                        updateUserEntries(it(), getLoggedInUser()).copy(requestUser = it)
+                        updateUserGroupEntries(it(), getLoggedInUser()).copy(requestUser = it)
                     }
                 }
             }
@@ -80,7 +86,7 @@ class SearchUserComponentViewModel(
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(
         action: suspend (value: T) -> V,
-        stateReducer: SearchUserComponentState.(Async<V>) -> SearchUserComponentState
+        stateReducer: SearchUserGroupComponentState.(Async<V>) -> SearchUserGroupComponentState
     ) {
         collectLatest {
             setState { stateReducer(Loading()) }
@@ -99,21 +105,27 @@ class SearchUserComponentViewModel(
      * update the params on the basis of name or email to search the user.
      */
     fun setSearchQuery(term: String) {
-        params = if (searchByName)
-            params.copy(name = term, email = "")
-        else params.copy(name = "", email = term)
+        params = if (searchByNameOrIndividual) {
+            if (term.isEmpty()) updateDefaultUserGroup(listOf(getLoggedInUser()))
+            params.copy(nameOrIndividual = term, emailOrGroups = "")
+        } else {
+            if (canSearchGroups && term.isEmpty()) updateDefaultUserGroup(emptyList())
+            params.copy(nameOrIndividual = "", emailOrGroups = term)
+        }
 
         liveSearchUserEvents.value = params
     }
 
-    private fun getLoggedInUser() = UserDetails.with(repository.getAPSUser())
+    private fun updateDefaultUserGroup(list: List<UserGroupDetails>) = setState { copy(listUserGroup = list) }
 
-    companion object : MavericksViewModelFactory<SearchUserComponentViewModel, SearchUserComponentState> {
+    private fun getLoggedInUser() = UserGroupDetails.with(repository.getAPSUser())
+
+    companion object : MavericksViewModelFactory<SearchUserGroupComponentViewModel, SearchUserGroupComponentState> {
         const val MIN_QUERY_LENGTH = 1
         const val DEFAULT_DEBOUNCE_TIME = 300L
         override fun create(
             viewModelContext: ViewModelContext,
-            state: SearchUserComponentState
-        ) = SearchUserComponentViewModel(viewModelContext.activity(), state, TaskRepository())
+            state: SearchUserGroupComponentState
+        ) = SearchUserGroupComponentViewModel(viewModelContext.activity(), state, TaskRepository())
     }
 }

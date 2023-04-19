@@ -8,7 +8,7 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.actions.databinding.ViewProcessDefinitionsListRowBinding
-import com.alfresco.content.data.ProcessDefinitionDataEntry
+import com.alfresco.content.data.RuntimeProcessDefinitionDataEntry
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 internal class ListRowProcessDefinitions @JvmOverloads constructor(
@@ -19,7 +19,7 @@ internal class ListRowProcessDefinitions @JvmOverloads constructor(
     private val binding = ViewProcessDefinitionsListRowBinding.inflate(LayoutInflater.from(context), this, true)
 
     @ModelProp(options = [ModelProp.Option.IgnoreRequireHashCode])
-    fun setProcessDefinition(data: ProcessDefinitionDataEntry) {
+    fun setProcessDefinition(data: RuntimeProcessDefinitionDataEntry) {
         binding.apply {
             title.text = data.name
             subtitle.text = data.description

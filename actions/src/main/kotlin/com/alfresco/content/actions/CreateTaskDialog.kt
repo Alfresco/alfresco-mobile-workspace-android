@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.databinding.DialogCreateLayoutBinding
-import com.alfresco.content.data.TaskEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 internal typealias CreateTaskSuccessCallback = (String, String) -> Unit
@@ -36,7 +35,7 @@ class CreateTaskDialog : DialogFragment() {
     var onSuccess: CreateTaskSuccessCallback? = null
     var onCancel: CreateTaskCancelCallback? = null
     var isUpdate: Boolean = false
-    var taskEntry: TaskEntry? = null
+    var dataObj: CreateMetadata? = null
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
@@ -75,14 +74,14 @@ class CreateTaskDialog : DialogFragment() {
             }
         })
 
-        if (isUpdate && taskEntry?.name != null) {
-            binding.nameInput.setText(taskEntry?.name)
+        if (isUpdate && dataObj?.name != null) {
+            binding.nameInput.setText(dataObj?.name)
             positiveButton.isEnabled = true
         } else {
             // Default disabled
             positiveButton.isEnabled = binding.nameInput.text.toString().isNotEmpty()
         }
-        binding.descriptionInput.setText(taskEntry?.description)
+        binding.descriptionInput.setText(dataObj?.description)
         binding.nameInput.requestFocus()
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
@@ -104,7 +103,7 @@ class CreateTaskDialog : DialogFragment() {
     data class Builder(
         val context: Context,
         val isUpdate: Boolean,
-        val taskEntry: TaskEntry? = null,
+        val dataObj: CreateMetadata? = null,
         var onSuccess: CreateTaskSuccessCallback? = null,
         var onCancel: CreateTaskCancelCallback? = null
     ) {
@@ -134,7 +133,7 @@ class CreateTaskDialog : DialogFragment() {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel
                 isUpdate = this@Builder.isUpdate
-                taskEntry = this@Builder.taskEntry
+                dataObj = this@Builder.dataObj
             }.show(fragmentManager, CreateTaskDialog::class.java.simpleName)
         }
     }

@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
 data class ProcessEntry(
     val id: String = "",
     val name: String = "",
+    val description: String = "",
     val businessKey: String? = null,
     val processDefinitionId: String? = null,
     val tenantId: String? = null,
@@ -26,7 +27,9 @@ data class ProcessEntry(
     val processDefinitionDeploymentId: Int? = null,
     val graphicalNotationDefined: Boolean? = null,
     val startFormDefined: Boolean? = null,
-    val suspended: Boolean? = null
+    val suspended: Boolean? = null,
+    var priority: Int = 0,
+    val formattedDueDate: String? = null
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -54,6 +57,99 @@ data class ProcessEntry(
                 graphicalNotationDefined = data.graphicalNotationDefined,
                 startFormDefined = data.startFormDefined,
                 suspended = data.suspended
+            )
+        }
+
+        fun with(data: RuntimeProcessDefinitionDataEntry): ProcessEntry {
+            return ProcessEntry(
+                id = data.id?.toString() ?: "",
+                name = data.name ?: "",
+                description = data.description ?: ""
+            )
+        }
+
+        /**
+         * updating the priority into existing object
+         */
+        fun updatePriority(data: ProcessEntry, priority: Int): ProcessEntry {
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = priority
+            )
+        }
+
+        fun updateDueDate(data: ProcessEntry, formattedDate: String?): ProcessEntry {
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = formattedDate,
+                priority = data.priority
+            )
+        }
+
+        /**
+         * updating the name and description into existing object
+         */
+        fun updateNameDescription(
+            data: ProcessEntry,
+            name: String,
+            description: String
+        ): ProcessEntry {
+            return ProcessEntry(
+                id = data.id,
+                name = name,
+                description = description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = data.priority
             )
         }
     }

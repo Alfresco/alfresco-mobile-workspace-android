@@ -103,7 +103,7 @@ data class ProcessEntry(
          * updating the due date into existing object
          */
 
-        fun updateDueDate(data: ProcessEntry, formattedDate: String?): ProcessEntry {
+        fun updateDueDate(data: ProcessEntry, formattedDate: String?, isClearDueDate: Boolean): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
                 name = data.name,

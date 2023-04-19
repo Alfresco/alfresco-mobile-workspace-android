@@ -40,10 +40,10 @@ class ProcessDetailViewModel(
     /**
      * update the formatted date in the existing ProcessEntry obj and update the UI.
      */
-    fun updateDate(formattedDate: String?) {
+    fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
         setState {
             requireNotNull(this.entry)
-            copy(entry = ProcessEntry.updateDueDate(this.entry, formattedDate))
+            copy(entry = ProcessEntry.updateDueDate(this.entry, formattedDate, isClearDueDate))
         }
     }
 

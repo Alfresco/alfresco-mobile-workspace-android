@@ -74,6 +74,7 @@ class ProcessDetailFragment : Fragment(), MavericksView {
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = false
         setData(state)
+        updateUI(state)
     }
 
     private fun setData(state: ProcessDetailViewState) {

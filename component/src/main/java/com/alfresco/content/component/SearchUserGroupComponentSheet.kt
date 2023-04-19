@@ -107,7 +107,7 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
     }
 
     private fun setSearchQuery(query: String) {
-        val term = cleanupSearchQuery(query)
+        val term = query.replace("\\s+".toRegex(), " ").trim()
         if (!viewModel.searchByNameOrIndividual) {
             if (!viewModel.canSearchGroups && term.isValidEmail())
                 executeSearch(term)
@@ -119,10 +119,6 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
     private fun executeSearch(term: String) {
         scrollToTop()
         viewModel.setSearchQuery(term)
-    }
-
-    private fun cleanupSearchQuery(query: String): String {
-        return query.replace("\\s+".toRegex(), " ").trim()
     }
 
     private fun scrollToTop() {

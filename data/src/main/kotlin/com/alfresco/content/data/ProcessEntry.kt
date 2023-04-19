@@ -18,7 +18,7 @@ data class ProcessEntry(
     val tenantId: String? = null,
     val started: ZonedDateTime? = null,
     val ended: ZonedDateTime? = null,
-    val startedBy: UserDetails? = null,
+    val startedBy: UserGroupDetails? = null,
     val processDefinitionName: String? = null,
     val processDefinitionDescription: String? = null,
     val processDefinitionKey: String? = null,
@@ -37,7 +37,7 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using ProcessInstanceEntry
          */
-        fun with(data: ProcessInstanceEntry, apsUser: UserDetails? = null): ProcessEntry {
+        fun with(data: ProcessInstanceEntry, apsUser: UserGroupDetails? = null): ProcessEntry {
             val isAssigneeUser = apsUser?.id == data.startedBy?.id
             return ProcessEntry(
                 id = data.id ?: "",
@@ -47,7 +47,7 @@ data class ProcessEntry(
                 tenantId = data.tenantId,
                 started = data.started,
                 ended = data.ended,
-                startedBy = if (isAssigneeUser) apsUser?.let { UserDetails.with(it) } else data.startedBy?.let { UserDetails.with(it) } ?: UserDetails(),
+                startedBy = if (isAssigneeUser) apsUser?.let { UserGroupDetails.with(it) } else data.startedBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
                 processDefinitionName = data.processDefinitionName,
                 processDefinitionDescription = data.processDefinitionDescription,
                 processDefinitionKey = data.processDefinitionKey,
@@ -146,6 +146,34 @@ data class ProcessEntry(
                 started = data.started,
                 ended = data.ended,
                 startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = data.priority
+            )
+        }
+
+        /**
+         * updating the task assignee into existing object
+         */
+        fun updateAssignee(data: ProcessEntry, assignee: UserGroupDetails): ProcessEntry {
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = assignee,
                 processDefinitionName = data.processDefinitionName,
                 processDefinitionDescription = data.processDefinitionDescription,
                 processDefinitionKey = data.processDefinitionKey,

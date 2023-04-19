@@ -65,9 +65,14 @@ internal fun ProcessDetailFragment.setListeners() {
     binding.iconAssignedEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             requireNotNull(state.entry)
-            val result = showSearchUserComponentDialog(
-                requireContext(), state.parent
-            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = showSearchUserGroupComponentDialog(
+                    requireContext(), state.entry
+                )
+                if (result != null) {
+                    viewModel.updateAssignee(result)
+                }
+            }
         }
     }
 }

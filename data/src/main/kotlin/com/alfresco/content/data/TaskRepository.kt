@@ -191,8 +191,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * returns the userID of APS user
      */
-    fun getAPSUser(): UserDetails {
-        return UserDetails(
+    fun getAPSUser(): UserGroupDetails {
+        return UserGroupDetails(
             id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "0")?.toInt() ?: 0,
             email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
             firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
@@ -212,9 +212,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * It will call the api to search the user by name or email and returns the ResponseUserList type obj
      */
-    suspend fun searchUser(name: String, email: String): ResponseUserList {
-        return ResponseUserList.with(
+    suspend fun searchUser(name: String, email: String): ResponseUserGroupList {
+        return ResponseUserGroupList.with(
             tasksService.searchUser(filter = name, email = email)
+        )
+    }
+
+    /**
+     * It will call the api to search the group by name and returns the ResponseUserList type obj
+     */
+    suspend fun searchGroups(name: String): ResponseUserGroupList {
+        return ResponseUserGroupList.with(
+            processesService.searchGroups(latest = name)
         )
     }
 

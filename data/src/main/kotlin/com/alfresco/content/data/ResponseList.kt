@@ -18,7 +18,7 @@ data class ResponseList(
         /**
          * return the ResponseList obj using ResultList
          */
-        fun with(raw: ResultList, apsUser: UserDetails): ResponseList {
+        fun with(raw: ResultList, apsUser: UserGroupDetails): ResponseList {
             return ResponseList(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
@@ -30,7 +30,7 @@ data class ResponseList(
         /**
          * return the ResponseList obj using ResultListProcessInstances
          */
-        fun with(raw: ResultListProcessInstances, apsUser: UserDetails): ResponseList {
+        fun with(raw: ResultListProcessInstances, apsUser: UserGroupDetails): ResponseList {
             return ResponseList(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,

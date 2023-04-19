@@ -28,11 +28,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
- * Marked as SearchUserComponentSheet class
+ * Marked as SearchUserGroupComponentSheet class
  */
-class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
+class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
-    internal val viewModel: SearchUserComponentViewModel by fragmentViewModel()
+    internal val viewModel: SearchUserGroupComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentSearchUserBinding
 
     var onApply: SearchUserComponentApplyCallback? = null
@@ -109,7 +109,9 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
     private fun setSearchQuery(query: String) {
         val term = cleanupSearchQuery(query)
         if (!viewModel.searchByNameOrIndividual) {
-            if (term.isValidEmail())
+            if (!viewModel.canSearchGroups && term.isValidEmail())
+                executeSearch(term)
+            else
                 executeSearch(term)
         } else executeSearch(term)
     }
@@ -162,11 +164,19 @@ class SearchUserComponentSheet : BottomSheetDialogFragment(), MavericksView {
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestUser is Loading
 
+        if (viewModel.canSearchGroups) {
+            binding.searchByNameOrIndividual.text = getString(R.string.individual_title)
+            binding.searchByEmailOrGroups.text = getString(R.string.group_title)
+        } else {
+            binding.searchByNameOrIndividual.text = getString(R.string.text_by_name)
+            binding.searchByEmailOrGroups.text = getString(R.string.text_by_email)
+        }
+
         epoxyController.requestModelBuild()
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
-        state.listUser.forEach { item ->
+        state.listUserGroup.forEach { item ->
             listViewUserRow {
                 id(item.id)
                 data(item)

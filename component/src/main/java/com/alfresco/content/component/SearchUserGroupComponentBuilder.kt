@@ -5,18 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.Mavericks
-import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.data.UserDetails
+import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UserGroupDetails
 
-internal typealias SearchUserComponentApplyCallback = (UserDetails) -> Unit
+internal typealias SearchUserComponentApplyCallback = (UserGroupDetails) -> Unit
 internal typealias SearchUserComponentCancelCallback = () -> Unit
 
 /**
  * Builder for build the search user component sheet
  */
-data class SearchUserComponentBuilder(
+data class SearchUserGroupComponentBuilder(
     val context: Context,
-    val taskEntry: TaskEntry,
+    val parentEntry: ParentEntry,
     var onApply: SearchUserComponentApplyCallback? = null,
     var onCancel: SearchUserComponentCancelCallback? = null
 ) {
@@ -44,10 +44,10 @@ data class SearchUserComponentBuilder(
             else -> throw IllegalArgumentException()
         }
 
-        SearchUserComponentSheet().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to taskEntry)
-            onApply = this@SearchUserComponentBuilder.onApply
-            onCancel = this@SearchUserComponentBuilder.onCancel
-        }.show(fragmentManager, SearchUserComponentSheet::class.java.simpleName)
+        SearchUserGroupComponentSheet().apply {
+            arguments = bundleOf(Mavericks.KEY_ARG to parentEntry)
+            onApply = this@SearchUserGroupComponentBuilder.onApply
+            onCancel = this@SearchUserGroupComponentBuilder.onCancel
+        }.show(fragmentManager, SearchUserGroupComponentSheet::class.java.simpleName)
     }
 }

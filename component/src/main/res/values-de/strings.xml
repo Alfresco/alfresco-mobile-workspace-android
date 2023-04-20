@@ -7,7 +7,7 @@
     <string name="hint_range_to">Bis</string>
     <string name="hint_range_from_date">Startdatum</string>
     <string name="hint_range_to_date">Enddatum</string>
-    <string name="component_number_range_invalid_input">Der „Von“ Wert muss kleiner als der „Bis“ Wert sein</string>
+    <string name="component_number_range_invalid_input">Der \„Von\“ Wert muss kleiner als der \„Bis\“ Wert sein</string>
     <string name="component_action_reset">Zurücksetzen</string>
     <string name="component_action_apply">Anwenden</string>
     <string name="component_action_cancel">Abbrechen</string>
@@ -25,5 +25,6 @@
     <string name="filter.option.due.after">Fällig nach</string>
     <string name="text_by_name">Nach Name</string>
     <string name="text_by_email">Nach E-Mail</string>
-    <string name="text_back_button">Schaltfläche „Zurück“</string>
+    <string name="text_back_button">Schaltfläche \„Zurück\“</string>
+    <string name="filter.option.all">Alle</string>
 </resources>

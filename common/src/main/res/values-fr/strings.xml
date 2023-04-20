@@ -21,4 +21,9 @@
     <string name="accessibility_text_add_favorite">Ajouter aux favoris</string>
     <string name="accessibility_text_remove_favorite">Supprimer des favoris</string>
     <string name="accessibility_text_create_button">Créer</string>
+    <string name="error_duplicate_folder">Un dossier du même nom existe déjà. Essayez avec un nom différent.</string>
+    <string name="accessibility_text_process_row">Titre : %s Assigné : %s</string>
+    <string name="individual_title">Individuel</string>
+    <string name="group_title">Groupe</string>
+    <string name="warning_message_uploading_in_progress">L\'importation est actuellement en cours. Voulez-vous continuer sans importer ?</string>
 </resources>

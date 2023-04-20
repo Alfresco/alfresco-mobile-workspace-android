@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="search_title">Buscar</string>
 
     <string name="recent_search_title">Búsquedas recientes</string>
 
-    <string name="search_loading_message">Buscando&#8230;</string>
+    <string name="search_loading_message">Buscando\u2026</string>
 
     <string name="search_chip_contextual">en: %s</string>
     <string name="search_chip_files">Ficheros</string>

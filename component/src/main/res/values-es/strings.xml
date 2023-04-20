@@ -26,4 +26,5 @@
     <string name="text_by_name">Por nombre</string>
     <string name="text_by_email">Por correo electrónico</string>
     <string name="text_back_button">Botón Atrás</string>
+    <string name="filter.option.all">Todos</string>
 </resources>

@@ -50,10 +50,10 @@
     <string name="action_task_next">Siguiente</string>
 
     <string name="action_folder_name_hint">Nombre</string>
-    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: \?: \\"*|/\\&lt;&gt;</string>
+    <string name="action_folder_name_invalid_chars">El nombre de la carpeta no puede contener ninguno de los siguientes caracteres: ?: \\"*|/\\&lt;&gt;</string>
     <string name="action_folder_name_empty">El nombre de la carpeta no puede estar vacío.</string>
 
-    <string name="action_task_name_invalid_chars">El nombre de la tarea no puede contener ninguno de los siguientes caracteres: \?: \\"*|/\\&lt;&gt;</string>
+    <string name="action_task_name_invalid_chars">El nombre de la tarea no puede contener ninguno de los siguientes caracteres: ?: \\"*|/\\&lt;&gt;</string>
     <string name="action_task_name_empty">El nombre de la tarea no puede estar vacío.</string>
 
     <string name="action_upload_files_title">Cargar ficheros</string>
@@ -75,5 +75,8 @@
     <string name="action_menu_edit">Editar</string>
     <string name="action_menu_done">Hecho</string>
     <string name="action_update_task_name_description">Nombre y descripción</string>
+    <string name="action_start_workflow">Iniciar flujo de trabajo</string>
+    <string name="action_workflow_started">Se ha iniciado el flujo de trabajo</string>
+    <string name="title_select_workflow">Seleccionar el flujo de trabajo</string>
 
 </resources>

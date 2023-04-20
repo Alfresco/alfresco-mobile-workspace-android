@@ -21,4 +21,9 @@
     <string name="accessibility_text_add_favorite">Favoriet toevoegen</string>
     <string name="accessibility_text_remove_favorite">Favoriet verwijderen</string>
     <string name="accessibility_text_create_button">Maken</string>
+    <string name="error_duplicate_folder">Er bestaat al een map met deze naam. Probeer een andere naam.</string>
+    <string name="accessibility_text_process_row">Titel: %s Toegewezen persoon: %s</string>
+    <string name="individual_title">Individueel</string>
+    <string name="group_title">Groep</string>
+    <string name="warning_message_uploading_in_progress">De upload is momenteel bezig. Wilt u doorgaan zonder uploaden?</string>
 </resources>

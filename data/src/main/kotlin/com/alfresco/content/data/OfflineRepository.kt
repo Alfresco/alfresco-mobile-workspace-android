@@ -180,8 +180,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         requireNotNull(name)
         requireNotNull(mimeType)
 
-        println("Check Server 2 = ${uploadServerType.value()}")
-
         val entry = Entry(
             parentId = parentId,
             name = name,

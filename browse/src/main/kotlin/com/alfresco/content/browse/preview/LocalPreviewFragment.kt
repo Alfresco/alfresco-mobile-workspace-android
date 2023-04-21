@@ -126,8 +126,6 @@ class LocalPreviewFragment : Fragment(), MavericksView {
             ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
         )
 
-        println("mime type ${argsLocal.mimeType}")
-
         val fragment = createViewer(argsLocal.mimeType)
         if (fragment != null) {
             binding.apply {

@@ -79,7 +79,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun onConfirmDelete(contentId: String) {
-        TODO("Not yet implemented")
+        // TODO
     }
 
     override fun invalidate() = withState(viewModel) { state ->

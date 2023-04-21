@@ -35,7 +35,6 @@ class UploadWorker(
                 status = true,
                 size = "${file.length().div(1024).div(1024)} MB"
             )
-            println("Check Server 3 = ${entry.uploadServer.value()}")
             val res = if (entry.uploadServer == UploadServerType.DEFAULT) BrowseRepository().createEntry(entry, file) else TaskRepository().createEntry(entry, file, entry.uploadServer)
             file.delete() // TODO: what if delete fails?
             repository.update(

@@ -474,6 +474,9 @@ enum class OfflineStatus {
     fun value() = name.lowercase()
 }
 
+/**
+ * Marked as UploadServerType enum
+ */
 enum class UploadServerType {
     DEFAULT,
     UPLOAD_TO_TASK,
@@ -507,12 +510,14 @@ class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
         entityProperty?.name?.lowercase()
 }
 
+/**
+ * convert the type to string to save in local DB
+ */
 class BoxUploadServerTypeConverter : PropertyConverter<UploadServerType, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
         try {
             UploadServerType.valueOf(databaseValue?.uppercase() ?: "")
         } catch (e: Exception) {
-            e.printStackTrace()
             UploadServerType.NONE
         }
 

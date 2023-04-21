@@ -23,7 +23,6 @@ data class ProcessDetailViewState(
     fun updateUploads(uploads: List<Entry>): ProcessDetailViewState {
         // Merge data only after at least the first page loaded
         // [parent] is a good enough flag for the initial load.
-        println("Check Server 6 = $uploads")
         return if (parent != null) {
             copyIncludingUploads(baseEntries, uploads)
         } else {

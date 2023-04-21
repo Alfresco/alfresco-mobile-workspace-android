@@ -80,7 +80,6 @@ class ProcessDetailViewModel(
     fun getAPSUser() = repository.getAPSUser()
 
     private fun observeUploads(state: ProcessDetailViewState) {
-        println("Check Server ID 4 = ${state.parent?.id}")
         if (state.parent?.id == null) return
 
         val repo = OfflineRepository()

@@ -26,7 +26,6 @@ data class ActionUploadMedia(
 
     override suspend fun execute(context: Context): Entry {
         val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
-        println("Check Server 1 = ${entry.uploadServer.value()}")
         if (result.isNotEmpty()) {
             when (entry.uploadServer) {
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {

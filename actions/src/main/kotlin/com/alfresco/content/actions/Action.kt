@@ -69,6 +69,9 @@ interface Action {
             AnalyticsManager().apiTracker(APIEvent.NewFolder, status)
     }
 
+    /**
+     * returns the parent ID on the basis of uploading server
+     */
     fun getParentId(entry: Entry): String {
         return when (entry.uploadServer) {
             UploadServerType.DEFAULT -> entry.id

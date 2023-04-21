@@ -9,7 +9,7 @@ import com.alfresco.content.data.ProcessEntry
  * Marked as ProcessDetailViewState
  */
 data class ProcessDetailViewState(
-    val parent: ProcessEntry,
+    val parent: ProcessEntry?,
     val listContents: List<Entry> = emptyList(),
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList()

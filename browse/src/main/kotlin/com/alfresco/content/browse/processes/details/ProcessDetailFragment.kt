@@ -66,7 +66,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
-                withState(viewModel) { state ->
+                withState(viewModel) { _ ->
                     requireActivity().onBackPressed()
                 }
             }
@@ -79,6 +79,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun onConfirmDelete(contentId: String) {
+        TODO("Not yet implemented")
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -90,20 +91,20 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
 
     private fun setData(state: ProcessDetailViewState) {
         val dataEntry = state.parent
-        binding.tvTitle.text = dataEntry.name
-        binding.tvDescription.text = dataEntry.description.ifEmpty { requireContext().getString(R.string.empty_description) }
+        binding.tvTitle.text = dataEntry?.name
+        binding.tvDescription.text = dataEntry?.description?.ifEmpty { requireContext().getString(R.string.empty_description) }
         binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
         binding.tvDueDateValue.text =
-            if (dataEntry.formattedDueDate.isNullOrEmpty()) requireContext().getString(R.string.empty_no_due_date) else dataEntry.formattedDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+            if (dataEntry?.formattedDueDate.isNullOrEmpty()) requireContext().getString(R.string.empty_no_due_date) else dataEntry?.formattedDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
         binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
         binding.completeButton.text = getString(R.string.title_start_workflow)
-        binding.tvPriorityValue.updatePriorityView(state.parent.priority)
+        binding.tvPriorityValue.updatePriorityView(state.parent?.priority ?: -1)
         binding.tvAssignedValue.apply {
-            text = if (dataEntry.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
+            text = if (dataEntry?.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
                 requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: "")
-            } else if (dataEntry.startedBy?.groupName?.isNotEmpty() == true)
+            } else if (dataEntry?.startedBy?.groupName?.isNotEmpty() == true)
                 requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: "")
-            else requireContext().getLocalizedName(dataEntry.startedBy?.name ?: "")
+            else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: "")
         }
     }
 

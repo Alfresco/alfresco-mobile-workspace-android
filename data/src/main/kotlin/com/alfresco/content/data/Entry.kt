@@ -425,7 +425,7 @@ data class Entry(
         /**
          * return the default Workflow content entry obj
          */
-        fun defaultWorkflowEntry(id: String): Entry {
+        fun defaultWorkflowEntry(id: String?): Entry {
             return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id)
         }
 

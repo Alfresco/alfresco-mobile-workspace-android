@@ -33,7 +33,7 @@ class ProcessDetailViewModel(
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
         }
-        updateDefaultEntry(state.parent.defaultEntry)
+        updateDefaultEntry(state.parent?.defaultEntry)
         observeUploads(state)
     }
 
@@ -80,8 +80,8 @@ class ProcessDetailViewModel(
     fun getAPSUser() = repository.getAPSUser()
 
     private fun observeUploads(state: ProcessDetailViewState) {
-        println("Check Server ID 4 = ${state.parent.id}")
-        if (state.parent.id == null) return
+        println("Check Server ID 4 = ${state.parent?.id}")
+        if (state.parent?.id == null) return
 
         val repo = OfflineRepository()
 

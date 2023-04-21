@@ -70,7 +70,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
     }
 
     override fun onConfirmDelete(contentId: String) {
-        TODO("Not yet implemented")
+        viewModel.deleteAttachment(contentId)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -104,7 +104,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
                     id(stableId(obj))
                     data(obj)
                     clickListener { _, _, _, _ -> }
-                    deleteContentClickListener { _, _, _, _ -> }
+                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         }

@@ -18,6 +18,15 @@ data class ProcessDetailViewState(
     constructor(target: ProcessEntry) : this(parent = target)
 
     /**
+     * delete content locally and update UI
+     */
+    fun deleteUploads(contentId: String): ProcessDetailViewState {
+        val listBaseEntries = baseEntries.filter { it.id != contentId }
+        val listUploads = uploads.filter { it.id != contentId }
+        return copyIncludingUploads(listBaseEntries, listUploads)
+    }
+
+    /**
      * updating the uploads entries with the server entries.
      */
     fun updateUploads(uploads: List<Entry>): ProcessDetailViewState {

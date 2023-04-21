@@ -40,7 +40,7 @@ data class ActionCaptureMedia(
                             item.filename,
                             item.description,
                             item.mimeType,
-                            UploadServerType.UPLOAD_TO_TASK
+                            entry.uploadServer
                         )
                     }
                     repository.setTotalTransferSize(result.size)

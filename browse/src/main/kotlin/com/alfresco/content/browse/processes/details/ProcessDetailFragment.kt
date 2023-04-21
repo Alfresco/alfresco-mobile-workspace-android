@@ -79,7 +79,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun onConfirmDelete(contentId: String) {
-        // TODO
+        viewModel.deleteAttachment(contentId)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -175,7 +175,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                     id(stableId(obj))
                     data(obj)
                     clickListener { _, _, _, _ -> }
-                    deleteContentClickListener { _, _, _, _ -> }
+                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
             }
         } else {
@@ -183,6 +183,11 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                 binding.recyclerViewAttachments.visibility = View.GONE
                 binding.tvAttachmentViewAll.visibility = View.GONE
                 binding.tvNoOfAttachments.visibility = View.GONE
+
+                binding.clAddAttachment.visibility = View.VISIBLE
+                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
             }
         }
     }

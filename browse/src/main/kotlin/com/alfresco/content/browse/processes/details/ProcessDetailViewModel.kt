@@ -91,11 +91,19 @@ class ProcessDetailViewModel(
         observeUploadsJob = repo.observeUploads(state.parent.id, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
+                    println("observer list ${it().size}")
                     updateUploads(it())
                 } else {
                     this
                 }
             }
+    }
+
+    /**
+     * delete content locally
+     */
+    fun deleteAttachment(contentId: String) = stateFlow.execute {
+        deleteUploads(contentId)
     }
 
     companion object : MavericksViewModelFactory<ProcessDetailViewModel, ProcessDetailViewState> {

@@ -37,7 +37,7 @@ internal fun ProcessDetailFragment.showStartFormView() {
 internal fun ProcessDetailFragment.setListeners() {
     binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.entry)))
+            viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
         }
     }
     binding.tvTitle.setSafeOnClickListener {
@@ -55,7 +55,7 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.iconPriorityEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            val dataObj = state.entry
+            val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showComponentSheetDialog(
                     requireContext(), ComponentData(
@@ -73,15 +73,20 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.iconAssignedEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            requireNotNull(state.entry)
+            requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showSearchUserGroupComponentDialog(
-                    requireContext(), state.entry
+                    requireContext(), state.parent
                 )
                 if (result != null) {
                     viewModel.updateAssignee(result)
                 }
             }
+        }
+    }
+    binding.clAddAttachment.setSafeOnClickListener {
+        withState(viewModel) {
+            showCreateSheet(it)
         }
     }
 }
@@ -108,7 +113,7 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
 }
 
 internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
-    if (state.entry.formattedDueDate.isNullOrEmpty()) {
+    if (state.parent.formattedDueDate.isNullOrEmpty()) {
         binding.iconDueDateClear.isVisible = false
         binding.iconDueDateEdit.isVisible = true
     } else {
@@ -119,7 +124,7 @@ internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
 
 private fun ProcessDetailFragment.formatDateAndShowCalendar() {
     withState(viewModel) { state ->
-        val parseDate = state.entry.formattedDueDate?.parseDate(DATE_FORMAT_1)
+        val parseDate = state.parent.formattedDueDate?.parseDate(DATE_FORMAT_1)
         showCalendar(parseDate?.formatDate(DATE_FORMAT_4, parseDate) ?: "")
     }
 }
@@ -129,8 +134,8 @@ internal fun ProcessDetailFragment.showTitleDescriptionComponent() = withState(v
         showComponentSheetDialog(
             requireContext(), ComponentData(
                 name = requireContext().getString(R.string.title_start_workflow),
-                query = it.entry.name,
-                value = it.entry.description,
+                query = it.parent.name,
+                value = it.parent.description,
                 selector = ComponentType.VIEW_TEXT.value
             )
         )

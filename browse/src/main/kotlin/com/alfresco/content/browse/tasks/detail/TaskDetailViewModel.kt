@@ -18,6 +18,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.getFormattedDate
@@ -144,7 +145,7 @@ class TaskDetailViewModel(
         repo.removeCompletedUploads(taskId)
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(taskId, true)
+        observeUploadsJob = repo.observeUploads(taskId, UploadServerType.UPLOAD_TO_TASK)
             .execute {
                 if (it is Success) {
                     updateUploads(it())

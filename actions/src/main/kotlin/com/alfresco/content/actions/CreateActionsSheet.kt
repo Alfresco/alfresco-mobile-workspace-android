@@ -17,6 +17,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.ui.BottomSheetDialogFragment
 import kotlinx.coroutines.GlobalScope
 
@@ -50,7 +51,7 @@ internal class ActionCreateViewModel(
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
 
-        if (!parent.isProcessService)
+        if (parent.uploadServer == UploadServerType.DEFAULT)
             actions.add(ActionCreateFolder(parent))
         actions.add(ActionCaptureMedia(parent))
         actions.add(ActionUploadMedia(parent))

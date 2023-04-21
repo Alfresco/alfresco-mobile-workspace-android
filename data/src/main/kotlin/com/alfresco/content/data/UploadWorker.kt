@@ -31,11 +31,12 @@ class UploadWorker(
         return try {
             repository.update(entry.copy(offlineStatus = OfflineStatus.SYNCING))
             AnalyticsManager().apiTracker(
-                if (entry.isProcessService) APIEvent.UploadTaskAttachment else APIEvent.UploadFiles,
+                if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) APIEvent.UploadTaskAttachment else APIEvent.UploadFiles,
                 status = true,
                 size = "${file.length().div(1024).div(1024)} MB"
             )
-            val res = if (entry.isProcessService) TaskRepository().createEntry(entry, file) else BrowseRepository().createEntry(entry, file)
+            println("Check Server 3 = ${entry.uploadServer.value()}")
+            val res = if (entry.uploadServer == UploadServerType.DEFAULT) BrowseRepository().createEntry(entry, file) else TaskRepository().createEntry(entry, file, entry.uploadServer)
             file.delete() // TODO: what if delete fails?
             repository.update(
                 entry.copyWithMetadata(res)
@@ -43,6 +44,7 @@ class UploadWorker(
             )
             true
         } catch (ex: Exception) {
+            ex.printStackTrace()
             if ((ex as HttpException).response()?.code() == 404 && (ex as HttpException).response()?.code() == 413) {
                 repository.remove(entry)
                 file.delete()

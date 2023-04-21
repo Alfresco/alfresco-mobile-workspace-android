@@ -261,10 +261,10 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * It will call the api to upload the raw content on process services.
      */
-    suspend fun createEntry(local: Entry, file: File): Entry {
+    suspend fun createEntry(local: Entry, file: File, uploadServerType: UploadServerType): Entry {
         // TODO: Support creating empty entries and folders
-        requireNotNull(local.parentId)
         requireNotNull(local.mimeType)
+        requireNotNull(local.parentId)
 
         val filePart = file.asRequestBody(local.mimeType.toMediaTypeOrNull())
         val properties = mutableMapOf<String, RequestBody>()
@@ -276,12 +276,22 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
 
         val multipartBody = MultipartBody.Part.createFormData("file", local.name, filePart)
 
-        return Entry.with(
-            tasksService.uploadRawContent(
-                local.parentId,
-                multipartBody
-            ), local.parentId
-        )
+        return when (uploadServerType) {
+            UploadServerType.UPLOAD_TO_TASK -> {
+                Entry.with(
+                    tasksService.uploadRawContent(
+                        local.parentId,
+                        multipartBody
+                    ), local.parentId, uploadServerType
+                )
+            }
+            UploadServerType.UPLOAD_TO_PROCESS -> Entry.with(
+                processesService.uploadRawContent(
+                    multipartBody
+                ), local.parentId, uploadServer = uploadServerType
+            )
+            else -> Entry()
+        }
     }
 
     /**
@@ -296,7 +306,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         Entry.with(
             processesService.linkContentToProcess(
                 includeLinkContent(linkContentPayload)
-            )
+            ), uploadServer = UploadServerType.NONE
         )
 
     private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {

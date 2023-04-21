@@ -21,7 +21,7 @@ data class ResponseContents(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listContents = raw.data?.map { Entry.with(it) } ?: emptyList()
+                listContents = raw.data?.map { Entry.with(it, uploadServer = UploadServerType.NONE) } ?: emptyList()
             )
         }
     }

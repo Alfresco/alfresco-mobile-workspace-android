@@ -114,6 +114,7 @@ enum class EventName(val value: String) {
     TaskUploadFiles("event_task_upload_files"),
     CANCEL("event_cancel"),
     StartWorkflow("start_workflow"),
+    UploadProcessAttachment("event_upload_workflow_attachment"),
     None("event_none")
 }
 

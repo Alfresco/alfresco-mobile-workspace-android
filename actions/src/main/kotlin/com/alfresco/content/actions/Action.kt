@@ -10,6 +10,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
@@ -39,7 +40,9 @@ interface Action {
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
-            if (entry is Entry && (entry as Entry).isProcessService && ex.message == ERROR_FILE_SIZE_EXCEED) {
+            if (entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
+                ex.message == ERROR_FILE_SIZE_EXCEED
+            ) {
                 bus.send(Error(context.getString(R.string.error_file_size_exceed)))
             }
         } catch (ex: Exception) {
@@ -64,6 +67,14 @@ interface Action {
     private fun sendAnalytics(status: Boolean) {
         if (title == R.string.action_create_folder)
             AnalyticsManager().apiTracker(APIEvent.NewFolder, status)
+    }
+
+    fun getParentId(entry: Entry): String {
+        return when (entry.uploadServer) {
+            UploadServerType.DEFAULT -> entry.id
+            UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> entry.parentId ?: ""
+            else -> ""
+        }
     }
 
     fun showToast(view: View, anchorView: View? = null) {}

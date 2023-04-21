@@ -8,6 +8,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +17,7 @@ data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
     override val title: Int = R.string.action_capture_media_title,
-    override val eventName: EventName = if (entry.isProcessService) EventName.TaskCreateMedia else EventName.CreateMedia
+    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskCreateMedia else EventName.CreateMedia
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -35,11 +36,11 @@ data class ActionCaptureMedia(
                     result.map { item ->
                         repository.scheduleForUpload(
                             item.uri.toString(),
-                            if (entry.isProcessService) entry.parentId ?: "" else entry.id,
+                            getParentId(entry),
                             item.filename,
                             item.description,
                             item.mimeType,
-                            entry.isProcessService
+                            UploadServerType.UPLOAD_TO_TASK
                         )
                     }
                     repository.setTotalTransferSize(result.size)

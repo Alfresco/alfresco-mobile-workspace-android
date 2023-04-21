@@ -57,7 +57,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun updateTransferSize(size: Int) {
         val list = box.query()
             .equal(Entry_.isTotalEntry, true)
-            .equal(Entry_.isProcessService, false)
+            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
             .build()
             .find()
         if (list.isEmpty()) {
@@ -76,7 +76,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun getTotalTransfersSize(): Int {
         val list = box.query()
             .equal(Entry_.isTotalEntry, true)
-            .equal(Entry_.isProcessService, false)
+            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
             .build()
             .find()
         return if (list.isEmpty()) 0 else list[0].totalCount
@@ -137,7 +137,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         box.query()
             .notEqual(Entry_.offlineStatus, OfflineStatus.UNDEFINED.value(), StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)
-            .equal(Entry_.isProcessService, false)
+            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
             .build()
             .find()
 
@@ -164,7 +164,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         contentUri: Uri,
         parentId: String,
         isExtension: Boolean = false,
-        isProcessService: Boolean = false
+        uploadServerType: UploadServerType = UploadServerType.DEFAULT
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -180,6 +180,8 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         requireNotNull(name)
         requireNotNull(mimeType)
 
+        println("Check Server 2 = ${uploadServerType.value()}")
+
         val entry = Entry(
             parentId = parentId,
             name = name,
@@ -188,7 +190,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING,
             isExtension = isExtension,
-            isProcessService = isProcessService
+            uploadServer = uploadServerType
         )
 
         clearData()
@@ -217,7 +219,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         name: String,
         description: String,
         mimeType: String,
-        isProcessService: Boolean
+        uploadServerType: UploadServerType
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
         val entry = Entry(
@@ -228,7 +230,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             properties = mapOf("cm:description" to description),
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING,
-            isProcessService = isProcessService
+            uploadServer = uploadServerType
         )
 
         clearData()
@@ -249,11 +251,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
-    fun observeUploads(parentId: String, isProcessService: Boolean = false): Flow<List<Entry>> = callbackFlow {
+    fun observeUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT): Flow<List<Entry>> = callbackFlow {
         val query = box.query()
             .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)
-            .equal(Entry_.isProcessService, isProcessService)
+            .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
             .order(Entry_.name)
             .build()
         val subscription = query.subscribe().observer {
@@ -268,7 +270,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     fun observeTransferUploads(): Flow<List<Entry>> = callbackFlow {
         val query = box.query()
             .equal(Entry_.isUpload, true)
-            .equal(Entry_.isProcessService, false)
+            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
             .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
             .order(Entry_.name)
             .build()
@@ -306,7 +308,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
      */
     fun removeTaskEntries(parentId: String? = null) =
         box.query()
-            .equal(Entry_.isProcessService, true)
+            .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_TASK.value(), StringOrder.CASE_SENSITIVE)
             .apply {
                 if (parentId != null) {
                     equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)

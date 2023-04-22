@@ -12,7 +12,9 @@ import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
@@ -98,5 +100,10 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         if (entry.isFolder || entry.isSynced) {
             findNavController().navigateTo(entry)
         }
+    }
+
+    override fun onProcessStart(entry: ParentEntry) {
+        if (isAdded && isVisible)
+            ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
     }
 }

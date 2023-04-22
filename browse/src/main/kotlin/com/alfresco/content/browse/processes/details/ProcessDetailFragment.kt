@@ -175,7 +175,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                     id(stableId(obj))
                     data(obj)
                     clickListener { _, _, _, _ -> }
-                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
+                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
         } else {

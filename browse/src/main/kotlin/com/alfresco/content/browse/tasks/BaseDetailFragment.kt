@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.alfresco.content.actions.CreateActionsSheet
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.processes.details.ProcessDetailViewState
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewState
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
@@ -47,6 +48,11 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
     internal fun showCreateSheet(state: TaskDetailViewState) {
         AnalyticsManager().taskEvent(EventName.UploadTaskAttachment)
         CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
+    }
+
+    internal fun showCreateSheet(state: ProcessDetailViewState) {
+        AnalyticsManager().taskEvent(EventName.UploadProcessAttachment)
+        CreateActionsSheet.with(Entry.defaultWorkflowEntry(state.parent?.id)).show(childFragmentManager, null)
     }
 
     /**

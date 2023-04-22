@@ -30,7 +30,6 @@
         {
           "label": "filter.option.active",
           "query": "active",
-          "default": true,
           "value": "state"
         },
         {

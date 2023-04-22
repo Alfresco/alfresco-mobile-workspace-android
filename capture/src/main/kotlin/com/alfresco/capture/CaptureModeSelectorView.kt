@@ -92,7 +92,6 @@ class CaptureModeSelectorView(
     }
 
     fun updateActive(position: Int) {
-        println("re position $position")
         setActive(position)
         recyclerView.smoothScrollToCenteredPosition(position)
     }

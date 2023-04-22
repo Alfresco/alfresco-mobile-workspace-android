@@ -29,7 +29,8 @@ data class ProcessEntry(
     val startFormDefined: Boolean? = null,
     val suspended: Boolean? = null,
     var priority: Int = 0,
-    val formattedDueDate: String? = null
+    val formattedDueDate: String? = null,
+    val defaultEntry: Entry? = null
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -63,11 +64,12 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: RuntimeProcessDefinitionDataEntry): ProcessEntry {
+        fun with(data: RuntimeProcessDefinitionDataEntry, entry: Entry): ProcessEntry {
             return ProcessEntry(
                 id = data.id?.toString() ?: "",
                 name = data.name ?: "",
-                description = data.description ?: ""
+                description = data.description ?: "",
+                defaultEntry = entry
             )
         }
 

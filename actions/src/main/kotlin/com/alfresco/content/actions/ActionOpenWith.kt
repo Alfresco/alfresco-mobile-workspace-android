@@ -11,6 +11,7 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.download.ContentDownloader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -41,16 +42,19 @@ data class ActionOpenWith(
             fetchRemoteFile(context)
         }
 
-        return if (!entry.isProcessService) {
-            showFileChooserDialog(context, target)
-            entry
-        } else {
-            var path = target.path
-            if (hasChooser) {
+        return when (entry.uploadServer) {
+            UploadServerType.DEFAULT -> {
                 showFileChooserDialog(context, target)
-                path = ""
+                entry
             }
-            Entry.updateDownloadEntry(entry, path)
+            else -> {
+                var path = target.path
+                if (hasChooser) {
+                    showFileChooserDialog(context, target)
+                    path = ""
+                }
+                Entry.updateDownloadEntry(entry, path)
+            }
         }
     }
 
@@ -61,7 +65,7 @@ data class ActionOpenWith(
         val client: OkHttpClient?
         val output: File
 
-        if (entry.isProcessService) {
+        if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) {
             uri = TaskRepository().contentUri(entry)
             client = TaskRepository().getHttpClient()
             output = TaskRepository().getContentDirectory(entry.fileName)

@@ -2,6 +2,7 @@ package com.alfresco.content.browse.processes.details
 
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
@@ -37,7 +38,7 @@ internal fun ProcessDetailFragment.showStartFormView() {
 internal fun ProcessDetailFragment.setListeners() {
     binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.entry)))
+            viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
         }
     }
     binding.tvTitle.setSafeOnClickListener {
@@ -55,12 +56,12 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.iconPriorityEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            val dataObj = state.entry
+            val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showComponentSheetDialog(
                     requireContext(), ComponentData(
                         name = requireContext().getString(R.string.title_priority),
-                        query = dataObj.priority.toString(),
+                        query = dataObj?.priority.toString(),
                         selector = ComponentType.TASK_PROCESS_PRIORITY.value
                     )
                 )
@@ -73,15 +74,23 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.iconAssignedEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
-            requireNotNull(state.entry)
+            requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showSearchUserGroupComponentDialog(
-                    requireContext(), state.entry
+                    requireContext(), state.parent
                 )
                 if (result != null) {
                     viewModel.updateAssignee(result)
                 }
             }
+        }
+    }
+    binding.tvAttachmentViewAll.setSafeOnClickListener {
+        findNavController().navigate(R.id.action_nav_process_details_to_nav_process_attached_files)
+    }
+    binding.clAddAttachment.setSafeOnClickListener {
+        withState(viewModel) {
+            showCreateSheet(it)
         }
     }
 }
@@ -108,7 +117,7 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
 }
 
 internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
-    if (state.entry.formattedDueDate.isNullOrEmpty()) {
+    if (state.parent?.formattedDueDate.isNullOrEmpty()) {
         binding.iconDueDateClear.isVisible = false
         binding.iconDueDateEdit.isVisible = true
     } else {
@@ -119,7 +128,7 @@ internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
 
 private fun ProcessDetailFragment.formatDateAndShowCalendar() {
     withState(viewModel) { state ->
-        val parseDate = state.entry.formattedDueDate?.parseDate(DATE_FORMAT_1)
+        val parseDate = state.parent?.formattedDueDate?.parseDate(DATE_FORMAT_1)
         showCalendar(parseDate?.formatDate(DATE_FORMAT_4, parseDate) ?: "")
     }
 }
@@ -129,8 +138,8 @@ internal fun ProcessDetailFragment.showTitleDescriptionComponent() = withState(v
         showComponentSheetDialog(
             requireContext(), ComponentData(
                 name = requireContext().getString(R.string.title_start_workflow),
-                query = it.entry.name,
-                value = it.entry.description,
+                query = it.parent?.name,
+                value = it.parent?.description,
                 selector = ComponentType.VIEW_TEXT.value
             )
         )

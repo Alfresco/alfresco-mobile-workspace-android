@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "26:4080731032307588210",
+      "lastPropertyId": "28:949912739494302928",
       "name": "Entry",
       "properties": [
         {
@@ -85,11 +85,6 @@
           "type": 1
         },
         {
-          "id": "16:84855644780396979",
-          "name": "isProcessService",
-          "type": 1
-        },
-        {
           "id": "17:126023913419070141",
           "name": "isDocFile",
           "type": 1
@@ -138,6 +133,16 @@
           "id": "26:4080731032307588210",
           "name": "sourceId",
           "type": 9
+        },
+        {
+          "id": "27:4514687495334138822",
+          "name": "uploadServer",
+          "type": 9
+        },
+        {
+          "id": "28:949912739494302928",
+          "name": "isProcessService",
+          "type": 1
         }
       ],
       "relations": []
@@ -151,7 +156,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    84855644780396979
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

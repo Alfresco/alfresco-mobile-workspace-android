@@ -71,7 +71,7 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                     id(it.id)
                     processDefinition(it)
                     clickListener { model, _, _, _ ->
-                        val processEntry = ProcessEntry.with(model.processDefinition())
+                        val processEntry = ProcessEntry.with(model.processDefinition(), state.entry)
                         startActivity(
                             Intent(requireActivity(), ProcessDetailActivity::class.java)
                                 .putExtra(Mavericks.KEY_ARG, processEntry)

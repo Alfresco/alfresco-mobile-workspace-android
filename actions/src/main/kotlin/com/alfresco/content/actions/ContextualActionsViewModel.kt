@@ -108,6 +108,7 @@ internal class ContextualActionsViewModel(
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
             externalActionsFor(entry),
+            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             offlineActionFor(entry)
         ).flatten()
 

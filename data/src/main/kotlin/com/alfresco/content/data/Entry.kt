@@ -71,7 +71,6 @@ data class Entry(
     val totalCount: Int = 0,
     val isTotalEntry: Boolean = false,
     val isDocFile: Boolean = false,
-    val isProcessService: Boolean = false,
     @Transient
     val parentPaths: MutableList<String> = mutableListOf(),
     /*APS content data*/
@@ -86,7 +85,9 @@ data class Entry(
     val source: String? = "",
     val sourceId: String? = "",
     val previewStatus: String? = "",
-    val thumbnailStatus: String? = ""
+    val thumbnailStatus: String? = "",
+    @Convert(converter = BoxUploadServerTypeConverter::class, dbType = String::class)
+    val uploadServer: UploadServerType = UploadServerType.DEFAULT
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -380,7 +381,7 @@ data class Entry(
                 id = contentEntry.id,
                 name = contentEntry.name,
                 mimeType = contentEntry.mimeType,
-                isProcessService = true,
+                uploadServer = UploadServerType.UPLOAD_TO_TASK,
                 isDocFile = isDocFile
             )
         }
@@ -388,7 +389,7 @@ data class Entry(
         /**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj
          */
-        fun with(data: ContentDataEntry, parentId: String? = null): Entry {
+        fun with(data: ContentDataEntry, parentId: String? = null, uploadServer: UploadServerType): Entry {
             return Entry(
                 id = data.id?.toString() ?: "",
                 parentId = parentId,
@@ -403,7 +404,7 @@ data class Entry(
                 sourceId = data.sourceId,
                 previewStatus = data.previewStatus,
                 thumbnailStatus = data.thumbnailStatus,
-                isProcessService = true
+                uploadServer = uploadServer
             )
         }
 
@@ -411,14 +412,21 @@ data class Entry(
          * update entry after downloading content from process services.
          */
         fun updateDownloadEntry(entry: Entry, path: String): Entry {
-            return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path, isProcessService = entry.isProcessService)
+            return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path, uploadServer = entry.uploadServer)
         }
 
         /**
          * return the default APS content entry obj
          */
         fun defaultAPSEntry(taskId: String?): Entry {
-            return Entry(isProcessService = true, parentId = taskId)
+            return Entry(uploadServer = UploadServerType.UPLOAD_TO_TASK, parentId = taskId)
+        }
+
+        /**
+         * return the default Workflow content entry obj
+         */
+        fun defaultWorkflowEntry(id: String?): Entry {
+            return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id)
         }
 
         private fun PathInfo.formattedString(): String? {
@@ -466,6 +474,18 @@ enum class OfflineStatus {
     fun value() = name.lowercase()
 }
 
+/**
+ * Marked as UploadServerType enum
+ */
+enum class UploadServerType {
+    DEFAULT,
+    UPLOAD_TO_TASK,
+    UPLOAD_TO_PROCESS,
+    NONE;
+
+    fun value() = name.lowercase()
+}
+
 class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
     override fun convertToEntityProperty(databaseValue: String?) =
         try {
@@ -488,6 +508,21 @@ class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
 
     override fun convertToDatabaseValue(entityProperty: Entry.Type?) =
         entityProperty?.name?.lowercase()
+}
+
+/**
+ * convert the type to string to save in local DB
+ */
+class BoxUploadServerTypeConverter : PropertyConverter<UploadServerType, String> {
+    override fun convertToEntityProperty(databaseValue: String?) =
+        try {
+            UploadServerType.valueOf(databaseValue?.uppercase() ?: "")
+        } catch (e: Exception) {
+            UploadServerType.NONE
+        }
+
+    override fun convertToDatabaseValue(entityProperty: UploadServerType?) =
+        entityProperty?.value()
 }
 
 object DateParceler : Parceler<ZonedDateTime> {

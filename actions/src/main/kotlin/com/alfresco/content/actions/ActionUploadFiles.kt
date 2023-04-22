@@ -10,6 +10,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
     override val title: Int = R.string.action_upload_files_title,
-    override val eventName: EventName = if (entry.isProcessService) EventName.TaskUploadFiles else EventName.UploadFiles
+    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskUploadFiles else EventName.UploadFiles
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -29,20 +30,24 @@ data class ActionUploadFiles(
     override suspend fun execute(context: Context): Entry {
         val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
         if (result.isNotEmpty()) {
-            if (entry.isProcessService)
-                result.forEach {
-                    val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
-                    if (GetMultipleContents.isFileSizeExceed(fileLength)) {
-                        throw CancellationException(ERROR_FILE_SIZE_EXCEED)
+            when (entry.uploadServer) {
+                UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
+                    result.forEach {
+                        val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
+                        if (GetMultipleContents.isFileSizeExceed(fileLength)) {
+                            throw CancellationException(ERROR_FILE_SIZE_EXCEED)
+                        }
                     }
                 }
+                else -> {}
+            }
             withContext(Dispatchers.IO) {
                 result.map {
                     repository.scheduleContentForUpload(
                         context,
                         it,
-                        if (entry.isProcessService) entry.parentId ?: "" else entry.id,
-                        isProcessService = entry.isProcessService
+                        getParentId(entry),
+                        uploadServerType = entry.uploadServer
                     )
                 }
                 repository.setTotalTransferSize(result.size)

@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity(), MavericksView {
         }
 
         viewModel.isProcessEnabled = {
-            println("MainActivity.onCreate APS Enabled $it")
             val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
             val editor = sharedPrefs.edit()
             editor.putBoolean(IS_PROCESS_ENABLED_KEY, it)

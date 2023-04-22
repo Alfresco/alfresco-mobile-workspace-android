@@ -19,6 +19,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentLocalPreviewBinding
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.viewer.common.ChildViewerArgs
@@ -98,8 +99,12 @@ class LocalPreviewFragment : Fragment(), MavericksView {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         withState(viewModel) { state ->
-            if (state.entry?.isProcessService == true)
-                inflater.inflate(R.menu.menu_preview, menu)
+            when (state.entry?.uploadServer) {
+                UploadServerType.UPLOAD_TO_TASK -> {
+                    inflater.inflate(R.menu.menu_preview, menu)
+                }
+                else -> {}
+            }
         }
     }
 
@@ -120,8 +125,6 @@ class LocalPreviewFragment : Fragment(), MavericksView {
         binding.icon.setImageDrawable(
             ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
         )
-
-        println("mime type ${argsLocal.mimeType}")
 
         val fragment = createViewer(argsLocal.mimeType)
         if (fragment != null) {

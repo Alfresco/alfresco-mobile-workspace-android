@@ -75,3 +75,7 @@ lint/reports/
 /gradle/libs.versions1.toml
 /process/
 /auth-alfresco/
+/build_api.gradle
+/build_app.gradle
+/gradle/libs.versions_api.toml
+/gradle/libs.versions_app.toml

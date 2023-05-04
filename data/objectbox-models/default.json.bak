@@ -138,11 +138,6 @@
           "id": "27:4514687495334138822",
           "name": "uploadServer",
           "type": 9
-        },
-        {
-          "id": "28:949912739494302928",
-          "name": "isProcessService",
-          "type": 1
         }
       ],
       "relations": []
@@ -157,7 +152,8 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    84855644780396979
+    84855644780396979,
+    949912739494302928
   ],
   "retiredRelationUids": [],
   "version": 1

@@ -12,7 +12,7 @@ internal typealias SearchUserComponentApplyCallback = (UserGroupDetails) -> Unit
 internal typealias SearchUserComponentCancelCallback = () -> Unit
 
 /**
- * Builder for build the search user component sheet
+ * Builder for build the search user and group component sheet
  */
 data class SearchUserGroupComponentBuilder(
     val context: Context,

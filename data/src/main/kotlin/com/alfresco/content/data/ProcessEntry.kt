@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.os.Parcelable
+import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProcessInstanceEntry
 import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
@@ -30,7 +31,8 @@ data class ProcessEntry(
     val suspended: Boolean? = null,
     var priority: Int = 0,
     val formattedDueDate: String? = null,
-    val defaultEntry: Entry? = null
+    val defaultEntry: Entry? = null,
+    val reviewerType: ReviewerType = ReviewerType.OTHER
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -74,6 +76,21 @@ data class ProcessEntry(
         }
 
         /**
+         * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
+         */
+        fun with(data: ProcessDefinitionDataEntry, entry: Entry): ProcessEntry {
+            return ProcessEntry(
+                id = data.id ?: "",
+                name = data.name ?: "",
+                description = data.description ?: "",
+                startFormDefined = data.hasStartForm,
+                processDefinitionKey = data.key,
+                tenantId = data.tenantId,
+                defaultEntry = entry
+            )
+        }
+
+        /**
          * updating the priority into existing object
          */
         fun updatePriority(data: ProcessEntry, priority: Int): ProcessEntry {
@@ -97,7 +114,8 @@ data class ProcessEntry(
                 startFormDefined = data.startFormDefined,
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
-                priority = priority
+                priority = priority,
+                reviewerType = data.reviewerType
             )
         }
 
@@ -126,7 +144,8 @@ data class ProcessEntry(
                 startFormDefined = data.startFormDefined,
                 suspended = data.suspended,
                 formattedDueDate = formattedDate,
-                priority = data.priority
+                priority = data.priority,
+                reviewerType = data.reviewerType
             )
         }
 
@@ -158,7 +177,8 @@ data class ProcessEntry(
                 startFormDefined = data.startFormDefined,
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
-                priority = data.priority
+                priority = data.priority,
+                reviewerType = data.reviewerType
             )
         }
 
@@ -186,8 +206,49 @@ data class ProcessEntry(
                 startFormDefined = data.startFormDefined,
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
-                priority = data.priority
+                priority = data.priority,
+                reviewerType = data.reviewerType
+            )
+        }
+
+        fun updateReviewerType(data: ProcessEntry, listFields: List<FieldsData>): ProcessEntry {
+            var reviewerType: ReviewerType = ReviewerType.PEOPLE
+            listFields.forEach {
+                if (it.type == ReviewerType.FUNCTIONAL_GROUP.value())
+                    reviewerType = ReviewerType.FUNCTIONAL_GROUP
+            }
+
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = data.priority,
+                reviewerType = reviewerType
             )
         }
     }
+}
+
+enum class ReviewerType {
+    PEOPLE,
+    FUNCTIONAL_GROUP,
+    OTHER;
+
+    fun value() = name.lowercase()
 }

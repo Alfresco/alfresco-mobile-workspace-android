@@ -27,4 +27,6 @@
     <string name="text_by_email">By E-mail</string>
     <string name="text_back_button">Back Button</string>
     <string name="filter.option.all">All</string>
+    <string name="search_user">Search User</string>
+    <string name="search_group">Search Group</string>
 </resources>

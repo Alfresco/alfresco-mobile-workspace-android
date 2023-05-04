@@ -17,6 +17,9 @@ data class ResponseListStartForm(
     val fields: List<FieldsData> = emptyList()
 ) : Parcelable {
     companion object {
+        /**
+         * returns the ResponseListStartForm obj by using ResultStartForm obj
+         */
         fun with(raw: ResultStartForm): ResponseListStartForm {
             return ResponseListStartForm(
                 id = raw.id ?: 0,

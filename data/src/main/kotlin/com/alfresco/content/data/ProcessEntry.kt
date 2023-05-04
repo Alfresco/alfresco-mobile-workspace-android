@@ -211,6 +211,9 @@ data class ProcessEntry(
             )
         }
 
+        /**
+         * update reviewerType into existing ProcessEntry obj
+         */
         fun updateReviewerType(data: ProcessEntry, listFields: List<FieldsData>): ProcessEntry {
             var reviewerType: ReviewerType = ReviewerType.PEOPLE
             listFields.forEach {
@@ -245,10 +248,16 @@ data class ProcessEntry(
     }
 }
 
+/**
+ * Marked as ReviewerType
+ */
 enum class ReviewerType {
     PEOPLE,
     FUNCTIONAL_GROUP,
     OTHER;
 
+    /**
+     * returns value of enum in lowercase
+     */
     fun value() = name.lowercase()
 }

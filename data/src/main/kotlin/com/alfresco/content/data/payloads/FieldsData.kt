@@ -4,6 +4,9 @@ import android.os.Parcelable
 import com.alfresco.process.models.Fields
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as FieldsData
+ */
 @Parcelize
 data class FieldsData(
     var fieldType: String = "",
@@ -18,6 +21,9 @@ data class FieldsData(
     var fields: List<FieldsData> = emptyList()
 ) : Parcelable {
     companion object {
+        /**
+         * returns the FieldsData obj by using Fields obj
+         */
         fun with(raw: Fields): FieldsData {
             return FieldsData(
                 fieldType = raw.fieldType ?: "",

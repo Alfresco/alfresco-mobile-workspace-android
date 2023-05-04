@@ -5,6 +5,9 @@ import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ResultStartForm
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Marked as ResponseListStartForm
+ */
 @Parcelize
 data class ResponseListStartForm(
     val id: Int = 0,

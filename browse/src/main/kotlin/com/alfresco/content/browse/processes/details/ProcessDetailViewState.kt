@@ -23,6 +23,9 @@ data class ProcessDetailViewState(
 
     constructor(target: ProcessEntry) : this(parent = target)
 
+    /**
+     * update ACS content and single definition data
+     */
     fun updateContentAndProcessDefinition(entry: Entry?, processEntry: ProcessEntry): ProcessDetailViewState {
         if (entry == null)
             return this
@@ -30,6 +33,9 @@ data class ProcessDetailViewState(
         return copyIncludingUploads(listOf(entry), emptyList()).copy(processEntry)
     }
 
+    /**
+     * update form fields data
+     */
     fun updateFormFields(response: ResponseListStartForm): ProcessDetailViewState {
         requireNotNull(parent)
         val formFields = response.fields.first().fields

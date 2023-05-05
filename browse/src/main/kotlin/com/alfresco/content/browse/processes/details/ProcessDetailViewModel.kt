@@ -1,6 +1,8 @@
 package com.alfresco.content.browse.processes.details
 
 import android.content.Context
+import com.airbnb.mvrx.Fail
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
@@ -14,9 +16,13 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
+import com.alfresco.content.data.payloads.LinkContentPayload
+import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.launch
 
 /**
  * Marked as ProcessDetailViewModel
@@ -30,10 +36,29 @@ class ProcessDetailViewModel(
     private var observeUploadsJob: Job? = null
 
     init {
+        state.parent?.let { processEntry ->
+            processEntry.defaultEntry?.let { entry ->
+                viewModelScope.launch {
+                    linkContentToProcess(entry).zip(singleProcessDefinition(processEntry.id)) { content, singleProcess ->
+                        Pair(content, singleProcess)
+                    }.execute {
+                        when (it) {
+                            is Success -> {
+                                val processData = ProcessEntry.with(it().second.listProcessDefinitions.first(), it().first)
+                                getStartForm(processData.id)
+                                updateContentAndProcessDefinition(it().first, processData)
+                            }
+                            else -> {
+                                this
+                            }
+                        }
+                    }
+                }
+            }
+        }
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
         }
-        updateDefaultEntry(state.parent?.defaultEntry)
         observeUploads(state)
     }
 
@@ -46,8 +71,6 @@ class ProcessDetailViewModel(
             copy(parent = ProcessEntry.updatePriority(this.parent, result.query?.toInt() ?: 0))
         }
     }
-
-    private fun updateDefaultEntry(entry: Entry?) = setState { copy(baseEntries = if (entry != null) listOf(entry) else emptyList()) }
 
     /**
      * update the formatted date in the existing ProcessEntry obj and update the UI.
@@ -91,12 +114,28 @@ class ProcessDetailViewModel(
         observeUploadsJob = repo.observeUploads(state.parent.id, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
-                    println("observer list ${it().size}")
                     updateUploads(it())
                 } else {
                     this
                 }
             }
+    }
+
+    private fun getStartForm(processDefinitionId: String) = withState { state ->
+        viewModelScope.launch {
+            repository::startForm.asFlow(processDefinitionId).execute {
+                when (it) {
+                    is Loading -> copy(requestStartForm = Loading())
+                    is Fail -> copy(requestStartForm = Fail(it.error))
+                    is Success -> {
+                        updateFormFields(it()).copy(requestStartForm = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -105,6 +144,10 @@ class ProcessDetailViewModel(
     fun deleteAttachment(contentId: String) = stateFlow.execute {
         deleteUploads(contentId)
     }
+
+    private fun linkContentToProcess(entry: Entry) = repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry))
+
+    private fun singleProcessDefinition(appDefinitionId: String) = repository::singleProcessDefinition.asFlow(appDefinitionId)
 
     companion object : MavericksViewModelFactory<ProcessDetailViewModel, ProcessDetailViewState> {
 

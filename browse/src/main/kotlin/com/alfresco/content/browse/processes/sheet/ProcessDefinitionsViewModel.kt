@@ -5,12 +5,9 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 internal class ProcessDefinitionsViewModel(
@@ -24,14 +21,12 @@ internal class ProcessDefinitionsViewModel(
 
     private fun buildModel() = withState { state ->
         viewModelScope.launch {
-            processDefinitions().zip(linkContentToProcess(state.entry)) { requestProcess, requestContent ->
-                Pair(requestProcess, requestContent)
-            }.execute {
+            processDefinitions().execute {
                 when (it) {
                     is Success -> {
                         ProcessDefinitionsState(
-                            entry = it().second,
-                            listProcessDefinitions = it().first.listRuntimeProcessDefinitions
+                            entry = state.entry,
+                            listProcessDefinitions = it().listRuntimeProcessDefinitions
                         )
                     }
                     else -> {
@@ -44,8 +39,6 @@ internal class ProcessDefinitionsViewModel(
             }
         }
     }
-
-    private fun linkContentToProcess(entry: Entry) = TaskRepository()::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry))
 
     private fun processDefinitions() = TaskRepository()::processDefinitions.asFlow()
 

@@ -1,9 +1,13 @@
 package com.alfresco.content.browse.processes.details
 
+import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MavericksState
+import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ResponseListStartForm
+import com.alfresco.content.data.payloads.FieldsData
 
 /**
  * Marked as ProcessDetailViewState
@@ -12,10 +16,31 @@ data class ProcessDetailViewState(
     val parent: ProcessEntry?,
     val listContents: List<Entry> = emptyList(),
     val baseEntries: List<Entry> = emptyList(),
-    val uploads: List<Entry> = emptyList()
+    val uploads: List<Entry> = emptyList(),
+    val formFields: List<FieldsData> = emptyList(),
+    val requestStartForm: Async<ResponseListStartForm> = Uninitialized
 ) : MavericksState {
 
     constructor(target: ProcessEntry) : this(parent = target)
+
+    /**
+     * update ACS content and single definition data
+     */
+    fun updateContentAndProcessDefinition(entry: Entry?, processEntry: ProcessEntry): ProcessDetailViewState {
+        if (entry == null)
+            return this
+
+        return copyIncludingUploads(listOf(entry), emptyList()).copy(processEntry)
+    }
+
+    /**
+     * update form fields data
+     */
+    fun updateFormFields(response: ResponseListStartForm): ProcessDetailViewState {
+        requireNotNull(parent)
+        val formFields = response.fields.first().fields
+        return copy(formFields = formFields, parent = ProcessEntry.updateReviewerType(parent, formFields))
+    }
 
     /**
      * delete content locally and update UI

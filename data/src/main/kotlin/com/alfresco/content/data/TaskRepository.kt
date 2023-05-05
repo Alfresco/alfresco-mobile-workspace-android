@@ -285,11 +285,13 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     ), local.parentId, uploadServerType
                 )
             }
+
             UploadServerType.UPLOAD_TO_PROCESS -> Entry.with(
                 processesService.uploadRawContent(
                     multipartBody
                 ), local.parentId, uploadServer = uploadServerType
             )
+
             else -> Entry()
         }
     }
@@ -319,9 +321,22 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     }
 
     /**
-     * execute process definitions apis and filter published process
+     * execute single process definitions api and get details of it.
      */
-    suspend fun processDefinitions() = ResponseListProcessDefinitions.with(processesService.processDefinitions())
+    suspend fun singleProcessDefinition(appDefinitionId: String) =
+        ResponseListProcessDefinition.with(processesService.singleProcessDefinition(true, appDefinitionId))
+
+    /**
+     * execute process definitions apis and filter published process.
+     */
+    suspend fun processDefinitions() = ResponseListRuntimeProcessDefinition.with(processesService.processDefinitions())
+
+    /**
+     * execute the start-form apis to fetch the form presentation
+     */
+    suspend fun startForm(processDefinitionId: String) = ResponseListStartForm.with(
+        processesService.startForm(processDefinitionId)
+    )
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

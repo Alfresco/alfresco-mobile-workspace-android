@@ -5,7 +5,7 @@ import com.alfresco.process.models.ResultListRuntimeProcessDefinitions
 /**
  * Marked as ResponseListProcessDefinitions class
  */
-data class ResponseListProcessDefinitions(
+data class ResponseListRuntimeProcessDefinition(
     val size: Int,
     val total: Int,
     val start: Int,
@@ -16,8 +16,8 @@ data class ResponseListProcessDefinitions(
         /**
          * return the ResponseListProcessDefinitions obj using ResultListRuntimeProcessDefinitions
          */
-        fun with(raw: ResultListRuntimeProcessDefinitions): ResponseListProcessDefinitions {
-            return ResponseListProcessDefinitions(
+        fun with(raw: ResultListRuntimeProcessDefinitions): ResponseListRuntimeProcessDefinition {
+            return ResponseListRuntimeProcessDefinition(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,

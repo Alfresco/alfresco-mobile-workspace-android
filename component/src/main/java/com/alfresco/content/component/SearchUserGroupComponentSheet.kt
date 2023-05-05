@@ -20,6 +20,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.common.isValidEmail
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
+import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.hideSoftInput
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.alfresco.ui.getDrawableForAttribute
@@ -149,9 +151,21 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         binding.loading.isVisible = state.requestUser is Loading
 
         if (viewModel.canSearchGroups) {
+            binding.rgSelector.visibility = View.GONE
+            binding.searchView.queryHint = when ((state.parent as ProcessEntry).reviewerType) {
+                ReviewerType.FUNCTIONAL_GROUP -> {
+                    viewModel.searchByNameOrIndividual = false
+                    getString(R.string.search_group)
+                }
+                else -> {
+                    viewModel.searchByNameOrIndividual = true
+                    getString(R.string.search_user)
+                }
+            }
             binding.searchByNameOrIndividual.text = getString(R.string.individual_title)
             binding.searchByEmailOrGroups.text = getString(R.string.group_title)
         } else {
+            binding.rgSelector.visibility = View.VISIBLE
             binding.searchByNameOrIndividual.text = getString(R.string.text_by_name)
             binding.searchByEmailOrGroups.text = getString(R.string.text_by_email)
         }

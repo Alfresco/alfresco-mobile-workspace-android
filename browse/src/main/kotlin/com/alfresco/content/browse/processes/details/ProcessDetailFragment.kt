@@ -83,7 +83,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = false
+        binding.loading.isVisible = state.listContents.isEmpty()
         setData(state)
         updateUI(state)
         epoxyAttachmentController.requestModelBuild()

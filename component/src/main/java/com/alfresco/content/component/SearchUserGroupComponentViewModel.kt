@@ -12,6 +12,7 @@ import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseUserGroupList
+import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserGroupDetails
 import java.util.concurrent.CancellationException
@@ -52,7 +53,11 @@ class SearchUserGroupComponentViewModel(
 
         setState {
             canSearchGroups = parent is ProcessEntry
-            copy(listUserGroup = listOf(getLoggedInUser()))
+            var listUserGroup: List<UserGroupDetails> = listOf()
+            if (parent is ProcessEntry && parent.reviewerType != ReviewerType.FUNCTIONAL_GROUP) {
+                listUserGroup = listOf(getLoggedInUser())
+            }
+            copy(listUserGroup = listUserGroup)
         }
 
         viewModelScope.launch {

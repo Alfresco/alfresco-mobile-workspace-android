@@ -78,7 +78,7 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: ProcessDefinitionDataEntry, entry: Entry): ProcessEntry {
+        fun with(data: ProcessDefinitionDataEntry, processEntry: ProcessEntry): ProcessEntry {
             return ProcessEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
@@ -86,7 +86,7 @@ data class ProcessEntry(
                 startFormDefined = data.hasStartForm,
                 processDefinitionKey = data.key,
                 tenantId = data.tenantId,
-                defaultEntry = entry
+                defaultEntry = processEntry.defaultEntry
             )
         }
 

@@ -93,6 +93,13 @@ internal fun ProcessDetailFragment.setListeners() {
             showCreateSheet(it)
         }
     }
+    binding.completeButton.setOnClickListener {
+        withState(viewModel) { state ->
+            state.listContents.find { it.isUpload }?.let {
+                confirmContentQueuePrompt()
+            }
+        }
+    }
 }
 
 private fun ProcessDetailFragment.showCalendar(fromDate: String) {

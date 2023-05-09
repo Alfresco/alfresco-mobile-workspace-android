@@ -6,6 +6,7 @@ import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.ResponseListStartForm
 import com.alfresco.content.data.payloads.FieldsData
 
@@ -18,19 +19,30 @@ data class ProcessDetailViewState(
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList(),
     val formFields: List<FieldsData> = emptyList(),
-    val requestStartForm: Async<ResponseListStartForm> = Uninitialized
+    val requestStartForm: Async<ResponseListStartForm> = Uninitialized,
+    val requestContent: Async<Entry> = Uninitialized,
+    val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized
 ) : MavericksState {
 
     constructor(target: ProcessEntry) : this(parent = target)
 
     /**
-     * update ACS content and single definition data
+     * update ACS content data in process entry object
      */
-    fun updateContentAndProcessDefinition(entry: Entry?, processEntry: ProcessEntry): ProcessDetailViewState {
+    fun updateContent(entry: Entry?): ProcessDetailViewState {
         if (entry == null)
             return this
+        return copy(baseEntries = listOf(entry), listContents = listOf(entry))
+    }
 
-        return copyIncludingUploads(listOf(entry), emptyList()).copy(processEntry)
+    /**
+     * update the single process definition entry
+     */
+    fun updateSingleProcessDefinition(response: ResponseListProcessDefinition): ProcessDetailViewState {
+        if (parent == null)
+            return this
+        val processEntry = ProcessEntry.with(response.listProcessDefinitions.first(), parent)
+        return copy(parent = processEntry)
     }
 
     /**

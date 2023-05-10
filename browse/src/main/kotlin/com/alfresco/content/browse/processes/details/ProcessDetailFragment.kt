@@ -154,6 +154,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
         }
     }
 
+    /**
+     * It will prompt if user trying to start workflow and if any of content file is in uploaded
+     */
     fun confirmContentQueuePrompt() {
         val oldDialog = confirmContentQueueDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return

@@ -7,8 +7,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -32,6 +34,8 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -48,6 +52,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     val viewModel: ProcessDetailViewModel by activityViewModel()
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
     private var viewLayout: View? = null
+    private var confirmContentQueueDialog = WeakReference<AlertDialog>(null)
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -83,7 +88,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = state.listContents.isEmpty()
+        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading
         setData(state)
         updateUI(state)
         epoxyAttachmentController.requestModelBuild()
@@ -147,6 +152,24 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                 }
                 .show()
         }
+    }
+
+    /**
+     * It will prompt if user trying to start workflow and if any of content file is in uploaded
+     */
+    fun confirmContentQueuePrompt() {
+        val oldDialog = confirmContentQueueDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
+            .setTitle("Warning")
+            .setMessage("Few files are not uploaded yet and tap on confirm to start workflow without uploaded it.")
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                requireActivity().onBackPressed()
+            }
+            .show()
+        confirmContentQueueDialog = WeakReference(dialog)
     }
 
     private fun epoxyAttachmentController() = simpleController(viewModel) { state ->

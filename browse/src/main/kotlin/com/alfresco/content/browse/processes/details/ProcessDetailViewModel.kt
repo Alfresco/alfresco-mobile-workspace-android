@@ -21,7 +21,6 @@ import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 /**
@@ -30,34 +29,20 @@ import kotlinx.coroutines.launch
 class ProcessDetailViewModel(
     state: ProcessDetailViewState,
     val context: Context,
-    val repository: TaskRepository
+    private val repository: TaskRepository
 ) : MavericksViewModel<ProcessDetailViewState>(state) {
 
     private var observeUploadsJob: Job? = null
 
     init {
-        state.parent?.let { processEntry ->
-            processEntry.defaultEntry?.let { entry ->
-                viewModelScope.launch {
-                    linkContentToProcess(entry).zip(singleProcessDefinition(processEntry.id)) { content, singleProcess ->
-                        Pair(content, singleProcess)
-                    }.execute {
-                        when (it) {
-                            is Success -> {
-                                val processData = ProcessEntry.with(it().second.listProcessDefinitions.first(), it().first)
-                                getStartForm(processData.id)
-                                updateContentAndProcessDefinition(it().first, processData)
-                            }
-                            else -> {
-                                this
-                            }
-                        }
-                    }
-                }
-            }
-        }
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
+        }
+        state.parent?.defaultEntry?.let { entry ->
+            linkContentToProcess(entry)
+        }
+        state.parent?.let { processEntry ->
+            singleProcessDefinition(processEntry.id)
         }
         observeUploads(state)
     }
@@ -114,6 +99,7 @@ class ProcessDetailViewModel(
         observeUploadsJob = repo.observeUploads(state.parent.id, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
+                    println("Check 2 == ${it()}")
                     updateUploads(it())
                 } else {
                     this
@@ -130,6 +116,7 @@ class ProcessDetailViewModel(
                     is Success -> {
                         updateFormFields(it()).copy(requestStartForm = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -145,9 +132,40 @@ class ProcessDetailViewModel(
         deleteUploads(contentId)
     }
 
-    private fun linkContentToProcess(entry: Entry) = repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry))
+    private fun linkContentToProcess(entry: Entry) =
+        viewModelScope.launch {
+            repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry)).execute {
+                when (it) {
+                    is Loading -> copy(requestContent = Loading())
+                    is Fail -> copy(requestContent = Fail(it.error))
+                    is Success -> {
+                        updateContent(it()).copy(requestContent = Success(it()))
+                    }
 
-    private fun singleProcessDefinition(appDefinitionId: String) = repository::singleProcessDefinition.asFlow(appDefinitionId)
+                    else -> this
+                }
+            }
+        }
+
+    private fun singleProcessDefinition(appDefinitionId: String) = withState { state ->
+        viewModelScope.launch {
+            repository::singleProcessDefinition.asFlow(appDefinitionId).execute {
+                when (it) {
+                    is Loading -> copy(requestProcessDefinition = Loading())
+                    is Fail -> copy(requestProcessDefinition = Fail(it.error))
+                    is Success -> {
+                        updateSingleProcessDefinition(it())
+                        getStartForm(it().listProcessDefinitions.first().id ?: "")
+                        copy(requestProcessDefinition = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
 
     companion object : MavericksViewModelFactory<ProcessDetailViewModel, ProcessDetailViewState> {
 

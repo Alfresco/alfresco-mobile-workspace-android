@@ -17,6 +17,7 @@ import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
+import com.google.android.material.snackbar.Snackbar
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
@@ -95,8 +96,16 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.completeButton.setOnClickListener {
         withState(viewModel) { state ->
-            state.listContents.find { it.isUpload }?.let {
+            val entry = state.listContents.find { it.isUpload }
+            if (entry != null) {
                 confirmContentQueuePrompt()
+            } else if (state.parent?.startedBy == null) {
+                Snackbar.make(binding.root,
+                    "Please select assignee",
+                    Snackbar.LENGTH_SHORT).show()
+            } else {
+
+                viewModel.startWorkflow()
             }
         }
     }

@@ -38,13 +38,13 @@ class ProcessDetailViewModel(
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
         }
+        fetchUserProfile()
         state.parent?.defaultEntry?.let { entry ->
             linkContentToProcess(entry)
         }
         state.parent?.let { processEntry ->
             singleProcessDefinition(processEntry.id)
         }
-        observeUploads(state)
     }
 
     /**
@@ -88,7 +88,7 @@ class ProcessDetailViewModel(
     fun getAPSUser() = repository.getAPSUser()
 
     private fun observeUploads(state: ProcessDetailViewState) {
-        if (state.parent?.id == null) return
+        requireNotNull(state.parent)
 
         val repo = OfflineRepository()
 
@@ -99,7 +99,6 @@ class ProcessDetailViewModel(
         observeUploadsJob = repo.observeUploads(state.parent.id, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
-                    println("Check 2 == ${it()}")
                     updateUploads(it())
                 } else {
                     this
@@ -107,14 +106,15 @@ class ProcessDetailViewModel(
             }
     }
 
-    private fun getStartForm(processDefinitionId: String) = withState { state ->
+    private fun getStartForm(processEntry: ProcessEntry) {
+        requireNotNull(processEntry.id)
         viewModelScope.launch {
-            repository::startForm.asFlow(processDefinitionId).execute {
+            repository::startForm.asFlow(processEntry.id).execute {
                 when (it) {
                     is Loading -> copy(requestStartForm = Loading())
                     is Fail -> copy(requestStartForm = Fail(it.error))
                     is Success -> {
-                        updateFormFields(it()).copy(requestStartForm = Success(it()))
+                        updateFormFields(it(), processEntry).copy(requestStartForm = Success(it()))
                     }
 
                     else -> {
@@ -154,11 +154,49 @@ class ProcessDetailViewModel(
                     is Loading -> copy(requestProcessDefinition = Loading())
                     is Fail -> copy(requestProcessDefinition = Fail(it.error))
                     is Success -> {
-                        updateSingleProcessDefinition(it())
-                        getStartForm(it().listProcessDefinitions.first().id ?: "")
+                        val updatedState = updateSingleProcessDefinition(it())
+                        observeUploads(updatedState)
+                        updatedState.parent?.let { processEntry ->
+                            getStartForm(processEntry)
+                        }
                         copy(requestProcessDefinition = Success(it()))
                     }
 
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun startWorkflow() = withState { state ->
+        val items = state.listContents.joinToString(separator = ",") { it.id }
+        viewModelScope.launch {
+            repository::startWorkflow.asFlow(state.parent, items).execute {
+                when (it) {
+                    is Loading -> copy(requestStartWorkflow = Loading())
+                    is Fail -> copy(requestStartWorkflow = Fail(it.error))
+                    is Success -> copy(requestStartWorkflow = Success(it()))
+                    else -> this
+                }
+            }
+        }
+    }
+
+    private fun fetchUserProfile() {
+        if (repository.isAcsAndApsSameUser())
+            return
+        viewModelScope.launch {
+            // Fetch APS user profile data
+            repository::getProcessUserProfile.execute {
+                when (it) {
+                    is Loading -> copy(requestProfile = Loading())
+                    is Fail -> copy(requestProfile = Fail(it.error))
+                    is Success -> {
+                        repository.saveProcessUserDetails(it())
+                        copy(requestProfile = Success(it()))
+                    }
                     else -> {
                         this
                     }

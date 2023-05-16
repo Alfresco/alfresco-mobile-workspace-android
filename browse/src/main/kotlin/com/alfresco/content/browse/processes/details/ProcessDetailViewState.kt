@@ -9,6 +9,7 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.ResponseListStartForm
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.process.models.ProfileData
 
 /**
  * Marked as ProcessDetailViewState
@@ -20,8 +21,10 @@ data class ProcessDetailViewState(
     val uploads: List<Entry> = emptyList(),
     val formFields: List<FieldsData> = emptyList(),
     val requestStartForm: Async<ResponseListStartForm> = Uninitialized,
+    val requestProfile: Async<ProfileData> = Uninitialized,
     val requestContent: Async<Entry> = Uninitialized,
-    val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized
+    val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
+    val requestStartWorkflow: Async<ProcessEntry> = Uninitialized
 ) : MavericksState {
 
     constructor(target: ProcessEntry) : this(parent = target)
@@ -48,10 +51,10 @@ data class ProcessDetailViewState(
     /**
      * update form fields data
      */
-    fun updateFormFields(response: ResponseListStartForm): ProcessDetailViewState {
-        requireNotNull(parent)
+    fun updateFormFields(response: ResponseListStartForm, processEntry: ProcessEntry): ProcessDetailViewState {
+        requireNotNull(processEntry)
         val formFields = response.fields.first().fields
-        return copy(formFields = formFields, parent = ProcessEntry.updateReviewerType(parent, formFields))
+        return copy(formFields = formFields, parent = ProcessEntry.updateReviewerType(processEntry, formFields))
     }
 
     /**

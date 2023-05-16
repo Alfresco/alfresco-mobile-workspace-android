@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
@@ -88,9 +89,14 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading
+        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading || state.requestStartWorkflow is Loading
         setData(state)
         updateUI(state)
+        when {
+            state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
+                requireActivity().onBackPressed()
+            }
+        }
         epoxyAttachmentController.requestModelBuild()
     }
 

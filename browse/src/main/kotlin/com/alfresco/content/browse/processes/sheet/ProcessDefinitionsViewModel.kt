@@ -6,7 +6,6 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
@@ -29,6 +28,7 @@ internal class ProcessDefinitionsViewModel(
                             listProcessDefinitions = it().listRuntimeProcessDefinitions
                         )
                     }
+
                     else -> {
                         ProcessDefinitionsState(
                             entry = state.entry,

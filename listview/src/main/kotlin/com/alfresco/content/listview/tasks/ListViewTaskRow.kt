@@ -10,8 +10,8 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.data.getTaskPriority
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.getTaskPriority
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
 

@@ -170,6 +170,9 @@ class ProcessDetailViewModel(
         }
     }
 
+    /**
+     * This method will execute the start flow api with required data
+     */
     fun startWorkflow() = withState { state ->
         val items = state.listContents.joinToString(separator = ",") { it.id }
         viewModelScope.launch {

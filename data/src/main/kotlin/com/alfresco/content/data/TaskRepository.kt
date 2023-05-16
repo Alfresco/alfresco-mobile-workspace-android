@@ -343,6 +343,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         processesService.startForm(processDefinitionId)
     )
 
+    /**
+     * Execute the start flow integration
+     */
     suspend fun startWorkflow(processEntry: ProcessEntry?, items: String) = ProcessEntry.with(
         processesService.createProcessInstance(
             RequestProcessInstances(

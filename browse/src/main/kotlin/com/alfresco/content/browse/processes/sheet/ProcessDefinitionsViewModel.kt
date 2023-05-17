@@ -5,6 +5,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.browse.R
 import com.alfresco.content.data.TaskRepository
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
@@ -41,6 +42,11 @@ internal class ProcessDefinitionsViewModel(
     }
 
     private fun processDefinitions() = TaskRepository()::processDefinitions.asFlow()
+
+    /**
+     * returns the empty data if no workflows avaialble
+     */
+    fun emptyMessageArgs() = Triple(R.drawable.ic_empty_workflow, R.string.workflows_unavailable_title, R.string.workflow_unavailable_message)
 
     companion object : MavericksViewModelFactory<ProcessDefinitionsViewModel, ProcessDefinitionsState> {
         override fun create(

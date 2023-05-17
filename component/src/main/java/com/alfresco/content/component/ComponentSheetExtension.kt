@@ -6,13 +6,13 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import com.alfresco.content.DefaultPriority
-import com.alfresco.content.TaskPriority
 import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_AFTER
 import com.alfresco.content.component.ComponentViewModel.Companion.DUE_BEFORE
+import com.alfresco.content.data.DefaultPriority
+import com.alfresco.content.data.TaskPriority
+import com.alfresco.content.data.getTaskPriority
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.getTaskPriority
 
 /**
  * setup the SingleInputText Component
@@ -209,12 +209,15 @@ fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
         TaskPriority.LOW -> {
             binding.taskPriorityComponent.tvPriorityLow.updatePriorityView(viewModel.priority)
         }
+
         TaskPriority.MEDIUM -> {
             binding.taskPriorityComponent.tvPriorityMedium.updatePriorityView(viewModel.priority)
         }
+
         TaskPriority.HIGH -> {
             binding.taskPriorityComponent.tvPriorityHigh.updatePriorityView(viewModel.priority)
         }
+
         else -> {}
     }
 

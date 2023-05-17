@@ -1,4 +1,4 @@
-package com.alfresco.content
+package com.alfresco.content.data
 
 /**
  * Marked as TaskPriority enum class

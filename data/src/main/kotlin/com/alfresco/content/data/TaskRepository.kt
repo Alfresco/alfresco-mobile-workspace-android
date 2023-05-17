@@ -12,12 +12,17 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
+import com.alfresco.process.models.GroupInfo
+import com.alfresco.process.models.PriorityModel
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
 import com.alfresco.process.models.RequestProcessInstances
+import com.alfresco.process.models.RequestProcessInstancesQuery
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
+import com.alfresco.process.models.UserInfo
+import com.alfresco.process.models.ValuesModel
 import java.io.File
 import java.net.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -59,7 +64,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * execute the task list api and returns the response as ResponseList obj
      */
     suspend fun getProcesses(filters: TaskProcessFiltersPayload) = ResponseList.with(
-        processesService.processInstances(
+        processesService.processInstancesQuery(
             includeProcessFilters(filters)
         ), getAPSUser()
     )
@@ -122,8 +127,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     }
 
-    private fun includeProcessFilters(taskFilters: TaskProcessFiltersPayload): RequestProcessInstances {
-        return RequestProcessInstances(
+    private fun includeProcessFilters(taskFilters: TaskProcessFiltersPayload): RequestProcessInstancesQuery {
+        return RequestProcessInstancesQuery(
             sort = taskFilters.sort,
             state = taskFilters.state
         )
@@ -337,6 +342,56 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun startForm(processDefinitionId: String) = ResponseListStartForm.with(
         processesService.startForm(processDefinitionId)
     )
+
+    /**
+     * Execute the start flow integration
+     */
+    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String) = ProcessEntry.with(
+        processesService.createProcessInstance(
+            RequestProcessInstances(
+                name = processEntry?.name,
+                processDefinitionId = processEntry?.id,
+                values = ValuesModel(
+                    due = processEntry?.formattedDueDate,
+                    message = processEntry?.description,
+                    priority = if (processEntry?.priority != -1) PriorityModel(
+                        id = getTaskPriority(processEntry?.priority ?: 0).name,
+                        name = getTaskPriority(processEntry?.priority ?: 0).name
+                    ) else null,
+                    reviewer = getUser(processEntry?.startedBy),
+                    reviewGroups = getGroup(processEntry?.startedBy),
+                    items = items,
+                    sendEmailNotifications = false
+                )
+            )
+        )
+    )
+
+    private fun getUser(userGroupInfo: UserGroupDetails?): UserInfo? {
+        return if (userGroupInfo?.isGroup == true)
+            null
+        else
+            UserInfo(
+                id = userGroupInfo?.id,
+                firstName = userGroupInfo?.firstName,
+                lastName = userGroupInfo?.lastName,
+                email = userGroupInfo?.email
+            )
+    }
+
+    private fun getGroup(userGroupInfo: UserGroupDetails?): GroupInfo? {
+        return if (userGroupInfo?.isGroup == false)
+            null
+        else
+            GroupInfo(
+                id = userGroupInfo?.id,
+                name = userGroupInfo?.name,
+                externalId = userGroupInfo?.externalId,
+                status = userGroupInfo?.status,
+                parentGroupId = userGroupInfo?.parentGroupId,
+                groups = userGroupInfo?.groups
+            )
+    }
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

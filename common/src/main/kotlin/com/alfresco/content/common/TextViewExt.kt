@@ -11,8 +11,8 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.alfresco.content.TaskPriority
-import com.alfresco.content.getTaskPriority
+import com.alfresco.content.data.TaskPriority
+import com.alfresco.content.data.getTaskPriority
 
 typealias TextViewCallback = ((isClicked: Boolean) -> Unit)?
 
@@ -26,20 +26,24 @@ fun TextView.updatePriorityView(priority: Int) {
             setTextColor(ContextCompat.getColor(context, R.color.colorPriorityLow))
             background = ContextCompat.getDrawable(context, R.drawable.bg_priority_low)
         }
+
         TaskPriority.MEDIUM -> {
             text = context.getString(R.string.priority_medium)
             setTextColor(ContextCompat.getColor(context, R.color.colorPriorityMedium))
             background = ContextCompat.getDrawable(context, R.drawable.bg_priority_medium)
         }
+
         TaskPriority.HIGH -> {
             text = context.getString(R.string.priority_high)
             setTextColor(ContextCompat.getColor(context, R.color.colorPriorityHigh))
             background = ContextCompat.getDrawable(context, R.drawable.bg_priority_high)
         }
+
         TaskPriority.RESET -> {
             setTextColor(ContextCompat.getColor(context, R.color.colorGray1))
             background = ContextCompat.getDrawable(context, R.drawable.bg_priority_reset)
         }
+
         else -> text = context.getString(R.string.priority_none)
     }
 }

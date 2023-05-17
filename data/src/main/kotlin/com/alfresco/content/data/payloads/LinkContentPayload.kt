@@ -18,7 +18,8 @@ data class LinkContentPayload(
          */
         fun with(entry: Entry): LinkContentPayload {
             return LinkContentPayload(
-                source = "alfresco-1-adw-contentAlfresco",
+//                source = "alfresco-1-adw-contentAlfresco",
+                source = "undefinedAlfresco",
                 sourceId = entry.id,
                 mimeType = entry.mimeType ?: "",
                 name = entry.name

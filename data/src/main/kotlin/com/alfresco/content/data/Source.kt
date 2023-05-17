@@ -10,8 +10,8 @@ data class Source(val name: String? = null) {
         /**
          * returns obj as Source type.
          */
-        fun with(node: Node?, email: String?): Source {
-            return if (!email.equals(node?.name))
+        fun with(node: Node?): Source {
+            return if (node?.createdByUser?.id != "System")
                 Source(name = node?.name)
             else Source()
         }

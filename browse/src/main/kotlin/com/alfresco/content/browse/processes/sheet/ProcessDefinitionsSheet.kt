@@ -18,6 +18,7 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.listview.listViewMessage
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,17 +67,27 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
             if (state.listProcessDefinitions == null) {
                 actionListLoading { id("loading") }
             }
-            state.listProcessDefinitions?.forEach {
-                listRowProcessDefinitions {
-                    id(it.id)
-                    processDefinition(it)
-                    clickListener { model, _, _, _ ->
-                        val processEntry = ProcessEntry.with(model.processDefinition(), state.entry)
-                        startActivity(
-                            Intent(requireActivity(), ProcessDetailActivity::class.java)
-                                .putExtra(Mavericks.KEY_ARG, processEntry)
-                        )
-                        dismiss()
+            if (state.listProcessDefinitions?.isEmpty() == true) {
+                val args = viewModel.emptyMessageArgs()
+                listViewMessage {
+                    id("empty_message")
+                    iconRes(args.first)
+                    title(args.second)
+                    message(args.third)
+                }
+            } else {
+                state.listProcessDefinitions?.forEach {
+                    listRowProcessDefinitions {
+                        id(it.id)
+                        processDefinition(it)
+                        clickListener { model, _, _, _ ->
+                            val processEntry = ProcessEntry.with(model.processDefinition(), state.entry)
+                            startActivity(
+                                Intent(requireActivity(), ProcessDetailActivity::class.java)
+                                    .putExtra(Mavericks.KEY_ARG, processEntry)
+                            )
+                            dismiss()
+                        }
                     }
                 }
             }

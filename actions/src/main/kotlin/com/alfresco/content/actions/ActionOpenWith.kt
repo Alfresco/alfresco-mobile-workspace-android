@@ -47,6 +47,10 @@ data class ActionOpenWith(
                 showFileChooserDialog(context, target)
                 entry
             }
+            UploadServerType.UPLOAD_TO_PROCESS -> {
+                showFileChooserDialog(context, target)
+                entry
+            }
             else -> {
                 var path = target.path
                 if (hasChooser) {
@@ -69,6 +73,10 @@ data class ActionOpenWith(
             uri = TaskRepository().contentUri(entry)
             client = TaskRepository().getHttpClient()
             output = TaskRepository().getContentDirectory(entry.fileName)
+        } else if (entry.uploadServer == UploadServerType.UPLOAD_TO_PROCESS) {
+            uri = BrowseRepository().contentUri(entry)
+            client = null
+            output = File(context.cacheDir, entry.name)
         } else {
             uri = BrowseRepository().contentUri(entry)
             client = null

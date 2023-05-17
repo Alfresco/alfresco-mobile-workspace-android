@@ -27,6 +27,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
@@ -129,7 +130,8 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
-            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK)))
         else startActivity(
             Intent(requireActivity(), LocalPreviewActivity::class.java)
                 .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)

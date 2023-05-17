@@ -1,6 +1,7 @@
 package com.alfresco.content.browse.processes.details
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,22 +18,30 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
+import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.browse.tasks.detail.executePreview
 import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
+import com.alfresco.content.listview.EntryListener
+import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -47,7 +56,7 @@ import kotlinx.coroutines.withContext
 /**
  * Marked as ProcessDetailFragment
  */
-class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
+class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     lateinit var binding: FragmentTaskDetailBinding
     val viewModel: ProcessDetailViewModel by activityViewModel()
@@ -203,7 +212,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { _, _, _, _ -> }
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
@@ -219,5 +228,23 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
                 binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
             }
         }
+    }
+
+    override fun onEntryCreated(entry: ParentEntry) {
+        if (isAdded)
+            startActivity(
+                Intent(requireActivity(), LocalPreviewActivity::class.java)
+                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry)
+            )
+    }
+
+    private fun onItemClicked(contentEntry: Entry) {
+        if (!contentEntry.isUpload)
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS)))
+        else startActivity(
+            Intent(requireActivity(), LocalPreviewActivity::class.java)
+                .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
+        )
     }
 }

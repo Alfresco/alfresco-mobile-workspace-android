@@ -37,6 +37,7 @@ internal fun ProcessDetailFragment.showStartFormView() {
 }
 
 internal fun ProcessDetailFragment.setListeners() {
+    viewModel.setListener(this)
     binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))

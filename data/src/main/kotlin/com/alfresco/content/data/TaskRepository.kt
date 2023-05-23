@@ -74,7 +74,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     fun contentUri(entry: Entry): String {
         val baseUrl = SessionManager.currentSession?.baseUrl
-        return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/app/rest/content/${entry.id}/raw"
+        return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/api/enterprise/content/${entry.id}/raw"
+//        return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/app/rest/content/${entry.id}/raw"
     }
 
     /**

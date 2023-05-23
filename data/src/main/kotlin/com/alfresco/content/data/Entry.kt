@@ -377,13 +377,15 @@ data class Entry(
          * return the Entry obj by using the contentEntry obj.
          */
         fun convertContentEntryToEntry(contentEntry: Entry, isDocFile: Boolean, uploadServer: UploadServerType): Entry {
-            val id = contentEntry.sourceId ?: contentEntry.id
+            val id = if (contentEntry.sourceId.isNullOrEmpty()) contentEntry.id else contentEntry.sourceId
             return Entry(
                 id = id,
                 name = contentEntry.name,
                 mimeType = contentEntry.mimeType,
                 uploadServer = uploadServer,
-                isDocFile = isDocFile
+                isDocFile = isDocFile,
+                source = contentEntry.source,
+                sourceId = contentEntry.sourceId
             )
         }
 

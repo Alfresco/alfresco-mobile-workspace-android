@@ -6,6 +6,7 @@ import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ResponseAccountInfo
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.ResponseListStartForm
 import com.alfresco.content.data.payloads.FieldsData
@@ -22,6 +23,7 @@ data class ProcessDetailViewState(
     val formFields: List<FieldsData> = emptyList(),
     val requestStartForm: Async<ResponseListStartForm> = Uninitialized,
     val requestProfile: Async<ProfileData> = Uninitialized,
+    val requestAccountInfo: Async<ResponseAccountInfo> = Uninitialized,
     val requestContent: Async<Entry> = Uninitialized,
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val requestStartWorkflow: Async<ProcessEntry> = Uninitialized

@@ -39,9 +39,8 @@ class ProcessDetailViewModel(
             setState { copy(parent = it.entry as ProcessEntry) }
         }
         fetchUserProfile()
-        state.parent?.defaultEntry?.let { entry ->
-            linkContentToProcess(entry)
-        }
+        fetchAccountInfo()
+
         state.parent?.let { processEntry ->
             singleProcessDefinition(processEntry.id)
         }
@@ -132,9 +131,9 @@ class ProcessDetailViewModel(
         deleteUploads(contentId)
     }
 
-    private fun linkContentToProcess(entry: Entry) =
+    private fun linkContentToProcess(entry: Entry, sourceName: String) =
         viewModelScope.launch {
-            repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry)).execute {
+            repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry, sourceName)).execute {
                 when (it) {
                     is Loading -> copy(requestContent = Loading())
                     is Fail -> copy(requestContent = Fail(it.error))
@@ -200,6 +199,30 @@ class ProcessDetailViewModel(
                         repository.saveProcessUserDetails(it())
                         copy(requestProfile = Success(it()))
                     }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchAccountInfo() = withState { state ->
+        viewModelScope.launch {
+            repository::getAccountInfo.execute {
+                when (it) {
+                    is Loading -> copy(requestAccountInfo = Loading())
+                    is Fail -> copy(requestAccountInfo = Fail(it.error))
+                    is Success -> {
+                        repository.saveSourceName(it().listAccounts.first())
+                        val sourceName = it().listAccounts.first().sourceName
+                        state.parent?.defaultEntry?.let { entry ->
+                            linkContentToProcess(entry, sourceName)
+                        }
+                        copy(requestAccountInfo = Success(it()))
+                    }
+
                     else -> {
                         this
                     }

@@ -23,6 +23,9 @@ data class AccountInfoData(
     val sourceName = if (id != null && !name.isNullOrEmpty()) "alfresco-$id-${name}Alfresco" else "undefinedAlfresco"
 
     companion object {
+        /**
+         * returns the AccountInfoData obj by using AccountInfo obj
+         */
         fun with(raw: AccountInfo): AccountInfoData {
             return AccountInfoData(
                 id = raw.id,

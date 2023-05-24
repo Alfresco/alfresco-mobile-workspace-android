@@ -398,12 +398,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             )
     }
 
+    /**
+     * saving the accountInfo data in preferences
+     */
     fun saveSourceName(accountInfo: AccountInfoData) {
         val editor = sharedPrefs.edit()
         editor.putString(KEY_SOURCE_NAME, accountInfo.sourceName)
         editor.apply()
     }
 
+    /**
+     * Call to fetch account info from APS
+     */
     suspend fun getAccountInfo() = ResponseAccountInfo.with(processesService.accountInfo())
 
     companion object {

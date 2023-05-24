@@ -168,8 +168,8 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView {
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
-            .setTitle("Warning")
-            .setMessage("Few files are not uploaded yet and tap on confirm to start workflow without uploaded it.")
+            .setTitle(getString(R.string.title_content_in_queue))
+            .setMessage(getString(R.string.message_content_in_queue))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
             .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
                 requireActivity().onBackPressed()

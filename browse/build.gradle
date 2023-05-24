@@ -36,8 +36,7 @@ dependencies {
     implementation project(':component')
 
     implementation libs.alfresco.content
-//    implementation libs.alfresco.process
-    implementation project(':process')
+    implementation libs.alfresco.process
     implementation libs.kotlin.reflect
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel

@@ -49,7 +49,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
-
+        binding.refreshLayout.isEnabled = false
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)

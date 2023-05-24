@@ -59,6 +59,9 @@ android {
     packagingOptions {
         pickFirst 'META-INF/auth_release.kotlin_module'
     }
+    androidResources {
+        noCompress 'dex'
+    }
 }
 
 project.afterEvaluate {

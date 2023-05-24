@@ -159,6 +159,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun getProcessUserProfile() = tasksService.getProfile()
 
     /**
+     * executes the Api to fetch the account Info
+     */
+    suspend fun getProcessAccountInfo() = processesService.accountInfo()
+
+    /**
      * If the ACS and APS users are same then it will return true otherwise false
      */
     fun isAcsAndApsSameUser(): Boolean {
@@ -394,11 +399,26 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             )
     }
 
+    /**
+     * saving the accountInfo data in preferences
+     */
+    fun saveSourceName(accountInfo: AccountInfoData) {
+        val editor = sharedPrefs.edit()
+        editor.putString(KEY_SOURCE_NAME, accountInfo.sourceName)
+        editor.apply()
+    }
+
+    /**
+     * Call to fetch account info from APS
+     */
+    suspend fun getAccountInfo() = ResponseAccountInfo.with(processesService.accountInfo())
+
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"
         const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"
         const val KEY_PROCESS_USER_FIRST_NAME = "process_user_first_name"
         const val KEY_PROCESS_USER_LAST_NAME = "process_user_last_name"
         const val KEY_PROCESS_USER_EMAIL = "process_user_email"
+        const val KEY_SOURCE_NAME = "source_name"
     }
 }

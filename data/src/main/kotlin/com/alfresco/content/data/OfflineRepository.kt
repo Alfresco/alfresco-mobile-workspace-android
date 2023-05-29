@@ -233,6 +233,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
         clearData()
         update(entry)
+
         val dest = File(session.uploadDir, entry.boxId.toString())
         val srcPath = path.removePrefix("file://")
         update(entry.copy(path = dest.absolutePath))

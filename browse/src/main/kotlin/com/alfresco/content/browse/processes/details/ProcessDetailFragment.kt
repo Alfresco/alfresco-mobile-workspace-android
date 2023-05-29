@@ -25,7 +25,6 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
-import com.alfresco.content.browse.tasks.detail.executePreview
 import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -212,7 +211,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    clickListener { model, _, _, _ ->
+                        onItemClicked(model.data())
+                    }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
@@ -239,10 +240,17 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     }
 
     private fun onItemClicked(contentEntry: Entry) {
-        if (!contentEntry.isUpload)
-            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS)))
-        else startActivity(
+        if (!contentEntry.isUpload) {
+            if (!contentEntry.source.isNullOrEmpty())
+                viewModel.executePreview(
+                    ActionOpenWith(
+                        Entry.convertContentEntryToEntry(
+                            contentEntry,
+                            MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
+                        )
+                    )
+                )
+        } else startActivity(
             Intent(requireActivity(), LocalPreviewActivity::class.java)
                 .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
         )

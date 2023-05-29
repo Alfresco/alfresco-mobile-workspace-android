@@ -108,7 +108,7 @@
     <string name="text_approve">Approve</string>
     <string name="text_reject">Reject</string>
     <string name="text_send_approval_again">Send for Approval Again</string>
-    <string name="text_send_approval_again">Stop Approval Request</string>
+    <string name="text_stop_approval_request">Stop Approval Request</string>
     <string name="title_comment">Comment</string>
 
 

@@ -8,6 +8,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.Entry
@@ -17,8 +18,10 @@ import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.LinkContentPayload
+import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
+import java.io.File
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -33,8 +36,13 @@ class ProcessDetailViewModel(
 ) : MavericksViewModel<ProcessDetailViewState>(state) {
 
     private var observeUploadsJob: Job? = null
+    var entryListener: EntryListener? = null
 
     init {
+        viewModelScope.on<ActionOpenWith> {
+            if (!it.entry.path.isNullOrEmpty())
+                entryListener?.onEntryCreated(it.entry)
+        }
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
         }
@@ -184,6 +192,24 @@ class ProcessDetailViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * adding listener to update the View after downloading the content
+     */
+    fun setListener(listener: EntryListener) {
+        this.entryListener = listener
+    }
+
+    /**
+     * execute "open with" action to download the content data
+     */
+    fun executePreview(action: Action) {
+        val entry = action.entry as Entry
+        val file = File(repository.session.contentDir, entry.fileName)
+        if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
+            entryListener?.onEntryCreated(Entry.updateDownloadEntry(entry, file.path))
+        } else action.execute(context, GlobalScope)
     }
 
     private fun fetchUserProfile() {

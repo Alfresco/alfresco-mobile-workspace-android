@@ -105,6 +105,11 @@
     <string name="workflow_unavailable_message">Workflows will appear here when created.</string>
     <string name="title_content_in_queue">Warning</string>
     <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
+    <string name="text_approve">Approve</string>
+    <string name="text_reject">Reject</string>
+    <string name="text_send_approval_again">Send for Approval Again</string>
+    <string name="text_stop_approval_request">Stop Approval Request</string>
+    <string name="title_comment">Comment</string>
 
 
 </resources>

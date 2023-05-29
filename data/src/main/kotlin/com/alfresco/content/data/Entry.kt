@@ -376,13 +376,16 @@ data class Entry(
         /**
          * return the Entry obj by using the contentEntry obj.
          */
-        fun convertContentEntryToEntry(contentEntry: Entry, isDocFile: Boolean): Entry {
+        fun convertContentEntryToEntry(contentEntry: Entry, isDocFile: Boolean, uploadServer: UploadServerType): Entry {
+            val id = if (contentEntry.sourceId.isNullOrEmpty()) contentEntry.id else contentEntry.sourceId
             return Entry(
-                id = contentEntry.id,
+                id = id,
                 name = contentEntry.name,
                 mimeType = contentEntry.mimeType,
-                uploadServer = UploadServerType.UPLOAD_TO_TASK,
-                isDocFile = isDocFile
+                uploadServer = uploadServer,
+                isDocFile = isDocFile,
+                source = contentEntry.source,
+                sourceId = contentEntry.sourceId
             )
         }
 
@@ -449,9 +452,11 @@ data class Entry(
                         is String -> {
                             map[k] = v
                         }
+
                         is List<*> -> {
                             map[k] = v.joinToString { ", " }
                         }
+
                         else -> {
                             // Ignored
                         }

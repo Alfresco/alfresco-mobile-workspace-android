@@ -47,6 +47,12 @@ data class ActionOpenWith(
                 showFileChooserDialog(context, target)
                 entry
             }
+
+            UploadServerType.UPLOAD_TO_PROCESS -> {
+                showFileChooserDialog(context, target)
+                entry
+            }
+
             else -> {
                 var path = target.path
                 if (hasChooser) {
@@ -61,35 +67,60 @@ data class ActionOpenWith(
     private suspend fun fetchRemoteFile(context: Context): File {
         val deferredDialog = showProgressDialogAsync(context)
 
-        val uri: String
-        val client: OkHttpClient?
-        val output: File
-
-        if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) {
-            uri = TaskRepository().contentUri(entry)
-            client = TaskRepository().getHttpClient()
-            output = TaskRepository().getContentDirectory(entry.fileName)
-        } else {
-            uri = BrowseRepository().contentUri(entry)
-            client = null
-            output = File(context.cacheDir, entry.name)
-        }
+        val triple = getUriClientOutputFileData(context, entry)
 
         val deferredDownload = GlobalScope.async(Dispatchers.IO) {
-            ContentDownloader.downloadFileTo(uri, output.path, client)
+            ContentDownloader.downloadFileTo(triple.first, triple.third.path, triple.second)
         }
         this.deferredDownload.compareAndSet(null, deferredDownload)
 
         try {
             deferredDownload.await()
         } catch (ex: Exception) {
-            output.delete()
+            triple.third.delete()
             deferredDialog.cancel()
             throw ex
         }
         deferredDialog.cancelAndJoin()
 
-        return output
+        return triple.third
+    }
+
+    private fun getUriClientOutputFileData(context: Context, entry: Entry): Triple<String, OkHttpClient?, File> {
+        val triple: Triple<String, OkHttpClient?, File>
+        when (entry.uploadServer) {
+            UploadServerType.UPLOAD_TO_TASK -> {
+                triple = Triple(
+                    TaskRepository().contentUri(entry),
+                    TaskRepository().getHttpClient(),
+                    TaskRepository().getContentDirectory(entry.fileName)
+                )
+            }
+
+            UploadServerType.UPLOAD_TO_PROCESS -> {
+                triple = if (!entry.sourceId.isNullOrEmpty())
+                    Triple(
+                        BrowseRepository().contentUri(entry),
+                        null,
+                        File(context.cacheDir, entry.name)
+                    )
+                else
+                    Triple(
+                        TaskRepository().contentUri(entry),
+                        TaskRepository().getHttpClient(),
+                        TaskRepository().getContentDirectory(entry.fileName)
+                    )
+            }
+
+            else -> {
+                triple = Triple(
+                    BrowseRepository().contentUri(entry),
+                    null,
+                    File(context.cacheDir, entry.name)
+                )
+            }
+        }
+        return triple
     }
 
     private fun showFileChooserDialog(context: Context, file: File) {

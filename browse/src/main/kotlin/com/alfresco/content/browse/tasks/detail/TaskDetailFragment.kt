@@ -46,6 +46,7 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
@@ -336,7 +337,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload)
-            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry, MimeType.isDocFile(contentEntry.mimeType))))
+            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK)))
         else startActivity(
             Intent(requireActivity(), LocalPreviewActivity::class.java)
                 .putExtra(KEY_ENTRY_OBJ, contentEntry)

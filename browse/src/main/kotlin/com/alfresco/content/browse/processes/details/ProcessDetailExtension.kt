@@ -10,14 +10,19 @@ import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
 import com.alfresco.content.common.isEllipsized
+import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.snackbar.Snackbar
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
@@ -37,6 +42,7 @@ internal fun ProcessDetailFragment.showStartFormView() {
 }
 
 internal fun ProcessDetailFragment.setListeners() {
+    viewModel.setListener(this)
     binding.iconTitleEdit.setSafeOnClickListener {
         withState(viewModel) { state ->
             viewModel.execute(ActionUpdateNameDescription(requireNotNull(state.parent)))
@@ -132,6 +138,25 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
     }
 }
 
+internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
+    val dataEntry = state.parent
+    binding.tvTitle.text = dataEntry?.name
+    binding.tvDescription.text = dataEntry?.description?.ifEmpty { requireContext().getString(R.string.empty_description) }
+    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+    binding.tvDueDateValue.text =
+        if (dataEntry?.formattedDueDate.isNullOrEmpty()) requireContext().getString(R.string.empty_no_due_date) else dataEntry?.formattedDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+    binding.completeButton.text = getString(R.string.title_start_workflow)
+    binding.tvPriorityValue.updatePriorityView(state.parent?.priority ?: -1)
+    binding.tvAssignedValue.apply {
+        text = if (dataEntry?.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
+            requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: "")
+        } else if (dataEntry?.startedBy?.groupName?.isNotEmpty() == true)
+            requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: "")
+        else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: "")
+    }
+}
+
 internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {
     if (state.parent?.formattedDueDate.isNullOrEmpty()) {
         binding.iconDueDateClear.isVisible = false
@@ -160,4 +185,8 @@ internal fun ProcessDetailFragment.showTitleDescriptionComponent() = withState(v
             )
         )
     }
+}
+
+internal fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+    continuation.resume(ComponentMetaData(name = name, query = query))
 }

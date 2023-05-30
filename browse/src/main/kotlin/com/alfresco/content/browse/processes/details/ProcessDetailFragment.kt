@@ -16,7 +16,6 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.preview.LocalPreviewActivity
@@ -35,14 +34,18 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
+import com.alfresco.content.viewer.ViewerActivity
+import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_ID
+import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_MODE
+import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_TITLE
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.ref.WeakReference
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Marked as ProcessDetailFragment
@@ -210,15 +213,17 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
-            if (!contentEntry.source.isNullOrEmpty())
-                viewModel.executePreview(
-                    ActionOpenWith(
-                        Entry.convertContentEntryToEntry(
-                            contentEntry,
-                            MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
-                        )
-                    )
+            if (!contentEntry.source.isNullOrEmpty()) {
+                val entry = Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
                 )
+                startActivity(Intent(requireActivity(), ViewerActivity::class.java)
+                    .putExtra(KEY_ID,entry.id)
+                    .putExtra(KEY_TITLE,entry.name)
+                    .putExtra(KEY_MODE,"remote")
+                )
+            }
         } else startActivity(
             Intent(requireActivity(), LocalPreviewActivity::class.java)
                 .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)

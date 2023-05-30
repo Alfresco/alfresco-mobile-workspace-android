@@ -41,4 +41,10 @@ class ViewerActivity : AppCompatActivity() {
             fragment.arguments = intent.extras
         }
     }
+
+    companion object{
+        const val KEY_ID = "id"
+        const val KEY_TITLE = "title"
+        const val KEY_MODE = "mode"
+    }
 }

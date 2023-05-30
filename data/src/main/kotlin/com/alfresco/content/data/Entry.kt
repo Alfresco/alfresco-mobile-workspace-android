@@ -397,6 +397,7 @@ data class Entry(
                 id = data.id?.toString() ?: "",
                 parentId = parentId,
                 name = data.name ?: "",
+                type = Type.FILE,
                 created = data.created,
                 userGroupDetails = data.createdBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
                 isRelatedContent = data.relatedContent,

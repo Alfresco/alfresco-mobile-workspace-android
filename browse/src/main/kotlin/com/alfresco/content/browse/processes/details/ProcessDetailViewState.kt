@@ -7,8 +7,10 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseAccountInfo
+import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.ResponseListStartForm
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProfileData
 
@@ -21,15 +23,21 @@ data class ProcessDetailViewState(
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList(),
     val formFields: List<FieldsData> = emptyList(),
+    val listTask: List<TaskEntry> = emptyList(),
     val requestStartForm: Async<ResponseListStartForm> = Uninitialized,
     val requestProfile: Async<ProfileData> = Uninitialized,
     val requestAccountInfo: Async<ResponseAccountInfo> = Uninitialized,
     val requestContent: Async<Entry> = Uninitialized,
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
-    val requestStartWorkflow: Async<ProcessEntry> = Uninitialized
+    val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
+    val requestTasks: Async<ResponseList> = Uninitialized
 ) : MavericksState {
 
     constructor(target: ProcessEntry) : this(parent = target)
+
+    fun updateTasks(response: ResponseList): ProcessDetailViewState {
+        return copy(listTask = response.listTask)
+    }
 
     /**
      * update ACS content data in process entry object

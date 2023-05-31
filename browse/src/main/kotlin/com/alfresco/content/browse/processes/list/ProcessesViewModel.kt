@@ -52,9 +52,9 @@ class ProcessesViewModel(
     override fun fetchNextPage() = withState { state ->
         val newPage = state.page.plus(1)
         viewModelScope.launch {
-            // Fetch tasks data
-            repository::getTasks.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage)
+            // Fetch processes data
+            repository::getProcesses.asFlow(
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())

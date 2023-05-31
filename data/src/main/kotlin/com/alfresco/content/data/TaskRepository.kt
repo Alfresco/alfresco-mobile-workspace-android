@@ -75,7 +75,6 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     fun contentUri(entry: Entry): String {
         val baseUrl = SessionManager.currentSession?.baseUrl
         return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/api/enterprise/content/${entry.id}/raw"
-//        return "${URL(baseUrl).protocol}://${URL(baseUrl).host}/activiti-app/app/rest/content/${entry.id}/raw"
     }
 
     /**
@@ -118,6 +117,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
 
     private fun includeTaskFilters(taskFilters: TaskProcessFiltersPayload): RequestTaskFilters {
         return RequestTaskFilters(
+            processInstanceId = taskFilters.processDefinitionId,
             assignment = taskFilters.assignment,
             sort = taskFilters.sort,
             page = taskFilters.page,

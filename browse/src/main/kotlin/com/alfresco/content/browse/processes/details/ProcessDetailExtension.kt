@@ -1,5 +1,6 @@
 package com.alfresco.content.browse.processes.details
 
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -106,9 +107,11 @@ internal fun ProcessDetailFragment.setListeners() {
             if (entry != null) {
                 confirmContentQueuePrompt()
             } else if (state.parent?.startedBy == null) {
-                Snackbar.make(binding.root,
+                Snackbar.make(
+                    binding.root,
                     "Please select assignee",
-                    Snackbar.LENGTH_SHORT).show()
+                    Snackbar.LENGTH_SHORT
+                ).show()
             } else {
 
                 viewModel.startWorkflow()
@@ -142,12 +145,6 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
     val dataEntry = state.parent
     binding.tvTitle.text = dataEntry?.name
     binding.tvDescription.text = dataEntry?.description?.ifEmpty { requireContext().getString(R.string.empty_description) }
-    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-    binding.tvDueDateValue.text =
-        if (dataEntry?.formattedDueDate.isNullOrEmpty()) requireContext().getString(R.string.empty_no_due_date) else dataEntry?.formattedDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
-    binding.completeButton.text = getString(R.string.title_start_workflow)
-    binding.tvPriorityValue.updatePriorityView(state.parent?.priority ?: -1)
     binding.tvAssignedValue.apply {
         text = if (dataEntry?.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
             requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: "")
@@ -155,6 +152,34 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
             requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: "")
         else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: "")
     }
+
+    if (dataEntry?.processDefinitionId.isNullOrEmpty()) {
+        binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+        binding.tvDueDateValue.text =
+            if (dataEntry?.formattedDueDate.isNullOrEmpty()) requireContext().getString(R.string.empty_no_due_date) else dataEntry?.formattedDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+        binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+        binding.completeButton.text = getString(R.string.title_start_workflow)
+        binding.tvPriorityValue.updatePriorityView(state.parent?.priority ?: -1)
+    } else {
+        enableViewUI()
+        binding.clStatus.visibility = View.VISIBLE
+        binding.clTasks.visibility = View.VISIBLE
+        binding.tvDueDateTitle.text = getString(R.string.title_start_date)
+        binding.tvAssignedTitle.text = getString(R.string.title_started_by)
+        binding.tvDueDateValue.text = dataEntry?.started?.toLocalDate()?.toString()?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+        binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_running)
+        binding.tvTasksValue.text = if (state.listTask.isNotEmpty()) state.listTask.size.toString() else "0"
+    }
+}
+
+private fun ProcessDetailFragment.enableViewUI() {
+    binding.clAttachmentHeader.visibility = View.GONE
+    binding.completeButton.visibility = View.GONE
+    binding.clPriority.visibility = View.GONE
+    binding.iconTitleEdit.visibility = View.GONE
+    binding.iconDueDateEdit.visibility = View.INVISIBLE
+    binding.iconDueDateClear.visibility = View.INVISIBLE
+    binding.iconAssignedEdit.visibility = View.INVISIBLE
 }
 
 internal fun ProcessDetailFragment.updateUI(state: ProcessDetailViewState) {

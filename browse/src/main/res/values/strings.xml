@@ -110,6 +110,10 @@
     <string name="text_send_approval_again">Send for Approval Again</string>
     <string name="text_stop_approval_request">Stop Approval Request</string>
     <string name="title_comment">Comment</string>
+    <string name="title_started_by">Started By</string>
+    <string name="title_start_date">Start Date</string>
+    <string name="status_running">Running</string>
+    <string name="title_workflow">Workflow</string>
 
 
 </resources>

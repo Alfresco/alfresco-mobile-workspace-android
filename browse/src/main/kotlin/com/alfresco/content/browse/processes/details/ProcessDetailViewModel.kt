@@ -18,6 +18,7 @@ import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.LinkContentPayload
+import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -46,11 +47,15 @@ class ProcessDetailViewModel(
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
         }
+
         fetchUserProfile()
         fetchAccountInfo()
-
-        state.parent?.let { processEntry ->
-            singleProcessDefinition(processEntry.id)
+        if (state.parent?.processDefinitionId.isNullOrEmpty()) {
+            state.parent?.let { processEntry ->
+                singleProcessDefinition(processEntry.id)
+            }
+        } else {
+            fetchTasks()
         }
     }
 
@@ -249,6 +254,26 @@ class ProcessDetailViewModel(
                         copy(requestAccountInfo = Success(it()))
                     }
 
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchTasks() = withState { state ->
+        viewModelScope.launch {
+            // Fetch tasks data
+            repository::getTasks.asFlow(
+                TaskProcessFiltersPayload.defaultTasksOfProcess(state.parent?.id)
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestTasks = Loading())
+                    is Fail -> copy(requestTasks = Fail(it.error))
+                    is Success -> {
+                        updateTasks(it()).copy(requestTasks = Success(it()))
+                    }
                     else -> {
                         this
                     }

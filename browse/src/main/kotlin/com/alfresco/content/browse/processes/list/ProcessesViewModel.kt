@@ -14,6 +14,7 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.processes.ProcessListViewModel
 import com.alfresco.content.listview.processes.ProcessListViewState
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.on
 import kotlinx.coroutines.launch
 
 /**
@@ -33,10 +34,17 @@ class ProcessesViewModel(
 
     var filterName: String = ProcessFilters.Active.filter
     var filterValue: String = ""
+    var scrollToTop = false
 
     init {
         filterValue = listProcesses.getValue(filterName)
         fetchInitial()
+        viewModelScope.on<UpdateProcessData> {
+            if (it.isRefresh) {
+                scrollToTop = true
+                fetchInitial()
+            }
+        }
     }
 
     companion object : MavericksViewModelFactory<ProcessesViewModel, ProcessesViewState> {
@@ -109,3 +117,8 @@ class ProcessesViewModel(
         fetchInitial()
     }
 }
+
+/**
+ * Mark as UpdateProcessData data class
+ */
+data class UpdateProcessData(val isRefresh: Boolean)

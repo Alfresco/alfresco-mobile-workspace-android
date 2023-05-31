@@ -16,13 +16,12 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.ActionCreateTask
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.ProcessDetailActivity
+import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ProcessEntry
-import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.processes.ProcessListFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,8 +47,16 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
         super.invalidate()
         filterTitle.text = requireContext().getLocalizedName(viewModel.filterName)
         rlFilters.contentDescription = getString(R.string.text_filter_option, viewModel.filterName)
+        scrollToTop()
         if (state.request is Success) {
             clParent.addView(makeFab(requireContext()))
+        }
+    }
+
+    private fun scrollToTop() {
+        if (isResumed && viewModel.scrollToTop) {
+            recyclerView.layoutManager?.scrollToPosition(0)
+            viewModel.scrollToTop = false
         }
     }
 
@@ -94,7 +101,7 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
             contentDescription = context.getString(R.string.title_start_workflow)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
-
+                ProcessDefinitionsSheet.with().show(parentFragmentManager, null)
             }
         }
 

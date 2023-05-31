@@ -66,7 +66,7 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: RuntimeProcessDefinitionDataEntry, entry: Entry): ProcessEntry {
+        fun with(data: RuntimeProcessDefinitionDataEntry, entry: Entry?): ProcessEntry {
             return ProcessEntry(
                 id = data.id?.toString() ?: "",
                 name = data.name ?: "",

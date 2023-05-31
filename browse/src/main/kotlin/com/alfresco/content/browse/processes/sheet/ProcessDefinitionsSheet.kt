@@ -98,7 +98,7 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
         /**
          * returns the instance of ProcessDefinitionsSheet with attached entry as bundle
          */
-        fun with(entry: Entry) = ProcessDefinitionsSheet().apply {
+        fun with(entry: Entry? = null) = ProcessDefinitionsSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to entry)
         }
     }

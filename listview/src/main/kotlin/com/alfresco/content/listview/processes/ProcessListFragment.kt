@@ -156,7 +156,7 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
                 listViewProcessRow {
                     id(it.id)
                     data(it)
-                    clickListener { model, _, _, _ -> }
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     compact(state.isCompact)
                 }
             }

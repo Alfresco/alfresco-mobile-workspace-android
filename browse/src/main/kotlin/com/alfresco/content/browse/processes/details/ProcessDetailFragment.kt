@@ -40,12 +40,12 @@ import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_MODE
 import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_TITLE
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Marked as ProcessDetailFragment
@@ -79,7 +79,6 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                     requireActivity().onBackPressed()
                 }
             }
-            title = resources.getString(R.string.title_start_workflow)
         }
 
         showStartFormView()
@@ -92,15 +91,21 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading || state.requestStartWorkflow is Loading
+        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading ||
+                state.requestStartWorkflow is Loading || state.requestTasks is Loading
         setData(state)
-        updateUI(state)
-        when {
-            state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
-                requireActivity().onBackPressed()
+        if (state.parent?.processDefinitionId.isNullOrEmpty()) {
+            binding.toolbar.title = resources.getString(R.string.title_start_workflow)
+            updateUI(state)
+            when {
+                state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
+                    requireActivity().onBackPressed()
+                }
             }
+            epoxyAttachmentController.requestModelBuild()
+        } else {
+            binding.toolbar.title = resources.getString(R.string.title_workflow)
         }
-        epoxyAttachmentController.requestModelBuild()
     }
 
     internal suspend fun showComponentSheetDialog(
@@ -219,9 +224,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                     MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
                 )
                 startActivity(Intent(requireActivity(), ViewerActivity::class.java)
-                    .putExtra(KEY_ID,entry.id)
-                    .putExtra(KEY_TITLE,entry.name)
-                    .putExtra(KEY_MODE,"remote")
+                    .putExtra(KEY_ID, entry.id)
+                    .putExtra(KEY_TITLE, entry.name)
+                    .putExtra(KEY_MODE, "remote")
                 )
             }
         } else startActivity(

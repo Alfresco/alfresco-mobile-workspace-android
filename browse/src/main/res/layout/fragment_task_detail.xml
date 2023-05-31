@@ -505,6 +505,69 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_tasks"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_identifier">
+
+                    <ImageView
+                        android:id="@+id/icon_tasks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/icon_identifier"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_task_identifier"
+                        app:layout_constraintEnd_toStartOf="@id/tv_tasks_title"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_tasks_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:letterSpacing="0"
+                        android:text="@string/title_tasks"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textColor="?attr/colorControlNormal"
+                        app:layout_constraintBottom_toBottomOf="@id/icon_tasks"
+                        app:layout_constraintEnd_toStartOf="@id/tv_tasks_value"
+                        app:layout_constraintHorizontal_weight="2"
+                        app:layout_constraintStart_toEndOf="@id/icon_tasks"
+                        app:layout_constraintTop_toTopOf="@id/icon_tasks" />
+
+                    <TextView
+                        android:id="@+id/tv_tasks_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        app:layout_constraintBottom_toBottomOf="@id/icon_tasks"
+                        app:layout_constraintEnd_toStartOf="@id/icon_tasks_nav"
+                        app:layout_constraintHorizontal_weight="2"
+                        app:layout_constraintStart_toEndOf="@id/tv_tasks_title"
+                        app:layout_constraintTop_toTopOf="@id/icon_tasks" />
+
+                    <ImageView
+                        android:id="@+id/icon_tasks_nav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_forward_nav"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@id/tv_tasks_value"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

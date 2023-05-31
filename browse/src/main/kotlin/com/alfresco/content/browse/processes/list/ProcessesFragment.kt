@@ -1,14 +1,17 @@
 package com.alfresco.content.browse.processes.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
+import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ProcessEntry
@@ -63,6 +66,9 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
     }
 
     override fun onItemClicked(entry: ProcessEntry) {
-        // TODO
+        startActivity(
+            Intent(requireActivity(), ProcessDetailActivity::class.java)
+                .putExtra(Mavericks.KEY_ARG, entry)
+        )
     }
 }

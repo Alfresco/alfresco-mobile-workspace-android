@@ -4,10 +4,12 @@ package com.alfresco.content.data.payloads
  * Marked as TaskFiltersPayload
  */
 data class TaskProcessFiltersPayload(
-    val assignment: String = "involved",
+    val processDefinitionId: String? = null,
+    val assignment: String? = "involved",
     val sort: String = "created-desc",
     var start: Int = 0,
     var page: Int = 0,
+    var size: Int = 25,
     var state: String = "",
     var text: String = "",
     var dueBefore: String = "",
@@ -44,6 +46,20 @@ data class TaskProcessFiltersPayload(
                 text = obj.text,
                 dueBefore = obj.dueBefore,
                 dueAfter = obj.dueAfter
+            )
+        }
+
+        /**
+         * returns the default payload for the task list related to workflow
+         */
+        fun defaultTasksOfProcess(processDefinitionId: String? = null): TaskProcessFiltersPayload {
+            return TaskProcessFiltersPayload(
+                processDefinitionId = processDefinitionId,
+                sort = "created-desc",
+                assignment = null,
+                size = 25,
+                page = 0,
+                state = "all"
             )
         }
     }

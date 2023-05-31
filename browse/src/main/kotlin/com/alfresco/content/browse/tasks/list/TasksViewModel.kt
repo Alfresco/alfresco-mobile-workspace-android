@@ -61,6 +61,7 @@ class TasksViewModel(
                     is Success -> {
                         update(it()).copy(request = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -89,6 +90,7 @@ class TasksViewModel(
                     is Success -> {
                         update(it()).copy(request = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -98,8 +100,7 @@ class TasksViewModel(
     }
 
     private fun fetchUserProfile() {
-        if (repository.isAcsAndApsSameUser())
-            return
+        if (repository.isAcsAndApsSameUser()) return
         viewModelScope.launch {
             // Fetch APS user profile data
             repository::getProcessUserProfile.execute {
@@ -110,6 +111,7 @@ class TasksViewModel(
                         repository.saveProcessUserDetails(it())
                         copy(requestProfile = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -132,9 +134,11 @@ class TasksViewModel(
                     if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER))
                         taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
                 }
+
                 context.getString(R.string.filter_task_status) -> {
                     taskFiltersPayload.state = it.selectedQuery
                 }
+
                 context.getString(R.string.filter_task_name) -> {
                     taskFiltersPayload.text = it.selectedQuery
                 }
@@ -180,8 +184,7 @@ class TasksViewModel(
                         selectedQueryMap = metaData.queryMap ?: mapOf()
                     )
                 )
-            } else
-                list.add(obj)
+            } else list.add(obj)
         }
 
         setState { copy(listSortDataChips = list) }

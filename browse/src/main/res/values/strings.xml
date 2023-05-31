@@ -115,6 +115,7 @@
     <string name="status_running">Running</string>
     <string name="title_workflow">Workflow</string>
     <string name="error_select_assignee">Please select assignee</string>
+    <string name="text_select_assignee">Select assignee</string>
 
 
 </resources>

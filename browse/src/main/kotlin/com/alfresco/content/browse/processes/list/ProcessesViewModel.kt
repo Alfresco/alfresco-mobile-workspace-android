@@ -54,7 +54,7 @@ class ProcessesViewModel(
         viewModelScope.launch {
             // Fetch processes data
             repository::getProcesses.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())

@@ -128,9 +128,11 @@ class TasksViewModel(
         list.filter { it.isSelected }.forEach {
             when (context.getLocalizedName(it.name?.lowercase() ?: "")) {
                 context.getString(R.string.filter_task_due_date) -> {
-                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE)) taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_BEFORE])
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE))
+                        taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_BEFORE])
 
-                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER)) taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER))
+                        taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
                 }
 
                 context.getString(R.string.filter_task_status) -> {
@@ -175,7 +177,11 @@ class TasksViewModel(
             if (obj == model) {
                 list.add(
                     TaskFilterData.withFilterResult(
-                        obj, isSelected = metaData.name?.isNotEmpty() == true, selectedName = metaData.name ?: "", selectedQuery = metaData.query ?: "", selectedQueryMap = metaData.queryMap ?: mapOf()
+                        obj,
+                        isSelected = metaData.name?.isNotEmpty() == true,
+                        selectedName = metaData.name ?: "",
+                        selectedQuery = metaData.query ?: "",
+                        selectedQueryMap = metaData.queryMap ?: mapOf()
                     )
                 )
             } else list.add(obj)

@@ -35,6 +35,9 @@ data class ProcessDetailViewState(
 
     constructor(target: ProcessEntry) : this(parent = target)
 
+    /**
+     * update the task list related to workflow
+     */
     fun updateTasks(response: ResponseList): ProcessDetailViewState {
         return copy(listTask = response.listTask)
     }

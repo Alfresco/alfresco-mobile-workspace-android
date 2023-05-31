@@ -104,16 +104,15 @@ internal fun ProcessDetailFragment.setListeners() {
     binding.completeButton.setOnClickListener {
         withState(viewModel) { state ->
             val entry = state.listContents.find { it.isUpload }
-            if (entry != null) {
-                confirmContentQueuePrompt()
-            } else if (state.parent?.startedBy == null) {
+            if (state.parent?.startedBy == null) {
                 Snackbar.make(
                     binding.root,
-                    "Please select assignee",
+                    getString(R.string.error_select_assignee),
                     Snackbar.LENGTH_SHORT
                 ).show()
+            } else if (entry != null) {
+                confirmContentQueuePrompt()
             } else {
-
                 viewModel.startWorkflow()
             }
         }

@@ -99,6 +99,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
             updateUI(state)
             when {
                 state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
+                    viewModel.updateProcessList()
                     requireActivity().onBackPressed()
                 }
             }
@@ -157,7 +158,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
             .setMessage(getString(R.string.message_content_in_queue))
             .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
             .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                requireActivity().onBackPressed()
+                viewModel.startWorkflow()
             }
             .show()
         confirmContentQueueDialog = WeakReference(dialog)

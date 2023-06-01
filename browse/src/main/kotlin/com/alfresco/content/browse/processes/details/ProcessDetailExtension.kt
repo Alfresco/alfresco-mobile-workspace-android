@@ -146,10 +146,10 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
     binding.tvDescription.text = dataEntry?.description?.ifEmpty { requireContext().getString(R.string.empty_description) }
     binding.tvAssignedValue.apply {
         text = if (dataEntry?.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
-            requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: "")
+            requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: getString(R.string.text_select_assignee))
         } else if (dataEntry?.startedBy?.groupName?.isNotEmpty() == true)
-            requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: "")
-        else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: "")
+            requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: getString(R.string.text_select_assignee))
+        else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: getString(R.string.text_select_assignee))
     }
 
     if (dataEntry?.processDefinitionId.isNullOrEmpty()) {

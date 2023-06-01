@@ -521,7 +521,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_identifier"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_task_identifier"
+                        android:src="@drawable/ic_task"
                         app:layout_constraintEnd_toStartOf="@id/tv_tasks_title"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toStartOf="parent"

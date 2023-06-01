@@ -8,7 +8,7 @@ import com.alfresco.content.data.RuntimeProcessDefinitionDataEntry
  * Marked as ProcessDefinitionsState
  */
 data class ProcessDefinitionsState(
-    val entry: Entry,
+    val entry: Entry? = null,
     val listProcessDefinitions: List<RuntimeProcessDefinitionDataEntry>? = null
 ) : MavericksState {
     constructor(target: Entry) : this(entry = target)

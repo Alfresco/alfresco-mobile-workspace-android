@@ -33,9 +33,11 @@ class TasksViewModel(
 ) : TaskListViewModel<TasksViewState>(state) {
 
     var scrollToTop = false
+    val isWorkflowTask = state.processEntry != null
 
     init {
-        setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
+        if (!isWorkflowTask)
+            setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
         fetchUserProfile()
         fetchInitial()
         viewModelScope.on<UpdateTasksData> {
@@ -82,7 +84,9 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams)
+                if (!isWorkflowTask)
+                    TaskProcessFiltersPayload.updateFilters(state.filterParams)
+                else TaskProcessFiltersPayload.defaultTasksOfProcess(state.processEntry?.id)
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())

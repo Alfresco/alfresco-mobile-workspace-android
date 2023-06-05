@@ -1,9 +1,11 @@
 package com.alfresco.content.browse.processes.details
 
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.withState
 import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_4
@@ -101,7 +103,7 @@ internal fun ProcessDetailFragment.setListeners() {
             showCreateSheet(it)
         }
     }
-    binding.completeButton.setOnClickListener {
+    binding.completeButton.setSafeOnClickListener {
         withState(viewModel) { state ->
             val entry = state.listContents.find { it.isUpload }
             if (state.parent?.startedBy == null) {
@@ -114,6 +116,14 @@ internal fun ProcessDetailFragment.setListeners() {
                 confirmContentQueuePrompt()
             } else {
                 viewModel.startWorkflow()
+            }
+        }
+    }
+    binding.clTasks.setSafeOnClickListener {
+        withState(viewModel) { state ->
+            if (state.parent != null) {
+                val bundle = bundleOf(Mavericks.KEY_ARG to state.parent)
+                findNavController().navigate(R.id.action_nav_process_details_to_nav_task_list, bundle)
             }
         }
     }

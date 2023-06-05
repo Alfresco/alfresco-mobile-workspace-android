@@ -12,4 +12,5 @@
     <string name="text_read_more_space">...Read more</string>
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
+    <string name="title_tasks">Tasks</string>
 </resources>

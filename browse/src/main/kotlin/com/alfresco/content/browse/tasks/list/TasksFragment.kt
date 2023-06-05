@@ -16,6 +16,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionCreateTask
 import com.alfresco.content.browse.R
+import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -31,6 +32,7 @@ import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.listview.tasks.TaskListFragment
 import com.alfresco.content.simpleController
+import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -52,6 +54,18 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         actionReset.setOnClickListener {
             AnalyticsManager().taskFiltersEvent(EventName.TaskFilterReset.value)
             resetAllFilters()
+        }
+        if (requireActivity() is ProcessDetailActivity) {
+            (requireActivity() as ProcessDetailActivity).setSupportActionBar(toolbar)
+            toolbar.apply {
+                navigationContentDescription = getString(R.string.label_navigation_back)
+                navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
+                setNavigationOnClickListener {
+                    withState(viewModel) { _ ->
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
         }
         recyclerViewFilters.setController(epoxyControllerFilters)
     }
@@ -85,7 +99,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         epoxyControllerFilters.requestModelBuild()
         scrollToTop()
 
-        if (state.request is Success) {
+        if (state.request is Success && !viewModel.isWorkflowTask) {
             clParent.addView(makeFab(requireContext()))
         }
     }
@@ -177,6 +191,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
+        if (viewModel.isWorkflowTask) return
         startActivity(
             Intent(requireActivity(), TaskViewerActivity::class.java)
                 .putExtra(Mavericks.KEY_ARG, entry)

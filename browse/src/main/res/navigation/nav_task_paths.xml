@@ -40,6 +40,15 @@
         <action
             android:id="@+id/action_nav_process_details_to_nav_process_attached_files"
             app:destination="@id/nav_process_attached_files" />
+
+        <action
+            android:id="@+id/action_nav_process_details_to_nav_task_list"
+            app:destination="@id/nav_task_list" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_task_list"
+        android:name="com.alfresco.content.browse.tasks.list.TasksFragment"
+        tools:layout="@layout/fragment_task_list" />
 
 </navigation>

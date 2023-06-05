@@ -96,7 +96,6 @@
 
     <string name="workflows_empty_title">Keine Workflows gefunden</string>
     <string name="workflows_empty_message">Beginnen Sie einen neuen Workflow, den Sie später leicht wiederfinden möchten.</string>
-    <string name="title_tasks">Aufgaben</string>
     <string name="title_workflows">Workflows</string>
     <string name="text_filter_option">Filteroption %s</string>
     <string name="workflows_account_not_configured">Workflows sind für diesen Account nicht aktiviert.</string>

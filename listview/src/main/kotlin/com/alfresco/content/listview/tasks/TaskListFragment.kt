@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionCreateTask
+import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.listview.EntryListener
@@ -41,6 +43,7 @@ import kotlinx.coroutines.withContext
  * Mark as TaskListViewState interface
  */
 interface TaskListViewState : MavericksState {
+    val processEntry: ProcessEntry?
     val taskEntries: List<TaskEntry>
     val hasMoreItems: Boolean
     val request: Async<ResponseList>
@@ -111,6 +114,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var topLoadingIndicator: View
     lateinit var clParent: CoordinatorLayout
     lateinit var actionReset: ImageView
+    lateinit var toolbar: Toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -124,6 +128,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         topLoadingIndicator = view.findViewById(R.id.loading)
         actionReset = view.findViewById(R.id.action_reset)
         clParent = view.findViewById(R.id.cl_parent)
+        toolbar = view.findViewById(R.id.toolbar)
 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
@@ -156,6 +161,8 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
 
     override fun invalidate() = withState(viewModel) { state ->
 
+        toolbar.visibility = if (state.processEntry != null) View.VISIBLE else View.GONE
+
         loadingAnimation.isVisible =
             state.request is Loading && state.taskEntries.isEmpty() && !refreshLayout.isRefreshing
 
@@ -173,7 +180,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
             visibleFilters(false)
         }
         if (state.taskEntries.isEmpty() && state.request.complete) {
-            if (state.request is Success) visibleFilters(true)
+            visibleFilters((state.request is Success && state.processEntry == null))
             val args = viewModel.emptyMessageArgs(state)
             listViewMessage {
                 id("empty_message")
@@ -182,7 +189,7 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                 message(args.third)
             }
         } else if (state.taskEntries.isNotEmpty()) {
-            visibleFilters(true)
+            visibleFilters((state.taskEntries.isNotEmpty() && state.processEntry == null))
             state.taskEntries.forEach {
                 listViewTaskRow {
                     id(it.id)

@@ -96,7 +96,6 @@
 
     <string name="workflows_empty_title">Geen workflows gevonden</string>
     <string name="workflows_empty_message">Maak een nieuwe workflow die u later gemakkelijk wilt kunnen vinden.</string>
-    <string name="title_tasks">Taken</string>
     <string name="title_workflows">Workflows</string>
     <string name="text_filter_option">Filteroptie %s</string>
     <string name="workflows_account_not_configured">Workflows zijn niet ingeschakeld voor dit account.</string>

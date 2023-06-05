@@ -2,6 +2,7 @@ package com.alfresco.content.browse.tasks.list
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Uninitialized
+import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
@@ -13,7 +14,7 @@ import com.alfresco.process.models.ProfileData
  * Marked as TasksViewState class
  */
 data class TasksViewState(
-    val parent: TaskEntry? = null,
+    override val processEntry: ProcessEntry? = null,
     override val taskEntries: List<TaskEntry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponseList> = Uninitialized,
@@ -24,6 +25,8 @@ data class TasksViewState(
     val loadItemsCount: Int = 0,
     val page: Int = 0
 ) : TaskListViewState {
+
+    constructor(target: ProcessEntry) : this (processEntry = target)
 
     override val isCompact = false
 

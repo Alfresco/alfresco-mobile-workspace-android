@@ -96,7 +96,6 @@
 
     <string name="workflows_empty_title">No se encontró ningún flujo de trabajo</string>
     <string name="workflows_empty_message">Inicie un flujo de trabajo nuevo que desee encontrar con facilidad más adelante.</string>
-    <string name="title_tasks">Tareas</string>
     <string name="title_workflows">Flujos de trabajo</string>
     <string name="text_filter_option">Opciones de filtro %s</string>
     <string name="workflows_account_not_configured">Los flujos de trabajo no están habilitados para esta cuenta.</string>

@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/bottom_separator"
+        android:theme="@style/Theme.Alfresco.toolbar"
+        app:title="@string/title_tasks" />
+
+
     <include layout="@layout/view_tasks_filters" />
 
 

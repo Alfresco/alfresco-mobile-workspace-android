@@ -100,4 +100,21 @@
     <string name="text_filter_option">Option de filtre %s</string>
     <string name="workflows_account_not_configured">Les workflows ne sont pas activées pour ce compte.</string>
 
+    <string name="workflows_unavailable_title">Workflows non disponibles</string>
+    <string name="workflow_unavailable_message">Les workflows apparaîtront ici lorsqu\'ils seront créés.</string>
+    <string name="title_content_in_queue">Avertissement</string>
+    <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
+    <string name="text_approve">Approuver</string>
+    <string name="text_reject">Rejeter</string>
+    <string name="text_send_approval_again">Envoyer à nouveau pour approbation</string>
+    <string name="text_stop_approval_request">Arrêter la demande d\'approbation</string>
+    <string name="title_comment">Commentaire</string>
+    <string name="title_started_by">Démarré par</string>
+    <string name="title_start_date">Date de début</string>
+    <string name="status_running">En cours</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="error_select_assignee">Veuillez sélectionner la personne assignée</string>
+    <string name="text_select_assignee">Sélectionner la personne assignée</string>
+
+
 </resources>

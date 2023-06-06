@@ -27,4 +27,6 @@
     <string name="text_by_email">Op e-mail</string>
     <string name="text_back_button">Knop Terug</string>
     <string name="filter.option.all">Alle</string>
+    <string name="search_user">Gebruiker zoeken</string>
+    <string name="search_group">Groep zoeken</string>
 </resources>

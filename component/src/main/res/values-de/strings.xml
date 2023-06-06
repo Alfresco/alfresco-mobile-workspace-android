@@ -27,4 +27,6 @@
     <string name="text_by_email">Nach E-Mail</string>
     <string name="text_back_button">Schaltfläche \„Zurück\“</string>
     <string name="filter.option.all">Alle</string>
+    <string name="search_user">Benutzer suchen</string>
+    <string name="search_group">Gruppe durchsuchen</string>
 </resources>

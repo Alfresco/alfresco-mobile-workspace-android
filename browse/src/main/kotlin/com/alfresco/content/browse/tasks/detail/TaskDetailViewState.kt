@@ -8,6 +8,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.ResponseContents
+import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.TaskEntry
 import retrofit2.Response
 
@@ -27,7 +28,8 @@ data class TaskDetailViewState(
     val requestContents: Async<ResponseContents> = Uninitialized,
     val requestAddComment: Async<CommentEntry> = Uninitialized,
     val requestCompleteTask: Async<Response<Unit>> = Uninitialized,
-    val requestDeleteContent: Async<Response<Unit>> = Uninitialized
+    val requestDeleteContent: Async<Response<Unit>> = Uninitialized,
+    val requestTaskForm: Async<ResponseListForm> = Uninitialized
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)
@@ -111,5 +113,16 @@ data class TaskDetailViewState(
         val filterList = listContents.filter { it.id != contentId }
         val baseEntries = filterList.filter { !it.isUpload }
         return copy(listContents = filterList, baseEntries = baseEntries)
+    }
+
+    /**
+     * update the taskDetailObj params after getting the response from server.
+     */
+    fun update(oldEntry: TaskEntry, response: ResponseListForm?): TaskDetailViewState {
+        if (response == null) return this
+
+        val taskEntry = TaskEntry.withTaskForm(response, oldEntry)
+
+        return copyIncludingUploads(taskEntry.listContents, listOf()).copy(parent = taskEntry, taskEntry = taskEntry)
     }
 }

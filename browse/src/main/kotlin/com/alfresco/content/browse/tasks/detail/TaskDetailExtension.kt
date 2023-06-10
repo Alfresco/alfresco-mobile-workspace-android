@@ -1,6 +1,8 @@
 package com.alfresco.content.browse.tasks.detail
 
+import android.util.TypedValue
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.withState
@@ -9,10 +11,13 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.browse.R
+import com.alfresco.content.common.addTextViewPrefix
 import com.alfresco.content.common.isEllipsized
+import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.parseDate
@@ -44,6 +49,63 @@ internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(
         binding.iconPriorityEdit.visibility = View.INVISIBLE
         binding.iconAssignedEdit.visibility = View.INVISIBLE
         binding.completeButton.isEnabled = true
+    }
+}
+
+internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { state ->
+    binding.clComment.visibility = View.GONE
+    binding.clIdentifier.visibility = View.GONE
+    binding.iconStatusNav.visibility = View.VISIBLE
+    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
+
+    binding.clStatus.setSafeOnClickListener {
+        findNavController().navigate(R.id.action_nav_task_detail_to_nav_task_status)
+    }
+}
+
+internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
+    if (state.requestTaskForm.complete || state.request.complete) {
+        if (dataObj.localDueDate != null) {
+            binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+        } else {
+            binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
+        }
+
+        binding.tvPriorityValue.updatePriorityView(dataObj.priority)
+        binding.tvDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
+        binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
+            showTitleDescriptionComponent()
+        }
+
+        if (viewModel.isTaskCompleted(state)) {
+            binding.tvAddComment.visibility = View.GONE
+            binding.iconAddCommentUser.visibility = View.GONE
+            binding.clCompleted.visibility = View.VISIBLE
+            if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
+            binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+
+            (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+            }
+            binding.clStatus.visibility = if (viewModel.isWorkflowTask && viewModel.hasTaskStatusEnabled(state)) {
+                binding.tvStatusValue.text = dataObj.status
+                View.VISIBLE
+            } else View.GONE
+        } else {
+            binding.clCompleted.visibility = View.GONE
+            (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
+            }
+            binding.clStatus.visibility = if (viewModel.isWorkflowTask && !viewModel.hasTaskStatusEnabled(state)) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+
+            binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {
+                getString(R.string.status_active)
+            } else dataObj.status.ifEmpty { getString(R.string.text_select_status) }
+        }
     }
 }
 

@@ -3,9 +3,9 @@ package com.alfresco.content.app.component
 import android.content.Context
 import com.airbnb.mvrx.test.MavericksTestRule
 import com.airbnb.mvrx.withState
-import com.alfresco.content.component.SearchUserGroupComponentState
-import com.alfresco.content.component.SearchUserGroupComponentViewModel
-import com.alfresco.content.component.SearchUserGroupParams
+import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentState
+import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentViewModel
+import com.alfresco.content.component.searchusergroup.SearchUserGroupParams
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository

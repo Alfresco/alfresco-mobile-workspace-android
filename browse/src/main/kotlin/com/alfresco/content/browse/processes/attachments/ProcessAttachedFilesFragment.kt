@@ -23,8 +23,11 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.listview.EntryListener
+import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
+import com.alfresco.content.viewer.ViewerActivity
 import com.alfresco.ui.getDrawableForAttribute
 
 /**
@@ -103,11 +106,30 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { _, _, _, _ -> }
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
         }
+    }
+
+    private fun onItemClicked(contentEntry: Entry) {
+        if (!contentEntry.isUpload) {
+            if (!contentEntry.source.isNullOrEmpty()) {
+                val entry = Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
+                )
+                startActivity(Intent(requireActivity(), ViewerActivity::class.java)
+                    .putExtra(ViewerActivity.KEY_ID, entry.id)
+                    .putExtra(ViewerActivity.KEY_TITLE, entry.name)
+                    .putExtra(ViewerActivity.KEY_MODE, "remote")
+                )
+            }
+        } else startActivity(
+            Intent(requireActivity(), LocalPreviewActivity::class.java)
+                .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
+        )
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

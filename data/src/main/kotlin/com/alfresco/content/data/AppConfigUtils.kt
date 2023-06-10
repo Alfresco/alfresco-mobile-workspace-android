@@ -4,12 +4,19 @@ import android.content.Context
 import android.os.Environment
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.TypeAdapter
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.concurrent.TimeUnit
 
 const val APP_CONFIG_JSON = "app.config.json"
@@ -120,3 +127,21 @@ fun retrieveJSONFromInternalDirectory(context: Context): String {
  * Convert given model to any JSON format
  */
 inline fun <reified T> getJSONFromModel(model: T): String = Gson().toJson(model)
+
+val gson: Gson = GsonBuilder()
+    .registerTypeAdapter(ZonedDateTime::class.java, object : TypeAdapter<ZonedDateTime?>() {
+        override fun write(out: JsonWriter, value: ZonedDateTime?) {
+            out.value(value.toString())
+        }
+
+        override fun read(inType: JsonReader): ZonedDateTime? {
+            return ZonedDateTime.parse(inType.nextString(), formatter)
+        }
+    })
+    .enableComplexMapKeySerialization()
+    .create()
+
+private val formatter = DateTimeFormatterBuilder()
+    .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
+    .toFormatter()

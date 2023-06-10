@@ -32,3 +32,12 @@ fun getTaskPriority(priority: Int): TaskPriority {
         else -> TaskPriority.NONE
     }
 }
+
+fun getPriorityNumValue(priority: String): Int {
+    return when (priority.lowercase()) {
+        DefaultPriority.LOW.name.lowercase() -> DefaultPriority.LOW.value
+        DefaultPriority.MEDIUM.name.lowercase() -> DefaultPriority.MEDIUM.value
+        DefaultPriority.HIGH.name.lowercase() -> DefaultPriority.HIGH.value
+        else -> -1
+    }
+}

@@ -428,7 +428,6 @@ class SearchFragment : Fragment(), MavericksView {
                     (chipView as FilterChip).isChecked = true
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
-
                     val result = showComponentSheetDialog(requireContext(), data)
                     binding.recyclerViewChips.isEnabled = true
                     if (result != null) {

@@ -1,5 +1,6 @@
-package com.alfresco.content.component
+package com.alfresco.content.component.searchusergroup
 
+import com.alfresco.content.component.listViewUserRow
 import com.alfresco.content.simpleController
 
 internal fun SearchUserGroupComponentSheet.epoxyController() = simpleController(viewModel) { state ->

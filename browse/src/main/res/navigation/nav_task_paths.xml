@@ -16,6 +16,10 @@
         <action
             android:id="@+id/action_nav_task_detail_to_nav_attached_files"
             app:destination="@id/nav_attached_files" />
+
+        <action
+            android:id="@+id/action_nav_task_detail_to_nav_task_status"
+            app:destination="@id/nav_task_status" />
     </fragment>
 
     <fragment
@@ -44,11 +48,17 @@
         <action
             android:id="@+id/action_nav_process_details_to_nav_task_list"
             app:destination="@id/nav_task_list" />
+
     </fragment>
 
     <fragment
         android:id="@+id/nav_task_list"
         android:name="com.alfresco.content.browse.tasks.list.TasksFragment"
         tools:layout="@layout/fragment_task_list" />
+
+    <fragment
+        android:id="@+id/nav_task_status"
+        android:name="com.alfresco.content.browse.processes.status.TaskStatusFragment"
+        tools:layout="@layout/fragment_task_status" />
 
 </navigation>

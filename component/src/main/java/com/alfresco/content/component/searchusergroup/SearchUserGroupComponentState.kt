@@ -1,4 +1,4 @@
-package com.alfresco.content.component
+package com.alfresco.content.component.searchusergroup
 
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.MavericksState

@@ -44,18 +44,27 @@ class TaskDetailViewModel(
     var isExecutingUpdateDetails = false
     var isExecutingAssignUser = false
     var entryListener: EntryListener? = null
+    var previousTaskFormStatus = ""
+
+    val isWorkflowTask = !state.parent?.processInstanceId.isNullOrEmpty()
 
     init {
-        getTaskDetails()
-        getComments()
-        getContents()
+        copyEntry(state.parent)
+
         viewModelScope.on<ActionOpenWith> {
             if (!it.entry.path.isNullOrEmpty())
                 entryListener?.onEntryCreated(it.entry)
         }
-        copyEntry(state.parent)
-        viewModelScope.on<ActionUpdateNameDescription> {
-            setState { copy(parent = it.entry as TaskEntry) }
+
+        if (!isWorkflowTask) {
+            getTaskDetails()
+            getComments()
+            getContents()
+            viewModelScope.on<ActionUpdateNameDescription> {
+                setState { copy(parent = it.entry as TaskEntry) }
+            }
+        } else {
+            getTaskForms()
         }
     }
 
@@ -79,8 +88,10 @@ class TaskDetailViewModel(
                     is Loading -> copy(request = Loading())
                     is Fail -> copy(request = Fail(it.error))
                     is Success -> {
-                        update(it()).copy(request = Success(it()))
+                        val updateState = update(it())
+                        updateState.copy(request = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -104,6 +115,7 @@ class TaskDetailViewModel(
                     is Success -> {
                         update(it()).copy(requestComments = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -128,6 +140,7 @@ class TaskDetailViewModel(
                         if (!isTaskCompleted(state)) observeUploads(parent?.id)
                         update(it()).copy(requestContents = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -171,6 +184,7 @@ class TaskDetailViewModel(
                         getComments()
                         copy(requestAddComment = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -194,6 +208,7 @@ class TaskDetailViewModel(
                     is Success -> {
                         copy(requestCompleteTask = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -288,6 +303,7 @@ class TaskDetailViewModel(
                         isExecutingUpdateDetails = false
                         copy(requestUpdateTask = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -312,11 +328,13 @@ class TaskDetailViewModel(
                         AnalyticsManager().apiTracker(APIEvent.AssignUser, false)
                         copy(requestUpdateTask = Fail(it.error))
                     }
+
                     is Success -> {
                         isExecutingAssignUser = false
                         AnalyticsManager().apiTracker(APIEvent.AssignUser, true)
                         copy(requestUpdateTask = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -339,15 +357,54 @@ class TaskDetailViewModel(
                         AnalyticsManager().apiTracker(APIEvent.DeleteTaskAttachment, false)
                         copy(requestDeleteContent = Fail(it.error))
                     }
+
                     is Success -> {
                         AnalyticsManager().apiTracker(APIEvent.DeleteTaskAttachment, true)
                         updateDelete(contentId).copy(requestDeleteContent = Success(it()))
                     }
+
                     else -> {
                         this
                     }
                 }
             }
+        }
+    }
+
+    private fun getTaskForms() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::getTaskForm.asFlow(state.parent.id).execute {
+                when (it) {
+                    is Loading -> copy(requestTaskForm = Loading())
+                    is Fail -> {
+                        it.error.printStackTrace()
+                        copy(requestTaskForm = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        update(state.parent, it()).copy(requestTaskForm = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateTaskStatus(dataObj: ComponentMetaData) {
+        val status = dataObj.query
+        setState {
+            requireNotNull(this.parent)
+            copy(parent = TaskEntry.updateTaskStatus(this.parent, status))
+        }
+    }
+    fun updateTaskStatusAndName(status: String?, comment: String?) {
+        setState {
+            requireNotNull(this.parent)
+            copy(parent = TaskEntry.updateTaskStatusAndComment(this.parent, status, comment))
         }
     }
 

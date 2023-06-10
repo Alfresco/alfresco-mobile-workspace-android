@@ -24,7 +24,7 @@ import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
-import com.alfresco.content.component.SearchUserGroupComponentBuilder
+import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView

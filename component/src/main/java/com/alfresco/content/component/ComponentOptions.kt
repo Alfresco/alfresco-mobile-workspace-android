@@ -2,7 +2,7 @@ package com.alfresco.content.component
 
 import android.os.Parcelable
 import com.alfresco.content.data.Buckets
-import com.alfresco.content.data.FilterOptions
+import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.models.Options
 import kotlinx.parcelize.Parcelize
 
@@ -21,14 +21,22 @@ data class ComponentOptions(
 
         /**
          * return the updated ComponentOptions obj by using FilterOptions obj
-         * @param filterOptions
+         * @param optionsModel
          */
-        fun with(filterOptions: FilterOptions): ComponentOptions {
+        fun with(optionsModel: OptionsModel): ComponentOptions {
             return ComponentOptions(
-                label = filterOptions.label,
-                query = filterOptions.query,
-                value = filterOptions.value,
-                default = filterOptions.default
+                label = optionsModel.label,
+                query = optionsModel.query,
+                value = optionsModel.value,
+                default = optionsModel.default
+            )
+        }
+
+        fun withTaskStatus(optionsModel: OptionsModel): ComponentOptions {
+            return ComponentOptions(
+                label = optionsModel.name,
+                query = optionsModel.id,
+                default = optionsModel.default
             )
         }
 

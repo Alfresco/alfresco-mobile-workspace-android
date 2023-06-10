@@ -20,7 +20,7 @@ data class ComponentOptions(
     companion object {
 
         /**
-         * return the updated ComponentOptions obj by using FilterOptions obj
+         * return the updated ComponentOptions obj by using OptionsModel obj
          * @param optionsModel
          */
         fun with(optionsModel: OptionsModel): ComponentOptions {
@@ -32,6 +32,10 @@ data class ComponentOptions(
             )
         }
 
+        /**
+         * return the updated ComponentOptions obj by using OptionsModel obj
+         * @param optionsModel
+         */
         fun withTaskStatus(optionsModel: OptionsModel): ComponentOptions {
             return ComponentOptions(
                 label = optionsModel.name,

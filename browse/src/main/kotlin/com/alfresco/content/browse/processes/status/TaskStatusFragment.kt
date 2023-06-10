@@ -156,6 +156,6 @@ class TaskStatusFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.tvStatus.text = state.parent?.status?.ifEmpty { getString(R.string.text_select_assignee) }
+        binding.tvStatus.text = state.parent?.status?.ifEmpty { getString(R.string.text_select_status) }
     }
 }

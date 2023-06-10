@@ -59,6 +59,9 @@ data class TaskEntry(
             )
         }
 
+        /**
+         * return the TaskEntry obj using ResponseListForm and existing TaskEntry
+         */
         fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
             val formFields = response.fields.first().fields
             var description = ""
@@ -219,6 +222,9 @@ data class TaskEntry(
             )
         }
 
+        /**
+         * update the status and comment and return the TaskEntry
+         */
         fun updateTaskStatusAndComment(data: TaskEntry, status: String?, comment: String?): TaskEntry {
             return TaskEntry(
                 id = data.id,

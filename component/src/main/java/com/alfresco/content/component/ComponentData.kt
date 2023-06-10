@@ -117,7 +117,10 @@ data class ComponentData(
                 selectedQueryMap = selectedQueryMap
             )
         }
-
+        /**
+         * update the name, selector and options in the existing ComponentData obj
+         * @param taskEntry
+         */
         fun with(taskEntry: TaskEntry): ComponentData {
             return ComponentData(
                 name = "title_status",

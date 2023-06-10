@@ -17,6 +17,11 @@ data class OptionsModel(
     val default: Boolean = false
 ) : Parcelable {
     companion object {
+
+        /**
+         * return the updated OptionsModel obj by using Options obj
+         * @param raw
+         */
         fun with(raw: Options): OptionsModel {
             return OptionsModel(
                 id = raw.id ?: "",

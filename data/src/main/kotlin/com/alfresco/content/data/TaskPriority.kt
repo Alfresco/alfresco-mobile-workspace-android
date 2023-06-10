@@ -33,6 +33,9 @@ fun getTaskPriority(priority: Int): TaskPriority {
     }
 }
 
+/**
+ * returns the priority integer value using low, medium and high priority.
+ */
 fun getPriorityNumValue(priority: String): Int {
     return when (priority.lowercase()) {
         DefaultPriority.LOW.name.lowercase() -> DefaultPriority.LOW.value

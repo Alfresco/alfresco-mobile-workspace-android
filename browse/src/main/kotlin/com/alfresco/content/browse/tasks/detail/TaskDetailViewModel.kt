@@ -394,6 +394,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * update the status of task related to workflow
+     */
     fun updateTaskStatus(dataObj: ComponentMetaData) {
         val status = dataObj.query
         setState {
@@ -401,6 +404,10 @@ class TaskDetailViewModel(
             copy(parent = TaskEntry.updateTaskStatus(this.parent, status))
         }
     }
+
+    /**
+     * update the status and name of task related to workflow
+     */
     fun updateTaskStatusAndName(status: String?, comment: String?) {
         setState {
             requireNotNull(this.parent)

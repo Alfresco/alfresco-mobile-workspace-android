@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Alfresco.toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -35,8 +35,8 @@
                 android:id="@+id/tv_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:letterSpacing="0"
                 android:layout_marginEnd="4dp"
+                android:letterSpacing="0"
                 android:text="@string/title_status"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorControlNormal"
@@ -68,9 +68,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/comment_input"
+                android:maxLength="250"
+                android:gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="textMultiLine"
+                android:minHeight="80dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

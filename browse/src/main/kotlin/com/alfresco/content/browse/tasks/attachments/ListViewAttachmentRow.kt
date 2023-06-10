@@ -97,6 +97,9 @@ class ListViewAttachmentRow @JvmOverloads constructor(
         setOnClickListener(listener)
     }
 
+    /**
+     * It will hide the delete button if it's workflow task.
+     */
     @ModelProp
     fun setDeleteButtonVisibility(hasDeleteOption: Boolean) {
         binding.deleteContentButton.isVisible = hasDeleteOption

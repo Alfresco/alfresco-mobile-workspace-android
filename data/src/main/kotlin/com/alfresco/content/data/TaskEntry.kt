@@ -65,6 +65,7 @@ data class TaskEntry(
         fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
             val formFields = response.fields.first().fields
             var description = ""
+            var comment: String? = null
             var taskDueDate: String? = null
             var priority = -1
             var taskFormStatus: String? = null
@@ -92,6 +93,10 @@ data class TaskEntry(
                         }
                     }
 
+                    TaskFields.COMMENT.value() -> {
+                        comment = it.value as? String
+                    }
+
                     TaskFields.ITEMS.value() -> {
                         listContents = (it.value as? List<*>)?.map {
                             gson.fromJson(
@@ -113,6 +118,7 @@ data class TaskEntry(
                 statusOption = listOptions,
                 listContents = listContents,
                 formattedDueDate = taskDueDate,
+                comment = comment,
                 assignee = parent.assignee,
                 endDate = parent.endDate,
                 duration = parent.duration,
@@ -247,6 +253,9 @@ data class TaskEntry(
     }
 }
 
+/**
+ * Marked as TaskFields enum
+ */
 enum class TaskFields {
 
     MESSAGE,

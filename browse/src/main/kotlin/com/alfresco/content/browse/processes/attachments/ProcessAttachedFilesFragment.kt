@@ -1,6 +1,5 @@
 package com.alfresco.content.browse.processes.attachments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,7 +14,6 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentAttachedFilesBinding
-import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.processes.details.ProcessDetailViewModel
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
@@ -23,7 +21,9 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.listview.EntryListener
+import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 
@@ -103,18 +103,27 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { _, _, _, _ -> }
+                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
         }
     }
 
+    private fun onItemClicked(contentEntry: Entry) {
+        if (!contentEntry.isUpload) {
+            if (!contentEntry.source.isNullOrEmpty()) {
+                val entry = Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
+                )
+                remoteViewerIntent(entry)
+            }
+        } else localViewerIntent(contentEntry)
+    }
+
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
-            startActivity(
-                Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry)
-            )
+            localViewerIntent(entry as Entry)
     }
 }

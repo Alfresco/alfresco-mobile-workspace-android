@@ -70,12 +70,16 @@ class ListViewAttachmentRow @JvmOverloads constructor(
                 } else {
                     R.drawable.ic_offline_status_pending
                 }
+
             OfflineStatus.SYNCING ->
                 R.drawable.ic_offline_status_in_progress_anim
+
             OfflineStatus.SYNCED ->
                 R.drawable.ic_offline_status_synced
+
             OfflineStatus.ERROR ->
                 R.drawable.ic_offline_status_error
+
             else ->
                 R.drawable.ic_offline_status_synced
         }
@@ -91,6 +95,14 @@ class ListViewAttachmentRow @JvmOverloads constructor(
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
+    }
+
+    /**
+     * It will hide the delete button if it's workflow task.
+     */
+    @ModelProp
+    fun setDeleteButtonVisibility(hasDeleteOption: Boolean) {
+        binding.deleteContentButton.isVisible = hasDeleteOption
     }
 
     /**

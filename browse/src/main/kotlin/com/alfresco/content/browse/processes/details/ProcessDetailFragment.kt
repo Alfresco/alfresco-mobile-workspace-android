@@ -1,7 +1,6 @@
 package com.alfresco.content.browse.processes.details
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,13 +17,12 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
-import com.alfresco.content.browse.preview.LocalPreviewActivity
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
-import com.alfresco.content.component.SearchUserGroupComponentBuilder
+import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
@@ -34,10 +32,6 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
-import com.alfresco.content.viewer.ViewerActivity
-import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_ID
-import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_MODE
-import com.alfresco.content.viewer.ViewerActivity.Companion.KEY_TITLE
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
@@ -211,10 +205,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
-            startActivity(
-                Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry)
-            )
+            localViewerIntent(entry as Entry)
     }
 
     private fun onItemClicked(contentEntry: Entry) {
@@ -224,15 +215,8 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                     contentEntry,
                     MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
                 )
-                startActivity(Intent(requireActivity(), ViewerActivity::class.java)
-                    .putExtra(KEY_ID, entry.id)
-                    .putExtra(KEY_TITLE, entry.name)
-                    .putExtra(KEY_MODE, "remote")
-                )
+                remoteViewerIntent(entry)
             }
-        } else startActivity(
-            Intent(requireActivity(), LocalPreviewActivity::class.java)
-                .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
-        )
+        } else localViewerIntent(contentEntry)
     }
 }

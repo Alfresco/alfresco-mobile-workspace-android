@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Loading
@@ -33,12 +31,10 @@ import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_EN
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
-import com.alfresco.content.common.addTextViewPrefix
-import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
-import com.alfresco.content.component.SearchUserGroupComponentBuilder
+import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentBuilder
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.Entry
@@ -96,7 +92,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         AnalyticsManager().screenViewEvent(PageView.TaskView)
         (requireActivity() as TaskViewerActivity).setSupportActionBar(binding.toolbar)
         withState(viewModel) { state ->
-            if (!viewModel.isTaskCompleted(state)) {
+            if (!viewModel.isWorkflowTask && !viewModel.isTaskCompleted(state)) {
                 setHasOptionsMenu(true)
             }
         }
@@ -106,7 +102,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
                 withState(viewModel) { state ->
-                    if (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))
+                    if (!viewModel.isWorkflowTask && (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state)))
                         discardTaskPrompt()
                     else requireActivity().onBackPressed()
                 }
@@ -142,6 +138,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 menuDetail.findItem(R.id.action_done).isVisible = true
                 true
             }
+
             R.id.action_done -> {
                 AnalyticsManager().taskEvent(EventName.UpdateTaskDetails)
                 withState(viewModel) { state ->
@@ -165,6 +162,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -179,7 +177,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
                 (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
-                (state.requestDeleteContent is Loading)
+                (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading)
 
         setData(state)
 
@@ -192,6 +190,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 viewModel.updateTaskList()
                 requireActivity().onBackPressed()
             }
+
             state.requestUpdateTask is Success -> {
                 if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
                     AnalyticsManager().taskEvent(EventName.DoneTask)
@@ -205,7 +204,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             }
         }
 
-        if (state.requestContents.complete)
+        if (state.requestContents.complete || (viewModel.isWorkflowTask && state.requestTaskForm.complete))
             epoxyAttachmentController.requestModelBuild()
     }
 
@@ -241,47 +240,20 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTitle.text = dataObj.name
-            if (dataObj.localDueDate != null) {
-                binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-            } else {
-                binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
-            }
-
             if (viewModel.hasTaskEditMode)
                 updateTaskDetailUI(true)
 
-            binding.tvPriorityValue.updatePriorityView(dataObj.priority)
+            if (viewModel.isWorkflowTask) {
+                enableTaskFormUI()
+            }
+
             binding.tvAssignedValue.apply {
                 text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
                     requireContext().getLocalizedName(dataObj.assignee?.let { UserGroupDetails.with(it).name } ?: "")
                 } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
             }
             binding.tvIdentifierValue.text = dataObj.id
-            binding.tvDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
-
-            binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
-                showTitleDescriptionComponent()
-            }
-
-            if (viewModel.isTaskCompleted(state)) {
-                binding.tvAddComment.visibility = View.GONE
-                binding.iconAddCommentUser.visibility = View.GONE
-                binding.clCompleted.visibility = View.VISIBLE
-                if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
-                binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-
-                (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
-                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
-                }
-                binding.clStatus.visibility = View.GONE
-            } else {
-                binding.clCompleted.visibility = View.GONE
-                (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
-                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
-                }
-                binding.clStatus.visibility = View.VISIBLE
-                binding.tvStatusValue.text = getString(R.string.status_active)
-            }
+            setTaskDetailAfterResponse(dataObj)
         }
     }
 
@@ -303,7 +275,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 else
                     binding.tvAttachmentViewAll.visibility = View.GONE
 
-                binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state)
+                binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state) && !viewModel.isWorkflowTask
 
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             }
@@ -312,6 +284,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
+                    deleteButtonVisibility(!viewModel.isWorkflowTask)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }
@@ -322,7 +295,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvAttachmentViewAll.visibility = View.GONE
                 binding.tvNoOfAttachments.visibility = View.GONE
                 if (!viewModel.isTaskCompleted(state)) {
-                    binding.clAddAttachment.visibility = View.VISIBLE
+                    binding.clAddAttachment.visibility = if (!viewModel.isWorkflowTask) View.VISIBLE else View.GONE
                     binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                     binding.tvNoAttachedFilesError.visibility = View.VISIBLE
                     binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
@@ -336,10 +309,16 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     }
 
     private fun onItemClicked(contentEntry: Entry) {
-        if (!contentEntry.isUpload)
-            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK)))
-        else startActivity(
+        if (!contentEntry.isUpload) {
+            val entry = Entry.convertContentEntryToEntry(
+                contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK
+            )
+            if (!contentEntry.source.isNullOrEmpty())
+                remoteViewerIntent(entry)
+            else
+                viewModel.executePreview(ActionOpenWith(entry))
+        } else startActivity(
             Intent(requireActivity(), LocalPreviewActivity::class.java)
                 .putExtra(KEY_ENTRY_OBJ, contentEntry)
         )

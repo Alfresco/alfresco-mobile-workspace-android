@@ -1,4 +1,4 @@
-package com.alfresco.content.component
+package com.alfresco.content.component.searchusergroup
 
 import android.content.Context
 import com.airbnb.mvrx.Async

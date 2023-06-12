@@ -345,7 +345,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     /**
      * execute the start-form apis to fetch the form presentation
      */
-    suspend fun startForm(processDefinitionId: String) = ResponseListStartForm.with(
+    suspend fun startForm(processDefinitionId: String) = ResponseListForm.with(
         processesService.startForm(processDefinitionId)
     )
 
@@ -412,6 +412,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * Call to fetch account info from APS
      */
     suspend fun getAccountInfo() = ResponseAccountInfo.with(processesService.accountInfo())
+
+    /**
+     * Call to fetch the task's form related to workflow
+     */
+    suspend fun getTaskForm(taskID: String) = ResponseListForm.with(tasksService.taskForm(taskID))
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

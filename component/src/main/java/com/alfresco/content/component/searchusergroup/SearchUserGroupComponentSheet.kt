@@ -1,4 +1,4 @@
-package com.alfresco.content.component
+package com.alfresco.content.component.searchusergroup
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
@@ -19,6 +19,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.common.isValidEmail
+import com.alfresco.content.component.R
 import com.alfresco.content.component.databinding.SheetComponentSearchUserBinding
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ReviewerType

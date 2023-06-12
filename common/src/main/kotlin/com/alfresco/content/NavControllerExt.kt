@@ -108,4 +108,4 @@ fun NavController.navigateToLocalPreview(mimeType: String, path: String, title: 
     navigate(Uri.parse("$BASE_URI/view/local/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
 
 private const val BASE_URI = "alfresco://content"
-private const val REMOTE = "remote"
+const val REMOTE = "remote"

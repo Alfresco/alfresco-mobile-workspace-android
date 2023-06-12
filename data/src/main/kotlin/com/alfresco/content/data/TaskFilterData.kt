@@ -20,7 +20,7 @@ data class TaskFilterData(
     val selector: String? = "",
     val query: String? = "",
     val value: String? = "",
-    val options: List<FilterOptions>? = emptyList(),
+    val options: List<OptionsModel>? = emptyList(),
     val selectedName: String = "",
     val selectedQuery: String = "",
     val selectedQueryMap: Map<String, String> = mapOf(),

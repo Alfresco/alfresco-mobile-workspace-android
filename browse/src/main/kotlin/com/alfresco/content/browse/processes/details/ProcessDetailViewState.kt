@@ -8,8 +8,8 @@ import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseAccountInfo
 import com.alfresco.content.data.ResponseList
+import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
-import com.alfresco.content.data.ResponseListStartForm
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProfileData
@@ -24,7 +24,7 @@ data class ProcessDetailViewState(
     val uploads: List<Entry> = emptyList(),
     val formFields: List<FieldsData> = emptyList(),
     val listTask: List<TaskEntry> = emptyList(),
-    val requestStartForm: Async<ResponseListStartForm> = Uninitialized,
+    val requestStartForm: Async<ResponseListForm> = Uninitialized,
     val requestProfile: Async<ProfileData> = Uninitialized,
     val requestAccountInfo: Async<ResponseAccountInfo> = Uninitialized,
     val requestContent: Async<Entry> = Uninitialized,
@@ -64,8 +64,7 @@ data class ProcessDetailViewState(
     /**
      * update form fields data
      */
-    fun updateFormFields(response: ResponseListStartForm, processEntry: ProcessEntry): ProcessDetailViewState {
-        requireNotNull(processEntry)
+    fun updateFormFields(response: ResponseListForm, processEntry: ProcessEntry): ProcessDetailViewState {
         val formFields = response.fields.first().fields
         return copy(formFields = formFields, parent = ProcessEntry.updateReviewerType(processEntry, formFields))
     }

@@ -129,13 +129,16 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
     }
 
     private fun onItemClicked(contentEntry: Entry) {
-        if (!contentEntry.isUpload)
-            viewModel.executePreview(ActionOpenWith(Entry.convertContentEntryToEntry(contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK)))
-        else startActivity(
-            Intent(requireActivity(), LocalPreviewActivity::class.java)
-                .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
-        )
+        if (!contentEntry.isUpload) {
+            val entry = Entry.convertContentEntryToEntry(
+                contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK
+            )
+            if (!contentEntry.source.isNullOrEmpty())
+                remoteViewerIntent(entry)
+            else
+                viewModel.executePreview(ActionOpenWith(entry))
+        } else localViewerIntent(contentEntry)
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

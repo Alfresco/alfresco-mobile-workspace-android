@@ -383,6 +383,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cl_assigned">
@@ -422,18 +423,18 @@
                         android:layout_marginStart="8dp"
                         android:textAppearance="?attr/textAppearanceBody1"
                         app:layout_constraintBottom_toBottomOf="@id/icon_status"
-                        app:layout_constraintEnd_toStartOf="@id/icon_status_edit"
+                        app:layout_constraintEnd_toStartOf="@id/icon_status_nav"
                         app:layout_constraintHorizontal_weight="2"
                         app:layout_constraintStart_toEndOf="@id/tv_status_title"
                         app:layout_constraintTop_toTopOf="@id/icon_status" />
 
 
                     <ImageView
-                        android:id="@+id/icon_status_edit"
+                        android:id="@+id/icon_status_nav"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_edit"
+                        android:src="@drawable/ic_forward_nav"
                         android:visibility="invisible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="1"
@@ -519,7 +520,7 @@
                         android:id="@+id/icon_tasks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/icon_identifier"
+                        android:contentDescription="@string/icon_tasks"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task"
                         app:layout_constraintEnd_toStartOf="@id/tv_tasks_title"

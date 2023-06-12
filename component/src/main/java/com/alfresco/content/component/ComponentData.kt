@@ -2,6 +2,7 @@ package com.alfresco.content.component
 
 import android.os.Parcelable
 import com.alfresco.content.data.Facets
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.models.CategoriesItem
 import kotlinx.parcelize.Parcelize
@@ -114,6 +115,20 @@ data class ComponentData(
                 options = obj?.options,
                 selectedName = selectedName,
                 selectedQueryMap = selectedQueryMap
+            )
+        }
+
+        /**
+         * update the name, selector and options in the existing ComponentData obj
+         * @param taskEntry
+         */
+        fun with(taskEntry: TaskEntry): ComponentData {
+            return ComponentData(
+                name = "title_status",
+                selector = ComponentType.RADIO.value,
+                options = taskEntry.statusOption.filter { it.id != "empty" }.map { ComponentOptions.withTaskStatus(it) },
+                selectedName = taskEntry.taskFormStatus ?: "",
+                selectedQuery = taskEntry.taskFormStatus ?: ""
             )
         }
     }

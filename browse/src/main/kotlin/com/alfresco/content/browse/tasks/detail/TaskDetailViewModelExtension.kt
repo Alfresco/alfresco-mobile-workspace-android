@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 /**
  * update the task list after complete the task
  */
-fun TaskDetailViewModel.updateTaskList() {
+internal fun TaskDetailViewModel.updateTaskList() {
     viewModelScope.launch {
         EventBus.default.send(UpdateTasksData(isRefresh = true))
     }
@@ -32,12 +32,16 @@ fun TaskDetailViewModel.executePreview(action: Action) {
 /**
  * returns true if task completed otherwise false
  */
-fun TaskDetailViewModel.isTaskCompleted(state: TaskDetailViewState): Boolean = state.parent?.endDate != null
+internal fun TaskDetailViewModel.isTaskCompleted(state: TaskDetailViewState): Boolean = state.parent?.endDate != null
+
+internal fun TaskDetailViewModel.hasTaskStatusEnabled(state: TaskDetailViewState): Boolean = state.parent?.statusOption?.isNotEmpty() == true
 
 /**
  * returns true if the endDate is empty and the assignee user is same as loggedIn user otherwise false
  */
 fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean {
+    if (isWorkflowTask)
+        return false
     if (isTaskCompleted(state))
         return false
     if (hasTaskEditMode)
@@ -48,11 +52,11 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
 /**
  * return true if uploading files are in queue otherwise false
  */
-fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }
+internal fun TaskDetailViewModel.isFilesInQueue(state: TaskDetailViewState) = state.listContents.any { it.isUpload }
 
 /**
  * removing the task related entries from local database
  */
-fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
+internal fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
     OfflineRepository().removeTaskEntries(state.parent?.id)
 }

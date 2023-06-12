@@ -66,6 +66,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         if (entry.isUpload) entry.boxId.toString()
         else entry.id
 
+    /**
+     * This intent will open the remote file
+     */
     fun remoteViewerIntent(entry: Entry) = startActivity(
         Intent(requireActivity(), ViewerActivity::class.java)
             .putExtra(ViewerActivity.KEY_ID, entry.id)
@@ -73,6 +76,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
             .putExtra(ViewerActivity.KEY_MODE, REMOTE)
     )
 
+    /**
+     * This intent will open the local file
+     */
     fun localViewerIntent(contentEntry: Entry) = startActivity(
         Intent(requireActivity(), LocalPreviewActivity::class.java)
             .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)

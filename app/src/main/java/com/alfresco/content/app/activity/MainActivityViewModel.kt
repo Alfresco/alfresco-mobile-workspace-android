@@ -14,6 +14,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.REMOTE
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCaptureMedia
 import com.alfresco.content.actions.ActionRemoveOffline
@@ -155,7 +156,7 @@ class MainActivityViewModel(
                     val session = SessionManager.currentSession ?: return@launch
                     session.ticket = AuthenticationRepository().fetchTicket()
                     success = true
-                    if (!mode.isNullOrEmpty() && mode.equals("remote")) {
+                    if (!mode.isNullOrEmpty() && mode.equals(REMOTE)) {
                         if (!isFolder) _navigationMode.value = NavigationMode.FILE
                         else _navigationMode.value = NavigationMode.FOLDER
                     }

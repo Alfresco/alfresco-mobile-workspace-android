@@ -22,9 +22,9 @@ import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
-import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit

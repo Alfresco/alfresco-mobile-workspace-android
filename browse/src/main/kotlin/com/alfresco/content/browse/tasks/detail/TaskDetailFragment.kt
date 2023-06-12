@@ -49,7 +49,6 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
-import com.alfresco.content.viewer.ViewerActivity
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
@@ -316,12 +315,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK
             )
             if (!contentEntry.source.isNullOrEmpty())
-                startActivity(
-                    Intent(requireActivity(), ViewerActivity::class.java)
-                        .putExtra(ViewerActivity.KEY_ID, entry.id)
-                        .putExtra(ViewerActivity.KEY_TITLE, entry.name)
-                        .putExtra(ViewerActivity.KEY_MODE, "remote")
-                )
+                remoteViewerIntent(entry)
             else
                 viewModel.executePreview(ActionOpenWith(entry))
         } else startActivity(

@@ -5,7 +5,7 @@ import com.alfresco.process.models.Options
 import kotlinx.parcelize.Parcelize
 
 /**
- * Marked as FilterOptions class
+ * Marked as OptionsModel class
  */
 @Parcelize
 data class OptionsModel(

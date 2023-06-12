@@ -27,4 +27,6 @@
     <string name="text_by_email">Per e-mail</string>
     <string name="text_back_button">Pulsante Indietro</string>
     <string name="filter.option.all">Tutti</string>
+    <string name="search_user">Cerca utente</string>
+    <string name="search_group">Cerca gruppo</string>
 </resources>

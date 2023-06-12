@@ -100,4 +100,21 @@
     <string name="text_filter_option">Filteroptie %s</string>
     <string name="workflows_account_not_configured">Workflows zijn niet ingeschakeld voor dit account.</string>
 
+    <string name="workflows_unavailable_title">Workflows niet beschikbaar!</string>
+    <string name="workflow_unavailable_message">Wanneer workflows zijn gemaakt, worden deze hier weergegeven.</string>
+    <string name="title_content_in_queue">Waarschuwing</string>
+    <string name="message_content_in_queue">Er worden bestanden geüpload. Tik om te bevestigen dat u wilt doorgaan zonder de bestanden in uitvoering.</string>
+    <string name="text_approve">Goedkeuren</string>
+    <string name="text_reject">Afwijzen</string>
+    <string name="text_send_approval_again">Nogmaals verzenden voor goedkeuring</string>
+    <string name="text_stop_approval_request">Goedkeuringsaanvraag stoppen</string>
+    <string name="title_comment">Opmerking</string>
+    <string name="title_started_by">Gestart door</string>
+    <string name="title_start_date">Begindatum</string>
+    <string name="status_running">Wordt uitgevoerd</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="error_select_assignee">Selecteer toegewezen persoon</string>
+    <string name="text_select_assignee">Selecteer toegewezen persoon</string>
+
+
 </resources>

@@ -100,4 +100,21 @@
     <string name="text_filter_option">Filteroption %s</string>
     <string name="workflows_account_not_configured">Workflows sind für diesen Account nicht aktiviert.</string>
 
+    <string name="workflows_unavailable_title">Workflows sind nicht verfügbar!</string>
+    <string name="workflow_unavailable_message">Workflows werden hier angezeigt, wenn sie erstellt werden.</string>
+    <string name="title_content_in_queue">Warnung</string>
+    <string name="message_content_in_queue">Das Hochladen von Dateien ist in Bearbeitung. Tippen Sie auf Bestätigen, um ohne laufende Dateien fortzufahren.</string>
+    <string name="text_approve">Genehmigen</string>
+    <string name="text_reject">Ablehnen</string>
+    <string name="text_send_approval_again">Erneut zur Genehmigung senden</string>
+    <string name="text_stop_approval_request">Genehmigungsanfrage stoppen</string>
+    <string name="title_comment">Kommentar</string>
+    <string name="title_started_by">Gestartet von</string>
+    <string name="title_start_date">Startdatum</string>
+    <string name="status_running">Wird ausgeführt</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="error_select_assignee">Bitte wählen Sie einen zugewiesenen Benutzer</string>
+    <string name="text_select_assignee">Zugewiesenen Benutzer auswählen</string>
+
+
 </resources>

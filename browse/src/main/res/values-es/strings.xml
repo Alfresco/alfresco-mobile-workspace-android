@@ -100,4 +100,21 @@
     <string name="text_filter_option">Opciones de filtro %s</string>
     <string name="workflows_account_not_configured">Los flujos de trabajo no están habilitados para esta cuenta.</string>
 
+    <string name="workflows_unavailable_title">Flujos de trabajo no disponibles</string>
+    <string name="workflow_unavailable_message">Los flujos de trabajo aparecerán aquí cuando sean creados</string>
+    <string name="title_content_in_queue">Advertencia</string>
+    <string name="message_content_in_queue">La carga de ficheros está en curso. Toque Confirmar para continuar sin los ficheros en curso.</string>
+    <string name="text_approve">Aprobar</string>
+    <string name="text_reject">Rechazar</string>
+    <string name="text_send_approval_again">Enviar para aprobación otra vez</string>
+    <string name="text_stop_approval_request">Detener solicitud de aprobación</string>
+    <string name="title_comment">Comentario</string>
+    <string name="title_started_by">Iniciado por</string>
+    <string name="title_start_date">Fecha de inicio</string>
+    <string name="status_running">Ejecutándose</string>
+    <string name="title_workflow">Flujo de trabajo</string>
+    <string name="error_select_assignee">Por favor seleccionar usuario asignado</string>
+    <string name="text_select_assignee">Seleccionar usuario asignado</string>
+
+
 </resources>

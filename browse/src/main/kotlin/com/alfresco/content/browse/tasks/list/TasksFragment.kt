@@ -191,7 +191,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
-        if (viewModel.isWorkflowTask) return
         startActivity(
             Intent(requireActivity(), TaskViewerActivity::class.java)
                 .putExtra(Mavericks.KEY_ARG, entry)

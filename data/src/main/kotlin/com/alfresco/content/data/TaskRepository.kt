@@ -12,24 +12,25 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
+import com.alfresco.process.models.CommonOptionModel
 import com.alfresco.process.models.GroupInfo
-import com.alfresco.process.models.PriorityModel
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
+import com.alfresco.process.models.RequestOutcomes
 import com.alfresco.process.models.RequestProcessInstances
 import com.alfresco.process.models.RequestProcessInstancesQuery
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import com.alfresco.process.models.UserInfo
 import com.alfresco.process.models.ValuesModel
-import java.io.File
-import java.net.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.net.URL
 
 /**
  * Marked as TaskRepository class
@@ -360,7 +361,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 values = ValuesModel(
                     due = processEntry?.formattedDueDate,
                     message = processEntry?.description,
-                    priority = if (processEntry?.priority != -1) PriorityModel(
+                    priority = if (processEntry?.priority != -1) CommonOptionModel(
                         id = getTaskPriority(processEntry?.priority ?: 0).name,
                         name = getTaskPriority(processEntry?.priority ?: 0).name
                     ) else null,
@@ -417,6 +418,19 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * Call to fetch the task's form related to workflow
      */
     suspend fun getTaskForm(taskID: String) = ResponseListForm.with(tasksService.taskForm(taskID))
+    suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry) = tasksService.taskFormAction(
+        taskEntry.id,
+        RequestOutcomes(
+            outcome = outcome,
+            values = if (taskEntry.taskFormStatus != null) ValuesModel(
+                status = CommonOptionModel(
+                    id = taskEntry.taskFormStatus,
+                    name = taskEntry.taskFormStatus,
+                ),
+                comment = taskEntry.comment
+            ) else null
+        )
+    )
 
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"

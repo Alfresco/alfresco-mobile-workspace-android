@@ -1,6 +1,7 @@
 package com.alfresco.content.browse.tasks.detail
 
 import com.alfresco.content.actions.Action
+import com.alfresco.content.browse.processes.list.UpdateProcessData
 import com.alfresco.content.browse.tasks.list.UpdateTasksData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 internal fun TaskDetailViewModel.updateTaskList() {
     viewModelScope.launch {
         EventBus.default.send(UpdateTasksData(isRefresh = true))
+        EventBus.default.send(UpdateProcessData(isRefresh = true))
     }
 }
 

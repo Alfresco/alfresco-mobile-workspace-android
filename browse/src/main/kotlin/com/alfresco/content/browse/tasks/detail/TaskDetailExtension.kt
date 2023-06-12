@@ -22,9 +22,10 @@ import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit
@@ -92,6 +93,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.VISIBLE
             } else View.GONE
         } else {
+            makeOutcomes()
             binding.clCompleted.visibility = View.GONE
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
@@ -229,4 +231,25 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
             )
         )
     }
+}
+
+internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
+    if (binding.parentOutcomes.childCount == 0)
+        state.parent?.outcomes?.forEach { outcome ->
+            val button = this.layoutInflater.inflate(R.layout.view_layout_outcomes, binding.parentOutcomes, false) as MaterialButton
+            button.text = outcome.name
+            button.setOnClickListener {
+                withState(viewModel) { newState ->
+                    if (viewModel.hasTaskStatusEnabled(newState) && (newState.parent?.taskFormStatus ==
+                                newState.parent?.statusOption?.find { option -> option.id == "empty" }?.name))
+                        showSnackar(
+                            binding.root,
+                            getString(R.string.error_select_status)
+                        )
+                    else viewModel.actionOutcome((it as MaterialButton).text.toString())
+
+                }
+            }
+            binding.parentOutcomes.addView(button)
+        }
 }

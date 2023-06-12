@@ -24,11 +24,10 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 internal fun ProcessDetailFragment.showStartFormView() {
     binding.clStatus.isVisible = false
@@ -107,11 +106,9 @@ internal fun ProcessDetailFragment.setListeners() {
         withState(viewModel) { state ->
             val entry = state.listContents.find { it.isUpload }
             if (state.parent?.startedBy == null) {
-                Snackbar.make(
+                showSnackar(
                     binding.root,
-                    getString(R.string.error_select_assignee),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                    getString(R.string.error_select_assignee))
             } else if (entry != null) {
                 confirmContentQueuePrompt()
             } else {

@@ -1,7 +1,6 @@
 package com.alfresco.content.browse.tasks.detail
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,8 +25,6 @@ import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
-import com.alfresco.content.browse.preview.LocalPreviewActivity
-import com.alfresco.content.browse.preview.LocalPreviewActivity.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
@@ -51,13 +48,13 @@ import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Marked as TaskDetailFragment class
@@ -177,7 +174,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 (state.requestComments is Loading && state.listComments.isEmpty()) ||
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
                 (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
-                (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading)
+                (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
+                (state.requestOutcomes is Loading)
 
         setData(state)
 
@@ -186,7 +184,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
         when {
-            state.requestCompleteTask.invoke()?.code() == 200 -> {
+            (state.requestCompleteTask.invoke()?.code() == 200) || (state.requestOutcomes.invoke()?.code() == 200) -> {
                 viewModel.updateTaskList()
                 requireActivity().onBackPressed()
             }
@@ -318,10 +316,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 remoteViewerIntent(entry)
             else
                 viewModel.executePreview(ActionOpenWith(entry))
-        } else startActivity(
-            Intent(requireActivity(), LocalPreviewActivity::class.java)
-                .putExtra(KEY_ENTRY_OBJ, contentEntry)
-        )
+        } else localViewerIntent(contentEntry)
     }
 
     internal fun taskCompletePrompt(filesInQueue: Boolean) {
@@ -361,10 +356,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded)
-            startActivity(
-                Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(KEY_ENTRY_OBJ, entry as Entry)
-            )
+            localViewerIntent(entry as Entry)
     }
 
     internal suspend fun showComponentSheetDialog(

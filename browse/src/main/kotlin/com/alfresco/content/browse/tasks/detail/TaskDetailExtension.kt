@@ -22,9 +22,9 @@ import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit
@@ -88,7 +88,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
             }
             binding.clStatus.visibility = if (viewModel.isWorkflowTask && viewModel.hasTaskStatusEnabled(state)) {
-                binding.tvStatusValue.text = dataObj.status
+                binding.tvStatusValue.text = dataObj.taskFormStatus
                 View.VISIBLE
             } else View.GONE
         } else {
@@ -104,7 +104,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
 
             binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {
                 getString(R.string.status_active)
-            } else dataObj.status.ifEmpty { getString(R.string.text_select_status) }
+            } else dataObj.taskFormStatus
         }
     }
 }

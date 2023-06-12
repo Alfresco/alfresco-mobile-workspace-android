@@ -117,6 +117,7 @@ data class ComponentData(
                 selectedQueryMap = selectedQueryMap
             )
         }
+
         /**
          * update the name, selector and options in the existing ComponentData obj
          * @param taskEntry
@@ -126,8 +127,8 @@ data class ComponentData(
                 name = "title_status",
                 selector = ComponentType.RADIO.value,
                 options = taskEntry.statusOption.filter { it.id != "empty" }.map { ComponentOptions.withTaskStatus(it) },
-                selectedName = taskEntry.status,
-                selectedQuery = taskEntry.status
+                selectedName = taskEntry.taskFormStatus ?: "",
+                selectedQuery = taskEntry.taskFormStatus ?: ""
             )
         }
     }

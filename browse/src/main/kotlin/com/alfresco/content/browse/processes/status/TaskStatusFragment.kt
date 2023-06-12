@@ -89,7 +89,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
 
         withState(viewModel) { state ->
             binding.commentInput.setText(state.parent?.comment ?: "")
-            viewModel.previousTaskFormStatus = state.parent?.status ?: ""
+            viewModel.previousTaskFormStatus = state.parent?.taskFormStatus ?: ""
             if (!viewModel.isTaskCompleted(state))
                 setListeners()
             else {
@@ -156,6 +156,6 @@ class TaskStatusFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        binding.tvStatus.text = state.parent?.status?.ifEmpty { getString(R.string.text_select_status) }
+        binding.tvStatus.text = state.parent?.taskFormStatus
     }
 }

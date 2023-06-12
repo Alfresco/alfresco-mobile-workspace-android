@@ -2,9 +2,9 @@ package com.alfresco.content.data
 
 import android.os.Parcelable
 import com.alfresco.process.models.TaskDataEntry
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
+import java.time.ZonedDateTime
 
 /**
  * Marked as TaskEntry class
@@ -32,9 +32,6 @@ data class TaskEntry(
 
     val localDueDate: String?
         get() = formattedDueDate ?: dueDate?.toLocalDate()?.toString()
-
-    val status: String
-        get() = if (statusOption.isNotEmpty() && taskFormStatus == statusOption.first().name) "" else taskFormStatus ?: ""
 
     companion object {
 

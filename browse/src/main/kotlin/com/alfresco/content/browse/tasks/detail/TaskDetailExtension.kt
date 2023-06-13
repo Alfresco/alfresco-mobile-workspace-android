@@ -17,6 +17,7 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
@@ -247,7 +248,10 @@ internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
                             binding.root,
                             getString(R.string.error_select_status)
                         )
-                    else viewModel.actionOutcome(dataObj.outcome)
+                    else {
+                        AnalyticsManager().taskFiltersEvent(dataObj.outcome)
+                        viewModel.actionOutcome(dataObj.outcome)
+                    }
                 }
             }
             binding.parentOutcomes.addView(button)

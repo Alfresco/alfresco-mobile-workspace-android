@@ -62,7 +62,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsManager().screenViewEvent(PageView.TaskStatusView)
+        AnalyticsManager().screenViewEvent(PageView.WorkflowTaskStatusView)
 
         var instanceActivity: AppCompatActivity? = null
         when (requireActivity()) {

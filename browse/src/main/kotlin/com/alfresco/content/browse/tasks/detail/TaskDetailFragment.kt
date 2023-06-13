@@ -86,7 +86,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsManager().screenViewEvent(PageView.TaskView)
+        AnalyticsManager().screenViewEvent(if (viewModel.isWorkflowTask) PageView.WorkflowTaskView else PageView.TaskView)
         (requireActivity() as TaskViewerActivity).setSupportActionBar(binding.toolbar)
         withState(viewModel) { state ->
             if (!viewModel.isWorkflowTask && !viewModel.isTaskCompleted(state)) {

@@ -86,6 +86,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
             .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
     )
 
+    /**
+     * showing Snackbar
+     */
     fun showSnackar(snackView: View, message: String) = Snackbar.make(
         snackView,
         message,

@@ -51,6 +51,9 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
     return state.parent?.assignee?.id == repository.getAPSUser().id
 }
 
+/**
+ * returns true if taskFormStatus has value otherwise false
+ */
 fun TaskDetailViewModel.hasTaskStatusValue(state: TaskDetailViewState) = state.parent?.taskFormStatus != state.parent?.statusOption?.find { option -> option.id == "empty" }?.name
 
 /**

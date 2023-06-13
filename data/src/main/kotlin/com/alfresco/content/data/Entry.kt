@@ -88,7 +88,7 @@ data class Entry(
     val thumbnailStatus: String? = "",
     @Convert(converter = BoxUploadServerTypeConverter::class, dbType = String::class)
     val uploadServer: UploadServerType = UploadServerType.DEFAULT,
-    val isReadOnly : Boolean = false
+    val isReadOnly: Boolean = false
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -469,7 +469,10 @@ data class Entry(
             return map
         }
 
-        fun withTaskForm(entry: Entry):Entry {
+        /**
+         * update existing entry with readOnly value.
+         */
+        fun withTaskForm(entry: Entry): Entry {
             return Entry(
                 id = entry.id,
                 name = entry.name,

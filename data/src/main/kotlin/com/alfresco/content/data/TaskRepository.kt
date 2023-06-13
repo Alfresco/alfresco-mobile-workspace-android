@@ -12,8 +12,8 @@ import com.alfresco.content.session.SessionManager
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
+import com.alfresco.process.models.CommonOptionModel
 import com.alfresco.process.models.GroupInfo
-import com.alfresco.process.models.PriorityModel
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
@@ -360,7 +360,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 values = ValuesModel(
                     due = processEntry?.formattedDueDate,
                     message = processEntry?.description,
-                    priority = if (processEntry?.priority != -1) PriorityModel(
+                    priority = if (processEntry?.priority != -1) CommonOptionModel(
                         id = getTaskPriority(processEntry?.priority ?: 0).name,
                         name = getTaskPriority(processEntry?.priority ?: 0).name
                     ) else null,

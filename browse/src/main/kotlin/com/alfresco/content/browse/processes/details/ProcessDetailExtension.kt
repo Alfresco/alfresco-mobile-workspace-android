@@ -173,7 +173,7 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
         binding.tvDueDateTitle.text = getString(R.string.title_start_date)
         binding.tvAssignedTitle.text = getString(R.string.title_started_by)
         binding.tvDueDateValue.text = dataEntry?.started?.toLocalDate()?.toString()?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-        binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_running)
+        binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_active)
         binding.tvTasksValue.text = if (state.listTask.isNotEmpty()) state.listTask.size.toString() else "0"
     }
 }

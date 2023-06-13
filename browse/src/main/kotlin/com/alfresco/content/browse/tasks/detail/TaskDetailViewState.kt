@@ -30,7 +30,8 @@ data class TaskDetailViewState(
     val requestCompleteTask: Async<Response<Unit>> = Uninitialized,
     val requestDeleteContent: Async<Response<Unit>> = Uninitialized,
     val requestTaskForm: Async<ResponseListForm> = Uninitialized,
-    val requestOutcomes: Async<Response<Unit>> = Uninitialized
+    val requestOutcomes: Async<Response<Unit>> = Uninitialized,
+    val requestSaveForm: Async<Response<Unit>> = Uninitialized
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)

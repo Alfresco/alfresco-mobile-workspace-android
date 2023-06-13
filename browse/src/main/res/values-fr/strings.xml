@@ -104,8 +104,8 @@
     <string name="workflow_unavailable_message">Les workflows apparaîtront ici lorsqu\'ils seront créés.</string>
     <string name="title_content_in_queue">Avertissement</string>
     <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
-    <string name="text_approve">Approuver</string>
-    <string name="text_reject">Rejeter</string>
+    <string name="approve">Approuver</string>
+    <string name="reject">Rejeter</string>
     <string name="text_send_approval_again">Envoyer à nouveau pour approbation</string>
     <string name="text_stop_approval_request">Arrêter la demande d\'approbation</string>
     <string name="title_comment">Commentaire</string>

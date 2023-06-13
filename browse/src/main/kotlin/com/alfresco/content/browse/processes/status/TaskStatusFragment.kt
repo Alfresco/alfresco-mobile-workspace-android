@@ -9,8 +9,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -105,10 +107,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                withState(viewModel) { state ->
-                    viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
-                }
-                requireActivity().onBackPressed()
+                viewModel.saveForm()
                 true
             }
 
@@ -156,6 +155,14 @@ class TaskStatusFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
+
+        binding.loading.isVisible = (state.requestSaveForm is Loading)
+
+        if (state.requestSaveForm.invoke()?.code() == 200){
+            viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
+            requireActivity().onBackPressed()
+        }
+
         binding.tvStatus.text = state.parent?.taskFormStatus
     }
 }

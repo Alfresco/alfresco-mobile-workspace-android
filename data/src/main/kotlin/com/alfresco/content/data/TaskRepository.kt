@@ -20,6 +20,7 @@ import com.alfresco.process.models.RequestLinkContent
 import com.alfresco.process.models.RequestOutcomes
 import com.alfresco.process.models.RequestProcessInstances
 import com.alfresco.process.models.RequestProcessInstancesQuery
+import com.alfresco.process.models.RequestSaveForm
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import com.alfresco.process.models.UserInfo
@@ -418,6 +419,10 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * Call to fetch the task's form related to workflow
      */
     suspend fun getTaskForm(taskID: String) = ResponseListForm.with(tasksService.taskForm(taskID))
+
+    /**
+     * Call to perform the outcomes
+     */
     suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry) = tasksService.taskFormAction(
         taskEntry.id,
         RequestOutcomes(
@@ -429,6 +434,22 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 ),
                 comment = taskEntry.comment
             ) else null
+        )
+    )
+
+    /**
+     * Call to save the form data
+     */
+    suspend fun saveForm(taskEntry: TaskEntry) = tasksService.saveForm(
+        taskEntry.id,
+        RequestSaveForm(
+            values = ValuesModel(
+                status = CommonOptionModel(
+                    id = taskEntry.taskFormStatus,
+                    name = taskEntry.taskFormStatus,
+                ),
+                comment = taskEntry.comment
+            )
         )
     )
 

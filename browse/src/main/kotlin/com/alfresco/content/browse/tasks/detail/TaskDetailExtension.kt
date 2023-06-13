@@ -20,6 +20,7 @@ import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.button.MaterialButton
@@ -235,19 +236,19 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
 
 internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
     if (binding.parentOutcomes.childCount == 0)
-        state.parent?.outcomes?.forEach { outcome ->
+        state.parent?.outcomes?.forEach { dataObj ->
             val button = this.layoutInflater.inflate(R.layout.view_layout_outcomes, binding.parentOutcomes, false) as MaterialButton
-            button.text = outcome.name
+            button.text = requireContext().getLocalizedName(dataObj.name)
             button.setOnClickListener {
                 withState(viewModel) { newState ->
                     if (viewModel.hasTaskStatusEnabled(newState) && (newState.parent?.taskFormStatus ==
-                                newState.parent?.statusOption?.find { option -> option.id == "empty" }?.name))
+                                newState.parent?.statusOption?.find { option -> option.id == "empty" }?.name)
+                    )
                         showSnackar(
                             binding.root,
                             getString(R.string.error_select_status)
                         )
-                    else viewModel.actionOutcome((it as MaterialButton).text.toString())
-
+                    else viewModel.actionOutcome(dataObj.outcome)
                 }
             }
             binding.parentOutcomes.addView(button)

@@ -25,7 +25,6 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
-import com.alfresco.process.models.ValuesModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -422,7 +421,7 @@ class TaskDetailViewModel(
     fun actionOutcome(outcome: String) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
-            repository::actionOutcomes.asFlow(outcome,state.parent).execute {
+            repository::actionOutcomes.asFlow(outcome, state.parent).execute {
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
                     is Fail -> {
@@ -444,7 +443,7 @@ class TaskDetailViewModel(
     /**
      * execute the save-form api
      */
-    fun saveForm()  = withState { state ->
+    fun saveForm() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::saveForm.asFlow(state.parent).execute {

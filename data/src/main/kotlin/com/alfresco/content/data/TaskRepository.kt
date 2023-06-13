@@ -25,13 +25,13 @@ import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import com.alfresco.process.models.UserInfo
 import com.alfresco.process.models.ValuesModel
+import java.io.File
+import java.net.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.net.URL
 
 /**
  * Marked as TaskRepository class
@@ -430,7 +430,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             values = if (taskEntry.taskFormStatus != null) ValuesModel(
                 status = CommonOptionModel(
                     id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus,
+                    name = taskEntry.taskFormStatus
                 ),
                 comment = taskEntry.comment
             ) else null
@@ -446,7 +446,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             values = ValuesModel(
                 status = CommonOptionModel(
                     id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus,
+                    name = taskEntry.taskFormStatus
                 ),
                 comment = taskEntry.comment
             )

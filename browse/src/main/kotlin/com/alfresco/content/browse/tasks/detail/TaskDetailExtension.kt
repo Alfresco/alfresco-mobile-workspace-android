@@ -24,9 +24,9 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit
@@ -241,8 +241,7 @@ internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
             button.text = requireContext().getLocalizedName(dataObj.name)
             button.setOnClickListener {
                 withState(viewModel) { newState ->
-                    if (viewModel.hasTaskStatusEnabled(newState) && (newState.parent?.taskFormStatus ==
-                                newState.parent?.statusOption?.find { option -> option.id == "empty" }?.name)
+                    if (viewModel.hasTaskStatusEnabled(newState) && !viewModel.hasTaskStatusValue(newState)
                     )
                         showSnackar(
                             binding.root,

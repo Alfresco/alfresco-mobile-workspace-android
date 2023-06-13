@@ -40,8 +40,9 @@ fun TextView.updatePriorityView(priority: Int) {
         }
 
         TaskPriority.RESET -> {
+            text = context.getString(R.string.none)
+            setPadding(0, 0, 0, 0)
             setTextColor(ContextCompat.getColor(context, R.color.colorGray1))
-            background = ContextCompat.getDrawable(context, R.drawable.bg_priority_reset)
         }
 
         else -> text = context.getString(R.string.priority_none)

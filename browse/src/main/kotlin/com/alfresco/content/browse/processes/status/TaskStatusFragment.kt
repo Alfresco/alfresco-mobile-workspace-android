@@ -158,7 +158,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
 
         binding.loading.isVisible = (state.requestSaveForm is Loading)
 
-        if (state.requestSaveForm.invoke()?.code() == 200){
+        if (state.requestSaveForm.invoke()?.code() == 200) {
             viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
             requireActivity().onBackPressed()
         }

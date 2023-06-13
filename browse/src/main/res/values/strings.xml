@@ -117,6 +117,12 @@
     <string name="text_select_assignee">Select assignee</string>
     <string name="error_select_status">Please select status</string>
     <string name="icon_tasks">Tasks icon</string>
+    <string name="choose_one">Choose one…</string>
+    <string name="not_yet_started">Not Yet Started</string>
+    <string name="in_progress">In Progress</string>
+    <string name="on_hold">On Hold</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="completed">Completed</string>
 
 
 </resources>

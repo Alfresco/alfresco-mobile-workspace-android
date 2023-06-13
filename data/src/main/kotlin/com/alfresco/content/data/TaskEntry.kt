@@ -2,9 +2,9 @@ package com.alfresco.content.data
 
 import android.os.Parcelable
 import com.alfresco.process.models.TaskDataEntry
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
+import java.time.ZonedDateTime
 
 /**
  * Marked as TaskEntry class
@@ -114,7 +114,7 @@ data class TaskEntry(
                 priority = priority,
                 taskFormStatus = taskFormStatus,
                 statusOption = listOptions,
-                listContents = listContents,
+                listContents = listContents.map { Entry.withTaskForm(it) },
                 formattedDueDate = taskDueDate,
                 comment = comment,
                 assignee = parent.assignee,
@@ -262,6 +262,7 @@ enum class TaskFields {
     PRIORITY,
     DUEDATE,
     STATUS,
+    TYPE,
     COMMENT;
 
     /**

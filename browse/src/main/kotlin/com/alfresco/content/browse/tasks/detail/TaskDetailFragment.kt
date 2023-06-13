@@ -282,7 +282,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    deleteButtonVisibility(!viewModel.isWorkflowTask)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
                     deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
                 }

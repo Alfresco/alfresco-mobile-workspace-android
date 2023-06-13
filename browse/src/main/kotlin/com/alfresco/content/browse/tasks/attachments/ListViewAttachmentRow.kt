@@ -87,7 +87,7 @@ class ListViewAttachmentRow @JvmOverloads constructor(
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink && !entry.isUpload &&
                 // Child folder in offline tab
-                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
+                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
 
     /**
      * list row click listener
@@ -95,14 +95,6 @@ class ListViewAttachmentRow @JvmOverloads constructor(
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
         setOnClickListener(listener)
-    }
-
-    /**
-     * It will hide the delete button if it's workflow task.
-     */
-    @ModelProp
-    fun setDeleteButtonVisibility(hasDeleteOption: Boolean) {
-        binding.deleteContentButton.isVisible = hasDeleteOption
     }
 
     /**

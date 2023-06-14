@@ -70,12 +70,9 @@ data class TaskEntry(
             var taskFormStatus: String? = null
             var listOptions: List<OptionsModel> = emptyList()
             var listContents: List<Entry> = emptyList()
-
             var reviewerType: ReviewerType = ReviewerType.REVIEWER
-            listFormVariables.forEach {
-                if (it.id == ReviewerType.REVIEWGROUPS.value())
-                    reviewerType = ReviewerType.REVIEWGROUPS
-            }
+
+            listFormVariables.forEach { if (it.id == ReviewerType.REVIEWGROUPS.value()) reviewerType = ReviewerType.REVIEWGROUPS }
 
             formFields.forEach {
                 when (it.id.lowercase()) {
@@ -103,12 +100,7 @@ data class TaskEntry(
                     }
 
                     TaskFields.ITEMS.value() -> {
-                        listContents = (it.value as? List<*>)?.map { mapData ->
-                            gson.fromJson(
-                                JSONObject(mapData as Map<String, Entry>).toString(),
-                                Entry::class.java
-                            )
-                        } ?: emptyList()
+                        listContents = (it.value as? List<*>)?.map { mapData -> gson.fromJson(JSONObject(mapData as Map<String, Entry>).toString(), Entry::class.java) } ?: emptyList()
                     }
                 }
             }

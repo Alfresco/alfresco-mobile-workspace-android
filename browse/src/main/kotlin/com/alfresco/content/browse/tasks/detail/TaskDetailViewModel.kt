@@ -488,6 +488,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute API to claim the task
+     */
     fun claimTask() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
@@ -510,6 +513,9 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute API to release the task
+     */
     fun releaseTask() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {

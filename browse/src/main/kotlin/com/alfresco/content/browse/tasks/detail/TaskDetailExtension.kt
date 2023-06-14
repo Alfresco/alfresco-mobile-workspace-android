@@ -17,11 +17,14 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
+import com.google.android.material.button.MaterialButton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
@@ -92,6 +95,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.VISIBLE
             } else View.GONE
         } else {
+            makeOutcomes()
             binding.clCompleted.visibility = View.GONE
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
@@ -229,4 +233,27 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
             )
         )
     }
+}
+
+internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
+    if (binding.parentOutcomes.childCount == 0)
+        state.parent?.outcomes?.forEach { dataObj ->
+            val button = this.layoutInflater.inflate(R.layout.view_layout_outcomes, binding.parentOutcomes, false) as MaterialButton
+            button.text = requireContext().getLocalizedName(dataObj.name)
+            button.setOnClickListener {
+                withState(viewModel) { newState ->
+                    if (viewModel.hasTaskStatusEnabled(newState) && !viewModel.hasTaskStatusValue(newState)
+                    )
+                        showSnackar(
+                            binding.root,
+                            getString(R.string.error_select_status)
+                        )
+                    else {
+                        AnalyticsManager().taskFiltersEvent(dataObj.outcome)
+                        viewModel.actionOutcome(dataObj.outcome)
+                    }
+                }
+            }
+            binding.parentOutcomes.addView(button)
+        }
 }

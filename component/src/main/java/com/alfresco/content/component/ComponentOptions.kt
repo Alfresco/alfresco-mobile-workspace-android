@@ -38,7 +38,7 @@ data class ComponentOptions(
          */
         fun withTaskStatus(optionsModel: OptionsModel): ComponentOptions {
             return ComponentOptions(
-                label = optionsModel.name,
+                label = optionsModel.name.replace(" ", "_"),
                 query = optionsModel.id,
                 default = optionsModel.default
             )

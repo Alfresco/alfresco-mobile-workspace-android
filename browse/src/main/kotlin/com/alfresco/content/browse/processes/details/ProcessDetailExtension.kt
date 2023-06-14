@@ -24,7 +24,6 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
-import com.google.android.material.snackbar.Snackbar
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -107,11 +106,9 @@ internal fun ProcessDetailFragment.setListeners() {
         withState(viewModel) { state ->
             val entry = state.listContents.find { it.isUpload }
             if (state.parent?.startedBy == null) {
-                Snackbar.make(
+                showSnackar(
                     binding.root,
-                    getString(R.string.error_select_assignee),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                    getString(R.string.error_select_assignee))
             } else if (entry != null) {
                 confirmContentQueuePrompt()
             } else {
@@ -176,7 +173,7 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
         binding.tvDueDateTitle.text = getString(R.string.title_start_date)
         binding.tvAssignedTitle.text = getString(R.string.title_started_by)
         binding.tvDueDateValue.text = dataEntry?.started?.toLocalDate()?.toString()?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-        binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_running)
+        binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_active)
         binding.tvTasksValue.text = if (state.listTask.isNotEmpty()) state.listTask.size.toString() else "0"
     }
 }

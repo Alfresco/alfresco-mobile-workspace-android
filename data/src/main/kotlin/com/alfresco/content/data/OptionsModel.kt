@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.os.Parcelable
+import com.alfresco.process.models.CommonOptionModel
 import com.alfresco.process.models.Options
 import kotlinx.parcelize.Parcelize
 
@@ -16,6 +17,10 @@ data class OptionsModel(
     val value: String = "",
     val default: Boolean = false
 ) : Parcelable {
+
+    val outcome: String
+        get() = name
+
     companion object {
 
         /**
@@ -23,6 +28,17 @@ data class OptionsModel(
          * @param raw
          */
         fun with(raw: Options): OptionsModel {
+            return OptionsModel(
+                id = raw.id ?: "",
+                name = raw.name ?: ""
+            )
+        }
+
+        /**
+         * return the updated OptionsModel obj by using CommonOptionModel obj
+         * @param raw
+         */
+        fun with(raw: CommonOptionModel): OptionsModel {
             return OptionsModel(
                 id = raw.id ?: "",
                 name = raw.name ?: ""

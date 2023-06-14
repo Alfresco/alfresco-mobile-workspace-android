@@ -415,6 +415,56 @@ class TaskDetailViewModel(
         }
     }
 
+    /**
+     * execute the outcome api
+     */
+    fun actionOutcome(outcome: String) = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::actionOutcomes.asFlow(outcome, state.parent).execute {
+                when (it) {
+                    is Loading -> copy(requestOutcomes = Loading())
+                    is Fail -> {
+                        copy(requestOutcomes = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestOutcomes = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the save-form api
+     */
+    fun saveForm() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::saveForm.asFlow(state.parent).execute {
+                when (it) {
+                    is Loading -> copy(requestSaveForm = Loading())
+                    is Fail -> {
+                        copy(requestSaveForm = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestSaveForm = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
     companion object : MavericksViewModelFactory<TaskDetailViewModel, TaskDetailViewState> {
 
         override fun create(

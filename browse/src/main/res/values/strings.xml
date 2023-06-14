@@ -104,8 +104,8 @@
     <string name="workflow_unavailable_message">Workflows will appear here when created.</string>
     <string name="title_content_in_queue">Warning</string>
     <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
-    <string name="text_approve">Approve</string>
-    <string name="text_reject">Reject</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
     <string name="text_send_approval_again">Send for Approval Again</string>
     <string name="text_stop_approval_request">Stop Approval Request</string>
     <string name="title_comment">Comment</string>
@@ -115,8 +115,14 @@
     <string name="title_workflow">Workflow</string>
     <string name="error_select_assignee">Please select assignee</string>
     <string name="text_select_assignee">Select assignee</string>
-    <string name="text_select_status">Select status</string>
+    <string name="error_select_status">Please select status</string>
     <string name="icon_tasks">Tasks icon</string>
+    <string name="choose_one">Choose one…</string>
+    <string name="not_yet_started">Not Yet Started</string>
+    <string name="in_progress">In Progress</string>
+    <string name="on_hold">On Hold</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="completed">Completed</string>
 
 
 </resources>

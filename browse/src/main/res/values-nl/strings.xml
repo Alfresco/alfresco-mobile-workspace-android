@@ -104,8 +104,8 @@
     <string name="workflow_unavailable_message">Wanneer workflows zijn gemaakt, worden deze hier weergegeven.</string>
     <string name="title_content_in_queue">Waarschuwing</string>
     <string name="message_content_in_queue">Er worden bestanden geüpload. Tik om te bevestigen dat u wilt doorgaan zonder de bestanden in uitvoering.</string>
-    <string name="text_approve">Goedkeuren</string>
-    <string name="text_reject">Afwijzen</string>
+    <string name="approve">Goedkeuren</string>
+    <string name="reject">Afwijzen</string>
     <string name="text_send_approval_again">Nogmaals verzenden voor goedkeuring</string>
     <string name="text_stop_approval_request">Goedkeuringsaanvraag stoppen</string>
     <string name="title_comment">Opmerking</string>

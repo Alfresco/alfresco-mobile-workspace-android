@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "28:949912739494302928",
+      "lastPropertyId": "29:1086618494346593047",
       "name": "Entry",
       "properties": [
         {
@@ -138,6 +138,11 @@
           "id": "27:4514687495334138822",
           "name": "uploadServer",
           "type": 9
+        },
+        {
+          "id": "29:1086618494346593047",
+          "name": "isReadOnly",
+          "type": 1
         }
       ],
       "relations": []

@@ -820,4 +820,14 @@
         android:text="@string/text_mark_as_complete"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/parent_outcomes"
+        android:layout_width="match_parent"
+        android:layout_marginStart="@dimen/list_layout_margin_button"
+        android:layout_marginEnd="@dimen/list_layout_margin_button"
+        android:layout_marginBottom="@dimen/list_layout_margin_button"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

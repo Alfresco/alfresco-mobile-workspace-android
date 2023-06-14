@@ -27,6 +27,7 @@ data class TaskEntry(
     val processInstanceId: String? = null,
     val statusOption: List<OptionsModel> = emptyList(),
     val listContents: List<Entry> = emptyList(),
+    val outcomes: List<OptionsModel> = emptyList(),
     val comment: String? = null
 ) : ParentEntry(), Parcelable {
 
@@ -61,7 +62,7 @@ data class TaskEntry(
          */
         fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
             val formFields = response.fields.first().fields
-            var description = ""
+            var description: String? = null
             var comment: String? = null
             var taskDueDate: String? = null
             var priority = -1
@@ -72,7 +73,7 @@ data class TaskEntry(
             formFields.forEach {
                 when (it.id.lowercase()) {
                     TaskFields.MESSAGE.value() -> {
-                        description = it.value as String
+                        description = it.value as? String
                     }
 
                     TaskFields.PRIORITY.value() -> {
@@ -95,9 +96,9 @@ data class TaskEntry(
                     }
 
                     TaskFields.ITEMS.value() -> {
-                        listContents = (it.value as? List<*>)?.map {
+                        listContents = (it.value as? List<*>)?.map { mapData ->
                             gson.fromJson(
-                                JSONObject(it as Map<String, Entry>).toString(),
+                                JSONObject(mapData as Map<String, Entry>).toString(),
                                 Entry::class.java
                             )
                         } ?: emptyList()
@@ -113,13 +114,14 @@ data class TaskEntry(
                 priority = priority,
                 taskFormStatus = taskFormStatus,
                 statusOption = listOptions,
-                listContents = listContents,
+                listContents = listContents.map { Entry.withTaskForm(it) },
                 formattedDueDate = taskDueDate,
                 comment = comment,
                 assignee = parent.assignee,
                 endDate = parent.endDate,
                 duration = parent.duration,
-                processInstanceId = parent.processInstanceId
+                processInstanceId = parent.processInstanceId,
+                outcomes = response.outcomes
             )
         }
 
@@ -260,6 +262,7 @@ enum class TaskFields {
     PRIORITY,
     DUEDATE,
     STATUS,
+    TYPE,
     COMMENT;
 
     /**

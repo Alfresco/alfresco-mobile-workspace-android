@@ -18,7 +18,8 @@ data class ResponseListForm(
     val taskId: String? = null,
     val taskName: String? = null,
     val taskDefinitionKey: String? = null,
-    val fields: List<FieldsData> = emptyList()
+    val fields: List<FieldsData> = emptyList(),
+    val outcomes: List<OptionsModel> = emptyList()
 ) : Parcelable {
     companion object {
         /**
@@ -34,7 +35,8 @@ data class ResponseListForm(
                 taskId = raw.taskId ?: "",
                 taskName = raw.taskName ?: "",
                 taskDefinitionKey = raw.taskDefinitionKey ?: "",
-                fields = raw.fields?.map { FieldsData.with(it) } ?: emptyList()
+                fields = raw.fields?.map { FieldsData.with(it) } ?: emptyList(),
+                outcomes = raw.outcomes?.map { OptionsModel.with(it) } ?: emptyList()
             )
         }
     }

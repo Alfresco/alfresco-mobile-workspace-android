@@ -254,6 +254,8 @@ data class ProcessEntry(
 enum class ReviewerType {
     PEOPLE,
     FUNCTIONAL_GROUP,
+    REVIEWGROUPS,
+    REVIEWER,
     OTHER;
 
     /**

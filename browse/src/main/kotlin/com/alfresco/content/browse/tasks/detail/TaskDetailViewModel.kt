@@ -15,6 +15,7 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.FormVariables
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
@@ -64,7 +65,7 @@ class TaskDetailViewModel(
                 setState { copy(parent = it.entry as TaskEntry) }
             }
         } else {
-            getTaskForms()
+            getTaskFormVariables()
         }
     }
 
@@ -371,7 +372,7 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getTaskForms() = withState { state ->
+    private fun getTaskForms(listFormVariables: List<FormVariables>) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::getTaskForm.asFlow(state.parent.id).execute {
@@ -383,7 +384,29 @@ class TaskDetailViewModel(
                     }
 
                     is Success -> {
-                        update(state.parent, it()).copy(requestTaskForm = Success(it()))
+                        update(state.parent, it(), listFormVariables).copy(requestTaskForm = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getTaskFormVariables() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::getTaskFormVariables.asFlow(state.parent.id).execute {
+                when (it) {
+                    is Loading -> copy(requestTaskFormVariables = Loading())
+                    is Fail ->
+                        copy(requestTaskFormVariables = Fail(it.error))
+
+                    is Success -> {
+                        getTaskForms(it())
+                        copy(requestTaskFormVariables = Success(it()))
                     }
 
                     else -> {
@@ -455,6 +478,50 @@ class TaskDetailViewModel(
 
                     is Success -> {
                         copy(requestSaveForm = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun claimTask() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::claimTask.asFlow(state.parent.id).execute {
+                when (it) {
+                    is Loading -> copy(requestClaimRelease = Loading())
+                    is Fail -> {
+                        copy(requestClaimRelease = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestClaimRelease = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun releaseTask() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::releaseTask.asFlow(state.parent.id).execute {
+                when (it) {
+                    is Loading -> copy(requestClaimRelease = Loading())
+                    is Fail -> {
+                        copy(requestClaimRelease = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestClaimRelease = Success(it()))
                     }
 
                     else -> {

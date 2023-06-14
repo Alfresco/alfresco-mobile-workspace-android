@@ -78,5 +78,7 @@
     <string name="action_start_workflow">Start workflow</string>
     <string name="action_workflow_started">Workflow has been started</string>
     <string name="title_select_workflow">Select Workflow</string>
+    <string name="action_menu_claim">Claim</string>
+    <string name="action_menu_release">Release</string>
 
 </resources>

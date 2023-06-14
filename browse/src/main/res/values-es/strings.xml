@@ -115,6 +115,14 @@
     <string name="title_workflow">Flujo de trabajo</string>
     <string name="error_select_assignee">Por favor seleccionar usuario asignado</string>
     <string name="text_select_assignee">Seleccionar usuario asignado</string>
+    <string name="error_select_status">Seleccionar estado</string>
+    <string name="icon_tasks">Icono de tareas</string>
+    <string name="choose_one">Seleccionar uno…</string>
+    <string name="not_yet_started">No se inició todavía</string>
+    <string name="in_progress">En curso</string>
+    <string name="on_hold">En easpera</string>
+    <string name="cancelled">Cancelado</string>
+    <string name="completed">Completado</string>
 
 
 </resources>

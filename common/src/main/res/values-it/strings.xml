@@ -26,4 +26,5 @@
     <string name="individual_title">Singolo</string>
     <string name="group_title">Gruppo</string>
     <string name="warning_message_uploading_in_progress">Il caricamento è attualmente in corso. Continuare senza eseguire il caricamento?</string>
+    <string name="none">Nessuno</string>
 </resources>

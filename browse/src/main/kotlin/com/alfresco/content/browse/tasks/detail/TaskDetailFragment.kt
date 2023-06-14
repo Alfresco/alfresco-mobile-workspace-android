@@ -89,7 +89,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         AnalyticsManager().screenViewEvent(if (viewModel.isWorkflowTask) PageView.WorkflowTaskView else PageView.TaskView)
         (requireActivity() as TaskViewerActivity).setSupportActionBar(binding.toolbar)
         withState(viewModel) { state ->
-            if (!viewModel.isWorkflowTask && !viewModel.isTaskCompleted(state)) {
+            if (!viewModel.isTaskCompleted(state)) {
                 setHasOptionsMenu(true)
             }
         }
@@ -112,17 +112,22 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_task_detail, menu)
-        menuDetail = menu
-        withState(viewModel) { state ->
-            if (state.parent?.isNewTaskCreated == true) {
-                menu.findItem(R.id.action_edit).isVisible = false
-                menu.findItem(R.id.action_done).isVisible = true
-                updateTaskDetailUI(true)
-            } else {
-                menu.findItem(R.id.action_done).isVisible = false
-                menu.findItem(R.id.action_edit).isVisible = true
+        if (!viewModel.isWorkflowTask) {
+            inflater.inflate(R.menu.menu_task_detail, menu)
+            menuDetail = menu
+            withState(viewModel) { state ->
+                if (state.parent?.isNewTaskCreated == true) {
+                    menu.findItem(R.id.action_edit).isVisible = false
+                    menu.findItem(R.id.action_done).isVisible = true
+                    updateTaskDetailUI(true)
+                } else {
+                    menu.findItem(R.id.action_done).isVisible = false
+                    menu.findItem(R.id.action_edit).isVisible = true
+                }
             }
+        } else {
+            inflater.inflate(R.menu.menu_workflow_task_detail, menu)
+            menuDetail = menu
         }
     }
 
@@ -160,6 +165,16 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 true
             }
 
+            R.id.action_claim -> {
+                viewModel.claimTask()
+                true
+            }
+
+            R.id.action_release -> {
+                viewModel.releaseTask()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -175,7 +190,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
                 (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
                 (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
-                (state.requestOutcomes is Loading)
+                (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading) ||
+                (state.requestTaskFormVariables is Loading)
 
         setData(state)
 
@@ -184,7 +200,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
         when {
-            (state.requestCompleteTask.invoke()?.code() == 200) || (state.requestOutcomes.invoke()?.code() == 200) -> {
+            (state.requestCompleteTask.invoke()?.code() == 200) ||
+                    (state.requestOutcomes.invoke()?.code() == 200)
+                    || (state.requestClaimRelease.invoke()?.code() == 200) -> {
                 viewModel.updateTaskList()
                 requireActivity().onBackPressed()
             }

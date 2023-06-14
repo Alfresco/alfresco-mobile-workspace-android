@@ -28,7 +28,8 @@ data class TaskEntry(
     val statusOption: List<OptionsModel> = emptyList(),
     val listContents: List<Entry> = emptyList(),
     val outcomes: List<OptionsModel> = emptyList(),
-    val comment: String? = null
+    val comment: String? = null,
+    val reviewerType: ReviewerType = ReviewerType.OTHER
 ) : ParentEntry(), Parcelable {
 
     val localDueDate: String?
@@ -60,7 +61,7 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using ResponseListForm and existing TaskEntry
          */
-        fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
+        fun withTaskForm(response: ResponseListForm, parent: TaskEntry, listFormVariables: List<FormVariables>): TaskEntry {
             val formFields = response.fields.first().fields
             var description: String? = null
             var comment: String? = null
@@ -69,6 +70,12 @@ data class TaskEntry(
             var taskFormStatus: String? = null
             var listOptions: List<OptionsModel> = emptyList()
             var listContents: List<Entry> = emptyList()
+
+            var reviewerType: ReviewerType = ReviewerType.REVIEWER
+            listFormVariables.forEach {
+                if (it.id == ReviewerType.REVIEWGROUPS.value())
+                    reviewerType = ReviewerType.REVIEWGROUPS
+            }
 
             formFields.forEach {
                 when (it.id.lowercase()) {
@@ -121,7 +128,8 @@ data class TaskEntry(
                 endDate = parent.endDate,
                 duration = parent.duration,
                 processInstanceId = parent.processInstanceId,
-                outcomes = response.outcomes
+                outcomes = response.outcomes,
+                reviewerType = reviewerType
             )
         }
 

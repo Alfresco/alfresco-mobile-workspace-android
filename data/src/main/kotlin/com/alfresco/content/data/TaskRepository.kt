@@ -453,6 +453,13 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         )
     )
 
+    suspend fun claimTask(taskID: String) = tasksService.claimTask(taskID)
+    suspend fun releaseTask(taskID: String) = tasksService.unclaimTask(taskID)
+
+    suspend fun getTaskFormVariables(taskID: String): List<FormVariables> {
+        return tasksService.taskFormVariables(taskID).map { FormVariables.with(it) }
+    }
+
     companion object {
         const val KEY_PROCESS_USER_ID = "process_user_id"
         const val KEY_PROCESS_USER_FULL_NAME = "process_user_full_name"

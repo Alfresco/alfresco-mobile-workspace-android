@@ -17,7 +17,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/complete_button"
+        android:layout_above="@id/bottom_layout"
         android:layout_below="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,6 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_completed"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_completed_tick"
                         app:layout_constraintEnd_toStartOf="@id/tv_completed_title"
@@ -146,7 +147,6 @@
                         android:id="@+id/icon_completed_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/icon_due_date"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_edit"
                         android:visibility="invisible"
@@ -170,6 +170,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_due_date"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task_calendar"
                         app:layout_constraintEnd_toStartOf="@id/tv_due_date_title"
@@ -250,6 +251,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_priority"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task_priority"
                         app:layout_constraintEnd_toStartOf="@id/tv_priority_title"
@@ -326,6 +328,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_assigned"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task_user"
                         app:layout_constraintBottom_toBottomOf="@id/tv_assigned_value"
@@ -393,6 +396,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_status"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task_status"
                         app:layout_constraintEnd_toStartOf="@id/tv_status_title"
@@ -457,6 +461,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_identifier"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task_identifier"
                         app:layout_constraintEnd_toStartOf="@id/tv_identifier_title"
@@ -511,9 +516,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@+id/cl_identifier">
 
                     <ImageView
@@ -521,6 +526,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/icon_tasks"
+                        android:importantForAccessibility="no"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_task"
                         app:layout_constraintEnd_toStartOf="@id/tv_tasks_title"
@@ -741,9 +747,9 @@
                     android:id="@+id/cl_add_attachment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="12dp"
                     app:layout_constraintTop_toBottomOf="@id/tv_no_of_attachments">
 
 
@@ -808,26 +814,32 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/complete_button"
-        style="@style/Widget.Alfresco.Button.Primary"
+    <FrameLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/list_layout_margin_button"
-        android:layout_marginEnd="@dimen/list_layout_margin_button"
-        android:layout_marginBottom="@dimen/list_layout_margin_button"
-        android:text="@string/text_mark_as_complete"
-        android:visibility="gone" />
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/parent_outcomes"
-        android:layout_width="match_parent"
-        android:layout_marginStart="@dimen/list_layout_margin_button"
-        android:layout_marginEnd="@dimen/list_layout_margin_button"
-        android:layout_marginBottom="@dimen/list_layout_margin_button"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/complete_button"
+            style="@style/Widget.Alfresco.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/list_layout_margin_button"
+            android:layout_marginEnd="@dimen/list_layout_margin_button"
+            android:layout_marginBottom="@dimen/list_layout_margin_button"
+            android:text="@string/text_mark_as_complete"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/parent_outcomes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/list_layout_margin_button"
+            android:layout_marginEnd="@dimen/list_layout_margin_button"
+            android:layout_marginBottom="@dimen/list_layout_margin_button"
+            android:orientation="horizontal" />
+
+    </FrameLayout>
 
 </RelativeLayout>

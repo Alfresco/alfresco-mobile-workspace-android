@@ -26,4 +26,5 @@
     <string name="individual_title">Individuel</string>
     <string name="group_title">Groupe</string>
     <string name="warning_message_uploading_in_progress">L\'importation est actuellement en cours. Voulez-vous continuer sans importer ?</string>
+    <string name="none">Aucun</string>
 </resources>

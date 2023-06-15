@@ -115,6 +115,14 @@
     <string name="title_workflow">Workflow</string>
     <string name="error_select_assignee">Bitte wählen Sie einen zugewiesenen Benutzer</string>
     <string name="text_select_assignee">Zugewiesenen Benutzer auswählen</string>
+    <string name="error_select_status">Wählen Sie den Status aus</string>
+    <string name="icon_tasks">Symbol für Aufgaben</string>
+    <string name="choose_one">Einen auswählen…</string>
+    <string name="not_yet_started">Noch nicht gestartet</string>
+    <string name="in_progress">In Bearbeitung</string>
+    <string name="on_hold">Gehalten</string>
+    <string name="cancelled">Abgebrochen</string>
+    <string name="completed">Abgeschlossen</string>
 
 
 </resources>

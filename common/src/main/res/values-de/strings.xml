@@ -26,4 +26,5 @@
     <string name="individual_title">Einzelperson</string>
     <string name="group_title">Gruppe</string>
     <string name="warning_message_uploading_in_progress">Der Hochladevorgang wird gerade durchgeführt. Möchten Sie ohne Upload fortfahren?</string>
+    <string name="none">Keine</string>
 </resources>

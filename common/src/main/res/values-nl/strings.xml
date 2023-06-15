@@ -26,4 +26,5 @@
     <string name="individual_title">Individueel</string>
     <string name="group_title">Groep</string>
     <string name="warning_message_uploading_in_progress">De upload is momenteel bezig. Wilt u doorgaan zonder uploaden?</string>
+    <string name="none">Geen</string>
 </resources>

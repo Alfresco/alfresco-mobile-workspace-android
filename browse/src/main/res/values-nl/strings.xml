@@ -115,6 +115,14 @@
     <string name="title_workflow">Workflow</string>
     <string name="error_select_assignee">Selecteer toegewezen persoon</string>
     <string name="text_select_assignee">Selecteer toegewezen persoon</string>
+    <string name="error_select_status">Please select status</string>
+    <string name="icon_tasks">Pictogram Taken</string>
+    <string name="choose_one">Kies er een…</string>
+    <string name="not_yet_started">Nog niet gestart</string>
+    <string name="in_progress">Wordt uitgevoerd</string>
+    <string name="on_hold">In de wacht</string>
+    <string name="cancelled">Geannuleerd</string>
+    <string name="completed">Voltooid</string>
 
 
 </resources>

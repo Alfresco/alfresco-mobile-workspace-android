@@ -18,6 +18,7 @@ import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
@@ -95,7 +96,6 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.VISIBLE
             } else View.GONE
         } else {
-            makeOutcomes()
             binding.clCompleted.visibility = View.GONE
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
@@ -104,6 +104,21 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.GONE
             } else {
                 View.VISIBLE
+            }
+
+            when (dataObj.reviewerType) {
+                ReviewerType.REVIEWGROUPS -> {
+                    if (dataObj.assignee?.id == 0) {
+                        menuDetail.findItem(R.id.action_release).isVisible = false
+                        menuDetail.findItem(R.id.action_claim).isVisible = true
+                    } else {
+                        menuDetail.findItem(R.id.action_claim).isVisible = false
+                        menuDetail.findItem(R.id.action_release).isVisible = true
+                        makeOutcomes()
+                    }
+                }
+
+                else -> makeOutcomes()
             }
 
             binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {

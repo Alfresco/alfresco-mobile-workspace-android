@@ -33,6 +33,11 @@
           "value": "state"
         },
         {
+          "label": "filter.option.queued",
+          "query": "candidate",
+          "value": "state"
+        },
+        {
           "label": "filter.option.completed",
           "query": "completed",
           "value": "state"

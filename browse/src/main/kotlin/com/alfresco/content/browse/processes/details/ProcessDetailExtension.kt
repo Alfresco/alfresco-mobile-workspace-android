@@ -61,7 +61,7 @@ internal fun ProcessDetailFragment.setListeners() {
         formatDateAndShowCalendar()
     }
     binding.iconDueDateClear.setSafeOnClickListener {
-        viewModel.updateDate(null, true)
+        viewModel.updateDate(null)
     }
     binding.iconPriorityEdit.setSafeOnClickListener {
         withState(viewModel) { state ->

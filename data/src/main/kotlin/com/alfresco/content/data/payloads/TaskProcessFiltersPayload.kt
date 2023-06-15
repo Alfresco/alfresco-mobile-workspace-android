@@ -5,7 +5,7 @@ package com.alfresco.content.data.payloads
  */
 data class TaskProcessFiltersPayload(
     val processDefinitionId: String? = null,
-    val assignment: String? = "involved",
+    var assignment: String? = "involved",
     val sort: String = "created-desc",
     var start: Int = 0,
     var page: Int = 0,
@@ -62,6 +62,22 @@ data class TaskProcessFiltersPayload(
                 state = "all"
             )
         }
+
+        /**
+         * update the task filters
+         */
+        fun updateTaskFilters(selectedStatus: String): TaskProcessFiltersPayload {
+            val taskFilters = TaskProcessFiltersPayload()
+
+            when (selectedStatus) {
+                TaskStatus.All.name.lowercase(), TaskStatus.ACTIVE.name.lowercase(),
+                TaskStatus.COMPLETED.name.lowercase() -> taskFilters.state = selectedStatus
+
+                TaskStatus.CANDIDATE.name.lowercase() -> taskFilters.assignment = selectedStatus
+            }
+
+            return taskFilters
+        }
     }
 }
 
@@ -73,4 +89,14 @@ enum class ProcessFilters(val filter: String) {
     Running("running"),
     Active("filter.option.active"),
     Completed("filter.option.completed")
+}
+
+/**
+ * Marked as TaskStatus
+ */
+enum class TaskStatus {
+    All,
+    ACTIVE,
+    CANDIDATE,
+    COMPLETED
 }

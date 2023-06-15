@@ -22,7 +22,6 @@ import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
-import java.io.File
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -72,10 +71,10 @@ class ProcessDetailViewModel(
     /**
      * update the formatted date in the existing ProcessEntry obj and update the UI.
      */
-    fun updateDate(formattedDate: String?, isClearDueDate: Boolean = false) {
+    fun updateDate(formattedDate: String?) {
         setState {
             requireNotNull(this.parent)
-            copy(parent = ProcessEntry.updateDueDate(this.parent, formattedDate, isClearDueDate))
+            copy(parent = ProcessEntry.updateDueDate(this.parent, formattedDate))
         }
     }
 
@@ -108,7 +107,7 @@ class ProcessDetailViewModel(
         repo.removeCompletedUploads()
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(state.parent.id, UploadServerType.UPLOAD_TO_PROCESS)
+        observeUploadsJob = repo.observeUploads(state.parent.observeId, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
                     updateUploads(it())
@@ -206,17 +205,6 @@ class ProcessDetailViewModel(
         this.entryListener = listener
     }
 
-    /**
-     * execute "open with" action to download the content data
-     */
-    fun executePreview(action: Action) {
-        val entry = action.entry as Entry
-        val file = File(repository.session.contentDir, entry.fileName)
-        if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
-            entryListener?.onEntryCreated(Entry.updateDownloadEntry(entry, file.path))
-        } else action.execute(context, GlobalScope)
-    }
-
     private fun fetchUserProfile() {
         if (repository.isAcsAndApsSameUser())
             return
@@ -274,6 +262,7 @@ class ProcessDetailViewModel(
                     is Success -> {
                         updateTasks(it()).copy(requestTasks = Success(it()))
                     }
+
                     else -> {
                         this
                     }

@@ -32,7 +32,8 @@ data class ProcessEntry(
     var priority: Int = 0,
     val formattedDueDate: String? = null,
     val defaultEntry: Entry? = null,
-    val reviewerType: ReviewerType = ReviewerType.OTHER
+    val reviewerType: ReviewerType = ReviewerType.OTHER,
+    val observeId: String = ""
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -86,7 +87,8 @@ data class ProcessEntry(
                 startFormDefined = dataObj.hasStartForm,
                 processDefinitionKey = dataObj.key,
                 tenantId = dataObj.tenantId,
-                defaultEntry = processEntry?.defaultEntry
+                defaultEntry = processEntry?.defaultEntry,
+                observeId = buildString { append(dataObj.id).append("::").append(System.currentTimeMillis()) }
             )
         }
 
@@ -115,7 +117,8 @@ data class ProcessEntry(
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
                 priority = priority,
-                reviewerType = data.reviewerType
+                reviewerType = data.reviewerType,
+                observeId = data.observeId
             )
         }
 
@@ -123,7 +126,7 @@ data class ProcessEntry(
          * updating the due date into existing object
          */
 
-        fun updateDueDate(data: ProcessEntry, formattedDate: String?, isClearDueDate: Boolean): ProcessEntry {
+        fun updateDueDate(data: ProcessEntry, formattedDate: String?): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
                 name = data.name,
@@ -145,7 +148,8 @@ data class ProcessEntry(
                 suspended = data.suspended,
                 formattedDueDate = formattedDate,
                 priority = data.priority,
-                reviewerType = data.reviewerType
+                reviewerType = data.reviewerType,
+                observeId = data.observeId
             )
         }
 
@@ -178,7 +182,8 @@ data class ProcessEntry(
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
-                reviewerType = data.reviewerType
+                reviewerType = data.reviewerType,
+                observeId = data.observeId
             )
         }
 
@@ -207,7 +212,8 @@ data class ProcessEntry(
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
-                reviewerType = data.reviewerType
+                reviewerType = data.reviewerType,
+                observeId = data.observeId
             )
         }
 
@@ -242,7 +248,8 @@ data class ProcessEntry(
                 suspended = data.suspended,
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
-                reviewerType = reviewerType
+                reviewerType = reviewerType,
+                observeId = data.observeId
             )
         }
     }

@@ -128,7 +128,7 @@ class TasksViewModel(
      * this method makes the payload filter for task api and execute it.
      */
     fun applyFilters(list: List<TaskFilterData>) {
-        val taskFiltersPayload = TaskProcessFiltersPayload()
+        var taskFiltersPayload = TaskProcessFiltersPayload()
         list.filter { it.isSelected }.forEach {
             when (context.getLocalizedName(it.name?.lowercase() ?: "")) {
                 context.getString(R.string.filter_task_due_date) -> {
@@ -140,7 +140,7 @@ class TasksViewModel(
                 }
 
                 context.getString(R.string.filter_task_status) -> {
-                    taskFiltersPayload.state = it.selectedQuery
+                    taskFiltersPayload = TaskProcessFiltersPayload.updateTaskFilters(it.selectedQuery)
                 }
 
                 context.getString(R.string.filter_task_name) -> {

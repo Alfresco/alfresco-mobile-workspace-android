@@ -30,9 +30,11 @@ data class SearchUserGroupComponentState(
             is ProcessEntry -> response.listUserGroup.filter { it.id != parent.startedBy?.id }
             else -> response.listUserGroup.filter { it.id != (parent as TaskEntry).assignee?.id }
         }
-        val filterUser = filterList.filter { it.id != userGroupDetails.id }.toMutableList()
-        if (!response.isGroupSearch)
+        var filterUser = filterList.toMutableList()
+        if (!response.isGroupSearch) {
+            filterUser = filterList.filter { it.id != userGroupDetails.id }.toMutableList()
             filterUser.add(0, UserGroupDetails.with(userGroupDetails))
+        }
         return copy(listUserGroup = filterUser)
     }
 }

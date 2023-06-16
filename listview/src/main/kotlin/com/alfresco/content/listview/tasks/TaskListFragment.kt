@@ -47,7 +47,6 @@ interface TaskListViewState : MavericksState {
     val taskEntries: List<TaskEntry>
     val hasMoreItems: Boolean
     val request: Async<ResponseList>
-    val isCompact: Boolean
 
     /**
      * copy the task entries and update the state
@@ -195,7 +194,6 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
                     id(it.id)
                     data(it)
                     clickListener { model, _, _, _ -> onItemClicked(model.data()) }
-                    compact(state.isCompact)
                 }
             }
         }

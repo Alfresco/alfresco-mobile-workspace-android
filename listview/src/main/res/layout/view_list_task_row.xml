@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="64dp"
     android:screenReaderFocusable="true"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
@@ -28,6 +29,15 @@
 
         <TextView
             android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:letterSpacing="0"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption" />
+
+        <TextView
+            android:id="@+id/time_stamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="start"

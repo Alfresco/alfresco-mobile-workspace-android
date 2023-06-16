@@ -6,10 +6,11 @@ import java.util.Locale
 
 const val DATE_FORMAT_1 = "yyyy-MM-dd"
 const val DATE_FORMAT_2 = "dd-MMM-yyyy"
-const val DATE_FORMAT_3 = "dd MMM,yyyy"
+const val DATE_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 const val DATE_FORMAT_4 = "dd MMM yyyy"
 const val DATE_FORMAT_5 = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-const val DATE_FORMAT_6 = "dd-MMM-yy"
+const val DATE_FORMAT_6 = "yyyy-MM-dd'T'HH:mm:ss"
+const val DATE_FORMAT_7 = "dd MMM,yyyy HH:mm:ss a"
 
 /**
  * pare the string date and returns the Date obj

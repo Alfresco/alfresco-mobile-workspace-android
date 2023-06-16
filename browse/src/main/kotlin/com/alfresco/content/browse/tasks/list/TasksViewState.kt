@@ -28,8 +28,6 @@ data class TasksViewState(
 
     constructor(target: ProcessEntry) : this (processEntry = target)
 
-    override val isCompact = false
-
     override fun copy(_entries: List<TaskEntry>) = copy(taskEntries = _entries)
 
     /**

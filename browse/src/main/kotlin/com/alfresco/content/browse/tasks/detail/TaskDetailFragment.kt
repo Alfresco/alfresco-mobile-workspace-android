@@ -165,11 +165,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 true
             }
 
-            R.id.action_claim -> {
-                viewModel.claimTask()
-                true
-            }
-
             R.id.action_release -> {
                 viewModel.releaseTask()
                 true

@@ -108,13 +108,12 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
 
             when (dataObj.reviewerType) {
                 ReviewerType.REVIEWGROUPS -> {
-                    if (dataObj.assignee?.id == 0) {
-                        menuDetail.findItem(R.id.action_release).isVisible = false
-                        menuDetail.findItem(R.id.action_claim).isVisible = true
-                    } else {
+                    if (dataObj.assignee?.id != 0) {
                         menuDetail.findItem(R.id.action_claim).isVisible = false
                         menuDetail.findItem(R.id.action_release).isVisible = true
                         makeOutcomes()
+                    } else {
+                        makeClaimButton()
                     }
                 }
 
@@ -253,7 +252,9 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
 internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
     if (binding.parentOutcomes.childCount == 0)
         state.parent?.outcomes?.forEach { dataObj ->
-            val button = this.layoutInflater.inflate(R.layout.view_layout_outcomes, binding.parentOutcomes, false) as MaterialButton
+            val button = if (dataObj.outcome.lowercase() == "reject")
+                this.layoutInflater.inflate(R.layout.view_layout_negative_outcome, binding.parentOutcomes, false) as MaterialButton
+            else this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
             button.text = requireContext().getLocalizedName(dataObj.name)
             button.setOnClickListener {
                 withState(viewModel) { newState ->
@@ -271,4 +272,15 @@ internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
             }
             binding.parentOutcomes.addView(button)
         }
+}
+
+internal fun TaskDetailFragment.makeClaimButton() = withState(viewModel) { state ->
+    if (binding.parentOutcomes.childCount == 0) {
+        val button = this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
+        button.text = getString(R.string.action_menu_claim)
+        button.setOnClickListener {
+            viewModel.claimTask()
+        }
+        binding.parentOutcomes.addView(button)
+    }
 }

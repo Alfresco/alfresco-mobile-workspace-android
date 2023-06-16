@@ -45,7 +45,11 @@ fun String.getFormattedDate(currentFormat: String, convertFormat: String): Strin
         return formatter.format(date)
     return ""
 }
-
+/**
+ * convert the UTC format date to Local date and time and returns the String obj
+ * @param currentFormat
+ * @param convertFormat
+ */
 fun String.getLocalFormattedDate(currentFormat: String, convertFormat: String): String {
     val parserFormat = SimpleDateFormat(currentFormat, Locale.getDefault())
     parserFormat.timeZone = TimeZone.getTimeZone("UTC")

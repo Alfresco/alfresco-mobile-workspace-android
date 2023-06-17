@@ -21,6 +21,7 @@ import com.alfresco.content.browse.databinding.FragmentTaskStatusBinding
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
+import com.alfresco.content.browse.tasks.detail.isAssigneeAndLoggedInSame
 import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -72,7 +73,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
         instanceActivity?.apply {
             setSupportActionBar(binding.toolbar)
             withState(viewModel) { state ->
-                if (!viewModel.isTaskCompleted(state))
+                if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee))
                     setHasOptionsMenu(true)
             }
 
@@ -92,7 +93,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
         withState(viewModel) { state ->
             binding.commentInput.setText(state.parent?.comment ?: "")
             viewModel.previousTaskFormStatus = state.parent?.taskFormStatus ?: ""
-            if (!viewModel.isTaskCompleted(state))
+            if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee))
                 setListeners()
             else {
                 binding.commentInput.isEnabled = false

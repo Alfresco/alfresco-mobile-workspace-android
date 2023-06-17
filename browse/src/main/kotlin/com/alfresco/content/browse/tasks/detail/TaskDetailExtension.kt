@@ -81,6 +81,8 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
             showTitleDescriptionComponent()
         }
 
+        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
+
         if (viewModel.isTaskCompleted(state)) {
             binding.tvAddComment.visibility = View.GONE
             binding.iconAddCommentUser.visibility = View.GONE
@@ -108,16 +110,20 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
 
             when (dataObj.reviewerType) {
                 ReviewerType.REVIEWGROUPS -> {
-                    if (dataObj.assignee?.id != 0) {
+                    if (dataObj.assignee?.id == 0) makeClaimButton()
+                    else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_claim).isVisible = false
                         menuDetail.findItem(R.id.action_release).isVisible = true
                         makeOutcomes()
-                    } else {
-                        makeClaimButton()
                     }
                 }
 
-                else -> makeOutcomes()
+                else -> {
+                    if (viewModel.isStartedByAndLoggedInSame(dataObj.startedBy) ||
+                        viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
+                    )
+                        makeOutcomes()
+                }
             }
 
             binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {

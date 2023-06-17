@@ -192,8 +192,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
         setCommentData(state.listComments)
 
-        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
-
         when {
             (state.requestCompleteTask.invoke()?.code() == 200) ||
                     (state.requestOutcomes.invoke()?.code() == 200)

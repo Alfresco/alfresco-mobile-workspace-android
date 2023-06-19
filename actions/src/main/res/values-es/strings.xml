@@ -78,5 +78,7 @@
     <string name="action_start_workflow">Iniciar flujo de trabajo</string>
     <string name="action_workflow_started">Se ha iniciado el flujo de trabajo</string>
     <string name="title_select_workflow">Seleccionar el flujo de trabajo</string>
+    <string name="action_menu_claim">Pedir</string>
+    <string name="action_menu_release">Liberar</string>
 
 </resources>

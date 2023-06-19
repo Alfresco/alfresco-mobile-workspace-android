@@ -29,4 +29,5 @@
     <string name="filter.option.all">Tutti</string>
     <string name="search_user">Cerca utente</string>
     <string name="search_group">Cerca gruppo</string>
+    <string name="filter.option.queued">In coda</string>
 </resources>

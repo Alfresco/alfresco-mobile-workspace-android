@@ -29,4 +29,5 @@
     <string name="filter.option.all">Alle</string>
     <string name="search_user">Benutzer suchen</string>
     <string name="search_group">Gruppe durchsuchen</string>
+    <string name="filter.option.queued">In Warteschlange</string>
 </resources>

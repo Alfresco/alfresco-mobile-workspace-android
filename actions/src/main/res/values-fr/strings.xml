@@ -78,5 +78,7 @@
     <string name="action_start_workflow">Démarrer un workflow</string>
     <string name="action_workflow_started">Le workflow a été démarré</string>
     <string name="title_select_workflow">Sélectionner le workflow</string>
+    <string name="action_menu_claim">S\'attribuer</string>
+    <string name="action_menu_release">Libérer</string>
 
 </resources>

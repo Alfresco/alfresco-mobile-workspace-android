@@ -29,4 +29,5 @@
     <string name="filter.option.all">Todos</string>
     <string name="search_user">Buscar usuario</string>
     <string name="search_group">Buscar grupo</string>
+    <string name="filter.option.queued">En cola</string>
 </resources>

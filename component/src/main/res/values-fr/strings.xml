@@ -29,4 +29,5 @@
     <string name="filter.option.all">Tout</string>
     <string name="search_user">Rechercher des utilisateurs</string>
     <string name="search_group">Groupe de recherche</string>
+    <string name="filter.option.queued">En file d\'attente</string>
 </resources>

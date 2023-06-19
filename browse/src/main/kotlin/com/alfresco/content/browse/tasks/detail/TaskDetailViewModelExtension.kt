@@ -71,3 +71,5 @@ internal fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
 
 internal fun TaskDetailViewModel.isAssigneeAndLoggedInSame(assignee: UserGroupDetails?) = getAPSUser().id == assignee?.id
 internal fun TaskDetailViewModel.isStartedByAndLoggedInSame(initiatorId: String?) = getAPSUser().id.toString() == initiatorId
+internal fun TaskDetailViewModel.isTaskFormAndDetailRequestCompleted(state: TaskDetailViewState) = isWorkflowTask && state.requestTaskForm.complete
+internal fun TaskDetailViewModel.isTaskDetailRequestCompleted(state: TaskDetailViewState) = !isWorkflowTask && state.request.complete

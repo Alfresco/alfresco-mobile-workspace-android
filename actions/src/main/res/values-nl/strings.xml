@@ -78,5 +78,7 @@
     <string name="action_start_workflow">Workflow starten</string>
     <string name="action_workflow_started">Workflow is gestart</string>
     <string name="title_select_workflow">Workflow selecteren</string>
+    <string name="action_menu_claim">Claimen</string>
+    <string name="action_menu_release">Vrijgeven</string>
 
 </resources>

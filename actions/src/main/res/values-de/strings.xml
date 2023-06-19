@@ -78,5 +78,7 @@
     <string name="action_start_workflow">Workflow starten</string>
     <string name="action_workflow_started">Workflow wurde gestartet</string>
     <string name="title_select_workflow">Workflow auswählen</string>
+    <string name="action_menu_claim">Beanspruchen</string>
+    <string name="action_menu_release">Anspruch aufheben</string>
 
 </resources>

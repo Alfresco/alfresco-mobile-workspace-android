@@ -5,7 +5,6 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.Uninitialized
 import com.alfresco.content.data.CommentEntry
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.FormVariables
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.ResponseComments
 import com.alfresco.content.data.ResponseContents
@@ -31,7 +30,6 @@ data class TaskDetailViewState(
     val requestCompleteTask: Async<Response<Unit>> = Uninitialized,
     val requestDeleteContent: Async<Response<Unit>> = Uninitialized,
     val requestTaskForm: Async<ResponseListForm> = Uninitialized,
-    val requestTaskFormVariables: Async<List<FormVariables>> = Uninitialized,
     val requestOutcomes: Async<Response<Unit>> = Uninitialized,
     val requestSaveForm: Async<Response<Unit>> = Uninitialized,
     val requestClaimRelease: Async<Response<Unit>> = Uninitialized

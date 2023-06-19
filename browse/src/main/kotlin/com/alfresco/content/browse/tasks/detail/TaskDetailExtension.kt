@@ -67,9 +67,7 @@ internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { stat
 }
 
 internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
-    if ((viewModel.isWorkflowTask && state.requestTaskForm.complete && state.request.complete) ||
-        (!viewModel.isWorkflowTask && state.request.complete)
-    ) {
+    if ((viewModel.isWorkflowTask && state.requestTaskForm.complete) || (!viewModel.isWorkflowTask && state.request.complete)) {
         if (dataObj.localDueDate != null) {
             binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
         } else {

@@ -70,4 +70,4 @@ internal fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
 }
 
 internal fun TaskDetailViewModel.isAssigneeAndLoggedInSame(assignee: UserGroupDetails?) = getAPSUser().id == assignee?.id
-internal fun TaskDetailViewModel.isStartedByAndLoggedInSame(startedBy: UserGroupDetails?) = getAPSUser().id == startedBy?.id
+internal fun TaskDetailViewModel.isStartedByAndLoggedInSame(initiatorId: String?) = getAPSUser().id.toString() == initiatorId

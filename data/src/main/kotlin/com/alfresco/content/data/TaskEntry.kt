@@ -15,7 +15,6 @@ data class TaskEntry(
     val name: String = "",
     val description: String? = null,
     val assignee: UserGroupDetails? = null,
-    val startedBy: UserGroupDetails? = null,
     var priority: Int = 0,
     var taskFormStatus: String? = null,
     val created: ZonedDateTime? = null,
@@ -30,7 +29,8 @@ data class TaskEntry(
     val listContents: List<Entry> = emptyList(),
     val outcomes: List<OptionsModel> = emptyList(),
     val comment: String? = null,
-    val reviewerType: ReviewerType = ReviewerType.OTHER
+    val processInstanceStartUserId: String? = null,
+    val memberOfCandidateGroup: Boolean? = null
 ) : ParentEntry(), Parcelable {
 
     val localDueDate: String?
@@ -55,14 +55,16 @@ data class TaskEntry(
                 duration = data.duration,
                 involvedPeople = data.involvedPeople?.map { UserGroupDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated,
-                processInstanceId = data.processInstanceId
+                processInstanceId = data.processInstanceId,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup
             )
         }
 
         /**
          * return the TaskEntry obj using ResponseListForm and existing TaskEntry
          */
-        fun withTaskForm(response: ResponseListForm, parent: TaskEntry, listFormVariables: List<FormVariables>): TaskEntry {
+        fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
             val formFields = response.fields.first().fields
             var description: String? = null
             var comment: String? = null
@@ -71,9 +73,6 @@ data class TaskEntry(
             var taskFormStatus: String? = null
             var listOptions: List<OptionsModel> = emptyList()
             var listContents: List<Entry> = emptyList()
-            var reviewerType: ReviewerType = ReviewerType.REVIEWER
-
-            listFormVariables.forEach { if (it.id == ReviewerType.REVIEWGROUPS.value()) reviewerType = ReviewerType.REVIEWGROUPS }
 
             formFields.forEach {
                 when (it.id.lowercase()) {
@@ -117,13 +116,13 @@ data class TaskEntry(
                 listContents = listContents.map { Entry.withTaskForm(it) },
                 formattedDueDate = taskDueDate,
                 comment = comment,
-                startedBy = parent.startedBy,
                 assignee = parent.assignee,
                 endDate = parent.endDate,
                 duration = parent.duration,
                 processInstanceId = parent.processInstanceId,
                 outcomes = response.outcomes,
-                reviewerType = reviewerType
+                processInstanceStartUserId = parent.processInstanceStartUserId,
+                memberOfCandidateGroup = parent.memberOfCandidateGroup
             )
         }
 
@@ -141,7 +140,6 @@ data class TaskEntry(
                 description = description,
                 created = data.created,
                 assignee = data.assignee,
-                startedBy = data.startedBy,
                 priority = data.priority,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
@@ -160,7 +158,6 @@ data class TaskEntry(
                 name = data.name,
                 description = data.description,
                 created = data.created,
-                startedBy = data.startedBy,
                 assignee = data.assignee,
                 priority = data.priority,
                 endDate = data.endDate,
@@ -178,7 +175,6 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id,
                 name = data.name,
-                startedBy = data.startedBy,
                 description = data.description,
                 created = data.created,
                 assignee = data.assignee,
@@ -198,8 +194,6 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id,
                 name = data.name,
-                startedBy = data.startedBy,
-                description = data.description,
                 created = data.created,
                 assignee = assignee,
                 priority = data.priority,
@@ -218,7 +212,6 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id,
                 name = data.name,
-                startedBy = data.startedBy,
                 description = data.description,
                 created = data.created,
                 assignee = data.assignee,
@@ -230,6 +223,8 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup,
                 involvedPeople = data.involvedPeople
             )
         }
@@ -244,7 +239,6 @@ data class TaskEntry(
                 description = data.description,
                 created = data.created,
                 assignee = data.assignee,
-                startedBy = data.startedBy,
                 priority = data.priority,
                 taskFormStatus = status,
                 statusOption = data.statusOption,
@@ -254,29 +248,9 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup,
                 involvedPeople = data.involvedPeople
-            )
-        }
-
-        fun updateStartedBy(data: TaskEntry, startedBy: UserGroupDetails?): TaskEntry {
-            return TaskEntry(
-                id = data.id,
-                name = data.name,
-                description = data.description,
-                created = data.created,
-                assignee = data.assignee,
-                startedBy = startedBy,
-                priority = data.priority,
-                taskFormStatus = data.taskFormStatus,
-                statusOption = data.statusOption,
-                listContents = data.listContents,
-                comment = data.comment,
-                formattedDueDate = data.formattedDueDate,
-                endDate = data.endDate,
-                dueDate = data.dueDate,
-                duration = data.duration,
-                involvedPeople = data.involvedPeople,
-                processInstanceId = data.processInstanceId
             )
         }
     }

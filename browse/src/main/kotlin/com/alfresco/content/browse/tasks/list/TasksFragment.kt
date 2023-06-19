@@ -191,12 +191,9 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
-        withState(viewModel) { state ->
-            val taskEntry = TaskEntry.updateStartedBy(entry, state.processEntry?.startedBy)
-            startActivity(
-                Intent(requireActivity(), TaskViewerActivity::class.java)
-                    .putExtra(Mavericks.KEY_ARG, taskEntry)
-            )
-        }
+        startActivity(
+            Intent(requireActivity(), TaskViewerActivity::class.java)
+                .putExtra(Mavericks.KEY_ARG, entry)
+        )
     }
 }

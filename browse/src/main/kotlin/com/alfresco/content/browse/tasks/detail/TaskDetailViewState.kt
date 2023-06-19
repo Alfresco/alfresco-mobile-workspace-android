@@ -123,10 +123,10 @@ data class TaskDetailViewState(
     /**
      * update the taskDetailObj params after getting the response from server.
      */
-    fun update(oldEntry: TaskEntry, response: ResponseListForm?, listFormVariables: List<FormVariables>): TaskDetailViewState {
+    fun update(oldEntry: TaskEntry, response: ResponseListForm?): TaskDetailViewState {
         if (response == null) return this
 
-        val taskEntry = TaskEntry.withTaskForm(response, oldEntry, listFormVariables)
+        val taskEntry = TaskEntry.withTaskForm(response, oldEntry)
 
         return copyIncludingUploads(taskEntry.listContents, listOf()).copy(parent = taskEntry, taskEntry = taskEntry)
     }

@@ -18,7 +18,6 @@ import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
@@ -68,7 +67,9 @@ internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { stat
 }
 
 internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
-    if (state.requestTaskForm.complete || state.request.complete) {
+    if ((viewModel.isWorkflowTask && state.requestTaskForm.complete && state.request.complete) ||
+        (!viewModel.isWorkflowTask && state.request.complete)
+    ) {
         if (dataObj.localDueDate != null) {
             binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
         } else {
@@ -108,18 +109,17 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.VISIBLE
             }
 
-            when (dataObj.reviewerType) {
-                ReviewerType.REVIEWGROUPS -> {
+            when (dataObj.memberOfCandidateGroup) {
+                true -> {
                     if (dataObj.assignee?.id == 0) makeClaimButton()
                     else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
-                        menuDetail.findItem(R.id.action_claim).isVisible = false
                         menuDetail.findItem(R.id.action_release).isVisible = true
                         makeOutcomes()
                     }
                 }
 
                 else -> {
-                    if (viewModel.isStartedByAndLoggedInSame(dataObj.startedBy) ||
+                    if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
                         viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
                     )
                         makeOutcomes()

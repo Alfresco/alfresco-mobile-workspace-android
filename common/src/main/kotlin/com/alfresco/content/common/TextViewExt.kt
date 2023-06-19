@@ -43,6 +43,7 @@ fun TextView.updatePriorityView(priority: Int) {
             text = context.getString(R.string.none)
             setPadding(0, 0, 0, 0)
             setTextColor(ContextCompat.getColor(context, R.color.colorGray1))
+            background = null
         }
 
         else -> text = context.getString(R.string.priority_none)

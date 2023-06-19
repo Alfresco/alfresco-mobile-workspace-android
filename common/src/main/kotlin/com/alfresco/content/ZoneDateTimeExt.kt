@@ -3,13 +3,15 @@ package com.alfresco.content
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 const val DATE_FORMAT_1 = "yyyy-MM-dd"
 const val DATE_FORMAT_2 = "dd-MMM-yyyy"
-const val DATE_FORMAT_3 = "dd MMM,yyyy"
+const val DATE_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 const val DATE_FORMAT_4 = "dd MMM yyyy"
 const val DATE_FORMAT_5 = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-const val DATE_FORMAT_6 = "dd-MMM-yy"
+const val DATE_FORMAT_6 = "yyyy-MM-dd'T'HH:mm:ss"
+const val DATE_FORMAT_7 = "dd MMM,yyyy hh:mm:ss a"
 
 /**
  * pare the string date and returns the Date obj
@@ -38,6 +40,20 @@ fun Date.formatDate(format: String, date: Date?): String? {
  */
 fun String.getFormattedDate(currentFormat: String, convertFormat: String): String {
     val date = SimpleDateFormat(currentFormat, Locale.ENGLISH).parse(this)
+    val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
+    if (date != null)
+        return formatter.format(date)
+    return ""
+}
+/**
+ * convert the UTC format date to Local date and time and returns the String obj
+ * @param currentFormat
+ * @param convertFormat
+ */
+fun String.getLocalFormattedDate(currentFormat: String, convertFormat: String): String {
+    val parserFormat = SimpleDateFormat(currentFormat, Locale.getDefault())
+    parserFormat.timeZone = TimeZone.getTimeZone("UTC")
+    val date = parserFormat.parse(this)
     val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
     if (date != null)
         return formatter.format(date)

@@ -165,11 +165,6 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 true
             }
 
-            R.id.action_claim -> {
-                viewModel.claimTask()
-                true
-            }
-
             R.id.action_release -> {
                 viewModel.releaseTask()
                 true
@@ -190,14 +185,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 (state.requestContents is Loading && state.listContents.isEmpty()) ||
                 (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
                 (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
-                (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading) ||
-                (state.requestTaskFormVariables is Loading)
+                (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading)
 
         setData(state)
 
         setCommentData(state.listComments)
-
-        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
         when {
             (state.requestCompleteTask.invoke()?.code() == 200) ||

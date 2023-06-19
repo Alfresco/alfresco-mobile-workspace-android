@@ -15,7 +15,6 @@ import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.FormVariables
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
@@ -57,15 +56,13 @@ class TaskDetailViewModel(
                 entryListener?.onEntryCreated(it.entry)
         }
 
+        getTaskDetails()
         if (!isWorkflowTask) {
-            getTaskDetails()
             getComments()
             getContents()
             viewModelScope.on<ActionUpdateNameDescription> {
                 setState { copy(parent = it.entry as TaskEntry) }
             }
-        } else {
-            getTaskFormVariables()
         }
     }
 
@@ -90,6 +87,7 @@ class TaskDetailViewModel(
                     is Fail -> copy(request = Fail(it.error))
                     is Success -> {
                         val updateState = update(it())
+                        if (isWorkflowTask) getTaskForms(updateState)
                         updateState.copy(request = Success(it()))
                     }
 
@@ -372,10 +370,10 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getTaskForms(listFormVariables: List<FormVariables>) = withState { state ->
-        requireNotNull(state.parent)
+    private fun getTaskForms(oldState: TaskDetailViewState) = withState { state ->
+        requireNotNull(oldState.parent)
         viewModelScope.launch {
-            repository::getTaskForm.asFlow(state.parent.id).execute {
+            repository::getTaskForm.asFlow(oldState.parent.id).execute {
                 when (it) {
                     is Loading -> copy(requestTaskForm = Loading())
                     is Fail -> {
@@ -384,29 +382,7 @@ class TaskDetailViewModel(
                     }
 
                     is Success -> {
-                        update(state.parent, it(), listFormVariables).copy(requestTaskForm = Success(it()))
-                    }
-
-                    else -> {
-                        this
-                    }
-                }
-            }
-        }
-    }
-
-    private fun getTaskFormVariables() = withState { state ->
-        requireNotNull(state.parent)
-        viewModelScope.launch {
-            repository::getTaskFormVariables.asFlow(state.parent.id).execute {
-                when (it) {
-                    is Loading -> copy(requestTaskFormVariables = Loading())
-                    is Fail ->
-                        copy(requestTaskFormVariables = Fail(it.error))
-
-                    is Success -> {
-                        getTaskForms(it())
-                        copy(requestTaskFormVariables = Success(it()))
+                        update(oldState.parent, it()).copy(requestTaskForm = Success(it()))
                     }
 
                     else -> {

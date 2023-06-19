@@ -18,7 +18,6 @@ import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.data.AnalyticsManager
-import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
@@ -68,7 +67,7 @@ internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { stat
 }
 
 internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
-    if (state.requestTaskForm.complete || state.request.complete) {
+    if (viewModel.isTaskFormAndDetailRequestCompleted(state) || viewModel.isTaskDetailRequestCompleted(state)) {
         if (dataObj.localDueDate != null) {
             binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
         } else {
@@ -80,6 +79,8 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
         binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
             showTitleDescriptionComponent()
         }
+
+        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
 
         if (viewModel.isTaskCompleted(state)) {
             binding.tvAddComment.visibility = View.GONE
@@ -106,19 +107,21 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 View.VISIBLE
             }
 
-            when (dataObj.reviewerType) {
-                ReviewerType.REVIEWGROUPS -> {
-                    if (dataObj.assignee?.id == 0) {
-                        menuDetail.findItem(R.id.action_release).isVisible = false
-                        menuDetail.findItem(R.id.action_claim).isVisible = true
-                    } else {
-                        menuDetail.findItem(R.id.action_claim).isVisible = false
+            when (dataObj.memberOfCandidateGroup) {
+                true -> {
+                    if (dataObj.assignee?.id == 0) makeClaimButton()
+                    else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_release).isVisible = true
                         makeOutcomes()
                     }
                 }
 
-                else -> makeOutcomes()
+                else -> {
+                    if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
+                        viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
+                    )
+                        makeOutcomes()
+                }
             }
 
             binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {
@@ -253,7 +256,9 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
 internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
     if (binding.parentOutcomes.childCount == 0)
         state.parent?.outcomes?.forEach { dataObj ->
-            val button = this.layoutInflater.inflate(R.layout.view_layout_outcomes, binding.parentOutcomes, false) as MaterialButton
+            val button = if (dataObj.outcome.lowercase() == "reject")
+                this.layoutInflater.inflate(R.layout.view_layout_negative_outcome, binding.parentOutcomes, false) as MaterialButton
+            else this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
             button.text = requireContext().getLocalizedName(dataObj.name)
             button.setOnClickListener {
                 withState(viewModel) { newState ->
@@ -271,4 +276,15 @@ internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
             }
             binding.parentOutcomes.addView(button)
         }
+}
+
+internal fun TaskDetailFragment.makeClaimButton() = withState(viewModel) { state ->
+    if (binding.parentOutcomes.childCount == 0) {
+        val button = this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
+        button.text = getString(R.string.action_menu_claim)
+        button.setOnClickListener {
+            viewModel.claimTask()
+        }
+        binding.parentOutcomes.addView(button)
+    }
 }

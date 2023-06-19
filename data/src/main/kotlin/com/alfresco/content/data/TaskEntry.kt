@@ -29,7 +29,8 @@ data class TaskEntry(
     val listContents: List<Entry> = emptyList(),
     val outcomes: List<OptionsModel> = emptyList(),
     val comment: String? = null,
-    val reviewerType: ReviewerType = ReviewerType.OTHER
+    val processInstanceStartUserId: String? = null,
+    val memberOfCandidateGroup: Boolean? = null
 ) : ParentEntry(), Parcelable {
 
     val localDueDate: String?
@@ -54,14 +55,16 @@ data class TaskEntry(
                 duration = data.duration,
                 involvedPeople = data.involvedPeople?.map { UserGroupDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated,
-                processInstanceId = data.processInstanceId
+                processInstanceId = data.processInstanceId,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup
             )
         }
 
         /**
          * return the TaskEntry obj using ResponseListForm and existing TaskEntry
          */
-        fun withTaskForm(response: ResponseListForm, parent: TaskEntry, listFormVariables: List<FormVariables>): TaskEntry {
+        fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
             val formFields = response.fields.first().fields
             var description: String? = null
             var comment: String? = null
@@ -70,9 +73,6 @@ data class TaskEntry(
             var taskFormStatus: String? = null
             var listOptions: List<OptionsModel> = emptyList()
             var listContents: List<Entry> = emptyList()
-            var reviewerType: ReviewerType = ReviewerType.REVIEWER
-
-            listFormVariables.forEach { if (it.id == ReviewerType.REVIEWGROUPS.value()) reviewerType = ReviewerType.REVIEWGROUPS }
 
             formFields.forEach {
                 when (it.id.lowercase()) {
@@ -121,7 +121,8 @@ data class TaskEntry(
                 duration = parent.duration,
                 processInstanceId = parent.processInstanceId,
                 outcomes = response.outcomes,
-                reviewerType = reviewerType
+                processInstanceStartUserId = parent.processInstanceStartUserId,
+                memberOfCandidateGroup = parent.memberOfCandidateGroup
             )
         }
 
@@ -193,7 +194,6 @@ data class TaskEntry(
             return TaskEntry(
                 id = data.id,
                 name = data.name,
-                description = data.description,
                 created = data.created,
                 assignee = assignee,
                 priority = data.priority,
@@ -223,6 +223,8 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup,
                 involvedPeople = data.involvedPeople
             )
         }
@@ -246,6 +248,8 @@ data class TaskEntry(
                 endDate = data.endDate,
                 dueDate = data.dueDate,
                 duration = data.duration,
+                processInstanceStartUserId = data.processInstanceStartUserId,
+                memberOfCandidateGroup = data.memberOfCandidateGroup,
                 involvedPeople = data.involvedPeople
             )
         }

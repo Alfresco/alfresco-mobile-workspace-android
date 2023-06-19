@@ -7,6 +7,7 @@
     android:background="?android:attr/selectableItemBackground"
     android:baselineAligned="false"
     android:gravity="center_vertical"
+    android:minHeight="64dp"
     android:paddingStart="24dp"
     android:paddingEnd="16dp"
     android:screenReaderFocusable="true">
@@ -29,6 +30,15 @@
 
         <TextView
             android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:letterSpacing="0"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption" />
+
+        <TextView
+            android:id="@+id/time_stamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="start"

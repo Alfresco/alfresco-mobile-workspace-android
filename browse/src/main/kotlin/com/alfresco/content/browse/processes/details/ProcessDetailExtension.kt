@@ -108,7 +108,8 @@ internal fun ProcessDetailFragment.setListeners() {
             if (state.parent?.startedBy == null) {
                 showSnackar(
                     binding.root,
-                    getString(R.string.error_select_assignee))
+                    getString(R.string.error_select_assignee)
+                )
             } else if (entry != null) {
                 confirmContentQueuePrompt()
             } else {
@@ -118,7 +119,7 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.clTasks.setSafeOnClickListener {
         withState(viewModel) { state ->
-            if (state.parent != null) {
+            if (state.parent != null && state.listTask.isNotEmpty()) {
                 val bundle = bundleOf(Mavericks.KEY_ARG to state.parent)
                 findNavController().navigate(R.id.action_nav_process_details_to_nav_task_list, bundle)
             }
@@ -174,7 +175,13 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
         binding.tvAssignedTitle.text = getString(R.string.title_started_by)
         binding.tvDueDateValue.text = dataEntry?.started?.toLocalDate()?.toString()?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
         binding.tvStatusValue.text = if (dataEntry?.ended != null) getString(R.string.status_completed) else getString(R.string.status_active)
-        binding.tvTasksValue.text = if (state.listTask.isNotEmpty()) state.listTask.size.toString() else "0"
+        if (state.listTask.isNotEmpty()) {
+            binding.clTasks.visibility = View.VISIBLE
+            binding.tvTasksValue.text = state.listTask.size.toString()
+        } else {
+            binding.tvTasksValue.text = ""
+            binding.clTasks.visibility = View.GONE
+        }
     }
 }
 

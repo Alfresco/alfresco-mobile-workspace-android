@@ -76,11 +76,11 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
         // Override double-tap behavior to bypass medium zoom
         view.setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 return false
             }
 
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
                 if (e == null) return false
 
                 if (view.scale > view.minimumScale) {
@@ -92,7 +92,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
                 return true
             }
 
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean {
+            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
                 return false
             }
         })

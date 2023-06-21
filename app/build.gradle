@@ -41,10 +41,10 @@ android {
         }
     }
 
-    dexOptions {
+    /*dexOptions {
         jumboMode = true
         javaMaxHeapSize "12g"
-    }
+    }*/
 
     buildFeatures {
         dataBinding = true
@@ -54,14 +54,17 @@ android {
     compileOptions {
         coreLibraryDesugaringEnabled true
     }
+    packagingOptions {
+        resources {
+            pickFirsts += ['META-INF/auth_release.kotlin_module']
+        }
+    }
 
     // Temporary kotlin module duplication fix
-    packagingOptions {
-        pickFirst 'META-INF/auth_release.kotlin_module'
-    }
     androidResources {
         noCompress 'dex'
     }
+    namespace 'com.alfresco.content.app'
 }
 
 project.afterEvaluate {

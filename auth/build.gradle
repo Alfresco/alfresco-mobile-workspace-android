@@ -4,14 +4,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
 
     buildFeatures {
         dataBinding = true
     }
+    namespace 'com.alfresco.android.aims'
 }
 
 dependencies {

@@ -2,12 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 dependencies {
     implementation libs.kotlin.stdlib
@@ -15,4 +9,8 @@ dependencies {
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.activity
     implementation libs.mavericks
+}
+
+android {
+    namespace 'com.alfresco.content.viewer.common'
 }

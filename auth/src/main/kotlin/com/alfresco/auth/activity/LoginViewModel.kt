@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
@@ -86,8 +86,8 @@ class LoginViewModel(
             loadSavedConfig()
         }
 
-        connectEnabled = Transformations.map(identityUrl) { it.isNotBlank() }
-        ssoLoginEnabled = Transformations.map(applicationUrl) { it.isNotBlank() }
+        connectEnabled = identityUrl.map{ it.isNotBlank() }
+        ssoLoginEnabled = applicationUrl.map{ it.isNotBlank() }
     }
 
     fun setHasNavigation(enableNavigation: Boolean) {

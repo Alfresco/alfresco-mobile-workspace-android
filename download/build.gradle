@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 dependencies {
     implementation project(':base')
@@ -14,4 +8,8 @@ dependencies {
     implementation libs.coroutines.core
     implementation libs.androidx.appcompat
     api libs.okhttp.core
+}
+
+android {
+    namespace 'com.alfresco.download'
 }

@@ -1,13 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 dependencies {
     implementation libs.kotlin.stdlib
+}
+
+android {
+    namespace 'com.alfresco.content.account'
 }

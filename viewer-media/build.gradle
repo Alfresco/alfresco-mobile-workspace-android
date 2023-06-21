@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 dependencies {
     implementation project(':base-ui')
@@ -21,4 +15,8 @@ dependencies {
     implementation libs.exoplayer.ui
 
     implementation libs.mavericks
+}
+
+android {
+    namespace 'com.alfresco.content.viewer.media'
 }

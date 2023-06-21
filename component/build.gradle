@@ -7,14 +7,11 @@ plugins {
 }
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
 
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.alfresco.content.component'
 }
 
 kapt {
@@ -47,12 +44,12 @@ dependencies {
     androidTestImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.espresso.core
 
-    testImplementation("com.airbnb.android:mavericks-testing:3.0.0")
+    testImplementation libs.mavericks.testing
 
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation libs.mockito.kotlin
 
     // Optional -- Mockito framework
-    testImplementation "org.mockito:mockito-core:5.1.1"
+    testImplementation libs.mockito.core
     // Optional -- Mockk framework
-    testImplementation "io.mockk:mockk:1.13.4"
+    testImplementation libs.mockk
 }

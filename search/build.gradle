@@ -4,14 +4,11 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
 
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.alfresco.content.search'
 }
 
 kapt {

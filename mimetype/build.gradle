@@ -1,14 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
-}
 
 dependencies {
     implementation libs.kotlin.stdlib
     implementation libs.androidx.appcompat
+}
+
+android {
+    namespace 'com.alfresco.content.mimetype'
 }

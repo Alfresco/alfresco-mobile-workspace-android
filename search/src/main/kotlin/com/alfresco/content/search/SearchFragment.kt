@@ -143,7 +143,6 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        println("SearchFragment.invalidate == ${state.isOnline}")
         if (!state.isExtension) {
             if (state.isOnline) {
                 disableOfflineSearch()

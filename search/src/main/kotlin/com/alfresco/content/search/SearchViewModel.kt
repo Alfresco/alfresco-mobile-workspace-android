@@ -18,6 +18,7 @@ import com.alfresco.content.data.SearchFacetQueries
 import com.alfresco.content.data.SearchFilter
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.emptyAdvanceFilters
 import com.alfresco.content.data.emptySearchFacetFields
 import com.alfresco.content.data.emptySearchFacetIntervals
@@ -424,7 +425,9 @@ class SearchViewModel(
     /**
      * returns true if device has active network connection otherwise false
      */
-    fun canSearchOverCurrentNetwork() = ConnectivityTracker.isActiveNetwork(context)
+    fun canSearchOverCurrentNetwork() =
+        Settings(context).canSyncOverMeteredNetwork ||
+                !ConnectivityTracker.isActiveNetworkMetered(context)
 
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)

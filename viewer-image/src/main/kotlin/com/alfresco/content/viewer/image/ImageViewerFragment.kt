@@ -108,13 +108,13 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
     private fun PhotoView.loadImage(uri: String) {
         val imageLoader = ImageLoader.Builder(requireContext())
-            .componentRegistry {
+            .components {
                 if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder(context))
+                    add(ImageDecoderDecoder.Factory())
                 } else {
-                    add(GifDecoder())
+                    add(GifDecoder.Factory())
                 }
-                add(SvgDecoder(requireContext()))
+                add(SvgDecoder.Factory())
             }
             .build()
 

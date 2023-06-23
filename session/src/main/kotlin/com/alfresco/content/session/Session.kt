@@ -3,6 +3,7 @@ package com.alfresco.content.session
 import android.content.Context
 import coil.Coil
 import coil.ImageLoader
+import coil.disk.DiskCache
 import coil.util.CoilUtils
 import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
@@ -59,12 +60,16 @@ class Session(
         }
 
         val imageLoader = ImageLoader.Builder(context)
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(context.cacheDir.resolve("image_cache"))
+                    .build()
+            }
             .crossfade(true)
             .okHttpClient {
                 OkHttpClient.Builder()
                     .addInterceptor(authInterceptor)
                     .addOptionalInterceptor(loggingInterceptor)
-                    .cache(CoilUtils.createDefaultCache(context))
                     .build()
             }
             .build()

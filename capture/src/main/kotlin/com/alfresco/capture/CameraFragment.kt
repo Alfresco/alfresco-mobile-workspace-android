@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.ImageLoader
-import coil.fetch.VideoFrameFileFetcher
+import coil.decode.VideoFrameDecoder
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
@@ -66,8 +66,8 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private val imageLoader: ImageLoader by lazy {
         ImageLoader.Builder(requireContext())
-            .componentRegistry {
-                add(VideoFrameFileFetcher(requireContext()))
+            .components {
+                add(VideoFrameDecoder.Factory())
             }
             .build()
     }

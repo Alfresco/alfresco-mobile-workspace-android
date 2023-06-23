@@ -10,16 +10,16 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import coil.EventListener
 import coil.ImageLoader
-import coil.fetch.VideoFrameFileFetcher
+import coil.decode.VideoFrameDecoder
 import coil.load
 import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil.request.SuccessResult
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.capture.databinding.ViewListPreviewBinding
-import java.util.Locale.ENGLISH
-import java.util.concurrent.TimeUnit
+import java.util.Locale.*
+import java.util.concurrent.*
 
 /**
  * Generated Model View for the Preview Screen
@@ -36,12 +36,12 @@ class ListViewPreview @JvmOverloads constructor(
     private val binding = ViewListPreviewBinding.inflate(LayoutInflater.from(context), this)
     private val imageLoader: ImageLoader by lazy {
         ImageLoader.Builder(context)
-            .componentRegistry {
-                add(VideoFrameFileFetcher(context))
+            .components {
+                add(VideoFrameDecoder.Factory())
             }
             .eventListener(object : EventListener {
-                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
-                    super.onSuccess(request, metadata)
+                override fun onSuccess(request: ImageRequest, result: SuccessResult) {
+                    super.onSuccess(request, result)
                     onSuccessMediaLoad()
                 }
             })
@@ -100,9 +100,11 @@ class ListViewPreview @JvmOverloads constructor(
             isTablet && (rotation == ORIENTATION_0 || rotation == ORIENTATION_180) -> {
                 ImageView.ScaleType.FIT_CENTER
             }
+
             !isTablet && (rotation == ORIENTATION_180 || rotation == ORIENTATION_0) -> {
                 ImageView.ScaleType.FIT_CENTER
             }
+
             else -> {
                 ImageView.ScaleType.FIT_XY
             }

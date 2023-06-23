@@ -60,7 +60,7 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 /**
  * navigate to contextual search
  */
-fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean, moveId: String = "") {
+fun NavController.navigateToContextualSearch(id: String? = null, title: String, isExtension: Boolean, moveId: String = "") {
     if (moveId.isNotEmpty())
         navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension/$moveId?title=${Uri.encode(title)}"))
     else navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension?title=${Uri.encode(title)}"))

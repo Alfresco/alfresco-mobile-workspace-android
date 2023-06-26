@@ -6,17 +6,17 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 data class ActionCreateFolder(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_create_folder,
     override val title: Int = R.string.action_create_folder,
-    override val eventName: EventName = EventName.CreateFolder
+    override val eventName: EventName = EventName.CreateFolder,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {

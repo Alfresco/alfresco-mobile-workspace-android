@@ -18,7 +18,7 @@ data class AccountInfoData(
     val secret: String? = null,
     val authenticationType: String? = null,
     val version: String? = null,
-    val sitesFolder: String? = null
+    val sitesFolder: String? = null,
 ) {
     val sourceName = if (id != null && !name.isNullOrEmpty()) "alfresco-$id-${name}Alfresco" else "undefinedAlfresco"
 
@@ -39,7 +39,7 @@ data class AccountInfoData(
                 secret = raw.secret,
                 authenticationType = raw.authenticationType,
                 version = raw.version,
-                sitesFolder = raw.sitesFolder
+                sitesFolder = raw.sitesFolder,
             )
         }
     }

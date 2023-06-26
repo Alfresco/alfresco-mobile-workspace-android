@@ -21,7 +21,7 @@ class InputServerFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = DataBindingUtil.inflate<ContainerAuthInputServerBinding>(inflater, R.layout.container_auth_input_server, container, false)
         binding.viewModel = viewModel

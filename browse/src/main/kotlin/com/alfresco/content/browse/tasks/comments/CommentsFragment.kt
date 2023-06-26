@@ -38,7 +38,7 @@ class CommentsFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentCommentsBinding.inflate(inflater, container, false)
         return binding.root

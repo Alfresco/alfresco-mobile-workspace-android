@@ -8,7 +8,7 @@ enum class TaskPriority(val value: String) {
     MEDIUM("medium"),
     HIGH("high"),
     RESET("reset"),
-    NONE("none")
+    NONE("none"),
 }
 
 /**
@@ -17,7 +17,7 @@ enum class TaskPriority(val value: String) {
 enum class DefaultPriority(val value: Int) {
     LOW(3),
     MEDIUM(7),
-    HIGH(10)
+    HIGH(10),
 }
 
 /**

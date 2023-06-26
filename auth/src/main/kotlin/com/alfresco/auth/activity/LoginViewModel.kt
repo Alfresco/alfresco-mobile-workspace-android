@@ -25,7 +25,7 @@ class LoginViewModel(
     authState: String?,
     authConfig: AuthConfig?,
     endpoint: String?,
-    val isExtension: Boolean
+    val isExtension: Boolean,
 ) : AuthenticationViewModel() {
 
     lateinit var authConfig: AuthConfig
@@ -86,8 +86,8 @@ class LoginViewModel(
             loadSavedConfig()
         }
 
-        connectEnabled = identityUrl.map{ it.isNotBlank() }
-        ssoLoginEnabled = applicationUrl.map{ it.isNotBlank() }
+        connectEnabled = identityUrl.map { it.isNotBlank() }
+        ssoLoginEnabled = applicationUrl.map { it.isNotBlank() }
     }
 
     fun setHasNavigation(enableNavigation: Boolean) {
@@ -220,7 +220,7 @@ class LoginViewModel(
         InputAppServer,
         EnterBasicCredentials,
         EnterPkceCredentials,
-        Cancelled;
+        Cancelled,
     }
 
     val basicAuth = BasicAuth()
@@ -355,7 +355,7 @@ class LoginViewModel(
                 contentServicePath = contentServicePath.value ?: "",
                 realm = realm.value ?: "",
                 clientId = clientId.value ?: "",
-                redirectUrl = redirectUrl
+                redirectUrl = redirectUrl,
             )
         }
 

@@ -25,7 +25,8 @@ enum class MimeType(val icon: Int) {
     FOLDER(R.drawable.file_ic_folder),
     FILE_LINK(R.drawable.file_ic_link),
     FOLDER_LINK(R.drawable.file_ic_folder_link),
-    LIBRARY(R.drawable.file_ic_library);
+    LIBRARY(R.drawable.file_ic_library),
+    ;
 
     companion object {
         private val map by lazy {
@@ -162,7 +163,7 @@ enum class MimeType(val icon: Int) {
                 "text/x-markdown" to CODE,
                 "text/x-setext" to CODE,
                 "text/xml" to CODE,
-                "x-world/x-vrml" to OTHER
+                "x-world/x-vrml" to OTHER,
             )
         }
 

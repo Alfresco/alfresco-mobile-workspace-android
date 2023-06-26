@@ -19,7 +19,7 @@ data class MoveViewState(val path: String) : MavericksState {
  */
 class MoveViewModel(
     state: MoveViewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<MoveViewState>(state) {
 
     /**
@@ -31,7 +31,7 @@ class MoveViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: MoveViewState
+            state: MoveViewState,
         ) = MoveViewModel(state, viewModelContext.app())
     }
 }

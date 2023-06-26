@@ -12,6 +12,6 @@ object LocationUtils {
         val locationManager: LocationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 }

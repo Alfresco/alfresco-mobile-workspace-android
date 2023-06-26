@@ -28,8 +28,9 @@ fun String.parseDate(format: String): Date? {
  */
 fun Date.formatDate(format: String, date: Date?): String? {
     val formatter = SimpleDateFormat(format, Locale.ENGLISH)
-    if (date != null)
+    if (date != null) {
         return formatter.format(date)
+    }
     return null
 }
 
@@ -41,10 +42,12 @@ fun Date.formatDate(format: String, date: Date?): String? {
 fun String.getFormattedDate(currentFormat: String, convertFormat: String): String {
     val date = SimpleDateFormat(currentFormat, Locale.ENGLISH).parse(this)
     val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
-    if (date != null)
+    if (date != null) {
         return formatter.format(date)
+    }
     return ""
 }
+
 /**
  * convert the UTC format date to Local date and time and returns the String obj
  * @param currentFormat
@@ -55,7 +58,8 @@ fun String.getLocalFormattedDate(currentFormat: String, convertFormat: String): 
     parserFormat.timeZone = TimeZone.getTimeZone("UTC")
     val date = parserFormat.parse(this)
     val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
-    if (date != null)
+    if (date != null) {
         return formatter.format(date)
+    }
     return ""
 }

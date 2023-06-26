@@ -31,13 +31,13 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.setSafeOnClickListener
 import com.alfresco.ui.getDrawableForAttribute
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * TaskStatusFragment
@@ -52,7 +52,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         if (viewLayout == null) {
             binding = FragmentTaskStatusBinding.inflate(inflater, container, false)
@@ -73,8 +73,9 @@ class TaskStatusFragment : Fragment(), MavericksView {
         instanceActivity?.apply {
             setSupportActionBar(binding.toolbar)
             withState(viewModel) { state ->
-                if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee))
+                if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee)) {
                     setHasOptionsMenu(true)
+                }
             }
 
             binding.toolbar.apply {
@@ -93,9 +94,9 @@ class TaskStatusFragment : Fragment(), MavericksView {
         withState(viewModel) { state ->
             binding.commentInput.setText(state.parent?.comment ?: "")
             viewModel.previousTaskFormStatus = state.parent?.taskFormStatus ?: ""
-            if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee))
+            if (!viewModel.isTaskCompleted(state) && viewModel.isAssigneeAndLoggedInSame(state.parent?.assignee)) {
                 setListeners()
-            else {
+            } else {
                 binding.commentInput.isEnabled = false
             }
         }
@@ -133,7 +134,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
 
     private suspend fun showComponentSheetDialog(
         context: Context,
-        taskEntry: TaskEntry
+        taskEntry: TaskEntry,
     ) = withContext(dispatcher) {
         suspendCoroutine {
             val componentData = ComponentData.with(taskEntry)

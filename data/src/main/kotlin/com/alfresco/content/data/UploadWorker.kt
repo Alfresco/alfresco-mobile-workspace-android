@@ -9,7 +9,7 @@ import retrofit2.HttpException
 
 class UploadWorker(
     appContext: Context,
-    params: WorkerParameters
+    params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
 
     private val repository = OfflineRepository()
@@ -33,13 +33,13 @@ class UploadWorker(
             AnalyticsManager().apiTracker(
                 if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) APIEvent.UploadTaskAttachment else APIEvent.UploadFiles,
                 status = true,
-                size = "${file.length().div(1024).div(1024)} MB"
+                size = "${file.length().div(1024).div(1024)} MB",
             )
             val res = if (entry.uploadServer == UploadServerType.DEFAULT) BrowseRepository().createEntry(entry, file) else TaskRepository().createEntry(entry, file, entry.uploadServer)
             file.delete() // TODO: what if delete fails?
             repository.update(
                 entry.copyWithMetadata(res)
-                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED)
+                    .copy(id = res.id, offlineStatus = OfflineStatus.SYNCED),
             )
             true
         } catch (ex: Exception) {
@@ -52,7 +52,7 @@ class UploadWorker(
             AnalyticsManager().apiTracker(
                 APIEvent.UploadFiles,
                 status = false,
-                size = "0"
+                size = "0",
             )
             false
         }

@@ -18,7 +18,7 @@ data class ProcessesViewState(
     val baseTaskEntries: List<ProcessEntry> = emptyList(),
     val filterParams: TaskProcessFiltersPayload = TaskProcessFiltersPayload(),
     val loadItemsCount: Int = 0,
-    val page: Int = 0
+    val page: Int = 0,
 ) : ProcessListViewState {
 
     override val isCompact = false
@@ -29,7 +29,7 @@ data class ProcessesViewState(
      * update the latest response
      */
     fun update(
-        response: ResponseList?
+        response: ResponseList?,
     ): ProcessesViewState {
         if (response == null) return this
 
@@ -49,7 +49,7 @@ data class ProcessesViewState(
             processEntries = newTaskEntries,
             baseTaskEntries = newTaskEntries,
             loadItemsCount = totalLoadCount,
-            hasMoreItems = totalLoadCount < response.total
+            hasMoreItems = totalLoadCount < response.total,
         )
     }
 }

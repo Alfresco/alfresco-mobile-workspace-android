@@ -9,7 +9,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.alfresco.coroutines.asFlow
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,10 +16,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class SyncService(
     private val context: Context,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
     private var lastSyncTime: Long = 0L
     private var pendingSync: Job? = null
@@ -182,8 +182,8 @@ class SyncService(
             .asFlow()
             .map { list ->
                 list?.find { it.state == WorkInfo.State.RUNNING }
-                ?: list?.find { !it.state.isFinished }
-                ?: list?.firstOrNull()
+                    ?: list?.find { !it.state.isFinished }
+                    ?: list?.firstOrNull()
             }
 
     companion object {
@@ -200,8 +200,8 @@ class SyncService(
                 .asFlow()
                 .map { list ->
                     list?.find { it.state == WorkInfo.State.RUNNING }
-                    ?: list?.find { !it.state.isFinished }
-                    ?: list?.firstOrNull()
+                        ?: list?.find { !it.state.isFinished }
+                        ?: list?.firstOrNull()
                 }
                 .map {
                     it?.let { SyncState.from(it.state) }
@@ -217,8 +217,8 @@ class SyncService(
                 .asFlow()
                 .map { list ->
                     list?.find { it.state == WorkInfo.State.RUNNING }
-                    ?: list?.find { !it.state.isFinished }
-                    ?: list?.firstOrNull()
+                        ?: list?.find { !it.state.isFinished }
+                        ?: list?.firstOrNull()
                 }
                 .map {
                     it?.let { SyncState.from(it.state) }
@@ -236,7 +236,8 @@ class SyncService(
         Enqueued,
         Running,
         Blocked,
-        Finished;
+        Finished,
+        ;
 
         companion object {
             fun from(workInfoState: WorkInfo.State?): SyncState =

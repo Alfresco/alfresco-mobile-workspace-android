@@ -15,5 +15,5 @@ enum class ComponentType(val value: String) {
     RADIO("radio"),
     FACETS("facets"),
     TASK_PROCESS_PRIORITY("task-process-priority"),
-    None("none")
+    None("none"),
 }

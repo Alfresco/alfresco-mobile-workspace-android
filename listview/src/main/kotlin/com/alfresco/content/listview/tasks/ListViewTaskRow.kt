@@ -27,7 +27,7 @@ import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
 class ListViewTaskRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListTaskRowBinding.inflate(LayoutInflater.from(context), this, true)
@@ -44,8 +44,10 @@ class ListViewTaskRow @JvmOverloads constructor(
         binding.subtitle.text = localizedName
         binding.timeStamp.text = entry.created?.toLocalDateTime().toString().getLocalFormattedDate(DATE_FORMAT_6, DATE_FORMAT_7)
         val accessibilityText = context.getString(
-            R.string.accessibility_text_task_row, entry.name,
-            localizedName, getTaskPriority(entry.priority).value
+            R.string.accessibility_text_task_row,
+            entry.name,
+            localizedName,
+            getTaskPriority(entry.priority).value,
         )
         binding.parent.contentDescription = accessibilityText
 

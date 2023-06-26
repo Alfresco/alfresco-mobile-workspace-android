@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MoveArgs(
     val path: String,
-    val entryObj: Entry?
+    val entryObj: Entry?,
 ) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
@@ -30,7 +30,7 @@ data class MoveArgs(
         fun with(args: Bundle): MoveArgs {
             return MoveArgs(
                 args.getString(PATH_KEY, ""),
-                args.getParcelable(ENTRY_OBJ_KEY)
+                args.getParcelable(ENTRY_OBJ_KEY),
             )
         }
     }
@@ -41,6 +41,7 @@ data class MoveArgs(
  */
 class MoveFragment : Fragment(), MavericksView {
     private lateinit var args: MoveArgs
+
     @OptIn(InternalMavericksApi::class)
     val viewModel: MoveViewModel by fragmentViewModelWithArgs { args }
 

@@ -14,7 +14,7 @@ import com.alfresco.content.getLocalizedName
 internal class ListViewRadioRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = ViewRadioListRowBinding.inflate(LayoutInflater.from(context), this, true)
 

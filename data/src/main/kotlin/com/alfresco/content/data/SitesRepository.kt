@@ -11,11 +11,13 @@ class SitesRepository(val session: Session = SessionManager.requireSession) {
     }
 
     suspend fun getMySites(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listSiteMembershipsForPerson(
-            AlfrescoApi.CURRENT_USER,
-            skipCount,
-            maxItems
-        ))
+        ResponsePaging.with(
+            service.listSiteMembershipsForPerson(
+                AlfrescoApi.CURRENT_USER,
+                skipCount,
+                maxItems,
+            ),
+        )
 
     suspend fun deleteSite(entry: Entry) =
         service.deleteSite(entry.otherId ?: "", null)

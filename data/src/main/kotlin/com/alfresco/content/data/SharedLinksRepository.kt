@@ -11,9 +11,11 @@ class SharedLinksRepository(val session: Session = SessionManager.requireSession
     }
 
     suspend fun getSharedLinks(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listSharedLinks(
-            skipCount,
-            maxItems,
-            include = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations")
-        ))
+        ResponsePaging.with(
+            service.listSharedLinks(
+                skipCount,
+                maxItems,
+                include = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations"),
+            ),
+        )
 }

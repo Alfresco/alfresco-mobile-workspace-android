@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 internal class ContextualActionsViewModel(
     state: ContextualActionsState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<ContextualActionsState>(state) {
 
     init {
@@ -59,7 +59,7 @@ internal class ContextualActionsViewModel(
             ContextualActionsState(
                 entry,
                 makeActions(entry),
-                makeTopActions(entry)
+                makeTopActions(entry),
             )
         }
     }
@@ -99,7 +99,7 @@ internal class ContextualActionsViewModel(
             if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             renameMoveActionFor(entry),
             offlineActionFor(entry),
-            deleteActionFor(entry)
+            deleteActionFor(entry),
         ).flatten()
 
     private fun actionsForTrashed(entry: Entry): List<Action> =
@@ -109,7 +109,7 @@ internal class ContextualActionsViewModel(
         listOf(
             externalActionsFor(entry),
             if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
-            offlineActionFor(entry)
+            offlineActionFor(entry),
         ).flatten()
 
     private fun actionsProcesses(entry: Entry): List<Action> =
@@ -163,7 +163,7 @@ internal class ContextualActionsViewModel(
     companion object : MavericksViewModelFactory<ContextualActionsViewModel, ContextualActionsState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ContextualActionsState
+            state: ContextualActionsState,
         ) =
             // Requires activity context in order to present other fragments
             ContextualActionsViewModel(state, viewModelContext.activity())

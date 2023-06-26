@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 class TaskDetailViewModel(
     state: TaskDetailViewState,
     val context: Context,
-    val repository: TaskRepository
+    val repository: TaskRepository,
 ) : MavericksViewModel<TaskDetailViewState>(state) {
 
     private var observeUploadsJob: Job? = null
@@ -52,8 +52,9 @@ class TaskDetailViewModel(
         copyEntry(state.parent)
 
         viewModelScope.on<ActionOpenWith> {
-            if (!it.entry.path.isNullOrEmpty())
+            if (!it.entry.path.isNullOrEmpty()) {
                 entryListener?.onEntryCreated(it.entry)
+            }
         }
 
         getTaskDetails()
@@ -80,7 +81,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getTaskDetails.asFlow(
-                state.parent?.id ?: ""
+                state.parent?.id ?: "",
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -106,7 +107,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getComments.asFlow(
-                state.parent?.id ?: ""
+                state.parent?.id ?: "",
             ).execute {
                 when (it) {
                     is Loading -> copy(requestComments = Loading())
@@ -130,7 +131,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::getContents.asFlow(
-                state.parent?.id ?: ""
+                state.parent?.id ?: "",
             ).execute {
                 when (it) {
                     is Loading -> copy(requestContents = Loading())
@@ -174,7 +175,8 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::addComments.asFlow(
-                state.parent?.id ?: "", CommentPayload.with(message)
+                state.parent?.id ?: "",
+                CommentPayload.with(message),
             ).execute {
                 when (it) {
                     is Loading -> copy(requestAddComment = Loading())
@@ -199,7 +201,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::completeTask.asFlow(
-                state.parent?.id ?: ""
+                state.parent?.id ?: "",
             ).execute {
                 when (it) {
                     is Loading -> copy(requestCompleteTask = Loading())
@@ -225,15 +227,19 @@ class TaskDetailViewModel(
      * If there is any change in the name, description, priority or due date the it will return true otherwise false
      */
     fun isTaskDetailsChanged(state: TaskDetailViewState): Boolean {
-        if (state.parent?.name != state.taskEntry?.name)
+        if (state.parent?.name != state.taskEntry?.name) {
             return true
-        if (state.parent?.description != state.taskEntry?.description)
+        }
+        if (state.parent?.description != state.taskEntry?.description) {
             return true
-        if (state.parent?.priority != state.taskEntry?.priority)
+        }
+        if (state.parent?.priority != state.taskEntry?.priority) {
             return true
+        }
 
-        if (state.parent?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1) != state.taskEntry?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1))
+        if (state.parent?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1) != state.taskEntry?.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_1)) {
             return true
+        }
 
         return false
     }
@@ -293,7 +299,7 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks detail data
             repository::updateTaskDetails.asFlow(
-                state.parent
+                state.parent,
             ).execute {
                 when (it) {
                     is Loading -> copy(requestUpdateTask = Loading())
@@ -319,7 +325,8 @@ class TaskDetailViewModel(
         viewModelScope.launch {
             // assign user to the task
             repository::assignUser.asFlow(
-                state.parent.id, state.parent.assignee?.id.toString()
+                state.parent.id,
+                state.parent.assignee?.id.toString(),
             ).execute {
                 when (it) {
                     is Loading -> copy(requestUpdateTask = Loading())
@@ -518,7 +525,7 @@ class TaskDetailViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: TaskDetailViewState
+            state: TaskDetailViewState,
         ) = TaskDetailViewModel(state, viewModelContext.activity(), TaskRepository())
     }
 }

@@ -10,7 +10,7 @@ import com.alfresco.kotlin.isLocalPath
 import com.alfresco.kotlin.parentFile
 
 data class PdfViewerState(
-    val uri: String
+    val uri: String,
 ) : MavericksState {
     constructor(args: ChildViewerArgs) : this(args.uri)
 }

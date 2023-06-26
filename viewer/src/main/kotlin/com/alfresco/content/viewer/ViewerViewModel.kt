@@ -16,13 +16,13 @@ data class ViewerState(
     val entry: Entry? = null,
     val ready: Boolean = false,
     val viewerUri: String? = null,
-    val viewerMimeType: String? = null
+    val viewerMimeType: String? = null,
 ) : MavericksState {
     constructor(args: ViewerArgs) : this(args.id, args.mode)
 }
 
 class ViewerViewModel(
-    state: ViewerState
+    state: ViewerState,
 ) : MavericksViewModel<ViewerState>(state) {
 
     private lateinit var offlineRepository: OfflineRepository
@@ -46,7 +46,7 @@ class ViewerViewModel(
                         copy(
                             ready = true,
                             viewerUri = state.id,
-                            viewerMimeType = "application/pdf"
+                            viewerMimeType = "application/pdf",
                         )
                     }
                 } else {
@@ -69,20 +69,20 @@ class ViewerViewModel(
                 copy(
                     ready = true,
                     viewerUri = loader.contentUri(entry),
-                    viewerMimeType = mimeType
+                    viewerMimeType = mimeType,
                 )
             }
             analyticsManager.previewFile(
                 mimeType ?: "",
                 entry.name.substringAfterLast(".", ""),
-                true
+                true,
             )
         } else {
             val rendition = loader.rendition(entry)
             analyticsManager.previewFile(
                 mimeType ?: "",
                 entry.name.substringAfterLast(".", ""),
-                false
+                false,
             )
             requireNotNull(rendition)
             // TODO: isRendition supported
@@ -90,7 +90,7 @@ class ViewerViewModel(
                 copy(
                     ready = true,
                     viewerUri = rendition.uri,
-                    viewerMimeType = rendition.mimeType
+                    viewerMimeType = rendition.mimeType,
                 )
             }
         }
@@ -107,7 +107,7 @@ class ViewerViewModel(
 
     private class RemoteContentLoader(
         val browseRepository: BrowseRepository,
-        val renditionRepository: RenditionRepository
+        val renditionRepository: RenditionRepository,
     ) : ContentLoader {
 
         override suspend fun fetchEntry(id: String) =
@@ -121,7 +121,7 @@ class ViewerViewModel(
     }
 
     private class OfflineContentLoader(
-        val offlineRepository: OfflineRepository
+        val offlineRepository: OfflineRepository,
     ) : ContentLoader {
 
         override suspend fun fetchEntry(id: String) =

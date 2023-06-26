@@ -10,10 +10,10 @@ import com.alfresco.content.PermissionFragment
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Marked as ActionPermission
@@ -30,12 +30,13 @@ interface ActionPermission {
      */
     fun executePermission(
         context: Context,
-        scope: CoroutineScope
+        scope: CoroutineScope,
     ) = scope.launch {
         val bus = EventBus.default
         try {
-            if (checkReadPermission(context))
+            if (checkReadPermission(context)) {
                 executeIntentData(context)
+            }
         } catch (ex: CancellationException) {
             (context as AppCompatActivity).finish()
         } catch (ex: Exception) {
@@ -46,17 +47,16 @@ interface ActionPermission {
     }
 
     private suspend fun checkReadPermission(context: Context): Boolean {
-
         if (PermissionFragment.requestPermissions(
                 context,
                 requiredPermissions(),
-                permissionRationale(context)
+                permissionRationale(context),
             )
         ) {
             return true
         } else {
             throw Exception(
-                context.getString(R.string.share_files_failure_permissions)
+                context.getString(R.string.share_files_failure_permissions),
             )
         }
     }
@@ -83,31 +83,32 @@ interface ActionPermission {
             view: View,
             anchorView: View?,
             @StringRes messageResId: Int,
-            vararg formatArgs: String
+            vararg formatArgs: String,
         ) = showToast(
             view,
             anchorView,
             view.resources.getString(
-                messageResId, *formatArgs
-            )
+                messageResId,
+                *formatArgs,
+            ),
         )
 
         @SuppressLint("ShowToast")
         internal fun showToast(
             view: View,
             anchorView: View?,
-            message: CharSequence
+            message: CharSequence,
         ) {
             Snackbar.make(
                 view,
                 message,
-                Snackbar.LENGTH_LONG
+                Snackbar.LENGTH_LONG,
             ).setAnchorView(anchorView).show()
         }
 
         private fun requiredPermissions() =
             listOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
             )
 
         private fun permissionRationale(context: Context) =

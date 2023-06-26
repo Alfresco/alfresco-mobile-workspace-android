@@ -9,7 +9,7 @@ data class ResponseComments(
     val size: Int,
     val total: Int,
     val start: Int,
-    val listComments: List<CommentEntry>
+    val listComments: List<CommentEntry>,
 ) {
     companion object {
 
@@ -21,7 +21,7 @@ data class ResponseComments(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listComments = raw.data?.map { CommentEntry.with(it) } ?: emptyList()
+                listComments = raw.data?.map { CommentEntry.with(it) } ?: emptyList(),
             )
         }
     }

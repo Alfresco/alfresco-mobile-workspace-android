@@ -32,7 +32,7 @@ data class TaskDetailViewState(
     val requestTaskForm: Async<ResponseListForm> = Uninitialized,
     val requestOutcomes: Async<Response<Unit>> = Uninitialized,
     val requestSaveForm: Async<Response<Unit>> = Uninitialized,
-    val requestClaimRelease: Async<Response<Unit>> = Uninitialized
+    val requestClaimRelease: Async<Response<Unit>> = Uninitialized,
 ) : MavericksState {
 
     constructor(target: TaskEntry) : this(parent = target)
@@ -78,7 +78,7 @@ data class TaskDetailViewState(
 
     private fun copyIncludingUploads(
         entries: List<Entry>,
-        uploads: List<Entry>
+        uploads: List<Entry>,
     ): TaskDetailViewState {
         val mixedUploads = uploads.transformCompletedUploads()
         val mergedEntries = mergeInUploads(entries, mixedUploads)
@@ -87,7 +87,7 @@ data class TaskDetailViewState(
         return copy(
             listContents = mergedEntries,
             baseEntries = baseEntries,
-            uploads = uploads
+            uploads = uploads,
         )
     }
 

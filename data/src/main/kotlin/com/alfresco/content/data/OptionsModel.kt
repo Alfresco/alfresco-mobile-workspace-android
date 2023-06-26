@@ -15,7 +15,7 @@ data class OptionsModel(
     val label: String = "",
     val query: String = "",
     val value: String = "",
-    val default: Boolean = false
+    val default: Boolean = false,
 ) : Parcelable {
 
     val outcome: String
@@ -30,7 +30,7 @@ data class OptionsModel(
         fun with(raw: Options): OptionsModel {
             return OptionsModel(
                 id = raw.id ?: "",
-                name = raw.name ?: ""
+                name = raw.name ?: "",
             )
         }
 
@@ -41,7 +41,7 @@ data class OptionsModel(
         fun with(raw: CommonOptionModel): OptionsModel {
             return OptionsModel(
                 id = raw.id ?: "",
-                name = raw.name ?: ""
+                name = raw.name ?: "",
             )
         }
     }

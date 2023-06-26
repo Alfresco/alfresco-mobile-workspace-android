@@ -6,7 +6,7 @@ enum class SearchFilter {
     Contextual,
     Files,
     Folders,
-    Libraries;
+    Libraries,
 }
 
 /**

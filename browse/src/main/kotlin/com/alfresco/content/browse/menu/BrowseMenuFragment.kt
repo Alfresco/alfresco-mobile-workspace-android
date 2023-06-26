@@ -26,7 +26,7 @@ class BrowseMenuFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentBrowseMenuBinding.inflate(inflater, container, false)
         return binding.root
@@ -38,8 +38,10 @@ class BrowseMenuFragment : Fragment(), MavericksView {
             it.extras?.let { bundle ->
                 if (!bundle.getString(MODE_KEY).isNullOrEmpty()) {
                     navigateTo(
-                        getString(R.string.nav_path_my_files), "", PageView.PersonalFiles,
-                        bundle.getString(ID_KEY, "")
+                        getString(R.string.nav_path_my_files),
+                        "",
+                        PageView.PersonalFiles,
+                        bundle.getString(ID_KEY, ""),
                     )
                     it.removeExtra(ID_KEY)
                     it.removeExtra(MODE_KEY)

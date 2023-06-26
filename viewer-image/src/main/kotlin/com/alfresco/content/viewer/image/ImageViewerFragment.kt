@@ -59,7 +59,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
         view.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
+            FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
         container.addView(view)
@@ -99,7 +99,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
         view.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
+            FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
         container.addView(view)

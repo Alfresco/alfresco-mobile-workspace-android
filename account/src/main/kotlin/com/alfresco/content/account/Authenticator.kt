@@ -17,7 +17,7 @@ class Authenticator(context: Context) :
     override fun confirmCredentials(
         response: AccountAuthenticatorResponse?,
         account: Account?,
-        options: Bundle?
+        options: Bundle?,
     ): Bundle {
         throw UnsupportedOperationException()
     }
@@ -26,7 +26,7 @@ class Authenticator(context: Context) :
         response: AccountAuthenticatorResponse?,
         account: Account?,
         authTokenType: String?,
-        options: Bundle?
+        options: Bundle?,
     ): Bundle {
         throw UnsupportedOperationException()
     }
@@ -35,7 +35,7 @@ class Authenticator(context: Context) :
         response: AccountAuthenticatorResponse?,
         account: Account?,
         authTokenType: String?,
-        options: Bundle?
+        options: Bundle?,
     ): Bundle {
         throw UnsupportedOperationException()
     }
@@ -43,14 +43,14 @@ class Authenticator(context: Context) :
     override fun hasFeatures(
         response: AccountAuthenticatorResponse?,
         account: Account?,
-        features: Array<out String>?
+        features: Array<out String>?,
     ): Bundle {
         throw UnsupportedOperationException()
     }
 
     override fun editProperties(
         response: AccountAuthenticatorResponse?,
-        accountType: String?
+        accountType: String?,
     ): Bundle {
         throw UnsupportedOperationException()
     }
@@ -60,7 +60,7 @@ class Authenticator(context: Context) :
         accountType: String?,
         authTokenType: String?,
         requiredFeatures: Array<out String>?,
-        options: Bundle?
+        options: Bundle?,
     ): Bundle {
         throw UnsupportedOperationException()
     }

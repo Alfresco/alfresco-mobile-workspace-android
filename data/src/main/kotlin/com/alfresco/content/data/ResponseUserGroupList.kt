@@ -11,7 +11,7 @@ data class ResponseUserGroupList(
     val total: Int = 0,
     val start: Int = 0,
     val isGroupSearch: Boolean = false,
-    val listUserGroup: List<UserGroupDetails> = emptyList()
+    val listUserGroup: List<UserGroupDetails> = emptyList(),
 ) {
     companion object {
 
@@ -24,7 +24,7 @@ data class ResponseUserGroupList(
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
                 isGroupSearch = false,
-                listUserGroup = raw.data?.map { UserGroupDetails.with(it) } ?: emptyList()
+                listUserGroup = raw.data?.map { UserGroupDetails.with(it) } ?: emptyList(),
             )
         }
 
@@ -37,7 +37,7 @@ data class ResponseUserGroupList(
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
                 isGroupSearch = true,
-                listUserGroup = raw.data?.map { UserGroupDetails.with(it) } ?: emptyList()
+                listUserGroup = raw.data?.map { UserGroupDetails.with(it) } ?: emptyList(),
             )
         }
     }

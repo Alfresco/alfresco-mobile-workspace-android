@@ -10,10 +10,10 @@ import com.alfresco.content.data.Entry
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
-import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 /**
  * Mark as ActionExtension
@@ -38,7 +38,7 @@ interface ActionExtension {
     fun execute(
         context: Context,
         scope: CoroutineScope,
-        list: List<Uri>
+        list: List<Uri>,
     ) = scope.launch {
         val bus = EventBus.default
         try {
@@ -99,25 +99,26 @@ interface ActionExtension {
             view: View,
             anchorView: View?,
             @StringRes messageResId: Int,
-            vararg formatArgs: String
+            vararg formatArgs: String,
         ) = showToast(
             view,
             anchorView,
             view.resources.getString(
-                messageResId, *formatArgs
-            )
+                messageResId,
+                *formatArgs,
+            ),
         )
 
         @SuppressLint("ShowToast")
         internal fun showToast(
             view: View,
             anchorView: View?,
-            message: CharSequence
+            message: CharSequence,
         ) {
             Snackbar.make(
                 view,
                 message,
-                Snackbar.LENGTH_LONG
+                Snackbar.LENGTH_LONG,
             ).setAnchorView(anchorView).show()
         }
     }

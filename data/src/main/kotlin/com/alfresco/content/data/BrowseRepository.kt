@@ -12,12 +12,12 @@ import com.alfresco.content.models.NodeBodyUpdate
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.google.gson.Gson
-import java.io.File
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 /**
  * Mark as BrowseRepository
@@ -50,8 +50,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 skipCount,
                 maxItems,
                 include = extraFields(),
-                includeSource = true
-            )
+                includeSource = true,
+            ),
         )
 
     /**
@@ -63,8 +63,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 folderId,
                 skipCount,
                 maxItems,
-                include = extraFields()
-            )
+                include = extraFields(),
+            ),
         )
 
     suspend fun fetchLibraryDocumentsFolder(siteId: String) =
@@ -72,8 +72,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             service.getNode(
                 siteId,
                 extraFields(),
-                LIB_DOCUMENTS_PATH
-            ).entry
+                LIB_DOCUMENTS_PATH,
+            ).entry,
         )
 
     suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
@@ -83,8 +83,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 skipCount,
                 maxItems,
                 include = extraFields(),
-                relativePath = LIB_DOCUMENTS_PATH
-            )
+                relativePath = LIB_DOCUMENTS_PATH,
+            ),
         )
 
     private fun extraFields() =
@@ -94,8 +94,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         Entry.with(
             service.getNode(
                 entryId,
-                extraFields()
-            ).entry
+                extraFields(),
+            ).entry,
         )
 
     suspend fun deleteEntry(entry: Entry) =
@@ -122,8 +122,8 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
                 "cm:content",
                 properties,
                 autoRename = true,
-                include = extraFields()
-            ).entry
+                include = extraFields(),
+            ).entry,
         )
     }
 
@@ -131,13 +131,13 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         val nodeBodyCreate = NodeBodyCreate(
             name = name,
             nodeType = "cm:folder",
-            properties = mapOf("cm:title" to name, "cm:description" to description)
+            properties = mapOf("cm:title" to name, "cm:description" to description),
         )
 
         val response = service.createNode(
             nodeId = requireNotNull(parentId),
             nodeBodyCreate = nodeBodyCreate,
-            autoRename = autoRename
+            autoRename = autoRename,
         )
 
         return Entry.with(response.entry)
@@ -150,14 +150,14 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         val nodeBodyUpdate = NodeBodyUpdate(
             name = name,
             nodeType = nodeType,
-            properties = mapOf("cm:title" to name, "cm:description" to description)
+            properties = mapOf("cm:title" to name, "cm:description" to description),
         )
 
         return Entry.with(
             service.updateNode(
                 nodeId = requireNotNull(nodeId),
-                nodeBodyUpdate = nodeBodyUpdate
-            ).entry
+                nodeBodyUpdate = nodeBodyUpdate,
+            ).entry,
         )
     }
 
@@ -177,11 +177,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
      * returns the shared files into preferences
      */
     fun getExtensionDataList(): List<String> {
-
         if (sharedPref.contains(SHARE_MULTIPLE_URI) &&
             !sharedPref.getString(SHARE_MULTIPLE_URI, "").isNullOrEmpty()
         ) {
-
             return Gson().fromJson(sharedPref.getString(SHARE_MULTIPLE_URI, ""), Array<String>::class.java).toList()
         }
         return emptyList()

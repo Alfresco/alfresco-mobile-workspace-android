@@ -4,7 +4,8 @@ import android.content.Context
 
 enum class CaptureMode {
     Photo,
-    Video;
+    Video,
+    ;
 
     fun title(context: Context) =
         when (this) {

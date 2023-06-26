@@ -93,7 +93,6 @@ fun getAppConfigParentDirectory(context: Context) = context.getExternalFilesDir(
  * returns true if AppConfig exists on the internal storage otherwise false
  */
 fun isAppConfigExistOnLocal(context: Context): Boolean {
-
     val fileDirectory = getAppConfigParentDirectory(context)
     if (fileDirectory != null && !fileDirectory.exists()) {
         return false
@@ -129,15 +128,18 @@ fun retrieveJSONFromInternalDirectory(context: Context): String {
 inline fun <reified T> getJSONFromModel(model: T): String = Gson().toJson(model)
 
 val gson: Gson = GsonBuilder()
-    .registerTypeAdapter(ZonedDateTime::class.java, object : TypeAdapter<ZonedDateTime?>() {
-        override fun write(out: JsonWriter, value: ZonedDateTime?) {
-            out.value(value.toString())
-        }
+    .registerTypeAdapter(
+        ZonedDateTime::class.java,
+        object : TypeAdapter<ZonedDateTime?>() {
+            override fun write(out: JsonWriter, value: ZonedDateTime?) {
+                out.value(value.toString())
+            }
 
-        override fun read(inType: JsonReader): ZonedDateTime? {
-            return ZonedDateTime.parse(inType.nextString(), formatter)
-        }
-    })
+            override fun read(inType: JsonReader): ZonedDateTime? {
+                return ZonedDateTime.parse(inType.nextString(), formatter)
+            }
+        },
+    )
     .enableComplexMapKeySerialization()
     .create()
 

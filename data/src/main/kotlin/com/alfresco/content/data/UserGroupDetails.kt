@@ -20,7 +20,7 @@ data class UserGroupDetails(
     val status: String = "",
     val parentGroupId: Int = 0,
     val groups: String = "",
-    val isGroup: Boolean? = false
+    val isGroup: Boolean? = false,
 ) : Parcelable {
 
     val name: String
@@ -35,8 +35,9 @@ data class UserGroupDetails(
     val nameInitial = if (isAssigneeUser) "me_title_initial" else (firstNameInitial + lastNameInitial).uppercase()
 
     private fun getGroupInitial(groupName: String): String {
-        if (!groupName.contains(" "))
+        if (!groupName.contains(" ")) {
             return groupName.substring(0, 1).uppercase()
+        }
 
         val groupNameSplit = groupName.split(" ")
 
@@ -53,7 +54,7 @@ data class UserGroupDetails(
                 id = assigneeInfo.id ?: 0,
                 firstName = assigneeInfo.firstName ?: "",
                 lastName = assigneeInfo.lastName ?: "",
-                email = assigneeInfo.email ?: ""
+                email = assigneeInfo.email ?: "",
             )
         }
 
@@ -67,7 +68,7 @@ data class UserGroupDetails(
                 lastName = userGroupDetails.lastName,
                 email = userGroupDetails.email,
                 isAssigneeUser = true,
-                isGroup = false
+                isGroup = false,
             )
         }
 
@@ -82,7 +83,7 @@ data class UserGroupDetails(
                 status = groupInfo.status ?: "",
                 parentGroupId = groupInfo.parentGroupId ?: 0,
                 groups = groupInfo.groups ?: "",
-                isGroup = true
+                isGroup = true,
             )
         }
     }

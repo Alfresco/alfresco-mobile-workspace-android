@@ -34,7 +34,7 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
@@ -84,7 +84,7 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                             val processEntry = ProcessEntry.with(model.processDefinition(), state.entry)
                             startActivity(
                                 Intent(requireActivity(), ProcessDetailActivity::class.java)
-                                    .putExtra(Mavericks.KEY_ARG, processEntry)
+                                    .putExtra(Mavericks.KEY_ARG, processEntry),
                             )
                             dismiss()
                         }

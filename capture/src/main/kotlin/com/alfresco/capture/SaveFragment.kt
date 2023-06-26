@@ -36,7 +36,7 @@ class SaveFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSaveBinding.inflate(inflater, container, false)
         return binding.root
@@ -178,7 +178,8 @@ class SaveFragment : Fragment(), MavericksView {
         requireNotNull(captureItem)
         findNavController().navigateToPreview(
             captureItem.mimeType,
-            captureItem.uri.toString(), captureItem.name
+            captureItem.uri.toString(),
+            captureItem.name,
         )
     }
 }

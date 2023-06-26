@@ -22,7 +22,7 @@ data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
     override val title: Int = R.string.action_upload_files_title,
-    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskUploadFiles else EventName.UploadFiles
+    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskUploadFiles else EventName.UploadFiles,
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -47,7 +47,7 @@ data class ActionUploadFiles(
                         context,
                         it,
                         getParentId(entry),
-                        uploadServerType = entry.uploadServer
+                        uploadServerType = entry.uploadServer,
                     )
                 }
                 repository.setTotalTransferSize(result.size)

@@ -15,7 +15,7 @@ import java.lang.IllegalArgumentException
 
 data class PreviewArgs(
     val path: String,
-    val mimeType: String
+    val mimeType: String,
 ) {
     companion object {
         private const val PATH_KEY = "path"
@@ -24,7 +24,7 @@ data class PreviewArgs(
         fun with(args: Bundle): PreviewArgs {
             return PreviewArgs(
                 args.getString(PATH_KEY, ""),
-                args.getString(MIME_TYPE_KEY, "")
+                args.getString(MIME_TYPE_KEY, ""),
             )
         }
 
@@ -40,7 +40,7 @@ class PreviewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentPreviewBinding.inflate(inflater, container, false)
         return binding.root

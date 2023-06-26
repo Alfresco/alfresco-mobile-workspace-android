@@ -119,7 +119,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         Snackbar.make(
             parentLayout,
             error,
-            Snackbar.LENGTH_LONG
+            Snackbar.LENGTH_LONG,
         ).show()
 
         // Hacky way to set error state to match design

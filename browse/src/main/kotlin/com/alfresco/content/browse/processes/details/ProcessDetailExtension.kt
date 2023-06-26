@@ -24,10 +24,10 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
+import kotlinx.coroutines.launch
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 internal fun ProcessDetailFragment.showStartFormView() {
     binding.clStatus.isVisible = false
@@ -51,8 +51,9 @@ internal fun ProcessDetailFragment.setListeners() {
         }
     }
     binding.tvTitle.setSafeOnClickListener {
-        if (binding.tvTitle.isEllipsized())
+        if (binding.tvTitle.isEllipsized()) {
             showTitleDescriptionComponent()
+        }
     }
     binding.tvDueDateValue.setSafeOnClickListener {
         formatDateAndShowCalendar()
@@ -68,11 +69,12 @@ internal fun ProcessDetailFragment.setListeners() {
             val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showComponentSheetDialog(
-                    requireContext(), ComponentData(
+                    requireContext(),
+                    ComponentData(
                         name = requireContext().getString(R.string.title_priority),
                         query = dataObj?.priority.toString(),
-                        selector = ComponentType.TASK_PROCESS_PRIORITY.value
-                    )
+                        selector = ComponentType.TASK_PROCESS_PRIORITY.value,
+                    ),
                 )
 
                 if (result != null) {
@@ -86,7 +88,8 @@ internal fun ProcessDetailFragment.setListeners() {
             requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showSearchUserGroupComponentDialog(
-                    requireContext(), state.parent
+                    requireContext(),
+                    state.parent,
                 )
                 if (result != null) {
                     viewModel.updateAssignee(result)
@@ -108,7 +111,7 @@ internal fun ProcessDetailFragment.setListeners() {
             if (state.parent?.startedBy == null) {
                 showSnackar(
                     binding.root,
-                    getString(R.string.error_select_assignee)
+                    getString(R.string.error_select_assignee),
                 )
             } else if (entry != null) {
                 confirmContentQueuePrompt()
@@ -135,7 +138,7 @@ private fun ProcessDetailFragment.showCalendar(fromDate: String) {
                 fromDate = fromDate,
                 isFrom = true,
                 isFutureDate = true,
-                dateFormat = DATE_FORMAT_4
+                dateFormat = DATE_FORMAT_4,
             )
                 .onSuccess { date -> it.resume(date) }
                 .onFailure { it.resume(null) }
@@ -155,9 +158,9 @@ internal fun ProcessDetailFragment.setData(state: ProcessDetailViewState) {
     binding.tvAssignedValue.apply {
         text = if (dataEntry?.startedBy?.groupName?.isEmpty() == true && viewModel.getAPSUser().id == dataEntry.startedBy?.id) {
             requireContext().getLocalizedName(dataEntry.startedBy?.let { UserGroupDetails.with(it).name } ?: getString(R.string.text_select_assignee))
-        } else if (dataEntry?.startedBy?.groupName?.isNotEmpty() == true)
+        } else if (dataEntry?.startedBy?.groupName?.isNotEmpty() == true) {
             requireContext().getLocalizedName(dataEntry.startedBy?.groupName ?: getString(R.string.text_select_assignee))
-        else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: getString(R.string.text_select_assignee))
+        } else requireContext().getLocalizedName(dataEntry?.startedBy?.name ?: getString(R.string.text_select_assignee))
     }
 
     if (dataEntry?.processDefinitionId.isNullOrEmpty()) {
@@ -215,12 +218,13 @@ private fun ProcessDetailFragment.formatDateAndShowCalendar() {
 internal fun ProcessDetailFragment.showTitleDescriptionComponent() = withState(viewModel) {
     viewLifecycleOwner.lifecycleScope.launch {
         showComponentSheetDialog(
-            requireContext(), ComponentData(
+            requireContext(),
+            ComponentData(
                 name = requireContext().getString(R.string.title_start_workflow),
                 query = it.parent?.name,
                 value = it.parent?.description,
-                selector = ComponentType.VIEW_TEXT.value
-            )
+                selector = ComponentType.VIEW_TEXT.value,
+            ),
         )
     }
 }

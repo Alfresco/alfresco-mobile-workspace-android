@@ -4,15 +4,16 @@ package com.alfresco.content.component
  * return true if the component is selected,otherwise false
  */
 fun ComponentViewModel.isOptionSelected(state: ComponentState, options: ComponentOptions): Boolean {
-
-    if (state.parent?.selectedQuery?.isEmpty() == true)
+    if (state.parent?.selectedQuery?.isEmpty() == true) {
         return options.default
+    }
 
     val selectedQuery = state.parent?.selectedQuery
     if (selectedQuery?.contains(delimiters) == true) {
         selectedQuery.split(delimiters).forEach { query ->
-            if (query == options.query)
+            if (query == options.query) {
                 return true
+            }
         }
     } else {
         return selectedQuery == options.query
@@ -24,12 +25,13 @@ fun ComponentViewModel.isOptionSelected(state: ComponentState, options: Componen
  * return true if To value valid otherwise false
  */
 fun ComponentViewModel.isToValueValid(to: String): Boolean {
-    if (to.isEmpty())
+    if (to.isEmpty()) {
         return true
+    }
 
-    return if (fromValue.isEmpty())
+    return if (fromValue.isEmpty()) {
         true
-    else
+    } else
         to.toLong() > fromValue.toLong()
 }
 
@@ -37,11 +39,12 @@ fun ComponentViewModel.isToValueValid(to: String): Boolean {
  * return true if from value valid otherwise false
  */
 fun ComponentViewModel.isFromValueValid(from: String): Boolean {
-    if (from.isEmpty())
+    if (from.isEmpty()) {
         return true
+    }
 
-    return if (toValue.isEmpty())
+    return if (toValue.isEmpty()) {
         true
-    else
+    } else
         from.toLong() < toValue.toLong()
 }

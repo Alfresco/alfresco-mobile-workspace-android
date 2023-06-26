@@ -17,7 +17,7 @@ class CameraLayout(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    defStyleRes: Int
+    defStyleRes: Int,
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     private lateinit var topBar: ViewGroup
@@ -44,7 +44,7 @@ class CameraLayout(
             closeButton,
             zoomTextView,
             messageView,
-            flashMenu
+            flashMenu,
         )
     private var controlRotation = 0
     private var deviceOrientation = 0
@@ -56,13 +56,13 @@ class CameraLayout(
         }
 
     constructor(context: Context) :
-            this(context, null)
+        this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) :
-            this(context, attrs, 0)
+        this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            this(context, attrs, defStyleAttr, 0)
+        this(context, attrs, defStyleAttr, 0)
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -106,18 +106,18 @@ class CameraLayout(
         val finderHeight = min(parentHeight, (parentWidth * aspectRatio).toInt())
         previewHolder.measure(
             widthMeasureSpec,
-            MeasureSpec.makeMeasureSpec(finderHeight, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(finderHeight, MeasureSpec.EXACTLY),
         )
 
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = topBar.measuredHeight +
-                previewHolder.measuredHeight +
-                shutterBar.measuredHeight +
-                modeBar.measuredHeight
+            previewHolder.measuredHeight +
+            shutterBar.measuredHeight +
+            modeBar.measuredHeight
 
         setMeasuredDimension(
             resolveSize(width, widthMeasureSpec),
-            resolveSize(height, heightMeasureSpec)
+            resolveSize(height, heightMeasureSpec),
         )
 
         // Re-measure flashMenu at 1:1 ratio
@@ -188,7 +188,8 @@ class CameraLayout(
             }
 
             if (controlRotation != rotation &&
-                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS) {
+                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS
+            ) {
                 controlRotation = rotation
                 deviceOrientation = orientation
                 orientationAwareControls.map {

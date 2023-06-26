@@ -24,6 +24,7 @@ import com.alfresco.content.navigateToExtensionFolder
 class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_extension_list) {
 
     private lateinit var args: BrowseArgs
+
     @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
@@ -71,13 +72,15 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             onItemClicked(entry as Entry)
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension))
+        if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension)) {
             super.disableRefreshLayout()
+        }
         super.invalidate()
     }
 

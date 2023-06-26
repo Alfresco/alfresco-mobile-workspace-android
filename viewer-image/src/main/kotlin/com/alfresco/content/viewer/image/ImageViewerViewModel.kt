@@ -11,14 +11,14 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.viewer.common.ChildViewerArgs
 import com.alfresco.download.ContentDownloader
 import com.alfresco.kotlin.isLocalPath
-import java.io.File
 import kotlinx.coroutines.launch
+import java.io.File
 
 data class ImageViewerState(
     val uri: String,
     val mimeType: String,
     val largeScale: Boolean = largeScaleFormats.contains(mimeType),
-    val path: Async<String> = Uninitialized
+    val path: Async<String> = Uninitialized,
 ) : MavericksState {
     constructor(args: ChildViewerArgs) : this(args.uri, args.type)
 
@@ -29,7 +29,7 @@ data class ImageViewerState(
 
 class ImageViewerViewModel(
     state: ImageViewerState,
-    context: Context
+    context: Context,
 ) : MavericksViewModel<ImageViewerState>(state) {
 
     init {
@@ -50,7 +50,7 @@ class ImageViewerViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ImageViewerState
+            state: ImageViewerState,
         ) = ImageViewerViewModel(state, viewModelContext.app())
     }
 }

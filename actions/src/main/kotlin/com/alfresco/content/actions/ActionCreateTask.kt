@@ -6,11 +6,11 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Mark as ActionCreateTask class
@@ -19,7 +19,7 @@ data class ActionCreateTask(
     override var entry: TaskEntry,
     override val icon: Int = R.drawable.ic_action_create_folder,
     override val title: Int = R.string.action_create_task,
-    override val eventName: EventName = EventName.CreateTask
+    override val eventName: EventName = EventName.CreateTask,
 ) : Action {
     override suspend fun execute(context: Context): TaskEntry {
         val result = showCreateTaskDialog(context) ?: throw CancellationException("User Cancellation")

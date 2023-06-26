@@ -22,7 +22,8 @@ open class PermissionFragment : Fragment() {
 
         // Register for result is not allowed after onCreate
         requestLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()) {
+            ActivityResultContracts.RequestMultiplePermissions(),
+        ) {
             requestCallback?.invoke(it)
         }
     }
@@ -30,7 +31,7 @@ open class PermissionFragment : Fragment() {
     private fun requestPermissions(
         permissions: List<String>,
         rationale: String,
-        continuation: CancellableContinuation<Boolean>
+        continuation: CancellableContinuation<Boolean>,
     ) {
         val denied = deniedPermissions(requireContext(), permissions)
         when {
@@ -50,7 +51,7 @@ open class PermissionFragment : Fragment() {
 
     private fun requestOptionalPermissions(
         permissions: List<String>,
-        continuation: CancellableContinuation<Boolean>
+        continuation: CancellableContinuation<Boolean>,
     ) {
         val denied = deniedPermissions(requireContext(), permissions)
 
@@ -71,7 +72,7 @@ open class PermissionFragment : Fragment() {
     private fun showRationaleDialog(
         rationale: String,
         permissions: List<String>,
-        continuation: CancellableContinuation<Boolean>
+        continuation: CancellableContinuation<Boolean>,
     ) = requireActivity().runOnUiThread {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.permission_rationale_title))
@@ -87,7 +88,7 @@ open class PermissionFragment : Fragment() {
 
     private fun execPermissionRequest(
         permissions: List<String>,
-        continuation: CancellableContinuation<Boolean>
+        continuation: CancellableContinuation<Boolean>,
     ) {
         requestCallback = { response ->
             continuation.resume(response.values.all { it }, null)
@@ -97,11 +98,11 @@ open class PermissionFragment : Fragment() {
 
     private suspend fun requestPermissions(
         permission: List<String>,
-        rationale: String
+        rationale: String,
     ): Boolean = suspendCancellableCoroutine { requestPermissions(permission, rationale, it) }
 
     private suspend fun requestOptionalPermissions(
-        permission: List<String>
+        permission: List<String>,
     ): Boolean = suspendCancellableCoroutine { requestOptionalPermissions(permission, it) }
 
     companion object {
@@ -110,30 +111,30 @@ open class PermissionFragment : Fragment() {
         suspend fun requestPermission(
             context: Context,
             permission: String,
-            rationale: String
+            rationale: String,
         ): Boolean = requestPermissions(context, listOf(permission), rationale)
 
         suspend fun requestPermissions(
             context: Context,
             permissions: List<String>,
-            rationale: String
+            rationale: String,
         ): Boolean =
             withFragment(
                 context,
                 TAG,
                 { it.requestPermissions(permissions.toList(), rationale) },
-                { PermissionFragment() }
+                { PermissionFragment() },
             )
 
         suspend fun requestOptionalPermissions(
             context: Context,
-            permissions: List<String>
+            permissions: List<String>,
         ): Boolean =
             withFragment(
                 context,
                 TAG,
                 { it.requestOptionalPermissions(permissions.toList()) },
-                { PermissionFragment() }
+                { PermissionFragment() },
             )
 
         fun deniedPermissions(context: Context, permissions: List<String>) =

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 data class TransferFilesViewState(
     val extension: Boolean,
     val entries: List<Entry> = emptyList(),
-    val syncNowEnabled: Boolean = false
+    val syncNowEnabled: Boolean = false,
 ) : MavericksState {
     constructor(args: TransferFilesArgs) : this(args.extension)
 
@@ -40,7 +40,7 @@ data class TransferFilesViewState(
  */
 class TransferFilesViewModel(
     state: TransferFilesViewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<TransferFilesViewState>(state) {
 
     private var observeExtensionUploadsJob: Job? = null
@@ -69,7 +69,6 @@ class TransferFilesViewModel(
     fun emptyMessageArgs() = Triple(R.drawable.ic_empty_folder, R.string.folder_empty_upload_title, R.string.folder_empty_upload_message)
 
     private fun observeExtensionUploads() {
-
         val repo = OfflineRepository()
 
         observeExtensionUploadsJob?.cancel()
@@ -88,13 +87,13 @@ class TransferFilesViewModel(
      */
     fun canSyncOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
-                !ConnectivityTracker.isActiveNetworkMetered(context)
+            !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MavericksViewModelFactory<TransferFilesViewModel, TransferFilesViewState> {
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: TransferFilesViewState
+            state: TransferFilesViewState,
         ) = TransferFilesViewModel(state, viewModelContext.app())
     }
 }

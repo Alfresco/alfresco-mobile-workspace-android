@@ -58,7 +58,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         args = requireNotNull(arguments?.getParcelable(Mavericks.KEY_ARG))
         val layout = if (args.type.startsWith("audio/")) {
@@ -81,7 +81,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
                 insets.systemWindowInsetLeft,
                 insets.systemWindowInsetTop,
                 insets.systemWindowInsetRight,
-                insets.systemWindowInsetBottom
+                insets.systemWindowInsetBottom,
             )
             // Don't consume the insets as it may disrupt the hidden action bar
             insets
@@ -261,7 +261,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
 
         override fun onTracksChanged(
             trackGroups: TrackGroupArray,
-            trackSelections: TrackSelectionArray
+            trackSelections: TrackSelectionArray,
         ) {
             if (trackGroups !== lastSeenTrackGroupArray) {
                 val mappedTrackInfo = trackSelector?.currentMappedTrackInfo
@@ -297,20 +297,20 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
                             cause.secureDecoderRequired -> {
                                 getString(
                                     R.string.error_no_secure_decoder,
-                                    cause.mimeType
+                                    cause.mimeType,
                                 )
                             }
                             else -> {
                                 getString(
                                     R.string.error_no_decoder,
-                                    cause.mimeType
+                                    cause.mimeType,
                                 )
                             }
                         }
                     } else {
                         getString(
                             R.string.error_instantiating_decoder,
-                            cause.codecInfo?.name
+                            cause.codecInfo?.name,
                         )
                     }
                 }
@@ -322,8 +322,10 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
     private fun hasVideoTracks(): Boolean {
         val trackInfo = trackSelector?.currentMappedTrackInfo
         if (trackInfo != null) {
-            return (trackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO)
-                    != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS)
+            return (
+                trackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO)
+                    != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS
+                )
         }
         return false
     }

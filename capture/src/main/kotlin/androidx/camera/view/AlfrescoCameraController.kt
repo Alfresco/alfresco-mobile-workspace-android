@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.MainThread
-import androidx.annotation.OptIn
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.camera.core.Camera

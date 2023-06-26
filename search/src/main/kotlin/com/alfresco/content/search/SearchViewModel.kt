@@ -28,7 +28,6 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
 import com.alfresco.content.network.ConnectivityTracker
-import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -36,6 +35,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
+import java.util.concurrent.CancellationException
 
 data class SearchParams(
     val terms: String,
@@ -47,13 +47,13 @@ data class SearchParams(
     val listFacetFields: SearchFacetFields,
     val skipCount: Int,
     val maxItems: Int = ListViewModel.ITEMS_PER_PAGE,
-    val executeLoader: Boolean = false
+    val executeLoader: Boolean = false,
 )
 
 class SearchViewModel(
     val context: Context,
     state: SearchResultsState,
-    private val repository: SearchRepository
+    private val repository: SearchRepository,
 ) : ListViewModel<SearchResultsState>(state) {
     private val liveSearchEvents: MutableStateFlow<SearchParams>
     private val searchEvents: MutableStateFlow<SearchParams>
@@ -69,9 +69,14 @@ class SearchViewModel(
         // TODO: move search params to state object
         val defaultIndex = getDefaultIndex(state)
         params = SearchParams(
-            "", state.contextId, defaultFilters(state), defaultAdvanceFilters(state),
-            defaultFacetQueries(defaultIndex), defaultFacetIntervals(defaultIndex),
-            defaultFacetFields(defaultIndex), 0
+            "",
+            state.contextId,
+            defaultFilters(state),
+            defaultAdvanceFilters(state),
+            defaultFacetQueries(defaultIndex),
+            defaultFacetIntervals(defaultIndex),
+            defaultFacetFields(defaultIndex),
+            0,
         )
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
@@ -88,25 +93,34 @@ class SearchViewModel(
         viewModelScope.launch {
             merge(
                 liveSearchEvents.debounce(DEFAULT_DEBOUNCE_TIME),
-                searchEvents
+                searchEvents,
             ).filter {
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                if (canSearchOverCurrentNetwork())
-                    if (state.isExtension)
+                if (canSearchOverCurrentNetwork()) {
+                    if (state.isExtension) {
                         repository.search(
-                            it.terms, it.contextId, it.filters, it.skipCount, it.maxItems
+                            it.terms,
+                            it.contextId,
+                            it.filters,
+                            it.skipCount,
+                            it.maxItems,
                         )
-                    else
+                    } else
                         repository.search(
-                            it.terms, it.contextId, it.filters, it.advanceSearchFilter,
+                            it.terms,
+                            it.contextId,
+                            it.filters,
+                            it.advanceSearchFilter,
                             SearchFacetData(
                                 searchFacetFields = it.listFacetFields,
                                 searchFacetQueries = it.listFacetQueries,
-                                searchFacetIntervals = it.listFacetIntervals
-                            ), it.skipCount, it.maxItems
+                                searchFacetIntervals = it.listFacetIntervals,
+                            ),
+                            it.skipCount,
+                            it.maxItems,
                         )
-                else
+                } else
                     repository.offlineSearch(it.terms, it.advanceSearchFilter)
             }) {
                 if (it is Loading) {
@@ -140,8 +154,9 @@ class SearchViewModel(
      */
     fun getDefaultSearchFilterName(state: SearchResultsState): String? {
         val defaultFilter = state.listSearchFilters?.get(state.selectedFilterIndex)
-        if (defaultFilter != null)
+        if (defaultFilter != null) {
             return defaultFilter.name
+        }
         return null
     }
 
@@ -168,10 +183,11 @@ class SearchViewModel(
 
         if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
             list.add(
-                0, SearchChipCategory.withContextual(
+                0,
+                SearchChipCategory.withContextual(
                     context.getString(R.string.search_chip_contextual, state.contextTitle),
-                    SearchFilter.Contextual
-                )
+                    SearchFilter.Contextual,
+                ),
             )
         }
 
@@ -196,7 +212,7 @@ class SearchViewModel(
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(
         action: suspend (value: T) -> V,
-        stateReducer: SearchResultsState.(Async<V>) -> SearchResultsState
+        stateReducer: SearchResultsState.(Async<V>) -> SearchResultsState,
     ) {
         collectLatest {
             setState { stateReducer(Loading()) }
@@ -214,37 +230,40 @@ class SearchViewModel(
     private fun defaultFilters(state: SearchResultsState): SearchFilters {
         return if (state.isExtension && state.isContextual) {
             SearchFilters.of(
-                SearchFilter.Folders
+                SearchFilter.Folders,
             )
         } else if (state.isContextual) {
             SearchFilters.of(
                 SearchFilter.Contextual,
                 SearchFilter.Files,
-                SearchFilter.Folders
+                SearchFilter.Folders,
             )
         } else {
             SearchFilters.of(
                 SearchFilter.Files,
-                SearchFilter.Folders
+                SearchFilter.Folders,
             )
         }
     }
 
     private fun defaultAdvanceFilters(state: SearchResultsState): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
-        if (state.isContextual)
+        if (state.isContextual) {
             list.add(AdvanceSearchFilter(SearchFilter.Contextual.name, SearchFilter.Contextual.name))
+        }
         val index = getDefaultIndex(state)
-        if (index != null && index != -1)
+        if (index != null && index != -1) {
             list.addAll(initAdvanceFilters(index))
+        }
         return list
     }
 
     private fun getDefaultIndex(state: SearchResultsState) =
-        if (canSearchOverCurrentNetwork())
+        if (canSearchOverCurrentNetwork()) {
             appConfigModel.search?.indexOfFirst { it.default == true }
-        else
+        } else {
             getDefaultSearchFilterIndex(state.listSearchFilters)
+        }
 
     /**
      * return the default facet fields list from app config json using the index
@@ -327,7 +346,7 @@ class SearchViewModel(
                 advanceSearchFilter = advanceSearchFilter,
                 listFacetFields = facetData.searchFacetFields,
                 listFacetIntervals = facetData.searchFacetIntervals,
-                listFacetQueries = facetData.searchFacetQueries
+                listFacetQueries = facetData.searchFacetQueries,
             )
             refresh()
             isRefreshSearch = false
@@ -336,7 +355,7 @@ class SearchViewModel(
                 advanceSearchFilter = emptyAdvanceFilters(),
                 listFacetFields = facetData.searchFacetFields,
                 listFacetIntervals = facetData.searchFacetIntervals,
-                listFacetQueries = facetData.searchFacetQueries
+                listFacetQueries = facetData.searchFacetQueries,
             )
             refresh()
             isRefreshSearch = false
@@ -357,8 +376,8 @@ class SearchViewModel(
                         facets = obj.facets,
                         isSelected = metaData.name?.isNotEmpty() == true,
                         selectedName = metaData.name ?: "",
-                        selectedQuery = metaData.query ?: ""
-                    )
+                        selectedQuery = metaData.query ?: "",
+                    ),
                 )
             } else
                 list.add(obj)
@@ -375,9 +394,9 @@ class SearchViewModel(
     fun resetChips(state: SearchResultsState): MutableList<SearchChipCategory> {
         val list = mutableListOf<SearchChipCategory>()
         state.listSearchCategoryChips?.forEach { obj ->
-            if (obj.selectedQuery == SearchFilter.Contextual.name)
+            if (obj.selectedQuery == SearchFilter.Contextual.name) {
                 list.add(obj)
-            else list.add(SearchChipCategory.resetData(obj))
+            } else list.add(SearchChipCategory.resetData(obj))
         }
         setState { copy(listSearchCategoryChips = list) }
 
@@ -396,8 +415,10 @@ class SearchViewModel(
                     SearchChipCategory(
                         obj.category,
                         facets = obj.facets,
-                        isSelected = isSelected, selectedName = obj.selectedName, selectedQuery = obj.selectedQuery
-                    )
+                        isSelected = isSelected,
+                        selectedName = obj.selectedName,
+                        selectedQuery = obj.selectedQuery,
+                    ),
                 )
             } else
                 list.add(obj)
@@ -427,7 +448,7 @@ class SearchViewModel(
      */
     fun canSearchOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
-                !ConnectivityTracker.isActiveNetworkMetered(context)
+            !ConnectivityTracker.isActiveNetworkMetered(context)
 
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)
@@ -438,7 +459,7 @@ class SearchViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: SearchResultsState
+            state: SearchResultsState,
         ) = SearchViewModel(viewModelContext.activity, state, SearchRepository())
     }
 }

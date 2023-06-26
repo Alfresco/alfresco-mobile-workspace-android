@@ -28,7 +28,7 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text), MavericksV
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         webView = createWebView(requireContext(), makeAssetLoader())
         webView.visibility = View.GONE
@@ -58,7 +58,7 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text), MavericksV
             webViewClient = object : WebViewClient() {
                 override fun shouldInterceptRequest(
                     view: WebView?,
-                    request: WebResourceRequest?
+                    request: WebResourceRequest?,
                 ): WebResourceResponse? {
                     if (request?.method != "GET") {
                         return null
@@ -75,8 +75,8 @@ class TextViewerFragment : ChildViewerFragment(R.layout.viewer_text), MavericksV
                 "/",
                 WebViewAssetLoader.InternalStoragePathHandler(
                     requireContext(),
-                    viewModel.docPath
-                )
+                    viewModel.docPath,
+                ),
             )
             .build()
 

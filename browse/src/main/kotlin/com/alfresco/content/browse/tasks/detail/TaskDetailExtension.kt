@@ -25,9 +25,9 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
     viewModel.hasTaskEditMode = isEdit
@@ -109,8 +109,9 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
 
             when (dataObj.memberOfCandidateGroup) {
                 true -> {
-                    if (dataObj.assignee?.id == null || dataObj.assignee?.id == 0) makeClaimButton()
-                    else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
+                    if (dataObj.assignee?.id == null || dataObj.assignee?.id == 0) {
+                        makeClaimButton()
+                    } else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_release).isVisible = true
                         makeOutcomes()
                     }
@@ -119,8 +120,9 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 else -> {
                     if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
                         viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
-                    )
+                    ) {
                         makeOutcomes()
+                    }
                 }
             }
 
@@ -157,8 +159,9 @@ internal fun TaskDetailFragment.setListeners() {
         }
     }
     binding.tvDueDateValue.setSafeOnClickListener {
-        if (viewModel.hasTaskEditMode)
+        if (viewModel.hasTaskEditMode) {
             formatDateAndShowCalendar()
+        }
     }
     binding.iconDueDateClear.setSafeOnClickListener {
         viewModel.updateDate(null, true)
@@ -167,8 +170,9 @@ internal fun TaskDetailFragment.setListeners() {
         formatDateAndShowCalendar()
     }
     binding.tvTitle.setSafeOnClickListener {
-        if (binding.tvTitle.isEllipsized())
+        if (binding.tvTitle.isEllipsized()) {
             showTitleDescriptionComponent()
+        }
     }
     binding.clAddAttachment.setSafeOnClickListener {
         withState(viewModel) {
@@ -180,11 +184,12 @@ internal fun TaskDetailFragment.setListeners() {
             val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showComponentSheetDialog(
-                    requireContext(), ComponentData(
+                    requireContext(),
+                    ComponentData(
                         name = requireContext().getString(R.string.title_priority),
                         query = dataObj?.priority.toString(),
-                        selector = ComponentType.TASK_PROCESS_PRIORITY.value
-                    )
+                        selector = ComponentType.TASK_PROCESS_PRIORITY.value,
+                    ),
                 )
 
                 if (result != null) {
@@ -198,7 +203,8 @@ internal fun TaskDetailFragment.setListeners() {
             requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = showSearchUserComponentDialog(
-                    requireContext(), state.parent
+                    requireContext(),
+                    state.parent,
                 )
                 if (result != null) {
                     viewModel.updateAssignee(result)
@@ -227,7 +233,7 @@ private fun TaskDetailFragment.showCalendar(fromDate: String) {
                 fromDate = fromDate,
                 isFrom = true,
                 isFutureDate = true,
-                dateFormat = DATE_FORMAT_4
+                dateFormat = DATE_FORMAT_4,
             )
                 .onSuccess { date -> it.resume(date) }
                 .onFailure { it.resume(null) }
@@ -243,32 +249,35 @@ private fun TaskDetailFragment.showCalendar(fromDate: String) {
 internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(viewModel) {
     viewLifecycleOwner.lifecycleScope.launch {
         showComponentSheetDialog(
-            requireContext(), ComponentData(
+            requireContext(),
+            ComponentData(
                 name = requireContext().getString(R.string.task_title),
                 query = it.parent?.name,
                 value = it.parent?.description,
-                selector = ComponentType.VIEW_TEXT.value
-            )
+                selector = ComponentType.VIEW_TEXT.value,
+            ),
         )
     }
 }
 
 internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
-    if (binding.parentOutcomes.childCount == 0)
+    if (binding.parentOutcomes.childCount == 0) {
         state.parent?.outcomes?.forEach { dataObj ->
-            val button = if (dataObj.outcome.lowercase() == "reject")
+            val button = if (dataObj.outcome.lowercase() == "reject") {
                 this.layoutInflater.inflate(R.layout.view_layout_negative_outcome, binding.parentOutcomes, false) as MaterialButton
-            else this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
+            } else {
+                this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
+            }
             button.text = requireContext().getLocalizedName(dataObj.name)
             button.setOnClickListener {
                 withState(viewModel) { newState ->
                     if (viewModel.hasTaskStatusEnabled(newState) && !viewModel.hasTaskStatusValue(newState)
-                    )
+                    ) {
                         showSnackar(
                             binding.root,
-                            getString(R.string.error_select_status)
+                            getString(R.string.error_select_status),
                         )
-                    else {
+                    } else {
                         AnalyticsManager().taskFiltersEvent(dataObj.outcome)
                         viewModel.actionOutcome(dataObj.outcome)
                     }
@@ -276,6 +285,7 @@ internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
             }
             binding.parentOutcomes.addView(button)
         }
+    }
 }
 
 internal fun TaskDetailFragment.makeClaimButton() = withState(viewModel) { state ->

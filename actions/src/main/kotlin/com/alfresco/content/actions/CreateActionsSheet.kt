@@ -23,14 +23,14 @@ import kotlinx.coroutines.GlobalScope
 
 internal data class ActionCreateState(
     val parent: Entry,
-    val actions: List<Action> = emptyList()
+    val actions: List<Action> = emptyList(),
 ) : MavericksState {
     constructor(target: Entry) : this(parent = target)
 }
 
 internal class ActionCreateViewModel(
     val context: Context,
-    state: ActionCreateState
+    state: ActionCreateState,
 ) : MavericksViewModel<ActionCreateState>(state) {
 
     init {
@@ -51,8 +51,9 @@ internal class ActionCreateViewModel(
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
 
-        if (parent.uploadServer == UploadServerType.DEFAULT)
+        if (parent.uploadServer == UploadServerType.DEFAULT) {
             actions.add(ActionCreateFolder(parent))
+        }
         actions.add(ActionCaptureMedia(parent))
         actions.add(ActionUploadMedia(parent))
         actions.add(ActionUploadFiles(parent))
@@ -63,7 +64,7 @@ internal class ActionCreateViewModel(
     companion object : MavericksViewModelFactory<ActionCreateViewModel, ActionCreateState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ActionCreateState
+            state: ActionCreateState,
         ) = ActionCreateViewModel(viewModelContext.activity(), state)
     }
 }
@@ -75,7 +76,7 @@ class CreateActionsSheet : BottomSheetDialogFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = SheetActionCreateBinding.inflate(inflater, container, false)
         return binding.root

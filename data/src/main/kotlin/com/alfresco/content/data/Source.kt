@@ -11,9 +11,11 @@ data class Source(val name: String? = null) {
          * returns obj as Source type.
          */
         fun with(node: Node?): Source {
-            return if (node?.createdByUser?.id != "System")
+            return if (node?.createdByUser?.id != "System") {
                 Source(name = node?.name)
-            else Source()
+            } else {
+                Source()
+            }
         }
     }
 }

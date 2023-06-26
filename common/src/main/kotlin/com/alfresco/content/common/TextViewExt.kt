@@ -59,10 +59,12 @@ fun TextView.isEllipsized() = layout.text.toString() != text.toString()
  * It adds the read more text if line exceeds more than 4 lines
  */
 fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {
-    if (layout == null)
+    if (layout == null) {
         return
-    if (layout.lineCount < 4)
+    }
+    if (layout.lineCount < 4) {
         return
+    }
     val hasSpaces = text.contains(" ")
     val maxLineCount = if (hasSpaces) 3 else 2
     if (layout.lineCount >= maxLineCount) {
@@ -70,15 +72,16 @@ fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {
         val truncatedText = getTruncatedText(this, maxLineCount, startCount, prefix)
         val spannable: Spannable = SpannableString(truncatedText)
         spannable.setSpan(
-            addClickableSpan(context, callback), 0,
+            addClickableSpan(context, callback),
+            0,
             truncatedText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         spannable.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorBlue)),
             truncatedText.length - prefix.length.minus(1),
             truncatedText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         setText(spannable, TextView.BufferType.SPANNABLE)
         maxLines = 4
@@ -91,9 +94,9 @@ private fun getTruncatedText(textView: TextView, maxLineCount: Int, count: Int, 
     val newString: StringBuilder = StringBuilder("")
     for (i in 0 until maxLineCount) {
         val lineEnd = textView.layout.getLineEnd(i)
-        if (i != maxLineCount.minus(1))
+        if (i != maxLineCount.minus(1)) {
             newString.append(textView.text.subSequence(startCount, lineEnd))
-        else {
+        } else {
             if (lineEnd.minus(startCount) > prefix.length + 1) {
                 newString.append(textView.text.subSequence(startCount, lineEnd - (prefix.length + 1)).toString().replace("\n", ""))
                 newString.append(" $prefix")

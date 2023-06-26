@@ -18,8 +18,8 @@ import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.alfresco.capture.databinding.ViewListPreviewBinding
-import java.util.Locale.*
-import java.util.concurrent.*
+import java.util.Locale.ENGLISH
+import java.util.concurrent.TimeUnit
 
 /**
  * Generated Model View for the Preview Screen
@@ -28,7 +28,7 @@ import java.util.concurrent.*
 class ListViewPreview @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var captureItem: CaptureItem? = null
@@ -69,7 +69,7 @@ class ListViewPreview @JvmOverloads constructor(
         if (exif != null) {
             val rotation = exif.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
+                ExifInterface.ORIENTATION_NORMAL,
             )
             binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation))
         }
@@ -165,23 +165,26 @@ class ListViewPreview @JvmOverloads constructor(
         val hour = TimeUnit.MILLISECONDS.toHours(millis)
         val minutes =
             TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
-                TimeUnit.MILLISECONDS.toHours(millis)
+                TimeUnit.MILLISECONDS.toHours(millis),
             )
         val seconds =
             TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                TimeUnit.MILLISECONDS.toMinutes(millis)
+                TimeUnit.MILLISECONDS.toMinutes(millis),
             )
         val hms = if (hour > 0L) {
             java.lang.String.format(
                 ENGLISH,
-                context.getString(R.string.format_video_duration_hour), hour,
-                minutes, seconds
+                context.getString(R.string.format_video_duration_hour),
+                hour,
+                minutes,
+                seconds,
             )
         } else {
             java.lang.String.format(
                 ENGLISH,
                 context.getString(R.string.format_video_duration_minute),
-                minutes, seconds
+                minutes,
+                seconds,
             )
         }
         binding.videoDuration.text = hms

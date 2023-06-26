@@ -10,16 +10,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class FabAwareScrollingBehavior(
     context: Context?,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
 ) : CoordinatorLayout.Behavior<View>(
     context,
-    attrs
+    attrs,
 ) {
 
     override fun layoutDependsOn(
         parent: CoordinatorLayout,
         child: View,
-        dependency: View
+        dependency: View,
     ): Boolean {
         return dependency is FloatingActionButton ||
             dependency is ExtendedFloatingActionButton
@@ -31,7 +31,7 @@ class FabAwareScrollingBehavior(
         directTargetChild: View,
         target: View,
         axes: Int,
-        type: Int
+        type: Int,
     ): Boolean {
         // Ensure we react to vertical scrolling
         return axes == ViewCompat.SCROLL_AXIS_VERTICAL
@@ -46,7 +46,7 @@ class FabAwareScrollingBehavior(
         dxUnconsumed: Int,
         dyUnconsumed: Int,
         type: Int,
-        consumed: IntArray
+        consumed: IntArray,
     ) {
         if (dyConsumed > 0) {
             // User scrolled down -> hide the FAB

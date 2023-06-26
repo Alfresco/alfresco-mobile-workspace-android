@@ -31,25 +31,25 @@ class CaptureHelperFragment : Fragment() {
         private val TAG = CaptureHelperFragment::class.java.simpleName
 
         suspend fun capturePhoto(
-            context: Context
+            context: Context,
         ): List<CaptureItem>? =
             withFragment(
                 context,
                 TAG,
                 { it.capturePhoto() },
-                { CaptureHelperFragment() }
+                { CaptureHelperFragment() },
             )
 
         fun requiredPermissions() =
             listOf(
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
             )
 
         fun optionalPermissions() =
             listOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
             )
 
         fun permissionRationale(context: Context) =

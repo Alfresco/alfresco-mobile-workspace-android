@@ -5,7 +5,7 @@ data class Pagination(
     val hasMoreItems: Boolean,
     val skipCount: Long,
     val maxItems: Long,
-    val totalItems: Long? = null
+    val totalItems: Long? = null,
 ) {
     companion object {
         fun with(raw: com.alfresco.content.models.Pagination): Pagination {
@@ -13,13 +13,13 @@ data class Pagination(
             // also, [count] may be 0 yet [totalItems] maybe be off by one
             val hasMoreItems =
                 raw.count > 0 &&
-                (raw.totalItems?.let { raw.count + raw.skipCount < it } ?: raw.hasMoreItems)
+                    (raw.totalItems?.let { raw.count + raw.skipCount < it } ?: raw.hasMoreItems)
             return Pagination(
                 raw.count,
                 hasMoreItems,
                 raw.skipCount,
                 raw.maxItems,
-                raw.totalItems
+                raw.totalItems,
             )
         }
 

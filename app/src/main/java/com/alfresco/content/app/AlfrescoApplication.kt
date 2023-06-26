@@ -52,7 +52,7 @@ class AlfrescoApplication : Application() {
                 Settings.Theme.System -> {
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 }
-            }
+            },
         )
     }
 }

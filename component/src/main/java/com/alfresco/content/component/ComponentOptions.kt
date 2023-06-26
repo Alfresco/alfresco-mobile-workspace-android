@@ -15,7 +15,7 @@ data class ComponentOptions(
     val query: String = "",
     val value: String = "",
     val default: Boolean = false,
-    val count: Int = 0
+    val count: Int = 0,
 ) : Parcelable {
     companion object {
 
@@ -28,7 +28,7 @@ data class ComponentOptions(
                 label = optionsModel.label,
                 query = optionsModel.query,
                 value = optionsModel.value,
-                default = optionsModel.default
+                default = optionsModel.default,
             )
         }
 
@@ -40,7 +40,7 @@ data class ComponentOptions(
             return ComponentOptions(
                 label = optionsModel.name.replace(" ", "_"),
                 query = optionsModel.id,
-                default = optionsModel.default
+                default = optionsModel.default,
             )
         }
 
@@ -52,7 +52,7 @@ data class ComponentOptions(
             return ComponentOptions(
                 label = bucket.label ?: "",
                 query = bucket.filterQuery ?: "",
-                count = if (bucket.metrics == null) bucket.count ?: 0 else bucket.metrics?.get(0)?.value?.count?.toInt() ?: 0
+                count = if (bucket.metrics == null) bucket.count ?: 0 else bucket.metrics?.get(0)?.value?.count?.toInt() ?: 0,
             )
         }
 
@@ -64,7 +64,7 @@ data class ComponentOptions(
             return ComponentOptions(
                 label = options.name ?: "",
                 query = options.value ?: "",
-                default = options.default ?: false
+                default = options.default ?: false,
 
             )
         }

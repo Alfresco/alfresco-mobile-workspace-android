@@ -16,11 +16,13 @@ class TrashCanRepository(val session: Session = SessionManager.requireSession) {
     }
 
     suspend fun getDeletedNodes(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(service.listDeletedNodes(
-            skipCount,
-            maxItems,
-            AlfrescoApi.csvQueryParam("path")
-        ))
+        ResponsePaging.with(
+            service.listDeletedNodes(
+                skipCount,
+                maxItems,
+                AlfrescoApi.csvQueryParam("path"),
+            ),
+        )
 
     suspend fun restoreEntry(entry: Entry) =
         Entry.with(serviceExt.restoreDeletedNode(entry.id).entry)

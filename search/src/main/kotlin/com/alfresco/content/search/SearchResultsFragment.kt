@@ -68,17 +68,18 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
             } else if (entry.isFolder) {
                 if (state.moveId.isNotEmpty()) {
                     val parentId = entry.parentPaths.find { it == state.moveId }
-                    if (parentId.isNullOrEmpty())
+                    if (parentId.isNullOrEmpty()) {
                         findNavController().navigateToFolder(entry, state.moveId)
-                    else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
+                    } else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
                 } else findNavController().navigateToExtensionFolder(entry)
             }
         }
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded && isVisible)
+        if (isAdded && isVisible) {
             onItemClicked(entry as Entry)
+        }
     }
 
     override fun invalidate() {

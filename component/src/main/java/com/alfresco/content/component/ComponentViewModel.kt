@@ -15,7 +15,7 @@ import com.alfresco.content.getLocalizedName
  * Mark as ComponentState class
  */
 data class ComponentState(
-    val parent: ComponentData?
+    val parent: ComponentData?,
 ) : MavericksState
 
 /**
@@ -23,7 +23,7 @@ data class ComponentState(
  */
 class ComponentViewModel(
     val context: Context,
-    stateChipCreate: ComponentState
+    stateChipCreate: ComponentState,
 ) : MavericksViewModel<ComponentState>(stateChipCreate) {
 
     var listOptionsData: MutableList<ComponentMetaData> = mutableListOf()
@@ -59,13 +59,15 @@ class ComponentViewModel(
      */
     fun updateFormatNumberRange(isSlider: Boolean) = withState {
         if ((fromValue.isNotEmpty() && toValue.isNotEmpty()) && fromValue.toInt() < toValue.toInt()) {
-            val nameFormat = if (isSlider)
+            val nameFormat = if (isSlider) {
                 toValue
-            else
+            } else
                 context.getLocalizedName("$fromValue - $toValue")
             val queryFormat = "${it.parent?.properties?.field}:[${fromValue.kBToByte()} TO ${toValue.kBToByte()}]"
             updateSingleComponentData(nameFormat, queryFormat)
-        } else updateSingleComponentData("", "")
+        } else {
+            updateSingleComponentData("", "")
+        }
     }
 
     /**
@@ -80,7 +82,9 @@ class ComponentViewModel(
 
                     val queryFormat = "${state.parent.properties?.field}:['${fromDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}' TO '${toDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}']"
                     updateSingleComponentData(dateFormat, queryFormat)
-                } else updateSingleComponentData("", "")
+                } else {
+                    updateSingleComponentData("", "")
+                }
             }
 
             ComponentType.DATE_RANGE_FUTURE.value -> {
@@ -162,7 +166,6 @@ class ComponentViewModel(
      * update multiple component option (check list)
      */
     fun updateMultipleComponentData(name: String, query: String) {
-
         if (listOptionsData.find { it.query == query } == null) {
             listOptionsData.add(ComponentMetaData(name, query))
         } else {
@@ -196,7 +199,7 @@ class ComponentViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ComponentState
+            state: ComponentState,
         ) = ComponentViewModel(viewModelContext.activity(), state)
     }
 }

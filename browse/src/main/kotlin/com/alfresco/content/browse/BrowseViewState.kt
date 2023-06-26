@@ -25,7 +25,7 @@ data class BrowseViewState(
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList(),
     val uploadTransferList: List<Entry> = emptyList(),
-    val totalTransfersSize: Int = 0
+    val totalTransfersSize: Int = 0,
 ) : ListViewState {
 
     constructor(args: BrowseArgs) : this(args.path, args.id, args.moveId)
@@ -37,7 +37,7 @@ data class BrowseViewState(
         }
 
     fun update(
-        response: ResponsePaging?
+        response: ResponsePaging?,
     ): BrowseViewState {
         if (response == null) return this
 
@@ -72,7 +72,7 @@ data class BrowseViewState(
     private fun copyIncludingUploads(
         entries: List<Entry>,
         uploads: List<Entry>,
-        hasMoreItems: Boolean
+        hasMoreItems: Boolean,
     ): BrowseViewState {
         val mixedUploads = uploads.transformCompletedUploads()
         val mergedEntries = mergeInUploads(entries, mixedUploads, !hasMoreItems)
@@ -82,7 +82,7 @@ data class BrowseViewState(
             .copy(
                 baseEntries = baseEntries,
                 uploads = uploads,
-                hasMoreItems = hasMoreItems
+                hasMoreItems = hasMoreItems,
             )
     }
 
@@ -129,7 +129,7 @@ data class BrowseViewState(
 
     private fun defaultReducer(newEntries: List<Entry>): BrowseViewState =
         copy(
-            entries = newEntries
+            entries = newEntries,
         )
 
     private fun groupByModifiedDateReducer(newEntries: List<Entry>): BrowseViewState {
@@ -162,15 +162,15 @@ data class BrowseViewState(
                         Entry.Type.GROUP,
                         currentGroup.title(),
                         null,
-                        null
-                    )
+                        null,
+                    ),
                 )
             }
             groupedList.add(entry)
         }
 
         return copy(
-            entries = groupedList
+            entries = groupedList,
         )
     }
 
@@ -180,14 +180,14 @@ data class BrowseViewState(
         copyIncludingUploads(
             baseEntries.filter { it.id != entry.id },
             uploads,
-            hasMoreItems
+            hasMoreItems,
         )
 
     override fun copyUpdating(entry: Entry): ListViewState =
         copyIncludingUploads(
             baseEntries.replace(entry) { it.id == entry.id },
             uploads,
-            hasMoreItems
+            hasMoreItems,
         )
 
     enum class ModifiedGroup {
@@ -196,7 +196,8 @@ data class BrowseViewState(
         ThisWeek,
         LastWeek,
         Older,
-        None;
+        None,
+        ;
 
         fun title(): String {
             return valueMap[this] ?: ""
@@ -217,6 +218,6 @@ data class BrowseViewState(
 
     enum class SortOrder {
         ByModifiedDate,
-        Default
+        Default,
     }
 }

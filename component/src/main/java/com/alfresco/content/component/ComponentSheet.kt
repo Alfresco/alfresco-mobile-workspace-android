@@ -19,9 +19,9 @@ import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.launch
 
 /**
  * Marked as ComponentSheet class
@@ -161,7 +161,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = SheetComponentFilterBinding.inflate(inflater, container, false)
         return binding.root
@@ -199,11 +199,11 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
         val replacedString = state.parent?.name?.replace(" ", ".") ?: ""
         val localizedName = requireContext().getLocalizedName(replacedString)
-        if (localizedName == replacedString)
+        if (localizedName == replacedString) {
             binding.title.text = state.parent?.name ?: ""
-        else if (state.parent?.name?.lowercase().equals(textFileSize))
+        } else if (state.parent?.name?.lowercase().equals(textFileSize)) {
             binding.title.text = requireContext().getString(R.string.size_end_kb, localizedName)
-        else
+        } else
             binding.title.text = localizedName
 
         when (val selector = state.parent?.selector) {
@@ -242,16 +242,19 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             withState(viewModel) { state ->
                 when (state.parent?.selector) {
                     ComponentType.DATE_RANGE.value -> {
-                        if (viewModel.fromDate.isEmpty()) binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
-                        else if (viewModel.toDate.isEmpty()) binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
-                        else {
+                        if (viewModel.fromDate.isEmpty()) {
+                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                        } else if (viewModel.toDate.isEmpty()) {
+                            binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
+                        } else {
                             onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
                             dismiss()
                         }
                     }
                     ComponentType.DATE_RANGE_FUTURE.value -> {
-                        if (viewModel.fromDate.isEmpty() && viewModel.toDate.isEmpty()) binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
-                        else {
+                        if (viewModel.fromDate.isEmpty() && viewModel.toDate.isEmpty()) {
+                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                        } else {
                             onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
                             dismiss()
                         }
@@ -292,7 +295,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     private fun epoxyCheckListController() = simpleController(viewModel) { state ->
-        if (state.parent?.options?.isNotEmpty() == true)
+        if (state.parent?.options?.isNotEmpty() == true) {
             state.parent.options.forEach { option ->
                 listViewCheckRow {
                     id(option.hashCode())
@@ -303,10 +306,11 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                 }
             }
+        }
     }
 
     private fun epoxyRadioListController() = simpleController(viewModel) { state ->
-        if (state.parent?.options?.isNotEmpty() == true)
+        if (state.parent?.options?.isNotEmpty() == true) {
             state.parent.options.forEach { option ->
                 listViewRadioRow {
                     id(option.hashCode())
@@ -315,24 +319,25 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     clickListener { model, _, _, _ ->
                         viewModel.updateSingleComponentData(
                             requireContext().getLocalizedName(model.data().label),
-                            model.data().query
+                            model.data().query,
                         )
                     }
                 }
             }
+        }
     }
 
     private fun epoxyCheckFacetListController() = simpleController(viewModel) { state ->
         var listBucket: List<ComponentOptions>? = null
         when (state.parent?.selector) {
             ComponentType.FACETS.value -> {
-                listBucket = if (viewModel.searchQuery.isNotEmpty())
+                listBucket = if (viewModel.searchQuery.isNotEmpty()) {
                     viewModel.searchComponentList
-                else
+                } else
                     state.parent.options
             }
         }
-        if (listBucket?.isNotEmpty() == true)
+        if (listBucket?.isNotEmpty() == true) {
             listBucket.forEach { bucket ->
                 listViewFacetCheckRow {
                     id(bucket.hashCode())
@@ -341,11 +346,12 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     clickListener { model, _, _, _ ->
                         viewModel.updateMultipleComponentData(
                             requireContext().getLocalizedName(model.data().label),
-                            model.data().query
+                            model.data().query,
                         )
                     }
                 }
             }
+        }
     }
 
     private fun showCalendar(isFrom: Boolean, isFutureDate: Boolean) {
@@ -357,7 +363,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     toDate = viewModel.toDate,
                     isFrom = isFrom,
                     isFutureDate = isFutureDate,
-                    dateFormat = viewModel.dateFormat
+                    dateFormat = viewModel.dateFormat,
                 )
                     .onSuccess { date -> it.resume(date) }
                     .onFailure { it.resume(null) }

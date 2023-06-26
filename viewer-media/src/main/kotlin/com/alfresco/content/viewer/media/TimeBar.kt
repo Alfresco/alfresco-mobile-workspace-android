@@ -10,12 +10,12 @@ class TimeBar(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    timeBarAttrs: AttributeSet?
+    timeBarAttrs: AttributeSet?,
 ) : DefaultTimeBar(
     context,
     attrs,
     defStyleAttr,
-    timeBarAttrs
+    timeBarAttrs,
 ) {
     init {
         val a = context.theme.obtainStyledAttributes(timeBarAttrs, R.styleable.DefaultTimeBar, 0, 0)

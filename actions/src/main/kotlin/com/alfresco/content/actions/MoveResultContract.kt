@@ -18,8 +18,11 @@ class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): String? {
-        return if (intent == null || resultCode != Activity.RESULT_OK) null
-        else intent.extras?.getString(OUTPUT_KEY)
+        return if (intent == null || resultCode != Activity.RESULT_OK) {
+            null
+        } else {
+            intent.extras?.getString(OUTPUT_KEY)
+        }
     }
 
     companion object {

@@ -7,9 +7,9 @@ data class MenuEntry(
     val path: String,
     val title: String,
     val icon: Int,
-    var pageView: PageView
+    var pageView: PageView,
 )
 
 data class BrowseMenuViewState(
-    val entries: List<MenuEntry> = emptyList()
+    val entries: List<MenuEntry> = emptyList(),
 ) : MavericksState

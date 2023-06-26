@@ -30,7 +30,7 @@ data class ProcessDetailViewState(
     val requestContent: Async<Entry> = Uninitialized,
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
-    val requestTasks: Async<ResponseList> = Uninitialized
+    val requestTasks: Async<ResponseList> = Uninitialized,
 ) : MavericksState {
 
     constructor(target: ProcessEntry) : this(parent = target)
@@ -46,8 +46,9 @@ data class ProcessDetailViewState(
      * update ACS content data in process entry object
      */
     fun updateContent(entry: Entry?): ProcessDetailViewState {
-        if (entry == null)
+        if (entry == null) {
             return this
+        }
         return copy(baseEntries = listOf(entry), listContents = listOf(entry))
     }
 
@@ -55,8 +56,9 @@ data class ProcessDetailViewState(
      * update the single process definition entry
      */
     fun updateSingleProcessDefinition(response: ResponseListProcessDefinition): ProcessDetailViewState {
-        if (parent == null)
+        if (parent == null) {
             return this
+        }
         val processEntry = ProcessEntry.with(response.listProcessDefinitions.first(), parent)
         return copy(parent = processEntry)
     }
@@ -93,7 +95,7 @@ data class ProcessDetailViewState(
 
     private fun copyIncludingUploads(
         entries: List<Entry>,
-        uploads: List<Entry>
+        uploads: List<Entry>,
     ): ProcessDetailViewState {
         val mixedUploads = uploads.transformCompletedUploads()
         val mergedEntries = mergeInUploads(entries, mixedUploads)
@@ -102,7 +104,7 @@ data class ProcessDetailViewState(
         return copy(
             listContents = mergedEntries,
             baseEntries = baseEntries,
-            uploads = uploads
+            uploads = uploads,
         )
     }
 

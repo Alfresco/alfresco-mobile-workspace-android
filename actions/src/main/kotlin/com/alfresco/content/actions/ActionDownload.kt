@@ -25,17 +25,17 @@ data class ActionDownload(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_download,
     override val title: Int = R.string.action_download_title,
-    override val eventName: EventName = EventName.Download
+    override val eventName: EventName = EventName.Download,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
             PermissionFragment.requestPermission(
                 context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                context.resources.getString(R.string.action_download_storage_permission_rationale)
-            )) {
+                context.resources.getString(R.string.action_download_storage_permission_rationale),
+            )
+        ) {
             if (entry.isSynced) {
                 exportFile(context)
             } else {
@@ -58,7 +58,7 @@ data class ActionDownload(
 
         val legacyPath = uniqueFilePath(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            filename
+            filename,
         )
 
         val contentValues = ContentValues().apply {
@@ -81,7 +81,7 @@ data class ActionDownload(
 
         val dest = resolver.insert(
             target,
-            contentValues
+            contentValues,
         ) ?: throw FileNotFoundException("Could not create destination file.")
 
         try {

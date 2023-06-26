@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
  * Marked as TaskFiltersJson class
  */
 data class TaskFiltersJson(
-    val filters: List<TaskFilterData>
+    val filters: List<TaskFilterData>,
 )
 
 /**
@@ -24,7 +24,7 @@ data class TaskFilterData(
     val selectedName: String = "",
     val selectedQuery: String = "",
     val selectedQueryMap: Map<String, String> = mapOf(),
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 ) : Parcelable {
     companion object {
 
@@ -39,7 +39,7 @@ data class TaskFilterData(
                 selector = obj.selector,
                 query = obj.query,
                 value = obj.value,
-                options = obj.options
+                options = obj.options,
             )
         }
 
@@ -59,7 +59,7 @@ data class TaskFilterData(
                 options = obj?.options,
                 selectedName = selectedName,
                 selectedQuery = selectedQuery,
-                isSelected = obj?.isSelected ?: false
+                isSelected = obj?.isSelected ?: false,
             )
         }
 
@@ -79,7 +79,7 @@ data class TaskFilterData(
                 options = obj?.options,
                 selectedName = selectedName,
                 selectedQueryMap = selectedQueryMap,
-                isSelected = obj?.isSelected ?: false
+                isSelected = obj?.isSelected ?: false,
             )
         }
 
@@ -96,7 +96,7 @@ data class TaskFilterData(
             isSelected: Boolean,
             selectedName: String,
             selectedQuery: String,
-            selectedQueryMap: Map<String, String>
+            selectedQueryMap: Map<String, String>,
         ): TaskFilterData {
             return TaskFilterData(
                 id = obj?.id,
@@ -108,7 +108,7 @@ data class TaskFilterData(
                 selectedName = selectedName,
                 selectedQuery = selectedQuery,
                 selectedQueryMap = selectedQueryMap,
-                isSelected = isSelected
+                isSelected = isSelected,
             )
         }
 
@@ -127,7 +127,7 @@ data class TaskFilterData(
                 options = obj.options,
                 selectedName = obj.selectedName,
                 selectedQuery = obj.selectedQuery,
-                isSelected = isSelected
+                isSelected = isSelected,
             )
         }
     }

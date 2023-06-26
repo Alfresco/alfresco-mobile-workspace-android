@@ -18,7 +18,7 @@ data class SearchUserGroupComponentBuilder(
     val context: Context,
     val parentEntry: ParentEntry,
     var onApply: SearchUserComponentApplyCallback? = null,
-    var onCancel: SearchUserComponentCancelCallback? = null
+    var onCancel: SearchUserComponentCancelCallback? = null,
 ) {
 
     /**
@@ -37,7 +37,6 @@ data class SearchUserGroupComponentBuilder(
      * Filter sheet show method
      */
     fun show() {
-
         val fragmentManager = when (context) {
             is AppCompatActivity -> context.supportFragmentManager
             is Fragment -> context.childFragmentManager

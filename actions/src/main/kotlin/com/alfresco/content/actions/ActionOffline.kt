@@ -13,7 +13,7 @@ data class ActionAddOffline(
     override val entry: Entry,
     override val icon: Int = R.drawable.ic_action_offline,
     override val title: Int = R.string.action_add_offline_title,
-    override val eventName: EventName = EventName.MarkOffline
+    override val eventName: EventName = EventName.MarkOffline,
 ) : Action {
     private val repository: OfflineRepository = OfflineRepository()
 
@@ -30,7 +30,7 @@ data class ActionAddOffline(
             view,
             anchorView,
             R.string.action_add_offline_toast,
-            entry.name.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view)),
         )
 }
 
@@ -38,7 +38,7 @@ data class ActionRemoveOffline(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_offline_filled,
     override val title: Int = R.string.action_remove_offline_title,
-    override val eventName: EventName = EventName.RemoveOffline
+    override val eventName: EventName = EventName.RemoveOffline,
 ) : Action {
     private val repository: OfflineRepository = OfflineRepository()
 
@@ -52,7 +52,7 @@ data class ActionRemoveOffline(
             view,
             anchorView,
             R.string.action_remove_offline_toast,
-            entry.name.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view)),
         )
 }
 

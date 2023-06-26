@@ -37,7 +37,7 @@ data class LocalPreviewArgs(
     val entry: Entry? = null,
     val path: String,
     val title: String,
-    val mimeType: String
+    val mimeType: String,
 ) : Parcelable {
     companion object {
         private const val ENTRY_OBJ_KEY = "entryObj"
@@ -55,14 +55,15 @@ data class LocalPreviewArgs(
                     entry,
                     path = entry?.path ?: "",
                     title = entry?.name ?: "",
-                    mimeType = entry?.mimeType ?: ""
+                    mimeType = entry?.mimeType ?: "",
                 )
-            } else
+            } else {
                 return LocalPreviewArgs(
                     path = args.getString(PATH_KEY, ""),
                     title = args.getString(TITLE_KEY, ""),
-                    mimeType = args.getString(MIME_TYPE_KEY, "")
+                    mimeType = args.getString(MIME_TYPE_KEY, ""),
                 )
+            }
         }
     }
 }
@@ -72,6 +73,7 @@ data class LocalPreviewArgs(
  */
 class LocalPreviewFragment : Fragment(), MavericksView {
     private lateinit var args: LocalPreviewArgs
+
     @OptIn(InternalMavericksApi::class)
     private val viewModel: LocalPreviewViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: FragmentLocalPreviewBinding
@@ -79,7 +81,7 @@ class LocalPreviewFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentLocalPreviewBinding.inflate(inflater, container, false)
         return binding.root
@@ -123,7 +125,7 @@ class LocalPreviewFragment : Fragment(), MavericksView {
         binding.title.text = argsLocal.title
         val type = MimeType.with(argsLocal.mimeType)
         binding.icon.setImageDrawable(
-            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
+            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme),
         )
 
         val fragment = createViewer(argsLocal.mimeType)

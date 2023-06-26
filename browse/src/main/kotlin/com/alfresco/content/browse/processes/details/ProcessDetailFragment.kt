@@ -34,12 +34,12 @@ import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.ref.WeakReference
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Marked as ProcessDetailFragment
@@ -86,7 +86,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading ||
-                state.requestStartWorkflow is Loading || state.requestTasks is Loading
+            state.requestStartWorkflow is Loading || state.requestTasks is Loading
         setData(state)
         if (state.parent?.processDefinitionId.isNullOrEmpty()) {
             binding.toolbar.title = resources.getString(R.string.title_start_workflow)
@@ -105,10 +105,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     internal suspend fun showComponentSheetDialog(
         context: Context,
-        componentData: ComponentData
+        componentData: ComponentData,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-
             ComponentBuilder(context, componentData)
                 .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
@@ -125,10 +124,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     internal suspend fun showSearchUserGroupComponentDialog(
         context: Context,
-        processEntry: ProcessEntry
+        processEntry: ProcessEntry,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-
             SearchUserGroupComponentBuilder(context, processEntry)
                 .onApply { userDetails ->
                     it.resume(userDetails)
@@ -167,13 +165,13 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                 binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                 binding.recyclerViewAttachments.visibility = View.VISIBLE
 
-                if (state.listContents.size > 1)
+                if (state.listContents.size > 1) {
                     binding.tvNoOfAttachments.visibility = View.VISIBLE
-                else binding.tvNoOfAttachments.visibility = View.GONE
+                } else binding.tvNoOfAttachments.visibility = View.GONE
 
-                if (state.listContents.size > 4)
+                if (state.listContents.size > 4) {
                     binding.tvAttachmentViewAll.visibility = View.VISIBLE
-                else
+                } else
                     binding.tvAttachmentViewAll.visibility = View.GONE
 
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
@@ -204,8 +202,9 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             localViewerIntent(entry as Entry)
+        }
     }
 
     private fun onItemClicked(contentEntry: Entry) {
@@ -213,10 +212,13 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
             if (!contentEntry.source.isNullOrEmpty()) {
                 val entry = Entry.convertContentEntryToEntry(
                     contentEntry,
-                    MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
+                    MimeType.isDocFile(contentEntry.mimeType),
+                    UploadServerType.UPLOAD_TO_PROCESS,
                 )
                 remoteViewerIntent(entry)
             }
-        } else localViewerIntent(contentEntry)
+        } else {
+            localViewerIntent(contentEntry)
+        }
     }
 }

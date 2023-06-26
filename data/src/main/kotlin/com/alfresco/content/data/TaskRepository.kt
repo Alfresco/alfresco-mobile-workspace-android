@@ -25,13 +25,13 @@ import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import com.alfresco.process.models.UserInfo
 import com.alfresco.process.models.ValuesModel
-import java.io.File
-import java.net.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.net.URL
 
 /**
  * Marked as TaskRepository class
@@ -58,8 +58,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun getTasks(filters: TaskProcessFiltersPayload) = ResponseList.with(
         tasksService.taskList(
-            includeTaskFilters(filters)
-        ), getAPSUser()
+            includeTaskFilters(filters),
+        ),
+        getAPSUser(),
     )
 
     /**
@@ -67,8 +68,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun getProcesses(filters: TaskProcessFiltersPayload) = ResponseList.with(
         processesService.processInstancesQuery(
-            includeProcessFilters(filters)
-        ), getAPSUser()
+            includeProcessFilters(filters),
+        ),
+        getAPSUser(),
     )
 
     /**
@@ -88,28 +90,28 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * execute the task details api and returns the response as TaskDataEntry obj
      */
     suspend fun getTaskDetails(taskID: String) = TaskEntry.with(
-        tasksService.getTaskDetails(taskID)
+        tasksService.getTaskDetails(taskID),
     )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
     suspend fun getComments(taskID: String) = ResponseComments.with(
-        tasksService.getComments(taskID)
+        tasksService.getComments(taskID),
     )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
     suspend fun addComments(taskID: String, payload: CommentPayload) = CommentEntry.with(
-        tasksService.addComment(taskID, includeComment(payload))
+        tasksService.addComment(taskID, includeComment(payload)),
     )
 
     /**
      * execute the get contents api and returns the response as ResponseContents obj
      */
     suspend fun getContents(taskID: String) = ResponseContents.with(
-        tasksService.getContents(taskID)
+        tasksService.getContents(taskID),
     )
 
     /**
@@ -126,20 +128,20 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             state = taskFilters.state,
             text = taskFilters.text,
             dueBefore = taskFilters.dueBefore,
-            dueAfter = taskFilters.dueAfter
+            dueAfter = taskFilters.dueAfter,
         )
     }
 
     private fun includeProcessFilters(taskFilters: TaskProcessFiltersPayload): RequestProcessInstancesQuery {
         return RequestProcessInstancesQuery(
             sort = taskFilters.sort,
-            state = taskFilters.state
+            state = taskFilters.state,
         )
     }
 
     private fun includeComment(payload: CommentPayload): RequestComment {
         return RequestComment(
-            message = payload.message
+            message = payload.message,
         )
     }
 
@@ -209,7 +211,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             id = sharedPrefs.getString(KEY_PROCESS_USER_ID, "0")?.toInt() ?: 0,
             email = sharedPrefs.getString(KEY_PROCESS_USER_EMAIL, "") ?: "",
             firstName = sharedPrefs.getString(KEY_PROCESS_USER_FIRST_NAME, "") ?: "",
-            lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: ""
+            lastName = sharedPrefs.getString(KEY_PROCESS_USER_LAST_NAME, "") ?: "",
         )
     }
 
@@ -218,7 +220,8 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun createTask(name: String, description: String): TaskEntry {
         return TaskEntry.with(
-            tasksService.createTask(TaskBodyCreate(name = name, description = description)), isNewTaskCreated = true
+            tasksService.createTask(TaskBodyCreate(name = name, description = description)),
+            isNewTaskCreated = true,
         )
     }
 
@@ -227,7 +230,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun searchUser(name: String, email: String): ResponseUserGroupList {
         return ResponseUserGroupList.with(
-            tasksService.searchUser(filter = name, email = email)
+            tasksService.searchUser(filter = name, email = email),
         )
     }
 
@@ -236,7 +239,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun searchGroups(name: String): ResponseUserGroupList {
         return ResponseUserGroupList.with(
-            processesService.searchGroups(latest = name)
+            processesService.searchGroups(latest = name),
         )
     }
 
@@ -251,9 +254,10 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                     name = taskEntry.name,
                     description = taskEntry.description,
                     priority = taskEntry.priority.toString(),
-                    dueDate = taskEntry.formattedDueDate ?: ""
-                )
-            ), isNewTaskCreated = true
+                    dueDate = taskEntry.formattedDueDate ?: "",
+                ),
+            ),
+            isNewTaskCreated = true,
         )
     }
 
@@ -262,7 +266,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      */
     suspend fun assignUser(taskID: String, assigneeID: String): TaskEntry {
         return TaskEntry.with(
-            tasksService.assignUser(taskID, AssignUserBody(assignee = assigneeID))
+            tasksService.assignUser(taskID, AssignUserBody(assignee = assigneeID)),
         )
     }
 
@@ -294,15 +298,19 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 Entry.with(
                     tasksService.uploadRawContent(
                         local.parentId,
-                        multipartBody
-                    ), local.parentId, uploadServerType
+                        multipartBody,
+                    ),
+                    local.parentId,
+                    uploadServerType,
                 )
             }
 
             UploadServerType.UPLOAD_TO_PROCESS -> Entry.with(
                 processesService.uploadRawContent(
-                    multipartBody
-                ), local.parentId, uploadServer = uploadServerType
+                    multipartBody,
+                ),
+                local.parentId,
+                uploadServer = uploadServerType,
             )
 
             else -> Entry()
@@ -320,8 +328,9 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
     suspend fun linkADWContentToProcess(linkContentPayload: LinkContentPayload) =
         Entry.with(
             processesService.linkContentToProcess(
-                includeLinkContent(linkContentPayload)
-            ), uploadServer = UploadServerType.NONE
+                includeLinkContent(linkContentPayload),
+            ),
+            uploadServer = UploadServerType.NONE,
         )
 
     private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {
@@ -329,7 +338,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             source = payload.source,
             sourceId = payload.sourceId,
             mimeType = payload.mimeType,
-            name = payload.name
+            name = payload.name,
         )
     }
 
@@ -348,7 +357,7 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
      * execute the start-form apis to fetch the form presentation
      */
     suspend fun startForm(processDefinitionId: String) = ResponseListForm.with(
-        processesService.startForm(processDefinitionId)
+        processesService.startForm(processDefinitionId),
     )
 
     /**
@@ -362,43 +371,49 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
                 values = ValuesModel(
                     due = processEntry?.formattedDueDate,
                     message = processEntry?.description,
-                    priority = if (processEntry?.priority != -1) CommonOptionModel(
-                        id = getTaskPriority(processEntry?.priority ?: 0).name,
-                        name = getTaskPriority(processEntry?.priority ?: 0).name
-                    ) else null,
+                    priority = if (processEntry?.priority != -1) {
+                        CommonOptionModel(
+                            id = getTaskPriority(processEntry?.priority ?: 0).name,
+                            name = getTaskPriority(processEntry?.priority ?: 0).name,
+                        )
+                    } else {
+                        null
+                    },
                     reviewer = getUser(processEntry?.startedBy),
                     reviewGroups = getGroup(processEntry?.startedBy),
                     items = items,
-                    sendEmailNotifications = false
-                )
-            )
-        )
+                    sendEmailNotifications = false,
+                ),
+            ),
+        ),
     )
 
     private fun getUser(userGroupInfo: UserGroupDetails?): UserInfo? {
-        return if (userGroupInfo?.isGroup == true)
+        return if (userGroupInfo?.isGroup == true) {
             null
-        else
+        } else {
             UserInfo(
                 id = userGroupInfo?.id,
                 firstName = userGroupInfo?.firstName,
                 lastName = userGroupInfo?.lastName,
-                email = userGroupInfo?.email
+                email = userGroupInfo?.email,
             )
+        }
     }
 
     private fun getGroup(userGroupInfo: UserGroupDetails?): GroupInfo? {
-        return if (userGroupInfo?.isGroup == false)
+        return if (userGroupInfo?.isGroup == false) {
             null
-        else
+        } else {
             GroupInfo(
                 id = userGroupInfo?.id,
                 name = userGroupInfo?.name,
                 externalId = userGroupInfo?.externalId,
                 status = userGroupInfo?.status,
                 parentGroupId = userGroupInfo?.parentGroupId,
-                groups = userGroupInfo?.groups
+                groups = userGroupInfo?.groups,
             )
+        }
     }
 
     /**
@@ -427,14 +442,18 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
         taskEntry.id,
         RequestOutcomes(
             outcome = outcome,
-            values = if (taskEntry.taskFormStatus != null) ValuesModel(
-                status = CommonOptionModel(
-                    id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus
-                ),
-                comment = taskEntry.comment
-            ) else null
-        )
+            values = if (taskEntry.taskFormStatus != null) {
+                ValuesModel(
+                    status = CommonOptionModel(
+                        id = taskEntry.taskFormStatus,
+                        name = taskEntry.taskFormStatus,
+                    ),
+                    comment = taskEntry.comment,
+                )
+            } else {
+                null
+            },
+        ),
     )
 
     /**
@@ -446,11 +465,11 @@ class TaskRepository(val session: Session = SessionManager.requireSession) {
             values = ValuesModel(
                 status = CommonOptionModel(
                     id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus
+                    name = taskEntry.taskFormStatus,
                 ),
-                comment = taskEntry.comment
-            )
-        )
+                comment = taskEntry.comment,
+            ),
+        ),
     )
 
     /**

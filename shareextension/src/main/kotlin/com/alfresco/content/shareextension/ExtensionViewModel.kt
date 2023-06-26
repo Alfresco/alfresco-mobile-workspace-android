@@ -19,7 +19,7 @@ data class ExtensionViewState(val path: String) : MavericksState {
  */
 class ExtensionViewModel(
     state: ExtensionViewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<ExtensionViewState>(state) {
 
     /**
@@ -31,7 +31,7 @@ class ExtensionViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ExtensionViewState
+            state: ExtensionViewState,
         ) = ExtensionViewModel(state, viewModelContext.app())
     }
 }

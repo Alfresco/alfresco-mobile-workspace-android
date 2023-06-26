@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 class ProcessDetailViewModel(
     state: ProcessDetailViewState,
     val context: Context,
-    private val repository: TaskRepository
+    private val repository: TaskRepository,
 ) : MavericksViewModel<ProcessDetailViewState>(state) {
 
     private var observeUploadsJob: Job? = null
@@ -40,8 +40,9 @@ class ProcessDetailViewModel(
 
     init {
         viewModelScope.on<ActionOpenWith> {
-            if (!it.entry.path.isNullOrEmpty())
+            if (!it.entry.path.isNullOrEmpty()) {
                 entryListener?.onEntryCreated(it.entry)
+            }
         }
         viewModelScope.on<ActionUpdateNameDescription> {
             setState { copy(parent = it.entry as ProcessEntry) }
@@ -206,8 +207,9 @@ class ProcessDetailViewModel(
     }
 
     private fun fetchUserProfile() {
-        if (repository.isAcsAndApsSameUser())
+        if (repository.isAcsAndApsSameUser()) {
             return
+        }
         viewModelScope.launch {
             // Fetch APS user profile data
             repository::getProcessUserProfile.execute {
@@ -254,7 +256,7 @@ class ProcessDetailViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                TaskProcessFiltersPayload.defaultTasksOfProcess(state.parent?.id)
+                TaskProcessFiltersPayload.defaultTasksOfProcess(state.parent?.id),
             ).execute {
                 when (it) {
                     is Loading -> copy(requestTasks = Loading())
@@ -275,7 +277,7 @@ class ProcessDetailViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ProcessDetailViewState
+            state: ProcessDetailViewState,
         ) = ProcessDetailViewModel(state, viewModelContext.activity(), TaskRepository())
     }
 }

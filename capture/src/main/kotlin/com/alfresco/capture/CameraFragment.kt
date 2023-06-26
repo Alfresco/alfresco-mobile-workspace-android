@@ -43,10 +43,10 @@ import com.alfresco.content.data.LocationData
 import com.alfresco.ui.KeyHandler
 import com.alfresco.ui.WindowCompat
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
@@ -117,7 +117,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? =
         inflater.inflate(R.layout.fragment_camera, container, false)
 
@@ -137,7 +137,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         if (PermissionFragment.requestPermissions(
                 requireContext(),
                 CaptureHelperFragment.requiredPermissions(),
-                CaptureHelperFragment.permissionRationale(requireContext())
+                CaptureHelperFragment.permissionRationale(requireContext()),
             )
         ) {
             if (cameraController == null) {
@@ -158,25 +158,28 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     private fun setUpCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener(
+            Runnable {
+                // CameraProvider
+                cameraProvider = cameraProviderFuture.get()
 
-            // CameraProvider
-            cameraProvider = cameraProviderFuture.get()
-
-            // Select lensFacing depending on the available cameras
-            if (viewModel.lensFacing == -1)
-                viewModel.lensFacing = when {
-                    hasBackCamera() -> CameraSelector.LENS_FACING_BACK
-                    hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
-                    else -> throw IllegalStateException("Back and front camera are unavailable")
+                // Select lensFacing depending on the available cameras
+                if (viewModel.lensFacing == -1) {
+                    viewModel.lensFacing = when {
+                        hasBackCamera() -> CameraSelector.LENS_FACING_BACK
+                        hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
+                        else -> throw IllegalStateException("Back and front camera are unavailable")
+                    }
                 }
 
-            // Enable or disable switching between cameras
-            updateCameraSwitchButton()
+                // Enable or disable switching between cameras
+                updateCameraSwitchButton()
 
-            // Setup camera controller
-            configureCamera()
-        }, ContextCompat.getMainExecutor(requireContext()))
+                // Setup camera controller
+                configureCamera()
+            },
+            ContextCompat.getMainExecutor(requireContext()),
+        )
     }
 
     private fun configureCamera() {
@@ -323,13 +326,15 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 override fun onError(exc: ImageCaptureException) {
                     Logger.e("Photo capture failed: ${exc.message}", exc)
                 }
-            })
+            },
+        )
 
         // Display flash animation to indicate that photo was captured
         layout.postDelayed({
             layout.viewFinder.foreground = ColorDrawable(Color.BLACK)
             layout.postDelayed(
-                { layout.viewFinder.foreground = null }, ANIMATION_FAST_MILLIS
+                { layout.viewFinder.foreground = null },
+                ANIMATION_FAST_MILLIS,
             )
         }, ANIMATION_SLOW_MILLIS)
     }
@@ -376,11 +381,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     override fun onError(
                         videoCaptureError: Int,
                         message: String,
-                        cause: Throwable?
+                        cause: Throwable?,
                     ) {
                         Logger.e("Video capture failed: ${cause?.message}", cause)
                     }
-                })
+                },
+            )
         }
     }
 

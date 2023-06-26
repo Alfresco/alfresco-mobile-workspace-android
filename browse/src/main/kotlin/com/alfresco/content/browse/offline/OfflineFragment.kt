@@ -62,7 +62,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         ExtendedFloatingActionButton(context).apply {
             layoutParams = CoordinatorLayout.LayoutParams(
                 CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
                 gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
                 setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())
@@ -103,7 +103,8 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
     }
 
     override fun onProcessStart(entry: ParentEntry) {
-        if (isAdded && isVisible)
+        if (isAdded && isVisible) {
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+        }
     }
 }

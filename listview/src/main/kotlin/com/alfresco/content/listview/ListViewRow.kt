@@ -20,7 +20,7 @@ import com.alfresco.content.mimetype.MimeType
 class ListViewRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListRowBinding.inflate(LayoutInflater.from(context), this, true)
@@ -56,11 +56,15 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.moreButton.isVisible = actionButtonVisibility(entry)
 
-        val accessibilityText = if (entry.path.isNullOrEmpty())
+        val accessibilityText = if (entry.path.isNullOrEmpty()) {
             context.getString(
-                R.string.accessibility_text_title, entry.name
-            ) else context.getString(
-            R.string.accessibility_text_simple_row, entry.name, entry.path
+                R.string.accessibility_text_title,
+                entry.name,
+            )
+        } else context.getString(
+            R.string.accessibility_text_simple_row,
+            entry.name,
+            entry.path,
         )
         binding.parent.contentDescription = accessibilityText
     }
@@ -73,8 +77,8 @@ class ListViewRow @JvmOverloads constructor(
                 ResourcesCompat.getDrawable(
                     resources,
                     R.drawable.ic_offline_marked,
-                    context.theme
-                )
+                    context.theme,
+                ),
             )
         } else {
             // Offline screen items and uploads
@@ -123,8 +127,8 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink && !entry.isUpload &&
-                // Child folder in offline tab
-                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
+            // Child folder in offline tab
+            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
 
     @ModelProp
     fun setCompact(compact: Boolean) {
@@ -133,7 +137,7 @@ class ListViewRow @JvmOverloads constructor(
         val heightResId = if (compact) R.dimen.list_row_compact_height else R.dimen.list_row_height
         layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            resources.getDimension(heightResId).toInt()
+            resources.getDimension(heightResId).toInt(),
         )
 
         updateSubtitleVisibility()

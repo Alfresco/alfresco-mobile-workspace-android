@@ -4,14 +4,14 @@ data class ResponsePaging(
     val entries: List<Entry>,
     val pagination: Pagination,
     val source: Source? = null,
-    val facetContext: FacetContext? = null
+    val facetContext: FacetContext? = null,
 ) {
     companion object {
         fun with(raw: com.alfresco.content.models.NodeChildAssociationPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                Source.with(raw.list?.source)
+                Source.with(raw.list?.source),
             )
         }
 
@@ -21,7 +21,7 @@ data class ResponsePaging(
         fun withExtension(raw: com.alfresco.content.models.NodeChildAssociationPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),
-                Pagination.with(raw.list!!.pagination!!)
+                Pagination.with(raw.list!!.pagination!!),
             )
         }
 
@@ -31,7 +31,7 @@ data class ResponsePaging(
         fun with(entries: List<Entry>): ResponsePaging {
             return ResponsePaging(
                 entries,
-                Pagination.empty()
+                Pagination.empty(),
             )
         }
 
@@ -39,7 +39,7 @@ data class ResponsePaging(
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                facetContext = FacetContext.with(raw.list?.context)
+                facetContext = FacetContext.with(raw.list?.context),
             )
         }
 
@@ -50,42 +50,42 @@ data class ResponsePaging(
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
-                facetContext = FacetContext.with(raw.list?.context)
+                facetContext = FacetContext.with(raw.list?.context),
             )
         }
 
         fun with(raw: com.alfresco.content.models.SitePaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },
-                Pagination.with(raw.list.pagination)
+                Pagination.with(raw.list.pagination),
             )
         }
 
         fun with(raw: com.alfresco.content.models.FavoritePaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },
-                Pagination.with(raw.list.pagination)
+                Pagination.with(raw.list.pagination),
             )
         }
 
         fun with(raw: com.alfresco.content.models.SiteRolePaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },
-                Pagination.with(raw.list.pagination)
+                Pagination.with(raw.list.pagination),
             )
         }
 
         fun with(raw: com.alfresco.content.models.SharedLinkPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list.entries.map { Entry.with(it.entry) },
-                Pagination.with(raw.list.pagination)
+                Pagination.with(raw.list.pagination),
             )
         }
 
         fun with(raw: com.alfresco.content.models.DeletedNodesPaging): ResponsePaging {
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry!!) } ?: emptyList(),
-                Pagination.with(raw.list!!.pagination!!)
+                Pagination.with(raw.list!!.pagination!!),
             )
         }
     }

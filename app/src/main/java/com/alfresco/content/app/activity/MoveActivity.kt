@@ -110,7 +110,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
         findViewById(android.R.id.content),
-        bottomView
+        bottomView,
     )
 
     override fun onBackPressed() {

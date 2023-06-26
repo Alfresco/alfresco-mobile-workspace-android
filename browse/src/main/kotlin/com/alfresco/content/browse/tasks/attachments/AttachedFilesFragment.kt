@@ -45,7 +45,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAttachedFilesBinding.inflate(inflater, container, false)
         return binding.root
@@ -132,20 +132,24 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         if (!contentEntry.isUpload) {
             val entry = Entry.convertContentEntryToEntry(
                 contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK
+                MimeType.isDocFile(contentEntry.mimeType),
+                UploadServerType.UPLOAD_TO_TASK,
             )
-            if (!contentEntry.source.isNullOrEmpty())
+            if (!contentEntry.source.isNullOrEmpty()) {
                 remoteViewerIntent(entry)
-            else
+            } else
                 viewModel.executePreview(ActionOpenWith(entry))
-        } else localViewerIntent(contentEntry)
+        } else {
+            localViewerIntent(contentEntry)
+        }
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             startActivity(
                 Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry)
+                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry),
             )
+        }
     }
 }

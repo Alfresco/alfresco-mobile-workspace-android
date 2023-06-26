@@ -34,12 +34,12 @@ import com.alfresco.content.listview.tasks.TaskListFragment
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Marked as TasksFragment
@@ -127,7 +127,6 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                     (chipView as FilterChip).isChecked = true
                 }
                 viewLifecycleOwner.lifecycleScope.launch {
-
                     val result = showFilterSheetDialog(requireContext(), data)
                     recyclerViewFilters.isEnabled = true
                     if (result != null) {
@@ -144,7 +143,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     private suspend fun showFilterSheetDialog(
         context: Context,
-        taskFilterData: TaskFilterData
+        taskFilterData: TaskFilterData,
     ) = withContext(Dispatchers.Main) {
         suspendCoroutine {
             ComponentBuilder(context, ComponentData.with(taskFilterData))
@@ -165,13 +164,13 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         FloatingActionButton(context).apply {
             layoutParams = CoordinatorLayout.LayoutParams(
                 CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
                 gravity = Gravity.BOTTOM or Gravity.END
                 // TODO: define margins
                 setMargins(
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt()
+                        .toInt(),
                 )
             }
             id = R.id.fab_create_task
@@ -187,13 +186,13 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         continuation: Continuation<ComponentMetaData?>,
         name: String,
         query: String,
-        queryMap: Map<String, String>
+        queryMap: Map<String, String>,
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
         startActivity(
             Intent(requireActivity(), TaskViewerActivity::class.java)
-                .putExtra(Mavericks.KEY_ARG, entry)
+                .putExtra(Mavericks.KEY_ARG, entry),
         )
     }
 }

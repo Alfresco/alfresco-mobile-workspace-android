@@ -41,7 +41,7 @@ class ActionMoveFragment : Fragment() {
          */
         suspend fun moveItem(
             context: Context,
-            entry: Entry
+            entry: Entry,
         ): String? {
             val fragment = ActionMoveFragment()
             val bundle = Bundle().apply {
@@ -52,7 +52,7 @@ class ActionMoveFragment : Fragment() {
                 context,
                 TAG,
                 { it.moveItems() },
-                { fragment }
+                { fragment },
             )
         }
     }

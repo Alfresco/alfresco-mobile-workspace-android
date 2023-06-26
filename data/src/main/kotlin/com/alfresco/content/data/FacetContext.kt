@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class FacetContext(
-    val facetResponse: FacetResponse?
+    val facetResponse: FacetResponse?,
 ) : Parcelable {
     companion object {
         /**
@@ -34,7 +34,7 @@ data class FacetContext(
 @Parcelize
 data class FacetResponse(
     val consistency: Consistency,
-    var facets: List<Facets>? = null
+    var facets: List<Facets>? = null,
 ) : Parcelable {
     companion object {
         /**
@@ -43,7 +43,7 @@ data class FacetResponse(
         fun with(result: ResultSetContext?): FacetResponse {
             return FacetResponse(
                 consistency = Consistency.with(result?.consistency),
-                facets = result?.facets?.map { Facets.with(it) } ?: emptyList()
+                facets = result?.facets?.map { Facets.with(it) } ?: emptyList(),
             )
         }
     }
@@ -71,7 +71,7 @@ data class Consistency(var lastTxId: Int? = null) : Parcelable {
 data class Facets(
     var label: String? = null,
     var type: String? = null,
-    var buckets: List<Buckets>? = null
+    var buckets: List<Buckets>? = null,
 ) : Parcelable {
     companion object {
         /**
@@ -99,10 +99,12 @@ data class Facets(
          * returns the Facets obj after updating the bucket list label
          */
         fun updateFacetFileSizeLabel(result: Facets): Facets {
-            return Facets(result.label, result.type,
-                if (result.label?.lowercase().equals("search.facet_fields.size"))
+            return Facets(
+                result.label,
+                result.type,
+                if (result.label?.lowercase().equals("search.facet_fields.size")) {
                     result.buckets?.map { Buckets.updateBucketLabel(it) } ?: emptyList()
-                else result.buckets
+                } else result.buckets,
             )
         }
     }
@@ -119,7 +121,7 @@ data class Buckets(
     var count: Int? = null,
     var display: String? = "",
     var metrics: List<Metric>? = null,
-    var bucketInfo: BucketInfo? = null
+    var bucketInfo: BucketInfo? = null,
 ) : Parcelable {
     companion object {
         /**
@@ -138,7 +140,8 @@ data class Buckets(
                 label = result.label,
                 filterQuery = result.filterQuery,
                 metrics = result.metrics?.map { Metric.with(it) } ?: emptyList(),
-                bucketInfo = result.bucketInfo?.let { BucketInfo.with(it) })
+                bucketInfo = result.bucketInfo?.let { BucketInfo.with(it) },
+            )
         }
 
         /**
@@ -150,17 +153,20 @@ data class Buckets(
                 label = result.label,
                 filterQuery = result.filterQuery,
                 metrics = result.metrics?.map { Metric.updateMetric(it) } ?: emptyList(),
-                bucketInfo = result.bucketInfo)
+                bucketInfo = result.bucketInfo,
+            )
         }
 
         /**
          * returns the update Buckets after updating the file label
          */
         fun updateBucketLabel(result: Buckets): Buckets {
-
             return Buckets(
                 originalLabel = result.originalLabel,
-                label = result.originalLabel?.byteToKB(), filterQuery = result.filterQuery, metrics = result.metrics, bucketInfo = result.bucketInfo
+                label = result.originalLabel?.byteToKB(),
+                filterQuery = result.filterQuery,
+                metrics = result.metrics,
+                bucketInfo = result.bucketInfo,
             )
         }
     }
@@ -174,7 +180,7 @@ data class BucketInfo(
     var start: String? = null,
     var startInclusive: String? = null,
     var end: String? = null,
-    var endInclusive: String? = null
+    var endInclusive: String? = null,
 ) : Parcelable {
     companion object {
         /**
@@ -192,7 +198,7 @@ data class BucketInfo(
 @Parcelize
 data class Metric(
     var type: String? = null,
-    var value: Value? = null
+    var value: Value? = null,
 ) : Parcelable {
     companion object {
         /**
@@ -216,7 +222,7 @@ data class Metric(
  */
 @Parcelize
 data class Value(
-    var count: String? = null
+    var count: String? = null,
 ) : Parcelable {
     companion object {
         /**

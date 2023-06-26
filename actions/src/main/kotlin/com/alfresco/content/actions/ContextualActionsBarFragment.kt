@@ -22,7 +22,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         view = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -61,7 +61,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
         ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
@@ -88,7 +88,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
             layoutParams = LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                1.0f
+                1.0f,
             )
         }
 
@@ -96,7 +96,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
         ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
             )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth

@@ -43,14 +43,14 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         advanceSearchFilters: AdvanceSearchFilters,
         searchFacetData: SearchFacetData,
         skipCount: Int,
-        maxItems: Int
+        maxItems: Int,
     ) = if (filters.contains(SearchFilter.Libraries)) {
         ResponsePaging.with(
             queryService.findSites(
                 terms,
                 skipCount,
-                maxItems
-            )
+                maxItems,
+            ),
         )
     } else if (advanceSearchFilters.isNotEmpty()) {
         ResponsePaging.with(
@@ -63,10 +63,10 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 FacetSearchInclude(
                     includeFacetFieldsFrom(searchFacetData.searchFacetFields),
                     includeFacetQueriesFrom(searchFacetData.searchFacetQueries),
-                    includeFacetIntervalsFrom(searchFacetData.searchFacetIntervals)
+                    includeFacetIntervalsFrom(searchFacetData.searchFacetIntervals),
                 ),
-                "V2"
-            )
+                "V2",
+            ),
         )
     } else {
         ResponsePaging.with(
@@ -75,8 +75,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 if (filters.contains(SearchFilter.Contextual)) nodeId else null,
                 skipCount,
                 maxItems,
-                includeFrom(filters)
-            )
+                includeFrom(filters),
+            ),
         )
     }
 
@@ -85,7 +85,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         nodeId: String?,
         filters: SearchFilters,
         skipCount: Int,
-        maxItems: Int
+        maxItems: Int,
     ) =
         ResponsePaging.withExtension(
             searchService.simpleSearch(
@@ -93,8 +93,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 if (filters.contains(SearchFilter.Contextual)) nodeId else null,
                 skipCount,
                 maxItems,
-                includeFrom(filters)
-            )
+                includeFrom(filters),
+            ),
         )
 
     /**
@@ -103,13 +103,13 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     fun offlineSearch(name: String, listFacetFields: AdvanceSearchFilters): ResponsePaging {
         val folderSearchData = listFacetFields.find { it.query.contains("cm:folder") }
         val fileSearchData = listFacetFields.find { it.query.contains("cm:content") }
-        val list = if (fileSearchData != null && folderSearchData != null)
+        val list = if (fileSearchData != null && folderSearchData != null) {
             offlineRepository.offlineSearch(name)
-        else if (folderSearchData != null)
+        } else if (folderSearchData != null) {
             offlineRepository.offlineSearch(name).filter { it.isFolder }
-        else if (fileSearchData != null)
+        } else if (fileSearchData != null) {
             offlineRepository.offlineSearch(name).filter { it.isFile }
-        else offlineRepository.offlineSearch(name)
+        } else offlineRepository.offlineSearch(name)
         return ResponsePaging.with(list)
     }
 
@@ -130,7 +130,6 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
         }
 
     private fun includeFrom(advanceSearchFilters: AdvanceSearchFilters): MutableSet<AdvanceSearchInclude> {
-
         val listFilter = advanceSearchFilters.filter { it.query != SearchFilter.Contextual.name }
 
         val advanceSet = listFilter.mapTo(mutableSetOf()) {
@@ -140,42 +139,58 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private fun includeFacetFieldsFrom(searchFacetFields: SearchFacetFields) =
-        if (!searchFacetFields.isNullOrEmpty()) searchFacetFields.mapTo(mutableListOf()) {
-            RequestFacetField(
-                label = it.label,
-                field = it.field,
-                mincount = it.mincount
-            )
-        } else null
+        if (!searchFacetFields.isNullOrEmpty()) {
+            searchFacetFields.mapTo(mutableListOf()) {
+                RequestFacetField(
+                    label = it.label,
+                    field = it.field,
+                    mincount = it.mincount,
+                )
+            }
+        } else {
+            null
+        }
 
     private fun includeFacetQueriesFrom(searchFacetQueries: SearchFacetQueries) =
-        if (!searchFacetQueries.isNullOrEmpty()) searchFacetQueries.mapTo(mutableListOf()) {
-            RequestFacetQueriesInner(
-                label = it.label,
-                query = it.query,
-                group = it.group
-            )
-        } else null
+        if (!searchFacetQueries.isNullOrEmpty()) {
+            searchFacetQueries.mapTo(mutableListOf()) {
+                RequestFacetQueriesInner(
+                    label = it.label,
+                    query = it.query,
+                    group = it.group,
+                )
+            }
+        } else {
+            null
+        }
 
     private fun includeFacetIntervalsFrom(searchFacetIntervals: SearchFacetIntervals) =
-        if (!searchFacetIntervals.isNullOrEmpty()) searchFacetIntervals.mapTo(mutableListOf()) {
-            RequestFacetIntervalsInIntervals(
-                label = it.label,
-                field = it.field,
-                sets = includeFacetSetsFrom(it.sets)
-            )
-        } else null
+        if (!searchFacetIntervals.isNullOrEmpty()) {
+            searchFacetIntervals.mapTo(mutableListOf()) {
+                RequestFacetIntervalsInIntervals(
+                    label = it.label,
+                    field = it.field,
+                    sets = includeFacetSetsFrom(it.sets),
+                )
+            }
+        } else {
+            null
+        }
 
     private fun includeFacetSetsFrom(searchFacetSets: List<SetsItem>?) =
-        if (!searchFacetSets.isNullOrEmpty()) searchFacetSets.mapTo(mutableListOf()) {
-            RequestFacetSet(
-                label = it.label,
-                start = it.start,
-                end = it.end,
-                startInclusive = it.startInclusive,
-                endInclusive = it.endInclusive
-            )
-        } else null
+        if (!searchFacetSets.isNullOrEmpty()) {
+            searchFacetSets.mapTo(mutableListOf()) {
+                RequestFacetSet(
+                    label = it.label,
+                    start = it.start,
+                    end = it.end,
+                    startInclusive = it.startInclusive,
+                    endInclusive = it.endInclusive,
+                )
+            }
+        } else {
+            null
+        }
 
     suspend fun getRecents(skipCount: Int, maxItems: Int) =
         ResponsePaging.with(
@@ -183,8 +198,8 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
                 SessionManager.requireSession.account.id,
                 MAX_RECENT_FILES_AGE,
                 skipCount,
-                maxItems
-            )
+                maxItems,
+            ),
         )
 
     /**
@@ -220,7 +235,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
     class RecentSearchesChangeListener(
         val context: Context,
-        val onChange: () -> Unit
+        val onChange: () -> Unit,
     ) : SharedPreferences.OnSharedPreferenceChangeListener {
 
         init {
@@ -230,7 +245,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
 
         override fun onSharedPreferenceChanged(
             sharedPreferences: SharedPreferences?,
-            key: String?
+            key: String?,
         ) {
             onChange()
         }

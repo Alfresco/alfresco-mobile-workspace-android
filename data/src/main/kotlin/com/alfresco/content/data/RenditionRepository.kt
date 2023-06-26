@@ -1,12 +1,12 @@
 package com.alfresco.content.data
 
 import com.alfresco.content.apis.RenditionsApi
-import com.alfresco.content.models.Rendition as RenditionModel
 import com.alfresco.content.models.RenditionBodyCreate
 import com.alfresco.content.models.RenditionEntry
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.delay
+import com.alfresco.content.models.Rendition as RenditionModel
 
 class RenditionRepository(val session: Session = SessionManager.requireSession) {
 
@@ -32,7 +32,7 @@ class RenditionRepository(val session: Session = SessionManager.requireSession) 
 
     private suspend fun checkAndCreateRendition(
         rendition: RenditionModel?,
-        id: String
+        id: String,
     ): Rendition? {
         if (rendition == null) return null
 
@@ -44,7 +44,7 @@ class RenditionRepository(val session: Session = SessionManager.requireSession) 
         if (rendition.status == RenditionModel.StatusEnum.CREATED) {
             return Rendition(
                 renditionUri(id, renditionId),
-                mimeType
+                mimeType,
             )
         } else {
             service.createRendition(id, RenditionBodyCreate(renditionId))
@@ -54,7 +54,7 @@ class RenditionRepository(val session: Session = SessionManager.requireSession) 
                     if (newRendition.status == RenditionModel.StatusEnum.CREATED) {
                         return Rendition(
                             renditionUri(id, renditionId),
-                            mimeType
+                            mimeType,
                         )
                     }
                 } catch (_: Exception) { }

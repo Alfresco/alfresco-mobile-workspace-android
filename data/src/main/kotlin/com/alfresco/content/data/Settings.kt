@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 class Settings(
-    val context: Context
+    val context: Context,
 ) {
     private val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
     private val themeKey = context.getString(R.string.pref_theme_key)
@@ -20,8 +20,9 @@ class Settings(
 
     private val listener =
         SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-            if (key != IS_PROCESS_ENABLED_KEY)
+            if (key != IS_PROCESS_ENABLED_KEY) {
                 AnalyticsManager().theme(prefs.getString(key, "") ?: "")
+            }
             preferenceChangedFlow.tryEmit(key)
         }
 
@@ -65,12 +66,12 @@ class Settings(
     enum class Theme {
         Light,
         Dark,
-        System
+        System,
     }
 
     enum class SyncNetwork {
         Wifi,
-        Mobile
+        Mobile,
     }
 
     companion object {

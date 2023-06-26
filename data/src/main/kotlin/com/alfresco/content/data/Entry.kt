@@ -20,11 +20,11 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
-import java.time.Instant
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
+import java.time.Instant
+import java.time.ZonedDateTime
 
 /**
  * Generic data model representing all types of objects.
@@ -88,7 +88,7 @@ data class Entry(
     val thumbnailStatus: String? = "",
     @Convert(converter = BoxUploadServerTypeConverter::class, dbType = String::class)
     val uploadServer: UploadServerType = UploadServerType.DEFAULT,
-    val isReadOnly: Boolean = false
+    val isReadOnly: Boolean = false,
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -115,7 +115,7 @@ data class Entry(
         return if (offline != null) {
             copy(
                 boxId = offline.boxId,
-                isOffline = offline.isOffline
+                isOffline = offline.isOffline,
             )
         } else {
             this
@@ -124,15 +124,15 @@ data class Entry(
 
     fun metadataEquals(other: Entry): Boolean =
         id == other.id &&
-                parentId == other.parentId &&
-                type == other.type &&
-                name == other.name &&
-                path == other.path &&
-                mimeType == other.mimeType &&
-                modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
-                isFavorite == other.isFavorite &&
-                canDelete == other.canDelete &&
-                otherId == other.otherId
+            parentId == other.parentId &&
+            type == other.type &&
+            name == other.name &&
+            path == other.path &&
+            mimeType == other.mimeType &&
+            modified?.toEpochSecond() == other.modified?.toEpochSecond() &&
+            isFavorite == other.isFavorite &&
+            canDelete == other.canDelete &&
+            otherId == other.otherId
 
     fun copyWithMetadata(other: Entry) =
         copy(
@@ -144,7 +144,7 @@ data class Entry(
             modified = other.modified,
             isFavorite = other.isFavorite,
             canDelete = other.canDelete,
-            otherId = other.otherId
+            otherId = other.otherId,
         )
 
     enum class Type {
@@ -154,7 +154,8 @@ data class Entry(
         FILE_LINK,
         FOLDER_LINK,
         GROUP,
-        UNKNOWN;
+        UNKNOWN,
+        ;
 
         companion object {
             fun from(value: String, isFile: Boolean = false, isFolder: Boolean = false): Type {
@@ -187,7 +188,7 @@ data class Entry(
                 node.isFavorite == null || node.allowableOperations == null,
                 node.isFavorite ?: false,
                 canDelete(node.allowableOperations),
-                canCreate(node.allowableOperations)
+                canCreate(node.allowableOperations),
             ).withOfflineStatus()
         }
 
@@ -205,7 +206,7 @@ data class Entry(
                 result.isFavorite ?: false,
                 canDelete(result.allowableOperations),
                 canCreate(result.allowableOperations),
-                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf()
+                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf(),
             ).withOfflineStatus()
         }
 
@@ -227,7 +228,7 @@ data class Entry(
                 canDelete(result.allowableOperations),
                 canCreate(result.allowableOperations),
                 isExtension = isExtension,
-                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf()
+                parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf(),
             ).withOfflineStatus()
         }
 
@@ -245,7 +246,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
-                otherId = node.properties?.get("cm:destination") as String?
+                otherId = node.properties?.get("cm:destination") as String?,
             ).withOfflineStatus()
         }
 
@@ -267,7 +268,7 @@ data class Entry(
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
                 otherId = node.properties?.get("cm:destination") as String?,
-                isExtension = isExtension
+                isExtension = isExtension,
             ).withOfflineStatus()
         }
 
@@ -286,7 +287,7 @@ data class Entry(
                     file.modifiedAt,
                     file.allowableOperations == null,
                     true,
-                    canDelete(file.allowableOperations)
+                    canDelete(file.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.folder != null) {
@@ -303,7 +304,7 @@ data class Entry(
                     folder.allowableOperations == null,
                     true,
                     canDelete(folder.allowableOperations),
-                    canCreate(folder.allowableOperations)
+                    canCreate(folder.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.site != null) {
@@ -323,7 +324,7 @@ data class Entry(
                 null,
                 isPartial = true,
                 canDelete = site.role == Site.RoleEnum.SITEMANAGER,
-                otherId = site.id
+                otherId = site.id,
             ).withOfflineStatus()
         }
 
@@ -337,7 +338,7 @@ data class Entry(
                 null,
                 isPartial = true,
                 canDelete = role.role == SiteRole.RoleEnum.SITEMANAGER,
-                otherId = role.site.id
+                otherId = role.site.id,
             ).withOfflineStatus()
         }
 
@@ -353,7 +354,7 @@ data class Entry(
                 link.modifiedAt,
                 link.isFavorite == null || link.allowableOperations == null,
                 link.isFavorite ?: false,
-                link.allowableOperations?.contains("delete") ?: false
+                link.allowableOperations?.contains("delete") ?: false,
             ).withOfflineStatus()
         }
 
@@ -370,7 +371,7 @@ data class Entry(
                 isPartial = false,
                 node.isFavorite ?: false,
                 canDelete = false,
-                isTrashed = true
+                isTrashed = true,
             ).withOfflineStatus()
         }
 
@@ -386,7 +387,7 @@ data class Entry(
                 uploadServer = uploadServer,
                 isDocFile = isDocFile,
                 source = contentEntry.source,
-                sourceId = contentEntry.sourceId
+                sourceId = contentEntry.sourceId,
             )
         }
 
@@ -409,7 +410,7 @@ data class Entry(
                 sourceId = data.sourceId,
                 previewStatus = data.previewStatus,
                 thumbnailStatus = data.thumbnailStatus,
-                uploadServer = uploadServer
+                uploadServer = uploadServer,
             )
         }
 
@@ -481,7 +482,7 @@ data class Entry(
                 simpleType = entry.simpleType,
                 previewStatus = entry.previewStatus,
                 thumbnailStatus = entry.thumbnailStatus,
-                isReadOnly = true
+                isReadOnly = true,
             )
         }
     }
@@ -492,7 +493,8 @@ enum class OfflineStatus {
     SYNCING,
     SYNCED,
     ERROR,
-    UNDEFINED;
+    UNDEFINED,
+    ;
 
     fun value() = name.lowercase()
 }
@@ -504,7 +506,8 @@ enum class UploadServerType {
     DEFAULT,
     UPLOAD_TO_TASK,
     UPLOAD_TO_PROCESS,
-    NONE;
+    NONE,
+    ;
 
     fun value() = name.lowercase()
 }
@@ -579,7 +582,7 @@ class PropertiesConverter : PropertyConverter<Map<String, String>, String> {
     private var type = Types.newParameterizedType(
         Map::class.java,
         String::class.java,
-        String::class.java
+        String::class.java,
     )
     private var jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
 

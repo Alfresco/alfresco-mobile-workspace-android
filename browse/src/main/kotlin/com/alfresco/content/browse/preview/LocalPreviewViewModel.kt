@@ -13,7 +13,7 @@ import kotlinx.coroutines.GlobalScope
  * Marked as LocalPreviewState data class
  */
 data class LocalPreviewState(
-    val entry: Entry?
+    val entry: Entry?,
 ) : MavericksState {
     constructor(args: LocalPreviewArgs) : this(entry = args.entry)
 }
@@ -23,7 +23,7 @@ data class LocalPreviewState(
  */
 class LocalPreviewViewModel(
     state: LocalPreviewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<LocalPreviewState>(state) {
 
     /**
@@ -39,7 +39,7 @@ class LocalPreviewViewModel(
     companion object : MavericksViewModelFactory<LocalPreviewViewModel, LocalPreviewState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: LocalPreviewState
+            state: LocalPreviewState,
         ) =
             // Requires activity context in order to present other fragments
             LocalPreviewViewModel(state, viewModelContext.activity())

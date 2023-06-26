@@ -65,8 +65,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
      * return the stable id of uploading contents
      */
     fun stableId(entry: Entry): String =
-        if (entry.isUpload) entry.boxId.toString()
-        else entry.id
+        if (entry.isUpload) {
+            entry.boxId.toString()
+        } else entry.id
 
     /**
      * This intent will open the remote file
@@ -75,7 +76,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         Intent(requireActivity(), ViewerActivity::class.java)
             .putExtra(ViewerActivity.KEY_ID, entry.id)
             .putExtra(ViewerActivity.KEY_TITLE, entry.name)
-            .putExtra(ViewerActivity.KEY_MODE, REMOTE)
+            .putExtra(ViewerActivity.KEY_MODE, REMOTE),
     )
 
     /**
@@ -83,7 +84,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
      */
     fun localViewerIntent(contentEntry: Entry) = startActivity(
         Intent(requireActivity(), LocalPreviewActivity::class.java)
-            .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry)
+            .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry),
     )
 
     /**
@@ -92,7 +93,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
     fun showSnackar(snackView: View, message: String) = Snackbar.make(
         snackView,
         message,
-        Snackbar.LENGTH_SHORT
+        Snackbar.LENGTH_SHORT,
     ).show()
 }
 

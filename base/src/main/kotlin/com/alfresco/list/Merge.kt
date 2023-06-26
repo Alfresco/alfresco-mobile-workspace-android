@@ -5,7 +5,7 @@ fun <T> merge(
     right: List<T>,
     includeRemainingLeft: Boolean = true,
     includeRemainingRight: Boolean = true,
-    comparator: Comparator<T>
+    comparator: Comparator<T>,
 ): List<T> {
     var indexLeft = 0
     var indexRight = 0

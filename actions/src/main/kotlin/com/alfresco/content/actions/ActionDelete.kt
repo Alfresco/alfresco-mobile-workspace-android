@@ -11,17 +11,17 @@ import com.alfresco.content.data.SitesRepository
 import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.kotlin.ellipsize
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 data class ActionDelete(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_delete,
     override val title: Int = R.string.action_delete_title,
-    override val eventName: EventName = EventName.MoveTrash
+    override val eventName: EventName = EventName.MoveTrash,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
@@ -54,7 +54,7 @@ data class ActionDelete(
             view,
             anchorView,
             R.string.action_delete_toast,
-            entry.name.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view)),
         )
 }
 
@@ -62,7 +62,7 @@ data class ActionRestore(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_restore,
     override val title: Int = R.string.action_restore_title,
-    override val eventName: EventName = EventName.Restore
+    override val eventName: EventName = EventName.Restore,
 ) : Action {
     override suspend fun execute(context: Context): Entry {
         TrashCanRepository().restoreEntry(entry)
@@ -76,7 +76,7 @@ data class ActionRestore(
             view,
             anchorView,
             R.string.action_restored_toast,
-            entry.name.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view)),
         )
 }
 
@@ -84,7 +84,7 @@ data class ActionDeleteForever(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_delete_forever,
     override val title: Int = R.string.action_delete_forever_title,
-    override val eventName: EventName = EventName.PermanentlyDelete
+    override val eventName: EventName = EventName.PermanentlyDelete,
 ) : Action {
     override suspend fun execute(context: Context): Entry {
         if (showConfirmation(context)) {
@@ -124,6 +124,6 @@ data class ActionDeleteForever(
             view,
             anchorView,
             R.string.action_delete_forever_toast,
-            entry.name.ellipsize(maxFileNameInToast(view))
+            entry.name.ellipsize(maxFileNameInToast(view)),
         )
 }

@@ -10,7 +10,7 @@ import coil.request.ImageRequest
 inline fun Preference.loadAny(
     data: Any?,
     imageLoader: ImageLoader = Coil.imageLoader(context),
-    builder: ImageRequest.Builder.() -> Unit = {}
+    builder: ImageRequest.Builder.() -> Unit = {},
 ): Disposable {
     val request = ImageRequest.Builder(context)
         .data(data)
@@ -23,7 +23,7 @@ inline fun Preference.loadAny(
             },
             onError = { error ->
                 icon = error
-            }
+            },
         )
         .apply(builder)
         .build()

@@ -40,7 +40,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -78,7 +78,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -115,7 +115,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -151,7 +151,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -185,7 +185,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -218,7 +218,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "",
             selectedQuery = "",
@@ -258,7 +258,7 @@ class ComponentViewModelTest {
             properties = ComponentProperties(
                 field = "cm:created",
                 maxDate = "today",
-                dateFormat = "DD-MMM-YY",
+                dateFormat = DATE_FORMAT,
             ),
             selectedName = "test-name",
             selectedQuery = "test-query",
@@ -293,7 +293,7 @@ class ComponentViewModelTest {
                 ),
                 ComponentOptions(
                     label = "test label 2",
-                    query = "test query 2",
+                    query = TEST_QUERY_2,
                 ),
             ),
             selectedName = "test-name",
@@ -329,7 +329,7 @@ class ComponentViewModelTest {
                 ),
                 ComponentOptions(
                     label = "test label 2",
-                    query = "test query 2",
+                    query = TEST_QUERY_2,
                 ),
             ),
             selectedName = "test-name",
@@ -366,7 +366,7 @@ class ComponentViewModelTest {
                 ),
                 ComponentOptions(
                     label = "All",
-                    query = "test query 2",
+                    query = TEST_QUERY_2,
                 ),
             ),
             selectedName = "",
@@ -401,7 +401,7 @@ class ComponentViewModelTest {
                 ),
                 ComponentOptions(
                     label = "All",
-                    query = "test query 2",
+                    query = TEST_QUERY_2,
                 ),
             ),
             selectedName = "",
@@ -518,5 +518,7 @@ class ComponentViewModelTest {
         @JvmField
         @ClassRule
         val mvrxTestRule = MavericksTestRule()
+        private const val TEST_QUERY_2 = "test query 2"
+        private const val DATE_FORMAT = "DD-MMM-YY"
     }
 }

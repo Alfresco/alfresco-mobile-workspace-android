@@ -260,8 +260,8 @@ class ComponentViewModelTest {
                 maxDate = "today",
                 dateFormat = DATE_FORMAT,
             ),
-            selectedName = "test-name",
-            selectedQuery = "test-query",
+            selectedName = TEST_NAME,
+            selectedQuery = TEST_QUERY,
         )
 
         // Initializing the state
@@ -296,8 +296,8 @@ class ComponentViewModelTest {
                     query = TEST_QUERY_2,
                 ),
             ),
-            selectedName = "test-name",
-            selectedQuery = "test-query",
+            selectedName = TEST_NAME,
+            selectedQuery = TEST_QUERY,
         )
 
         // Initializing the state
@@ -332,8 +332,8 @@ class ComponentViewModelTest {
                     query = TEST_QUERY_2,
                 ),
             ),
-            selectedName = "test-name",
-            selectedQuery = "test-query",
+            selectedName = TEST_NAME,
+            selectedQuery = TEST_QUERY,
         )
 
         // Initializing the state
@@ -520,5 +520,7 @@ class ComponentViewModelTest {
         val mvrxTestRule = MavericksTestRule()
         private const val TEST_QUERY_2 = "test query 2"
         private const val DATE_FORMAT = "DD-MMM-YY"
+        private const val TEST_QUERY = "test-query"
+        private const val TEST_NAME = "test-name"
     }
 }

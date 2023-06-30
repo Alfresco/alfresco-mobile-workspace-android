@@ -5,9 +5,11 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+android {
+    namespace 'com.alfresco.content.move'
+}
 
 dependencies {
-
     implementation project(':base')
     api project(':base-ui')
     implementation project(':common')
@@ -35,8 +37,4 @@ dependencies {
     implementation libs.androidx.preference
 
     kapt libs.epoxy.processor
-}
-
-android {
-    namespace 'com.alfresco.content.move'
 }

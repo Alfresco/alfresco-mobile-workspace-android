@@ -1,13 +1,14 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins{
+    id('com.android.library')
+    id('kotlin-android')
+}
 
+android {
+    namespace 'com.alfresco.base'
+}
 
 dependencies {
     implementation libs.coroutines.core
     implementation libs.androidx.lifecycle.livedata
     implementation libs.timber
-}
-
-android {
-    namespace 'com.alfresco.base'
 }

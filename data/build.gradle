@@ -1,16 +1,17 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android") // Only for Kotlin projects.
-    id("kotlin-parcelize") // Only for Kotlin projects.
-    id("io.objectbox") // Apply last.
+    id('com.android.library')
+    id('kotlin-android') // Only for Kotlin projects.
+    id('kotlin-parcelize') // Only for Kotlin projects.
+    id('io.objectbox') // Apply last.
 }
 
 android {
 
+    namespace 'com.alfresco.content.data'
+
     compileOptions {
         coreLibraryDesugaringEnabled true
     }
-    namespace 'com.alfresco.content.data'
 }
 
 dependencies {

@@ -1,10 +1,12 @@
-apply plugin: 'com.android.library'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-parcelize'
-
+plugins{
+    id('com.android.library')
+    id('kotlin-android')
+    id('kotlin-kapt')
+    id('kotlin-parcelize')
+}
 android {
+
+    namespace 'com.alfresco.content.browse'
 
     buildFeatures {
         viewBinding true
@@ -13,7 +15,6 @@ android {
     compileOptions {
         coreLibraryDesugaringEnabled true
     }
-    namespace 'com.alfresco.content.browse'
 }
 
 dependencies {

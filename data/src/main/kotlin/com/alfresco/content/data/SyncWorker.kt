@@ -8,7 +8,6 @@ import com.alfresco.coroutines.asyncMap
 import com.alfresco.download.ContentDownloader
 import retrofit2.HttpException
 import java.io.File
-import java.lang.Exception
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {

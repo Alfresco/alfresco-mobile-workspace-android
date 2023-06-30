@@ -5,7 +5,6 @@ import android.accounts.Account
 import android.accounts.AccountAuthenticatorResponse
 import android.content.Context
 import android.os.Bundle
-import java.lang.UnsupportedOperationException
 
 class Authenticator(context: Context) :
     AbstractAccountAuthenticator(context) {

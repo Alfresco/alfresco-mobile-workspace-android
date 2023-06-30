@@ -14,7 +14,6 @@ import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 internal class ContextualActionsViewModel(

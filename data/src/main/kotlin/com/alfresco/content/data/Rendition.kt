@@ -1,7 +1,6 @@
 package com.alfresco.content.data
 
 import java.io.File
-import java.lang.UnsupportedOperationException
 
 data class Rendition(
     val uri: String,

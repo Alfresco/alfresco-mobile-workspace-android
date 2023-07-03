@@ -3,6 +3,7 @@ package com.alfresco.content.actions
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -107,9 +108,17 @@ interface ActionPermission {
         }
 
         private fun requiredPermissions() =
-            listOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                listOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_AUDIO,
+                )
+            } else {
+                listOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                )
+            }
 
         private fun permissionRationale(context: Context) =
             context.getString(R.string.share_files_permissions_rationale)

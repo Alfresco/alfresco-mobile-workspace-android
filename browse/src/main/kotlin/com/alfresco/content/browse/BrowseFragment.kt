@@ -170,7 +170,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id?.ifEmpty { null }, args.title ?: "", false)
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", false)
                 true
             }
             else -> super.onOptionsItemSelected(item)

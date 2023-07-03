@@ -87,7 +87,7 @@
             android:name="moveId"
             app:argType="string" />
 
-        <deepLink app:uri="alfresco://content/search/folder/{id}/{extension}/{moveId}?title={title}" />
+        <deepLink app:uri="alfresco://content/search/folder/{id}?title={title},extension={extension},moveId={moveId}" />
     </fragment>
 
 </navigation>

@@ -37,6 +37,7 @@ import com.alfresco.events.on
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
@@ -173,7 +174,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         refreshLayout.setOnRefreshListener {
             viewModel.refresh()
         }
+
         recyclerView.setController(epoxyController)
+
         viewModel.setListener(this)
 
         epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -227,7 +230,13 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         id(stableId(it))
                         data(it)
                         compact(state.isCompact)
-                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                        clickListener { model, _, _, _ ->
+                            onItemClicked(model.data())
+                        }
+                        longClickListener { model, parentView, _, _ ->
+                            Snackbar.make(parentView, "Selected item = ${model.data().name}", Snackbar.LENGTH_SHORT).show()
+                            true
+                        }
                         moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
                     }
                 }

@@ -149,6 +149,11 @@ class ListViewRow @JvmOverloads constructor(
     }
 
     @CallbackProp
+    fun setLongClickListener(listener: OnLongClickListener?) {
+        setOnLongClickListener(listener)
+    }
+
+    @CallbackProp
     fun setMoreClickListener(listener: OnClickListener?) {
         binding.moreButton.setOnClickListener(listener)
     }

@@ -148,6 +148,14 @@ class ListViewRow @JvmOverloads constructor(
         setOnClickListener(listener)
     }
 
+    /**
+     * long press gesture for the row
+     */
+    @CallbackProp
+    fun setLongClickListener(listener: OnLongClickListener?) {
+        setOnLongClickListener(listener)
+    }
+
     @CallbackProp
     fun setMoreClickListener(listener: OnClickListener?) {
         binding.moreButton.setOnClickListener(listener)

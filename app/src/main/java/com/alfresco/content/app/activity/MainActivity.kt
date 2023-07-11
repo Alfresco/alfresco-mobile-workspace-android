@@ -31,8 +31,8 @@ import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.browse.BrowseFragment
 import com.alfresco.content.browse.offline.OfflineFragment
-import com.alfresco.content.listview.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
+import com.alfresco.content.listview.MultiSelection
 import com.alfresco.content.search.SearchResultsFragment
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.slideBottom
@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         }
         actionBarController?.showHideActionBarLayout(false)
         bottomNav.slideBottom()
-        if(bottomNav.isVisible) {
+        if (bottomNav.isVisible) {
             bottomNav.visibility = View.GONE
         }
     }
@@ -277,10 +277,10 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     override fun onDestroyActionMode(mode: ActionMode?) {
         println("MainActivity.onDestroyActionMode")
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        when(val fragment = navHostFragment?.childFragmentManager?.fragments?.first()){
-            is BrowseFragment-> fragment.clearMultiSelection()
-            is SearchResultsFragment-> fragment.clearMultiSelection()
-            is OfflineFragment-> fragment.clearMultiSelection()
+        when (val fragment = navHostFragment?.childFragmentManager?.fragments?.first()) {
+            is BrowseFragment -> fragment.clearMultiSelection()
+            is SearchResultsFragment -> fragment.clearMultiSelection()
+            is OfflineFragment -> fragment.clearMultiSelection()
         }
         disableMultiSelection()
         actionMode = null

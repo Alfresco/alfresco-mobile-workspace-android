@@ -112,7 +112,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         viewModel.selectionTracker = selectionTrackerBuilder.build()
     }
 
-    override fun invalidate() =  withState(viewModel) { state ->
+    override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
 
             if (state.path == getString(R.string.nav_path_recents)) {

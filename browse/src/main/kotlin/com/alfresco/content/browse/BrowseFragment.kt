@@ -15,6 +15,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
@@ -30,6 +33,9 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.listview.selectiontracker.ListViewRowModelKeyProvider
+import com.alfresco.content.listview.selectiontracker.ListViewRowModelSelectionLookup
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToLocalPreview
@@ -94,12 +100,21 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 }
             } else bannerTransferData?.visibility = View.GONE
         }
+
+        val selectionTrackerBuilder = SelectionTracker.Builder(
+            "user_selection",
+            recyclerView,
+            ListViewRowModelKeyProvider(recyclerView),
+            ListViewRowModelSelectionLookup(recyclerView),
+            StorageStrategy.createParcelableStorage(Entry::class.java)
+        ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+
+        viewModel.selectionTracker = selectionTrackerBuilder.build()
     }
 
-    override fun invalidate() {
+    override fun invalidate() =  withState(viewModel) { state ->
         super.invalidate()
 
-        withState(viewModel) { state ->
             if (state.path == getString(R.string.nav_path_recents)) {
                 updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
                 if (state.uploadTransferList.isEmpty())
@@ -113,7 +128,6 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             if (viewModel.canAddItems(state)) {
                 (view as ViewGroup).addView(makeFab(requireContext()))
             }
-        }
     }
 
     override fun onResume() {
@@ -171,6 +185,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 findNavController().navigateToContextualSearch(args.id?.ifEmpty { null }, args.title ?: "", false)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -188,6 +203,11 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             }
         else
             findNavController().navigateTo(entry)
+    }
+
+    override fun onItemLongClicked(entry: Entry) {
+        viewModel.toggleSelection(entry)
+        MultiSelection.multiSelectionChangedFlow.tryEmit(true)
     }
 
     private fun makeFab(context: Context) =
@@ -231,5 +251,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onProcessStart(entry: ParentEntry) {
         if (isAdded && isVisible)
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+    }
+
+    fun clearMultiSelection() {
+        disableLongPress()
+        viewModel.resetMultiSelection()
     }
 }

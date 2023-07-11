@@ -24,6 +24,7 @@ import com.alfresco.content.models.SearchItem
  */
 data class SearchResultsState(
     override val entries: List<Entry> = emptyList(),
+    override val selectedEntries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     val isOnline: Boolean = true,

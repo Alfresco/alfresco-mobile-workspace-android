@@ -1,12 +1,14 @@
 package com.alfresco.content.app.widget
 
 import android.net.Uri
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.alfresco.content.app.R
+import com.alfresco.content.slideTop
 
 class ActionBarController(private val layout: ActionBarLayout) {
 
@@ -66,6 +68,11 @@ class ActionBarController(private val layout: ActionBarLayout) {
         if (navController.currentDestination?.id == R.id.searchFragment) {
             navController.navigateUp()
         }
+    }
+
+    fun showHideActionBarLayout(isVisible: Boolean) {
+        layout.slideTop()
+        layout.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     private fun matchDestinations(

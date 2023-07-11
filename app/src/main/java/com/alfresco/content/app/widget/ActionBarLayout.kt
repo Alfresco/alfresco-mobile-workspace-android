@@ -3,12 +3,14 @@ package com.alfresco.content.app.widget
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
+import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alfresco.content.app.R
@@ -104,4 +106,6 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
      * set user online status
      */
     fun setOnline(value: Boolean) = profileView.setOffline(!value)
+
+
 }

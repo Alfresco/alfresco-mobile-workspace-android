@@ -128,6 +128,7 @@ class BrowseViewModel(
                     is Success -> {
                         update(it()).copy(request = Success(it()))
                     }
+
                     else -> {
                         this
                     }
@@ -156,6 +157,7 @@ class BrowseViewModel(
                         observeUploads(it().second?.id)
                         update(it().first).copy(parent = it().second, request = Success(it().first))
                     }
+
                     else -> {
                         this
                     }
@@ -170,6 +172,7 @@ class BrowseViewModel(
         when (path) {
             context.getString(R.string.nav_path_site) ->
                 BrowseRepository()::fetchLibraryDocumentsFolder.asFlow(item)
+
             else ->
                 BrowseRepository()::fetchEntry.asFlow(item)
         }
@@ -180,6 +183,7 @@ class BrowseViewModel(
             context.getString(R.string.nav_path_recents) -> {
                 SearchRepository()::getRecents.asFlow(skipCount, maxItems)
             }
+
             context.getString(R.string.nav_path_favorites) ->
                 FavoritesRepository()::getFavorites.asFlow(skipCount, maxItems)
 
@@ -255,10 +259,13 @@ class BrowseViewModel(
         when ((state as BrowseViewState).path) {
             context.getString(R.string.nav_path_recents) ->
                 Triple(R.drawable.ic_empty_recent, R.string.recent_empty_title, R.string.recent_empty_message)
+
             context.getString(R.string.nav_path_favorites) ->
                 Triple(R.drawable.ic_empty_favorites, R.string.favorite_files_empty_title, R.string.favorites_empty_message)
+
             context.getString(R.string.nav_path_fav_libraries) ->
                 Triple(R.drawable.ic_empty_favorites, R.string.favorite_sites_empty_title, R.string.favorites_empty_message)
+
             else ->
                 Triple(R.drawable.ic_empty_folder, R.string.folder_empty_title, R.string.folder_empty_message)
         }
@@ -294,6 +301,24 @@ class BrowseViewModel(
 
     private fun execute(action: Action) =
         action.execute(context, GlobalScope)
+
+    fun toggleSelection(entry: Entry) = setState {
+        val updatedEntries = entries.map {
+            if (it.id == entry.id) {
+                it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+            } else {
+                it
+            }
+        }
+        copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+    }
+
+    fun resetMultiSelection() = setState {
+        val resetMultiEntries = entries.map {
+            it.copy(isSelectedForMultiSelection = false)
+        }
+        copy(entries = resetMultiEntries, selectedEntries = emptyList())
+    }
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
 

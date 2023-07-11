@@ -42,6 +42,7 @@ androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", ver
 
 androidx-preference = "androidx.preference:preference:1.2.0"
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
+androidx-recyclerview-selection = "androidx.recyclerview:recyclerview-selection:1.1.0"
 androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 androidx-test-core = { module = "androidx.test:core", version.ref = "test" }

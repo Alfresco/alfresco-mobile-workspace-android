@@ -17,6 +17,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.MultiSelection
 import com.alfresco.content.navigateTo
 import com.alfresco.events.emit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -102,8 +103,18 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
     }
 
+    override fun onItemLongClicked(entry: Entry) {
+        viewModel.toggleSelection(entry)
+        MultiSelection.multiSelectionChangedFlow.tryEmit(true)
+    }
+
     override fun onProcessStart(entry: ParentEntry) {
         if (isAdded && isVisible)
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+    }
+
+    fun clearMultiSelection() {
+        disableLongPress()
+        viewModel.resetMultiSelection()
     }
 }

@@ -6,8 +6,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -15,6 +17,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.listview.databinding.ViewListRowBinding
 import com.alfresco.content.mimetype.MimeType
+import com.alfresco.ui.getDrawableForAttribute
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewRow @JvmOverloads constructor(
@@ -25,9 +28,11 @@ class ListViewRow @JvmOverloads constructor(
 
     private val binding = ViewListRowBinding.inflate(LayoutInflater.from(context), this, true)
     private var isCompact: Boolean = false
+    private var entry: Entry? = null
 
     @ModelProp
     fun setData(entry: Entry) {
+        this.entry = entry
         binding.title.text = entry.name
         binding.subtitle.text = entry.path
         updateSubtitleVisibility()
@@ -111,12 +116,16 @@ class ListViewRow @JvmOverloads constructor(
                 } else {
                     Pair(R.drawable.ic_offline_status_pending, null)
                 }
+
             OfflineStatus.SYNCING ->
                 Pair(R.drawable.ic_offline_status_in_progress_anim, R.string.offline_status_in_progress)
+
             OfflineStatus.SYNCED ->
                 Pair(R.drawable.ic_offline_status_synced, null)
+
             OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
+
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)
         }
@@ -125,6 +134,16 @@ class ListViewRow @JvmOverloads constructor(
         !entry.isLink && !entry.isUpload &&
                 // Child folder in offline tab
                 !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
+
+    @AfterPropsSet
+    fun bind() {
+        println("ListViewRow.setMultiSelect ${entry?.isSelectedForMultiSelection}")
+        if (entry?.isSelectedForMultiSelection == true) {
+            binding.parent.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackgroundMultiSelection))
+        } else {
+            binding.parent.background = context.getDrawableForAttribute(R.attr.selectableItemBackground)
+        }
+    }
 
     @ModelProp
     fun setCompact(compact: Boolean) {

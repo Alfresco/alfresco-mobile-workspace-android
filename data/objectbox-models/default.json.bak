@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "29:1086618494346593047",
+      "lastPropertyId": "30:309190734268609709",
       "name": "Entry",
       "properties": [
         {
@@ -142,6 +142,11 @@
         {
           "id": "29:1086618494346593047",
           "name": "isReadOnly",
+          "type": 1
+        },
+        {
+          "id": "30:309190734268609709",
+          "name": "isMultiSelection",
           "type": 1
         }
       ],

@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -37,12 +38,12 @@ import com.alfresco.events.on
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
+    val selectedEntries: List<Entry>
     val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
     val isCompact: Boolean
@@ -67,6 +68,7 @@ abstract class ListViewModel<S : ListViewState>(
     private val _sharedFlow = MutableSharedFlow<Entry>()
     val sharedFlow = _sharedFlow.asSharedFlow()
     private var folderListener: EntryListener? = null
+    var selectionTracker: SelectionTracker<Entry>? = null
 
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
@@ -154,6 +156,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
+    private var longPressHandled = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -191,6 +194,12 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     override fun invalidate() = withState(viewModel) { state ->
 
+        println("ListFragment.invalidate 12121")
+
+        if (state.selectedEntries.isEmpty()) {
+            MultiSelection.multiSelectionChangedFlow.tryEmit(false)
+        }
+
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
 
@@ -209,6 +218,16 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         refreshLayout.isEnabled = false
     }
 
+    private fun enableLongPress() {
+        longPressHandled = true
+        refreshLayout.isEnabled = false
+    }
+
+    fun disableLongPress() {
+        longPressHandled = false
+        refreshLayout.isEnabled = true
+    }
+
     private fun epoxyController() = simpleController(viewModel) { state ->
         if (state.entries.isEmpty() && state.request.complete) {
             val args = viewModel.emptyMessageArgs(state)
@@ -219,6 +238,12 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 message(args.third)
             }
         } else if (state.entries.isNotEmpty()) {
+
+            val selectedEntries = state.entries.find { obj -> obj.isSelectedForMultiSelection }
+            if (selectedEntries == null) {
+                disableLongPress()
+            }
+
             state.entries.forEach {
                 if (it.type == Entry.Type.GROUP) {
                     listViewGroupHeader {
@@ -231,11 +256,24 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         data(it)
                         compact(state.isCompact)
                         clickListener { model, _, _, _ ->
-                            onItemClicked(model.data())
+                            if (!longPressHandled) {
+                                println("ListFragment.epoxyController tap 3")
+                                onItemClicked(model.data())
+                            } else {
+                                println("ListFragment.epoxyController tap 4")
+                                onItemLongClicked(model.data())
+                            }
                         }
                         longClickListener { model, parentView, _, _ ->
-                            Snackbar.make(parentView, "Selected item = ${model.data().name}", Snackbar.LENGTH_SHORT).show()
-                            true
+                            if (!longPressHandled) {
+                                enableLongPress()
+                                println("ListFragment.epoxyController tap 0")
+                                onItemLongClicked(model.data())
+                                true
+                            } else {
+                                println("ListFragment.epoxyController tap 1")
+                                false
+                            }
                         }
                         moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
                     }
@@ -273,6 +311,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         else entry.id
 
     abstract fun onItemClicked(entry: Entry)
+    abstract fun onItemLongClicked(entry: Entry)
 
     open fun onItemMoreClicked(entry: Entry) {
         ContextualActionsSheet.with(entry).show(childFragmentManager, null)

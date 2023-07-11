@@ -11,6 +11,7 @@ import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFacetFields
 import com.alfresco.content.data.SearchFacetIntervals
@@ -419,6 +420,24 @@ class SearchViewModel(
             params = params.copy(skipCount = it.entries.count())
             searchEvents.value = params
         }
+    }
+
+    fun toggleSelection(entry: Entry) = setState {
+        val updatedEntries = entries.map {
+            if (it.id == entry.id) {
+                it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+            } else {
+                it
+            }
+        }
+        copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+    }
+
+    fun resetMultiSelection() = setState {
+        val resetMultiEntries = entries.map {
+            it.copy(isSelectedForMultiSelection = false)
+        }
+        copy(entries = resetMultiEntries, selectedEntries = emptyList())
     }
 
     /**

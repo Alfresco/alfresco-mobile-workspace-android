@@ -194,8 +194,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     override fun invalidate() = withState(viewModel) { state ->
 
-        println("ListFragment.invalidate 12121")
-
         if (state.selectedEntries.isEmpty()) {
             MultiSelection.multiSelectionChangedFlow.tryEmit(false)
         }
@@ -255,6 +253,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         id(stableId(it))
                         data(it)
                         compact(state.isCompact)
+                        multiSelection(state.selectedEntries.isNotEmpty())
                         clickListener { model, _, _, _ ->
                             if (!longPressHandled) {
                                 println("ListFragment.epoxyController tap 3")

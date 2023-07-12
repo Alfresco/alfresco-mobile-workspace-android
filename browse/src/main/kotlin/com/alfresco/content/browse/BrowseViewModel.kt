@@ -39,16 +39,16 @@ import kotlinx.coroutines.launch
 
 class BrowseViewModel(
     state: BrowseViewState,
-    val context: Context
+    val context: Context,
+    val browseRepository: BrowseRepository,
+    val offlineRepository: OfflineRepository
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
     private var observeTransferUploadsJob: Job? = null
-    private val browseRepository = BrowseRepository()
-    private val offlineRepository = OfflineRepository()
 
     init {
-        fetchInitial()
+//        fetchInitial()
         withState {
             if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
@@ -310,14 +310,14 @@ class BrowseViewModel(
                 it
             }
         }
-        copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+        copy(baseEntries = updatedEntries, entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
     }
 
     fun resetMultiSelection() = setState {
         val resetMultiEntries = entries.map {
             it.copy(isSelectedForMultiSelection = false)
         }
-        copy(entries = resetMultiEntries, selectedEntries = emptyList())
+        copy(baseEntries = resetMultiEntries, entries = resetMultiEntries, selectedEntries = emptyList())
     }
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
@@ -325,6 +325,6 @@ class BrowseViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: BrowseViewState
-        ) = BrowseViewModel(state, viewModelContext.activity)
+        ) = BrowseViewModel(state, viewModelContext.activity, BrowseRepository(), OfflineRepository())
     }
 }

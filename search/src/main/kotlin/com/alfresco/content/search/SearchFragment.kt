@@ -504,4 +504,8 @@ class SearchFragment : Fragment(), MavericksView {
 
         resultsFragment.setFilters(advanceSearchFilter, facetData)
     }
+
+    fun clearMultiSelection() {
+        resultsFragment.clearMultiSelection()
+    }
 }

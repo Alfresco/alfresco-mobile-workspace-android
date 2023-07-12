@@ -12,14 +12,23 @@ import androidx.viewpager.widget.ViewPager
 
 class FavoritesFragment : Fragment() {
 
+    private lateinit var pager: ViewPager
+    private lateinit var pagerAdapter: PagerAdapter
+    private var listFragments = mutableListOf<Fragment>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
-        val pager = view.findViewById<ViewPager>(R.id.pager)
-        pager.adapter = PagerAdapter(requireContext(), childFragmentManager)
+        pager = view.findViewById(R.id.pager)
+        listFragments = mutableListOf(
+            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_favorites)),
+            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_fav_libraries))
+        )
+        pagerAdapter = PagerAdapter(requireContext(), childFragmentManager, listFragments)
+        pager.adapter = pagerAdapter
         return view
     }
 
@@ -29,18 +38,19 @@ class FavoritesFragment : Fragment() {
         view.requestFocus()
     }
 
-    private class PagerAdapter(val context: Context, fragmentManager: FragmentManager) :
+    private class PagerAdapter(val context: Context, fragmentManager: FragmentManager, val listFragments: List<Fragment>) :
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment {
+
             return when (position) {
-                0 -> BrowseFragment.withArg(context.getString(R.string.nav_path_favorites))
-                else -> BrowseFragment.withArg(context.getString(R.string.nav_path_fav_libraries))
+                0 -> listFragments[position]
+                else -> listFragments[position]
             }
         }
 
         override fun getCount(): Int {
-            return 2
+            return listFragments.size
         }
 
         override fun getPageTitle(position: Int) =
@@ -48,5 +58,12 @@ class FavoritesFragment : Fragment() {
                 0 -> context.getString(R.string.favorites_tab_files)
                 else -> context.getString(R.string.favorites_tab_libraries)
             }
+    }
+
+    fun clearMultiSelection() {
+        val fragment = listFragments[pager.currentItem]
+        if (fragment is BrowseFragment) {
+            fragment.clearMultiSelection()
+        }
     }
 }

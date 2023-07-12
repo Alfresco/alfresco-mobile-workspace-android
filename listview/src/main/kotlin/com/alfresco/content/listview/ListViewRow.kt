@@ -28,7 +28,8 @@ class ListViewRow @JvmOverloads constructor(
 
     private val binding = ViewListRowBinding.inflate(LayoutInflater.from(context), this, true)
     private var isCompact: Boolean = false
-    private var entry: Entry? = null
+    private lateinit var entry: Entry
+    private var multiSelectionEnabled = false
 
     @ModelProp
     fun setData(entry: Entry) {
@@ -36,14 +37,6 @@ class ListViewRow @JvmOverloads constructor(
         binding.title.text = entry.name
         binding.subtitle.text = entry.path
         updateSubtitleVisibility()
-
-        val type = when (entry.type) {
-            Entry.Type.SITE -> MimeType.LIBRARY
-            Entry.Type.FOLDER -> MimeType.FOLDER
-            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
-            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
-            else -> MimeType.with(entry.mimeType)
-        }
 
         if (entry.isExtension && !entry.isFolder) {
             binding.parent.alpha = 0.5f
@@ -54,12 +47,6 @@ class ListViewRow @JvmOverloads constructor(
         }
 
         binding.moreButton.isEnabled = !entry.isExtension
-
-        binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
-
-        configureOfflineStatus(entry)
-
-        binding.moreButton.isVisible = actionButtonVisibility(entry)
 
         val accessibilityText = if (entry.path.isNullOrEmpty())
             context.getString(
@@ -135,16 +122,6 @@ class ListViewRow @JvmOverloads constructor(
                 // Child folder in offline tab
                 !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline)
 
-    @AfterPropsSet
-    fun bind() {
-        println("ListViewRow.setMultiSelect ${entry?.isSelectedForMultiSelection}")
-        if (entry?.isSelectedForMultiSelection == true) {
-            binding.parent.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackgroundMultiSelection))
-        } else {
-            binding.parent.background = context.getDrawableForAttribute(R.attr.selectableItemBackground)
-        }
-    }
-
     @ModelProp
     fun setCompact(compact: Boolean) {
         this.isCompact = compact
@@ -160,6 +137,50 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun updateSubtitleVisibility() {
         binding.subtitle.isVisible = binding.subtitle.text.isNotEmpty() && !isCompact
+    }
+
+    @ModelProp
+    fun setMultiSelection(isMultiSelection: Boolean) {
+        this.multiSelectionEnabled = isMultiSelection
+    }
+
+    @AfterPropsSet
+    fun bind() {
+
+        println("ListViewRow.bind ${entry.isSelectedForMultiSelection}")
+
+        binding.checkBox.isChecked = entry.isSelectedForMultiSelection
+
+        if (entry.isSelectedForMultiSelection) {
+            binding.parent.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackgroundMultiSelection))
+        } else {
+            binding.parent.background = context.getDrawableForAttribute(R.attr.selectableItemBackground)
+        }
+
+        if (multiSelectionEnabled) {
+            binding.moreButton.isVisible = false
+            binding.offlineIcon.isVisible = false
+            binding.checkBox.isVisible = true
+        } else {
+            postDataSet()
+        }
+    }
+
+    private fun postDataSet() {
+
+        val type = when (entry.type) {
+            Entry.Type.SITE -> MimeType.LIBRARY
+            Entry.Type.FOLDER -> MimeType.FOLDER
+            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
+            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
+            else -> MimeType.with(entry.mimeType)
+        }
+
+        binding.checkBox.isVisible = false
+        binding.checkBox.isChecked = false
+        binding.moreButton.isVisible = actionButtonVisibility(entry)
+        configureOfflineStatus(entry)
+        binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
     }
 
     @CallbackProp

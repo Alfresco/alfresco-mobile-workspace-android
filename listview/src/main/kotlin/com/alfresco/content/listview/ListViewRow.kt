@@ -38,6 +38,14 @@ class ListViewRow @JvmOverloads constructor(
         binding.subtitle.text = entry.path
         updateSubtitleVisibility()
 
+        val type = when (entry.type) {
+            Entry.Type.SITE -> MimeType.LIBRARY
+            Entry.Type.FOLDER -> MimeType.FOLDER
+            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
+            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
+            else -> MimeType.with(entry.mimeType)
+        }
+
         if (entry.isExtension && !entry.isFolder) {
             binding.parent.alpha = 0.5f
             binding.parent.isEnabled = false
@@ -47,6 +55,8 @@ class ListViewRow @JvmOverloads constructor(
         }
 
         binding.moreButton.isEnabled = !entry.isExtension
+
+        binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
         val accessibilityText = if (entry.path.isNullOrEmpty())
             context.getString(
@@ -146,9 +156,6 @@ class ListViewRow @JvmOverloads constructor(
 
     @AfterPropsSet
     fun bind() {
-
-        println("ListViewRow.bind ${entry.isSelectedForMultiSelection}")
-
         binding.checkBox.isChecked = entry.isSelectedForMultiSelection
 
         if (entry.isSelectedForMultiSelection) {
@@ -168,19 +175,10 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun postDataSet() {
 
-        val type = when (entry.type) {
-            Entry.Type.SITE -> MimeType.LIBRARY
-            Entry.Type.FOLDER -> MimeType.FOLDER
-            Entry.Type.FILE_LINK -> MimeType.FILE_LINK
-            Entry.Type.FOLDER_LINK -> MimeType.FOLDER_LINK
-            else -> MimeType.with(entry.mimeType)
-        }
-
         binding.checkBox.isVisible = false
         binding.checkBox.isChecked = false
         binding.moreButton.isVisible = actionButtonVisibility(entry)
         configureOfflineStatus(entry)
-        binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
     }
 
     @CallbackProp

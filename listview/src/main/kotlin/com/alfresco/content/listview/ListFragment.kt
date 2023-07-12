@@ -243,6 +243,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             }
 
             state.entries.forEach {
+                println("ListFragment.epoxyController $it")
                 if (it.type == Entry.Type.GROUP) {
                     listViewGroupHeader {
                         id(it.name)
@@ -256,21 +257,17 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         multiSelection(state.selectedEntries.isNotEmpty())
                         clickListener { model, _, _, _ ->
                             if (!longPressHandled) {
-                                println("ListFragment.epoxyController tap 3")
                                 onItemClicked(model.data())
                             } else {
-                                println("ListFragment.epoxyController tap 4")
                                 onItemLongClicked(model.data())
                             }
                         }
                         longClickListener { model, parentView, _, _ ->
                             if (!longPressHandled) {
                                 enableLongPress()
-                                println("ListFragment.epoxyController tap 0")
                                 onItemLongClicked(model.data())
                                 true
                             } else {
-                                println("ListFragment.epoxyController tap 1")
                                 false
                             }
                         }

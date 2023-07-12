@@ -262,24 +262,20 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        println("MainActivity.onCreateActionMode")
         return true
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        println("MainActivity.onPrepareActionMode")
         return true
     }
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-        println("MainActivity.onActionItemClicked")
         return true
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val fragment = navHostFragment?.childFragmentManager?.fragments?.first()
-        println("MainActivity.onDestroyActionMode == ${fragment?.javaClass?.name}")
         when (fragment) {
             is BrowseFragment -> fragment.clearMultiSelection()
             is FavoritesFragment -> fragment.clearMultiSelection()

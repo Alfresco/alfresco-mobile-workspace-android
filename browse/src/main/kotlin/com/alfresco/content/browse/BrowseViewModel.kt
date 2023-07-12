@@ -40,15 +40,15 @@ import kotlinx.coroutines.launch
 class BrowseViewModel(
     state: BrowseViewState,
     val context: Context,
-    val browseRepository: BrowseRepository,
-    val offlineRepository: OfflineRepository
+    private val browseRepository: BrowseRepository,
+    private val offlineRepository: OfflineRepository
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
     private var observeTransferUploadsJob: Job? = null
 
     init {
-//        fetchInitial()
+        fetchInitial()
         withState {
             if (it.sortOrder == BrowseViewState.SortOrder.ByModifiedDate) {
                 BrowseViewState.ModifiedGroup.prepare(context)
@@ -303,14 +303,17 @@ class BrowseViewModel(
         action.execute(context, GlobalScope)
 
     fun toggleSelection(entry: Entry) = setState {
+        println("BrowseViewModel.toggleSelection 0 == ${entries.size}")
         val updatedEntries = entries.map {
-            if (it.id == entry.id) {
+            println("BrowseViewModel.toggleSelection 1 == $it")
+            if (it.id == entry.id && it.type != Entry.Type.GROUP) {
                 it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
             } else {
                 it
             }
         }
-        copy(baseEntries = updatedEntries, entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+        println("BrowseViewModel.toggleSelection 2 == ${updatedEntries.size}")
+        copy(baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP }, entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
     }
 
     fun resetMultiSelection() = setState {

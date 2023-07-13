@@ -1,6 +1,7 @@
 package com.alfresco.content.browse.offline
 
 import android.content.Context
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -28,6 +29,11 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
     @OptIn(InternalMavericksApi::class)
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     private var fab: ExtendedFloatingActionButton? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setViewRequiredMultiSelection(true)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

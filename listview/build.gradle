@@ -31,7 +31,6 @@ dependencies {
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.fragment
     implementation libs.androidx.recyclerview
-    implementation libs.androidx.recyclerview.selection
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.preference

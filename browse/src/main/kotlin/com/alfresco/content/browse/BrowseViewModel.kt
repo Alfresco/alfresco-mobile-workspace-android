@@ -303,16 +303,13 @@ class BrowseViewModel(
         action.execute(context, GlobalScope)
 
     fun toggleSelection(entry: Entry) = setState {
-        println("BrowseViewModel.toggleSelection 0 == ${entries.size}")
         val updatedEntries = entries.map {
-            println("BrowseViewModel.toggleSelection 1 == $it")
             if (it.id == entry.id && it.type != Entry.Type.GROUP) {
                 it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
             } else {
                 it
             }
         }
-        println("BrowseViewModel.toggleSelection 2 == ${updatedEntries.size}")
         copy(baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP }, entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
     }
 

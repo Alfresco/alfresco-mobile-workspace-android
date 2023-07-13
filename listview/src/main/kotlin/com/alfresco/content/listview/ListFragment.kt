@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.epoxy.AsyncEpoxyController
@@ -68,7 +67,6 @@ abstract class ListViewModel<S : ListViewState>(
     private val _sharedFlow = MutableSharedFlow<Entry>()
     val sharedFlow = _sharedFlow.asSharedFlow()
     private var folderListener: EntryListener? = null
-    var selectionTracker: SelectionTracker<Entry>? = null
 
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
@@ -132,7 +130,6 @@ abstract class ListViewModel<S : ListViewState>(
 
     companion object {
         const val ITEMS_PER_PAGE = 25
-        const val IS_EVENT_REGISTERED = "isEventRegistered"
     }
 }
 
@@ -157,6 +154,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
     private var longPressHandled = false
+    private var isViewRequiredMultiSelection = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -226,6 +224,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         refreshLayout.isEnabled = true
     }
 
+    fun setViewRequiredMultiSelection(isViewRequiredMultiSelection: Boolean) {
+        this.isViewRequiredMultiSelection = isViewRequiredMultiSelection
+    }
+
     private fun epoxyController() = simpleController(viewModel) { state ->
         if (state.entries.isEmpty() && state.request.complete) {
             val args = viewModel.emptyMessageArgs(state)
@@ -243,7 +245,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             }
 
             state.entries.forEach {
-                println("ListFragment.epoxyController $it")
                 if (it.type == Entry.Type.GROUP) {
                     listViewGroupHeader {
                         id(it.name)
@@ -262,13 +263,15 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                                 onItemLongClicked(model.data())
                             }
                         }
-                        longClickListener { model, parentView, _, _ ->
-                            if (!longPressHandled) {
-                                enableLongPress()
-                                onItemLongClicked(model.data())
-                                true
-                            } else {
-                                false
+                        if (isViewRequiredMultiSelection) {
+                            longClickListener { model, _, _, _ ->
+                                if (!longPressHandled) {
+                                    enableLongPress()
+                                    onItemLongClicked(model.data())
+                                    true
+                                } else {
+                                    false
+                                }
                             }
                         }
                         moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
@@ -307,7 +310,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         else entry.id
 
     abstract fun onItemClicked(entry: Entry)
-    abstract fun onItemLongClicked(entry: Entry)
+    open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
         ContextualActionsSheet.with(entry).show(childFragmentManager, null)

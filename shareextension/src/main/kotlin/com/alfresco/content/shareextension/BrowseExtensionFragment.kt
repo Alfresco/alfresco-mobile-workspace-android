@@ -89,7 +89,4 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
 
         findNavController().navigateToExtensionFolder(entry)
     }
-
-    override fun onItemLongClicked(entry: Entry) {
-    }
 }

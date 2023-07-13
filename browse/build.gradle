@@ -45,7 +45,6 @@ dependencies {
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.navigation.fragment
-    implementation 'androidx.test:core-ktx:1.5.0'
 
     coreLibraryDesugaring libs.android.desugar
 

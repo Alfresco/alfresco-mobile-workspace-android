@@ -50,6 +50,8 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.3.0"
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "test" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "test" }
 
+androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
+
 androidx-webkit = "androidx.webkit:webkit:1.4.0"
 androidx-work = "androidx.work:work-runtime-ktx:2.7.1"
 

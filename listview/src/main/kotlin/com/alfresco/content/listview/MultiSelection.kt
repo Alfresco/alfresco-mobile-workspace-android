@@ -7,5 +7,9 @@ object MultiSelection {
 
     val multiSelectionChangedFlow = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
 
+//    val manageFavoriteFlow = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+
     fun observeMultiSelection(): Flow<Boolean> = multiSelectionChangedFlow
+
+//    fun observeManageFavorite(): Flow<Boolean> = manageFavoriteFlow
 }

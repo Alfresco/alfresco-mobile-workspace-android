@@ -108,7 +108,4 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
             findNavController().navigateToFolder(entry, state.moveId)
         }
     }
-
-    override fun onItemLongClicked(entry: Entry) {
-    }
 }

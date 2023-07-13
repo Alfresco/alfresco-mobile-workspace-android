@@ -6,8 +6,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -15,6 +17,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.listview.databinding.ViewListRowBinding
 import com.alfresco.content.mimetype.MimeType
+import com.alfresco.ui.getDrawableForAttribute
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class ListViewRow @JvmOverloads constructor(
@@ -25,9 +28,12 @@ class ListViewRow @JvmOverloads constructor(
 
     private val binding = ViewListRowBinding.inflate(LayoutInflater.from(context), this, true)
     private var isCompact: Boolean = false
+    private lateinit var entry: Entry
+    private var multiSelectionEnabled = false
 
     @ModelProp
     fun setData(entry: Entry) {
+        this.entry = entry
         binding.title.text = entry.name
         binding.subtitle.text = entry.path
         updateSubtitleVisibility()
@@ -51,10 +57,6 @@ class ListViewRow @JvmOverloads constructor(
         binding.moreButton.isEnabled = !entry.isExtension
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
-
-        configureOfflineStatus(entry)
-
-        binding.moreButton.isVisible = actionButtonVisibility(entry)
 
         val accessibilityText = if (entry.path.isNullOrEmpty())
             context.getString(
@@ -111,12 +113,16 @@ class ListViewRow @JvmOverloads constructor(
                 } else {
                     Pair(R.drawable.ic_offline_status_pending, null)
                 }
+
             OfflineStatus.SYNCING ->
                 Pair(R.drawable.ic_offline_status_in_progress_anim, R.string.offline_status_in_progress)
+
             OfflineStatus.SYNCED ->
                 Pair(R.drawable.ic_offline_status_synced, null)
+
             OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
+
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)
         }
@@ -141,6 +147,38 @@ class ListViewRow @JvmOverloads constructor(
 
     private fun updateSubtitleVisibility() {
         binding.subtitle.isVisible = binding.subtitle.text.isNotEmpty() && !isCompact
+    }
+
+    @ModelProp
+    fun setMultiSelection(isMultiSelection: Boolean) {
+        this.multiSelectionEnabled = isMultiSelection
+    }
+
+    @AfterPropsSet
+    fun bind() {
+        binding.checkBox.isChecked = entry.isSelectedForMultiSelection
+
+        if (entry.isSelectedForMultiSelection) {
+            binding.parent.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackgroundMultiSelection))
+        } else {
+            binding.parent.background = context.getDrawableForAttribute(R.attr.selectableItemBackground)
+        }
+
+        if (multiSelectionEnabled) {
+            binding.moreButton.isVisible = false
+            binding.offlineIcon.isVisible = false
+            binding.checkBox.isVisible = true
+        } else {
+            postDataSet()
+        }
+    }
+
+    private fun postDataSet() {
+
+        binding.checkBox.isVisible = false
+        binding.checkBox.isChecked = false
+        binding.moreButton.isVisible = actionButtonVisibility(entry)
+        configureOfflineStatus(entry)
     }
 
     @CallbackProp

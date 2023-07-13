@@ -47,9 +47,9 @@ dependencies {
     androidTestImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.espresso.core
 
-    testImplementation("com.airbnb.android:mavericks-testing:3.0.0")
+    testImplementation("com.airbnb.android:mavericks-testing:3.0.3")
 
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
 
     // Optional -- Mockito framework
     testImplementation "org.mockito:mockito-core:5.1.1"

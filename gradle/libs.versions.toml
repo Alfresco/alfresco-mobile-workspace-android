@@ -97,7 +97,7 @@ kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.re
 
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
-mavericks = "com.airbnb.android:mavericks:3.0.5"
+mavericks = "com.airbnb.android:mavericks:2.7.0"
 mockito = "org.mockito:mockito-core:3.12.4"
 
 objectbox = "io.objectbox:objectbox-gradle-plugin:3.1.3"

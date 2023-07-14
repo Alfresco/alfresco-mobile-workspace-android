@@ -130,6 +130,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     companion object {
         const val ITEMS_PER_PAGE = 25
+        const val MULTI_SELECTION_LIMIT = 25
     }
 }
 

@@ -27,4 +27,5 @@
     <string name="group_title">Group</string>
     <string name="warning_message_uploading_in_progress">The upload is currently in progress. Do you want to continue without uploading?</string>
     <string name="none">None</string>
+    <string name="title_action_mode">%d Selected</string>
 </resources>

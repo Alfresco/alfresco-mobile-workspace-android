@@ -6,12 +6,17 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -32,6 +37,7 @@ import com.alfresco.content.app.widget.ActionBarController
 import com.alfresco.content.browse.BrowseFragment
 import com.alfresco.content.browse.FavoritesFragment
 import com.alfresco.content.browse.offline.OfflineFragment
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.listview.MultiSelection
 import com.alfresco.content.search.SearchFragment
@@ -75,8 +81,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         GlobalScope.launch {
             MultiSelection.observeMultiSelection().collect {
                 Handler(Looper.getMainLooper()).post {
-                    if (it) {
-                        enableMultiSelection()
+                    if (it.isMultiSelectionEnabled) {
+                        enableMultiSelection(it.selectedEntries)
                     } else {
                         disableMultiSelection()
                     }
@@ -241,10 +247,15 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
 
     private fun primaryColor(context: Context) = context.getColorForAttribute(R.attr.colorPrimary)
 
-    private fun enableMultiSelection() {
+    private fun enableMultiSelection(selectedEntries: List<Entry>) {
         if (actionMode == null) {
             actionMode = startSupportActionMode(this)
         }
+        val title = SpannableString(getString(R.string.title_action_mode, selectedEntries.size))
+        title.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)), 0, title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        actionMode?.title = title
+
         actionBarController?.showHideActionBarLayout(false)
         bottomNav.slideBottom()
         if (bottomNav.isVisible) {
@@ -262,7 +273,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        return true
+        mode?.let {
+            val inflater: MenuInflater = it.menuInflater
+            inflater.inflate(R.menu.menu_action_multi_selection, menu)
+            return true
+        }
+        return false
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {

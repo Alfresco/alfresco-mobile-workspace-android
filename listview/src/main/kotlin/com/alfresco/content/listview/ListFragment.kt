@@ -192,8 +192,20 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     override fun invalidate() = withState(viewModel) { state ->
 
-        if (state.selectedEntries.isEmpty()) {
-            MultiSelection.multiSelectionChangedFlow.tryEmit(false)
+        if (longPressHandled) {
+            if (state.selectedEntries.isEmpty()) {
+                MultiSelection.multiSelectionChangedFlow.tryEmit(
+                    MultiSelectionData(
+                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = false
+                    )
+                )
+            } else {
+                MultiSelection.multiSelectionChangedFlow.tryEmit(
+                    MultiSelectionData(
+                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = true
+                    )
+                )
+            }
         }
 
         loadingAnimation.isVisible =

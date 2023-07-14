@@ -16,6 +16,7 @@ import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder
@@ -79,7 +80,9 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
 
     override fun onItemLongClicked(entry: Entry) {
         viewModel.toggleSelection(entry)
-        MultiSelection.multiSelectionChangedFlow.tryEmit(true)
+        withState(viewModel) { state ->
+            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true))
+        }
     }
 
     override fun onEntryCreated(entry: ParentEntry) {

@@ -9,7 +9,8 @@
         <item name="android:colorBackground">@android:color/white</item>
         <item name="separatorColor">@color/alfresco_gray_900_15</item> <!-- sdk21 workaround -->
         <item name="colorControlNormal">@color/alfresco_gray_900_60</item> <!-- sdk21 workaround -->
-
+        <item name="actionModeCloseDrawable">@drawable/ic_cross_arrow_blue</item>
+        <item name="actionModeBackground">@color/colorActionModeBackground</item>
         <!-- Action Bar -->
         <item name="actionBarSize">52dp</item>
 
@@ -62,6 +63,8 @@
         <item name="separatorColor">@color/white_15</item>
         <item name="colorControlNormal">@color/white_60</item>
         <item name="android:colorBackground">@color/design_dark_default_color_background</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_cross_arrow_blue_night</item>
+        <item name="actionModeBackground">@color/colorActionModeBackground</item>
 
         <!-- Widget Styles -->
         <item name="actionBarStyle">@style/Widget.Alfresco.ActionBar.Dark</item>

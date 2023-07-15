@@ -102,7 +102,7 @@ internal fun ProcessDetailFragment.setListeners() {
     }
     binding.clAddAttachment.setSafeOnClickListener {
         withState(viewModel) {
-            showCreateSheet(it)
+            showCreateSheet(it, viewModel.observerID)
         }
     }
     binding.completeButton.setSafeOnClickListener {

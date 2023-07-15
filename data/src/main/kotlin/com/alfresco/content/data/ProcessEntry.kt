@@ -33,7 +33,6 @@ data class ProcessEntry(
     val formattedDueDate: String? = null,
     val defaultEntry: Entry? = null,
     val reviewerType: ReviewerType = ReviewerType.OTHER,
-    val observeId: String = "",
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -88,7 +87,6 @@ data class ProcessEntry(
                 processDefinitionKey = dataObj.key,
                 tenantId = dataObj.tenantId,
                 defaultEntry = processEntry?.defaultEntry,
-                observeId = buildString { append(dataObj.id).append("::").append(System.currentTimeMillis()) },
             )
         }
 
@@ -118,7 +116,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId,
             )
         }
 
@@ -149,7 +146,6 @@ data class ProcessEntry(
                 formattedDueDate = formattedDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId,
             )
         }
 
@@ -183,7 +179,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId,
             )
         }
 
@@ -213,7 +208,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId,
             )
         }
 
@@ -250,7 +244,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = reviewerType,
-                observeId = data.observeId,
             )
         }
     }
@@ -262,8 +255,6 @@ data class ProcessEntry(
 enum class ReviewerType {
     PEOPLE,
     FUNCTIONAL_GROUP,
-    REVIEWGROUPS,
-    REVIEWER,
     OTHER,
     ;
 

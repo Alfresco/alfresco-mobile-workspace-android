@@ -88,7 +88,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
 
         binding.fabAddAttachments.visibility = View.VISIBLE
         binding.fabAddAttachments.setOnClickListener {
-            showCreateSheet(state)
+            showCreateSheet(state, viewModel.observerID)
         }
 
         if (state.listContents.isEmpty()) requireActivity().onBackPressed()

@@ -56,9 +56,9 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         CreateActionsSheet.with(Entry.defaultAPSEntry(state.parent?.id)).show(childFragmentManager, null)
     }
 
-    internal fun showCreateSheet(state: ProcessDetailViewState) {
+    internal fun showCreateSheet(state: ProcessDetailViewState, observerID: String) {
         AnalyticsManager().taskEvent(EventName.UploadProcessAttachment)
-        CreateActionsSheet.with(Entry.defaultWorkflowEntry(state.parent?.observeId)).show(childFragmentManager, null)
+        CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID)).show(childFragmentManager, null)
     }
 
     /**

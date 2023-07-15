@@ -25,6 +25,7 @@ import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /**
  * Marked as ProcessDetailViewModel
@@ -37,8 +38,10 @@ class ProcessDetailViewModel(
 
     private var observeUploadsJob: Job? = null
     var entryListener: EntryListener? = null
+    var observerID: String = ""
 
     init {
+        observerID = UUID.randomUUID().toString()
         viewModelScope.on<ActionOpenWith> {
             if (!it.entry.path.isNullOrEmpty()) {
                 entryListener?.onEntryCreated(it.entry)
@@ -108,7 +111,7 @@ class ProcessDetailViewModel(
         repo.removeCompletedUploads()
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(state.parent.observeId, UploadServerType.UPLOAD_TO_PROCESS)
+        observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
                     updateUploads(it())

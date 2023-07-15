@@ -49,7 +49,7 @@ class FavoritesFragment : Fragment() {
             MultiSelection.observeMultiSelection().collect {
                 Handler(Looper.getMainLooper()).post {
                     if (isAdded) {
-                        enableDisableTabs(it)
+                        enableDisableTabs(it.isMultiSelectionEnabled)
                     }
                 }
             }

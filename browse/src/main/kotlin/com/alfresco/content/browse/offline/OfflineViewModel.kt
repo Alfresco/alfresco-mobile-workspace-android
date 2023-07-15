@@ -70,14 +70,19 @@ class OfflineViewModel(
                 !ConnectivityTracker.isActiveNetworkMetered(context)
 
     fun toggleSelection(entry: Entry) = setState {
-        val updatedEntries = entries.map {
-            if (it.id == entry.id) {
-                it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
-            } else {
-                it
+        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+            this
+        } else {
+            val updatedEntries = entries.map {
+                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                } else {
+                    it
+                }
             }
+            copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
         }
-        copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
     }
 
     fun resetMultiSelection() = setState {

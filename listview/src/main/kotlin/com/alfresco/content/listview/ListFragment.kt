@@ -130,6 +130,7 @@ abstract class ListViewModel<S : ListViewState>(
 
     companion object {
         const val ITEMS_PER_PAGE = 25
+        const val MULTI_SELECTION_LIMIT = 25
     }
 }
 
@@ -192,8 +193,20 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     override fun invalidate() = withState(viewModel) { state ->
 
-        if (state.selectedEntries.isEmpty()) {
-            MultiSelection.multiSelectionChangedFlow.tryEmit(false)
+        if (longPressHandled) {
+            if (state.selectedEntries.isEmpty()) {
+                MultiSelection.multiSelectionChangedFlow.tryEmit(
+                    MultiSelectionData(
+                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = false
+                    )
+                )
+            } else {
+                MultiSelection.multiSelectionChangedFlow.tryEmit(
+                    MultiSelectionData(
+                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = true
+                    )
+                )
+            }
         }
 
         loadingAnimation.isVisible =

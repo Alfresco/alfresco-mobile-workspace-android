@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="alfresco_blue_900">#1A43A9</color>
-<!--    <color name="alfresco_blue_700">#2A7DE1</color>-->
+    <!--    <color name="alfresco_blue_700">#2A7DE1</color>-->
     <color name="alfresco_blue_700">#1F74DB</color>
     <color name="alfresco_blue_300">#6EACFF</color>
 
@@ -19,5 +19,7 @@
     <color name="white">@android:color/white</color>
     <color name="white_15">#26FFFFFF</color>
     <color name="white_60">#99FFFFFF</color>
+    <color name="actionModeColor">@color/alfresco_blue_700</color>
+    <color name="separateColorGray">#212121</color>
 
 </resources>

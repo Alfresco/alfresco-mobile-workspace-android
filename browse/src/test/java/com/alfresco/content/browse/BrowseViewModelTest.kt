@@ -23,7 +23,7 @@ class BrowseViewModelTest {
 
     private var offlineRepository: OfflineRepository = mockk(relaxed = true)
 
-    private val testEntries = listOf(
+    private var testEntries = mutableListOf(
         Entry(id = "1", name = "Entry 1", isSelectedForMultiSelection = false),
         Entry(id = "2", name = "Entry 2", isSelectedForMultiSelection = false)
     )
@@ -31,6 +31,10 @@ class BrowseViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
+    }
+
+    @Test
+    fun `toggleSelection should update the state with entry selection`() {
         viewModel = BrowseViewModel(
             BrowseViewState(
                 entries = testEntries,
@@ -42,11 +46,6 @@ class BrowseViewModelTest {
             browseRepository,
             offlineRepository
         )
-    }
-
-    @Test
-    fun `toggleSelection should update the state with entry selection`() {
-
         testEntries.forEach { entry ->
             assertEquals(false, entry.isSelectedForMultiSelection)
         }
@@ -59,8 +58,53 @@ class BrowseViewModelTest {
     }
 
     @Test
-    fun `resetMultiSelection should update the state with entries deselection`() {
+    fun `toggleSelection should update the state with entry selection with in limit`() {
 
+        testEntries = mutableListOf()
+
+        for (i in 0 until 50) {
+            testEntries.add(Entry(id = "$i", name = "Entry $i", isSelectedForMultiSelection = false))
+        }
+
+        viewModel = BrowseViewModel(
+            BrowseViewState(
+                entries = testEntries,
+                selectedEntries = emptyList(),
+                path = "",
+                nodeId = null,
+                moveId = ""
+            ),
+            context,
+            browseRepository,
+            offlineRepository
+        )
+
+        withState(viewModel) { state ->
+            assertEquals(50, state.entries.size)
+        }
+
+        testEntries.forEach { entry ->
+            viewModel.toggleSelection(entry)
+        }
+
+        withState(viewModel) { state ->
+            assertEquals(25, state.selectedEntries.size)
+        }
+    }
+
+    @Test
+    fun `resetMultiSelection should update the state with entries deselection`() {
+        viewModel = BrowseViewModel(
+            BrowseViewState(
+                entries = testEntries,
+                path = "",
+                nodeId = null,
+                moveId = ""
+            ),
+            context,
+            browseRepository,
+            offlineRepository
+        )
         viewModel.resetMultiSelection()
 
         withState(viewModel) { state ->

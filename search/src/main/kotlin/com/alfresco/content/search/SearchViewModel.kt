@@ -290,7 +290,7 @@ class SearchViewModel(
      */
     fun initAdvanceFilters(index: Int): AdvanceSearchFilters {
         val list = emptyAdvanceFilters()
-        if (appConfigModel.search?.size ?: 0 >= index) {
+        if ((appConfigModel.search?.size ?: 0) >= index) {
             appConfigModel.search?.get(index)?.filterQueries?.filter { it.query != null }?.map { obj ->
                 obj.query?.let { query ->
                     list.add(AdvanceSearchFilter(query = query, name = query))
@@ -423,14 +423,19 @@ class SearchViewModel(
     }
 
     fun toggleSelection(entry: Entry) = setState {
-        val updatedEntries = entries.map {
-            if (it.id == entry.id) {
-                it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
-            } else {
-                it
+        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+            this
+        } else {
+            val updatedEntries = entries.map {
+                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                } else {
+                    it
+                }
             }
+            copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
         }
-        copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
     }
 
     fun resetMultiSelection() = setState {

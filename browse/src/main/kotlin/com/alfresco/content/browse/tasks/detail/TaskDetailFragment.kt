@@ -48,13 +48,13 @@ import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Marked as TaskDetailFragment class
@@ -74,7 +74,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         if (viewLayout == null) {
             binding = FragmentTaskDetailBinding.inflate(inflater, container, false)
@@ -99,9 +99,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
                 withState(viewModel) { state ->
-                    if (!viewModel.isWorkflowTask && (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state)))
+                    if (!viewModel.isWorkflowTask && (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))) {
                         discardTaskPrompt()
-                    else requireActivity().onBackPressed()
+                    } else requireActivity().onBackPressed()
                 }
             }
             title = resources.getString(R.string.title_task_view)
@@ -181,11 +181,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun invalidate() = withState(viewModel) { state ->
 
         binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
-                (state.requestComments is Loading && state.listComments.isEmpty()) ||
-                (state.requestContents is Loading && state.listContents.isEmpty()) ||
-                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
-                (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
-                (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading)
+            (state.requestComments is Loading && state.listComments.isEmpty()) ||
+            (state.requestContents is Loading && state.listContents.isEmpty()) ||
+            (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
+            (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
+            (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading)
 
         setData(state)
 
@@ -193,8 +193,8 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
         when {
             (state.requestCompleteTask.invoke()?.code() == 200) ||
-                    (state.requestOutcomes.invoke()?.code() == 200)
-                    || (state.requestClaimRelease.invoke()?.code() == 200) -> {
+                (state.requestOutcomes.invoke()?.code() == 200) ||
+                (state.requestClaimRelease.invoke()?.code() == 200) -> {
                 viewModel.updateTaskList()
                 requireActivity().onBackPressed()
             }
@@ -212,8 +212,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             }
         }
 
-        if (state.requestContents.complete || (viewModel.isWorkflowTask && state.requestTaskForm.complete))
+        if (state.requestContents.complete || (viewModel.isWorkflowTask && state.requestTaskForm.complete)) {
             epoxyAttachmentController.requestModelBuild()
+        }
     }
 
     private fun setCommentData(listComments: List<CommentEntry>) {
@@ -248,8 +249,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         val dataObj = state.parent
         if (dataObj != null) {
             binding.tvTitle.text = dataObj.name
-            if (viewModel.hasTaskEditMode)
+            if (viewModel.hasTaskEditMode) {
                 updateTaskDetailUI(true)
+            }
 
             if (viewModel.isWorkflowTask) {
                 enableTaskFormUI()
@@ -274,13 +276,13 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
                 binding.recyclerViewAttachments.visibility = View.VISIBLE
 
-                if (state.listContents.size > 1)
+                if (state.listContents.size > 1) {
                     binding.tvNoOfAttachments.visibility = View.VISIBLE
-                else binding.tvNoOfAttachments.visibility = View.GONE
+                } else binding.tvNoOfAttachments.visibility = View.GONE
 
-                if (state.listContents.size > 4)
+                if (state.listContents.size > 4) {
                     binding.tvAttachmentViewAll.visibility = View.VISIBLE
-                else
+                } else
                     binding.tvAttachmentViewAll.visibility = View.GONE
 
                 binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state) && !viewModel.isWorkflowTask
@@ -319,13 +321,16 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         if (!contentEntry.isUpload) {
             val entry = Entry.convertContentEntryToEntry(
                 contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_TASK
+                MimeType.isDocFile(contentEntry.mimeType),
+                UploadServerType.UPLOAD_TO_TASK,
             )
-            if (!contentEntry.source.isNullOrEmpty())
+            if (!contentEntry.source.isNullOrEmpty()) {
                 remoteViewerIntent(entry)
-            else
+            } else
                 viewModel.executePreview(ActionOpenWith(entry))
-        } else localViewerIntent(contentEntry)
+        } else {
+            localViewerIntent(contentEntry)
+        }
     }
 
     internal fun taskCompletePrompt(filesInQueue: Boolean) {
@@ -364,16 +369,16 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             localViewerIntent(entry as Entry)
+        }
     }
 
     internal suspend fun showComponentSheetDialog(
         context: Context,
-        componentData: ComponentData
+        componentData: ComponentData,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-
             ComponentBuilder(context, componentData)
                 .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
@@ -390,10 +395,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
     internal suspend fun showSearchUserComponentDialog(
         context: Context,
-        taskEntry: TaskEntry
+        taskEntry: TaskEntry,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-
             SearchUserGroupComponentBuilder(context, taskEntry)
                 .onApply { userDetails ->
                     it.resume(userDetails)

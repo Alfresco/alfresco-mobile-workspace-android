@@ -9,11 +9,11 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.query.QueryBuilder.StringOrder
-import java.io.File
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.io.File
 
 class OfflineRepository(val session: Session = SessionManager.requireSession) {
 
@@ -88,10 +88,15 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             val count = data.count().toLong()
             trySendBlocking(
                 ResponsePaging(
-                    data, Pagination(
-                        count, false, 0, count, count
-                    )
-                )
+                    data,
+                    Pagination(
+                        count,
+                        false,
+                        0,
+                        count,
+                        count,
+                    ),
+                ),
             )
         }
         awaitClose { subscription.cancel() }
@@ -155,8 +160,11 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         val count = getTotalTransfersSize()
         val list = fetchAllTransferEntries()
 
-        if (list.isEmpty()) updateTransferSize(size)
-        else updateTransferSize(count + size)
+        if (list.isEmpty()) {
+            updateTransferSize(size)
+        } else {
+            updateTransferSize(count + size)
+        }
     }
 
     fun scheduleContentForUpload(
@@ -164,7 +172,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         contentUri: Uri,
         parentId: String,
         isExtension: Boolean = false,
-        uploadServerType: UploadServerType = UploadServerType.DEFAULT
+        uploadServerType: UploadServerType = UploadServerType.DEFAULT,
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -188,7 +196,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING,
             isExtension = isExtension,
-            uploadServer = uploadServerType
+            uploadServer = uploadServerType,
         )
 
         clearData()
@@ -217,7 +225,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         name: String,
         description: String,
         mimeType: String,
-        uploadServerType: UploadServerType
+        uploadServerType: UploadServerType,
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
         val entry = Entry(
@@ -228,7 +236,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             properties = mapOf("cm:description" to description),
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING,
-            uploadServer = uploadServerType
+            uploadServer = uploadServerType,
         )
 
         clearData()

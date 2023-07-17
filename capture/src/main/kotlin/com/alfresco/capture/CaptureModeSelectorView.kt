@@ -23,7 +23,7 @@ class CaptureModeSelectorView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    defStyleRes: Int
+    defStyleRes: Int,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     var modes: List<CaptureMode> = listOf(CaptureMode.Photo, CaptureMode.Video)
@@ -54,17 +54,19 @@ class CaptureModeSelectorView(
         RecyclerView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT
+                LayoutParams.WRAP_CONTENT,
             )
             adapter = Adapter(modes.map { it.title(context) })
             layoutManager = LinearLayoutManager(
                 context,
                 LinearLayoutManager.HORIZONTAL,
-                false
+                false,
             )
-            addItemDecoration(SpacingDecoration(
-                resources.getDimension(R.dimen.capture_button_min_spacing).toInt()
-            ))
+            addItemDecoration(
+                SpacingDecoration(
+                    resources.getDimension(R.dimen.capture_button_min_spacing).toInt(),
+                ),
+            )
             addItemDecoration(BoundsOffsetDecoration())
         }.also {
             val snapHelper = LinearSnapHelper()
@@ -102,12 +104,14 @@ class CaptureModeSelectorView(
         inner class ViewHolder(val view: ModeView) : RecyclerView.ViewHolder(view)
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
-            ViewHolder(ModeView(viewGroup.context).apply {
-                layoutParams = RecyclerView.LayoutParams(
-                    RecyclerView.LayoutParams.WRAP_CONTENT,
-                    resources.getDimension(R.dimen.capture_button_size).toInt()
-                )
-            })
+            ViewHolder(
+                ModeView(viewGroup.context).apply {
+                    layoutParams = RecyclerView.LayoutParams(
+                        RecyclerView.LayoutParams.WRAP_CONTENT,
+                        resources.getDimension(R.dimen.capture_button_size).toInt(),
+                    )
+                },
+            )
 
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
             viewHolder.view.apply {
@@ -123,11 +127,11 @@ class CaptureModeSelectorView(
     }
 
     private class ModeView(
-        context: Context
+        context: Context,
     ) : AppCompatTextView(
         ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
         null,
-        0
+        0,
     ) {
         init {
             gravity = Gravity.CENTER
@@ -143,7 +147,7 @@ class CaptureModeSelectorView(
             outRect: Rect,
             view: View,
             parent: RecyclerView,
-            state: RecyclerView.State
+            state: RecyclerView.State,
         ) {
             super.getItemOffsets(outRect, view, parent, state)
 
@@ -160,7 +164,7 @@ class CaptureModeSelectorView(
             outRect: Rect,
             view: View,
             parent: RecyclerView,
-            state: RecyclerView.State
+            state: RecyclerView.State,
         ) {
             super.getItemOffsets(outRect, view, parent, state)
 
@@ -168,7 +172,7 @@ class CaptureModeSelectorView(
 
             view.measure(
                 MeasureSpec.makeMeasureSpec(parent.measuredWidth, MeasureSpec.AT_MOST),
-                MeasureSpec.makeMeasureSpec(parent.measuredHeight, MeasureSpec.UNSPECIFIED)
+                MeasureSpec.makeMeasureSpec(parent.measuredHeight, MeasureSpec.UNSPECIFIED),
             )
             val itemWidth = view.measuredWidth
             val offset = (parent.measuredWidth - itemWidth) / 2
@@ -183,7 +187,7 @@ class CaptureModeSelectorView(
 
     private inner class OnSnapScrollListener(
         private val snapHelper: SnapHelper,
-        val onSnap: (Int) -> Unit
+        val onSnap: (Int) -> Unit,
     ) : RecyclerView.OnScrollListener() {
         private var snapPosition = RecyclerView.NO_POSITION
 

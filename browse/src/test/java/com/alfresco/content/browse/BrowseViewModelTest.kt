@@ -25,7 +25,7 @@ class BrowseViewModelTest {
 
     private var testEntries = mutableListOf(
         Entry(id = "1", name = "Entry 1", isSelectedForMultiSelection = false),
-        Entry(id = "2", name = "Entry 2", isSelectedForMultiSelection = false)
+        Entry(id = "2", name = "Entry 2", isSelectedForMultiSelection = false),
     )
 
     @Before
@@ -40,11 +40,11 @@ class BrowseViewModelTest {
                 entries = testEntries,
                 path = "",
                 nodeId = null,
-                moveId = ""
+                moveId = "",
             ),
             context,
             browseRepository,
-            offlineRepository
+            offlineRepository,
         )
         testEntries.forEach { entry ->
             assertEquals(false, entry.isSelectedForMultiSelection)
@@ -59,7 +59,6 @@ class BrowseViewModelTest {
 
     @Test
     fun `toggleSelection should update the state with entry selection with in limit`() {
-
         testEntries = mutableListOf()
 
         for (i in 0 until 50) {
@@ -72,11 +71,11 @@ class BrowseViewModelTest {
                 selectedEntries = emptyList(),
                 path = "",
                 nodeId = null,
-                moveId = ""
+                moveId = "",
             ),
             context,
             browseRepository,
-            offlineRepository
+            offlineRepository,
         )
 
         withState(viewModel) { state ->
@@ -99,11 +98,11 @@ class BrowseViewModelTest {
                 entries = testEntries,
                 path = "",
                 nodeId = null,
-                moveId = ""
+                moveId = "",
             ),
             context,
             browseRepository,
-            offlineRepository
+            offlineRepository,
         )
         viewModel.resetMultiSelection()
 

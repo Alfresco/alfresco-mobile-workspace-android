@@ -29,7 +29,7 @@ fun ModelCollector.carouselBuilder(builder: EpoxyCarouselBuilder.() -> Unit): Ca
  * Epoxy Builder to build the carousel view
  */
 class EpoxyCarouselBuilder(
-    internal val carouselModel: CarouselModel_ = CarouselModel_()
+    internal val carouselModel: CarouselModel_ = CarouselModel_(),
 ) : ModelCollector, CarouselModelBuilder by carouselModel {
     private val models = mutableListOf<EpoxyModel<*>>()
 

@@ -23,7 +23,7 @@ data class TasksViewState(
     val listSortDataChips: List<TaskFilterData> = emptyList(),
     val filterParams: TaskProcessFiltersPayload = TaskProcessFiltersPayload(),
     val loadItemsCount: Int = 0,
-    val page: Int = 0
+    val page: Int = 0,
 ) : TaskListViewState {
 
     constructor(target: ProcessEntry) : this (processEntry = target)
@@ -34,7 +34,7 @@ data class TasksViewState(
      * update the latest response
      */
     fun update(
-        response: ResponseList?
+        response: ResponseList?,
     ): TasksViewState {
         if (response == null) return this
 
@@ -54,7 +54,7 @@ data class TasksViewState(
             taskEntries = newTaskEntries,
             baseTaskEntries = newTaskEntries,
             loadItemsCount = totalLoadCount,
-            hasMoreItems = totalLoadCount < response.total
+            hasMoreItems = totalLoadCount < response.total,
         )
     }
 }

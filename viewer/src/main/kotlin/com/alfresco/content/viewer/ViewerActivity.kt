@@ -24,13 +24,14 @@ class ViewerActivity : AppCompatActivity() {
         supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        if (intent.extras?.getString("mode") == "share")
+        if (intent.extras?.getString("mode") == "share") {
             binding.parentActionBarList.visibility = View.GONE
+        }
 
         Action.showActionToasts(
             lifecycleScope,
             binding.root,
-            binding.actionListBar
+            binding.actionListBar,
         )
     }
 

@@ -49,7 +49,7 @@ interface ProcessListViewState : MavericksState {
  * Mark as TaskListViewModel class
  */
 abstract class ProcessListViewModel<S : ProcessListViewState>(
-    initialState: S
+    initialState: S,
 ) : MavericksViewModel<S>(initialState) {
 
     private var folderListener: EntryListener? = null

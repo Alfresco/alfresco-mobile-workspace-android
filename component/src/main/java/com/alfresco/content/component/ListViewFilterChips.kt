@@ -23,7 +23,7 @@ import com.alfresco.content.getLocalizedName
 class ListViewFilterChips @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListFilterChipsBinding.inflate(LayoutInflater.from(context), this)
@@ -45,8 +45,9 @@ class ListViewFilterChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(chipTextDisplayLimit.plus(3)))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) {
+                    dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
+                } else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
             ComponentType.FACETS.value -> {
                 if (dataObj.selectedName.isNotEmpty()) {
@@ -54,15 +55,16 @@ class ListViewFilterChips @JvmOverloads constructor(
                 } else {
                     val replacedString = dataObj.facets?.label?.replace(" ", ".") ?: ""
                     val localizedName = context.getLocalizedName(replacedString)
-                    if (localizedName == replacedString)
+                    if (localizedName == replacedString) {
                         binding.chip.text = dataObj.facets?.label?.wrapWithLimit(context, chipTextDisplayLimit) ?: ""
-                    else
+                    } else
                         binding.chip.text = localizedName.wrapWithLimit(context, chipTextDisplayLimit)
                 }
             }
             else -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
-                else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) {
+                    dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
+                } else context.getLocalizedName(dataObj.category?.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
         }
 

@@ -12,7 +12,7 @@ data class OfflineViewState(
     override val selectedEntries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
-    val syncNowEnabled: Boolean = false
+    val syncNowEnabled: Boolean = false,
 ) : ListViewState {
 
     constructor(args: OfflineBrowseArgs) : this(parentId = args.id)

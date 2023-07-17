@@ -16,8 +16,11 @@ class CapturePhotoResultContract : ActivityResultContract<Unit, List<CaptureItem
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): List<CaptureItem>? {
-        return if (intent == null || resultCode != Activity.RESULT_OK) null
-        else intent.extras?.getParcelableArrayList(OUTPUT_KEY)
+        return if (intent == null || resultCode != Activity.RESULT_OK) {
+            null
+        } else {
+            intent.extras?.getParcelableArrayList(OUTPUT_KEY)
+        }
     }
 
     internal companion object {

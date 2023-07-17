@@ -35,6 +35,6 @@ class TaskViewerActivity : AppCompatActivity() {
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
         binding.root,
-        binding.bottomView
+        binding.bottomView,
     )
 }

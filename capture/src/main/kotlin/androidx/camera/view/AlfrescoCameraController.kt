@@ -4,14 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.MainThread
-import androidx.annotation.OptIn
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LensFacing
 import androidx.camera.core.impl.utils.Threads
-import androidx.camera.lifecycle.ExperimentalUseCaseGroupLifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.alfresco.Logger
 
@@ -60,7 +58,6 @@ class AlfrescoCameraController(context: Context) :
      *
      * @return null if failed to start camera.
      */
-    @OptIn(ExperimentalUseCaseGroupLifecycle::class)
     @RequiresPermission(Manifest.permission.CAMERA)
     override fun startCamera(): Camera? {
         if (mLifecycleOwner == null) {

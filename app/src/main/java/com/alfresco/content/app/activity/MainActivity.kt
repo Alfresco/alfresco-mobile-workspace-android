@@ -54,9 +54,9 @@ import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 
 /**
  * Marked as MainActivity class
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
 
         viewModel.handleDataIntent(
             intent.extras?.getString(MODE_KEY, ""),
-            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false
+            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false,
         )
 
         // Check login during creation for faster transition on startup
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         val data = Triple(
             intent.extras?.getString(ID_KEY, "") ?: "",
             intent.extras?.getString(MODE_KEY, "") ?: "",
-            "Preview"
+            "Preview",
         )
 
         when (mode) {
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         isNewIntent = true
         viewModel.handleDataIntent(
             intent?.extras?.getString(MODE_KEY, ""),
-            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false
+            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false,
         )
     }
 
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
             Intent(this, ViewerActivity::class.java)
                 .putExtra(ID_KEY, data.first)
                 .putExtra(MODE_KEY, data.second)
-                .putExtra(TITLE_KEY, data.third)
+                .putExtra(TITLE_KEY, data.third),
         )
     }
 
@@ -209,8 +209,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
             // Only when logged in otherwise triggers re-login prompts
             actionBarController?.setProfileIcon(viewModel.profileIcon)
         }
-        if (actionBarController != null)
+        if (actionBarController != null) {
             actionBarController?.setOnline(state.isOnline)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
@@ -240,7 +241,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope, findViewById(android.R.id.content), bottomNav
+        lifecycleScope,
+        findViewById(android.R.id.content),
+        bottomNav,
     )
 
     private fun setupDownloadNotifications() = DownloadMonitor.smallIcon(R.drawable.ic_notification_small).tint(primaryColor(this)).observe(this)

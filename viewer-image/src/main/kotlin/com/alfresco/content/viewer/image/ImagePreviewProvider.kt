@@ -11,7 +11,7 @@ object ImagePreviewProvider : PreviewProvider {
         "image/gif",
         "image/webp",
         "image/gif",
-        "image/svg+xml"
+        "image/svg+xml",
     ).apply {
         if (Build.VERSION.SDK_INT >= 26) {
             add("image/heic")

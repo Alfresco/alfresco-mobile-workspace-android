@@ -58,7 +58,7 @@ interface TaskListViewState : MavericksState {
  * Mark as TaskListViewModel class
  */
 abstract class TaskListViewModel<S : TaskListViewState>(
-    initialState: S
+    initialState: S,
 ) : MavericksViewModel<S>(initialState) {
 
     private var folderListener: EntryListener? = null

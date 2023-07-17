@@ -17,7 +17,7 @@ data class SearchChipCategory(
     var facets: Facets? = null,
     var isSelected: Boolean = false,
     var selectedName: String = "",
-    var selectedQuery: String = ""
+    var selectedQuery: String = "",
 ) : Parcelable {
 
     companion object {
@@ -31,7 +31,7 @@ data class SearchChipCategory(
                 isSelected = searchChipCategory?.isSelected == true,
                 facets = searchChipCategory?.facets,
                 selectedName = name,
-                selectedQuery = query
+                selectedQuery = query,
             )
         }
 
@@ -41,13 +41,15 @@ data class SearchChipCategory(
         fun withContextual(name: String, contextual: SearchFilter): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    name = name, expanded = null,
-                    component = null, enabled = null,
-                    id = contextual.toString()
+                    name = name,
+                    expanded = null,
+                    component = null,
+                    enabled = null,
+                    id = contextual.toString(),
                 ),
                 isSelected = true,
                 selectedName = name,
-                selectedQuery = contextual.name
+                selectedQuery = contextual.name,
             )
         }
 
@@ -60,7 +62,7 @@ data class SearchChipCategory(
                 facets = searchChipCategory.facets,
                 isSelected = searchChipCategory.category?.component == null,
                 selectedName = "",
-                selectedQuery = ""
+                selectedQuery = "",
             )
         }
 
@@ -70,12 +72,15 @@ data class SearchChipCategory(
         fun withDefaultFacet(data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    null, Component(null, ComponentType.FACETS.value),
-                    data.label, data.label, null
+                    null,
+                    Component(null, ComponentType.FACETS.value),
+                    data.label,
+                    data.label,
+                    null,
                 ),
                 facets = data,
                 selectedName = "",
-                selectedQuery = ""
+                selectedQuery = "",
             )
         }
 
@@ -88,21 +93,25 @@ data class SearchChipCategory(
                 facets = data,
                 selectedName = oldDataObj.selectedName,
                 selectedQuery = oldDataObj.selectedQuery,
-                isSelected = oldDataObj.isSelected
+                isSelected = oldDataObj.isSelected,
             )
         }
+
         /**
          * return the update SearchChipCategory obj using FacetIntervals data obj
          */
         fun withFilterCountZero(data: Facets): SearchChipCategory {
             return SearchChipCategory(
                 category = CategoriesItem(
-                    null, Component(null, ComponentType.FACETS.value),
-                    data.label, data.label, null
+                    null,
+                    Component(null, ComponentType.FACETS.value),
+                    data.label,
+                    data.label,
+                    null,
                 ),
                 facets = Facets.filterZeroCount(data),
                 selectedName = "",
-                selectedQuery = ""
+                selectedQuery = "",
             )
         }
     }

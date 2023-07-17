@@ -42,15 +42,15 @@ subprojects {
     afterEvaluate {
         if(it.hasProperty('android')) {
             android {
-                compileSdkVersion 32
+                compileSdkVersion 33
 
                 defaultConfig {
                     minSdkVersion 24
-                    targetSdkVersion 32
+                    targetSdkVersion 33
                 }
                 compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_1_8
-                    targetCompatibility JavaVersion.VERSION_1_8
+                    sourceCompatibility JavaVersion.VERSION_18
+                    targetCompatibility JavaVersion.VERSION_18
                 }
                 sourceSets['main'].java.srcDir('src/main/kotlin')
 
@@ -84,8 +84,8 @@ subprojects {
 
             freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
 
-            // Set JVM target to 1.8
-            jvmTarget = "1.8"
+            // Set JVM target to 18
+            jvmTarget = "18"
         }
     }
 }

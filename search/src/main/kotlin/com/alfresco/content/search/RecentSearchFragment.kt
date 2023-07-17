@@ -19,7 +19,7 @@ class RecentSearchFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentRecentSearchBinding.inflate(inflater, container, false)
         return binding.root

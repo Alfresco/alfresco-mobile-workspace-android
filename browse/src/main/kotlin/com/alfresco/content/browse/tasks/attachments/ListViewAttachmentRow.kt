@@ -24,7 +24,7 @@ import com.alfresco.content.mimetype.MimeType
 class ListViewAttachmentRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListAttachmentRowBinding.inflate(LayoutInflater.from(context), this)
@@ -86,8 +86,8 @@ class ListViewAttachmentRow @JvmOverloads constructor(
 
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink && !entry.isUpload &&
-                // Child folder in offline tab
-                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
+            // Child folder in offline tab
+            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
 
     /**
      * list row click listener

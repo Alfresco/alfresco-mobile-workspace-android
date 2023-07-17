@@ -22,7 +22,7 @@ import com.alfresco.content.getLocalizedName
 class ListViewSortChips @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListSortChipsBinding.inflate(LayoutInflater.from(context), this)
@@ -41,12 +41,14 @@ class ListViewSortChips @JvmOverloads constructor(
                     binding.chip.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(chipTextDisplayLimit.plus(3)))
                     binding.chip.ellipsize = TextUtils.TruncateAt.END
                 }
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
-                else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) {
+                    dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit)
+                } else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
             else -> {
-                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
-                else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
+                binding.chip.text = if (dataObj.selectedName.isNotEmpty()) {
+                    dataObj.selectedName.wrapWithLimit(context, chipTextDisplayLimit, ",")
+                } else context.getLocalizedName(dataObj.name?.wrapWithLimit(context, chipTextDisplayLimit) ?: "")
             }
         }
 

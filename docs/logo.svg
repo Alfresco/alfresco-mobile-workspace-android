@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   height="152.03149"
-   width="559.58502"
-   id="svg56"
-   style="color:#2a7de1;text-align:left;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#2a7de1;inline-size:130px;display:block"
-   version="1.1"
-   viewBox="-28.579 0.043 559.585 152.03149"
-   class="icon__logo">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="152.03149"
+    width="559.58502" id="svg56" style="color:#2a7de1;text-align:left;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#2a7de1;inline-size:130px;display:block"
+    version="1.1" viewBox="-28.579 0.043 559.585 152.03149" class="icon__logo">
   <metadata
      id="metadata62">
     <rdf:RDF>

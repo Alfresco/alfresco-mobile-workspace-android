@@ -9,7 +9,7 @@ data class ResponseAccountInfo(
     val size: Int? = null,
     val start: Int? = null,
     val total: Int? = null,
-    val listAccounts: List<AccountInfoData> = emptyList()
+    val listAccounts: List<AccountInfoData> = emptyList(),
 ) {
     companion object {
         /**
@@ -20,7 +20,7 @@ data class ResponseAccountInfo(
                 size = raw.size,
                 start = raw.start,
                 total = raw.total,
-                listAccounts = raw.listAccountInfo?.map { AccountInfoData.with(it) } ?: listOf(AccountInfoData())
+                listAccounts = raw.listAccountInfo?.map { AccountInfoData.with(it) } ?: listOf(AccountInfoData()),
             )
         }
     }

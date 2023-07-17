@@ -17,7 +17,7 @@ class ProfileIconView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    defStyleRes: Int
+    defStyleRes: Int,
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding = ViewProfileIconBinding.inflate(LayoutInflater.from(context), this)
@@ -50,8 +50,8 @@ class ProfileIconView(
                 statusIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.ic_profile_status_offline
-                    )
+                        R.drawable.ic_profile_status_offline,
+                    ),
                 )
             }
             status.isVisible = value

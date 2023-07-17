@@ -23,13 +23,13 @@ import kotlinx.coroutines.launch
 class ProcessesViewModel(
     state: ProcessesViewState,
     val context: Context,
-    private val repository: TaskRepository
+    private val repository: TaskRepository,
 ) : ProcessListViewModel<ProcessesViewState>(state) {
 
     val listProcesses = mapOf(
         ProcessFilters.All.filter to ProcessFilters.All.name,
         ProcessFilters.Active.filter to ProcessFilters.Running.name,
-        ProcessFilters.Completed.filter to ProcessFilters.Completed.name
+        ProcessFilters.Completed.filter to ProcessFilters.Completed.name,
     )
 
     var filterName: String = ProcessFilters.Active.filter
@@ -51,7 +51,7 @@ class ProcessesViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ProcessesViewState
+            state: ProcessesViewState,
         ) = ProcessesViewModel(state, viewModelContext.activity, TaskRepository())
     }
 
@@ -62,7 +62,7 @@ class ProcessesViewModel(
         viewModelScope.launch {
             // Fetch processes data
             repository::getProcesses.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage),
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -89,7 +89,7 @@ class ProcessesViewModel(
         viewModelScope.launch {
             // Fetch processes data
             repository::getProcesses.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue),
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())

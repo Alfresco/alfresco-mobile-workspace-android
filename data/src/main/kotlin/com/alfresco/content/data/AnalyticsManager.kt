@@ -42,6 +42,7 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         params.putString(Parameters.EventName.value, eventName.lowercase())
         repository.logEvent(eventName.lowercase(), params)
     }
+
     /**
      * analytics for task complete
      */
@@ -86,8 +87,9 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
     fun screenViewEvent(pageViewName: PageView, noOfFiles: Int = -1) {
         val params = repository.defaultParams()
 
-        if (noOfFiles > -1)
+        if (noOfFiles > -1) {
             params.putInt(Parameters.NumberOfFiles.value, noOfFiles)
+        }
 
         params.putString(Parameters.EventName.value, pageViewName.value.lowercase())
         repository.logEvent(pageViewName.value.lowercase(), params)
@@ -102,8 +104,9 @@ class AnalyticsManager(val session: Session = SessionManager.requireSession) {
         val params = repository.defaultParams()
         params.putString(Parameters.EventName.value, apiTrackName)
         params.putBoolean(Parameters.Success.value, status)
-        if (size.isNotEmpty())
+        if (size.isNotEmpty()) {
             params.putString(Parameters.FileSize.value, size)
+        }
         repository.logEvent(apiTrackName, params)
     }
 }

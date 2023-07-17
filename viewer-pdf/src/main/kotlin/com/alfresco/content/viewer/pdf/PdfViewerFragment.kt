@@ -28,7 +28,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.viewer_pdf, container, false)
     }
@@ -73,7 +73,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
 
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
-                request: WebResourceRequest?
+                request: WebResourceRequest?,
             ): Boolean {
                 // Open URIs in external browser
                 startActivity(Intent(Intent.ACTION_VIEW, request?.url))
@@ -82,7 +82,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
 
             override fun shouldInterceptRequest(
                 view: WebView?,
-                request: WebResourceRequest?
+                request: WebResourceRequest?,
             ): WebResourceResponse? {
                 if (request?.method != "GET") {
                     return null
@@ -103,13 +103,13 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             .setHttpAllowed(true)
             .addPathHandler(
                 "/${PdfViewerViewModel.RESERVED_ASSETS_PATH}/",
-                WebViewAssetLoader.AssetsPathHandler(ctx)
+                WebViewAssetLoader.AssetsPathHandler(ctx),
             )
         val docPath = viewModel.localDir(it)
         if (docPath != null) {
             builder.addPathHandler(
                 "/${PdfViewerViewModel.RESERVED_FILES_PATH}/",
-                WebViewAssetLoader.InternalStoragePathHandler(ctx, docPath)
+                WebViewAssetLoader.InternalStoragePathHandler(ctx, docPath),
             )
         }
         builder.build()
@@ -118,7 +118,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
     class NativeBridge(
         @get:JavascriptInterface val maxTextureSize: Int,
         @get:JavascriptInterface val assetUrl: String,
-        val onPasswordPrompt: (Int) -> Unit
+        val onPasswordPrompt: (Int) -> Unit,
     ) {
         @JavascriptInterface
         fun showPasswordPrompt(reason: Int) {
@@ -159,7 +159,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             .setPositiveButton(getString(R.string.password_prompt_positive)) { _, _ ->
                 webView.evaluateJavascript(
                     "PDFViewerApplication.onPassword(\"${input.text}\")",
-                    null
+                    null,
                 )
             }
             .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->

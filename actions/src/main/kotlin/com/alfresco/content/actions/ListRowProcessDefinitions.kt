@@ -14,7 +14,7 @@ import com.alfresco.content.data.RuntimeProcessDefinitionDataEntry
 internal class ListRowProcessDefinitions @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = ViewProcessDefinitionsListRowBinding.inflate(LayoutInflater.from(context), this, true)
 

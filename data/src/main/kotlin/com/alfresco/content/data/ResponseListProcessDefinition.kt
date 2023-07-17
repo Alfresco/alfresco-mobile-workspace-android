@@ -9,7 +9,7 @@ data class ResponseListProcessDefinition(
     val size: Int,
     val total: Int,
     val start: Int,
-    val listProcessDefinitions: List<ProcessDefinitionDataEntry> = emptyList()
+    val listProcessDefinitions: List<ProcessDefinitionDataEntry> = emptyList(),
 ) {
     companion object {
 
@@ -21,7 +21,7 @@ data class ResponseListProcessDefinition(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listProcessDefinitions = raw.data?.map { ProcessDefinitionDataEntry.with(it) } ?: emptyList()
+                listProcessDefinitions = raw.data?.map { ProcessDefinitionDataEntry.with(it) } ?: emptyList(),
             )
         }
     }

@@ -14,11 +14,13 @@ suspend fun <F : Fragment, R> withFragment(
     context: Context,
     tag: String,
     lambda: suspend (F) -> R,
-    factory: () -> F
+    factory: () -> F,
 ): R =
-    lambda(suspendCancellableCoroutine { continuation ->
-        findFragmentAndResume(context, tag, continuation, factory)
-    })
+    lambda(
+        suspendCancellableCoroutine { continuation ->
+            findFragmentAndResume(context, tag, continuation, factory)
+        },
+    )
 
 /**
  * Calls the specified [lambda] with the a [F] fragment as the receiver and returns its result.
@@ -28,17 +30,19 @@ suspend fun <F : Fragment, R> withNewFragment(
     context: Context,
     tag: String,
     lambda: suspend (F) -> R,
-    factory: () -> F
+    factory: () -> F,
 ): R =
-    lambda(suspendCancellableCoroutine { continuation ->
-        findNewInstance(context, tag, continuation, factory)
-    })
+    lambda(
+        suspendCancellableCoroutine { continuation ->
+            findNewInstance(context, tag, continuation, factory)
+        },
+    )
 
 private fun <F : Fragment> findFragmentAndResume(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,
-    factory: () -> F
+    factory: () -> F,
 ) {
     val fragmentManager = when (context) {
         is AppCompatActivity -> context.supportFragmentManager
@@ -59,7 +63,7 @@ private fun <F : Fragment> findFragmentAndResume(
         fragment = factory()
         fragmentManager.beginTransaction().add(
             fragment,
-            tag
+            tag,
         ).runOnCommit {
             continuation.resume(fragment, null)
         }.commit()
@@ -73,7 +77,7 @@ private fun <F : Fragment> findNewInstance(
     context: Context,
     tag: String,
     continuation: CancellableContinuation<F>,
-    factory: () -> F
+    factory: () -> F,
 ) {
     val fragmentManager = when (context) {
         is AppCompatActivity -> context.supportFragmentManager
@@ -89,7 +93,7 @@ private fun <F : Fragment> findNewInstance(
     val fragment = factory()
     fragmentManager.beginTransaction().add(
         fragment,
-        tag
+        tag,
     ).runOnCommit {
         continuation.resume(fragment, null)
     }.commit()

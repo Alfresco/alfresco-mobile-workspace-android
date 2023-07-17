@@ -30,9 +30,11 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val myFiles = BrowseRepository(session).myFilesNodeId()
                 processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
                 AnalyticsManager(session).apiTracker(APIEvent.Login, true)
-                if (isExtension)
+                if (isExtension) {
                     navigateToExtension()
-                else navigateToMain()
+                } else {
+                    navigateToMain()
+                }
             } catch (ex: Exception) {
                 onError(R.string.auth_error_wrong_credentials)
             }
@@ -50,7 +52,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 endpoint,
                 person.displayName ?: "",
                 person.email,
-                myFiles
+                myFiles,
             )
         } else {
             val current = Account.getAccount(applicationContext)
@@ -66,7 +68,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 credentials.authState,
                 person.displayName ?: "",
                 person.email,
-                myFiles
+                myFiles,
             )
         }
     }

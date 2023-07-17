@@ -10,14 +10,14 @@ import com.google.android.material.shape.MaterialShapeDrawable
 enum class FlashMenuItem {
     Auto,
     On,
-    Off
+    Off,
 }
 
 class FlashMenu(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    defStyleRes: Int
+    defStyleRes: Int,
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding: ViewFlashMenuBinding

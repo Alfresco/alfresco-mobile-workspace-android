@@ -1,10 +1,5 @@
 package com.alfresco.content.session
 
-import java.io.IOException
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets.UTF_8
-import java.util.TreeSet
-import java.util.concurrent.TimeUnit
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.MultipartBody
@@ -15,18 +10,24 @@ import okhttp3.internal.platform.Platform
 import okio.Buffer
 import okio.EOFException
 import okio.GzipSource
+import java.io.IOException
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets.UTF_8
+import java.util.TreeSet
+import java.util.concurrent.TimeUnit
 
 /**
  * A fork of the [okhttp3.logging.HttpLoggingInterceptor] which omits binary multipart request body.
  */
 class HttpLoggingInterceptor @JvmOverloads constructor(
-    private val logger: Logger = Logger.DEFAULT
+    private val logger: Logger = Logger.DEFAULT,
 ) : Interceptor {
 
     @Volatile private var headersToRedact = emptySet<String>()
 
     @set:JvmName("level")
-    @Volatile var level = Level.NONE
+    @Volatile
+    var level = Level.NONE
 
     enum class Level {
         /** No logs. */
@@ -84,7 +85,7 @@ class HttpLoggingInterceptor @JvmOverloads constructor(
          * <-- END HTTP
          * ```
          */
-        BODY
+        BODY,
     }
 
     interface Logger {
@@ -124,7 +125,7 @@ class HttpLoggingInterceptor @JvmOverloads constructor(
     @Deprecated(
         message = "moved to var",
         replaceWith = ReplaceWith(expression = "level"),
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.ERROR,
     )
     fun getLevel(): Level = level
 
@@ -195,7 +196,7 @@ class HttpLoggingInterceptor @JvmOverloads constructor(
                     logger.log("--> END ${request.method} (${requestBody.contentLength()}-byte body)")
                 } else {
                     logger.log(
-                        "--> END ${request.method} (binary ${requestBody.contentLength()}-byte body omitted)"
+                        "--> END ${request.method} (binary ${requestBody.contentLength()}-byte body omitted)",
                     )
                 }
             }
@@ -216,7 +217,7 @@ class HttpLoggingInterceptor @JvmOverloads constructor(
         val contentLength = responseBody.contentLength()
         val bodySize = if (contentLength != -1L) "$contentLength-byte" else "unknown-length"
         logger.log(
-            "<-- ${response.code}${if (response.message.isEmpty()) "" else ' ' + response.message} ${response.request.url} (${tookMs}ms${if (!logHeaders) ", $bodySize body" else ""})"
+            "<-- ${response.code}${if (response.message.isEmpty()) "" else ' ' + response.message} ${response.request.url} (${tookMs}ms${if (!logHeaders) ", $bodySize body" else ""})",
         )
 
         if (logHeaders) {

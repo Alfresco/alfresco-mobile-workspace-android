@@ -42,7 +42,8 @@ class ActionBarController(private val layout: ActionBarLayout) {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val isTopLevelDestination = matchDestinations(
-                destination, appBarConfiguration.topLevelDestinations
+                destination,
+                appBarConfiguration.topLevelDestinations,
             )
 
             if (isTopLevelDestination) {
@@ -77,7 +78,7 @@ class ActionBarController(private val layout: ActionBarLayout) {
 
     private fun matchDestinations(
         destination: NavDestination,
-        destinationIds: Set<Int?>
+        destinationIds: Set<Int?>,
     ): Boolean {
         return destinationIds.contains(destination.id)
     }

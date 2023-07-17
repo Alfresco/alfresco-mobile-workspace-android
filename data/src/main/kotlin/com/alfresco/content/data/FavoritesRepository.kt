@@ -15,27 +15,31 @@ class FavoritesRepository(val session: Session = SessionManager.requireSession) 
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
         val include = AlfrescoApi.csvQueryParam("path", "allowableOperations")
         val orderBy = listOf("title ASC")
-        return ResponsePaging.with(service.listFavorites(
-            AlfrescoApi.CURRENT_USER,
-            skipCount,
-            maxItems,
-            orderBy,
-            where,
-            include,
-            null
-        ))
+        return ResponsePaging.with(
+            service.listFavorites(
+                AlfrescoApi.CURRENT_USER,
+                skipCount,
+                maxItems,
+                orderBy,
+                where,
+                include,
+                null,
+            ),
+        )
     }
 
     suspend fun getFavoriteLibraries(skipCount: Int, maxItems: Int): ResponsePaging {
         val where = "(EXISTS(target/site))"
         val orderBy = listOf("title ASC")
-        return ResponsePaging.with(service.listFavorites(
-            AlfrescoApi.CURRENT_USER,
-            skipCount,
-            maxItems,
-            orderBy,
-            where
-        ))
+        return ResponsePaging.with(
+            service.listFavorites(
+                AlfrescoApi.CURRENT_USER,
+                skipCount,
+                maxItems,
+                orderBy,
+                where,
+            ),
+        )
     }
 
     suspend fun addFavorite(entry: Entry) {
@@ -48,7 +52,7 @@ class FavoritesRepository(val session: Session = SessionManager.requireSession) 
 
         service.createFavorite(
             AlfrescoApi.CURRENT_USER,
-            FavoriteBodyCreate(mapOf(key to mapOf("guid" to entry.id)))
+            FavoriteBodyCreate(mapOf(key to mapOf("guid" to entry.id))),
         )
     }
 

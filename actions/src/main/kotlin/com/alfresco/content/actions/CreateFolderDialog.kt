@@ -39,12 +39,15 @@ class CreateFolderDialog : DialogFragment() {
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                if (isUpdate) getString(R.string.action_text_save)
-                else getString(R.string.action_folder_create)
+                if (isUpdate) {
+                    getString(R.string.action_text_save)
+                } else {
+                    getString(R.string.action_folder_create)
+                },
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),
-                    binding.descriptionInput.text.toString()
+                    binding.descriptionInput.text.toString(),
                 )
             }
             .setView(binding.root)
@@ -100,7 +103,7 @@ class CreateFolderDialog : DialogFragment() {
         val updateValue: Boolean,
         val name: String? = null,
         var onSuccess: CreateFolderSuccessCallback? = null,
-        var onCancel: CreateFolderCancelCallback? = null
+        var onCancel: CreateFolderCancelCallback? = null,
     ) {
 
         fun onSuccess(callback: CreateFolderSuccessCallback?) =

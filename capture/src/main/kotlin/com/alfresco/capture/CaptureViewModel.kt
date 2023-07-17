@@ -13,12 +13,12 @@ import java.io.File
 
 data class CaptureState(
     val visibleItem: CaptureItem? = null,
-    val listCapture: List<CaptureItem> = emptyList()
+    val listCapture: List<CaptureItem> = emptyList(),
 ) : MavericksState
 
 class CaptureViewModel(
     val context: Context,
-    state: CaptureState
+    state: CaptureState,
 ) : MavericksViewModel<CaptureState>(state) {
     var onSaveComplete: ((List<CaptureItem>) -> Unit)? = null
 
@@ -62,9 +62,11 @@ class CaptureViewModel(
 
     private fun deleteCapture(captureItem: CaptureItem) =
         setState {
-            copy(listCapture = listCapture.filter {
-                it.uri != captureItem.uri
-            })
+            copy(
+                listCapture = listCapture.filter {
+                    it.uri != captureItem.uri
+                },
+            )
         }
 
     fun prepareCaptureFile(mode: CaptureMode) =
@@ -84,7 +86,7 @@ class CaptureViewModel(
 
         it.listCapture.let { capturedList ->
             onSaveComplete?.invoke(
-                capturedList
+                capturedList,
             )
         }
     }
@@ -110,7 +112,6 @@ class CaptureViewModel(
      * validate the filename in the give list
      */
     fun isAllFileNameValid(listCapture: List<CaptureItem?>): Boolean {
-
         var isValidNotEmpty = false
 
         listCapture.forEach {
@@ -118,8 +119,9 @@ class CaptureViewModel(
                 val valid = isFilenameValid(capture.name)
                 val empty = capture.name.isEmpty()
                 isValidNotEmpty = valid && !empty
-                if (!isValidNotEmpty)
+                if (!isValidNotEmpty) {
                     return isValidNotEmpty
+                }
             }
         }
 
@@ -183,7 +185,7 @@ class CaptureViewModel(
     companion object : MavericksViewModelFactory<CaptureViewModel, CaptureState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: CaptureState
+            state: CaptureState,
         ) = CaptureViewModel(viewModelContext.activity(), state)
     }
 }

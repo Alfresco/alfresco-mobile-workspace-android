@@ -26,8 +26,8 @@ import com.alfresco.content.data.BrowseRepository.Companion.SHARE_MULTIPLE_URI
 import com.alfresco.content.session.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.GlobalScope
+import java.lang.ref.WeakReference
 
 /**
  * Marked as ExtensionActivity class
@@ -47,14 +47,15 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 
         ActionExtension.showActionExtensionToasts(
             lifecycleScope,
-            findViewById(android.R.id.content)
+            findViewById(android.R.id.content),
         )
         ActionPermission.showActionPermissionToasts(
             lifecycleScope,
-            findViewById(android.R.id.content)
+            findViewById(android.R.id.content),
         )
         Action.showActionToasts(
-            lifecycleScope, findViewById(android.R.id.content)
+            lifecycleScope,
+            findViewById(android.R.id.content),
         )
 
         executePermission(this, GlobalScope)
@@ -67,7 +68,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
                 resources.getString(R.string.auth_login_app_subtitle),
                 resources.getString(R.string.auth_login_app_ok_button),
                 null,
-                AlertType.TYPE_NO_LOGIN
+                AlertType.TYPE_NO_LOGIN,
             )
             return
         }
@@ -107,7 +108,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
     }
 
     private fun handleFiles(intent: Intent, isMultipleFiles: Boolean) {
-
         if (!isMultipleFiles) {
             (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
                 saveShareData(arrayOf(it.toString()))
@@ -144,16 +144,17 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
                     resources.getString(R.string.auth_signed_out_subtitle),
                     resources.getString(R.string.auth_basic_sign_in_button),
                     resources.getString(R.string.sign_out_confirmation_negative),
-                    AlertType.TYPE_SIGN_OUT
+                    AlertType.TYPE_SIGN_OUT,
                 )
-            } else if (!state.isOnline)
+            } else if (!state.isOnline) {
                 showAlertPrompt(
                     resources.getString(R.string.auth_internet_unavailable_title),
                     resources.getString(R.string.auth_internet_unavailable_subtitle),
                     resources.getString(R.string.auth_internet_unavailable_ok_button),
                     null,
-                    AlertType.TYPE_INTERNET_UNAVAILABLE
+                    AlertType.TYPE_INTERNET_UNAVAILABLE,
                 )
+            }
         }
     }
 
@@ -229,5 +230,5 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
 enum class AlertType {
     TYPE_SIGN_OUT,
     TYPE_INTERNET_UNAVAILABLE,
-    TYPE_NO_LOGIN
+    TYPE_NO_LOGIN,
 }

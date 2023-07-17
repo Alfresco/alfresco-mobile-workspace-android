@@ -17,7 +17,7 @@ data class RuntimeProcessDefinitionDataEntry(
     val theme: String? = null,
     val icon: String? = null,
     val deploymentId: String? = null,
-    val tenantId: Int? = null
+    val tenantId: Int? = null,
 ) : ParentEntry(), Parcelable {
     companion object {
 
@@ -34,7 +34,7 @@ data class RuntimeProcessDefinitionDataEntry(
                 theme = raw.theme,
                 icon = raw.icon,
                 deploymentId = raw.deploymentId,
-                tenantId = raw.tenantId
+                tenantId = raw.tenantId,
             )
         }
     }

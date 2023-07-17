@@ -6,9 +6,8 @@ import androidx.work.WorkerParameters
 import com.alfresco.Logger
 import com.alfresco.coroutines.asyncMap
 import com.alfresco.download.ContentDownloader
-import java.io.File
-import java.lang.Exception
 import retrofit2.HttpException
+import java.io.File
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
@@ -40,7 +39,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                     BrowseRepository().fetchEntry(entry.id)
                 } catch (ex: HttpException) {
                     if (ex.code() == HTTP_STATUS_FORBIDDEN ||
-                        ex.code() == HTTP_STATUS_NOT_FOUND) {
+                        ex.code() == HTTP_STATUS_NOT_FOUND
+                    ) {
                         null
                     } else {
                         throw ex
@@ -87,29 +87,33 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         val remoteMap = remoteList.associateBy({ it.id }, { it })
         val operations = arrayListOf<Operation>()
 
-        operations.addAll(localList.mapNotNull { local ->
-            val remote = remoteMap[local.id]
-            if (remote != null) {
-                if (contentHasChanged(local, remote)) {
-                    Operation.UpdateContent(local, remote)
-                } else if (!local.metadataEquals(remote)) {
-                    Operation.UpdateMetadata(local, remote)
+        operations.addAll(
+            localList.mapNotNull { local ->
+                val remote = remoteMap[local.id]
+                if (remote != null) {
+                    if (contentHasChanged(local, remote)) {
+                        Operation.UpdateContent(local, remote)
+                    } else if (!local.metadataEquals(remote)) {
+                        Operation.UpdateMetadata(local, remote)
+                    } else {
+                        null
+                    }
+                } else {
+                    Operation.Delete(local)
+                }
+            },
+        )
+
+        operations.addAll(
+            remoteList.mapNotNull { remote ->
+                val local = localMap[remote.id]
+                if (local == null) {
+                    Operation.Create(remote)
                 } else {
                     null
                 }
-            } else {
-                Operation.Delete(local)
-            }
-        })
-
-        operations.addAll(remoteList.mapNotNull { remote ->
-            val local = localMap[remote.id]
-            if (local == null) {
-                Operation.Create(remote)
-            } else {
-                null
-            }
-        })
+            },
+        )
 
         return operations
     }

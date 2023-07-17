@@ -15,8 +15,6 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.download.ContentDownloader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.io.File
-import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,13 +22,15 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.OkHttpClient
+import java.io.File
+import java.util.concurrent.atomic.AtomicReference
 
 data class ActionOpenWith(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_open_with,
     override val title: Int = R.string.action_open_with_title,
     override val eventName: EventName = EventName.OpenWith,
-    val hasChooser: Boolean = false
+    val hasChooser: Boolean = false,
 ) : Action {
 
     private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)
@@ -93,30 +93,31 @@ data class ActionOpenWith(
                 triple = Triple(
                     TaskRepository().contentUri(entry),
                     TaskRepository().getHttpClient(),
-                    TaskRepository().getContentDirectory(entry.fileName)
+                    TaskRepository().getContentDirectory(entry.fileName),
                 )
             }
 
             UploadServerType.UPLOAD_TO_PROCESS -> {
-                triple = if (!entry.sourceId.isNullOrEmpty())
+                triple = if (!entry.sourceId.isNullOrEmpty()) {
                     Triple(
                         BrowseRepository().contentUri(entry),
                         null,
-                        File(context.cacheDir, entry.name)
+                        File(context.cacheDir, entry.name),
                     )
-                else
+                } else {
                     Triple(
                         TaskRepository().contentUri(entry),
                         TaskRepository().getHttpClient(),
-                        TaskRepository().getContentDirectory(entry.fileName)
+                        TaskRepository().getContentDirectory(entry.fileName),
                     )
+                }
             }
 
             else -> {
                 triple = Triple(
                     BrowseRepository().contentUri(entry),
                     null,
-                    File(context.cacheDir, entry.name)
+                    File(context.cacheDir, entry.name),
                 )
             }
         }
@@ -143,17 +144,17 @@ data class ActionOpenWith(
                 val dialog = MaterialAlertDialogBuilder(context)
                     .setTitle(entry.name)
                     .setMessage(
-                        context.getString(R.string.action_open_with_downloading)
+                        context.getString(R.string.action_open_with_downloading),
                     )
                     .setIcon(
                         ResourcesCompat.getDrawable(
                             context.resources,
                             MimeType.with(entry.mimeType).icon,
-                            context.theme
-                        )
+                            context.theme,
+                        ),
                     )
                     .setNegativeButton(
-                        context.getString(R.string.action_open_with_cancel)
+                        context.getString(R.string.action_open_with_cancel),
                     ) { _, _ ->
                         deferredDownload.get()?.cancel()
                     }

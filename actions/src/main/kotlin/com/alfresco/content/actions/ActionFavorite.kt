@@ -11,7 +11,7 @@ data class ActionAddFavorite(
     override val entry: Entry,
     override val icon: Int = R.drawable.ic_favorite,
     override val title: Int = R.string.action_add_favorite_title,
-    override val eventName: EventName = EventName.AddFavorite
+    override val eventName: EventName = EventName.AddFavorite,
 ) : Action {
     private val repository: FavoritesRepository = FavoritesRepository()
 
@@ -30,7 +30,7 @@ data class ActionRemoveFavorite(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_favorite_filled,
     override val title: Int = R.string.action_remove_favorite_title,
-    override val eventName: EventName = EventName.RemoveFavorite
+    override val eventName: EventName = EventName.RemoveFavorite,
 ) : Action {
     private val repository: FavoritesRepository = FavoritesRepository()
 

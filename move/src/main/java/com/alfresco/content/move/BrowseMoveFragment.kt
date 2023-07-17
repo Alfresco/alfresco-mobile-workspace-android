@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_move_list) {
 
     private lateinit var args: BrowseArgs
+
     @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
 
@@ -89,13 +90,15 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             onItemClicked(entry as Entry)
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        if (state.path == getString(R.string.nav_path_move))
+        if (state.path == getString(R.string.nav_path_move)) {
             super.disableRefreshLayout()
+        }
         super.invalidate()
     }
 

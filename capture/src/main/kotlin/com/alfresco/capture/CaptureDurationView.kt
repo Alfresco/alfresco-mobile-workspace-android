@@ -11,11 +11,11 @@ import android.widget.Chronometer
 class CaptureDurationView(
     context: Context,
     attrs: AttributeSet?,
-    defStyleAttr: Int
+    defStyleAttr: Int,
 ) : Chronometer(
     ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
     attrs,
-    defStyleAttr
+    defStyleAttr,
 ) {
 
     constructor(context: Context) :

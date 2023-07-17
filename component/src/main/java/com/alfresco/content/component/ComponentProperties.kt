@@ -25,7 +25,7 @@ data class ComponentProperties(
     val maxDate: String? = "",
     val allowUpdateOnChange: Boolean? = false,
     val hideDefaultAction: Boolean? = false,
-    val unit: String? = ""
+    val unit: String? = "",
 ) : Parcelable {
     companion object {
         /**
@@ -44,7 +44,7 @@ data class ComponentProperties(
                 format = settings?.format ?: "",
                 dateFormat = settings?.dateFormat ?: "",
                 maxDate = settings?.maxDate ?: "",
-                unit = settings?.unit ?: ""
+                unit = settings?.unit ?: "",
             )
         }
     }

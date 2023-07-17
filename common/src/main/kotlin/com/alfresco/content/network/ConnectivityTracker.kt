@@ -42,7 +42,6 @@ object ConnectivityTracker {
      * returns true if network is active otherwise false
      */
     fun isActiveNetwork(context: Context): Boolean {
-
         val connectivityManager = context.getSystemService<ConnectivityManager>() ?: return false
 
         val network = context.getSystemService<ConnectivityManager>()?.activeNetwork ?: return false

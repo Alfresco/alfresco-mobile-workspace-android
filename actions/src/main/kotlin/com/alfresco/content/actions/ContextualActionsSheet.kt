@@ -25,7 +25,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = SheetActionListBinding.inflate(inflater, container, false)
         return binding.root
@@ -72,7 +72,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                         AnalyticsManager().fileActionEvent(
                             entry.mimeType ?: "",
                             entry.name.substringAfterLast(".", ""),
-                            it.eventName
+                            it.eventName,
                         )
                         viewModel.execute(it)
                         dismiss()

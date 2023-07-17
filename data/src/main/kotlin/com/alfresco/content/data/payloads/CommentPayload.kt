@@ -4,7 +4,7 @@ package com.alfresco.content.data.payloads
  * Marked as CommentPayload class
  */
 data class CommentPayload(
-    val message: String = ""
+    val message: String = "",
 ) {
     companion object {
         /**

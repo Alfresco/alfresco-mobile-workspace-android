@@ -2,9 +2,9 @@ package com.alfresco.content.data
 
 import android.os.Parcelable
 import com.alfresco.process.models.TaskDataEntry
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
+import java.time.ZonedDateTime
 
 /**
  * Marked as TaskEntry class
@@ -30,7 +30,7 @@ data class TaskEntry(
     val outcomes: List<OptionsModel> = emptyList(),
     val comment: String? = null,
     val processInstanceStartUserId: String? = null,
-    val memberOfCandidateGroup: Boolean? = null
+    val memberOfCandidateGroup: Boolean? = null,
 ) : ParentEntry(), Parcelable {
 
     val localDueDate: String?
@@ -57,7 +57,7 @@ data class TaskEntry(
                 isNewTaskCreated = isNewTaskCreated,
                 processInstanceId = data.processInstanceId,
                 processInstanceStartUserId = data.processInstanceStartUserId,
-                memberOfCandidateGroup = data.memberOfCandidateGroup
+                memberOfCandidateGroup = data.memberOfCandidateGroup,
             )
         }
 
@@ -122,7 +122,7 @@ data class TaskEntry(
                 processInstanceId = parent.processInstanceId,
                 outcomes = response.outcomes,
                 processInstanceStartUserId = parent.processInstanceStartUserId,
-                memberOfCandidateGroup = parent.memberOfCandidateGroup
+                memberOfCandidateGroup = parent.memberOfCandidateGroup,
             )
         }
 
@@ -132,7 +132,7 @@ data class TaskEntry(
         fun updateTaskNameDescription(
             data: TaskEntry,
             name: String,
-            description: String
+            description: String,
         ): TaskEntry {
             return TaskEntry(
                 id = data.id,
@@ -145,7 +145,7 @@ data class TaskEntry(
                 dueDate = data.dueDate,
                 duration = data.duration,
                 involvedPeople = data.involvedPeople,
-                formattedDueDate = data.formattedDueDate
+                formattedDueDate = data.formattedDueDate,
             )
         }
 
@@ -164,7 +164,7 @@ data class TaskEntry(
                 dueDate = if (isClearDueDate) null else data.dueDate,
                 duration = data.duration,
                 involvedPeople = data.involvedPeople,
-                formattedDueDate = formattedDueDate
+                formattedDueDate = formattedDueDate,
             )
         }
 
@@ -183,7 +183,7 @@ data class TaskEntry(
                 dueDate = data.dueDate,
                 duration = data.duration,
                 involvedPeople = data.involvedPeople,
-                formattedDueDate = data.formattedDueDate
+                formattedDueDate = data.formattedDueDate,
             )
         }
 
@@ -201,7 +201,7 @@ data class TaskEntry(
                 dueDate = data.dueDate,
                 duration = data.duration,
                 involvedPeople = data.involvedPeople,
-                formattedDueDate = data.formattedDueDate
+                formattedDueDate = data.formattedDueDate,
             )
         }
 
@@ -225,7 +225,7 @@ data class TaskEntry(
                 duration = data.duration,
                 processInstanceStartUserId = data.processInstanceStartUserId,
                 memberOfCandidateGroup = data.memberOfCandidateGroup,
-                involvedPeople = data.involvedPeople
+                involvedPeople = data.involvedPeople,
             )
         }
 
@@ -250,7 +250,7 @@ data class TaskEntry(
                 duration = data.duration,
                 processInstanceStartUserId = data.processInstanceStartUserId,
                 memberOfCandidateGroup = data.memberOfCandidateGroup,
-                involvedPeople = data.involvedPeople
+                involvedPeople = data.involvedPeople,
             )
         }
     }
@@ -267,7 +267,8 @@ enum class TaskFields {
     DUEDATE,
     STATUS,
     TYPE,
-    COMMENT;
+    COMMENT,
+    ;
 
     /**
      * returns value of enum in lowercase

@@ -89,10 +89,15 @@ object DownloadMonitor {
             context.packageManager.getLaunchIntentForPackage(context.applicationContext.packageName)
         }
 
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
-            else -> FLAG_UPDATE_CURRENT
-        })
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                else -> FLAG_UPDATE_CURRENT
+            },
+        )
 
         val smallIcon = this.smallIcon ?: return
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -111,7 +116,7 @@ object DownloadMonitor {
 }
 
 class DownloadCompleteReceiver(
-    private val onComplete: (context: Context?, downloadId: Long) -> Unit
+    private val onComplete: (context: Context?, downloadId: Long) -> Unit,
 ) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) =
         onComplete(context, intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1)

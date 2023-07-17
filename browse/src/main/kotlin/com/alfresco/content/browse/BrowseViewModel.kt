@@ -41,7 +41,7 @@ class BrowseViewModel(
     state: BrowseViewState,
     val context: Context,
     private val browseRepository: BrowseRepository,
-    private val offlineRepository: OfflineRepository
+    private val offlineRepository: OfflineRepository,
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null
@@ -56,8 +56,9 @@ class BrowseViewModel(
         }
         if (state.path == context.getString(R.string.nav_path_recents)) {
             val list = offlineRepository.buildTransferList()
-            if (list.isEmpty())
+            if (list.isEmpty()) {
                 offlineRepository.updateTransferSize(0)
+            }
             setState { copy(totalTransfersSize = offlineRepository.getTotalTransfersSize()) }
         }
 
@@ -93,7 +94,7 @@ class BrowseViewModel(
     @Suppress("ControlFlowWithEmptyBody")
     private fun Entry.ifType(
         types: Set<Entry.Type>,
-        block: (entry: Entry) -> Unit
+        block: (entry: Entry) -> Unit,
     ) = if (types.contains(type)) {
         block(this)
     } else {
@@ -120,7 +121,7 @@ class BrowseViewModel(
                 path,
                 nodeId,
                 skipCount,
-                ITEMS_PER_PAGE
+                ITEMS_PER_PAGE,
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -144,9 +145,9 @@ class BrowseViewModel(
                 state.path,
                 state.nodeId,
                 0,
-                ITEMS_PER_PAGE
+                ITEMS_PER_PAGE,
             ).zip(
-                fetchNode(state.path, state.nodeId)
+                fetchNode(state.path, state.nodeId),
             ) { paging, parent ->
                 Pair(paging, parent)
             }.execute {
@@ -235,7 +236,6 @@ class BrowseViewModel(
      * observer for transfer uploads
      */
     fun observeTransferUploads() {
-
         observeTransferUploadsJob?.cancel()
         observeTransferUploadsJob = OfflineRepository().observeTransferUploads()
             .execute {
@@ -292,8 +292,9 @@ class BrowseViewModel(
      * It will create the new folder on the current node
      */
     fun createFolder(state: BrowseViewState) {
-        if (state.parent != null)
+        if (state.parent != null) {
             execute(ActionCreateFolder(state.parent))
+        }
     }
 
     private fun execute(action: ActionExtension, list: List<Uri>) =
@@ -329,7 +330,7 @@ class BrowseViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: BrowseViewState
+            state: BrowseViewState,
         ) = BrowseViewModel(state, viewModelContext.activity, BrowseRepository(), OfflineRepository())
     }
 }

@@ -13,5 +13,5 @@ data class ProcessInstancesPayload(
     val items: String = "",
     val userGroupDetails: UserGroupDetails? = null,
     val sendEmailNotifications: Boolean = false,
-    val priority: String = ""
+    val priority: String = "",
 )

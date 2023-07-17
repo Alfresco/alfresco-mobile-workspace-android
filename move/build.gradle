@@ -6,14 +6,10 @@ plugins {
 }
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
+    namespace 'com.alfresco.content.move'
 }
 
 dependencies {
-
     implementation project(':base')
     api project(':base-ui')
     implementation project(':common')

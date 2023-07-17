@@ -53,15 +53,16 @@ fun Context.showKeyboard(edt: TextInputEditText) {
  * @return the localised string from string.xml if found otherwise the same name
  */
 fun Context.getLocalizedName(name: String): String {
-
-    if (name.matches(".*\\d.*".toRegex()))
+    if (name.matches(".*\\d.*".toRegex())) {
         return name
+    }
 
     val stringResource = resources.getIdentifier(name.lowercase(), "string", packageName)
-    return if (stringResource != 0)
+    return if (stringResource != 0) {
         getString(stringResource)
-    else
+    } else {
         name
+    }
 }
 
 /**

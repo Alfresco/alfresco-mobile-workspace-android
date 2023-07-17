@@ -39,7 +39,7 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
-            Looper.myLooper()
+            Looper.myLooper(),
         )
     }
 
@@ -54,7 +54,7 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
     private fun setLocationData(location: Location) {
         value = LocationModel(
             longitude = location.longitude,
-            latitude = location.latitude
+            latitude = location.latitude,
         )
     }
 
@@ -69,5 +69,5 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
 
 data class LocationModel(
     val longitude: Double,
-    val latitude: Double
+    val latitude: Double,
 )

@@ -13,7 +13,7 @@ import com.alfresco.content.search.databinding.ViewRecentSearchRowBinding
 class RecentSearchRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewRecentSearchRowBinding.inflate(LayoutInflater.from(context), this, true)

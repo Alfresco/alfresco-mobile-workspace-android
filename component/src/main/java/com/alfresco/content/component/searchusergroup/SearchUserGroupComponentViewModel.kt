@@ -15,7 +15,6 @@ import com.alfresco.content.data.ResponseUserGroupList
 import com.alfresco.content.data.ReviewerType
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserGroupDetails
-import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -23,13 +22,14 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
+import java.util.concurrent.CancellationException
 
 /**
  * Marked as SearchUserParams class
  */
 data class SearchUserGroupParams(
     val nameOrIndividual: String = "",
-    val emailOrGroups: String = ""
+    val emailOrGroups: String = "",
 )
 
 /**
@@ -38,7 +38,7 @@ data class SearchUserGroupParams(
 class SearchUserGroupComponentViewModel(
     val context: Context,
     stateChipCreate: SearchUserGroupComponentState,
-    private val repository: TaskRepository
+    private val repository: TaskRepository,
 ) : MavericksViewModel<SearchUserGroupComponentState>(stateChipCreate) {
     private val liveSearchUserEvents: MutableStateFlow<SearchUserGroupParams>
     private val searchUserEvents: MutableStateFlow<SearchUserGroupParams>
@@ -58,7 +58,9 @@ class SearchUserGroupComponentViewModel(
                 is ProcessEntry -> {
                     if (parent.reviewerType != ReviewerType.FUNCTIONAL_GROUP) {
                         listOf(getLoggedInUser())
-                    } else listOf()
+                    } else {
+                        listOf()
+                    }
                 } else -> listOf(getLoggedInUser())
             }
             copy(listUserGroup = listUserGroup)
@@ -67,13 +69,13 @@ class SearchUserGroupComponentViewModel(
         viewModelScope.launch {
             merge(
                 liveSearchUserEvents.debounce(DEFAULT_DEBOUNCE_TIME),
-                searchUserEvents
+                searchUserEvents,
             ).filter {
                 it.nameOrIndividual.length >= MIN_QUERY_LENGTH || it.emailOrGroups.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
-                if (canSearchGroups && it.emailOrGroups.isNotEmpty())
+                if (canSearchGroups && it.emailOrGroups.isNotEmpty()) {
                     repository.searchGroups(it.emailOrGroups)
-                else
+                } else
                     repository.searchUser(it.nameOrIndividual, it.emailOrGroups)
             }) {
                 if (it is Loading) {
@@ -83,9 +85,9 @@ class SearchUserGroupComponentViewModel(
                     copy(requestUser = it)
                 } else {
                     AnalyticsManager().apiTracker(APIEvent.SearchUser, true)
-                    if (params.nameOrIndividual.isEmpty() && params.emailOrGroups.isEmpty())
+                    if (params.nameOrIndividual.isEmpty() && params.emailOrGroups.isEmpty()) {
                         updateUserGroupEntries(ResponseUserGroupList(), getLoggedInUser()).copy(requestUser = it)
-                    else {
+                    } else {
                         updateUserGroupEntries(it(), getLoggedInUser()).copy(requestUser = it)
                     }
                 }
@@ -95,7 +97,7 @@ class SearchUserGroupComponentViewModel(
 
     private suspend fun <T, V> Flow<T>.executeOnLatest(
         action: suspend (value: T) -> V,
-        stateReducer: SearchUserGroupComponentState.(Async<V>) -> SearchUserGroupComponentState
+        stateReducer: SearchUserGroupComponentState.(Async<V>) -> SearchUserGroupComponentState,
     ) {
         collectLatest {
             setState { stateReducer(Loading()) }
@@ -134,7 +136,7 @@ class SearchUserGroupComponentViewModel(
         const val DEFAULT_DEBOUNCE_TIME = 300L
         override fun create(
             viewModelContext: ViewModelContext,
-            state: SearchUserGroupComponentState
+            state: SearchUserGroupComponentState,
         ) = SearchUserGroupComponentViewModel(viewModelContext.activity(), state, TaskRepository())
     }
 }

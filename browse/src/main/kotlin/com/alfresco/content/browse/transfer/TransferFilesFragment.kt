@@ -34,7 +34,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TransferFilesArgs(
-    val extension: Boolean
+    val extension: Boolean,
 ) : Parcelable {
     companion object {
         private const val EXTENSION_KEY = "extension"
@@ -44,7 +44,7 @@ data class TransferFilesArgs(
          */
         fun with(args: Bundle): TransferFilesArgs {
             return TransferFilesArgs(
-                args.getBoolean(EXTENSION_KEY, false)
+                args.getBoolean(EXTENSION_KEY, false),
             )
         }
     }
@@ -56,6 +56,7 @@ data class TransferFilesArgs(
 class TransferFilesFragment : Fragment(), MavericksView {
 
     private lateinit var args: TransferFilesArgs
+
     @OptIn(InternalMavericksApi::class)
     private val viewModel: TransferFilesViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: FragmentTransferFilesListBinding
@@ -121,14 +122,15 @@ class TransferFilesFragment : Fragment(), MavericksView {
     }
 
     private fun stableId(entry: Entry): String =
-        if (entry.isUpload) entry.boxId.toString()
-        else entry.id
+        if (entry.isUpload) {
+            entry.boxId.toString()
+        } else entry.id
 
     private fun makeFab(context: Context) =
         ExtendedFloatingActionButton(context).apply {
             layoutParams = CoordinatorLayout.LayoutParams(
                 CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
                 gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
                 setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())

@@ -16,13 +16,12 @@ import kotlinx.coroutines.withContext
  */
 data class ActionUploadExtensionFiles(
     override var entry: Entry,
-    override val title: Int = R.string.action_upload_files_title
+    override val title: Int = R.string.action_upload_files_title,
 ) : ActionExtension {
 
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context, list: List<Uri>): Entry {
-
         if (!list.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
                 list.map {

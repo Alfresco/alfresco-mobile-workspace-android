@@ -5,8 +5,9 @@ import java.io.File
 import java.security.MessageDigest
 
 fun String.ellipsize(length: Int) =
-    if (this.length <= length) this
-    else this.subSequence(0, length).toString().plus("\u2026")
+    if (this.length <= length) {
+        this
+    } else this.subSequence(0, length).toString().plus("\u2026")
 
 fun String.isLocalPath() =
     with(Uri.parse(this).scheme) {

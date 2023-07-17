@@ -50,18 +50,22 @@ interface ListViewState : MavericksState {
     fun copy(_entries: List<Entry>): ListViewState
 
     fun copyRemoving(entry: Entry) =
-        copy(entries.filter {
-            it.id != entry.id
-        })
+        copy(
+            entries.filter {
+                it.id != entry.id
+            },
+        )
 
     fun copyUpdating(entry: Entry) =
-        copy(entries.replace(entry) {
-            it.id == entry.id
-        })
+        copy(
+            entries.replace(entry) {
+                it.id == entry.id
+            },
+        )
 }
 
 abstract class ListViewModel<S : ListViewState>(
-    initialState: S
+    initialState: S,
 ) : MavericksViewModel<S>(initialState) {
 
     private val _sharedFlow = MutableSharedFlow<Entry>()
@@ -81,8 +85,9 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     private fun onStartProcess(entry: Entry) = entry.run {
-        if (entry.isFile)
+        if (entry.isFile) {
             folderListener?.onProcessStart(entry)
+        }
     }
 
     private fun onDelete(entry: Entry) = entry.run {
@@ -95,8 +100,9 @@ abstract class ListViewModel<S : ListViewState>(
 
     private fun onCreateFolder(entry: Entry) = entry.run {
         refresh()
-        if (entry.isFolder)
+        if (entry.isFolder) {
             folderListener?.onEntryCreated(entry)
+        }
     }
 
     private fun onMove(entry: Entry) = entry.run {
@@ -197,14 +203,16 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             if (state.selectedEntries.isEmpty()) {
                 MultiSelection.multiSelectionChangedFlow.tryEmit(
                     MultiSelectionData(
-                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = false
-                    )
+                        selectedEntries = state.selectedEntries,
+                        isMultiSelectionEnabled = false,
+                    ),
                 )
             } else {
                 MultiSelection.multiSelectionChangedFlow.tryEmit(
                     MultiSelectionData(
-                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = true
-                    )
+                        selectedEntries = state.selectedEntries,
+                        isMultiSelectionEnabled = true,
+                    ),
                 )
             }
         }
@@ -251,7 +259,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 message(args.third)
             }
         } else if (state.entries.isNotEmpty()) {
-
             val selectedEntries = state.entries.find { obj -> obj.isSelectedForMultiSelection }
             if (selectedEntries == null) {
                 disableLongPress()
@@ -319,8 +326,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     }
 
     private fun stableId(entry: Entry): String =
-        if (entry.isUpload) entry.boxId.toString()
-        else entry.id
+        if (entry.isUpload) {
+            entry.boxId.toString()
+        } else entry.id
 
     abstract fun onItemClicked(entry: Entry)
     open fun onItemLongClicked(entry: Entry) {}

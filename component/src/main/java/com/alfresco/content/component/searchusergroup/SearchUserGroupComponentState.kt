@@ -16,7 +16,7 @@ import com.alfresco.content.data.UserGroupDetails
 data class SearchUserGroupComponentState(
     val parent: ParentEntry?,
     val requestUser: Async<ResponseUserGroupList> = Uninitialized,
-    val listUserGroup: List<UserGroupDetails> = emptyList()
+    val listUserGroup: List<UserGroupDetails> = emptyList(),
 ) : MavericksState {
     constructor(target: ParentEntry) : this(parent = target)
 

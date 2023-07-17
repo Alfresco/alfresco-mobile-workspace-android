@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ChildViewerArgs(
     val uri: String,
-    val type: String
+    val type: String,
 ) : Parcelable

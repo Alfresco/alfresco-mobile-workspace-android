@@ -26,14 +26,14 @@ class FavoritesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
         pager = view.findViewById(R.id.pager)
         tabs = view.findViewById(R.id.tabs)
         listFragments = mutableListOf(
             BrowseFragment.withArg(requireContext().getString(R.string.nav_path_favorites)),
-            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_fav_libraries))
+            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_fav_libraries)),
         )
         pagerAdapter = PagerAdapter(requireContext(), childFragmentManager, listFragments)
         pager.adapter = pagerAdapter
@@ -68,7 +68,6 @@ class FavoritesFragment : Fragment() {
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment {
-
             return when (position) {
                 0 -> listFragments[position]
                 else -> listFragments[position]

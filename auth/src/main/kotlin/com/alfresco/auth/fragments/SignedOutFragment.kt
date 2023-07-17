@@ -144,7 +144,6 @@ class SignedOutFragmentViewModel : ViewModel() {
 }
 
 private fun onViewCreated(self: AppCompatDialogFragment, view: View, adapter: SignedOutAdapter) {
-
     // Disable dismissing the dialog
     self.isCancelable = false
 

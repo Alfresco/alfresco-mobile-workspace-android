@@ -11,7 +11,7 @@ data class ResponseList(
     val total: Int,
     val start: Int,
     val listTask: List<TaskEntry> = emptyList(),
-    val listProcesses: List<ProcessEntry> = emptyList()
+    val listProcesses: List<ProcessEntry> = emptyList(),
 ) {
     companion object {
 
@@ -23,7 +23,7 @@ data class ResponseList(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listTask = raw.data?.map { TaskEntry.with(it, apsUser) } ?: emptyList()
+                listTask = raw.data?.map { TaskEntry.with(it, apsUser) } ?: emptyList(),
             )
         }
 
@@ -35,7 +35,7 @@ data class ResponseList(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listProcesses = raw.data?.map { ProcessEntry.with(it, apsUser) } ?: emptyList()
+                listProcesses = raw.data?.map { ProcessEntry.with(it, apsUser) } ?: emptyList(),
             )
         }
     }

@@ -11,7 +11,7 @@ import android.widget.ImageView
 class ShutterButton(
     context: Context,
     attrs: AttributeSet?,
-    defStyleAttr: Int
+    defStyleAttr: Int,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val background = createBackground()
@@ -38,7 +38,7 @@ class ShutterButton(
         ImageView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
+                LayoutParams.WRAP_CONTENT,
             )
             setImageResource(R.drawable.ic_shutter_photo_to_video)
             // Seems that the drawable is sometimes loaded in the end state, so reset it.
@@ -49,7 +49,7 @@ class ShutterButton(
         ImageView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
+                LayoutParams.WRAP_CONTENT,
             )
             setImageResource(R.drawable.bg_shutter_btn)
         }
@@ -95,7 +95,7 @@ class ShutterButton(
     enum class State {
         Photo,
         Video,
-        Recording
+        Recording,
     }
 
     private companion object {

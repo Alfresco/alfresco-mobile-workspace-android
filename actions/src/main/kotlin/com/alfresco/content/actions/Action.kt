@@ -14,10 +14,10 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.events.EventBus
 import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
-import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 interface Action {
     val entry: ParentEntry
@@ -30,7 +30,7 @@ interface Action {
 
     fun execute(
         context: Context,
-        scope: CoroutineScope
+        scope: CoroutineScope,
     ) = scope.launch {
         val bus = EventBus.default
         try {
@@ -56,8 +56,9 @@ interface Action {
             Logger.e(ex)
             when (title) {
                 R.string.action_create_folder -> {
-                    if (ex.message?.contains("409") == true)
+                    if (ex.message?.contains("409") == true) {
                         bus.send(Error(context.getString(R.string.error_duplicate_folder)))
+                    }
                 }
                 else -> bus.send(Error(context.getString(R.string.action_generic_error)))
             }
@@ -65,8 +66,9 @@ interface Action {
     }
 
     private fun sendAnalytics(status: Boolean) {
-        if (title == R.string.action_create_folder)
+        if (title == R.string.action_create_folder) {
             AnalyticsManager().apiTracker(APIEvent.NewFolder, status)
+        }
     }
 
     /**
@@ -113,25 +115,26 @@ interface Action {
             view: View,
             anchorView: View?,
             @StringRes messageResId: Int,
-            vararg formatArgs: String
+            vararg formatArgs: String,
         ) = showToast(
             view,
             anchorView,
             view.resources.getString(
-                messageResId, *formatArgs
-            )
+                messageResId,
+                *formatArgs,
+            ),
         )
 
         @SuppressLint("ShowToast")
         internal fun showToast(
             view: View,
             anchorView: View?,
-            message: CharSequence
+            message: CharSequence,
         ) {
             Snackbar.make(
                 view,
                 message,
-                Snackbar.LENGTH_LONG
+                Snackbar.LENGTH_LONG,
             ).setAnchorView(anchorView).show()
         }
     }

@@ -1,11 +1,10 @@
 package com.alfresco.content.data
 
 import java.io.File
-import java.lang.UnsupportedOperationException
 
 data class Rendition(
     val uri: String,
-    val mimeType: String
+    val mimeType: String,
 ) {
     val offlineFileName: String
         get() = when (mimeType) {

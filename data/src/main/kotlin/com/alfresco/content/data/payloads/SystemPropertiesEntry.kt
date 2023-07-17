@@ -11,7 +11,7 @@ data class SystemPropertiesEntry(
     val disableJavaScriptEventsInFormEditor: Boolean? = false,
     val logoutDisabled: Boolean? = false,
     val alfrescoContentSsoEnabled: Boolean? = false,
-    val authConfiguration: AuthConfigurationData? = null
+    val authConfiguration: AuthConfigurationData? = null,
 ) {
     companion object {
         /**
@@ -23,7 +23,7 @@ data class SystemPropertiesEntry(
                 disableJavaScriptEventsInFormEditor = data?.disableJavaScriptEventsInFormEditor,
                 logoutDisabled = data?.logoutDisabled,
                 alfrescoContentSsoEnabled = data?.alfrescoContentSsoEnabled,
-                authConfiguration = AuthConfigurationData.with(data?.authConfiguration)
+                authConfiguration = AuthConfigurationData.with(data?.authConfiguration),
             )
         }
     }
@@ -36,7 +36,7 @@ data class AuthConfigurationData(
     val authUrl: String? = null,
     val realm: String? = null,
     val clientId: String? = null,
-    val useBrowserLogout: Boolean? = false
+    val useBrowserLogout: Boolean? = false,
 ) {
     companion object {
         /**
@@ -47,7 +47,7 @@ data class AuthConfigurationData(
                 authUrl = data?.authUrl,
                 realm = data?.realm,
                 clientId = data?.clientId,
-                useBrowserLogout = data?.useBrowserLogout
+                useBrowserLogout = data?.useBrowserLogout,
             )
         }
     }

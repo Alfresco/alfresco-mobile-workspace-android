@@ -6,12 +6,12 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
-import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Marked as ActionUpdateFileFolder
@@ -20,7 +20,7 @@ data class ActionUpdateFileFolder(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_rename,
     override val title: Int = R.string.action_rename_file_folder,
-    override val eventName: EventName = EventName.RenameNode
+    override val eventName: EventName = EventName.RenameNode,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
@@ -52,7 +52,7 @@ data class ActionUpdateFileFolder(
 
     private data class CreateFolderMetadata(
         val name: String,
-        val description: String
+        val description: String,
     )
 
     private fun String.nameAndExtension(): Pair<String, String> {

@@ -10,10 +10,10 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import coil.EventListener
 import coil.ImageLoader
-import coil.fetch.VideoFrameFileFetcher
+import coil.decode.VideoFrameDecoder
 import coil.load
 import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil.request.SuccessResult
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 class ListViewPreview @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var captureItem: CaptureItem? = null
@@ -36,12 +36,12 @@ class ListViewPreview @JvmOverloads constructor(
     private val binding = ViewListPreviewBinding.inflate(LayoutInflater.from(context), this)
     private val imageLoader: ImageLoader by lazy {
         ImageLoader.Builder(context)
-            .componentRegistry {
-                add(VideoFrameFileFetcher(context))
+            .components {
+                add(VideoFrameDecoder.Factory())
             }
             .eventListener(object : EventListener {
-                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
-                    super.onSuccess(request, metadata)
+                override fun onSuccess(request: ImageRequest, result: SuccessResult) {
+                    super.onSuccess(request, result)
                     onSuccessMediaLoad()
                 }
             })
@@ -69,7 +69,7 @@ class ListViewPreview @JvmOverloads constructor(
         if (exif != null) {
             val rotation = exif.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
+                ExifInterface.ORIENTATION_NORMAL,
             )
             binding.preview.scaleType = getScaleType(convertOrientationToDegree(rotation))
         }
@@ -100,9 +100,11 @@ class ListViewPreview @JvmOverloads constructor(
             isTablet && (rotation == ORIENTATION_0 || rotation == ORIENTATION_180) -> {
                 ImageView.ScaleType.FIT_CENTER
             }
+
             !isTablet && (rotation == ORIENTATION_180 || rotation == ORIENTATION_0) -> {
                 ImageView.ScaleType.FIT_CENTER
             }
+
             else -> {
                 ImageView.ScaleType.FIT_XY
             }
@@ -163,23 +165,26 @@ class ListViewPreview @JvmOverloads constructor(
         val hour = TimeUnit.MILLISECONDS.toHours(millis)
         val minutes =
             TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
-                TimeUnit.MILLISECONDS.toHours(millis)
+                TimeUnit.MILLISECONDS.toHours(millis),
             )
         val seconds =
             TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                TimeUnit.MILLISECONDS.toMinutes(millis)
+                TimeUnit.MILLISECONDS.toMinutes(millis),
             )
         val hms = if (hour > 0L) {
             java.lang.String.format(
                 ENGLISH,
-                context.getString(R.string.format_video_duration_hour), hour,
-                minutes, seconds
+                context.getString(R.string.format_video_duration_hour),
+                hour,
+                minutes,
+                seconds,
             )
         } else {
             java.lang.String.format(
                 ENGLISH,
                 context.getString(R.string.format_video_duration_minute),
-                minutes, seconds
+                minutes,
+                seconds,
             )
         }
         binding.videoDuration.text = hms

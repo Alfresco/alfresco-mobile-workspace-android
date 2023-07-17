@@ -8,7 +8,7 @@ import com.alfresco.process.models.ResultFormVariables
 data class FormVariables(
     val id: String? = null,
     val type: String? = null,
-    val value: Any? = null
+    val value: Any? = null,
 ) {
     companion object {
         /**
@@ -18,7 +18,7 @@ data class FormVariables(
             return FormVariables(
                 id = raw.id,
                 type = raw.type,
-                value = raw.value
+                value = raw.value,
             )
         }
     }

@@ -9,7 +9,7 @@ data class ContextualActionsState(
     val entry: Entry,
     val actions: List<Action> = emptyList(),
     val topActions: List<Action> = emptyList(),
-    val fetch: Async<Entry> = Uninitialized
+    val fetch: Async<Entry> = Uninitialized,
 ) : MavericksState {
     constructor(target: Entry) : this(entry = target)
 }

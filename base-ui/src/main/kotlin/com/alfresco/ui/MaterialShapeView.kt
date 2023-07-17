@@ -15,7 +15,7 @@ class MaterialShapeView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
-    defStyleRes: Int
+    defStyleRes: Int,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val background = MaterialShapeDrawable(context, attrs, defStyleAttr, defStyleRes)
@@ -65,7 +65,7 @@ class MaterialShapeView(
             attrs,
             R.styleable.MaterialShapeView,
             defStyleAttr,
-            defStyleRes
+            defStyleRes,
         )
 
         try {

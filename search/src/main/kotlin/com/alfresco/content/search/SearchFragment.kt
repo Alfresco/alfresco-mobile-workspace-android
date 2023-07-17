@@ -41,21 +41,21 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.hideSoftInput
 import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Parcelize
 data class ContextualSearchArgs(
     val id: String?,
     val title: String?,
     val moveId: String,
-    val isExtension: Boolean
+    val isExtension: Boolean,
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
@@ -69,7 +69,7 @@ data class ContextualSearchArgs(
                 args.getString(ID_KEY, null),
                 args.getString(TITLE_KEY, null),
                 args.getString(MOVE_ID_KEY, ""),
-                args.getBoolean(EXTENSION_KEY, false)
+                args.getBoolean(EXTENSION_KEY, false),
             )
         }
     }
@@ -102,7 +102,7 @@ class SearchFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
@@ -198,11 +198,11 @@ class SearchFragment : Fragment(), MavericksView {
         })
 
         searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 this@SearchFragment.findNavController().navigateUp()
                 return true
             }
@@ -277,20 +277,22 @@ class SearchFragment : Fragment(), MavericksView {
                     setSelectedFilterData()
 
                     val listSearchChip = mutableListOf<SearchChipCategory>()
-                    if (state.isContextual)
+                    if (state.isContextual) {
                         listSearchChip.add(
                             SearchChipCategory.withContextual(
                                 getString(R.string.search_chip_contextual, state.contextTitle),
-                                SearchFilter.Contextual
-                            )
+                                SearchFilter.Contextual,
+                            ),
                         )
+                    }
                     applyAdvanceFilters(position, listSearchChip)
                 }
                 searchFilterPopup.dismiss()
             }
         }
-        if (viewModel.canSearchOverCurrentNetwork())
+        if (viewModel.canSearchOverCurrentNetwork()) {
             binding.rlDropDownSearch.setOnClickListener { searchFilterPopup.show() }
+        }
         binding.actionReset.setOnClickListener { resetAllFilters() }
     }
 
@@ -307,10 +309,11 @@ class SearchFragment : Fragment(), MavericksView {
     }
 
     private fun setSearchFilterLocalizedName(state: SearchResultsState) {
-        if (state.selectedFilterIndex != -1)
+        if (state.selectedFilterIndex != -1) {
             viewModel.getDefaultSearchFilterName(state)?.let { name ->
                 binding.textSearchFilterTitle.text = requireContext().getLocalizedName(name)
             }
+        }
     }
 
     private fun setSelectedFilterData() {
@@ -382,7 +385,6 @@ class SearchFragment : Fragment(), MavericksView {
             val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
 
             if (!searchChipCategory.isNullOrEmpty()) {
-
                 searchChipCategory.forEach { item ->
                     val modelID = filterIndex.toString() + item.category?.id
                     listViewFilterChips {
@@ -407,10 +409,11 @@ class SearchFragment : Fragment(), MavericksView {
         if (binding.recyclerViewChips.isEnabled) {
             binding.recyclerViewChips.isEnabled = false
             withState(viewModel) { state ->
-                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked)
+                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked) {
                     ComponentMetaData(requireContext().getString(R.string.search_chip_contextual, state.contextTitle), SearchFilter.Contextual.name)
-                else
+                } else {
                     ComponentMetaData("", "")
+                }
                 binding.recyclerViewChips.isEnabled = true
                 val resultList = viewModel.updateChipComponentResult(state, data, result)
                 applyAdvanceFilters(state.selectedFilterIndex, resultList)
@@ -444,16 +447,19 @@ class SearchFragment : Fragment(), MavericksView {
 
     private suspend fun showComponentSheetDialog(
         context: Context,
-        searchChipCategory: SearchChipCategory
+        searchChipCategory: SearchChipCategory,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-            val componentData = if (searchChipCategory.facets == null) ComponentData.with(
-                searchChipCategory.category,
-                searchChipCategory.selectedName, searchChipCategory.selectedQuery
-            )
-            else ComponentData.with(
+            val componentData = if (searchChipCategory.facets == null) {
+                ComponentData.with(
+                    searchChipCategory.category,
+                    searchChipCategory.selectedName,
+                    searchChipCategory.selectedQuery,
+                )
+            } else ComponentData.with(
                 searchChipCategory.facets,
-                searchChipCategory.selectedName, searchChipCategory.selectedQuery
+                searchChipCategory.selectedName,
+                searchChipCategory.selectedQuery,
             )
             ComponentBuilder(context, componentData)
                 .onApply { name, query, _ ->
@@ -495,7 +501,7 @@ class SearchFragment : Fragment(), MavericksView {
         val facetData = SearchFacetData(
             viewModel.defaultFacetFields(position),
             viewModel.defaultFacetQueries(position),
-            viewModel.defaultFacetIntervals(position)
+            viewModel.defaultFacetIntervals(position),
         )
 
         advanceSearchFilter.addAll(viewModel.initAdvanceFilters(position))

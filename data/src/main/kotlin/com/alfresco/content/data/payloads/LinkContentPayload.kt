@@ -9,7 +9,7 @@ data class LinkContentPayload(
     val source: String = "",
     val mimeType: String = "",
     val sourceId: String = "",
-    val name: String = ""
+    val name: String = "",
 ) {
     companion object {
 
@@ -21,7 +21,7 @@ data class LinkContentPayload(
                 source = sourceName,
                 sourceId = entry.id,
                 mimeType = entry.mimeType ?: "",
-                name = entry.name
+                name = entry.name,
             )
         }
     }

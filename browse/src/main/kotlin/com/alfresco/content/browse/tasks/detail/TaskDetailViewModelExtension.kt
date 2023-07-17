@@ -7,9 +7,9 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.events.EventBus
-import java.io.File
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * update the task list after complete the task
@@ -43,12 +43,15 @@ internal fun TaskDetailViewModel.hasTaskStatusEnabled(state: TaskDetailViewState
  * returns true if the endDate is empty and the assignee user is same as loggedIn user otherwise false
  */
 fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boolean {
-    if (isWorkflowTask)
+    if (isWorkflowTask) {
         return false
-    if (isTaskCompleted(state))
+    }
+    if (isTaskCompleted(state)) {
         return false
-    if (hasTaskEditMode)
+    }
+    if (hasTaskEditMode) {
         return true
+    }
     return state.parent?.assignee?.id == repository.getAPSUser().id
 }
 

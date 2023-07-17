@@ -8,12 +8,12 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.SearchRepository
 
 data class RecentSearchViewState(
-    val entries: List<String> = emptyList()
+    val entries: List<String> = emptyList(),
 ) : MavericksState
 
 class RecentSearchViewModel(
     viewState: RecentSearchViewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<RecentSearchViewState>(viewState) {
 
     @Suppress("unused")
@@ -30,7 +30,7 @@ class RecentSearchViewModel(
     companion object : MavericksViewModelFactory<RecentSearchViewModel, RecentSearchViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: RecentSearchViewState
+            state: RecentSearchViewState,
         ) = RecentSearchViewModel(state, viewModelContext.app())
     }
 }

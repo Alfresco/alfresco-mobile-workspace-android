@@ -6,5 +6,5 @@ package com.alfresco.content.component
 data class ComponentMetaData(
     val name: String? = "",
     val query: String? = "",
-    val queryMap: Map<String, String>? = mapOf()
+    val queryMap: Map<String, String>? = mapOf(),
 )

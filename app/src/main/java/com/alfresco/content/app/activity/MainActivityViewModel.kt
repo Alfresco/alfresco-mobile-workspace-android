@@ -43,12 +43,12 @@ import kotlinx.coroutines.launch
 data class MainActivityState(
     val reLoginCount: Int = 0, // new state on each invalid auth
     val requiresReLogin: Boolean = false,
-    val isOnline: Boolean = true
+    val isOnline: Boolean = true,
 ) : MavericksState
 
 class MainActivityViewModel(
     state: MainActivityState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<MainActivityState>(state), LifecycleObserver {
 
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
@@ -95,8 +95,9 @@ class MainActivityViewModel(
      * It executes the system properties APIs to determine APS is enabled or not for the loggedIn user.
      */
     fun checkIfAPSEnabled() {
-        if (SessionManager.currentSession != null)
+        if (SessionManager.currentSession != null) {
             fetchAPSSystemProperties()
+        }
     }
 
     private fun fetchAPSSystemProperties() {
@@ -157,8 +158,9 @@ class MainActivityViewModel(
                     session.ticket = AuthenticationRepository().fetchTicket()
                     success = true
                     if (!mode.isNullOrEmpty() && mode.equals(REMOTE)) {
-                        if (!isFolder) _navigationMode.value = NavigationMode.FILE
-                        else _navigationMode.value = NavigationMode.FOLDER
+                        if (!isFolder) {
+                            _navigationMode.value = NavigationMode.FILE
+                        } else _navigationMode.value = NavigationMode.FOLDER
                     }
                 } catch (_: Exception) {
                     delay(60 * 1000L)
@@ -187,8 +189,9 @@ class MainActivityViewModel(
                 _navigationMode.value = NavigationMode.FILE
             }
             VALUE_REMOTE -> {
-                if (requiresLogin) _navigationMode.value = NavigationMode.LOGIN
-                else _navigationMode.value = NavigationMode.DEFAULT
+                if (requiresLogin) {
+                    _navigationMode.value = NavigationMode.LOGIN
+                } else _navigationMode.value = NavigationMode.DEFAULT
             }
             else -> _navigationMode.value = NavigationMode.DEFAULT
         }
@@ -198,7 +201,7 @@ class MainActivityViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: MainActivityState
+            state: MainActivityState,
         ) = MainActivityViewModel(state, viewModelContext.app())
     }
 }

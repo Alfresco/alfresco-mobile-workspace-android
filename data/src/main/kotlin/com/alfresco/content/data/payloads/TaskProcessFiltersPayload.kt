@@ -13,7 +13,7 @@ data class TaskProcessFiltersPayload(
     var state: String = "",
     var text: String = "",
     var dueBefore: String = "",
-    var dueAfter: String = ""
+    var dueAfter: String = "",
 ) {
     companion object {
 
@@ -29,7 +29,7 @@ data class TaskProcessFiltersPayload(
                 state = obj.state,
                 text = obj.text,
                 dueBefore = obj.dueBefore,
-                dueAfter = obj.dueAfter
+                dueAfter = obj.dueAfter,
             )
         }
 
@@ -45,7 +45,7 @@ data class TaskProcessFiltersPayload(
                 state = state.lowercase(),
                 text = obj.text,
                 dueBefore = obj.dueBefore,
-                dueAfter = obj.dueAfter
+                dueAfter = obj.dueAfter,
             )
         }
 
@@ -59,7 +59,7 @@ data class TaskProcessFiltersPayload(
                 assignment = null,
                 size = 25,
                 page = 0,
-                state = "all"
+                state = "all",
             )
         }
 
@@ -71,7 +71,8 @@ data class TaskProcessFiltersPayload(
 
             when (selectedStatus) {
                 TaskStatus.All.name.lowercase(), TaskStatus.ACTIVE.name.lowercase(),
-                TaskStatus.COMPLETED.name.lowercase() -> taskFilters.state = selectedStatus
+                TaskStatus.COMPLETED.name.lowercase(),
+                -> taskFilters.state = selectedStatus
 
                 TaskStatus.CANDIDATE.name.lowercase() -> taskFilters.assignment = selectedStatus
             }
@@ -88,7 +89,7 @@ enum class ProcessFilters(val filter: String) {
     All("filter.option.all"),
     Running("running"),
     Active("filter.option.active"),
-    Completed("filter.option.completed")
+    Completed("filter.option.completed"),
 }
 
 /**
@@ -98,5 +99,5 @@ enum class TaskStatus {
     All,
     ACTIVE,
     CANDIDATE,
-    COMPLETED
+    COMPLETED,
 }

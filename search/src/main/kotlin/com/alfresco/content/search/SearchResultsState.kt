@@ -38,7 +38,7 @@ data class SearchResultsState(
     val contextId: String? = null,
     val contextTitle: String? = null,
     val isExtension: Boolean = false,
-    val moveId: String = ""
+    val moveId: String = "",
 ) : ListViewState {
 
     constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension, moveId = args.moveId)
@@ -84,38 +84,40 @@ data class SearchResultsState(
             searchChipList.forEach { chipDataObj ->
                 val facetObj = chipDataObj.facets
                 if (facetObj != null) {
-
                     val updateChipDataObj = SearchChipCategory.updateFacet(chipDataObj, Facets.updateFacetFileSizeLabel(facetObj))
 
                     val bucketList = facetObj.buckets?.filter { bucketObj -> bucketObj.metrics?.get(0)?.value?.count != "0" }
 
-                    if (updateChipDataObj.isSelected)
+                    if (updateChipDataObj.isSelected) {
                         tempSearchChipList.add(updateChipDataObj)
-                    else if (!updateChipDataObj.isSelected && !bucketList.isNullOrEmpty())
+                    } else if (!updateChipDataObj.isSelected && !bucketList.isNullOrEmpty()) {
                         tempSearchChipList.add(updateChipDataObj)
+                    }
                 } else {
                     tempSearchChipList.add(chipDataObj)
                 }
             }
             copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems, listSearchCategoryChips = tempSearchChipList)
-        } else
+        } else {
             copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
+        }
     }
 
     private fun isChipSelected(list: MutableList<SearchChipCategory>?, newEntries: List<Entry>, facets: List<Facets>?): MutableList<SearchChipCategory>? {
         val facetChipObj = list?.find { filterChip -> filterChip.category?.component != null && filterChip.isSelected }
 
-        if (facetChipObj != null && newEntries.isEmpty())
+        if (facetChipObj != null && newEntries.isEmpty()) {
             return list
+        }
 
         if (facetChipObj != null && newEntries.isNotEmpty()) {
             // updating the new facet's data
             facets?.forEach { newFacetObj ->
                 // returns the SearchChipCategory obj that matches facets label otherwise null
                 val existingFacetObj = list.find { data -> data.facets?.label == newFacetObj.label }
-                if (existingFacetObj == null)
+                if (existingFacetObj == null) {
                     list.add(SearchChipCategory.withDefaultFacet(newFacetObj))
-                else {
+                } else {
                     newFacetObj.buckets = getFacetBucketList(existingFacetObj, newFacetObj)
                     list[list.indexOf(existingFacetObj)] = SearchChipCategory.updateFacet(existingFacetObj, newFacetObj)
                 }
@@ -136,8 +138,9 @@ data class SearchResultsState(
         obj.facets?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)
             val newBucketObj = facets.buckets?.find { newBucket -> oldBucket.filterQuery == newBucket.filterQuery }
-            if (newBucketObj != null)
+            if (newBucketObj != null) {
                 bucketObj.metrics?.get(0)?.value?.count = newBucketObj.metrics?.get(0)?.value?.count
+            }
             listBuckets.add(bucketObj)
         }
         return listBuckets

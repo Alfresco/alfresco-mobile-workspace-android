@@ -60,10 +60,12 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 /**
  * navigate to contextual search
  */
-fun NavController.navigateToContextualSearch(id: String? = null, title: String, isExtension: Boolean, moveId: String = "") {
-    if (moveId.isNotEmpty())
-        navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension/$moveId?title=${Uri.encode(title)}"))
-    else navigate(Uri.parse("$BASE_URI/search/folder/$id/$isExtension?title=${Uri.encode(title)}"))
+fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean, moveId: String = "") {
+    if (moveId.isNotEmpty()) {
+        navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)},extension=$isExtension,moveId=$moveId"))
+    } else {
+        navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)},extension=$isExtension"))
+    }
 }
 
 /**
@@ -84,9 +86,11 @@ fun NavController.navigateToMoveParent(id: String, moveId: String, title: String
  * navigate to browse child folder
  */
 fun NavController.navigateToChildFolder(id: String, title: String, moveId: String = "", mode: String = REMOTE) {
-    if (moveId.isNotEmpty())
+    if (moveId.isNotEmpty()) {
         navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id/$moveId?title=${Uri.encode(title)}"))
-    else navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
+    } else {
+        navigate(Uri.parse("$BASE_URI/browse_child/extension/$mode/$id?title=${Uri.encode(title)}"))
+    }
 }
 
 /**

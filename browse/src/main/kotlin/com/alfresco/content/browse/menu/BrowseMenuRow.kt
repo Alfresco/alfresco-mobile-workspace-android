@@ -14,7 +14,7 @@ import com.alfresco.content.browse.databinding.ViewBrowseMenuRowBinding
 class BrowseMenuRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewBrowseMenuRowBinding.inflate(LayoutInflater.from(context), this, true)
@@ -23,7 +23,7 @@ class BrowseMenuRow @JvmOverloads constructor(
     fun setEntry(entry: MenuEntry) {
         binding.title.text = entry.title
         binding.icon.setImageDrawable(
-            ResourcesCompat.getDrawable(resources, entry.icon, context.theme)
+            ResourcesCompat.getDrawable(resources, entry.icon, context.theme),
         )
     }
 

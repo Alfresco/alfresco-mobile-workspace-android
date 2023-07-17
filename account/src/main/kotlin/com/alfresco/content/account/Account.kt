@@ -1,9 +1,9 @@
 package com.alfresco.content.account
 
-import android.accounts.Account as AndroidAccount
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
+import android.accounts.Account as AndroidAccount
 
 data class Account(
     val id: String,
@@ -13,7 +13,7 @@ data class Account(
     val serverUrl: String,
     val displayName: String? = null,
     val email: String? = null,
-    val myFiles: String? = null
+    val myFiles: String? = null,
 ) {
     companion object {
         private const val displayNameKey = "displayName"
@@ -32,7 +32,7 @@ data class Account(
             serverUrl: String,
             displayName: String,
             email: String,
-            myFiles: String
+            myFiles: String,
         ) {
             val b = Bundle()
             b.putString(authTypeKey, authType)
@@ -59,7 +59,7 @@ data class Account(
             authState: String,
             displayName: String,
             email: String,
-            myFiles: String
+            myFiles: String,
         ) {
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
@@ -93,7 +93,7 @@ data class Account(
                     am.getUserData(acc, serverKey),
                     am.getUserData(acc, displayNameKey),
                     am.getUserData(acc, emailKey),
-                    am.getUserData(acc, myFilesKey)
+                    am.getUserData(acc, myFilesKey),
                 )
             }
             return null

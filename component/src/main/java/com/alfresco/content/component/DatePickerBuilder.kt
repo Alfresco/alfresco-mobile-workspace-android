@@ -28,7 +28,7 @@ data class DatePickerBuilder(
     var dateFormat: String = "",
     var isFutureDate: Boolean = false,
     var onSuccess: DatePickerOnSuccess? = null,
-    var onFailure: DatePickerOnFailure? = null
+    var onFailure: DatePickerOnFailure? = null,
 ) {
 
     private val dateFormatddMMMyy = "dd-MMM-yy"
@@ -36,8 +36,9 @@ data class DatePickerBuilder(
     private val addOneDay = 1000 * 60 * 60 * 24
 
     init {
-        if (dateFormat.isEmpty())
+        if (dateFormat.isEmpty()) {
             dateFormat = dateFormatddMMMyy
+        }
     }
 
     /**
@@ -67,9 +68,11 @@ data class DatePickerBuilder(
         constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            if (isFrom)
+            if (isFrom) {
                 setTitleText(context.getString(R.string.hint_range_from_date))
-            else setTitleText(context.getString(R.string.hint_range_to_date))
+            } else {
+                setTitleText(context.getString(R.string.hint_range_to_date))
+            }
             setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
         }.build()
@@ -108,8 +111,9 @@ data class DatePickerBuilder(
                 requiredEndDate = !isFutureDate
             }
         }
-        if (requiredEndDate)
+        if (requiredEndDate) {
             validators.add(DateValidatorPointBackward.before(endDate))
+        }
 
         return validators
     }
@@ -117,15 +121,17 @@ data class DatePickerBuilder(
     private fun getSelectionDate(): Long {
         var selectionDate = MaterialDatePicker.todayInUtcMilliseconds()
         if (isFrom) {
-            if (fromDate.isNotEmpty())
+            if (fromDate.isNotEmpty()) {
                 fromDate.getddMMyyyyStringDate()?.let { stringDate ->
                     selectionDate = getSelectionDate(stringDate)
                 }
+            }
         } else {
-            if (toDate.isNotEmpty())
+            if (toDate.isNotEmpty()) {
                 toDate.getddMMyyyyStringDate()?.let { stringDate ->
                     selectionDate = getSelectionDate(stringDate)
                 }
+            }
         }
         return selectionDate
     }
@@ -139,11 +145,11 @@ data class DatePickerBuilder(
     }
 
     private fun String.getddMMyyyyStringDate(): String? {
-
         val formatter = SimpleDateFormat(dateFormatddMMyyyy, Locale.ENGLISH)
         val date = SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(this)
-        if (date != null)
+        if (date != null) {
             return formatter.format(date)
+        }
 
         return null
     }

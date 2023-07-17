@@ -33,7 +33,7 @@ class AdvancedSettingsFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = DataBindingUtil.inflate<FragmentAuthSettingsBinding>(inflater, R.layout.fragment_auth_settings, container, false)
         binding.viewModel = viewModel
@@ -52,9 +52,11 @@ class AdvancedSettingsFragment : DialogFragment() {
     }
 
     private fun onSave(@Suppress("UNUSED_PARAMETER") value: Int) {
-        Snackbar.make(rootView,
-                R.string.auth_settings_prompt_success,
-                Snackbar.LENGTH_LONG).show()
+        Snackbar.make(
+            rootView,
+            R.string.auth_settings_prompt_success,
+            Snackbar.LENGTH_LONG,
+        ).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

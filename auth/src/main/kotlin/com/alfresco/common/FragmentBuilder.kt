@@ -21,19 +21,20 @@ abstract class FragmentBuilder(protected val parent: FragmentActivity) {
 
     private fun internalDisplay() {
         parent.supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        R.anim.anim_slide_in_right,
-                        R.anim.anim_slide_out_left,
-                        R.anim.anim_slide_in_left,
-                        R.anim.anim_slide_out_right)
-                .replace(R.id.frame_placeholder, build(extraConfiguration), fragmentTag)
-                .addToBackStack(null)
-                .commit()
+            .setCustomAnimations(
+                R.anim.anim_slide_in_right,
+                R.anim.anim_slide_out_left,
+                R.anim.anim_slide_in_left,
+                R.anim.anim_slide_out_right,
+            )
+            .replace(R.id.frame_placeholder, build(extraConfiguration), fragmentTag)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun replace() {
         parent.supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_placeholder, build(extraConfiguration), fragmentTag)
-                .commit()
+            .replace(R.id.frame_placeholder, build(extraConfiguration), fragmentTag)
+            .commit()
     }
 }

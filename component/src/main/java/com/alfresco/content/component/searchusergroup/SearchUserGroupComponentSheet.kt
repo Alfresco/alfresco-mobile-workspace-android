@@ -45,7 +45,7 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = SheetComponentSearchUserBinding.inflate(inflater, container, false)
         return binding.root
@@ -96,8 +96,9 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
             }
         }
         binding.recyclerView.setOnTouchListener { view, event ->
-            if (view != null && event.action == MotionEvent.ACTION_MOVE)
+            if (view != null && event.action == MotionEvent.ACTION_MOVE) {
                 view.hideSoftInput()
+            }
             false
         }
     }
@@ -111,11 +112,14 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
     private fun setSearchQuery(query: String) {
         val term = query.replace("\\s+".toRegex(), " ").trim()
         if (!viewModel.searchByNameOrIndividual) {
-            if (!viewModel.canSearchGroups && term.isValidEmail())
+            if (!viewModel.canSearchGroups && term.isValidEmail()) {
                 executeSearch(term)
-            else
+            } else {
                 executeSearch(term)
-        } else executeSearch(term)
+            }
+        } else {
+            executeSearch(term)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

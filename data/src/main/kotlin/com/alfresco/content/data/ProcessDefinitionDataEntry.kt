@@ -17,7 +17,7 @@ data class ProcessDefinitionDataEntry(
     val version: Int? = null,
     val deploymentId: String? = null,
     val tenantId: String? = null,
-    val hasStartForm: Boolean? = null
+    val hasStartForm: Boolean? = null,
 ) : ParentEntry(), Parcelable {
     companion object {
 
@@ -34,7 +34,7 @@ data class ProcessDefinitionDataEntry(
                 version = raw.version,
                 deploymentId = raw.deploymentId,
                 tenantId = raw.tenantId,
-                hasStartForm = raw.hasStartForm
+                hasStartForm = raw.hasStartForm,
             )
         }
     }

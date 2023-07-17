@@ -45,12 +45,15 @@ class CreateTaskDialog : DialogFragment() {
                 dialog?.dismiss()
             }
             .setPositiveButton(
-                if (isUpdate) getString(R.string.action_text_save)
-                else getString(R.string.action_folder_create)
+                if (isUpdate) {
+                    getString(R.string.action_text_save)
+                } else {
+                    getString(R.string.action_folder_create)
+                },
             ) { _, _ ->
                 onSuccess?.invoke(
                     binding.nameInput.text.toString(),
-                    binding.descriptionInput.text.toString()
+                    binding.descriptionInput.text.toString(),
                 )
             }
             .setView(binding.root)
@@ -105,7 +108,7 @@ class CreateTaskDialog : DialogFragment() {
         val isUpdate: Boolean,
         val dataObj: CreateMetadata? = null,
         var onSuccess: CreateTaskSuccessCallback? = null,
-        var onCancel: CreateTaskCancelCallback? = null
+        var onCancel: CreateTaskCancelCallback? = null,
     ) {
 
         /**

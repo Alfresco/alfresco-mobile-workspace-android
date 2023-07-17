@@ -18,7 +18,7 @@ data class ComponentBuilder(
     val componentData: ComponentData,
     var onApply: ComponentApplyCallback? = null,
     var onReset: ComponentResetCallback? = null,
-    var onCancel: ComponentCancelCallback? = null
+    var onCancel: ComponentCancelCallback? = null,
 ) {
 
     /**
@@ -43,7 +43,6 @@ data class ComponentBuilder(
      * Filter sheet show method
      */
     fun show() {
-
         val fragmentManager = when (context) {
             is AppCompatActivity -> context.supportFragmentManager
             is Fragment -> context.childFragmentManager

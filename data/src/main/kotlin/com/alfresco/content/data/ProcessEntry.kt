@@ -3,8 +3,8 @@ package com.alfresco.content.data
 import android.os.Parcelable
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProcessInstanceEntry
-import java.time.ZonedDateTime
 import kotlinx.parcelize.Parcelize
+import java.time.ZonedDateTime
 
 /**
  * Marked as ProcessEntry
@@ -33,7 +33,6 @@ data class ProcessEntry(
     val formattedDueDate: String? = null,
     val defaultEntry: Entry? = null,
     val reviewerType: ReviewerType = ReviewerType.OTHER,
-    val observeId: String = ""
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -60,7 +59,7 @@ data class ProcessEntry(
                 processDefinitionDeploymentId = data.processDefinitionDeploymentId,
                 graphicalNotationDefined = data.graphicalNotationDefined,
                 startFormDefined = data.startFormDefined,
-                suspended = data.suspended
+                suspended = data.suspended,
             )
         }
 
@@ -72,7 +71,7 @@ data class ProcessEntry(
                 id = data.id?.toString() ?: "",
                 name = data.name ?: "",
                 description = data.description ?: "",
-                defaultEntry = entry
+                defaultEntry = entry,
             )
         }
 
@@ -88,7 +87,6 @@ data class ProcessEntry(
                 processDefinitionKey = dataObj.key,
                 tenantId = dataObj.tenantId,
                 defaultEntry = processEntry?.defaultEntry,
-                observeId = buildString { append(dataObj.id).append("::").append(System.currentTimeMillis()) }
             )
         }
 
@@ -118,7 +116,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId
             )
         }
 
@@ -149,7 +146,6 @@ data class ProcessEntry(
                 formattedDueDate = formattedDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId
             )
         }
 
@@ -159,7 +155,7 @@ data class ProcessEntry(
         fun updateNameDescription(
             data: ProcessEntry,
             name: String,
-            description: String
+            description: String,
         ): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
@@ -183,7 +179,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId
             )
         }
 
@@ -213,7 +208,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = data.reviewerType,
-                observeId = data.observeId
             )
         }
 
@@ -223,8 +217,9 @@ data class ProcessEntry(
         fun updateReviewerType(data: ProcessEntry, listFields: List<FieldsData>): ProcessEntry {
             var reviewerType: ReviewerType = ReviewerType.PEOPLE
             listFields.forEach {
-                if (it.type == ReviewerType.FUNCTIONAL_GROUP.value())
+                if (it.type == ReviewerType.FUNCTIONAL_GROUP.value()) {
                     reviewerType = ReviewerType.FUNCTIONAL_GROUP
+                }
             }
 
             return ProcessEntry(
@@ -249,7 +244,6 @@ data class ProcessEntry(
                 formattedDueDate = data.formattedDueDate,
                 priority = data.priority,
                 reviewerType = reviewerType,
-                observeId = data.observeId
             )
         }
     }
@@ -261,9 +255,8 @@ data class ProcessEntry(
 enum class ReviewerType {
     PEOPLE,
     FUNCTIONAL_GROUP,
-    REVIEWGROUPS,
-    REVIEWER,
-    OTHER;
+    OTHER,
+    ;
 
     /**
      * returns value of enum in lowercase

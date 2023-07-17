@@ -59,7 +59,7 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
         view.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
+            FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
         container.addView(view)
@@ -76,11 +76,11 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
         // Override double-tap behavior to bypass medium zoom
         view.setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 return false
             }
 
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
                 if (e == null) return false
 
                 if (view.scale > view.minimumScale) {
@@ -92,14 +92,14 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
                 return true
             }
 
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean {
+            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
                 return false
             }
         })
 
         view.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT
+            FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
         container.addView(view)
@@ -108,13 +108,13 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
 
     private fun PhotoView.loadImage(uri: String) {
         val imageLoader = ImageLoader.Builder(requireContext())
-            .componentRegistry {
+            .components {
                 if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder(context))
+                    add(ImageDecoderDecoder.Factory())
                 } else {
-                    add(GifDecoder())
+                    add(GifDecoder.Factory())
                 }
-                add(SvgDecoder(requireContext()))
+                add(SvgDecoder.Factory())
             }
             .build()
 

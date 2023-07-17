@@ -9,15 +9,15 @@ import com.alfresco.content.data.EventName
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
 data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
     override val title: Int = R.string.action_capture_media_title,
-    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskCreateMedia else EventName.CreateMedia
+    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskCreateMedia else EventName.CreateMedia,
 ) : Action {
 
     private val repository = OfflineRepository()
@@ -26,7 +26,7 @@ data class ActionCaptureMedia(
         if (PermissionFragment.requestPermissions(
                 context,
                 CaptureHelperFragment.requiredPermissions(),
-                CaptureHelperFragment.permissionRationale(context)
+                CaptureHelperFragment.permissionRationale(context),
             )
         ) {
             PermissionFragment.requestOptionalPermissions(context, CaptureHelperFragment.optionalPermissions())
@@ -40,7 +40,7 @@ data class ActionCaptureMedia(
                             item.filename,
                             item.description,
                             item.mimeType,
-                            entry.uploadServer
+                            entry.uploadServer,
                         )
                     }
                     repository.setTotalTransferSize(result.size)
@@ -50,7 +50,7 @@ data class ActionCaptureMedia(
             }
         } else {
             throw Action.Exception(
-                context.resources.getString(R.string.action_capture_failed_permissions)
+                context.resources.getString(R.string.action_capture_failed_permissions),
             )
         }
 

@@ -6,9 +6,9 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Mark as ActionMoveFilesFolders
@@ -17,11 +17,10 @@ data class ActionMoveFilesFolders(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_move,
     override val title: Int = R.string.action_move_title,
-    override val eventName: EventName = EventName.MoveToFolder
+    override val eventName: EventName = EventName.MoveToFolder,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {
-
         val result = ActionMoveFragment.moveItem(context, entry)
         if (!result.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {

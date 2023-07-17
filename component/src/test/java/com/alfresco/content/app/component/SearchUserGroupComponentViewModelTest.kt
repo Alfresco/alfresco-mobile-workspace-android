@@ -29,7 +29,6 @@ class SearchUserGroupComponentViewModelTest {
 
     @Test
     fun searchQuery_empty() {
-
         entry = ProcessEntry()
 
         state = SearchUserGroupComponentState(entry)
@@ -44,7 +43,6 @@ class SearchUserGroupComponentViewModelTest {
 
     @Test
     fun nameOrIndividual_notEmpty() {
-
         entry = ProcessEntry()
 
         state = SearchUserGroupComponentState(entry)
@@ -64,7 +62,6 @@ class SearchUserGroupComponentViewModelTest {
 
     @Test
     fun emailOrGroup_notEmpty() {
-
         entry = ProcessEntry()
 
         state = SearchUserGroupComponentState(entry)

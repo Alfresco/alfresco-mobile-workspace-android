@@ -28,7 +28,7 @@ import kotlinx.parcelize.Parcelize
 data class ViewerArgs(
     val id: String,
     val title: String,
-    val mode: String
+    val mode: String,
 ) : Parcelable {
     companion object {
         const val ID_KEY = "id"
@@ -40,7 +40,9 @@ data class ViewerArgs(
 
         fun with(args: Bundle): ViewerArgs {
             return ViewerArgs(
-                args.getString(ID_KEY, ""), args.getString(TITLE_KEY, ""), args.getString(MODE_KEY, "")
+                args.getString(ID_KEY, ""),
+                args.getString(TITLE_KEY, ""),
+                args.getString(MODE_KEY, ""),
             )
         }
     }
@@ -68,7 +70,7 @@ class ViewerFragment : Fragment(), MavericksView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = ViewerBinding.inflate(inflater, container, false)
         return binding.root
@@ -85,8 +87,8 @@ class ViewerFragment : Fragment(), MavericksView {
 
         if (childFragment is ChildViewerFragment) {
             this.childFragment = childFragment.apply {
-                    loadingListener = viewerLoadingListener
-                }
+                loadingListener = viewerLoadingListener
+            }
         }
     }
 
@@ -103,7 +105,7 @@ class ViewerFragment : Fragment(), MavericksView {
         } else binding.title.text = args.title
         val type = MimeType.with(state.entry?.mimeType)
         binding.icon.setImageDrawable(
-            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme)
+            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme),
         )
 
         if (state.entry != null) {
@@ -113,7 +115,8 @@ class ViewerFragment : Fragment(), MavericksView {
         if (state.ready) {
             if (state.viewerMimeType != null && state.viewerUri != null) {
                 configureViewer(
-                    state.viewerUri, state.viewerMimeType
+                    state.viewerUri,
+                    state.viewerMimeType,
                 )
                 show(Status.LoadingPreview)
             } else {
@@ -137,12 +140,13 @@ class ViewerFragment : Fragment(), MavericksView {
 
     private fun configureViewer(
         viewerUri: String,
-        mimeType: String
+        mimeType: String,
     ) {
         val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
             val args = ChildViewerArgs(
-                viewerUri, mimeType
+                viewerUri,
+                mimeType,
             )
             val fragment = ViewerRegistry.previewProvider(mimeType)?.createViewer()
             requireNotNull(fragment)

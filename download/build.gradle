@@ -1,11 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins{
+    id('com.android.library')
+    id('kotlin-android')
+}
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
+    namespace 'com.alfresco.download'
 }
 
 dependencies {

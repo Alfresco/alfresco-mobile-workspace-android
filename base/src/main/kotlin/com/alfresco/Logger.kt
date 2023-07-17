@@ -1,7 +1,7 @@
 package com.alfresco
 
-import java.util.regex.Pattern
 import timber.log.Timber
+import java.util.regex.Pattern
 
 object Logger {
     fun init(debugMode: Boolean) {

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 internal class ProcessDefinitionsViewModel(
     state: ProcessDefinitionsState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<ProcessDefinitionsState>(state) {
 
     init {
@@ -26,14 +26,14 @@ internal class ProcessDefinitionsViewModel(
                     is Success -> {
                         ProcessDefinitionsState(
                             entry = state.entry,
-                            listProcessDefinitions = it().listRuntimeProcessDefinitions
+                            listProcessDefinitions = it().listRuntimeProcessDefinitions,
                         )
                     }
 
                     else -> {
                         ProcessDefinitionsState(
                             entry = state.entry,
-                            listProcessDefinitions = null
+                            listProcessDefinitions = null,
                         )
                     }
                 }
@@ -51,7 +51,7 @@ internal class ProcessDefinitionsViewModel(
     companion object : MavericksViewModelFactory<ProcessDefinitionsViewModel, ProcessDefinitionsState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: ProcessDefinitionsState
+            state: ProcessDefinitionsState,
         ) =
             // Requires activity context in order to present other fragments
             ProcessDefinitionsViewModel(state, viewModelContext.activity())

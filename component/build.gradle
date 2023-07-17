@@ -7,10 +7,8 @@ plugins {
 }
 
 android {
-    defaultConfig {
-        versionCode 1
-        versionName "1.0"
-    }
+
+    namespace 'com.alfresco.content.component'
 
     buildFeatures {
         viewBinding true
@@ -43,16 +41,16 @@ dependencies {
     kapt libs.epoxy.processor
 
     // Testing
-    testImplementation "junit:junit:4.13.2"
+    testImplementation libs.junit
     androidTestImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.espresso.core
 
-    testImplementation("com.airbnb.android:mavericks-testing:3.0.3")
+    testImplementation libs.mavericks.testing
 
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+    testImplementation libs.mockito.kotlin
 
     // Optional -- Mockito framework
-    testImplementation "org.mockito:mockito-core:5.1.1"
+    testImplementation libs.mockito.core
     // Optional -- Mockk framework
-    testImplementation "io.mockk:mockk:1.13.4"
+    testImplementation libs.mockk
 }

@@ -11,7 +11,7 @@ import com.google.android.material.R
 import com.google.android.material.textfield.TextInputLayout
 
 class TextInputLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-        TextInputLayout(context, attrs, defStyleAttr) {
+    TextInputLayout(context, attrs, defStyleAttr) {
 
     constructor(context: Context) :
         this(context, null)
@@ -35,7 +35,7 @@ class TextInputLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
                     s: CharSequence?,
                     start: Int,
                     count: Int,
-                    after: Int
+                    after: Int,
                 ) {
                     // no-op
                 }

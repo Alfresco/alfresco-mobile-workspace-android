@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class OfflineBrowseArgs(
     val id: String?,
-    val title: String?
+    val title: String?,
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
@@ -18,7 +18,7 @@ data class OfflineBrowseArgs(
 
             return OfflineBrowseArgs(
                 args.getString(ID_KEY, null),
-                args.getString(TITLE_KEY, null)
+                args.getString(TITLE_KEY, null),
             )
         }
     }

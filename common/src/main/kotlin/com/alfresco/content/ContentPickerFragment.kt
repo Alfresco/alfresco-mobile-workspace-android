@@ -31,13 +31,13 @@ class ContentPickerFragment : Fragment() {
 
         suspend fun pickItems(
             context: Context,
-            mimeTypes: Array<String>
+            mimeTypes: Array<String>,
         ): List<Uri> =
             withFragment(
                 context,
                 TAG,
                 { it.pickItems(mimeTypes) },
-                { ContentPickerFragment() }
+                { ContentPickerFragment() },
             )
     }
 }

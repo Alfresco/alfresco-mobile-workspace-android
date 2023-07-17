@@ -44,7 +44,7 @@ data class BrowseArgs(
     val path: String,
     val id: String?,
     val moveId: String,
-    val title: String?
+    val title: String?,
 ) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
@@ -53,7 +53,10 @@ data class BrowseArgs(
 
         fun with(args: Bundle): BrowseArgs {
             return BrowseArgs(
-                args.getString(PATH_KEY, ""), args.getString(ID_KEY, null), args.getString(MOVE_ID_KEY, ""), args.getString(TITLE_KEY, null)
+                args.getString(PATH_KEY, ""),
+                args.getString(ID_KEY, null),
+                args.getString(MOVE_ID_KEY, ""),
+                args.getString(TITLE_KEY, null),
             )
         }
 
@@ -100,9 +103,13 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
 
-        if (state.path == getString(R.string.nav_path_recents)) {
-            updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
-            if (state.uploadTransferList.isEmpty()) viewModel.resetTransferData()
+        withState(viewModel) { state ->
+            if (state.path == getString(R.string.nav_path_recents)) {
+                updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
+                if (state.uploadTransferList.isEmpty()) {
+                    viewModel.resetTransferData()
+                }
+            }
         }
 
         state.title?.let {
@@ -122,8 +129,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
-
-        if (totalSize != 0 && pendingFilesCount != 0) bannerTransferData?.visibility = View.VISIBLE
+        if (totalSize != 0 && pendingFilesCount != 0) {
+            bannerTransferData?.visibility = View.VISIBLE
+        }
 
         val uploadFileCount = totalSize - pendingFilesCount
         val percentage = (uploadFileCount.toFloat().div(totalSize.toFloat())).times(100)
@@ -149,7 +157,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         bannerTransferData?.postDelayed({
             bannerTransferData?.apply {
                 TransitionManager.beginDelayedTransition(
-                    this, TransitionSet().addTransition(Fade()).addTransition(ChangeBounds())
+                    this,
+                    TransitionSet()
+                        .addTransition(Fade())
+                        .addTransition(ChangeBounds()),
                 )
                 bannerTransferData?.visibility = View.GONE
             }
@@ -163,10 +174,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id?.ifEmpty { null }, args.title ?: "", false)
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", false)
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -175,12 +185,16 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         // Disable interaction on Trash or Upload items
         if (entry.isTrashed) return
 
-        if (entry.isFolder) AnalyticsManager().screenViewEvent(PageView.PersonalFiles)
-
-        if (entry.isUpload) entry.mimeType?.let {
-            findNavController().navigateToLocalPreview(it, entry.path.toString(), entry.name)
+        if (entry.isFolder) {
+            AnalyticsManager().screenViewEvent(PageView.PersonalFiles)
         }
-        else findNavController().navigateTo(entry)
+
+        if (entry.isUpload) {
+            entry.mimeType?.let {
+                findNavController().navigateToLocalPreview(it, entry.path.toString(), entry.name)
+            }
+        } else
+            findNavController().navigateTo(entry)
     }
 
     override fun onItemLongClicked(entry: Entry) {
@@ -190,22 +204,25 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    private fun makeFab(context: Context) = FloatingActionButton(context).apply {
-        layoutParams = CoordinatorLayout.LayoutParams(
-            CoordinatorLayout.LayoutParams.WRAP_CONTENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = Gravity.BOTTOM or Gravity.END
-            // TODO: define margins
-            setMargins(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt()
-            )
+    private fun makeFab(context: Context) =
+        FloatingActionButton(context).apply {
+            layoutParams = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+            ).apply {
+                gravity = Gravity.BOTTOM or Gravity.END
+                // TODO: define margins
+                setMargins(
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                        .toInt(),
+                )
+            }
+            contentDescription = getString(R.string.accessibility_text_create_button)
+            setImageResource(R.drawable.ic_add_fab)
+            setOnClickListener {
+                showCreateSheet()
+            }
         }
-        contentDescription = getString(R.string.accessibility_text_create_button)
-        setImageResource(R.drawable.ic_add_fab)
-        setOnClickListener {
-            showCreateSheet()
-        }
-    }
 
     private fun showCreateSheet() = withState(viewModel) {
         CreateActionsSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
@@ -221,11 +238,15 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded && isVisible) onItemClicked(entry as Entry)
+        if (isAdded && isVisible) {
+            onItemClicked(entry as Entry)
+        }
     }
 
     override fun onProcessStart(entry: ParentEntry) {
-        if (isAdded && isVisible) ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+        if (isAdded && isVisible) {
+            ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+        }
     }
 
     fun clearMultiSelection() {

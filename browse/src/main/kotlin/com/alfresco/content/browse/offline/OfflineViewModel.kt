@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class OfflineViewModel(
     state: OfflineViewState,
-    val context: Context
+    val context: Context,
 ) : ListViewModel<OfflineViewState>(state) {
 
     init {
@@ -67,7 +67,7 @@ class OfflineViewModel(
 
     fun canSyncOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
-                !ConnectivityTracker.isActiveNetworkMetered(context)
+            !ConnectivityTracker.isActiveNetworkMetered(context)
 
     fun toggleSelection(entry: Entry) = setState {
         val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
@@ -96,7 +96,7 @@ class OfflineViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: OfflineViewState
+            state: OfflineViewState,
         ) = OfflineViewModel(state, viewModelContext.app())
     }
 }

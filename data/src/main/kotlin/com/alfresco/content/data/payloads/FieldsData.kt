@@ -21,7 +21,7 @@ data class FieldsData(
     var readOnly: Boolean = false,
     var overrideId: Boolean = false,
     var fields: List<FieldsData> = emptyList(),
-    var options: List<OptionsModel> = emptyList()
+    var options: List<OptionsModel> = emptyList(),
 ) : Parcelable {
 
     companion object {
@@ -40,7 +40,7 @@ data class FieldsData(
                 readOnly = raw.readOnly ?: false,
                 overrideId = raw.overrideId ?: false,
                 options = raw.options?.map { OptionsModel.with(it) } ?: emptyList(),
-                fields = raw.getFieldMapAsList()?.map { with(it) } ?: emptyList()
+                fields = raw.getFieldMapAsList()?.map { with(it) } ?: emptyList(),
             )
         }
     }

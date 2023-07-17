@@ -13,7 +13,7 @@ import com.alfresco.content.data.PageView
 
 class BrowseMenuViewModel(
     viewState: BrowseMenuViewState,
-    val context: Context
+    val context: Context,
 ) : MavericksViewModel<BrowseMenuViewState>(viewState) {
 
     init {
@@ -38,7 +38,7 @@ class BrowseMenuViewModel(
     companion object : MavericksViewModelFactory<BrowseMenuViewModel, BrowseMenuViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: BrowseMenuViewState
+            state: BrowseMenuViewState,
         ) = BrowseMenuViewModel(state, viewModelContext.app())
     }
 }

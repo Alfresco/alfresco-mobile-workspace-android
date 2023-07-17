@@ -88,13 +88,13 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
         FloatingActionButton(context).apply {
             layoutParams = CoordinatorLayout.LayoutParams(
                 CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
             ).apply {
                 gravity = Gravity.BOTTOM or Gravity.END
                 // TODO: define margins
                 setMargins(
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt()
+                        .toInt(),
                 )
             }
             id = R.id.fab_create_task
@@ -108,7 +108,7 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
     override fun onItemClicked(entry: ProcessEntry) {
         startActivity(
             Intent(requireActivity(), ProcessDetailActivity::class.java)
-                .putExtra(Mavericks.KEY_ARG, entry)
+                .putExtra(Mavericks.KEY_ARG, entry),
         )
     }
 }

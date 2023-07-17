@@ -24,7 +24,7 @@ import com.alfresco.content.listview.databinding.ViewListProcessRowBinding
 class ListViewProcessRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListProcessRowBinding.inflate(LayoutInflater.from(context), this, true)
@@ -40,7 +40,9 @@ class ListViewProcessRow @JvmOverloads constructor(
         binding.subtitle.text = localizedName
         binding.timeStamp.text = entry.started?.toLocalDateTime().toString().getLocalFormattedDate(DATE_FORMAT_6, DATE_FORMAT_7)
         val accessibilityText = context.getString(
-            R.string.accessibility_text_process_row, entry.name, localizedName
+            R.string.accessibility_text_process_row,
+            entry.name,
+            localizedName,
         )
         binding.parent.contentDescription = accessibilityText
     }

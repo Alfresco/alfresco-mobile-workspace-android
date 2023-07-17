@@ -26,7 +26,9 @@ class GetMultipleContents : ActivityResultContract<Array<String>, List<Uri>>() {
     override fun parseResult(resultCode: Int, intent: Intent?): List<Uri> {
         return if (intent == null || resultCode != Activity.RESULT_OK) {
             emptyList()
-        } else getClipDataUris(intent)
+        } else {
+            getClipDataUris(intent)
+        }
     }
 
     companion object {

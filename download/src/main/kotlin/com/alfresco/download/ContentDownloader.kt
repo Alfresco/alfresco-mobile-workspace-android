@@ -1,9 +1,6 @@
 package com.alfresco.download
 
 import com.alfresco.Logger
-import java.io.File
-import java.io.IOException
-import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,6 +14,9 @@ import okhttp3.Request
 import okhttp3.Response
 import okio.buffer
 import okio.sink
+import java.io.File
+import java.io.IOException
+import kotlin.coroutines.resumeWithException
 
 object ContentDownloader {
 
@@ -52,7 +52,7 @@ suspend fun Call.downloadAndSaveTo(
     output: File,
     bufferSize: Long = DEFAULT_BUFFER_SIZE.toLong(),
     blockingDispatcher: CoroutineDispatcher = OK_IO,
-    progress: ((downloaded: Long, total: Long) -> Unit)? = null
+    progress: ((downloaded: Long, total: Long) -> Unit)? = null,
 ): File = withContext(blockingDispatcher) {
     suspendCancellableCoroutine { cont ->
         enqueue(object : Callback {

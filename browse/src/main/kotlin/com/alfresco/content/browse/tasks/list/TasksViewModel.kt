@@ -18,10 +18,10 @@ import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
-import java.text.SimpleDateFormat
-import java.util.Locale
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Marked as TasksViewModel class
@@ -29,15 +29,16 @@ import kotlinx.coroutines.launch
 class TasksViewModel(
     state: TasksViewState,
     val context: Context,
-    private val repository: TaskRepository
+    private val repository: TaskRepository,
 ) : TaskListViewModel<TasksViewState>(state) {
 
     var scrollToTop = false
     val isWorkflowTask = state.processEntry != null
 
     init {
-        if (!isWorkflowTask)
+        if (!isWorkflowTask) {
             setState { copy(listSortDataChips = repository.getTaskFiltersJSON().filters) }
+        }
         fetchUserProfile()
         fetchInitial()
         viewModelScope.on<UpdateTasksData> {
@@ -55,7 +56,7 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, newPage)
+                TaskProcessFiltersPayload.updateFilters(state.filterParams, newPage),
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -73,7 +74,6 @@ class TasksViewModel(
     }
 
     override fun emptyMessageArgs(state: TaskListViewState): Triple<Int, Int, Int> {
-
         return when (state.request) {
             is Fail -> Triple(R.drawable.ic_empty_recent, R.string.tasks_empty_title, R.string.account_not_configured)
             else -> Triple(R.drawable.ic_empty_recent, R.string.tasks_empty_title, R.string.tasks_empty_message)
@@ -84,9 +84,9 @@ class TasksViewModel(
         viewModelScope.launch {
             // Fetch tasks data
             repository::getTasks.asFlow(
-                if (!isWorkflowTask)
+                if (!isWorkflowTask) {
                     TaskProcessFiltersPayload.updateFilters(state.filterParams)
-                else TaskProcessFiltersPayload.defaultTasksOfProcess(state.processEntry?.id)
+                } else TaskProcessFiltersPayload.defaultTasksOfProcess(state.processEntry?.id),
             ).execute {
                 when (it) {
                     is Loading -> copy(request = Loading())
@@ -132,11 +132,13 @@ class TasksViewModel(
         list.filter { it.isSelected }.forEach {
             when (context.getLocalizedName(it.name?.lowercase() ?: "")) {
                 context.getString(R.string.filter_task_due_date) -> {
-                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE))
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_BEFORE)) {
                         taskFiltersPayload.dueBefore = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_BEFORE])
+                    }
 
-                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER))
+                    if (it.selectedQueryMap.containsKey(ComponentViewModel.DUE_AFTER)) {
                         taskFiltersPayload.dueAfter = getZoneFormattedDate(it.selectedQueryMap[ComponentViewModel.DUE_AFTER])
+                    }
                 }
 
                 context.getString(R.string.filter_task_status) -> {
@@ -185,8 +187,8 @@ class TasksViewModel(
                         isSelected = metaData.name?.isNotEmpty() == true,
                         selectedName = metaData.name ?: "",
                         selectedQuery = metaData.query ?: "",
-                        selectedQueryMap = metaData.queryMap ?: mapOf()
-                    )
+                        selectedQueryMap = metaData.queryMap ?: mapOf(),
+                    ),
                 )
             } else list.add(obj)
         }
@@ -210,7 +212,6 @@ class TasksViewModel(
     }
 
     private fun getZoneFormattedDate(dateString: String?): String {
-
         if (dateString.isNullOrEmpty()) return ""
 
         val currentFormat = SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
@@ -228,7 +229,7 @@ class TasksViewModel(
 
         override fun create(
             viewModelContext: ViewModelContext,
-            state: TasksViewState
+            state: TasksViewState,
         ) = TasksViewModel(state, viewModelContext.activity, TaskRepository())
     }
 }

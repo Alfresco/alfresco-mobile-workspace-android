@@ -2,19 +2,19 @@ package com.alfresco.capture
 
 import android.net.Uri
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CaptureItem(
     val uri: Uri,
     val mimeType: String,
     val name: String,
-    val description: String = ""
+    val description: String = "",
 ) : Parcelable {
     val filename: String
         get() = "$name$extension"

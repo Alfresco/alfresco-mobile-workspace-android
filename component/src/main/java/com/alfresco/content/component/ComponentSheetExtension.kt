@@ -48,8 +48,9 @@ fun ComponentSheet.setupCheckListComponent(viewModel: ComponentViewModel) {
 fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: ComponentViewModel) {
     binding.parentView.addView(binding.frameRadio)
     viewModel.buildSingleDataModel()
-    if (state.parent?.selectedName?.isEmpty() == true)
+    if (state.parent?.selectedName?.isEmpty() == true) {
         viewModel.copyDefaultComponentData()
+    }
     binding.radioListComponent.radioParent.visibility = View.VISIBLE
     binding.radioListComponent.recyclerView.setController(epoxyRadioListController)
 }
@@ -113,7 +114,6 @@ fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: Compon
  * @param viewModel
  */
 fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: ComponentViewModel) {
-
     binding.parentView.addView(binding.frameDateRange)
     binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
 
@@ -169,7 +169,6 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
  */
 @SuppressLint("ClickableViewAccessibility")
 fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: ComponentViewModel) {
-
     viewModel.buildCheckListModel()
     state.parent?.options?.let {
         if (it.size > minVisibleItem) {

@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class ExtensionArgs(
-    val path: String
+    val path: String,
 ) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
@@ -26,7 +26,7 @@ data class ExtensionArgs(
          */
         fun with(args: Bundle): ExtensionArgs {
             return ExtensionArgs(
-                args.getString(PATH_KEY, "")
+                args.getString(PATH_KEY, ""),
             )
         }
     }
@@ -37,6 +37,7 @@ data class ExtensionArgs(
  */
 class ExtensionFragment : Fragment(), MavericksView {
     private lateinit var args: ExtensionArgs
+
     @OptIn(InternalMavericksApi::class)
     val viewModel: ExtensionViewModel by fragmentViewModelWithArgs { args }
 

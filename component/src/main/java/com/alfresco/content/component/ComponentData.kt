@@ -21,7 +21,7 @@ data class ComponentData(
     val properties: ComponentProperties? = null,
     val selectedName: String = "",
     val selectedQuery: String = "",
-    val selectedQueryMap: Map<String, String> = mapOf()
+    val selectedQueryMap: Map<String, String> = mapOf(),
 ) : Parcelable {
     companion object {
 
@@ -39,7 +39,7 @@ data class ComponentData(
                 options = category?.component?.settings?.options?.map { ComponentOptions.with(it) },
                 properties = ComponentProperties.with(category?.component?.settings),
                 selectedName = name,
-                selectedQuery = query
+                selectedQuery = query,
             )
         }
 
@@ -56,7 +56,7 @@ data class ComponentData(
                 selector = ComponentType.FACETS.value,
                 options = facets?.buckets?.map { ComponentOptions.with(it) },
                 selectedName = name,
-                selectedQuery = query
+                selectedQuery = query,
             )
         }
 
@@ -74,7 +74,7 @@ data class ComponentData(
                 options = taskFilterData.options?.map { ComponentOptions.with(it) },
                 selectedQuery = taskFilterData.selectedQuery,
                 selectedName = taskFilterData.selectedName,
-                selectedQueryMap = taskFilterData.selectedQueryMap
+                selectedQueryMap = taskFilterData.selectedQueryMap,
             )
         }
 
@@ -95,7 +95,7 @@ data class ComponentData(
                 properties = componentData?.properties,
                 selectedName = name,
                 selectedQuery = query,
-                selectedQueryMap = componentData?.selectedQueryMap ?: mapOf()
+                selectedQueryMap = componentData?.selectedQueryMap ?: mapOf(),
             )
         }
 
@@ -114,7 +114,7 @@ data class ComponentData(
                 value = obj?.value,
                 options = obj?.options,
                 selectedName = selectedName,
-                selectedQueryMap = selectedQueryMap
+                selectedQueryMap = selectedQueryMap,
             )
         }
 
@@ -128,7 +128,7 @@ data class ComponentData(
                 selector = ComponentType.RADIO.value,
                 options = taskEntry.statusOption.filter { it.id != "empty" }.map { ComponentOptions.withTaskStatus(it) },
                 selectedName = taskEntry.taskFormStatus ?: "",
-                selectedQuery = taskEntry.taskFormStatus ?: ""
+                selectedQuery = taskEntry.taskFormStatus ?: "",
             )
         }
     }

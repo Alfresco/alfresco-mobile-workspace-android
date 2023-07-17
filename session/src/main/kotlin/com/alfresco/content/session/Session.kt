@@ -3,21 +3,21 @@ package com.alfresco.content.session
 import android.content.Context
 import coil.Coil
 import coil.ImageLoader
-import coil.util.CoilUtils
+import coil.disk.DiskCache
 import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
 import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
-import java.io.File
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import java.io.File
 
 class Session(
     val context: Context,
-    var account: Account
+    var account: Account,
 ) {
     var ticket: String? = null
 
@@ -33,7 +33,7 @@ class Session(
             account.id,
             account.authType,
             account.authState,
-            account.authConfig
+            account.authConfig,
         )
 
         authInterceptor.setListener(object : AuthInterceptor.Listener {
@@ -59,12 +59,16 @@ class Session(
         }
 
         val imageLoader = ImageLoader.Builder(context)
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(context.cacheDir.resolve("image_cache"))
+                    .build()
+            }
             .crossfade(true)
             .okHttpClient {
                 OkHttpClient.Builder()
                     .addInterceptor(authInterceptor)
                     .addOptionalInterceptor(loggingInterceptor)
-                    .cache(CoilUtils.createDefaultCache(context))
                     .build()
             }
             .build()

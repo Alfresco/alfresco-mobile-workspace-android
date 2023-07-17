@@ -13,7 +13,7 @@ data class ActionStartProcess(
     override val entry: Entry,
     override val icon: Int = R.drawable.ic_start_workflow,
     override val title: Int = R.string.action_start_workflow,
-    override val eventName: EventName = EventName.StartWorkflow
+    override val eventName: EventName = EventName.StartWorkflow,
 ) : Action {
 
     override suspend fun execute(context: Context): Entry {

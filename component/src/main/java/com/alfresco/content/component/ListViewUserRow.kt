@@ -15,7 +15,7 @@ import com.alfresco.content.getLocalizedName
 internal class ListViewUserRow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = ViewListUserRowBinding.inflate(LayoutInflater.from(context), this)
 

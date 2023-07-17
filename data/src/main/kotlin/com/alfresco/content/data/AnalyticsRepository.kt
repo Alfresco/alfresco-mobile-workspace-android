@@ -26,8 +26,9 @@ class AnalyticsRepository(val session: Session) {
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL
 
-        if (model.lowercase().startsWith(manufacturer.lowercase()))
+        if (model.lowercase().startsWith(manufacturer.lowercase())) {
             return model.uppercase()
+        }
 
         return "${manufacturer.uppercase()} $model"
     }
@@ -115,7 +116,7 @@ enum class EventName(val value: String) {
     CANCEL("event_cancel"),
     StartWorkflow("start_workflow"),
     UploadProcessAttachment("event_upload_workflow_attachment"),
-    None("event_none")
+    None("event_none"),
 }
 
 /**
@@ -141,7 +142,7 @@ enum class PageView(val value: String) {
     WorkflowView("page_view_workflow_view"),
     WorkflowTaskView("page_view_workflow_task_view"),
     WorkflowTaskStatusView("page_view_workflow_task_status"),
-    None("none")
+    None("none"),
 }
 
 /**
@@ -154,7 +155,7 @@ enum class APIEvent(val value: String) {
     Login("event_api_login"),
     DeleteTaskAttachment("event_api_delete_task_attachment"),
     AssignUser("event_api_assign_user"),
-    SearchUser("event_api_search_user")
+    SearchUser("event_api_search_user"),
 }
 
 /**
@@ -166,7 +167,7 @@ enum class DefaultParameters(val value: String) {
     DeviceOS("device_os"),
     DeviceNetwork("device_network"),
     AppVersion("app_version"),
-    DeviceID("device_id")
+    DeviceID("device_id"),
 }
 
 /**
@@ -175,7 +176,7 @@ enum class DefaultParameters(val value: String) {
 enum class NetworkStatus {
     NOT_CONNECTED,
     WIFI,
-    CELLULAR
+    CELLULAR,
 }
 
 /**
@@ -189,5 +190,5 @@ enum class Parameters(val value: String) {
     ThemeName("theme_name"),
     NumberOfFiles("number_of_files"),
     FacetName("facet_name"),
-    Success("success")
+    Success("success"),
 }

@@ -39,7 +39,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAttachedFilesBinding.inflate(inflater, container, false)
         return binding.root
@@ -88,7 +88,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
 
         binding.fabAddAttachments.visibility = View.VISIBLE
         binding.fabAddAttachments.setOnClickListener {
-            showCreateSheet(state)
+            showCreateSheet(state, viewModel.observerID)
         }
 
         if (state.listContents.isEmpty()) requireActivity().onBackPressed()
@@ -115,15 +115,19 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
             if (!contentEntry.source.isNullOrEmpty()) {
                 val entry = Entry.convertContentEntryToEntry(
                     contentEntry,
-                    MimeType.isDocFile(contentEntry.mimeType), UploadServerType.UPLOAD_TO_PROCESS
+                    MimeType.isDocFile(contentEntry.mimeType),
+                    UploadServerType.UPLOAD_TO_PROCESS,
                 )
                 remoteViewerIntent(entry)
             }
-        } else localViewerIntent(contentEntry)
+        } else {
+            localViewerIntent(contentEntry)
+        }
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
-        if (isAdded)
+        if (isAdded) {
             localViewerIntent(entry as Entry)
+        }
     }
 }

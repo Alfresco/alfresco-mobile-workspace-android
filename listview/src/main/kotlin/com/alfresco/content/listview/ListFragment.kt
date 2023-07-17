@@ -30,6 +30,7 @@ import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
@@ -334,6 +335,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(entry).show(childFragmentManager, null)
+        ContextualActionsSheet.with(ContextualActionData.withEntries(listOf(entry))).show(childFragmentManager, null)
     }
 }

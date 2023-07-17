@@ -15,6 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 data class ActionMoveFilesFolders(
     override var entry: Entry,
+    override var entries: List<Entry> = emptyList(),
     override val icon: Int = R.drawable.ic_move,
     override val title: Int = R.string.action_move_title,
     override val eventName: EventName = EventName.MoveToFolder,

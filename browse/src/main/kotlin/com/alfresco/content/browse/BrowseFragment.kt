@@ -67,6 +67,7 @@ data class BrowseArgs(
 class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private lateinit var args: BrowseArgs
+    private var fab: FloatingActionButton? = null
 
     @OptIn(InternalMavericksApi::class)
     override val viewModel: BrowseViewModel by fragmentViewModelWithArgs { args }
@@ -103,12 +104,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
 
-        withState(viewModel) { state ->
-            if (state.path == getString(R.string.nav_path_recents)) {
-                updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
-                if (state.uploadTransferList.isEmpty()) {
-                    viewModel.resetTransferData()
-                }
+        if (state.path == getString(R.string.nav_path_recents)) {
+            updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
+            if (state.uploadTransferList.isEmpty()) {
+                viewModel.resetTransferData()
             }
         }
 
@@ -116,8 +115,15 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = it
         }
 
-        if (viewModel.canAddItems(state)) {
-            (view as ViewGroup).addView(makeFab(requireContext()))
+        if (viewModel.canAddItems(state) && fab == null) {
+            fab = makeFab(requireContext())
+            (view as ViewGroup).addView(fab)
+        }
+
+        fab?.visibility = if (state.selectedEntries.isNotEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
         }
     }
 
@@ -177,6 +183,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", false)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -247,6 +254,11 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         if (isAdded && isVisible) {
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fab = null
     }
 
     fun clearMultiSelection() {

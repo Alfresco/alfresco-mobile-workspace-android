@@ -42,27 +42,31 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         fab = null
     }
 
-    override fun invalidate() {
+    override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
 
-        withState(viewModel) { state ->
-            // Add fab only to root folder
-            if (state.parentId == null && fab == null) {
-                fab = makeFab(requireContext()).apply {
-                    visibility = View.INVISIBLE // required for animation
-                }
-                (view as ViewGroup).addView(fab)
+        // Add fab only to root folder
+        if (state.parentId == null && fab == null) {
+            fab = makeFab(requireContext()).apply {
+                visibility = View.INVISIBLE // required for animation
+            }
+            (view as ViewGroup).addView(fab)
+        }
+
+        fab?.apply {
+            if (state.entries.isNotEmpty()) {
+                show()
+            } else {
+                hide()
             }
 
-            fab?.apply {
-                if (state.entries.count() > 0) {
-                    show()
-                } else {
-                    hide()
-                }
+            isEnabled = state.syncNowEnabled
+        }
 
-                isEnabled = state.syncNowEnabled
-            }
+        fab?.visibility = if (state.selectedEntries.isNotEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
         }
     }
 

@@ -58,7 +58,7 @@ class ListViewRow @JvmOverloads constructor(
 
         binding.icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context.theme))
 
-        val accessibilityText = if (entry.path.isNullOrEmpty())
+        val accessibilityText = if (entry.path.isNullOrEmpty()) {
             context.getString(
                 R.string.accessibility_text_title,
                 entry.name,
@@ -174,7 +174,6 @@ class ListViewRow @JvmOverloads constructor(
     }
 
     private fun postDataSet() {
-
         binding.checkBox.isVisible = false
         binding.checkBox.isChecked = false
         binding.moreButton.isVisible = actionButtonVisibility(entry)

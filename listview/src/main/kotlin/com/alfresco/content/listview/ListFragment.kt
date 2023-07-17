@@ -203,14 +203,16 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             if (state.selectedEntries.isEmpty()) {
                 MultiSelection.multiSelectionChangedFlow.tryEmit(
                     MultiSelectionData(
-                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = false
-                    )
+                        selectedEntries = state.selectedEntries,
+                        isMultiSelectionEnabled = false,
+                    ),
                 )
             } else {
                 MultiSelection.multiSelectionChangedFlow.tryEmit(
                     MultiSelectionData(
-                        selectedEntries = state.selectedEntries, isMultiSelectionEnabled = true
-                    )
+                        selectedEntries = state.selectedEntries,
+                        isMultiSelectionEnabled = true,
+                    ),
                 )
             }
         }
@@ -257,7 +259,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 message(args.third)
             }
         } else if (state.entries.isNotEmpty()) {
-
             val selectedEntries = state.entries.find { obj -> obj.isSelectedForMultiSelection }
             if (selectedEntries == null) {
                 disableLongPress()

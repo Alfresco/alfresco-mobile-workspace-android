@@ -110,6 +110,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                     viewModel.resetTransferData()
                 }
             }
+        }
 
         state.title?.let {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = it
@@ -247,8 +248,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
         }
     }
-        fun clearMultiSelection() {
-            disableLongPress()
-            viewModel.resetMultiSelection()
-        }
+
+    fun clearMultiSelection() {
+        disableLongPress()
+        viewModel.resetMultiSelection()
+    }
 }

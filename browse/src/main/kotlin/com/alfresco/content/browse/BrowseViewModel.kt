@@ -41,7 +41,7 @@ class BrowseViewModel(
     state: BrowseViewState,
     val context: Context,
     private val browseRepository: BrowseRepository,
-    private val offlineRepository: OfflineRepository
+    private val offlineRepository: OfflineRepository,
 ) : ListViewModel<BrowseViewState>(state) {
 
     private var observeUploadsJob: Job? = null

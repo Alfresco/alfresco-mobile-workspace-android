@@ -6,4 +6,5 @@
     <color name="color_back_attachment">#00000000</color>
     <color name="color_attachment_row">#0A0A0A</color>
     <color name="color_gray_30">@color/white_60</color>
+    <color name="colorBackgroundMultiSelection">#00468D</color>
 </resources>

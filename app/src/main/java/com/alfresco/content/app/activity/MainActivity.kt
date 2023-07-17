@@ -4,8 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,8 +34,17 @@ import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.browse.BrowseFragment
+import com.alfresco.content.browse.FavoritesFragment
+import com.alfresco.content.browse.offline.OfflineFragment
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
+import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.search.SearchFragment
+import com.alfresco.content.search.SearchResultsFragment
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.slideBottom
+import com.alfresco.content.slideTop
 import com.alfresco.content.viewer.ViewerActivity
 import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
 import com.alfresco.content.viewer.ViewerArgs.Companion.KEY_FOLDER
@@ -34,11 +55,13 @@ import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.lang.ref.WeakReference
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Marked as MainActivity class
  */
-class MainActivity : AppCompatActivity(), MavericksView {
+class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
 
     @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
@@ -47,12 +70,25 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private var actionBarController: ActionBarController? = null
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var isNewIntent = false
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         observe(viewModel.navigationMode, ::navigateTo)
+
+        GlobalScope.launch {
+            MultiSelection.observeMultiSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (it.isMultiSelectionEnabled) {
+                        enableMultiSelection(it.selectedEntries)
+                    } else {
+                        disableMultiSelection()
+                    }
+                }
+            }
+        }
 
         viewModel.handleDataIntent(
             intent.extras?.getString(MODE_KEY, ""),
@@ -89,11 +125,13 @@ class MainActivity : AppCompatActivity(), MavericksView {
             MainActivityViewModel.NavigationMode.FOLDER -> {
                 bottomNav.selectedItemId = R.id.nav_browse
             }
+
             MainActivityViewModel.NavigationMode.FILE -> {
                 removeShareData()
                 if (!isNewIntent) checkLogin(data)
                 navigateToViewer(data)
             }
+
             MainActivityViewModel.NavigationMode.LOGIN -> navigateToLogin(data)
             MainActivityViewModel.NavigationMode.DEFAULT -> checkLogin(data)
         }
@@ -211,4 +249,60 @@ class MainActivity : AppCompatActivity(), MavericksView {
     private fun setupDownloadNotifications() = DownloadMonitor.smallIcon(R.drawable.ic_notification_small).tint(primaryColor(this)).observe(this)
 
     private fun primaryColor(context: Context) = context.getColorForAttribute(R.attr.colorPrimary)
+
+    private fun enableMultiSelection(selectedEntries: List<Entry>) {
+        if (actionMode == null) {
+            actionMode = startSupportActionMode(this)
+        }
+        val title = SpannableString(getString(R.string.title_action_mode, selectedEntries.size))
+        title.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)), 0, title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        actionMode?.title = title
+
+        actionBarController?.showHideActionBarLayout(false)
+        bottomNav.slideBottom()
+        if (bottomNav.isVisible) {
+            bottomNav.visibility = View.GONE
+        }
+    }
+
+    private fun disableMultiSelection() {
+        actionMode?.finish()
+        actionBarController?.showHideActionBarLayout(true)
+        bottomNav.slideTop()
+        if (!bottomNav.isVisible) {
+            bottomNav.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        mode?.let {
+            val inflater: MenuInflater = it.menuInflater
+            inflater.inflate(R.menu.menu_action_multi_selection, menu)
+            return true
+        }
+        return false
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        return true
+    }
+
+    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+        return true
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode?) {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val fragment = navHostFragment?.childFragmentManager?.fragments?.first()
+        when (fragment) {
+            is BrowseFragment -> fragment.clearMultiSelection()
+            is FavoritesFragment -> fragment.clearMultiSelection()
+            is SearchResultsFragment -> fragment.clearMultiSelection()
+            is SearchFragment -> fragment.clearMultiSelection()
+            is OfflineFragment -> fragment.clearMultiSelection()
+        }
+        disableMultiSelection()
+        actionMode = null
+    }
 }

@@ -39,6 +39,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.recyclerview
+    implementation libs.androidx.recyclerview.selection
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.navigation.fragment
@@ -49,4 +50,22 @@ dependencies {
 
     implementation libs.epoxy.core
     kapt libs.epoxy.processor
+
+    // Testing
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation libs.androidx.test.core
+    androidTestImplementation libs.androidx.test.espresso.core
+
+    // Mockito
+    // Coroutines test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
+
+    testImplementation("com.airbnb.android:mavericks-testing:3.0.5")
+
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+
+    // Optional -- Mockito framework
+    testImplementation "org.mockito:mockito-core:5.4.0"
+    // Optional -- Mockk framework
+    testImplementation "io.mockk:mockk:1.13.5"
 }

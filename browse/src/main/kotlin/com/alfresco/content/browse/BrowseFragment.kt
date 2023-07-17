@@ -30,6 +30,8 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToLocalPreview
@@ -81,6 +83,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             supportActionBar?.title = args.title
             supportActionBar?.setHomeActionContentDescription(requireActivity().getString(R.string.label_navigation_back))
         }
+
+        setViewRequiredMultiSelection(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,7 +100,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    override fun invalidate() {
+    override fun invalidate() = withState(viewModel) { state ->
         super.invalidate()
 
         withState(viewModel) { state ->
@@ -107,13 +111,12 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 }
             }
 
-            state.title?.let {
-                (requireActivity() as AppCompatActivity).supportActionBar?.title = it
-            }
+        state.title?.let {
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = it
+        }
 
-            if (viewModel.canAddItems(state)) {
-                (view as ViewGroup).addView(makeFab(requireContext()))
-            }
+        if (viewModel.canAddItems(state)) {
+            (view as ViewGroup).addView(makeFab(requireContext()))
         }
     }
 
@@ -193,6 +196,13 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             findNavController().navigateTo(entry)
     }
 
+    override fun onItemLongClicked(entry: Entry) {
+        viewModel.toggleSelection(entry)
+        withState(viewModel) { state ->
+            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true))
+        }
+    }
+
     private fun makeFab(context: Context) =
         FloatingActionButton(context).apply {
             layoutParams = CoordinatorLayout.LayoutParams(
@@ -237,4 +247,8 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
         }
     }
+        fun clearMultiSelection() {
+            disableLongPress()
+            viewModel.resetMultiSelection()
+        }
 }

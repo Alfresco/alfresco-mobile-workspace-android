@@ -6,4 +6,5 @@
     <color name="color_back_attachment">#EFF1F1</color>
     <color name="color_attachment_row">@color/white</color>
     <color name="color_gray_30">@color/alfresco_gray_900_30</color>
+    <color name="colorBackgroundMultiSelection">#3D1F74DB</color>
 </resources>

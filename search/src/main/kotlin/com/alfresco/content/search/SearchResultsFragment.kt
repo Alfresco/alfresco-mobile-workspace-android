@@ -15,6 +15,8 @@ import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder
@@ -26,9 +28,9 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setViewRequiredMultiSelection(true)
 
         loadingMessage.setText(R.string.search_loading_message)
-
         recyclerView.addOnScrollListener(HideSoftInputOnScrollListener())
     }
 
@@ -76,6 +78,13 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         }
     }
 
+    override fun onItemLongClicked(entry: Entry) {
+        viewModel.toggleSelection(entry)
+        withState(viewModel) { state ->
+            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true))
+        }
+    }
+
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded && isVisible) {
             onItemClicked(entry as Entry)
@@ -91,5 +100,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
             topLoadingIndicator?.isVisible =
                 state.request is Loading && state.entries.isNotEmpty() && !refreshLayout.isRefreshing
         }
+    }
+
+    fun clearMultiSelection() {
+        disableLongPress()
+        viewModel.resetMultiSelection()
     }
 }

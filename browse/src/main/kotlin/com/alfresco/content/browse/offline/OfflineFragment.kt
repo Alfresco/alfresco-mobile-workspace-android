@@ -1,6 +1,7 @@
 package com.alfresco.content.browse.offline
 
 import android.content.Context
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -17,6 +18,8 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
+import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.events.emit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,6 +30,11 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
     @OptIn(InternalMavericksApi::class)
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     private var fab: ExtendedFloatingActionButton? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setViewRequiredMultiSelection(true)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -102,9 +110,21 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
     }
 
+    override fun onItemLongClicked(entry: Entry) {
+        viewModel.toggleSelection(entry)
+        withState(viewModel) { state ->
+            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true))
+        }
+    }
+
     override fun onProcessStart(entry: ParentEntry) {
         if (isAdded && isVisible) {
             ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
         }
+    }
+
+    fun clearMultiSelection() {
+        disableLongPress()
+        viewModel.resetMultiSelection()
     }
 }

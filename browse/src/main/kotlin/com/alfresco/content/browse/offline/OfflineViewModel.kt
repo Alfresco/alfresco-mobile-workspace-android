@@ -6,6 +6,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.browse.R
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.Settings
@@ -67,6 +68,29 @@ class OfflineViewModel(
     fun canSyncOverCurrentNetwork() =
         Settings(context).canSyncOverMeteredNetwork ||
             !ConnectivityTracker.isActiveNetworkMetered(context)
+
+    fun toggleSelection(entry: Entry) = setState {
+        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+            this
+        } else {
+            val updatedEntries = entries.map {
+                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                } else {
+                    it
+                }
+            }
+            copy(entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+        }
+    }
+
+    fun resetMultiSelection() = setState {
+        val resetMultiEntries = entries.map {
+            it.copy(isSelectedForMultiSelection = false)
+        }
+        copy(entries = resetMultiEntries, selectedEntries = emptyList())
+    }
 
     companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
 

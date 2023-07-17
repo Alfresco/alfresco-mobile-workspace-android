@@ -9,6 +9,7 @@ import com.alfresco.content.listview.ListViewState
 data class OfflineViewState(
     val parentId: String? = null,
     override val entries: List<Entry> = emptyList(),
+    override val selectedEntries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     val syncNowEnabled: Boolean = false,

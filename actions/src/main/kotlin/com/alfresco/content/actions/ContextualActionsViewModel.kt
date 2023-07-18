@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 class ContextualActionsViewModel(
     state: ContextualActionsState,
     val context: Context,
+    private val settings: Settings,
 ) : MavericksViewModel<ContextualActionsState>(state) {
 
     init {
@@ -37,7 +38,7 @@ class ContextualActionsViewModel(
         viewModelScope.on<ActionMoveFilesFolders>(block = ::updateState)
     }
 
-    private fun buildModelSingleSelection() = withState { state ->
+    fun buildModelSingleSelection() = withState { state ->
         // If entry is partial and not in the offline tab
         if (state.entries.isNotEmpty()) {
             state.entries.first().let { entry ->
@@ -63,7 +64,7 @@ class ContextualActionsViewModel(
         }
     }
 
-    private fun buildModelForMultiSelection() = withState { state ->
+    fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
         val filteredEntries = state.entries.filter {
             (!it.isUpload || it.offlineStatus == OfflineStatus.UNDEFINED) &&
@@ -114,7 +115,7 @@ class ContextualActionsViewModel(
             }
         }
 
-    private fun makeMultiActions(entries: List<Entry>): List<Action> {
+    fun makeMultiActions(entries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
         val entry = Entry()
 
@@ -126,7 +127,7 @@ class ContextualActionsViewModel(
         }
 
         // Added Start Process Action
-        if (Settings(context).isProcessEnabled && !entries.any { it.isFolder }) {
+        if (settings.isProcessEnabled && !entries.any { it.isFolder }) {
             actions.add(ActionStartProcess(entry))
         }
 
@@ -152,7 +153,7 @@ class ContextualActionsViewModel(
         listOf(
             externalActionsFor(entry),
             favoriteActionFor(entry),
-            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
+            if (settings.isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             renameMoveActionFor(entry),
             offlineActionFor(entry),
             deleteActionFor(entry),
@@ -164,7 +165,7 @@ class ContextualActionsViewModel(
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
             externalActionsFor(entry),
-            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
+            if (settings.isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             offlineActionFor(entry),
         ).flatten()
 
@@ -222,6 +223,6 @@ class ContextualActionsViewModel(
             state: ContextualActionsState,
         ) =
             // Requires activity context in order to present other fragments
-            ContextualActionsViewModel(state, viewModelContext.activity())
+            ContextualActionsViewModel(state, viewModelContext.activity(), Settings(viewModelContext.activity))
     }
 }

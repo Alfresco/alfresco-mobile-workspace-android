@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.listview.NonSwipeableViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.GlobalScope

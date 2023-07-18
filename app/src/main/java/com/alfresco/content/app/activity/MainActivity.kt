@@ -40,8 +40,8 @@ import com.alfresco.content.browse.FavoritesFragment
 import com.alfresco.content.browse.offline.OfflineFragment
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
-import com.alfresco.content.listview.MultiSelection
 import com.alfresco.content.search.SearchFragment
 import com.alfresco.content.search.SearchResultsFragment
 import com.alfresco.content.session.SessionManager

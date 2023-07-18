@@ -1,6 +1,5 @@
-package com.alfresco.content.listview
+package com.alfresco.content.data
 
-import com.alfresco.content.data.Entry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 

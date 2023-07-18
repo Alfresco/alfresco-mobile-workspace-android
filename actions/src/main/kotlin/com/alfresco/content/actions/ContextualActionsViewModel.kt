@@ -115,14 +115,32 @@ class ContextualActionsViewModel(
     private fun makeMultiActions(entries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
         val entry = Entry()
+
+        // Added Favorite Action
         if (entries.any { !it.isFavorite }) {
             actions.add(ActionAddFavorite(entry))
         } else {
             actions.add(ActionRemoveFavorite(entry))
         }
 
+        // Added Start Process Action
+        if (Settings(context).isProcessEnabled && !entries.any { it.isFolder }) {
+            actions.add(ActionStartProcess(entry))
+        }
+
+        // Added Move and Delete Action
         if (entries.any { it.canDelete }) {
             actions.add(ActionMoveFilesFolders(entry))
+            actions.add(ActionDelete(entry))
+        }
+
+        // Added Offline Action
+        val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+
+        if (filteredOffline.any { !it.isOffline }) {
+            actions.add(ActionAddOffline(entry))
+        } else {
+            actions.add(ActionRemoveOffline(entry))
         }
 
         return actions

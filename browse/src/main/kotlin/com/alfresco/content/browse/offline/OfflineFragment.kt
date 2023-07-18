@@ -15,11 +15,11 @@ import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.listview.MultiSelection
-import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.events.emit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

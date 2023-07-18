@@ -13,6 +13,8 @@ import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -64,7 +66,13 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                             entry.name.substringAfterLast(".", ""),
                             it.eventName,
                         )
-                        viewModel.execute(it)
+                        withState(viewModel) { newState ->
+                            if (!newState.isMultiSelection) {
+                                viewModel.execute(it)
+                            } else {
+                                MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
+                            }
+                        }
                         dismiss()
                     }
                 }

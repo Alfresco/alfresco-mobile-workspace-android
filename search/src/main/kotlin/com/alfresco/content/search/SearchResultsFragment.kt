@@ -11,12 +11,12 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.listview.MultiSelection
-import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder

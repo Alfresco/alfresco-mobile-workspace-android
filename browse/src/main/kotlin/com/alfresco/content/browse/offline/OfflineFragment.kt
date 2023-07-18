@@ -2,6 +2,8 @@ package com.alfresco.content.browse.offline
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -24,12 +26,27 @@ import com.alfresco.content.navigateTo
 import com.alfresco.events.emit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
 
     @OptIn(InternalMavericksApi::class)
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     private var fab: ExtendedFloatingActionButton? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            MultiSelection.observeClearSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (isAdded) {
+                        clearMultiSelection()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

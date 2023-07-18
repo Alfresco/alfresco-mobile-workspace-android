@@ -245,7 +245,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     fun disableLongPress() {
         longPressHandled = false
-        refreshLayout.isEnabled = true
+        if (this::refreshLayout.isInitialized) {
+            refreshLayout.isEnabled = true
+        }
     }
 
     fun setViewRequiredMultiSelection(isViewRequiredMultiSelection: Boolean) {

@@ -2,6 +2,8 @@ package com.alfresco.content.browse
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.util.TypedValue
 import android.view.Gravity
@@ -37,6 +39,8 @@ import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.navigateToLocalPreview
 import com.alfresco.content.navigateToUploadFilesPath
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -76,6 +80,16 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         super.onCreate(savedInstanceState)
 
         args = BrowseArgs.with(requireArguments())
+
+        GlobalScope.launch {
+            MultiSelection.observeClearSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (isAdded) {
+                        clearMultiSelection()
+                    }
+                }
+            }
+        }
 
         // Contextual search only in folders/sites
         if (args.id != null) {

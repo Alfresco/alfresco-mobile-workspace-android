@@ -1,6 +1,8 @@
 package com.alfresco.content.search
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -20,11 +22,26 @@ import com.alfresco.content.listview.ListFragment
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
 
     override val viewModel: SearchViewModel by parentFragmentViewModel()
     var topLoadingIndicator: View? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            MultiSelection.observeClearSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (isAdded) {
+                        clearMultiSelection()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -78,8 +78,9 @@ fun NavController.navigateToParent(id: String, title: String, mode: String = REM
 /**
  * navigate to browse move parent folder
  */
-fun NavController.navigateToMoveParent(id: String, moveId: String, title: String, mode: String = REMOTE) {
-    navigate(Uri.parse("$BASE_URI/browse_move_parent/move/$mode/$id/$moveId?title=${Uri.encode(title)}"))
+fun NavController.navigateToMoveParent(id: String, moveId: String, title: String) {
+    val path = "move"
+    navigate(Uri.parse("$BASE_URI/browse_move_parent/$id?title=${Uri.encode(title)},moveId=$moveId,path=$path"))
 }
 
 /**

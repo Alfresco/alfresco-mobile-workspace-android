@@ -69,6 +69,9 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                         withState(viewModel) { newState ->
                             if (!newState.isMultiSelection) {
                                 viewModel.execute(it)
+                            } else if (it is ActionMoveFilesFolders) {
+                                viewModel.execute(it)
+                                MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
                             } else {
                                 MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
                             }

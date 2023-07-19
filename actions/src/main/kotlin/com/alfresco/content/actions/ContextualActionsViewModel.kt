@@ -115,39 +115,44 @@ class ContextualActionsViewModel(
             }
         }
 
-    fun makeMultiActions(entries: List<Entry>): List<Action> {
+    fun makeMultiActions(filteredEntries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
-        val entry = Entry()
+        withState { state ->
+            val entry = Entry(
+                id = state.entries.joinToString(separator = ",") { it.id },
+                name = state.entries.joinToString(separator = ",") { it.name },
+            )
 
-        // Added Favorite Action
-        if (entries.any { !it.isFavorite }) {
-            actions.add(ActionAddFavorite(entry))
-        } else {
-            actions.add(ActionRemoveFavorite(entry))
-        }
+            // Added Favorite Action
+            if (filteredEntries.any { !it.isFavorite }) {
+                actions.add(ActionAddFavorite(entry))
+            } else {
+                actions.add(ActionRemoveFavorite(entry))
+            }
 
-        // Added Start Process Action
-        if (settings.isProcessEnabled && !entries.any { it.isFolder }) {
-            actions.add(ActionStartProcess(entry))
-        }
+            // Added Start Process Action
+            if (settings.isProcessEnabled && !filteredEntries.any { it.isFolder }) {
+                actions.add(ActionStartProcess(entry))
+            }
 
-        // Added Move Action
-        if (entries.any { it.canDelete }) {
-            actions.add(ActionMoveFilesFolders(entry))
-        }
+            // Added Move Action
+            if (filteredEntries.any { it.canDelete }) {
+                actions.add(ActionMoveFilesFolders(entry, state.entries))
+            }
 
-        // Added Offline Action
-        val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+            // Added Offline Action
+            val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
-        if (filteredOffline.any { !it.isOffline }) {
-            actions.add(ActionAddOffline(entry))
-        } else {
-            actions.add(ActionRemoveOffline(entry))
-        }
+            if (filteredOffline.any { !it.isOffline }) {
+                actions.add(ActionAddOffline(entry))
+            } else {
+                actions.add(ActionRemoveOffline(entry))
+            }
 
-        // Added Delete Action
-        if (entries.any { it.canDelete }) {
-            actions.add((ActionDelete(entry)))
+            // Added Delete Action
+            if (filteredEntries.any { it.canDelete }) {
+                actions.add((ActionDelete(entry)))
+            }
         }
 
         return actions

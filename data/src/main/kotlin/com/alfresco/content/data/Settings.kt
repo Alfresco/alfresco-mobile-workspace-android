@@ -61,7 +61,7 @@ class Settings(
     val canSyncOverMeteredNetwork: Boolean
         get() = syncNetwork == SyncNetwork.Mobile
 
-    val isProcessEnabled = sharedPref.getBoolean(IS_PROCESS_ENABLED_KEY, false)
+    var isProcessEnabled = sharedPref.getBoolean(IS_PROCESS_ENABLED_KEY, false)
 
     enum class Theme {
         Light,

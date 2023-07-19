@@ -2,6 +2,8 @@ package com.alfresco.content.search
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
@@ -30,6 +32,7 @@ import com.alfresco.content.component.listViewFilterChips
 import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilter
@@ -43,6 +46,7 @@ import com.alfresco.content.search.databinding.FragmentSearchBinding
 import com.alfresco.content.simpleController
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
@@ -98,6 +102,19 @@ class SearchFragment : Fragment(), MavericksView {
     private lateinit var filterFiles: FilterChip
     private lateinit var filterFolders: FilterChip
     private lateinit var filterLibraries: FilterChip
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            MultiSelection.observeClearSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (isAdded) {
+                        clearMultiSelection()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

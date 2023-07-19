@@ -61,7 +61,7 @@ class MainActivityViewModel(
     private var mode: String? = null
     private var isFolder: Boolean = false
     var isProcessEnabled: ((Boolean) -> Unit)? = null
-    var selectedEntries: List<Entry> = emptyList()
+    var entriesMultiSelection: List<Entry> = emptyList()
 
     init {
         // Start a new session

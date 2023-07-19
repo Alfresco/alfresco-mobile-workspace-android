@@ -30,7 +30,10 @@ import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
@@ -242,7 +245,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     fun disableLongPress() {
         viewModel.longPressHandled = false
-        refreshLayout.isEnabled = true
+        if (this::refreshLayout.isInitialized) {
+            refreshLayout.isEnabled = true
+        }
     }
 
     fun setViewRequiredMultiSelection(isViewRequiredMultiSelection: Boolean) {
@@ -279,13 +284,13 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         clickListener { model, _, _, _ ->
                             if (!viewModel.longPressHandled) {
                                 onItemClicked(model.data())
-                            } else {
+                            } else if (model.data().id.isNotEmpty()) {
                                 onItemLongClicked(model.data())
                             }
                         }
                         if (isViewRequiredMultiSelection) {
                             longClickListener { model, _, _, _ ->
-                                if (!viewModel.longPressHandled) {
+                                if (!viewModel.longPressHandled && model.data().id.isNotEmpty()) {
                                     enableLongPress()
                                     onItemLongClicked(model.data())
                                     true
@@ -334,6 +339,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(entry).show(childFragmentManager, null)
+        ContextualActionsSheet.with(ContextualActionData.withEntries(listOf(entry))).show(childFragmentManager, null)
     }
 }

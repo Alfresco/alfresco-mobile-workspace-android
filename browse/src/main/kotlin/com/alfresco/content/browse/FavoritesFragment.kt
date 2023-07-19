@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.alfresco.content.listview.MultiSelection
+import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.listview.NonSwipeableViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.GlobalScope
@@ -46,22 +46,22 @@ class FavoritesFragment : Fragment() {
         view.requestFocus()
 
         GlobalScope.launch {
-            MultiSelection.observeMultiSelection().collect {
+            MultiSelection.observeClearSelection().collect {
                 Handler(Looper.getMainLooper()).post {
                     if (isAdded) {
-                        enableDisableTabs(it.isMultiSelectionEnabled)
+                        enableDisableTabs(it)
                     }
                 }
             }
         }
     }
 
-    private fun enableDisableTabs(isMultiSelectionEnabled: Boolean) {
+    private fun enableDisableTabs(isClearSelection: Boolean) {
         for (i in 0 until tabs.tabCount) {
             val tab = tabs.getTabAt(i)
-            tab?.view?.isClickable = !isMultiSelectionEnabled
+            tab?.view?.isClickable = isClearSelection
         }
-        pager.setSwipeEnabled(!isMultiSelectionEnabled)
+        pager.setSwipeEnabled(isClearSelection)
     }
 
     private class PagerAdapter(val context: Context, fragmentManager: FragmentManager, val listFragments: List<Fragment>) :
@@ -86,9 +86,9 @@ class FavoritesFragment : Fragment() {
     }
 
     fun clearMultiSelection() {
-        val fragment = listFragments[pager.currentItem]
-        if (fragment is BrowseFragment) {
+        /*val fragment = listFragments[pager.currentItem]
+        if (fragment is BrowseFragment && fragment.isAdded) {
             fragment.clearMultiSelection()
-        }
+        }*/
     }
 }

@@ -15,6 +15,7 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ContextualActionsBarFragment
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.mimetype.MimeType
@@ -133,7 +134,7 @@ class ViewerFragment : Fragment(), MavericksView {
 
     private fun configureActionBar(entry: Entry) {
         val fragment = ContextualActionsBarFragment().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to entry)
+            arguments = bundleOf(Mavericks.KEY_ARG to ContextualActionData.withEntries(listOf(entry)))
         }
         parentFragmentManager.beginTransaction().replace(R.id.action_list_bar, fragment).commit()
     }

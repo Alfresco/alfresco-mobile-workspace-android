@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "31:4511095047656282043",
+      "lastPropertyId": "32:675229831295035009",
       "name": "Entry",
       "properties": [
         {
@@ -147,6 +147,11 @@
         {
           "id": "31:4511095047656282043",
           "name": "isSelectedForMultiSelection",
+          "type": 1
+        },
+        {
+          "id": "32:675229831295035009",
+          "name": "canDelete",
           "type": 1
         }
       ],

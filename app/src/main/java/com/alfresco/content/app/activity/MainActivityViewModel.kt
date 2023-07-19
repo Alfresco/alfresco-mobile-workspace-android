@@ -112,10 +112,12 @@ class MainActivityViewModel(
                             isProcessEnabled?.invoke(true)
                             this
                         }
+
                         is Fail -> {
                             isProcessEnabled?.invoke(false)
                             this
                         }
+
                         else -> {
                             this
                         }
@@ -190,11 +192,13 @@ class MainActivityViewModel(
             VALUE_SHARE -> {
                 _navigationMode.value = NavigationMode.FILE
             }
+
             VALUE_REMOTE -> {
                 if (requiresLogin) {
                     _navigationMode.value = NavigationMode.LOGIN
                 } else _navigationMode.value = NavigationMode.DEFAULT
             }
+
             else -> _navigationMode.value = NavigationMode.DEFAULT
         }
     }

@@ -74,6 +74,7 @@ abstract class ListViewModel<S : ListViewState>(
     private val _sharedFlow = MutableSharedFlow<Entry>()
     val sharedFlow = _sharedFlow.asSharedFlow()
     private var folderListener: EntryListener? = null
+    var longPressHandled = false
 
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
@@ -163,7 +164,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
-    private var longPressHandled = false
     private var isViewRequiredMultiSelection = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -202,7 +202,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
     override fun invalidate() = withState(viewModel) { state ->
 
-        if (longPressHandled) {
+        if (viewModel.longPressHandled) {
             if (state.selectedEntries.isEmpty()) {
                 MultiSelection.multiSelectionChangedFlow.tryEmit(
                     MultiSelectionData(
@@ -239,12 +239,12 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     }
 
     private fun enableLongPress() {
-        longPressHandled = true
+        viewModel.longPressHandled = true
         refreshLayout.isEnabled = false
     }
 
     fun disableLongPress() {
-        longPressHandled = false
+        viewModel.longPressHandled = false
         if (this::refreshLayout.isInitialized) {
             refreshLayout.isEnabled = true
         }
@@ -282,7 +282,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         compact(state.isCompact)
                         multiSelection(state.selectedEntries.isNotEmpty())
                         clickListener { model, _, _, _ ->
-                            if (!longPressHandled) {
+                            if (!viewModel.longPressHandled) {
                                 onItemClicked(model.data())
                             } else if (model.data().id.isNotEmpty()) {
                                 onItemLongClicked(model.data())
@@ -290,7 +290,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         }
                         if (isViewRequiredMultiSelection) {
                             longClickListener { model, _, _, _ ->
-                                if (!longPressHandled && model.data().id.isNotEmpty()) {
+                                if (!viewModel.longPressHandled && model.data().id.isNotEmpty()) {
                                     enableLongPress()
                                     onItemLongClicked(model.data())
                                     true

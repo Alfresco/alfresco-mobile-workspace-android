@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
             editor.apply()
         }
 
-        if (savedInstanceState != null && viewModel.selectedEntries.isNotEmpty()) {
-            enableMultiSelection(viewModel.selectedEntries)
+        if (savedInstanceState != null && viewModel.entriesMultiSelection.isNotEmpty()) {
+            enableMultiSelection(viewModel.entriesMultiSelection)
         }
     }
 
@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         if (actionMode == null) {
             actionMode = startSupportActionMode(this)
         }
-        viewModel.selectedEntries = selectedEntries
+        viewModel.entriesMultiSelection = selectedEntries
         val title = SpannableString(getString(R.string.title_action_mode, selectedEntries.size))
         title.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)), 0, title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun disableMultiSelection() {
-        viewModel.selectedEntries = emptyList()
+        viewModel.entriesMultiSelection = emptyList()
         actionMode?.finish()
         actionBarController?.showHideActionBarLayout(true)
         bottomNav.slideTop()

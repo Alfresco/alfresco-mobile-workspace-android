@@ -23,6 +23,7 @@ import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
@@ -60,6 +61,7 @@ class MainActivityViewModel(
     private var mode: String? = null
     private var isFolder: Boolean = false
     var isProcessEnabled: ((Boolean) -> Unit)? = null
+    var selectedEntries: List<Entry> = emptyList()
 
     init {
         // Start a new session
@@ -110,10 +112,12 @@ class MainActivityViewModel(
                             isProcessEnabled?.invoke(true)
                             this
                         }
+
                         is Fail -> {
                             isProcessEnabled?.invoke(false)
                             this
                         }
+
                         else -> {
                             this
                         }
@@ -188,11 +192,13 @@ class MainActivityViewModel(
             VALUE_SHARE -> {
                 _navigationMode.value = NavigationMode.FILE
             }
+
             VALUE_REMOTE -> {
                 if (requiresLogin) {
                     _navigationMode.value = NavigationMode.LOGIN
                 } else _navigationMode.value = NavigationMode.DEFAULT
             }
+
             else -> _navigationMode.value = NavigationMode.DEFAULT
         }
     }

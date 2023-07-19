@@ -38,7 +38,7 @@ class ContextualActionsViewModel(
         viewModelScope.on<ActionMoveFilesFolders>(block = ::updateState)
     }
 
-    fun buildModelSingleSelection() = withState { state ->
+    private fun buildModelSingleSelection() = withState { state ->
         // If entry is partial and not in the offline tab
         if (state.entries.isNotEmpty()) {
             state.entries.first().let { entry ->

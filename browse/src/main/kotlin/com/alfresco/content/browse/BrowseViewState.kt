@@ -67,7 +67,7 @@ data class BrowseViewState(
         return if (parent != null) {
             copyIncludingUploads(baseEntries, updateEntries, hasMoreItems)
         } else {
-            copy(uploads = uploads)
+            copy(uploads = updateEntries)
         }
     }
 

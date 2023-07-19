@@ -284,13 +284,13 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         clickListener { model, _, _, _ ->
                             if (!longPressHandled) {
                                 onItemClicked(model.data())
-                            } else {
+                            } else if (model.data().id.isNotEmpty()) {
                                 onItemLongClicked(model.data())
                             }
                         }
                         if (isViewRequiredMultiSelection) {
                             longClickListener { model, _, _, _ ->
-                                if (!longPressHandled) {
+                                if (!longPressHandled && model.data().id.isNotEmpty()) {
                                     enableLongPress()
                                     onItemLongClicked(model.data())
                                     true

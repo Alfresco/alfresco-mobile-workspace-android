@@ -24,8 +24,19 @@ data class OfflineViewState(
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
-        val pageEntries = response.entries
-        val newEntries = if (nextPage) { entries + pageEntries } else { pageEntries }
+
+        val selectedEntriesMap = selectedEntries.associateBy { it.id }
+
+        val pageEntries = response.entries.map { entry ->
+            val isSelectedForMultiSelection = selectedEntriesMap[entry.id]?.isSelectedForMultiSelection ?: false
+            entry.copy(isSelectedForMultiSelection = isSelectedForMultiSelection)
+        }.toMutableList()
+
+        val newEntries = if (nextPage) {
+            entries + pageEntries
+        } else {
+            pageEntries
+        }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }

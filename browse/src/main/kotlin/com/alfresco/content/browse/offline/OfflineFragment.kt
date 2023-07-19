@@ -40,7 +40,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         GlobalScope.launch {
             MultiSelection.observeClearSelection().collect {
                 Handler(Looper.getMainLooper()).post {
-                    if (isAdded) {
+                    if (isAdded && it) {
                         clearMultiSelection()
                     }
                 }
@@ -144,7 +144,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
     }
 
-    fun clearMultiSelection() {
+    private fun clearMultiSelection() {
         disableLongPress()
         viewModel.resetMultiSelection()
     }

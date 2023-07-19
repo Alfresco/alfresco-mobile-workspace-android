@@ -55,9 +55,17 @@ data class BrowseViewState(
 
     fun updateUploads(uploads: List<Entry>): BrowseViewState {
         // Merge data only after at least the first page loaded
-        // [parent] is a good enough flag for the initial load.
+        // [parent] is a good enough flag for the initial load.2
+
+        val selectedEntriesMap = selectedEntries.associateBy { it.id }
+
+        val updateEntries = uploads.map { entry ->
+            val isSelectedForMultiSelection = selectedEntriesMap[entry.id]?.isSelectedForMultiSelection ?: false
+            entry.copy(isSelectedForMultiSelection = isSelectedForMultiSelection)
+        }.toMutableList()
+
         return if (parent != null) {
-            copyIncludingUploads(baseEntries, uploads, hasMoreItems)
+            copyIncludingUploads(baseEntries, updateEntries, hasMoreItems)
         } else {
             copy(uploads = uploads)
         }

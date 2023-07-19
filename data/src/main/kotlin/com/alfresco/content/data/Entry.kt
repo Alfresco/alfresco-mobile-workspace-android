@@ -89,7 +89,7 @@ data class Entry(
     @Convert(converter = BoxUploadServerTypeConverter::class, dbType = String::class)
     val uploadServer: UploadServerType = UploadServerType.DEFAULT,
     val isReadOnly: Boolean = false,
-    val isSelectedForMultiSelection: Boolean = false,
+    var isSelectedForMultiSelection: Boolean = false,
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean

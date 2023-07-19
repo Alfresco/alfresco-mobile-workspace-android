@@ -64,13 +64,13 @@ class ContextualActionsViewModel(
         }
     }
 
-    fun buildModelForMultiSelection() = withState { state ->
+    private fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
         val filteredEntries = state.entries.filter {
             (!it.isUpload || it.offlineStatus == OfflineStatus.UNDEFINED) &&
                 (it.offlineStatus == OfflineStatus.UNDEFINED || it.offlineStatus == OfflineStatus.SYNCED)
         }
-        setState { copy(entries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
+        setState { copy(filteredEntries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
     }
 
     private fun updateState(action: Action) {
@@ -131,10 +131,9 @@ class ContextualActionsViewModel(
             actions.add(ActionStartProcess(entry))
         }
 
-        // Added Move and Delete Action
+        // Added Move Action
         if (entries.any { it.canDelete }) {
             actions.add(ActionMoveFilesFolders(entry))
-            actions.add(ActionDelete(entry))
         }
 
         // Added Offline Action
@@ -144,6 +143,11 @@ class ContextualActionsViewModel(
             actions.add(ActionAddOffline(entry))
         } else {
             actions.add(ActionRemoveOffline(entry))
+        }
+
+        // Added Delete Action
+        if (entries.any { it.canDelete }) {
+            actions.add((ActionDelete(entry)))
         }
 
         return actions

@@ -8,6 +8,7 @@ import com.alfresco.content.data.Entry
 
 data class ContextualActionsState(
     val entries: List<Entry> = emptyList(),
+    val filteredEntries: List<Entry> = emptyList(),
     val isMultiSelection: Boolean = false,
     val actions: List<Action> = emptyList(),
     val topActions: List<Action> = emptyList(),

@@ -11,7 +11,7 @@ import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
@@ -45,7 +45,7 @@ class ContextualActionsViewModelTest {
     }
 
     @Test
-    fun `test buildModelForMultiSelection with different entry types`() {
+    fun `test makeMultiActions and returns ActionAddFavorite`() {
         val entries = createEntries(
             Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
             Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
@@ -54,20 +54,40 @@ class ContextualActionsViewModelTest {
             Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
         )
 
-        // Mock the required dependencies and initialize the ViewModel
         val initialState = ContextualActionsState(ContextualActionData(entries = entries, isMultiSelection = true))
         val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
-        // Trigger the buildModelForMultiSelection function
-        viewModel.buildModelForMultiSelection()
+        withState(viewModel) { newState ->
+            viewModel.makeMultiActions(newState.entries)
+            assertEquals(1, newState.actions.size)
 
-        // Assert the updated state after the function call
+            newState.actions.forEach {
+                assertEquals(true, it is ActionAddFavorite)
+            }
+        }
+    }
+
+    @Test
+    fun `test makeMultiActions and returns ActionRemoveFavorite`() {
+        val entries = createEntries(
+            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
+            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
+            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
+            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
+            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
+        )
+
+        val initialState = ContextualActionsState(ContextualActionData(entries = entries, isMultiSelection = true))
+        val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
         withState(viewModel) { newState ->
-            assertTrue(newState.isMultiSelection) // Ensure isMultiSelection is set to true
-        }
+            viewModel.makeMultiActions(newState.entries)
+            assertEquals(1, newState.actions.size)
 
-        // Add more assertions as needed based on your specific logic and state updates
+            newState.actions.forEach {
+                assertEquals(true, it is ActionRemoveFavorite)
+            }
+        }
     }
 
     @After

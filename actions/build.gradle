@@ -36,4 +36,22 @@ dependencies {
     implementation libs.mavericks
 
     kapt libs.epoxy.processor
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.core
+    androidTestImplementation libs.androidx.test.espresso.core
+
+    // Mockito
+    // Coroutines test
+    testImplementation libs.kotlinx.coroutines.test
+
+    testImplementation libs.mavericks.testing
+
+    testImplementation libs.mockito.kotlin
+
+    // Optional -- Mockito framework
+    testImplementation libs.mockito.core
+    // Optional -- Mockk framework
+    testImplementation libs.mockk
 }

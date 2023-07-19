@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.events.on
 import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
@@ -69,9 +70,11 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
                 is ActionDownload -> {
                     contentDescription = getString(R.string.accessibility_text_download)
                 }
+
                 is ActionAddFavorite -> {
                     contentDescription = getString(R.string.accessibility_text_add_favorite)
                 }
+
                 is ActionRemoveFavorite -> {
                     contentDescription = getString(R.string.accessibility_text_remove_favorite)
                 }
@@ -104,8 +107,8 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
             background = context.getDrawableForAttribute(android.R.attr.actionBarItemBackground)
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
-                withState(viewModel) {
-                    ContextualActionsSheet.with(it.entry).show(childFragmentManager, null)
+                withState(viewModel) { state ->
+                    ContextualActionsSheet.with(ContextualActionData.withEntries(state.entries)).show(childFragmentManager, null)
                 }
             }
         }

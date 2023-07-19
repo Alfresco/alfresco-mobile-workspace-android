@@ -9,6 +9,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.Settings
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -16,13 +17,18 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-internal class ContextualActionsViewModel(
+class ContextualActionsViewModel(
     state: ContextualActionsState,
     val context: Context,
+    private val settings: Settings,
 ) : MavericksViewModel<ContextualActionsState>(state) {
 
     init {
-        buildModel()
+        if (!state.isMultiSelection) {
+            buildModelSingleSelection()
+        } else {
+            buildModelForMultiSelection()
+        }
 
         // Update the model if necessary
         viewModelScope.on<ActionAddFavorite>(block = ::updateState)
@@ -32,33 +38,49 @@ internal class ContextualActionsViewModel(
         viewModelScope.on<ActionMoveFilesFolders>(block = ::updateState)
     }
 
-    private fun buildModel() = withState { state ->
+    private fun buildModelSingleSelection() = withState { state ->
         // If entry is partial and not in the offline tab
-        if (state.entry.isPartial && !state.entry.hasOfflineStatus) {
-            viewModelScope.launch {
-                fetchEntry(state.entry).execute {
-                    when (it) {
-                        is Success ->
-                            ContextualActionsState(it(), makeActions(it()), makeTopActions(it()), it)
-                        is Fail ->
-                            ContextualActionsState(state.entry, makeActions(entry), makeTopActions(entry), it)
-                        else ->
-                            copy(fetch = it)
+        if (state.entries.isNotEmpty()) {
+            state.entries.first().let { entry ->
+                if (entry.isPartial && !entry.hasOfflineStatus) {
+                    viewModelScope.launch {
+                        fetchEntry(entry).execute {
+                            when (it) {
+                                is Success ->
+                                    ContextualActionsState(entries = listOf(it()), actions = makeActions(it()), topActions = makeTopActions(it()), fetch = it)
+
+                                is Fail ->
+                                    ContextualActionsState(entries = listOf(entry), actions = makeActions(entry), topActions = makeTopActions(entry), fetch = it)
+
+                                else ->
+                                    copy(fetch = it)
+                            }
+                        }
                     }
+                } else {
+                    setState { copy(actions = makeActions(entry), topActions = makeTopActions(entry), fetch = Success(entry)) }
                 }
             }
-        } else {
-            setState { copy(actions = makeActions(entry), topActions = makeTopActions(entry), fetch = Success(entry)) }
         }
+    }
+
+    private fun buildModelForMultiSelection() = withState { state ->
+        // If entry is partial and not in the offline tab
+        val filteredEntries = state.entries.filter {
+            (!it.isUpload || it.offlineStatus == OfflineStatus.UNDEFINED) &&
+                (it.offlineStatus == OfflineStatus.UNDEFINED || it.offlineStatus == OfflineStatus.SYNCED)
+        }
+        setState { copy(filteredEntries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
     }
 
     private fun updateState(action: Action) {
         setState {
             val entry = action.entry as Entry
+
             ContextualActionsState(
-                entry,
-                makeActions(entry),
-                makeTopActions(entry),
+                entries = listOf(entry),
+                actions = if (isMultiSelection) makeMultiActions(action.entries) else makeActions(entry),
+                topActions = makeTopActions(entry),
             )
         }
     }
@@ -83,19 +105,59 @@ internal class ContextualActionsViewModel(
             entry.isTrashed -> {
                 actionsForTrashed(entry)
             }
+
             entry.hasOfflineStatus -> {
                 actionsForOffline(entry)
             }
+
             else -> {
                 defaultActionsFor(entry)
             }
         }
 
+    fun makeMultiActions(entries: List<Entry>): List<Action> {
+        val actions = mutableListOf<Action>()
+        val entry = Entry()
+
+        // Added Favorite Action
+        if (entries.any { !it.isFavorite }) {
+            actions.add(ActionAddFavorite(entry))
+        } else {
+            actions.add(ActionRemoveFavorite(entry))
+        }
+
+        // Added Start Process Action
+        if (settings.isProcessEnabled && !entries.any { it.isFolder }) {
+            actions.add(ActionStartProcess(entry))
+        }
+
+        // Added Move Action
+        if (entries.any { it.canDelete }) {
+            actions.add(ActionMoveFilesFolders(entry))
+        }
+
+        // Added Offline Action
+        val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+
+        if (filteredOffline.any { !it.isOffline }) {
+            actions.add(ActionAddOffline(entry))
+        } else {
+            actions.add(ActionRemoveOffline(entry))
+        }
+
+        // Added Delete Action
+        if (entries.any { it.canDelete }) {
+            actions.add((ActionDelete(entry)))
+        }
+
+        return actions
+    }
+
     private fun defaultActionsFor(entry: Entry) =
         listOf(
             externalActionsFor(entry),
             favoriteActionFor(entry),
-            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
+            if (settings.isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             renameMoveActionFor(entry),
             offlineActionFor(entry),
             deleteActionFor(entry),
@@ -107,7 +169,7 @@ internal class ContextualActionsViewModel(
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
             externalActionsFor(entry),
-            if (Settings(context).isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
+            if (settings.isProcessEnabled && entry.isFile) actionsProcesses(entry) else listOf(),
             offlineActionFor(entry),
         ).flatten()
 
@@ -165,6 +227,6 @@ internal class ContextualActionsViewModel(
             state: ContextualActionsState,
         ) =
             // Requires activity context in order to present other fragments
-            ContextualActionsViewModel(state, viewModelContext.activity())
+            ContextualActionsViewModel(state, viewModelContext.activity(), Settings(viewModelContext.activity))
     }
 }

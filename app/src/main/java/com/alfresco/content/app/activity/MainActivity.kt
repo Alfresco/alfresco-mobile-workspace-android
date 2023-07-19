@@ -30,18 +30,15 @@ import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
 import com.alfresco.content.actions.Action
+import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
-import com.alfresco.content.browse.BrowseFragment
-import com.alfresco.content.browse.FavoritesFragment
-import com.alfresco.content.browse.offline.OfflineFragment
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
-import com.alfresco.content.listview.MultiSelection
-import com.alfresco.content.search.SearchFragment
-import com.alfresco.content.search.SearchResultsFragment
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.slideBottom
 import com.alfresco.content.slideTop
@@ -81,6 +78,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         GlobalScope.launch {
             MultiSelection.observeMultiSelection().collect {
                 Handler(Looper.getMainLooper()).post {
+                    viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
                         enableMultiSelection(it.selectedEntries)
                     } else {
@@ -273,6 +271,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         if (!bottomNav.isVisible) {
             bottomNav.visibility = View.VISIBLE
         }
+        MultiSelection.clearSelectionChangedFlow.tryEmit(true)
+        actionMode = null
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
@@ -289,20 +289,24 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-        return true
+        when (item?.itemId) {
+            R.id.move -> {
+                return true
+            }
+
+            R.id.more_vert -> {
+                showCreateSheet()
+                return true
+            }
+        }
+        return false
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val fragment = navHostFragment?.childFragmentManager?.fragments?.first()
-        when (fragment) {
-            is BrowseFragment -> fragment.clearMultiSelection()
-            is FavoritesFragment -> fragment.clearMultiSelection()
-            is SearchResultsFragment -> fragment.clearMultiSelection()
-            is SearchFragment -> fragment.clearMultiSelection()
-            is OfflineFragment -> fragment.clearMultiSelection()
-        }
         disableMultiSelection()
-        actionMode = null
+    }
+
+    private fun showCreateSheet() = withState(viewModel) {
+        ContextualActionsSheet.with(ContextualActionData.withEntries(viewModel.entriesMultiSelection, true)).show(supportFragmentManager, null)
     }
 }

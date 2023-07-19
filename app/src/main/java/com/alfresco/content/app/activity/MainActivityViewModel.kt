@@ -23,6 +23,7 @@ import com.alfresco.content.actions.ActionUploadMedia
 import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
@@ -60,6 +61,7 @@ class MainActivityViewModel(
     private var mode: String? = null
     private var isFolder: Boolean = false
     var isProcessEnabled: ((Boolean) -> Unit)? = null
+    var entriesMultiSelection: List<Entry> = emptyList()
 
     init {
         // Start a new session

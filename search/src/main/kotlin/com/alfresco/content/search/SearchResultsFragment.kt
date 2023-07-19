@@ -1,6 +1,8 @@
 package com.alfresco.content.search
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -11,20 +13,35 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.HideSoftInputOnScrollListener
 import com.alfresco.content.data.AdvanceSearchFilters
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFilters
 import com.alfresco.content.listview.ListFragment
-import com.alfresco.content.listview.MultiSelection
-import com.alfresco.content.listview.MultiSelectionData
 import com.alfresco.content.navigateTo
 import com.alfresco.content.navigateToExtensionFolder
 import com.alfresco.content.navigateToFolder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
 
     override val viewModel: SearchViewModel by parentFragmentViewModel()
     var topLoadingIndicator: View? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GlobalScope.launch {
+            MultiSelection.observeClearSelection().collect {
+                Handler(Looper.getMainLooper()).post {
+                    if (isAdded) {
+                        clearMultiSelection()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

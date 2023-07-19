@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
@@ -12,15 +11,17 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
-import com.alfresco.content.mimetype.MimeType
+import com.alfresco.content.data.MultiSelection
+import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
-    private val viewModel: ContextualActionsViewModel by fragmentViewModel()
-    private lateinit var binding: SheetActionListBinding
+    val viewModel: ContextualActionsViewModel by fragmentViewModel()
+    lateinit var binding: SheetActionListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,17 +48,8 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) { state ->
-        val type = when (state.entry.type) {
-            Entry.Type.SITE -> MimeType.LIBRARY
-            Entry.Type.FOLDER -> MimeType.FOLDER
-            else -> MimeType.with(state.entry.mimeType)
-        }
 
-        binding.header.apply {
-            parentTitle.contentDescription = getString(R.string.accessibility_text_title_type, state.entry.name, type.name)
-            icon.setImageDrawable(ResourcesCompat.getDrawable(resources, type.icon, context?.theme))
-            title.text = state.entry.name
-        }
+        setHeader(state)
 
         binding.recyclerView.withModels {
             if (state.actions.isEmpty()) {
@@ -74,7 +66,13 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                             entry.name.substringAfterLast(".", ""),
                             it.eventName,
                         )
-                        viewModel.execute(it)
+                        withState(viewModel) { newState ->
+                            if (!newState.isMultiSelection) {
+                                viewModel.execute(it)
+                            } else {
+                                MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
+                            }
+                        }
                         dismiss()
                     }
                 }
@@ -83,8 +81,8 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     companion object {
-        fun with(entry: Entry) = ContextualActionsSheet().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to entry)
+        fun with(contextualActionData: ContextualActionData) = ContextualActionsSheet().apply {
+            arguments = bundleOf(Mavericks.KEY_ARG to contextualActionData)
         }
     }
 }

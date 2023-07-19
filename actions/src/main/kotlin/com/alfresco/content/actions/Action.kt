@@ -21,6 +21,8 @@ import java.net.SocketTimeoutException
 
 interface Action {
     val entry: ParentEntry
+    val entries: List<Entry>
+        get() = emptyList()
     val icon: Int
     val title: Int
     val eventName: EventName

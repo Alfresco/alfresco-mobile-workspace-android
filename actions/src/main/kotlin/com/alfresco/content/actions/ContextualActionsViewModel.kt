@@ -135,12 +135,12 @@ class ContextualActionsViewModel(
                 }
 
                 // Added Start Process Action
-                if (settings.isProcessEnabled && !filteredEntries.any { it.isFolder }) {
+                if (settings.isProcessEnabled && filteredEntries.all { it.isFile }) {
                     actions.add(ActionStartProcess(entry))
                 }
 
                 // Added Move Action
-                if (filteredEntries.any { it.canDelete }) {
+                if (filteredEntries.any { it.canDelete } && (entry.isFile || entry.isFolder)) {
                     actions.add(ActionMoveFilesFolders(entry, state.entries))
                 }
 
@@ -154,7 +154,7 @@ class ContextualActionsViewModel(
                 }
 
                 // Added Delete Action
-                if (filteredEntries.any { it.canDelete }) {
+                if (filteredEntries.any { it.canDelete } && (entry.isFile || entry.isFolder)) {
                     actions.add((ActionDelete(entry)))
                 }
             }
@@ -209,7 +209,7 @@ class ContextualActionsViewModel(
 
     private fun renameMoveActionFor(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
-        if (entry.canDelete) {
+        if (entry.canDelete && (entry.isFile || entry.isFolder)) {
             actions.add(ActionUpdateFileFolder(entry))
             actions.add(ActionMoveFilesFolders(entry))
         }

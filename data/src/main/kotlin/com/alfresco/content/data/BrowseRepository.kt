@@ -98,8 +98,9 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
             ).entry,
         )
 
-    suspend fun deleteEntry(entry: Entry) =
+    suspend fun deleteEntry(entry: Entry) {
         service.deleteNode(entry.id, null)
+    }
 
     suspend fun createEntry(local: Entry, file: File): Entry {
         // TODO: Support creating empty entries and folders

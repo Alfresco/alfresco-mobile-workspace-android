@@ -9,7 +9,6 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
-import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.Settings
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -66,10 +65,7 @@ class ContextualActionsViewModel(
 
     private fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
-        val filteredEntries = state.entries.filter {
-            (!it.isUpload || it.offlineStatus == OfflineStatus.UNDEFINED) &&
-                (it.offlineStatus == OfflineStatus.UNDEFINED || it.offlineStatus == OfflineStatus.SYNCED)
-        }
+        val filteredEntries = getFilteredEntries(state.entries)
         setState { copy(filteredEntries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
     }
 
@@ -118,10 +114,7 @@ class ContextualActionsViewModel(
     fun makeMultiActions(filteredEntries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
         withState { state ->
-            val entry = Entry(
-                id = state.entries.joinToString(separator = ",") { it.id },
-                name = state.entries.joinToString(separator = ",") { it.name },
-            )
+            val entry = Entry.withSelectedEntries(state.entries)
 
             if (filteredEntries.all { it.isTrashed }) {
                 actions.add(ActionRestore(entry))
@@ -140,7 +133,7 @@ class ContextualActionsViewModel(
                 }
 
                 // Added Move Action
-                if (filteredEntries.any { it.canDelete } && (entry.isFile || entry.isFolder)) {
+                if (isMoveDeleteAllowed(filteredEntries)) {
                     actions.add(ActionMoveFilesFolders(entry, state.entries))
                 }
 
@@ -154,7 +147,7 @@ class ContextualActionsViewModel(
                 }
 
                 // Added Delete Action
-                if (filteredEntries.any { it.canDelete } && (entry.isFile || entry.isFolder)) {
+                if (isMoveDeleteAllowed(filteredEntries)) {
                     actions.add((ActionDelete(entry)))
                 }
             }

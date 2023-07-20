@@ -15,11 +15,15 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.REMOTE
+import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCaptureMedia
+import com.alfresco.content.actions.ActionMoveFilesFolders
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.ActionUploadMedia
+import com.alfresco.content.actions.getFilteredEntries
+import com.alfresco.content.actions.isMoveDeleteAllowed
 import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
@@ -35,6 +39,7 @@ import com.alfresco.content.viewer.ViewerArgs.Companion.VALUE_REMOTE
 import com.alfresco.content.viewer.ViewerArgs.Companion.VALUE_SHARE
 import com.alfresco.events.on
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
@@ -49,7 +54,8 @@ data class MainActivityState(
 
 class MainActivityViewModel(
     state: MainActivityState,
-    val context: Context,
+    private val appContext: Context,
+    private val activityContext: Context,
 ) : MavericksViewModel<MainActivityState>(state), LifecycleObserver {
 
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
@@ -65,9 +71,9 @@ class MainActivityViewModel(
 
     init {
         // Start a new session
-        val session = SessionManager.newSession(context)
+        val session = SessionManager.newSession(appContext)
         if (session != null) {
-            init(context, session)
+            init(appContext, session)
         }
     }
 
@@ -203,11 +209,21 @@ class MainActivityViewModel(
         }
     }
 
+    fun moveFilesFolder() {
+        val filteredEntries = getFilteredEntries(entriesMultiSelection)
+        if (filteredEntries.isNotEmpty() && isMoveDeleteAllowed(filteredEntries)) {
+            execute(ActionMoveFilesFolders(Entry.withSelectedEntries(filteredEntries), filteredEntries))
+        }
+    }
+
+    private fun execute(action: Action) =
+        action.execute(activityContext, GlobalScope)
+
     companion object : MavericksViewModelFactory<MainActivityViewModel, MainActivityState> {
 
         override fun create(
             viewModelContext: ViewModelContext,
             state: MainActivityState,
-        ) = MainActivityViewModel(state, viewModelContext.app())
+        ) = MainActivityViewModel(state, viewModelContext.app(), viewModelContext.activity)
     }
 }

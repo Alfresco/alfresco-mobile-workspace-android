@@ -9,7 +9,6 @@ import com.alfresco.content.data.ParentEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
-
 /**
  * Mark as ActionMoveFilesFolders
  */
@@ -25,7 +24,13 @@ data class ActionMoveFilesFolders(
         val result = ActionMoveFragment.moveItem(context, entry)
         if (!result.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
-                BrowseRepository().moveNode(entry.id, result)
+                if (entries.isNotEmpty()) {
+                    entries.map {
+                        BrowseRepository().moveNode(it.id, result)
+                    }
+                } else {
+                    BrowseRepository().moveNode(entry.id, result)
+                }
             }
         } else {
             throw CancellationException("User Cancellation")
@@ -35,6 +40,11 @@ data class ActionMoveFilesFolders(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_move_toast, entry.name)
+    override fun showToast(view: View, anchorView: View?) {
+        if (entries.size > 1) {
+            Action.showToast(view, anchorView, R.string.action_move_multiple_toast, entries.size.toString())
+        } else {
+            Action.showToast(view, anchorView, R.string.action_move_toast, entry.name)
+        }
+    }
 }

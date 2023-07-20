@@ -43,7 +43,15 @@ data class BrowseViewState(
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
-        val pageEntries = response.entries.filter { it.id != moveId }
+
+        val listMoveIds = if (moveId.isNotEmpty() && moveId.contains(",")) {
+            moveId.split(",").toList()
+        } else {
+            listOf(moveId)
+        }
+
+        val pageEntries = response.entries.filterNot { listMoveIds.contains(it.id) }
+
         val newEntries = if (nextPage) {
             baseEntries + pageEntries
         } else {

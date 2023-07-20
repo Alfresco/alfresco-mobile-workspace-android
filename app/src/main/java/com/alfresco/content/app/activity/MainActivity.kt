@@ -297,6 +297,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.move -> {
+                viewModel.moveFilesFolder()
+                disableMultiSelection()
                 return true
             }
 

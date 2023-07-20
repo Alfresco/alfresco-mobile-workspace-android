@@ -436,6 +436,13 @@ data class Entry(
             return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id)
         }
 
+        fun withSelectedEntries(entries: List<Entry>): Entry {
+            return Entry(
+                id = entries.joinToString(separator = ",") { it.id },
+                name = entries.joinToString(separator = ",") { it.name },
+            )
+        }
+
         private fun PathInfo.formattedString(): String? {
             return elements?.map { it.name }
                 ?.reduce { out, el -> "$out \u203A $el" }

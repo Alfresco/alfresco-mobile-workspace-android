@@ -46,8 +46,8 @@ class CreateFolderDialog : DialogFragment() {
                 },
             ) { _, _ ->
                 onSuccess?.invoke(
-                    binding.nameInput.text.toString(),
-                    binding.descriptionInput.text.toString(),
+                    binding.nameInput.text.toString().trim(),
+                    binding.descriptionInput.text.toString().trim(),
                 )
             }
             .setView(binding.root)

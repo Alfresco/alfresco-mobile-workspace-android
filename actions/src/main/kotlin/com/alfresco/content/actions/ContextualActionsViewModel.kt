@@ -9,7 +9,6 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
-import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.Settings
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -66,10 +65,7 @@ class ContextualActionsViewModel(
 
     private fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
-        val filteredEntries = state.entries.filter {
-            (!it.isUpload || it.offlineStatus == OfflineStatus.UNDEFINED) &&
-                (it.offlineStatus == OfflineStatus.UNDEFINED || it.offlineStatus == OfflineStatus.SYNCED)
-        }
+        val filteredEntries = getFilteredEntries(state.entries)
         setState { copy(filteredEntries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
     }
 
@@ -115,39 +111,46 @@ class ContextualActionsViewModel(
             }
         }
 
-    fun makeMultiActions(entries: List<Entry>): List<Action> {
+    fun makeMultiActions(filteredEntries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
-        val entry = Entry()
+        withState { state ->
+            val entry = Entry.withSelectedEntries(state.entries)
 
-        // Added Favorite Action
-        if (entries.any { !it.isFavorite }) {
-            actions.add(ActionAddFavorite(entry))
-        } else {
-            actions.add(ActionRemoveFavorite(entry))
-        }
+            if (filteredEntries.all { it.isTrashed }) {
+                actions.add(ActionRestore(entry))
+                actions.add(ActionDeleteForever(entry))
+            } else {
+                // Added Favorite Action
+                if (filteredEntries.any { !it.isFavorite }) {
+                    actions.add(ActionAddFavorite(entry))
+                } else {
+                    actions.add(ActionRemoveFavorite(entry))
+                }
 
-        // Added Start Process Action
-        if (settings.isProcessEnabled && !entries.any { it.isFolder }) {
-            actions.add(ActionStartProcess(entry))
-        }
+                // Added Start Process Action
+                if (settings.isProcessEnabled && filteredEntries.all { it.isFile }) {
+                    actions.add(ActionStartProcess(entry))
+                }
 
-        // Added Move Action
-        if (entries.any { it.canDelete }) {
-            actions.add(ActionMoveFilesFolders(entry))
-        }
+                // Added Move Action
+                if (isMoveDeleteAllowed(filteredEntries)) {
+                    actions.add(ActionMoveFilesFolders(entry, state.entries))
+                }
 
-        // Added Offline Action
-        val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+                // Added Offline Action
+                val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
-        if (filteredOffline.any { !it.isOffline }) {
-            actions.add(ActionAddOffline(entry))
-        } else {
-            actions.add(ActionRemoveOffline(entry))
-        }
+                if (filteredOffline.any { !it.isOffline }) {
+                    actions.add(ActionAddOffline(entry))
+                } else {
+                    actions.add(ActionRemoveOffline(entry))
+                }
 
-        // Added Delete Action
-        if (entries.any { it.canDelete }) {
-            actions.add((ActionDelete(entry)))
+                // Added Delete Action
+                if (isMoveDeleteAllowed(filteredEntries)) {
+                    actions.add((ActionDelete(entry)))
+                }
+            }
         }
 
         return actions
@@ -199,7 +202,7 @@ class ContextualActionsViewModel(
 
     private fun renameMoveActionFor(entry: Entry): List<Action> {
         val actions = mutableListOf<Action>()
-        if (entry.canDelete) {
+        if (entry.canDelete && (entry.isFile || entry.isFolder)) {
             actions.add(ActionUpdateFileFolder(entry))
             actions.add(ActionMoveFilesFolders(entry))
         }

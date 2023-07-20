@@ -61,7 +61,7 @@
             app:argType="string"
             android:defaultValue=""/>
 
-        <deepLink app:uri="alfresco://content/browse_move_parent/{path}/remote/{id}/{moveId}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse_move_parent/{id}?title={title},moveId={moveId},path={path}" />
 
     </fragment>
 

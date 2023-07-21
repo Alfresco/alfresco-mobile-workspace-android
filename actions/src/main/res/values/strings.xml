@@ -82,5 +82,8 @@
     <string name="action_menu_release">Release</string>
 
     <string name="action_move_multiple_toast">%s files were moved successfully</string>
+    <string name="action_delete_multiple_toast">%s files were moved to trash</string>
+    <string name="action_restored_multiple_toast">%s files were restored</string>
+    <string name="action_delete_multiple_confirmation_message">%s files will be permanently deleted.</string>
 
 </resources>

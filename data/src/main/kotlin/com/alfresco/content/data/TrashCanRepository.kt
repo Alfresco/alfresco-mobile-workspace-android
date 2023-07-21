@@ -27,6 +27,7 @@ class TrashCanRepository(val session: Session = SessionManager.requireSession) {
     suspend fun restoreEntry(entry: Entry) =
         Entry.with(serviceExt.restoreDeletedNode(entry.id).entry)
 
-    suspend fun deleteForeverEntry(entry: Entry) =
+    suspend fun deleteForeverEntry(entry: Entry) {
         service.deleteDeletedNode(entry.id)
+    }
 }

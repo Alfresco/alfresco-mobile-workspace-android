@@ -117,8 +117,8 @@ class ContextualActionsViewModel(
             val entry = Entry.withSelectedEntries(state.entries)
 
             if (filteredEntries.all { it.isTrashed }) {
-                actions.add(ActionRestore(entry))
-                actions.add(ActionDeleteForever(entry))
+                actions.add(ActionRestore(entry, state.entries))
+                actions.add(ActionDeleteForever(entry, state.entries))
             } else {
                 // Added Favorite Action
                 if (filteredEntries.any { !it.isFavorite }) {
@@ -148,7 +148,7 @@ class ContextualActionsViewModel(
 
                 // Added Delete Action
                 if (isMoveDeleteAllowed(filteredEntries)) {
-                    actions.add((ActionDelete(entry)))
+                    actions.add((ActionDelete(entry, state.entries)))
                 }
             }
         }

@@ -75,8 +75,18 @@ class BrowseViewModel(
         }
 
         if (state.path == context.getString(R.string.nav_path_trash)) {
-            viewModelScope.on<ActionRestore> { removeEntry(it.entry) }
-            viewModelScope.on<ActionDeleteForever> { removeEntry(it.entry) }
+            viewModelScope.on<ActionRestore> { removeDataEntry(it.entry, it.entries) }
+            viewModelScope.on<ActionDeleteForever> { removeDataEntry(it.entry, it.entries) }
+        }
+    }
+
+    private fun removeDataEntry(entry: Entry, entries: List<Entry>) {
+        if (entries.isNotEmpty()) {
+            entries.forEach { entryObj ->
+                removeEntry(entryObj)
+            }
+        } else {
+            removeEntry(entry)
         }
     }
 

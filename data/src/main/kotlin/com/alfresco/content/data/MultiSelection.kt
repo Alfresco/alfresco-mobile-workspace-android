@@ -15,4 +15,5 @@ object MultiSelection {
 data class MultiSelectionData(
     val selectedEntries: List<Entry> = emptyList(),
     val isMultiSelectionEnabled: Boolean = false,
+    val path: String = "",
 )

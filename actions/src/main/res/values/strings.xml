@@ -85,5 +85,6 @@
     <string name="action_delete_multiple_toast">%s files were moved to trash</string>
     <string name="action_restored_multiple_toast">%s files were restored</string>
     <string name="action_delete_multiple_confirmation_message">%s files will be permanently deleted.</string>
+    <string name="action_add_offline_multiple_toast">%s files will be made available offline.</string>
 
 </resources>

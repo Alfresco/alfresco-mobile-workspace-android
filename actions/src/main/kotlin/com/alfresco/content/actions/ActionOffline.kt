@@ -11,6 +11,7 @@ import com.alfresco.kotlin.ellipsize
 
 data class ActionAddOffline(
     override val entry: Entry,
+    override var entries: List<Entry> = emptyList(),
     override val icon: Int = R.drawable.ic_action_offline,
     override val title: Int = R.string.action_add_offline_title,
     override val eventName: EventName = EventName.MarkOffline,
@@ -18,20 +19,31 @@ data class ActionAddOffline(
     private val repository: OfflineRepository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val res = repository.markForSync(entry)
-        // return item without status
-        return res.copy(offlineStatus = OfflineStatus.UNDEFINED)
+        val listEntries = mutableListOf<Entry>()
+        return if (entries.isNotEmpty()) {
+            entries.forEach {
+                val res = repository.markForSync(it)
+                listEntries.add(res.copy(offlineStatus = OfflineStatus.UNDEFINED))
+            }
+            entries = listEntries
+
+            entry
+        } else {
+            val res = repository.markForSync(entry)
+            // return item without status
+            res.copy(offlineStatus = OfflineStatus.UNDEFINED)
+        }
     }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(
-            view,
-            anchorView,
-            R.string.action_add_offline_toast,
-            entry.name.ellipsize(maxFileNameInToast(view)),
-        )
+    override fun showToast(view: View, anchorView: View?) {
+        if (entries.size > 1) {
+            Action.showToast(view, anchorView, R.string.action_add_offline_multiple_toast, entries.size.toString())
+        } else {
+            Action.showToast(view, anchorView, R.string.action_add_offline_toast, entry.name.ellipsize(maxFileNameInToast(view)))
+        }
+    }
 }
 
 data class ActionRemoveOffline(

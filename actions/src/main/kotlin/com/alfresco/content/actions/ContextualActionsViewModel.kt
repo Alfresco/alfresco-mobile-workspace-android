@@ -74,7 +74,7 @@ class ContextualActionsViewModel(
             val entry = action.entry as Entry
 
             ContextualActionsState(
-                entries = listOf(entry),
+                entries = if (isMultiSelection) action.entries else listOf(entry),
                 actions = if (isMultiSelection) makeMultiActions(action.entries) else makeActions(entry),
                 topActions = makeTopActions(entry),
             )
@@ -141,7 +141,7 @@ class ContextualActionsViewModel(
                 val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
                 if (filteredOffline.any { !it.isOffline }) {
-                    actions.add(ActionAddOffline(entry))
+                    actions.add(ActionAddOffline(entry, state.entries))
                 } else {
                     actions.add(ActionRemoveOffline(entry))
                 }

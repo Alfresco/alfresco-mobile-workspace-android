@@ -7,8 +7,11 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.ParentEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
+
 /**
  * Mark as ActionMoveFilesFolders
  */
@@ -24,13 +27,7 @@ data class ActionMoveFilesFolders(
         val result = ActionMoveFragment.moveItem(context, entry)
         if (!result.isNullOrEmpty()) {
             withContext(Dispatchers.IO) {
-                if (entries.isNotEmpty()) {
-                    entries.map {
-                        BrowseRepository().moveNode(it.id, result)
-                    }
-                } else {
-                    BrowseRepository().moveNode(entry.id, result)
-                }
+                BrowseRepository().moveNode(entry.id, result)
             }
         } else {
             throw CancellationException("User Cancellation")
@@ -38,7 +35,23 @@ data class ActionMoveFilesFolders(
         return entry
     }
 
+    override suspend fun executeMulti(context: Context): Pair<Entry, List<Entry>> = coroutineScope {
+        val entriesObj = entries.toMutableList()
+        val result = ActionMoveFragment.moveItem(context, entry)
+        if (!result.isNullOrEmpty()) {
+            entriesObj.map {
+                async(Dispatchers.IO) {
+                    BrowseRepository().moveNode(it.id, result)
+                }
+            }
+        } else {
+            throw CancellationException("User Cancellation")
+        }
+        return@coroutineScope Pair(entry, entriesObj)
+    }
+
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+    override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
     override fun showToast(view: View, anchorView: View?) {
         if (entries.size > 1) {

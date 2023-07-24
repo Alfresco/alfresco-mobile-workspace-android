@@ -16,6 +16,7 @@ import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
@@ -28,7 +29,13 @@ interface Action {
     val eventName: EventName
 
     suspend fun execute(context: Context): ParentEntry
+    suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> {
+        return Pair(entry, entries)
+    }
     fun copy(_entry: ParentEntry): Action
+    fun copy(_entries: List<Entry>): Action {
+        return this
+    }
 
     fun execute(
         context: Context,
@@ -38,6 +45,43 @@ interface Action {
         try {
             val newEntry = execute(context)
             val newAction = copy(newEntry)
+            sendAnalytics(true)
+            bus.send(newAction)
+        } catch (ex: CancellationException) {
+            // no-op
+            if (entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
+                ex.message == ERROR_FILE_SIZE_EXCEED
+            ) {
+                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+            }
+        } catch (ex: Exception) {
+            sendAnalytics(false)
+            bus.send(Error(ex.message ?: ""))
+        } catch (ex: SocketTimeoutException) {
+            sendAnalytics(false)
+            bus.send(Error(context.getString(R.string.action_timeout_error)))
+        } catch (ex: kotlin.Exception) {
+            sendAnalytics(false)
+            Logger.e(ex)
+            when (title) {
+                R.string.action_create_folder -> {
+                    if (ex.message?.contains("409") == true) {
+                        bus.send(Error(context.getString(R.string.error_duplicate_folder)))
+                    }
+                }
+                else -> bus.send(Error(context.getString(R.string.action_generic_error)))
+            }
+        }
+    }
+
+    fun executeMulti(
+        context: Context,
+        scope: CoroutineScope,
+    ) = scope.launch(Dispatchers.IO) {
+        val bus = EventBus.default
+        try {
+            val newEntry = executeMulti(context)
+            val newAction = copy(newEntry.second)
             sendAnalytics(true)
             bus.send(newAction)
         } catch (ex: CancellationException) {

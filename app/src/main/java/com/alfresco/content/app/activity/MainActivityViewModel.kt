@@ -218,7 +218,7 @@ class MainActivityViewModel(
     }
 
     private fun execute(action: Action) =
-        action.execute(activityContext, GlobalScope)
+        action.executeMulti(activityContext, GlobalScope)
 
     companion object : MavericksViewModelFactory<MainActivityViewModel, MainActivityState> {
 

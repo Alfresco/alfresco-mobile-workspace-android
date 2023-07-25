@@ -46,9 +46,9 @@ class MoveActivity : AppCompatActivity(), MavericksView {
 
             configure()
 
-            if (!resources.getBoolean(R.bool.isTablet)) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
+//            if (!resources.getBoolean(R.bool.isTablet)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//            }
         }
     }
 

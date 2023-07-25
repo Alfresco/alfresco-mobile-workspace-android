@@ -88,5 +88,7 @@
     <string name="action_add_offline_multiple_toast">%s items will be made available offline.</string>
     <string name="action_remove_offline_multiple_toast">%s items will no longer be available offline.</string>
     <string name="action_delete_forever_multiple_toast">%s items deleted</string>
+    <string name="action_add_favorite_multiple_toast">%s items Added to favorites</string>
+    <string name="action_remove_favorite_multiple_toast">%s items Removed from favorites</string>
 
 </resources>

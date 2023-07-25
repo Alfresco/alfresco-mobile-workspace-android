@@ -56,8 +56,9 @@ class FavoritesRepository(val session: Session = SessionManager.requireSession) 
         )
     }
 
-    suspend fun removeFavorite(entry: Entry) =
+    suspend fun removeFavorite(entry: Entry) {
         service.deleteFavorite(AlfrescoApi.CURRENT_USER, entry.id)
+    }
 
     suspend fun getFavoriteSite(id: String) =
         Entry.with(service.getFavorite(AlfrescoApi.CURRENT_USER, id).entry)

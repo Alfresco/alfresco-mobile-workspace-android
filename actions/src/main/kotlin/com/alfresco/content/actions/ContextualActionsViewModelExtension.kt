@@ -11,4 +11,4 @@ fun getFilteredEntries(entries: List<Entry>): List<Entry> {
     return filteredEntries
 }
 
-fun isMoveDeleteAllowed(entries: List<Entry>) = (entries.any { it.canDelete } && (entries.all { it.isFile || it.isFolder }))
+fun isMoveDeleteAllowed(entries: List<Entry>) = entries.isNotEmpty() && (entries.any { it.canDelete } && (entries.all { it.isFile || it.isFolder }))

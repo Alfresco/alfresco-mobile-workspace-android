@@ -68,6 +68,7 @@ class MainActivityViewModel(
     private var isFolder: Boolean = false
     var isProcessEnabled: ((Boolean) -> Unit)? = null
     var entriesMultiSelection: List<Entry> = emptyList()
+    var path: String = ""
 
     init {
         // Start a new session
@@ -217,7 +218,7 @@ class MainActivityViewModel(
     }
 
     private fun execute(action: Action) =
-        action.execute(activityContext, GlobalScope)
+        action.executeMulti(activityContext, GlobalScope)
 
     companion object : MavericksViewModelFactory<MainActivityViewModel, MainActivityState> {
 

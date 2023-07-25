@@ -137,7 +137,7 @@ class ListViewRow @JvmOverloads constructor(
         this.isCompact = compact
 
         val heightResId = if (compact) R.dimen.list_row_compact_height else R.dimen.list_row_height
-        layoutParams = ViewGroup.LayoutParams(
+        binding.parent.layoutParams = LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             resources.getDimension(heightResId).toInt(),
         )
@@ -182,7 +182,7 @@ class ListViewRow @JvmOverloads constructor(
 
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
-        setOnClickListener(listener)
+        binding.parent.setOnClickListener(listener)
     }
 
     /**
@@ -190,7 +190,7 @@ class ListViewRow @JvmOverloads constructor(
      */
     @CallbackProp
     fun setLongClickListener(listener: OnLongClickListener?) {
-        setOnLongClickListener(listener)
+        binding.parent.setOnLongClickListener(listener)
     }
 
     @CallbackProp

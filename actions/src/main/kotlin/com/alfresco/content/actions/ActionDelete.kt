@@ -13,6 +13,8 @@ import com.alfresco.kotlin.ellipsize
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -28,13 +30,27 @@ data class ActionDelete(
     override suspend fun execute(context: Context): Entry {
         try {
             withContext(Dispatchers.IO) {
-                if (entries.isNotEmpty()) {
-                    for (entryObj in entries) {
-                        println("data entry id == ${entryObj.id}")
-                        delete(entryObj)
-                    }
-                } else {
-                    delete(entry)
+                delete(entry)
+            }
+        } catch (ex: KotlinNullPointerException) {
+            // no-op. expected for 204
+            ex.printStackTrace()
+        }
+
+        // Cleanup associated upload if any
+        if (entry.type == Entry.Type.FILE) {
+            OfflineRepository().removeUpload(entry.id)
+        }
+
+        return entry
+    }
+
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
+        val entriesObj = entries.toMutableList()
+        try {
+            entriesObj.map {
+                async(Dispatchers.IO) {
+                    delete(it)
                 }
             }
         } catch (ex: KotlinNullPointerException) {
@@ -43,19 +59,13 @@ data class ActionDelete(
         }
 
         // Cleanup associated upload if any
-        if (entries.isNotEmpty()) {
-            entries.map {
-                if (it.type == Entry.Type.FILE) {
-                    OfflineRepository().removeUpload(it.id)
-                }
-            }
-        } else {
-            if (entry.type == Entry.Type.FILE) {
-                OfflineRepository().removeUpload(entry.id)
+        entriesObj.forEach {
+            if (it.type == Entry.Type.FILE) {
+                OfflineRepository().removeUpload(it.id)
             }
         }
 
-        return entry
+        return@coroutineScope Pair(entry, entriesObj)
     }
 
     private suspend inline fun delete(entry: Entry) {
@@ -67,6 +77,8 @@ data class ActionDelete(
     }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
+    override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
     override fun showToast(view: View, anchorView: View?) {
         if (entries.size > 1) {
@@ -86,18 +98,24 @@ data class ActionRestore(
 ) : Action {
     override suspend fun execute(context: Context): Entry {
         withContext(Dispatchers.IO) {
-            if (entries.isNotEmpty()) {
-                entries.forEach { entryObj ->
-                    TrashCanRepository().restoreEntry(entryObj)
-                }
-            } else {
-                TrashCanRepository().restoreEntry(entry)
-            }
+            TrashCanRepository().restoreEntry(entry)
         }
         return entry
     }
 
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
+        val entriesObj = entries.toMutableList()
+        entriesObj.map {
+            async(Dispatchers.IO) {
+                TrashCanRepository().restoreEntry(it)
+            }
+        }
+        return@coroutineScope Pair(entry, entriesObj)
+    }
+
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
+    override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
     override fun showToast(view: View, anchorView: View?) {
         if (entries.size > 1) {
@@ -120,13 +138,7 @@ data class ActionDeleteForever(
         if (showConfirmation(context)) {
             try {
                 withContext(Dispatchers.IO) {
-                    if (entries.isNotEmpty()) {
-                        entries.forEach { entryObj ->
-                            delete(entryObj)
-                        }
-                    } else {
-                        delete(entry)
-                    }
+                    delete(entry)
                 }
             } catch (ex: KotlinNullPointerException) {
                 // no-op. expected for 204
@@ -137,6 +149,25 @@ data class ActionDeleteForever(
         }
 
         return entry
+    }
+
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
+        val entriesObj = entries.toMutableList()
+        if (showConfirmation(context)) {
+            try {
+                entriesObj.map {
+                    async(Dispatchers.IO) {
+                        delete(it)
+                    }
+                }
+            } catch (ex: KotlinNullPointerException) {
+                // no-op. expected for 204
+                ex.printStackTrace()
+            }
+        } else {
+            throw CancellationException()
+        }
+        return@coroutineScope Pair(entry, entriesObj)
     }
 
     private suspend fun showConfirmation(context: Context) = withContext(Dispatchers.Main) {
@@ -165,11 +196,13 @@ data class ActionDeleteForever(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(
-            view,
-            anchorView,
-            R.string.action_delete_forever_toast,
-            entry.name.ellipsize(maxFileNameInToast(view)),
-        )
+    override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
+
+    override fun showToast(view: View, anchorView: View?) {
+        if (entries.size > 1) {
+            Action.showToast(view, anchorView, R.string.action_delete_forever_multiple_toast, entries.size.toString())
+        } else {
+            Action.showToast(view, anchorView, R.string.action_delete_forever_toast, entry.name.ellipsize(maxFileNameInToast(view)))
+        }
+    }
 }

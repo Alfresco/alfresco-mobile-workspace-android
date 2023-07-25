@@ -65,17 +65,15 @@ class ContextualActionsViewModel(
 
     private fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
-        val filteredEntries = getFilteredEntries(state.entries)
-        setState { copy(filteredEntries = filteredEntries, actions = makeMultiActions(filteredEntries), topActions = emptyList()) }
+        setState { copy(entries = state.entries, actions = makeMultiActions(getFilteredEntries(state.entries), state), topActions = emptyList()) }
     }
 
     private fun updateState(action: Action) {
         setState {
             val entry = action.entry as Entry
-
             ContextualActionsState(
-                entries = listOf(entry),
-                actions = if (isMultiSelection) makeMultiActions(action.entries) else makeActions(entry),
+                entries = if (isMultiSelection) action.entries else listOf(entry),
+                actions = if (isMultiSelection) makeMultiActions(action.entries, this) else makeActions(entry),
                 topActions = makeTopActions(entry),
             )
         }
@@ -87,14 +85,17 @@ class ContextualActionsViewModel(
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
-    fun <T : Action> execute(actionClass: Class<T>) {
+    /*fun <T : Action> execute(actionClass: Class<T>) {
         withState { st ->
             st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(context, GlobalScope)
         }
-    }
+    }*/
 
     fun execute(action: Action) =
         action.execute(context, GlobalScope)
+
+    fun executeMulti(action: Action) =
+        action.executeMulti(context, GlobalScope)
 
     private fun makeActions(entry: Entry): List<Action> =
         when {
@@ -111,48 +112,45 @@ class ContextualActionsViewModel(
             }
         }
 
-    fun makeMultiActions(filteredEntries: List<Entry>): List<Action> {
+    fun makeMultiActions(filteredEntries: List<Entry>, state: ContextualActionsState): List<Action> {
         val actions = mutableListOf<Action>()
-        withState { state ->
-            val entry = Entry.withSelectedEntries(state.entries)
+        val entry = Entry.withSelectedEntries(state.entries)
 
-            if (filteredEntries.all { it.isTrashed }) {
-                actions.add(ActionRestore(entry, state.entries))
-                actions.add(ActionDeleteForever(entry, state.entries))
+        if (filteredEntries.all { it.isTrashed }) {
+            actions.add(ActionRestore(entry, state.entries))
+            actions.add(ActionDeleteForever(entry, state.entries))
+        } else {
+            // Added Favorite Action
+            if (filteredEntries.any { !it.isFavorite }) {
+                actions.add(ActionAddFavorite(entry))
             } else {
-                // Added Favorite Action
-                if (filteredEntries.any { !it.isFavorite }) {
-                    actions.add(ActionAddFavorite(entry))
-                } else {
-                    actions.add(ActionRemoveFavorite(entry))
-                }
+                actions.add(ActionRemoveFavorite(entry))
+            }
 
-                // Added Start Process Action
-                if (settings.isProcessEnabled && filteredEntries.all { it.isFile }) {
-                    actions.add(ActionStartProcess(entry))
-                }
+            // Added Start Process Action
+            if (settings.isProcessEnabled && filteredEntries.all { it.isFile }) {
+                actions.add(ActionStartProcess(entry))
+            }
 
-                // Added Move Action
-                if (isMoveDeleteAllowed(filteredEntries)) {
-                    actions.add(ActionMoveFilesFolders(entry, state.entries))
-                }
+            // Added Move Action
+            if (isMoveDeleteAllowed(filteredEntries)) {
+                actions.add(ActionMoveFilesFolders(entry, state.entries))
+            }
 
-                // Added Offline Action
-                val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+            // Added Offline Action
+            val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
-                if (filteredOffline.any { !it.isOffline }) {
-                    actions.add(ActionAddOffline(entry))
-                } else {
-                    actions.add(ActionRemoveOffline(entry))
-                }
+            if (filteredOffline.any { !it.isOffline }) {
+                actions.add(ActionAddOffline(entry, state.entries))
+            } else {
+                actions.add(ActionRemoveOffline(entry, state.entries))
+            }
 
-                // Added Delete Action
-                if (isMoveDeleteAllowed(filteredEntries)) {
-                    actions.add((ActionDelete(entry, state.entries)))
-                }
+            // Added Delete Action
+            if (isMoveDeleteAllowed(filteredEntries)) {
+                actions.add((ActionDelete(entry, state.entries)))
             }
         }
-
         return actions
     }
 

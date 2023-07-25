@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 Handler(Looper.getMainLooper()).post {
                     viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
+                        viewModel.path = it.path
                         enableMultiSelection(it.selectedEntries)
                     } else {
                         disableMultiSelection()
@@ -291,6 +292,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        if (viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) {
+            menu?.findItem(R.id.move)?.isVisible = false
+        }
         return true
     }
 

@@ -20,6 +20,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionAddFavorite
 import com.alfresco.content.actions.ActionAddOffline
 import com.alfresco.content.actions.ActionCreateFolder
@@ -78,13 +79,13 @@ abstract class ListViewModel<S : ListViewState>(
 
     init {
         viewModelScope.on<ActionCreateFolder> { onCreateFolder(it.entry) }
-        viewModelScope.on<ActionDelete> { onDelete(it.entry) }
+        viewModelScope.on<ActionDelete> { onDelete(it) }
         viewModelScope.on<ActionUpdateFileFolder> { refresh() }
         viewModelScope.on<ActionAddFavorite> { updateEntry(it.entry) }
         viewModelScope.on<ActionRemoveFavorite> { updateEntry(it.entry) }
-        viewModelScope.on<ActionAddOffline> { updateEntry(it.entry) }
-        viewModelScope.on<ActionRemoveOffline> { updateEntry(it.entry) }
-        viewModelScope.on<ActionMoveFilesFolders> { onMove(it.entry) }
+        viewModelScope.on<ActionAddOffline> { updateActionEntries(it.entry, it.entries) }
+        viewModelScope.on<ActionRemoveOffline> { updateActionEntries(it.entry, it.entries) }
+        viewModelScope.on<ActionMoveFilesFolders> { onMove(it) }
         viewModelScope.on<ActionStartProcess> { onStartProcess(it.entry) }
     }
 
@@ -94,11 +95,16 @@ abstract class ListViewModel<S : ListViewState>(
         }
     }
 
-    private fun onDelete(entry: Entry) = entry.run {
-        if (isFile) {
-            removeEntry(entry)
-        } else {
+    private fun onDelete(action: Action) = action.run {
+        if (action.entries.isNotEmpty()) {
             refresh()
+        } else {
+            val entry = (action.entry as Entry)
+            if (entry.isFile) {
+                removeEntry(entry)
+            } else {
+                refresh()
+            }
         }
     }
 
@@ -109,7 +115,10 @@ abstract class ListViewModel<S : ListViewState>(
         }
     }
 
-    private fun onMove(entry: Entry) = entry.run {
+    private fun onMove(action: ActionMoveFilesFolders) = action.run {
+        action.entries.forEach {
+            removeEntry(it)
+        }
         refresh()
     }
 
@@ -120,6 +129,16 @@ abstract class ListViewModel<S : ListViewState>(
     @Suppress("UNCHECKED_CAST")
     private fun updateEntry(entry: Entry) =
         setState { copyUpdating(entry) as S }
+
+    private fun updateActionEntries(entry: Entry, entries: List<Entry>) {
+        if (entries.isNotEmpty()) {
+            entries.forEach { obj ->
+                updateEntry(obj)
+            }
+        } else {
+            updateEntry(entry)
+        }
+    }
 
     private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
         return map {

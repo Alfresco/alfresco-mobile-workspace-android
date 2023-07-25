@@ -221,7 +221,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onItemLongClicked(entry: Entry) {
         viewModel.toggleSelection(entry)
         withState(viewModel) { state ->
-            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true))
+            MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(state.selectedEntries, true, args.path))
         }
     }
 
@@ -275,7 +275,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         fab = null
     }
 
-    fun clearMultiSelection() {
+    private fun clearMultiSelection() {
         disableLongPress()
         viewModel.resetMultiSelection()
     }

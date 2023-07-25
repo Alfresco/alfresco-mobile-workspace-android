@@ -16,11 +16,10 @@ import com.alfresco.events.on
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 
-interface Action {
+interface MultiAction {
     val entry: ParentEntry
     val entries: List<Entry>
         get() = emptyList()
@@ -28,14 +27,8 @@ interface Action {
     val title: Int
     val eventName: EventName
 
-    suspend fun execute(context: Context): ParentEntry
-    suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> {
-        return Pair(entry, entries)
-    }
-    fun copy(_entry: ParentEntry): Action
-    fun copy(_entries: List<Entry>): Action {
-        return this
-    }
+    suspend fun execute(context: Context): List<ParentEntry>
+    fun copy(_entries: List<ParentEntry>): MultiAction
 
     fun execute(
         context: Context,
@@ -45,43 +38,6 @@ interface Action {
         try {
             val newEntry = execute(context)
             val newAction = copy(newEntry)
-            sendAnalytics(true)
-            bus.send(newAction)
-        } catch (ex: CancellationException) {
-            // no-op
-            if (entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
-                ex.message == ERROR_FILE_SIZE_EXCEED
-            ) {
-                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
-            }
-        } catch (ex: Exception) {
-            sendAnalytics(false)
-            bus.send(Error(ex.message ?: ""))
-        } catch (ex: SocketTimeoutException) {
-            sendAnalytics(false)
-            bus.send(Error(context.getString(R.string.action_timeout_error)))
-        } catch (ex: kotlin.Exception) {
-            sendAnalytics(false)
-            Logger.e(ex)
-            when (title) {
-                R.string.action_create_folder -> {
-                    if (ex.message?.contains("409") == true) {
-                        bus.send(Error(context.getString(R.string.error_duplicate_folder)))
-                    }
-                }
-                else -> bus.send(Error(context.getString(R.string.action_generic_error)))
-            }
-        }
-    }
-
-    fun executeMulti(
-        context: Context,
-        scope: CoroutineScope,
-    ) = scope.launch(Dispatchers.IO) {
-        val bus = EventBus.default
-        try {
-            val newEntry = executeMulti(context)
-            val newAction = copy(newEntry.second)
             sendAnalytics(true)
             bus.send(newAction)
         } catch (ex: CancellationException) {
@@ -140,7 +96,7 @@ interface Action {
     companion object {
         const val ERROR_FILE_SIZE_EXCEED = "File size exceed"
         fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
-            scope.on<Action>(block = showToast(view, anchorView))
+            scope.on<MultiAction>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)
@@ -148,7 +104,7 @@ interface Action {
             }
         }
 
-        private fun <T : Action> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
+        private fun <T : MultiAction> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
             return { action: T ->
                 // Don't call on backstack views
                 if (view != null) {

@@ -85,12 +85,6 @@ class ContextualActionsViewModel(
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
-    /*fun <T : Action> execute(actionClass: Class<T>) {
-        withState { st ->
-            st.actions.firstOrNull { actionClass.isInstance(it) }?.execute(context, GlobalScope)
-        }
-    }*/
-
     fun execute(action: Action) =
         action.execute(context, GlobalScope)
 
@@ -116,41 +110,47 @@ class ContextualActionsViewModel(
         val actions = mutableListOf<Action>()
         val entry = Entry.withSelectedEntries(state.entries)
 
-        if (filteredEntries.all { it.isTrashed }) {
-            actions.add(ActionRestore(entry, state.entries))
-            actions.add(ActionDeleteForever(entry, state.entries))
-        } else {
-            // Added Favorite Action
-            if (filteredEntries.any { !it.isFavorite }) {
-                actions.add(ActionAddFavorite(entry))
-            } else {
-                actions.add(ActionRemoveFavorite(entry))
+        when {
+            state.entries.all { it.isTrashed } -> {
+                actions.add(ActionRestore(entry, state.entries))
+                actions.add(ActionDeleteForever(entry, state.entries))
             }
 
-            // Added Start Process Action
-            if (settings.isProcessEnabled && filteredEntries.all { it.isFile }) {
-                actions.add(ActionStartProcess(entry))
+            state.entries.all { it.hasOfflineStatus } -> {
+                actions.add(offlineMultiActionFor(entry, state.entries))
+                processMultiActionFor(entry, state.entries)?.let { action ->
+                    actions.add(action)
+                }
             }
 
-            // Added Move Action
-            if (isMoveDeleteAllowed(filteredEntries)) {
-                actions.add(ActionMoveFilesFolders(entry, state.entries))
-            }
+            else -> {
+                // Added Favorite Action
+                if (filteredEntries.any { !it.isFavorite }) {
+                    actions.add(ActionAddFavorite(entry, state.entries))
+                } else {
+                    actions.add(ActionRemoveFavorite(entry, state.entries))
+                }
 
-            // Added Offline Action
-            val filteredOffline = filteredEntries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+                // Added Start Process Action
+                processMultiActionFor(entry, filteredEntries)?.let { action ->
+                    actions.add(action)
+                }
 
-            if (filteredOffline.any { !it.isOffline }) {
-                actions.add(ActionAddOffline(entry, state.entries))
-            } else {
-                actions.add(ActionRemoveOffline(entry, state.entries))
-            }
+                // Added Move Action
+                if (isMoveDeleteAllowed(filteredEntries)) {
+                    actions.add(ActionMoveFilesFolders(entry, state.entries))
+                }
 
-            // Added Delete Action
-            if (isMoveDeleteAllowed(filteredEntries)) {
-                actions.add((ActionDelete(entry, state.entries)))
+                // Added Offline Action
+                actions.add(offlineMultiActionFor(entry, state.entries))
+
+                // Added Delete Action
+                if (isMoveDeleteAllowed(filteredEntries)) {
+                    actions.add((ActionDelete(entry, state.entries)))
+                }
             }
         }
+
         return actions
     }
 
@@ -177,6 +177,13 @@ class ContextualActionsViewModel(
     private fun actionsProcesses(entry: Entry): List<Action> =
         listOf(ActionStartProcess(entry))
 
+    private fun processMultiActionFor(entry: Entry, entries: List<Entry>): Action? {
+        if (settings.isProcessEnabled && (entries.isNotEmpty() && entries.all { it.isFile })) {
+            return ActionStartProcess(entry)
+        }
+        return null
+    }
+
     private fun offlineActionFor(entry: Entry) =
         if (!entry.isFile && !entry.isFolder) {
             listOf()
@@ -185,6 +192,16 @@ class ContextualActionsViewModel(
         } else {
             listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))
         }
+
+    private fun offlineMultiActionFor(entry: Entry, entries: List<Entry>): Action {
+        val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
+
+        return if (filteredOffline.any { !it.isOffline }) {
+            ActionAddOffline(entry, entries)
+        } else {
+            ActionRemoveOffline(entry, entries)
+        }
+    }
 
     private fun favoriteActionFor(entry: Entry) =
         listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))

@@ -65,7 +65,15 @@ class BrowseViewModel(
         if (state.path == context.getString(R.string.nav_path_favorites)) {
             val types = setOf(Entry.Type.FILE, Entry.Type.FOLDER)
             viewModelScope.on<ActionAddFavorite> { it.entry.ifType(types, ::refresh) }
-            viewModelScope.on<ActionRemoveFavorite> { it.entry.ifType(types, ::removeEntry) }
+            viewModelScope.on<ActionRemoveFavorite> {
+                if (it.entries.isNotEmpty()) {
+                    it.entries.forEach { entryObj ->
+                        entryObj.ifType(types, ::removeEntry)
+                    }
+                } else {
+                    it.entry.ifType(types, ::removeEntry)
+                }
+            }
         }
 
         if (state.path == context.getString(R.string.nav_path_fav_libraries)) {
@@ -333,7 +341,7 @@ class BrowseViewModel(
         val resetMultiEntries = entries.map {
             it.copy(isSelectedForMultiSelection = false)
         }
-        copy(baseEntries = resetMultiEntries, entries = resetMultiEntries, selectedEntries = emptyList())
+        copy(baseEntries = resetMultiEntries.filter { it.type != Entry.Type.GROUP }, entries = resetMultiEntries, selectedEntries = emptyList())
     }
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {

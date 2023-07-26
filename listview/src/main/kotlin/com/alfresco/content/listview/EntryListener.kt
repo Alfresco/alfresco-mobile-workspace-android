@@ -15,5 +15,5 @@ interface EntryListener {
     /**
      * It will get called on tap of start workflow on the option list
      */
-    fun onProcessStart(entry: ParentEntry) {}
+    fun onProcessStart(entry: List<ParentEntry>) {}
 }

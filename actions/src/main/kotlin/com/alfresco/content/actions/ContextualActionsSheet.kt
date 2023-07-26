@@ -69,13 +69,8 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                         withState(viewModel) { newState ->
                             if (!newState.isMultiSelection) {
                                 viewModel.execute(it)
-                            } else if (it is ActionDelete || it is ActionRestore || it is ActionDeleteForever ||
-                                it is ActionMoveFilesFolders || it is ActionAddOffline || it is ActionRemoveOffline ||
-                                it is ActionAddFavorite || it is ActionRemoveFavorite
-                            ) {
-                                viewModel.executeMulti(it)
-                                MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
                             } else {
+                                viewModel.executeMulti(it)
                                 MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
                             }
                         }

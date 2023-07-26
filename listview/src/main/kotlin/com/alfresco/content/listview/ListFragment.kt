@@ -86,12 +86,12 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionAddOffline> { updateActionEntries(it.entry, it.entries) }
         viewModelScope.on<ActionRemoveOffline> { updateActionEntries(it.entry, it.entries) }
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it) }
-        viewModelScope.on<ActionStartProcess> { onStartProcess(it.entry) }
+        viewModelScope.on<ActionStartProcess> { onStartProcess(it.entries.ifEmpty { listOf(it.entry) }) }
     }
 
-    private fun onStartProcess(entry: Entry) = entry.run {
-        if (entry.isFile) {
-            folderListener?.onProcessStart(entry)
+    private fun onStartProcess(entries: List<Entry>) = entries.run {
+        if (entries.all { it.isFile }) {
+            folderListener?.onProcessStart(entries)
         }
     }
 

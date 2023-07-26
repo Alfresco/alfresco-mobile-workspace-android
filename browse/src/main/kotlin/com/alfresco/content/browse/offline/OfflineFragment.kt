@@ -138,9 +138,9 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
     }
 
-    override fun onProcessStart(entry: ParentEntry) {
+    override fun onProcessStart(entries: List<ParentEntry>) {
         if (isAdded && isVisible) {
-            ProcessDefinitionsSheet.with(entry as Entry).show(parentFragmentManager, null)
+            ProcessDefinitionsSheet.with(entries.map { it as Entry }).show(parentFragmentManager, null)
         }
     }
 

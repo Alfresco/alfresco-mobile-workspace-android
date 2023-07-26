@@ -65,7 +65,7 @@ class ContextualActionsViewModel(
 
     private fun buildModelForMultiSelection() = withState { state ->
         // If entry is partial and not in the offline tab
-        setState { copy(entries = state.entries, actions = makeMultiActions(getFilteredEntries(state.entries), state), topActions = emptyList()) }
+        setState { copy(entries = state.entries, actions = makeMultiActions(state), topActions = emptyList()) }
     }
 
     private fun updateState(action: Action) {
@@ -73,7 +73,7 @@ class ContextualActionsViewModel(
             val entry = action.entry as Entry
             ContextualActionsState(
                 entries = if (isMultiSelection) action.entries else listOf(entry),
-                actions = if (isMultiSelection) makeMultiActions(action.entries, this) else makeActions(entry),
+                actions = if (isMultiSelection) makeMultiActions(this) else makeActions(entry),
                 topActions = makeTopActions(entry),
             )
         }
@@ -106,7 +106,7 @@ class ContextualActionsViewModel(
             }
         }
 
-    fun makeMultiActions(filteredEntries: List<Entry>, state: ContextualActionsState): List<Action> {
+    fun makeMultiActions(state: ContextualActionsState): List<Action> {
         val actions = mutableListOf<Action>()
         val entry = Entry.withSelectedEntries(state.entries)
 
@@ -117,40 +117,44 @@ class ContextualActionsViewModel(
             }
 
             state.entries.all { it.hasOfflineStatus } -> {
-                actions.add(offlineMultiActionFor(entry, state.entries))
-                processMultiActionFor(entry, state.entries)?.let { action ->
-                    actions.add(action)
-                }
+                // Added Favorite Action
+                actions.addAll(sharedActions(entry, state.entries))
             }
 
             else -> {
-                // Added Favorite Action
-                if (filteredEntries.any { !it.isFavorite }) {
-                    actions.add(ActionAddFavorite(entry, state.entries))
-                } else {
-                    actions.add(ActionRemoveFavorite(entry, state.entries))
-                }
-
-                // Added Start Process Action
-                processMultiActionFor(entry, filteredEntries)?.let { action ->
-                    actions.add(action)
-                }
-
-                // Added Move Action
-                if (isMoveDeleteAllowed(filteredEntries)) {
-                    actions.add(ActionMoveFilesFolders(entry, state.entries))
-                }
-
-                // Added Offline Action
-                actions.add(offlineMultiActionFor(entry, state.entries))
-
-                // Added Delete Action
-                if (isMoveDeleteAllowed(filteredEntries)) {
-                    actions.add((ActionDelete(entry, state.entries)))
-                }
+                actions.addAll(sharedActions(entry, state.entries))
             }
         }
 
+        return actions
+    }
+
+    private fun sharedActions(entry: Entry, entries: List<Entry>): List<Action> {
+        val actions = mutableListOf<Action>()
+        // Added Favorite Action
+        if (entries.any { !it.isFavorite }) {
+            actions.add(ActionAddFavorite(entry, entries))
+        } else {
+            actions.add(ActionRemoveFavorite(entry, entries))
+        }
+
+        // Added Start Process Action
+        processMultiActionFor(entry, entries)?.let { action ->
+            actions.add(action)
+        }
+
+        // Added Move Action
+        if (isMoveDeleteAllowed(entries)) {
+            actions.add(ActionMoveFilesFolders(entry, entries))
+        }
+
+        // Added Offline Action
+        actions.add(offlineMultiActionFor(entry, entries))
+
+        // Added Delete Action
+        if (isMoveDeleteAllowed(entries)) {
+            actions.add((ActionDelete(entry, entries)))
+        }
         return actions
     }
 
@@ -179,7 +183,7 @@ class ContextualActionsViewModel(
 
     private fun processMultiActionFor(entry: Entry, entries: List<Entry>): Action? {
         if (settings.isProcessEnabled && (entries.isNotEmpty() && entries.all { it.isFile })) {
-            return ActionStartProcess(entry)
+            return ActionStartProcess(entry, entries)
         }
         return null
     }

@@ -25,14 +25,14 @@ internal class ProcessDefinitionsViewModel(
                 when (it) {
                     is Success -> {
                         ProcessDefinitionsState(
-                            entry = state.entry,
+                            entries = state.entries,
                             listProcessDefinitions = it().listRuntimeProcessDefinitions,
                         )
                     }
 
                     else -> {
                         ProcessDefinitionsState(
-                            entry = state.entry,
+                            entries = state.entries,
                             listProcessDefinitions = null,
                         )
                     }

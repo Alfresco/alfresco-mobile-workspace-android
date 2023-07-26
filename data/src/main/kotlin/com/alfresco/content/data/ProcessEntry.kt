@@ -31,7 +31,7 @@ data class ProcessEntry(
     val suspended: Boolean? = null,
     var priority: Int = 0,
     val formattedDueDate: String? = null,
-    val defaultEntry: Entry? = null,
+    val defaultEntries: List<Entry> = emptyList(),
     val reviewerType: ReviewerType = ReviewerType.OTHER,
 ) : ParentEntry(), Parcelable {
 
@@ -66,12 +66,12 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: RuntimeProcessDefinitionDataEntry, entry: Entry?): ProcessEntry {
+        fun with(data: RuntimeProcessDefinitionDataEntry, entries: List<Entry>): ProcessEntry {
             return ProcessEntry(
                 id = data.id?.toString() ?: "",
                 name = data.name ?: "",
                 description = data.description ?: "",
-                defaultEntry = entry,
+                defaultEntries = entries,
             )
         }
 
@@ -86,7 +86,7 @@ data class ProcessEntry(
                 startFormDefined = dataObj.hasStartForm,
                 processDefinitionKey = dataObj.key,
                 tenantId = dataObj.tenantId,
-                defaultEntry = processEntry?.defaultEntry,
+                defaultEntries = processEntry?.defaultEntries ?: emptyList(),
             )
         }
 

@@ -25,7 +25,7 @@ import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 
 /**
  * Marked as ProcessDetailViewModel
@@ -39,6 +39,7 @@ class ProcessDetailViewModel(
     private var observeUploadsJob: Job? = null
     var entryListener: EntryListener? = null
     var observerID: String = ""
+    private var isExecuted = false
 
     init {
         observerID = UUID.randomUUID().toString()
@@ -220,8 +221,9 @@ class ProcessDetailViewModel(
                     is Loading -> copy(requestProfile = Loading())
                     is Fail -> copy(requestProfile = Fail(it.error))
                     is Success -> {
-                        repository.saveProcessUserDetails(it())
-                        copy(requestProfile = Success(it()))
+                        val response = it()
+                        repository.saveProcessUserDetails(response)
+                        copy(requestProfile = Success(response))
                     }
 
                     else -> {
@@ -239,12 +241,17 @@ class ProcessDetailViewModel(
                     is Loading -> copy(requestAccountInfo = Loading())
                     is Fail -> copy(requestAccountInfo = Fail(it.error))
                     is Success -> {
-                        repository.saveSourceName(it().listAccounts.first())
-                        val sourceName = it().listAccounts.first().sourceName
-                        state.parent?.defaultEntry?.let { entry ->
-                            linkContentToProcess(entry, sourceName)
+                        val response = it()
+
+                        repository.saveSourceName(response.listAccounts.first())
+                        val sourceName = response.listAccounts.first().sourceName
+                        if (!isExecuted) {
+                            isExecuted = true
+                            state.parent?.defaultEntries?.map { entry ->
+                                linkContentToProcess(entry, sourceName)
+                            }
                         }
-                        copy(requestAccountInfo = Success(it()))
+                        copy(requestAccountInfo = Success(response))
                     }
 
                     else -> {
@@ -265,7 +272,8 @@ class ProcessDetailViewModel(
                     is Loading -> copy(requestTasks = Loading())
                     is Fail -> copy(requestTasks = Fail(it.error))
                     is Success -> {
-                        updateTasks(it()).copy(requestTasks = Success(it()))
+                        val response = it()
+                        updateTasks(response).copy(requestTasks = Success(response))
                     }
 
                     else -> {

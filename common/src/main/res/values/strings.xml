@@ -28,4 +28,5 @@
     <string name="warning_message_uploading_in_progress">The upload is currently in progress. Do you want to continue without uploading?</string>
     <string name="none">None</string>
     <string name="title_action_mode">%d Selected</string>
+    <string name="message_no_internet">Please check your internet connection and Try again.</string>
 </resources>

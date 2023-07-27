@@ -22,7 +22,6 @@ import com.alfresco.content.actions.ActionMoveFilesFolders
 import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionSyncNow
 import com.alfresco.content.actions.ActionUploadMedia
-import com.alfresco.content.actions.getFilteredEntries
 import com.alfresco.content.actions.isMoveDeleteAllowed
 import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AnalyticsManager
@@ -211,9 +210,8 @@ class MainActivityViewModel(
     }
 
     fun moveFilesFolder() {
-        val filteredEntries = getFilteredEntries(entriesMultiSelection)
-        if (filteredEntries.isNotEmpty() && isMoveDeleteAllowed(filteredEntries)) {
-            execute(ActionMoveFilesFolders(Entry.withSelectedEntries(filteredEntries), filteredEntries))
+        if (entriesMultiSelection.isNotEmpty() && isMoveDeleteAllowed(entriesMultiSelection)) {
+            execute(ActionMoveFilesFolders(Entry.withSelectedEntries(entriesMultiSelection), entriesMultiSelection))
         }
     }
 

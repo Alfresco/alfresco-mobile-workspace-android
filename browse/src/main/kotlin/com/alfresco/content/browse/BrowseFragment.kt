@@ -265,7 +265,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     }
 
     override fun onProcessStart(entries: List<ParentEntry>) {
-        if (isAdded && isVisible) {
+        if (isAdded && isVisible && isResumed) {
             ProcessDefinitionsSheet.with(entries.map { it as Entry }).show(parentFragmentManager, null)
         }
     }

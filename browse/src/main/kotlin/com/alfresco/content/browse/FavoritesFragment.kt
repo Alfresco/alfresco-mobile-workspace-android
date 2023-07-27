@@ -84,11 +84,4 @@ class FavoritesFragment : Fragment() {
                 else -> context.getString(R.string.favorites_tab_libraries)
             }
     }
-
-    fun clearMultiSelection() {
-        /*val fragment = listFragments[pager.currentItem]
-        if (fragment is BrowseFragment && fragment.isAdded) {
-            fragment.clearMultiSelection()
-        }*/
-    }
 }

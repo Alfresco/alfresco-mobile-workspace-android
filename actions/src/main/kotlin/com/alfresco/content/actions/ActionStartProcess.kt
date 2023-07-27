@@ -29,6 +29,5 @@ data class ActionStartProcess(
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_workflow_started)
+    override fun showToast(view: View, anchorView: View?) {}
 }

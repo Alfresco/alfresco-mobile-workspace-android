@@ -181,9 +181,6 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { model, _, _, _ ->
-                        onItemClicked(model.data())
-                    }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }

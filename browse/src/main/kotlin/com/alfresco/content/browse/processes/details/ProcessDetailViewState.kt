@@ -49,8 +49,6 @@ data class ProcessDetailViewState(
         if (entry == null) {
             return this
         }
-        println("data ==  1 :: $entry")
-        println("data ==  2 :: ${listContents.size}")
 
         val list: List<Entry>
         if (listContents.isNotEmpty()) {
@@ -60,7 +58,7 @@ data class ProcessDetailViewState(
             list = listOf(entry)
         }
 
-        return copy(baseEntries = listOf(entry), listContents = list.distinct())
+        return copy(baseEntries = list, listContents = list)
     }
 
     /**

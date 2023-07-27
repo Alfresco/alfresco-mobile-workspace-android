@@ -35,6 +35,8 @@ class ContextualActionsViewModel(
         viewModelScope.on<ActionAddOffline>(block = ::updateState)
         viewModelScope.on<ActionRemoveOffline>(block = ::updateState)
         viewModelScope.on<ActionMoveFilesFolders>(block = ::updateState)
+        viewModelScope.on<ActionUpdateFileFolder>(block = ::updateState)
+        viewModelScope.on<ActionStartProcess>(block = ::updateState)
     }
 
     private fun buildModelSingleSelection() = withState { state ->
@@ -71,6 +73,7 @@ class ContextualActionsViewModel(
     private fun updateState(action: Action) {
         setState {
             val entry = action.entry as Entry
+
             ContextualActionsState(
                 entries = if (isMultiSelection) action.entries else listOf(entry),
                 actions = if (isMultiSelection) makeMultiActions(this) else makeActions(entry),

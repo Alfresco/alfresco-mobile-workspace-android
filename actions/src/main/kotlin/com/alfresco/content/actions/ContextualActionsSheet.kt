@@ -18,6 +18,7 @@ import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 
 class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     val viewModel: ContextualActionsViewModel by fragmentViewModel()
@@ -69,16 +70,38 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                         withState(viewModel) { newState ->
                             if (!newState.isMultiSelection) {
                                 viewModel.execute(it)
+                                dismiss()
                             } else {
-                                viewModel.executeMulti(it)
-                                MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
+                                executeMultiAction(it)
                             }
                         }
-                        dismiss()
                     }
                 }
             }
         }
+    }
+
+    private fun executeMultiAction(action: Action) {
+        when (viewModel.canPerformActionOverNetwork()) {
+            true -> {
+                performMultiAction(action)
+                dismiss()
+            }
+
+            else -> {
+                if (action is ActionAddOffline || action is ActionRemoveOffline) {
+                    performMultiAction(action)
+                    dismiss()
+                } else {
+                    Snackbar.make(binding.root, R.string.message_no_internet, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun performMultiAction(action: Action) {
+        viewModel.executeMulti(action)
+        MultiSelection.multiSelectionChangedFlow.tryEmit(MultiSelectionData(isMultiSelectionEnabled = false))
     }
 
     companion object {

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MavericksView
@@ -42,6 +43,10 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
     }
 
     override fun invalidate() = withState(viewModel) {
+        it.entries.first().let { entry ->
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
+        }
+
         view.removeAllViews()
         addButtons(view, it.topActions)
     }

@@ -51,6 +51,7 @@ import com.alfresco.download.DownloadMonitor
 import com.alfresco.ui.getColorForAttribute
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
@@ -283,8 +284,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        mode?.let {
-            val inflater: MenuInflater = it.menuInflater
+        mode?.apply {
+            val inflater: MenuInflater = menuInflater
             inflater.inflate(R.menu.menu_action_multi_selection, menu)
             return true
         }
@@ -301,8 +302,14 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.move -> {
-                viewModel.moveFilesFolder()
-                disableMultiSelection()
+                withState(viewModel) { state ->
+                    if (state.isOnline) {
+                        viewModel.moveFilesFolder()
+                        disableMultiSelection()
+                    } else {
+                        Snackbar.make(bottomNav, com.alfresco.content.actions.R.string.message_no_internet, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
                 return true
             }
 

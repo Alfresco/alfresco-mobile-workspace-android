@@ -93,7 +93,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                     performMultiAction(action)
                     dismiss()
                 } else {
-                    Snackbar.make(binding.root, R.string.message_no_internet, Snackbar.LENGTH_SHORT).show()
+                    dialog?.window?.decorView?.let { Snackbar.make(it, R.string.message_no_internet, Snackbar.LENGTH_SHORT).show() }
                 }
             }
         }

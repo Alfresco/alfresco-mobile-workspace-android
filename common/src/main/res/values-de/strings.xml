@@ -27,4 +27,6 @@
     <string name="group_title">Gruppe</string>
     <string name="warning_message_uploading_in_progress">Der Hochladevorgang wird gerade durchgeführt. Möchten Sie ohne Upload fortfahren?</string>
     <string name="none">Keine</string>
+    <string name="title_action_mode">%d Ausgewählt</string>
+    <string name="message_no_internet">Bitte überprüfen Sie Ihre Internetverbindung und starten anschließend den Vorgang erneut.</string>
 </resources>

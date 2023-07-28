@@ -27,4 +27,6 @@
     <string name="group_title">Grupo</string>
     <string name="warning_message_uploading_in_progress">La carga ya está en curso. ¿Desea continuar sin cargar?</string>
     <string name="none">Ninguno</string>
+    <string name="title_action_mode">%d Seleccionado</string>
+    <string name="message_no_internet">Verifique su conexión a Internet y vuelva a intentarlo.</string>
 </resources>

@@ -283,8 +283,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        mode?.let {
-            val inflater: MenuInflater = it.menuInflater
+        mode?.apply {
+            val inflater: MenuInflater = menuInflater
             inflater.inflate(R.menu.menu_action_multi_selection, menu)
             return true
         }

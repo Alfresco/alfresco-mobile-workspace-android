@@ -16,7 +16,7 @@ fun ContextualActionsSheet.setHeader(state: ContextualActionsState) {
         val titleHeader = SpannableString(getString(R.string.title_action_mode, state.entries.size))
         titleHeader.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorActionMode)), 0, titleHeader.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.header.apply {
-            parentTitle.contentDescription = title.toString()
+            parentTitle.contentDescription = titleHeader
             icon.visibility = View.GONE
             title.text = titleHeader
             title.updateLayoutParams<LinearLayout.LayoutParams> {

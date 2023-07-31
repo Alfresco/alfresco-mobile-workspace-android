@@ -81,4 +81,14 @@
     <string name="action_menu_claim">Claimen</string>
     <string name="action_menu_release">Vrijgeven</string>
 
+    <string name="action_move_multiple_toast">%s items zijn succesvol verplaatst</string>
+    <string name="action_delete_multiple_toast">%s items zijn verplaatst naar de prullenbak</string>
+    <string name="action_restored_multiple_toast">%s items zijn hersteld</string>
+    <string name="action_delete_multiple_confirmation_message">%s items worden permanent verwijderd.</string>
+    <string name="action_add_offline_multiple_toast">%s items zullen offline beschikbaar worden gemaakt.</string>
+    <string name="action_remove_offline_multiple_toast">%s items zullen niet langer offline beschikbaar zijn.</string>
+    <string name="action_delete_forever_multiple_toast">%s items verwijderd</string>
+    <string name="action_add_favorite_multiple_toast">%s items toegevoegd aan favorieten</string>
+    <string name="action_remove_favorite_multiple_toast">%s items verwijderd uit favorieten</string>
+
 </resources>

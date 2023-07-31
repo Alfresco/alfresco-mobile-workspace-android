@@ -81,4 +81,13 @@
     <string name="action_menu_claim">Richiedi</string>
     <string name="action_menu_release">Rilascia</string>
 
+    <string name="action_move_multiple_toast">%s elementi sono stati spostati con successo.</string>
+    <string name="action_delete_multiple_toast">%s elementi sono stati spostati nel cestino.</string>
+    <string name="action_restored_multiple_toast">%s elementi sono stati ripristinati</string>
+    <string name="action_delete_multiple_confirmation_message">%s elementi verranno eliminati definitivamente.</string>
+    <string name="action_add_offline_multiple_toast">%s elementi saranno resi disponibili offline.</string>
+    <string name="action_remove_offline_multiple_toast">%s elementi non saranno più disponibili offline.</string>
+    <string name="action_delete_forever_multiple_toast">%s elementi eliminati</string>
+    <string name="action_add_favorite_multiple_toast">%s elementi aggiunti ai preferiti</string>
+    <string name="action_remove_favorite_multiple_toast">%s elementi rimossi dai preferiti</string>
 </resources>

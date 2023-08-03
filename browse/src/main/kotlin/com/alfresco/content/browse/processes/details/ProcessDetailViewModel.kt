@@ -243,12 +243,14 @@ class ProcessDetailViewModel(
                     is Success -> {
                         val response = it()
 
-                        repository.saveSourceName(response.listAccounts.first())
-                        val sourceName = response.listAccounts.first().sourceName
-                        if (!isExecuted) {
-                            isExecuted = true
-                            state.parent?.defaultEntries?.map { entry ->
-                                linkContentToProcess(entry, sourceName)
+                        if(response.listAccounts.isNotEmpty()){
+                            repository.saveSourceName(response.listAccounts.first())
+                            val sourceName = response.listAccounts.first().sourceName
+                            if (!isExecuted) {
+                                isExecuted = true
+                                state.parent?.defaultEntries?.map { entry ->
+                                    linkContentToProcess(entry, sourceName)
+                                }
                             }
                         }
                         copy(requestAccountInfo = Success(response))

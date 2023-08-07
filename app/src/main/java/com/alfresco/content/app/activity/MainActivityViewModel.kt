@@ -32,6 +32,7 @@ import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SyncService
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.network.ConnectivityTracker
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.viewer.ViewerArgs.Companion.VALUE_REMOTE
@@ -74,6 +75,11 @@ class MainActivityViewModel(
         val session = SessionManager.newSession(appContext)
         if (session != null) {
             init(appContext, session)
+        }
+
+        viewModelScope.on<ActionSessionInvalid> {
+            println("MainActivityViewModel. ActionSessionInvalid ${it.requiresReLogin}")
+            setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
     }
 

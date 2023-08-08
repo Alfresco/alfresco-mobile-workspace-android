@@ -43,9 +43,9 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
             .build()
             .findFirst()
 
-    fun markForSync(entry: Entry) = update(entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING))
+    fun markForSync(entry: Entry) = update(entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING, isSelectedForMultiSelection = false))
 
-    fun removeFromSync(entry: Entry) = update(entry.copy(isOffline = false))
+    fun removeFromSync(entry: Entry) = update(entry.copy(isOffline = false, isSelectedForMultiSelection = false))
 
     fun remove(entry: Entry) = box.remove(entry)
 

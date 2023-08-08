@@ -417,7 +417,7 @@ class TaskDetailViewModel(
     fun updateTaskStatusAndName(status: String?, comment: String?) {
         setState {
             requireNotNull(this.parent)
-            copy(parent = TaskEntry.updateTaskStatusAndComment(this.parent, status, comment))
+            copy(parent = TaskEntry.updateTaskStatusAndComment(this.parent, status, comment), requestSaveForm = Uninitialized)
         }
     }
 

@@ -29,7 +29,7 @@ data class ActionAddOffline(
         entries.forEachIndexed { index, obj ->
             val res = repository.markForSync(obj)
             // return item without status
-            entriesObj[index] = res.copy(offlineStatus = OfflineStatus.UNDEFINED, isSelectedForMultiSelection = false)
+            entriesObj[index] = res.copy(offlineStatus = OfflineStatus.UNDEFINED)
         }
         return Pair(entry, entriesObj)
     }
@@ -63,7 +63,7 @@ data class ActionRemoveOffline(
     override suspend fun executeMulti(context: Context): Pair<Entry, List<Entry>> {
         val entriesObj = entries.toMutableList()
         entries.forEachIndexed { index, obj ->
-            entriesObj[index] = repository.removeFromSync(obj).copy(isSelectedForMultiSelection = false)
+            entriesObj[index] = repository.removeFromSync(obj)
         }
         return Pair(entry, entriesObj)
     }

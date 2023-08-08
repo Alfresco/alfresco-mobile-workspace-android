@@ -39,16 +39,14 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_move)
 
-        if (savedInstanceState == null) {
-            if (intent.extras != null) {
-                entryObj = intent.getParcelableExtra(ENTRY_OBJ_KEY) as Entry?
-            }
+        if (intent.extras != null) {
+            entryObj = intent.getParcelableExtra(ENTRY_OBJ_KEY) as Entry?
+        }
 
-            configure()
+        configure()
 
-//            if (!resources.getBoolean(R.bool.isTablet)) {
+        if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//            }
         }
     }
 

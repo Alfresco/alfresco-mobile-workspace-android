@@ -269,6 +269,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         if (bottomNav.isVisible) {
             bottomNav.visibility = View.GONE
         }
+        MultiSelection.clearSelectionChangedFlow.tryEmit(false)
     }
 
     private fun disableMultiSelection() {

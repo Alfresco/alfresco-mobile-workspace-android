@@ -109,7 +109,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_save -> {
-                viewModel.saveForm()
+                viewModel.saveForm(binding.commentInput.text.toString().trim())
                 true
             }
 

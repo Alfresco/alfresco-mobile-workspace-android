@@ -17,10 +17,30 @@ import com.alfresco.content.models.RequestFacetIntervalsInIntervals
 import com.alfresco.content.models.RequestFacetQueriesInner
 import com.alfresco.content.models.RequestFacetSet
 import com.alfresco.content.models.SetsItem
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import com.alfresco.events.EventBus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class SearchRepository(val session: Session = SessionManager.requireSession) {
+class SearchRepository {
+
+    lateinit var session: Session
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        try {
+            session = SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+            coroutineScope.launch {
+                EventBus.default.send(ActionSessionInvalid(true))
+            }
+        }
+    }
 
     private val context get() = session.context
 
@@ -195,7 +215,7 @@ class SearchRepository(val session: Session = SessionManager.requireSession) {
     suspend fun getRecents(skipCount: Int, maxItems: Int) =
         ResponsePaging.with(
             searchService.recentFiles(
-                SessionManager.requireSession.account.id,
+                session.account.id,
                 MAX_RECENT_FILES_AGE,
                 skipCount,
                 maxItems,

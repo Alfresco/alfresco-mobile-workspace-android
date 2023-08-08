@@ -78,7 +78,6 @@ class MainActivityViewModel(
         }
 
         viewModelScope.on<ActionSessionInvalid> {
-            println("MainActivityViewModel. ActionSessionInvalid ${it.requiresReLogin}")
             setState { copy(reLoginCount = reLoginCount + 1, requiresReLogin = true) }
         }
     }

@@ -9,9 +9,15 @@ import com.alfresco.content.apis.getMyNode
 import com.alfresco.content.models.NodeBodyCreate
 import com.alfresco.content.models.NodeBodyMove
 import com.alfresco.content.models.NodeBodyUpdate
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import com.alfresco.events.EventBus
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -22,7 +28,21 @@ import java.io.File
 /**
  * Mark as BrowseRepository
  */
-class BrowseRepository(val session: Session = SessionManager.requireSession) {
+class BrowseRepository(otherSession: Session? = null) {
+
+    lateinit var session: Session
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        try {
+            session = otherSession ?: SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+            coroutineScope.launch {
+                EventBus.default.send(ActionSessionInvalid(true))
+            }
+        }
+    }
 
     private val context get() = session.context
 
@@ -38,7 +58,7 @@ class BrowseRepository(val session: Session = SessionManager.requireSession) {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    val myFilesNodeId: String get() = SessionManager.requireSession.account.myFiles ?: ""
+    val myFilesNodeId: String get() = session.account.myFiles ?: ""
 
     suspend fun myFilesNodeId() =
         service.getMyNode().entry.id

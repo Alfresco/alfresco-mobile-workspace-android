@@ -3,19 +3,39 @@ package com.alfresco.content.data
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import com.alfresco.events.EventBus
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.query.QueryBuilder.StringOrder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import java.io.File
 
-class OfflineRepository(val session: Session = SessionManager.requireSession) {
+class OfflineRepository(otherSession: Session? = null) {
+
+    lateinit var session: Session
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        try {
+            session = otherSession ?: SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+            coroutineScope.launch {
+                EventBus.default.send(ActionSessionInvalid(true))
+            }
+        }
+    }
 
     private object ObjectBox {
         lateinit var boxStore: BoxStore
@@ -330,7 +350,7 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
         File(contentDir(entry), entry.name)
     }
 
-    fun contentDir(entry: Entry): File = File(SessionManager.requireSession.filesDir, entry.id)
+    fun contentDir(entry: Entry): File = File(session.filesDir, entry.id)
 
     fun cleanup() {
         SyncService.cancel(session.context)
@@ -344,6 +364,6 @@ class OfflineRepository(val session: Session = SessionManager.requireSession) {
     }
 
     private fun removeAllFiles() {
-        SessionManager.requireSession.filesDir.deleteRecursively()
+        session.filesDir.deleteRecursively()
     }
 }

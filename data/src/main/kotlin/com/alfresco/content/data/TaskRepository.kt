@@ -7,8 +7,11 @@ import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import com.alfresco.events.EventBus
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
@@ -25,6 +28,9 @@ import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
 import com.alfresco.process.models.UserInfo
 import com.alfresco.process.models.ValuesModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -36,7 +42,21 @@ import java.net.URL
 /**
  * Marked as TaskRepository class
  */
-class TaskRepository(val session: Session = SessionManager.requireSession) {
+class TaskRepository {
+
+    lateinit var session: Session
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        try {
+            session = SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+            coroutineScope.launch {
+                EventBus.default.send(ActionSessionInvalid(true))
+            }
+        }
+    }
 
     private val context get() = session.context
     val acsUserEmail get() = session.account.email

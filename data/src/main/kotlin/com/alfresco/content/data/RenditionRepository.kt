@@ -3,12 +3,32 @@ package com.alfresco.content.data
 import com.alfresco.content.apis.RenditionsApi
 import com.alfresco.content.models.RenditionBodyCreate
 import com.alfresco.content.models.RenditionEntry
+import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import com.alfresco.events.EventBus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.alfresco.content.models.Rendition as RenditionModel
 
-class RenditionRepository(val session: Session = SessionManager.requireSession) {
+class RenditionRepository {
+
+    lateinit var session: Session
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        try {
+            session = SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+            coroutineScope.launch {
+                EventBus.default.send(ActionSessionInvalid(true))
+            }
+        }
+    }
 
     private val service: RenditionsApi by lazy {
         session.createService(RenditionsApi::class.java)

@@ -35,7 +35,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         GlobalScope.launch {
             MultiSelection.observeClearSelection().collect {
                 Handler(Looper.getMainLooper()).post {
-                    if (isAdded) {
+                    if (isAdded && it) {
                         clearMultiSelection()
                     }
                 }

@@ -108,7 +108,7 @@ class SearchFragment : Fragment(), MavericksView {
         GlobalScope.launch {
             MultiSelection.observeClearSelection().collect {
                 Handler(Looper.getMainLooper()).post {
-                    if (isAdded) {
+                    if (isAdded && it) {
                         clearMultiSelection()
                     }
                 }

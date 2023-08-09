@@ -417,7 +417,7 @@ class TaskDetailViewModel(
     fun updateTaskStatusAndName(status: String?, comment: String?) {
         setState {
             requireNotNull(this.parent)
-            copy(parent = TaskEntry.updateTaskStatusAndComment(this.parent, status, comment))
+            copy(parent = TaskEntry.updateTaskStatusAndComment(this.parent, status, comment), requestSaveForm = Uninitialized)
         }
     }
 
@@ -449,10 +449,10 @@ class TaskDetailViewModel(
     /**
      * execute the save-form api
      */
-    fun saveForm() = withState { state ->
+    fun saveForm(comment: String) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
-            repository::saveForm.asFlow(state.parent).execute {
+            repository::saveForm.asFlow(state.parent, comment).execute {
                 when (it) {
                     is Loading -> copy(requestSaveForm = Loading())
                     is Fail -> {

@@ -479,7 +479,7 @@ class TaskRepository {
     /**
      * Call to save the form data
      */
-    suspend fun saveForm(taskEntry: TaskEntry) = tasksService.saveForm(
+    suspend fun saveForm(taskEntry: TaskEntry, comment: String) = tasksService.saveForm(
         taskEntry.id,
         RequestSaveForm(
             values = ValuesModel(
@@ -487,7 +487,7 @@ class TaskRepository {
                     id = taskEntry.taskFormStatus,
                     name = taskEntry.taskFormStatus,
                 ),
-                comment = taskEntry.comment,
+                comment = comment,
             ),
         ),
     )

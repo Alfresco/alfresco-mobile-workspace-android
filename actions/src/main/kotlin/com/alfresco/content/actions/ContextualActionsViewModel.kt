@@ -252,6 +252,6 @@ class ContextualActionsViewModel(
             state: ContextualActionsState,
         ) =
             // Requires activity context in order to present other fragments
-            ContextualActionsViewModel(state, viewModelContext.activity(), Settings(viewModelContext.activity))
+            ContextualActionsViewModel(state, viewModelContext.activity, Settings(viewModelContext.activity))
     }
 }

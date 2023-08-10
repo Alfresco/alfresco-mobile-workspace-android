@@ -468,6 +468,7 @@ class SearchViewModel(
             maxLimitReachedForMultiSelection = false,
         )
     }
+    override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
 
     /**
      * returns true if device has active network connection otherwise false

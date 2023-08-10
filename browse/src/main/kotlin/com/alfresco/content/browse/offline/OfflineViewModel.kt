@@ -99,7 +99,7 @@ class OfflineViewModel(
             maxLimitReachedForMultiSelection = false,
         )
     }
-
+    override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
     companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
 
         override fun create(

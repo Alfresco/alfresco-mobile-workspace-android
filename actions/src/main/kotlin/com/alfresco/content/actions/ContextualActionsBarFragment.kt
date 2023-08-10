@@ -12,12 +12,16 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.sheet.ProcessDefinitionsSheet
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.ContextualActionData
+import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.events.on
 import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
 
-class ContextualActionsBarFragment : Fragment(), MavericksView {
+class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
     private val viewModel: ContextualActionsViewModel by fragmentViewModel()
     private lateinit var view: LinearLayout
 
@@ -40,6 +44,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
             delay(1000)
             requireActivity().onBackPressed()
         }
+        viewModel.setEntryListener(this)
     }
 
     override fun invalidate() = withState(viewModel) {
@@ -117,4 +122,12 @@ class ContextualActionsBarFragment : Fragment(), MavericksView {
                 }
             }
         }
+
+    override fun onProcessStart(entries: List<ParentEntry>) {
+        super.onProcessStart(entries)
+        if (isAdded && isVisible && isResumed) {
+            ProcessDefinitionsSheet.with(entries.map { it as Entry }).showNow(requireActivity().supportFragmentManager, null)
+            requireActivity().supportFragmentManager.executePendingTransactions()
+        }
+    }
 }

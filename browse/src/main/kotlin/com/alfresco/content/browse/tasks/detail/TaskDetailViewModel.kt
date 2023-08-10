@@ -12,6 +12,7 @@ import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.actions.ActionUpdateNameDescription
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
@@ -22,7 +23,6 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.getFormattedDate
-import com.alfresco.content.listview.EntryListener
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope

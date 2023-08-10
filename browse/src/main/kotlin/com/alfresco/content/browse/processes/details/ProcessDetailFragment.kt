@@ -20,6 +20,7 @@ import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.browse.tasks.BaseDetailFragment
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentBuilder
@@ -29,7 +30,6 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UploadServerType
-import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute

@@ -1,5 +1,6 @@
-package com.alfresco.content.browse.processes.sheet
+package com.alfresco.content.actions.sheet
 
+// import com.alfresco.content.browse.processes.ProcessDetailActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,14 +12,12 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.R
 import com.alfresco.content.actions.actionListLoading
 import com.alfresco.content.actions.databinding.SheetActionListBinding
 import com.alfresco.content.actions.listRowProcessDefinitions
-import com.alfresco.content.browse.R
-import com.alfresco.content.browse.processes.ProcessDetailActivity
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ProcessEntry
-import com.alfresco.content.listview.listViewMessage
 import com.alfresco.ui.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -68,13 +67,13 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                 actionListLoading { id("loading") }
             }
             if (state.listProcessDefinitions?.isEmpty() == true) {
-                val args = viewModel.emptyMessageArgs()
-                listViewMessage {
+//                val args = viewModel.emptyMessageArgs()
+                /*listViewMessage {
                     id("empty_message")
                     iconRes(args.first)
                     title(args.second)
                     message(args.third)
-                }
+                }*/
             } else {
                 state.listProcessDefinitions?.forEach {
                     listRowProcessDefinitions {
@@ -82,10 +81,18 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                         processDefinition(it)
                         clickListener { model, _, _, _ ->
                             val processEntry = ProcessEntry.with(model.processDefinition(), state.entries)
-                            startActivity(
+
+                            val intent = Intent(
+                                requireActivity(),
+                                Class.forName("com.alfresco.content.browse.processes.ProcessDetailActivity"),
+                            )
+                            intent.putExtra(Mavericks.KEY_ARG, processEntry)
+                            startActivity(intent)
+
+                            /*startActivity(
                                 Intent(requireActivity(), ProcessDetailActivity::class.java)
                                     .putExtra(Mavericks.KEY_ARG, processEntry),
-                            )
+                            )*/
                             dismiss()
                         }
                     }

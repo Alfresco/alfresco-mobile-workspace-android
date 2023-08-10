@@ -23,6 +23,7 @@ data class BrowseViewState(
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
     override val selectedEntries: List<Entry> = emptyList(),
+    override val maxLimitReachedForMultiSelection: Boolean = false,
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList(),
     val uploadTransferList: List<Entry> = emptyList(),

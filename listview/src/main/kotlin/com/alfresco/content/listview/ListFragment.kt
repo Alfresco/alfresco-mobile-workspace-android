@@ -36,11 +36,13 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.listview.ListViewModel.Companion.MULTI_SELECTION_LIMIT
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
 import com.alfresco.list.replace
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
@@ -50,6 +52,7 @@ interface ListViewState : MavericksState {
     val hasMoreItems: Boolean
     val request: Async<ResponsePaging>
     val isCompact: Boolean
+    val maxLimitReachedForMultiSelection: Boolean
 
     fun copy(_entries: List<Entry>): ListViewState
 
@@ -156,6 +159,7 @@ abstract class ListViewModel<S : ListViewState>(
     abstract fun refresh()
     abstract fun fetchNextPage()
     abstract fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int>
+    open fun resetMaxLimitError() {}
 
     companion object {
         const val ITEMS_PER_PAGE = 25
@@ -239,6 +243,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
             }
         }
 
+        if (state.maxLimitReachedForMultiSelection) {
+            Snackbar.make(recyclerView, String.format(getString(R.string.warning_max_item_multi_selection), MULTI_SELECTION_LIMIT), Snackbar.LENGTH_SHORT).show()
+            viewModel.resetMaxLimitError()
+        }
         loadingAnimation.isVisible =
             state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
 

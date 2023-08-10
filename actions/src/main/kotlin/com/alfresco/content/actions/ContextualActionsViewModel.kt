@@ -120,8 +120,8 @@ class ContextualActionsViewModel(
             }
 
             state.entries.all { it.hasOfflineStatus } -> {
-                // Added Favorite Action
-                actions.addAll(sharedActions(entry, state.entries))
+                // Added Offline Action
+                actions.add(offlineMultiActionFor(entry, state.entries))
             }
 
             else -> {

@@ -27,6 +27,7 @@ data class SearchResultsState(
     override val selectedEntries: List<Entry> = emptyList(),
     override val hasMoreItems: Boolean = false,
     override val request: Async<ResponsePaging> = Uninitialized,
+    override val maxLimitReachedForMultiSelection: Boolean = false,
     val isOnline: Boolean = true,
     val selectedFilterIndex: Int = -1,
     val listSearchFilters: List<SearchItem>? = emptyList(),

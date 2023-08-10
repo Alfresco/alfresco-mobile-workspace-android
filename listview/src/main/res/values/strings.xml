@@ -13,4 +13,5 @@
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
     <string name="title_tasks">Tasks</string>
+    <string name="warning_max_item_multi_selection">Maximum %d items can be selected</string>
 </resources>

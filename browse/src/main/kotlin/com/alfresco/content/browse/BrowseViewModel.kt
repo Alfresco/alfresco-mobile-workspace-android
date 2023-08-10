@@ -324,7 +324,7 @@ class BrowseViewModel(
     fun toggleSelection(entry: Entry) = setState {
         val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
         if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
-            this
+            copy(maxLimitReachedForMultiSelection = true)
         } else {
             val updatedEntries = entries.map {
                 if (it.id == entry.id && it.type != Entry.Type.GROUP) {
@@ -333,7 +333,12 @@ class BrowseViewModel(
                     it
                 }
             }
-            copy(baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP }, entries = updatedEntries, selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection })
+            copy(
+                baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP },
+                entries = updatedEntries,
+                selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                maxLimitReachedForMultiSelection = false,
+            )
         }
     }
 
@@ -341,8 +346,15 @@ class BrowseViewModel(
         val resetMultiEntries = entries.map {
             it.copy(isSelectedForMultiSelection = false)
         }
-        copy(baseEntries = resetMultiEntries.filter { it.type != Entry.Type.GROUP }, entries = resetMultiEntries, selectedEntries = emptyList())
+        copy(
+            baseEntries = resetMultiEntries.filter { it.type != Entry.Type.GROUP },
+            entries = resetMultiEntries,
+            selectedEntries = emptyList(),
+            maxLimitReachedForMultiSelection = false,
+        )
     }
+
+    override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
 

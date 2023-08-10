@@ -91,4 +91,6 @@
     <string name="action_add_favorite_multiple_toast">%s éléments ajoutés aux favoris</string>
     <string name="action_remove_favorite_multiple_toast">%s éléments supprimés des favoris</string>
 
+    <string name="workflows_unavailable_title">Workflows non disponibles</string>
+    <string name="workflow_unavailable_message">Les workflows apparaîtront ici lorsqu\'ils seront créés.</string>
 </resources>

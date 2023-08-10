@@ -1,6 +1,5 @@
 package com.alfresco.content.actions.sheet
 
-// import com.alfresco.content.browse.processes.ProcessDetailActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -67,13 +66,13 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                 actionListLoading { id("loading") }
             }
             if (state.listProcessDefinitions?.isEmpty() == true) {
-//                val args = viewModel.emptyMessageArgs()
-                /*listViewMessage {
+                val args = viewModel.emptyMessageArgs()
+                listViewProcessErrorMessage {
                     id("empty_message")
                     iconRes(args.first)
                     title(args.second)
                     message(args.third)
-                }*/
+                }
             } else {
                 state.listProcessDefinitions?.forEach {
                     listRowProcessDefinitions {
@@ -88,11 +87,6 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
                             )
                             intent.putExtra(Mavericks.KEY_ARG, processEntry)
                             startActivity(intent)
-
-                            /*startActivity(
-                                Intent(requireActivity(), ProcessDetailActivity::class.java)
-                                    .putExtra(Mavericks.KEY_ARG, processEntry),
-                            )*/
                             dismiss()
                         }
                     }

@@ -91,4 +91,7 @@
     <string name="action_add_favorite_multiple_toast">%s items toegevoegd aan favorieten</string>
     <string name="action_remove_favorite_multiple_toast">%s items verwijderd uit favorieten</string>
 
+    <string name="workflows_empty_title">Geen workflows gevonden</string>
+    <string name="workflows_empty_message">Maak een nieuwe workflow die u later gemakkelijk wilt kunnen vinden.</string>
+
 </resources>

@@ -24,10 +24,10 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionCreateTask
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseList
 import com.alfresco.content.data.TaskEntry
-import com.alfresco.content.listview.EntryListener
 import com.alfresco.content.listview.R
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.listview.listViewPageBoundary

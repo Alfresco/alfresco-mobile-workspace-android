@@ -100,8 +100,6 @@
     <string name="text_filter_option">Option de filtre %s</string>
     <string name="workflows_account_not_configured">Les workflows ne sont pas activées pour ce compte.</string>
 
-    <string name="workflows_unavailable_title">Workflows non disponibles</string>
-    <string name="workflow_unavailable_message">Les workflows apparaîtront ici lorsqu\'ils seront créés.</string>
     <string name="title_content_in_queue">Avertissement</string>
     <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
     <string name="approve">Approuver</string>

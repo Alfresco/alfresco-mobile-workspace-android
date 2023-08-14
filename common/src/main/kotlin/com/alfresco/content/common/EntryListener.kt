@@ -1,4 +1,4 @@
-package com.alfresco.content.listview
+package com.alfresco.content.common
 
 import com.alfresco.content.data.ParentEntry
 

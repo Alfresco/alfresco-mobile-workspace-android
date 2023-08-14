@@ -14,8 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.InternalMavericksApi
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionSyncNow
+import com.alfresco.content.actions.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.browse.R
-import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.MultiSelectionData

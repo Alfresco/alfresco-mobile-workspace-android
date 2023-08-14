@@ -6,6 +6,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -21,6 +22,8 @@ class ContextualActionsViewModel(
     val context: Context,
     private val settings: Settings,
 ) : MavericksViewModel<ContextualActionsState>(state) {
+
+    var listener: EntryListener? = null
 
     init {
         if (!state.isMultiSelection) {
@@ -71,14 +74,26 @@ class ContextualActionsViewModel(
     }
 
     private fun updateState(action: Action) {
+        val entry = action.entry as Entry
+        if (action is ActionStartProcess) {
+            onStartProcess(action.entries.ifEmpty { listOf(entry) })
+        }
         setState {
-            val entry = action.entry as Entry
-
             ContextualActionsState(
                 entries = if (isMultiSelection) action.entries else listOf(entry),
                 actions = if (isMultiSelection) makeMultiActions(this) else makeActions(entry),
                 topActions = makeTopActions(entry),
             )
+        }
+    }
+
+    fun setEntryListener(listener: EntryListener) {
+        this.listener = listener
+    }
+
+    private fun onStartProcess(entries: List<Entry>) = entries.run {
+        if (entries.all { it.isFile }) {
+            listener?.onProcessStart(entries)
         }
     }
 

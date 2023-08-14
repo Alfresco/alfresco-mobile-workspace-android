@@ -94,8 +94,6 @@
     <string name="icon_add_attachment">Pictogram Bijlage toevoegen</string>
     <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien? Nadat de taak is voltooid, kunnen sommige bestanden niet worden geüpload en kunnen geen wijzigingen worden aangebracht.</string>
 
-    <string name="workflows_empty_title">Geen workflows gevonden</string>
-    <string name="workflows_empty_message">Maak een nieuwe workflow die u later gemakkelijk wilt kunnen vinden.</string>
     <string name="title_workflows">Workflows</string>
     <string name="text_filter_option">Filteroptie %s</string>
     <string name="workflows_account_not_configured">Workflows zijn niet ingeschakeld voor dit account.</string>

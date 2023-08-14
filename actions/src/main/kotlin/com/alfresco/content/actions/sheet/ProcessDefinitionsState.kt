@@ -1,4 +1,4 @@
-package com.alfresco.content.browse.processes.sheet
+package com.alfresco.content.actions.sheet
 
 import com.airbnb.mvrx.MavericksState
 import com.alfresco.content.data.Entry

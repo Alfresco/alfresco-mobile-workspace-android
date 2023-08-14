@@ -16,9 +16,9 @@ import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.ProcessDetailActivity
-import com.alfresco.content.browse.processes.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ProcessEntry

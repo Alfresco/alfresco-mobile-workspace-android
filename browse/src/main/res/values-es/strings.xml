@@ -94,8 +94,6 @@
     <string name="icon_add_attachment">Añadir icono adjunto</string>
     <string name="dialog_message_complete_task_files_queue">¿Está seguro de que quiere completar la tarea? Una vez completada, algunos ficheros no se pudieron cargar y no se pueden realizar cambios.</string>
 
-    <string name="workflows_empty_title">No se encontró ningún flujo de trabajo</string>
-    <string name="workflows_empty_message">Inicie un flujo de trabajo nuevo que desee encontrar con facilidad más adelante.</string>
     <string name="title_workflows">Flujos de trabajo</string>
     <string name="text_filter_option">Opciones de filtro %s</string>
     <string name="workflows_account_not_configured">Los flujos de trabajo no están habilitados para esta cuenta.</string>

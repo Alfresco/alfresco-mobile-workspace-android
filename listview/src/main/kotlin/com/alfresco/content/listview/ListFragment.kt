@@ -31,6 +31,7 @@ import com.alfresco.content.actions.ActionRemoveOffline
 import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.MultiSelection

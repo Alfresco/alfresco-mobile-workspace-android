@@ -70,6 +70,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
                         withState(viewModel) { newState ->
                             if (!newState.isMultiSelection) {
                                 viewModel.execute(it)
+
                                 dismiss()
                             } else {
                                 executeMultiAction(it)

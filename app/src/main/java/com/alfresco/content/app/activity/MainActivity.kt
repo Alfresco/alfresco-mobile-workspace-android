@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
+    private var navHostFragment: NavHostFragment? = null
     private val bottomNav by lazy { findViewById<BottomNavigationView>(R.id.bottom_nav) }
     private var actionBarController: ActionBarController? = null
     private var signedOutDialog = WeakReference<AlertDialog>(null)
@@ -181,6 +183,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun configure() = withState(viewModel) { state ->
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
         graph.setStartDestination(if (state.isOnline) R.id.nav_recents else R.id.nav_offline)
         navController.graph = graph
@@ -294,7 +297,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) || navController.currentDestination?.id == R.id.nav_offline) {
+        if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) ||
+            navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline
+        ) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
         return true

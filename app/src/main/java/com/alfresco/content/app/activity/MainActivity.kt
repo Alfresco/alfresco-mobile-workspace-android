@@ -294,7 +294,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        if (viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) {
+        if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) || navController.currentDestination?.id == R.id.nav_offline) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
         return true

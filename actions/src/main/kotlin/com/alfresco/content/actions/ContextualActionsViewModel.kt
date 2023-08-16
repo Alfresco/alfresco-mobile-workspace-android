@@ -130,16 +130,18 @@ class ContextualActionsViewModel(
 
         when {
             state.entries.all { it.isTrashed } -> {
+                // Added restore and delete actions
                 actions.add(ActionRestore(entry, state.entries))
                 actions.add(ActionDeleteForever(entry, state.entries))
             }
 
             state.entries.all { it.hasOfflineStatus } -> {
-                // Added Offline Action
+                // Added Offline action
                 actions.add(offlineMultiActionFor(entry, state.entries))
             }
 
             else -> {
+                // Added common actions
                 actions.addAll(sharedActions(entry, state.entries))
             }
         }

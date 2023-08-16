@@ -63,7 +63,7 @@ data class ActionRemoveOffline(
     override suspend fun executeMulti(context: Context): Pair<Entry, List<Entry>> {
         val entriesObj = entries.toMutableList()
         entries.forEachIndexed { index, obj ->
-            entriesObj[index] = repository.removeFromSync(obj)
+            entriesObj[index] = repository.removeFromSync(obj).copy(offlineStatus = OfflineStatus.UNDEFINED)
         }
         return Pair(entry, entriesObj)
     }

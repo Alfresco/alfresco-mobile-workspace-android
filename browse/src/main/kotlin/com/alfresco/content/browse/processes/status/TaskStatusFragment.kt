@@ -19,10 +19,10 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskStatusBinding
 import com.alfresco.content.browse.processes.ProcessDetailActivity
-import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
 import com.alfresco.content.browse.tasks.detail.isAssigneeAndLoggedInSame
 import com.alfresco.content.browse.tasks.detail.isTaskCompleted
+import com.alfresco.content.common.BaseActivity
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -68,7 +68,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
         var instanceActivity: AppCompatActivity? = null
         when (requireActivity()) {
             is ProcessDetailActivity -> instanceActivity = (requireActivity() as ProcessDetailActivity)
-            is TaskViewerActivity -> instanceActivity = (requireActivity() as TaskViewerActivity)
+            is BaseActivity -> instanceActivity = (requireActivity() as BaseActivity)
         }
         instanceActivity?.apply {
             setSupportActionBar(binding.toolbar)

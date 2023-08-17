@@ -17,7 +17,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.ActionCreateTask
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.processes.ProcessDetailActivity
-import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentMetaData
@@ -190,9 +189,11 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
-        startActivity(
-            Intent(requireActivity(), TaskViewerActivity::class.java)
-                .putExtra(Mavericks.KEY_ARG, entry),
+        val intent = Intent(
+            requireActivity(),
+            Class.forName("com.alfresco.content.app.activity.TaskViewerActivity"),
         )
+        intent.putExtra(Mavericks.KEY_ARG, entry)
+        startActivity(intent)
     }
 }

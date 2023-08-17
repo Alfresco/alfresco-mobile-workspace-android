@@ -26,8 +26,8 @@ import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.FragmentTaskDetailBinding
 import com.alfresco.content.browse.databinding.ViewListCommentRowBinding
 import com.alfresco.content.browse.tasks.BaseDetailFragment
-import com.alfresco.content.browse.tasks.TaskViewerActivity
 import com.alfresco.content.browse.tasks.attachments.listViewAttachmentRow
+import com.alfresco.content.common.BaseActivity
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
@@ -87,7 +87,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsManager().screenViewEvent(if (viewModel.isWorkflowTask) PageView.WorkflowTaskView else PageView.TaskView)
-        (requireActivity() as TaskViewerActivity).setSupportActionBar(binding.toolbar)
+        (requireActivity() as BaseActivity).setSupportActionBar(binding.toolbar)
         withState(viewModel) { state ->
             if (!viewModel.isTaskCompleted(state)) {
                 setHasOptionsMenu(true)

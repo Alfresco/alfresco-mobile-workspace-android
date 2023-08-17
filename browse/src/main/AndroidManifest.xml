@@ -3,11 +3,6 @@
 
     <application>
         <activity
-            android:name=".tasks.TaskViewerActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false" />
-
-        <activity
             android:name=".processes.ProcessDetailActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />

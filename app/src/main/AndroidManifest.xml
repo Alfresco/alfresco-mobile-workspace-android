@@ -79,6 +79,12 @@
         <activity
             android:name=".activity.MoveActivity"
             android:windowSoftInputMode="adjustNothing" />
+
+        <activity
+            android:name="com.alfresco.content.app.activity.TaskViewerActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false" />
+
     </application>
 
 </manifest>

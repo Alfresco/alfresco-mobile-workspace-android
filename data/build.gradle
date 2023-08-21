@@ -37,4 +37,6 @@ dependencies {
     implementation libs.guava
 
     implementation libs.firebase.analytics
+
+    implementation libs.rooted
 }

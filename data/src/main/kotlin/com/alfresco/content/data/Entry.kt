@@ -288,7 +288,7 @@ data class Entry(
                     file.modifiedAt,
                     file.allowableOperations == null,
                     true,
-                    canDelete(file.allowableOperations),
+                    canDelete(favorite.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.folder != null) {
@@ -304,8 +304,8 @@ data class Entry(
                     folder.modifiedAt,
                     folder.allowableOperations == null,
                     true,
-                    canDelete(folder.allowableOperations),
-                    canCreate(folder.allowableOperations),
+                    canDelete(favorite.allowableOperations),
+                    canCreate(favorite.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.site != null) {

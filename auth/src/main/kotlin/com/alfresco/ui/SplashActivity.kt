@@ -6,6 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.alfresco.android.aims.R
+import com.alfresco.content.data.rooted.CheckForRootWorker
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 abstract class SplashActivity : AppCompatActivity() {
@@ -63,16 +66,23 @@ abstract class SplashActivity : AppCompatActivity() {
     }
 
     private fun goToMain() {
-        val i = getMainIntent()
-        if (entryId.isNotEmpty()) {
-            i.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-//            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            i.putExtra(MODE_KEY, if (isPreview) VALUE_SHARE else VALUE_REMOTE)
-            i.putExtra(KEY_FOLDER, isRemoteFolder)
-            i.putExtra(ID_KEY, entryId)
+        GlobalScope.launch {
+            val checkForRoot = CheckForRootWorker(this@SplashActivity)
+            val results = checkForRoot.invoke()
+
+            if (!results.any { it.result }) {
+                val i = getMainIntent()
+                if (entryId.isNotEmpty()) {
+                    i.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    //            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    i.putExtra(MODE_KEY, if (isPreview) VALUE_SHARE else VALUE_REMOTE)
+                    i.putExtra(KEY_FOLDER, isRemoteFolder)
+                    i.putExtra(ID_KEY, entryId)
+                }
+                startActivity(i)
+                overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out)
+            }
         }
-        startActivity(i)
-        overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out)
         finish()
     }
 

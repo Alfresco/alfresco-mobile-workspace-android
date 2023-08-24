@@ -79,3 +79,5 @@ lint/reports/
 /build_app.gradle
 /gradle/libs.versions_api.toml
 /gradle/libs.versions_app.toml
+app/google-services_1.json
+app/google-services_2.json

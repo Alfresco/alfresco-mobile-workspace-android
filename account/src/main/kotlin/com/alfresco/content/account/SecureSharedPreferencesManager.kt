@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
+/**
+ * Marked as SecureSharedPreferencesManager
+ */
 class SecureSharedPreferencesManager(private val context: Context) {
 
     private val masterKey: MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)

@@ -82,8 +82,8 @@ abstract class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out)
             }
+            finish()
         }
-        finish()
     }
 
     abstract fun getMainIntent(): Intent

@@ -8,6 +8,7 @@ import com.alfresco.content.data.Settings
 import com.alfresco.content.data.SyncWorker
 import com.alfresco.content.network.ConnectivityTracker
 import com.alfresco.content.viewer.ViewerRegistry
+import com.datatheorem.android.trustkit.TrustKit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,6 +23,9 @@ class AlfrescoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Logger.init(BuildConfig.DEBUG)
+
+        // Initialize TrustKit with the default network security configuration
+        TrustKit.initializeWithNetworkSecurityConfiguration(this)
 
         ViewerRegistry.setup()
         SyncWorker.use(ViewerRegistry)

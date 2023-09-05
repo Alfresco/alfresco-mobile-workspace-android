@@ -27,8 +27,6 @@ class Session(
     private var onSignedOut: (() -> Unit)? = null
 
     init {
-        // Initialize TrustKit with the default network security configuration
-//        TrustKit.initializeWithNetworkSecurityConfiguration(context)
 
         require(context == context.applicationContext)
 
@@ -83,11 +81,13 @@ class Session(
     val processBaseUrl get() = account.serverUrl.replace("/alfresco", "/activiti-app/")
 
     fun <T> createService(service: Class<T>): T {
+        println("Session.createService == ${account.serverUrl}")
+
         val okHttpClient: OkHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(authInterceptor)
             .addOptionalInterceptor(loggingInterceptor)
-//            .sslSocketFactory(TrustKit.getInstance().getSSLSocketFactory(account.serverUrl), TrustKit.getInstance().getTrustManager(account.serverUrl))
+            .sslSocketFactory(TrustKit.getInstance().getSSLSocketFactory("mobileapps.envalfresco.com"), TrustKit.getInstance().getTrustManager("mobileapps.envalfresco.com"))
             .build()
 
         val retrofit = Retrofit.Builder()

@@ -9,12 +9,12 @@
         </trust-anchors>
     </base-config>
     <!-- Add your existing domain-config for www.datatheorem.com here -->
-    <!--<domain-config>
-        <domain includeSubdomains="true">www.datatheorem.com</domain>
-        &lt;!&ndash; Valid pins &ndash;&gt;
+    <domain-config>
+        <domain includeSubdomains="true">mobileapps.envalfresco.com</domain>
+        <!-- Valid pins -->
         <pin-set expiration="2018-01-01">
-            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
-            <pin digest="SHA-256">YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=</pin>
+            <pin digest="SHA-256">dHm85fhh0rQOvS6Xkul+sXbLX0RydYNfNYeeV1PctS4=</pin>
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
         </pin-set>
         <trustkit-config
             disableDefaultReportUri="true"
@@ -22,12 +22,11 @@
             <report-uri>https://overmind.datatheorem.com/trustkit/report</report-uri>
         </trustkit-config>
     </domain-config>
--->
     <!-- Add your new domain-config for mobileapps.envalfresco.com -->
-    <domain-config>
+    <!--<domain-config>
         <domain includeSubdomains="true">mobileapps.envalfresco.com</domain>
         <pin-set>
-            <!-- Pins for mobileapps.envalfresco.com (Update with actual pins) -->
+            &lt;!&ndash; Pins for mobileapps.envalfresco.com (Update with actual pins) &ndash;&gt;
             <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin>
             <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin>
         </pin-set>
@@ -36,7 +35,7 @@
             enforcePinning="true">
             <report-uri>https://example.com/trustkit/report</report-uri>
         </trustkit-config>
-    </domain-config>
+    </domain-config>-->
     <!-- Add your domain-config for localhost here -->
     <domain-config enforcePinning="false">
         <domain includeSubdomains="true">localhost</domain>

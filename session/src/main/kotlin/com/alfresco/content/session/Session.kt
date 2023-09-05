@@ -10,6 +10,7 @@ import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
+import com.datatheorem.android.trustkit.TrustKit
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -26,6 +27,9 @@ class Session(
     private var onSignedOut: (() -> Unit)? = null
 
     init {
+        // Initialize TrustKit with the default network security configuration
+//        TrustKit.initializeWithNetworkSecurityConfiguration(context)
+
         require(context == context.applicationContext)
 
         authInterceptor = AuthInterceptor(
@@ -83,6 +87,7 @@ class Session(
             .newBuilder()
             .addInterceptor(authInterceptor)
             .addOptionalInterceptor(loggingInterceptor)
+//            .sslSocketFactory(TrustKit.getInstance().getSSLSocketFactory(account.serverUrl), TrustKit.getInstance().getTrustManager(account.serverUrl))
             .build()
 
         val retrofit = Retrofit.Builder()

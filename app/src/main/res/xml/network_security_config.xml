@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <!-- Enable HTTP requests -->
-    <base-config cleartextTrafficPermitted="true">
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
-            <certificates src="system"/>
+            <certificates src="system" />
             <!-- Trust user added CAs -->
             <certificates src="user" />
         </trust-anchors>
     </base-config>
+    <!-- Add your existing domain-config for www.datatheorem.com here -->
+    <!--<domain-config>
+        <domain includeSubdomains="true">www.datatheorem.com</domain>
+        &lt;!&ndash; Valid pins &ndash;&gt;
+        <pin-set expiration="2018-01-01">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <pin digest="SHA-256">YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=</pin>
+        </pin-set>
+        <trustkit-config
+            disableDefaultReportUri="true"
+            enforcePinning="true">
+            <report-uri>https://overmind.datatheorem.com/trustkit/report</report-uri>
+        </trustkit-config>
+    </domain-config>
+-->
+    <!-- Add your new domain-config for mobileapps.envalfresco.com -->
+    <domain-config>
+        <domain includeSubdomains="true">mobileapps.envalfresco.com</domain>
+        <pin-set>
+            <!-- Pins for mobileapps.envalfresco.com (Update with actual pins) -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin>
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin>
+        </pin-set>
+        <trustkit-config
+            disableDefaultReportUri="true"
+            enforcePinning="true">
+            <report-uri>https://example.com/trustkit/report</report-uri>
+        </trustkit-config>
+    </domain-config>
+    <!-- Add your domain-config for localhost here -->
+    <domain-config enforcePinning="false">
+        <domain includeSubdomains="true">localhost</domain>
+        <trustkit-config
+            disableDefaultReportUri="true"
+            enforcePinning="false" />
+    </domain-config>
 </network-security-config>

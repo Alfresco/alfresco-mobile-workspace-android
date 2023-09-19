@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
-        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
+//        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
 
         bottomNav.setOnItemSelectedListener { item ->

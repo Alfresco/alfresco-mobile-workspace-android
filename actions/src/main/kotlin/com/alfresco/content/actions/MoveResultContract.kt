@@ -13,6 +13,10 @@ import com.alfresco.content.data.Entry
 class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<Unit, String?>() {
     @CallSuper
     override fun createIntent(context: Context, input: Unit): Intent {
+        val intent = Intent(
+            context,
+            Class.forName("com.alfresco.content.app.activity.MoveActivity"),
+        )
         intent.putExtra(ENTRY_OBJ_KEY, entryObj)
         return intent
     }
@@ -29,13 +33,13 @@ class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<
         const val OUTPUT_KEY = "targetParentId"
         const val ENTRY_OBJ_KEY = "entryObj"
         const val MOVE_ID_KEY = "moveId"
-        lateinit var intent: Intent
+        /*lateinit var intent: Intent
 
-        /**
+        *//**
          * adding intent for MoveActivity
-         */
+         *//*
         fun addMoveIntent(moveIntent: Intent) {
             intent = moveIntent
-        }
+        }*/
     }
 }

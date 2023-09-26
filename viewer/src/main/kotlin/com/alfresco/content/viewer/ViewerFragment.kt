@@ -57,6 +57,7 @@ class ViewerFragment : Fragment(), MavericksView {
     private val viewModel: ViewerViewModel by fragmentViewModelWithArgs { args }
     private lateinit var binding: ViewerBinding
     private var childFragment: ChildViewerFragment? = null
+    private var hasLoadingStatus: Boolean = false
 
     private val viewerLoadingListener = object : LoadingListener {
         override fun onContentLoaded() {
@@ -119,7 +120,9 @@ class ViewerFragment : Fragment(), MavericksView {
                     state.viewerUri,
                     state.viewerMimeType,
                 )
-                show(Status.LoadingPreview)
+                if (!hasLoadingStatus) {
+                    show(Status.LoadingPreview)
+                }
             } else {
                 show(Status.NotSupported)
             }
@@ -158,6 +161,7 @@ class ViewerFragment : Fragment(), MavericksView {
     }
 
     private fun show(s: Status) {
+        println("ViewerFragment.show ${s.name}")
         binding.apply {
             when (s) {
                 Status.LoadingMetadata -> {
@@ -179,12 +183,14 @@ class ViewerFragment : Fragment(), MavericksView {
                 }
 
                 Status.PreviewLoaded -> {
+                    hasLoadingStatus = true
                     info.isVisible = childFragment?.showInfoWhenLoaded() == true
                     loading.isVisible = false
                     status.text = ""
                 }
 
                 Status.NotSupported -> {
+                    hasLoadingStatus = true
                     info.isVisible = true
                     loading.isVisible = false
                     status.text = getString(R.string.error_preview_not_available)

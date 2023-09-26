@@ -161,7 +161,6 @@ class ViewerFragment : Fragment(), MavericksView {
     }
 
     private fun show(s: Status) {
-        println("ViewerFragment.show ${s.name}")
         binding.apply {
             when (s) {
                 Status.LoadingMetadata -> {

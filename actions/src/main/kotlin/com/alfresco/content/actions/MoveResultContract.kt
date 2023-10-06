@@ -33,13 +33,5 @@ class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<
         const val OUTPUT_KEY = "targetParentId"
         const val ENTRY_OBJ_KEY = "entryObj"
         const val MOVE_ID_KEY = "moveId"
-        /*lateinit var intent: Intent
-
-        *//**
-         * adding intent for MoveActivity
-         *//*
-        fun addMoveIntent(moveIntent: Intent) {
-            intent = moveIntent
-        }*/
     }
 }

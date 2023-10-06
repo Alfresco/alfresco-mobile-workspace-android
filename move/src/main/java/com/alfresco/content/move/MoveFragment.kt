@@ -64,13 +64,7 @@ class MoveFragment : Fragment(), MavericksView {
         super.onCreate(savedInstanceState)
         println("MoveFragment.onCreate")
         args = MoveArgs.with(requireArguments())
-
-
-
     }
-
-
-
 
     override fun invalidate() = withState(viewModel) { state ->
     }

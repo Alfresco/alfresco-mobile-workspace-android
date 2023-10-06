@@ -2,7 +2,6 @@ package com.alfresco.content.data.rooted
 
 import android.content.Context
 import com.scottyab.rootbeer.RootBeer
-import com.scottyab.rootbeer.util.Utils
 
 class CheckForRootWorker(context: Context) {
 

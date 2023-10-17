@@ -32,7 +32,6 @@ import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ContextualActionsSheet
-import com.alfresco.content.actions.MoveResultContract
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
@@ -195,7 +194,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
-        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
+//        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
 
         bottomNav.setOnItemSelectedListener { item ->

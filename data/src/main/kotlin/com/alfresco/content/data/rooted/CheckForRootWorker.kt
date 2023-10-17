@@ -2,7 +2,6 @@ package com.alfresco.content.data.rooted
 
 import android.content.Context
 import com.scottyab.rootbeer.RootBeer
-import com.scottyab.rootbeer.util.Utils
 
 class CheckForRootWorker(context: Context) {
 
@@ -16,12 +15,12 @@ class CheckForRootWorker(context: Context) {
         RootItemResult("Root Cloaking Apps", rootBeer.detectRootCloakingApps()),
         RootItemResult("TestKeys", rootBeer.detectTestKeys()),
         RootItemResult("BusyBoxBinary", rootBeer.checkForBusyBoxBinary()),
-        RootItemResult("SU Binary", rootBeer.checkForSuBinary()),
+//        RootItemResult("SU Binary", rootBeer.checkForSuBinary()),
         RootItemResult("2nd SU Binary check", rootBeer.checkSuExists()),
         RootItemResult("For RW Paths", rootBeer.checkForRWPaths()),
-        RootItemResult("Dangerous Props", rootBeer.checkForDangerousProps()),
+//        RootItemResult("Dangerous Props", rootBeer.checkForDangerousProps()),
         RootItemResult("Root via native check", rootBeer.checkForRootNative()),
-        RootItemResult("SE linux Flag Is Enabled", !Utils.isSelinuxFlagInEnabled()),
+//        RootItemResult("SE linux Flag Is Enabled", !Utils.isSelinuxFlagInEnabled()),
         RootItemResult("Magisk specific checks", rootBeer.checkForMagiskBinary()),
     )
 }

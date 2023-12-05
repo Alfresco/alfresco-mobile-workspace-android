@@ -307,6 +307,7 @@ class SearchRepository {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPrefs.edit()
         editor.remove(RECENT_SEARCH_KEY)
+        editor.remove(SERVER_VERSION)
         editor.apply()
     }
 

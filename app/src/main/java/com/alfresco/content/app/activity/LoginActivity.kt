@@ -36,7 +36,6 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                     navigateToMain()
                 }
             } catch (ex: Exception) {
-                ex.printStackTrace()
                 onError(R.string.auth_error_wrong_credentials)
             }
         }

@@ -54,8 +54,6 @@ android {
         viewBinding = true
     }
 
-
-
     compileOptions {
         coreLibraryDesugaringEnabled true
     }

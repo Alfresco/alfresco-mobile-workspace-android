@@ -219,7 +219,7 @@ class SearchRepository {
     suspend fun getRecents(skipCount: Int, maxItems: Int): ResponsePaging {
         val version = getServerVersion()
 
-        if (version.toInt() >= 23) {
+        if (version.toInt() >= SERVER_VERSION_NUMBER) {
             return ResponsePaging.with(
                 searchService.recentFiles(
                     session.account.id,
@@ -328,10 +328,11 @@ class SearchRepository {
         }
     }
 
-    private companion object {
-        const val RECENT_SEARCH_KEY = "recent_searches"
-        const val MAX_RECENT_FILES_AGE = 30
-        const val MAX_RECENT_SEARCHES = 15
-        const val SERVER_VERSION = "server_version"
+    companion object {
+        private const val RECENT_SEARCH_KEY = "recent_searches"
+        private const val MAX_RECENT_FILES_AGE = 30
+        private const val MAX_RECENT_SEARCHES = 15
+        private const val SERVER_VERSION = "server_version"
+        const val SERVER_VERSION_NUMBER = 23
     }
 }

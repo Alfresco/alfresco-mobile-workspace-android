@@ -52,7 +52,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 authConfig.jsonSerialize(),
                 endpoint,
                 person.displayName ?: "",
-                person.email ?: "",
+                person.email,
                 myFiles,
             )
         } else {
@@ -68,7 +68,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.id,
                 credentials.authState,
                 person.displayName ?: "",
-                person.email ?: person.company?.email ?: "",
+                person.email,
                 myFiles,
             )
         }

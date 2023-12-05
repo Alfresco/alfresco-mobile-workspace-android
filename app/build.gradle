@@ -1,4 +1,4 @@
-plugins{
+plugins {
     id('com.android.application')
     id('kotlin-android')
     id('kotlin-kapt')
@@ -53,6 +53,8 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+
 
     compileOptions {
         coreLibraryDesugaringEnabled true

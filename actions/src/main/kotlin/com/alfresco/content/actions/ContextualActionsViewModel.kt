@@ -11,6 +11,7 @@ import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.SearchRepository.Companion.SERVER_VERSION_NUMBER
 import com.alfresco.content.data.Settings
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -155,7 +156,7 @@ class ContextualActionsViewModel(
         // Added Favorite Action
         val version = SearchRepository().getPrefsServerVersion()
 
-        if (version.toInt() >= 23) {
+        if (version.toInt() >= SERVER_VERSION_NUMBER) {
             if (entries.any { !it.isFavorite }) {
                 actions.add(ActionAddFavorite(entry, entries))
             } else {

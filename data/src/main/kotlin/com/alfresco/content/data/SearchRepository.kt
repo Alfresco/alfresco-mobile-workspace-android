@@ -2,7 +2,10 @@ package com.alfresco.content.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.preference.PreferenceManager
+import com.alfresco.auth.AuthConfig
+import com.alfresco.auth.DiscoveryService
 import com.alfresco.content.apis.AdvanceSearchInclude
 import com.alfresco.content.apis.FacetSearchInclude
 import com.alfresco.content.apis.QueriesApi
@@ -25,6 +28,7 @@ import com.alfresco.events.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchRepository {
 
@@ -212,15 +216,68 @@ class SearchRepository {
             null
         }
 
-    suspend fun getRecents(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            searchService.recentFiles(
-                session.account.id,
-                MAX_RECENT_FILES_AGE,
-                skipCount,
-                maxItems,
-            ),
-        )
+    suspend fun getRecents(skipCount: Int, maxItems: Int): ResponsePaging {
+        val version = getServerVersion()
+
+        if (version.toInt() >= SERVER_VERSION_NUMBER) {
+            return ResponsePaging.with(
+                searchService.recentFiles(
+                    session.account.id,
+                    MAX_RECENT_FILES_AGE,
+                    skipCount,
+                    maxItems,
+                    true,
+                ),
+            )
+        } else {
+            return ResponsePaging.with(
+                searchService.recentFiles(
+                    session.account.id,
+                    MAX_RECENT_FILES_AGE,
+                    skipCount,
+                    maxItems,
+                ),
+            )
+        }
+    }
+
+    fun getPrefsServerVersion(): String {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return sharedPrefs.getString(SERVER_VERSION, "") ?: ""
+    }
+
+    private fun saveServerVersion(serverVersion: String) {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = sharedPrefs.edit()
+        editor.putString(SERVER_VERSION, serverVersion)
+        editor.apply()
+    }
+
+    private suspend fun getServerVersion(): String {
+        val version = getPrefsServerVersion()
+        if (version.isNullOrEmpty()) {
+            val acc = session.account
+
+            val authConfig = AuthConfig.jsonDeserialize(acc.authConfig)
+
+            authConfig?.let { config ->
+
+                val discoveryService = DiscoveryService(context, config)
+
+                val contentServiceDetailsObj = withContext(Dispatchers.IO) {
+                    discoveryService.getContentServiceDetails(Uri.parse(acc.serverUrl).host ?: "")
+                }
+
+                val serverVersion = contentServiceDetailsObj?.version?.split(".")?.get(0) ?: ""
+                saveServerVersion(serverVersion)
+                return serverVersion
+            }
+
+            return ""
+        } else {
+            return version
+        }
+    }
 
     /**
      * Get AppConfigModel from the internal storage or from assets
@@ -250,6 +307,7 @@ class SearchRepository {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPrefs.edit()
         editor.remove(RECENT_SEARCH_KEY)
+        editor.remove(SERVER_VERSION)
         editor.apply()
     }
 
@@ -271,9 +329,11 @@ class SearchRepository {
         }
     }
 
-    private companion object {
-        const val RECENT_SEARCH_KEY = "recent_searches"
-        const val MAX_RECENT_FILES_AGE = 30
-        const val MAX_RECENT_SEARCHES = 15
+    companion object {
+        private const val RECENT_SEARCH_KEY = "recent_searches"
+        private const val MAX_RECENT_FILES_AGE = 30
+        private const val MAX_RECENT_SEARCHES = 15
+        private const val SERVER_VERSION = "server_version"
+        const val SERVER_VERSION_NUMBER = 23
     }
 }

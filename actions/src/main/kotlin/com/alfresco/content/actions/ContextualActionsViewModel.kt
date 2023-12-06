@@ -10,6 +10,8 @@ import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.SearchRepository
+import com.alfresco.content.data.SearchRepository.Companion.SERVER_VERSION_NUMBER
 import com.alfresco.content.data.Settings
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -152,10 +154,14 @@ class ContextualActionsViewModel(
     private fun sharedActions(entry: Entry, entries: List<Entry>): List<Action> {
         val actions = mutableListOf<Action>()
         // Added Favorite Action
-        if (entries.any { !it.isFavorite }) {
-            actions.add(ActionAddFavorite(entry, entries))
-        } else {
-            actions.add(ActionRemoveFavorite(entry, entries))
+        val version = SearchRepository().getPrefsServerVersion()
+
+        if (version.toInt() >= SERVER_VERSION_NUMBER) {
+            if (entries.any { !it.isFavorite }) {
+                actions.add(ActionAddFavorite(entry, entries))
+            } else {
+                actions.add(ActionRemoveFavorite(entry, entries))
+            }
         }
 
         // Added Start Process Action

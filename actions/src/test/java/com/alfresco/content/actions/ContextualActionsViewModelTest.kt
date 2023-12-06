@@ -58,7 +58,7 @@ class ContextualActionsViewModelTest {
         val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
         withState(viewModel) { newState ->
-            viewModel.makeMultiActions(newState.entries)
+            viewModel.makeMultiActions(newState)
             assertEquals(1, newState.actions.size)
 
             newState.actions.forEach {
@@ -81,7 +81,7 @@ class ContextualActionsViewModelTest {
         val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
         withState(viewModel) { newState ->
-            viewModel.makeMultiActions(newState.entries)
+            viewModel.makeMultiActions(newState)
             assertEquals(1, newState.actions.size)
 
             newState.actions.forEach {

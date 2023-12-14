@@ -106,6 +106,8 @@ kotlinx-coroutines-test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2"
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
 mavericks = "com.airbnb.android:mavericks:3.0.3"
+mavericks-compose = "com.airbnb.android:mavericks-compose:3.0.3"
+mavericks-navigation = "com.airbnb.android:mavericks-navigation:3.0.3"
 mavericks-testing = "com.airbnb.android:mavericks-testing:3.0.3"
 
 mockito-core = "org.mockito:mockito-core:5.4.0"
@@ -135,3 +137,5 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+navigation-compose = "androidx.navigation:navigation-compose:2.7.5"
+

@@ -23,7 +23,9 @@ class Settings(
             if (key != IS_PROCESS_ENABLED_KEY) {
                 AnalyticsManager().theme(prefs.getString(key, "") ?: "")
             }
-            preferenceChangedFlow.tryEmit(key)
+            key?.apply {
+                preferenceChangedFlow.tryEmit(this)
+            }
         }
 
     fun observeChanges() {

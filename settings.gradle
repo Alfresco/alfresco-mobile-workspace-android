@@ -24,6 +24,7 @@ include ':move'
 include ':component'
 include ':app'
 //include ':process'
+include ':process-app'
 //include ':content'
 //include ':content-ktx'
 

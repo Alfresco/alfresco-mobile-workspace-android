@@ -12,37 +12,52 @@ import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
+import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
 
 data class FormViewState(
-    val parent: ProcessEntry,
+    val parent: ProcessEntry = ProcessEntry(),
     val requestStartForm: Async<ResponseListForm> = Uninitialized,
+    val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
+    val formFields: List<FieldsData> = emptyList(),
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
+
+    /**
+     * update the single process definition entry
+     */
+    fun updateSingleProcessDefinition(response: ResponseListProcessDefinition): FormViewState {
+        if (parent == null) {
+            return this
+        }
+        val processEntry = ProcessEntry.with(response.listProcessDefinitions.first(), parent)
+        return copy(parent = processEntry)
+    }
 }
 
 class FormViewModel(
-    state: FormViewState,
+    val state: FormViewState,
     val context: Context,
     private val repository: TaskRepository,
 ) : MavericksViewModel<FormViewState>(state) {
 
     init {
-        getStartForm(state.parent)
+        singleProcessDefinition(state.parent.id)
     }
 
-    private fun getStartForm(processEntry: ProcessEntry) {
-        requireNotNull(processEntry.id)
+    private fun singleProcessDefinition(appDefinitionId: String) = withState { state ->
         viewModelScope.launch {
-            repository::startForm.asFlow(processEntry.id).execute {
+            repository::singleProcessDefinition.asFlow(appDefinitionId).execute {
                 when (it) {
-                    is Loading -> copy(requestStartForm = Loading())
-                    is Fail -> copy(requestStartForm = Fail(it.error))
+                    is Loading -> copy(requestProcessDefinition = Loading())
+                    is Fail -> copy(requestProcessDefinition = Fail(it.error))
                     is Success -> {
-                        println("form-data == ${it()}")
-                        copy(requestStartForm = Success(it()))
+                        val updatedState = updateSingleProcessDefinition(it())
+                        getStartForm(updatedState.parent)
+                        copy(requestProcessDefinition = Success(it()))
                     }
 
                     else -> {
@@ -51,6 +66,40 @@ class FormViewModel(
                 }
             }
         }
+    }
+
+    private fun getStartForm(processEntry: ProcessEntry) {
+        requireNotNull(processEntry.id)
+        viewModelScope.launch {
+            repository::startForm.asFlow(processEntry.id).execute {
+                when (it) {
+                    is Loading -> copy(requestStartForm = Loading())
+                    is Fail -> {
+                        it.error.printStackTrace()
+                        copy(requestStartForm = Fail(it.error)) }
+                    is Success -> {
+//                        println("form-data == ${it()}")
+                        copy(formFields = it().fields.first().fields, requestStartForm = Success(it()))
+                    }
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateFieldValue(fieldId: String, newValue: String, state: FormViewState) {
+        val updatedFields = state.copy(
+            formFields = state.formFields.map { field ->
+                if (field.id == fieldId) {
+                    field.copy(value = newValue)
+                } else {
+                    field
+                }
+            },
+        )
+        setState { updatedFields }
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

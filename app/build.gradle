@@ -121,6 +121,7 @@ dependencies {
 
     implementation libs.coil.core
     implementation libs.gson
+    implementation libs.compose.runtime
 
     coreLibraryDesugaring libs.android.desugar
 

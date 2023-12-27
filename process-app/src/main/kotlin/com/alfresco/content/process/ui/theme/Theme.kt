@@ -2,6 +2,7 @@ package com.alfresco.content.process.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -39,11 +40,19 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun AlfrescoBaseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isNightMode(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val statusBarColor = if (darkTheme) {
+        // Set status bar color for dark theme
+        designDefaultDarkBackgroundColor
+    } else {
+        // Set status bar color for light theme
+        AlfrescoGray900 // Replace with your desired light theme status bar color
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -61,7 +70,9 @@ fun AlfrescoBaseTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            window.statusBarColor = statusBarColor.toArgb()
+//            window.navigationBarColor = AlfrescoGray900.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
@@ -71,4 +82,11 @@ fun AlfrescoBaseTheme(
         typography = Typography,
         content = content,
     )
+}
+
+@Composable
+private fun isNightMode() = when (AppCompatDelegate.getDefaultNightMode()) {
+    AppCompatDelegate.MODE_NIGHT_NO -> false
+    AppCompatDelegate.MODE_NIGHT_YES -> true
+    else -> isSystemInDarkTheme()
 }

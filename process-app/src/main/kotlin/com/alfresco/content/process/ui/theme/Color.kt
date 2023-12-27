@@ -16,6 +16,9 @@ val AlfrescoGray100 = Color(0xFFF5F5F5)
 
 val AlfrescoError = Color(0xFFB8082A)
 
+// Define your specific colors
+val designDefaultDarkBackgroundColor = Color(0xFF121212)
+
 val Transparent = Color.Transparent
 val White = Color.White
 val White15 = Color(0x26FFFFFF)

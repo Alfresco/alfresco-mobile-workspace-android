@@ -22,6 +22,7 @@ data class FieldsData(
     var overrideId: Boolean = false,
     var fields: List<FieldsData> = emptyList(),
     var options: List<OptionsModel> = emptyList(),
+    var placeHolder: String? = null,
 ) : Parcelable {
 
     companion object {
@@ -44,4 +45,11 @@ data class FieldsData(
             )
         }
     }
+}
+
+enum class FieldType() {
+    TEXT,
+    ;
+
+    fun value() = name.lowercase()
 }

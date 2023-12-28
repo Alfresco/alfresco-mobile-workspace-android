@@ -18,7 +18,7 @@ class ProcessFormActivity : ComponentActivity() {
             AlfrescoBaseTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    NavigationComponent(intent.extras)
+                    NavigationComponent()
                 }
             }
         }
@@ -29,6 +29,6 @@ class ProcessFormActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     AlfrescoBaseTheme {
-        NavigationComponent(null)
+        NavigationComponent()
     }
 }

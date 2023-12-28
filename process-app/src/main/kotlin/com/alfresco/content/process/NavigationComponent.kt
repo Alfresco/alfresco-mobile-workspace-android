@@ -1,6 +1,5 @@
 package com.alfresco.content.process
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -11,14 +10,14 @@ import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.process.ui.FormFragment
 
 @Composable
-fun NavigationComponent(extras: Bundle?) {
+fun NavigationComponent() {
     val navController = rememberNavController()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         NavHost(navController = navController, startDestination = "first_screen") {
             composable("first_screen") {
                 // Replace with the content of your first fragment
-                FormFragment(navController = navController, extras)
+                FormFragment(navController = navController)
             }
             // Add more composable entries for other fragments in your navigation graph
         }

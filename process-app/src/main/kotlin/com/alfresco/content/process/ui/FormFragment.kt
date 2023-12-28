@@ -32,6 +32,7 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.compose.collectAsState
 import com.airbnb.mvrx.compose.mavericksActivityViewModel
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
@@ -86,11 +87,6 @@ fun BackButton(onClick: () -> Unit) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: FormViewModel) {
-    // This will get or create a ViewModel scoped to the Activity.
-    /*val viewModel: FormViewModel = mavericksActivityViewModel()
-
-    val state by viewModel.collectAsState()*/
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -108,12 +104,10 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
 
     ) {
         state.formFields.forEach { field ->
-            if (field.type == "text") {
-                println("FormDetailScreen Value 1 == ${field.value as? String}")
+            if (field.type == FieldType.TEXT.value()) {
                 TextInputField(
                     value = field.value as? String,
                     onValueChange = { newValue ->
-                        println("FormDetailScreen Value == $newValue")
                         viewModel.updateFieldValue(field.id, newValue, state)
                     },
                     field,

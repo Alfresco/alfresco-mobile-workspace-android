@@ -16,13 +16,18 @@ data class FieldsData(
     var name: String = "",
     var message: String = "",
     var type: String = "",
+    var placeHolder: String? = null,
     var value: @RawValue Any? = null,
+    var minLength: Int = 0,
+    var maxLength: Int = 0,
+    var minValue: String? = null,
+    var maxValue: String? = null,
+    var regexPattern: String? = null,
     var required: Boolean = false,
     var readOnly: Boolean = false,
     var overrideId: Boolean = false,
     var fields: List<FieldsData> = emptyList(),
     var options: List<OptionsModel> = emptyList(),
-    var placeHolder: String? = null,
 ) : Parcelable {
 
     companion object {
@@ -36,7 +41,13 @@ data class FieldsData(
                 name = raw.name ?: "",
                 message = raw.message ?: "",
                 type = raw.type?.replace("-", "_")?.lowercase() ?: "",
+                placeHolder = raw.placeholder,
                 value = raw.value,
+                minLength = raw.minLength,
+                maxLength = raw.maxLength,
+                minValue = raw.minValue,
+                maxValue = raw.maxValue,
+                regexPattern = raw.regexPattern,
                 required = raw.required ?: false,
                 readOnly = raw.readOnly ?: false,
                 overrideId = raw.overrideId ?: false,
@@ -47,8 +58,9 @@ data class FieldsData(
     }
 }
 
-enum class FieldType() {
+enum class FieldType {
     TEXT,
+    MULTI_LINE_TEXT,
     ;
 
     fun value() = name.lowercase()

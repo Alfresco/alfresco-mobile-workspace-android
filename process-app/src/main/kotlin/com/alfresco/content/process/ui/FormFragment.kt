@@ -104,17 +104,28 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
 
     ) {
         state.formFields.forEach { field ->
-            if (field.type == FieldType.TEXT.value()) {
-                TextInputField(
-                    value = field.value as? String,
-                    onValueChange = { newValue ->
-                        viewModel.updateFieldValue(field.id, newValue, state)
-                    },
-                    field,
-                )
+            when (field.type) {
+                FieldType.TEXT.value() -> {
+                    TextInputField(
+                        value = field.value as? String,
+                        onValueChanged = { newValue ->
+                            viewModel.updateFieldValue(field.id, newValue, state)
+                        },
+                        field,
+                    )
+                }
+                FieldType.MULTI_LINE_TEXT.value() -> {
+                    TextInputField(
+                        value = field.value as? String,
+                        onValueChanged = { newValue ->
+                            viewModel.updateFieldValue(field.id, newValue, state)
+                        },
+                        field,
+                        maxLines = 4,
+                    )
+                }
             }
         }
-        // Add more Composables here based on your UI requirements
     }
 }
 

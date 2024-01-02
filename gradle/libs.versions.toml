@@ -10,11 +10,7 @@ navigation = "2.6.0"
 okhttp = "4.11.0"
 test = "1.5.0"
 activity-compose = "1.7.0"
-compose-bom = "2023.03.00"
-
-
-moshi = "1.15.0"
-retrofit = "2.9.0"
+compose-bom = "2023.10.01"
 
 [libraries]
 alfresco-auth = "com.alfresco.android:auth:0.8.1-SNAPSHOT"
@@ -57,7 +53,6 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "test" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "test" }
 
-androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
 
 androidx-webkit = "androidx.webkit:webkit:1.7.0"
 androidx-work = "androidx.work:work-runtime-ktx:2.8.1"
@@ -67,9 +62,7 @@ coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 coil-video = { module = "io.coil-kt:coil-video", version.ref = "coil" }
 
-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 epoxy-core = { module = "com.airbnb.android:epoxy", version.ref = "epoxy" }
 epoxy-processor = { module = "com.airbnb.android:epoxy-processor", version.ref = "epoxy" }
@@ -107,7 +100,6 @@ leakcanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
 mavericks = "com.airbnb.android:mavericks:3.0.3"
 mavericks-compose = "com.airbnb.android:mavericks-compose:3.0.3"
-mavericks-navigation = "com.airbnb.android:mavericks-navigation:3.0.3"
 mavericks-testing = "com.airbnb.android:mavericks-testing:3.0.3"
 
 mockito-core = "org.mockito:mockito-core:5.4.0"
@@ -132,11 +124,10 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-navigation-compose = "androidx.navigation:navigation-compose:2.7.5"
+androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+
+navigation-compose = "androidx.navigation:navigation-compose:2.7.6"
 compose-runtime = "androidx.compose.runtime:runtime:1.5.4"
 

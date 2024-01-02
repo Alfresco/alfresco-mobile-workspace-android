@@ -19,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -36,7 +39,8 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
-import com.alfresco.content.process.ui.components.TextInputField
+import com.alfresco.content.process.ui.components.MultiLineInputField
+import com.alfresco.content.process.ui.components.SingleLineInputField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,22 +110,26 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
         state.formFields.forEach { field ->
             when (field.type) {
                 FieldType.TEXT.value() -> {
-                    TextInputField(
-                        value = field.value as? String,
-                        onValueChanged = { newValue ->
-                            viewModel.updateFieldValue(field.id, newValue, state)
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    SingleLineInputField(
+                        textFieldValue = textFieldValue,
+                        onValueChanged = { newText ->
+                            textFieldValue = newText
+                            viewModel.updateFieldValue(field.id, newText, state)
                         },
                         field,
                     )
                 }
+
                 FieldType.MULTI_LINE_TEXT.value() -> {
-                    TextInputField(
-                        value = field.value as? String,
-                        onValueChanged = { newValue ->
-                            viewModel.updateFieldValue(field.id, newValue, state)
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    MultiLineInputField(
+                        textFieldValue = textFieldValue,
+                        onValueChanged = { newText ->
+                            textFieldValue = newText
+                            viewModel.updateFieldValue(field.id, newText, state)
                         },
                         field,
-                        maxLines = 4,
                     )
                 }
             }

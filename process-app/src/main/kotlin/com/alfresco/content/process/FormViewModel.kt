@@ -76,11 +76,13 @@ class FormViewModel(
                     is Loading -> copy(requestStartForm = Loading())
                     is Fail -> {
                         it.error.printStackTrace()
-                        copy(requestStartForm = Fail(it.error)) }
-                    is Success -> {
-//                        println("form-data == ${it()}")
-                        copy(formFields = it().fields.first().fields, requestStartForm = Success(it()))
+                        copy(requestStartForm = Fail(it.error))
                     }
+
+                    is Success -> {
+                        copy(formFields = it().fields.flatMap { listData -> listData.fields }, requestStartForm = Success(it()))
+                    }
+
                     else -> {
                         this
                     }

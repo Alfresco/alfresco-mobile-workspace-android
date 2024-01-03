@@ -61,6 +61,7 @@ data class FieldsData(
 enum class FieldType {
     TEXT,
     MULTI_LINE_TEXT,
+    INTEGER,
     ;
 
     fun value() = name.lowercase()

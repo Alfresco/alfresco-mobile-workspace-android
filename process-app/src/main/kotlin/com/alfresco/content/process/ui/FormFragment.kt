@@ -1,22 +1,22 @@
 package com.alfresco.content.process.ui
 
-import android.app.Activity
+import ComposeTopBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,43 +39,37 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
+import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.SingleLineInputField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormFragment(navController: NavController) {
-    val context = LocalContext.current
     // This will get or create a ViewModel scoped to the Activity.
     val viewModel: FormViewModel = mavericksActivityViewModel()
     val state by viewModel.collectAsState()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Workflow form")
-                },
-                navigationIcon = {
-                    BackButton(onClick = { (context as Activity).finish() })
-                },
-                actions = {
-                    // Add actions if any
-                },
-            )
-        },
+        topBar = { ComposeTopBar() },
         content = { padding ->
 
             val colorScheme = MaterialTheme.colorScheme
-
-            Surface(
-                color = colorScheme.background,
-                contentColor = colorScheme.onBackground,
+            // Wrap the content in a Column with verticalScroll
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(padding)
+                    .statusBarsPadding(),
             ) {
-                if (state.requestStartForm is Loading) {
-                    CustomLinearProgressIndicator(padding)
+                Surface(
+                    color = colorScheme.background,
+                    contentColor = colorScheme.onBackground,
+                ) {
+                    if (state.requestStartForm is Loading) {
+                        CustomLinearProgressIndicator(padding)
+                    }
+                    FormDetailScreen(padding, state, viewModel)
                 }
-                FormDetailScreen(padding, state, viewModel)
             }
         },
     )
@@ -101,8 +95,7 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
                 // Hide the keyboard on click outside of input fields
                 keyboardController?.hide()
                 focusManager.clearFocus()
-            }
-            .padding(padding),
+            },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -124,6 +117,18 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
                 FieldType.MULTI_LINE_TEXT.value() -> {
                     var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
                     MultiLineInputField(
+                        textFieldValue = textFieldValue,
+                        onValueChanged = { newText ->
+                            textFieldValue = newText
+                            viewModel.updateFieldValue(field.id, newText, state)
+                        },
+                        field,
+                    )
+                }
+
+                FieldType.INTEGER.value() -> {
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    IntegerInputField(
                         textFieldValue = textFieldValue,
                         onValueChanged = { newText ->
                             textFieldValue = newText

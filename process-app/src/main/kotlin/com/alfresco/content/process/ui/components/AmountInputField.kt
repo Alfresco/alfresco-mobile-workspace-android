@@ -53,23 +53,21 @@ fun AmountInputFieldPreview() {
 fun isValidInput(inputText: String?, fieldsData: FieldsData): Pair<Boolean, String> {
     val errorData = Pair(false, "")
 
-    if (!inputText.isNullOrEmpty()) {
+    if (inputText.isNullOrEmpty()) {
         return errorData
     }
 
-    inputText?.apply {
-        if (this.toFloat() < (fieldsData.minValue?.toFloat() ?: 0f)) {
-            return Pair(true, stringResource(R.string.error_min_value, fieldsData.minLength))
-        }
+    if (inputText.toFloat() < (fieldsData.minValue?.toFloat() ?: 0f)) {
+        return Pair(true, stringResource(R.string.error_min_value, fieldsData.minLength))
+    }
 
-        if (this.toFloat() > (fieldsData.minValue?.toFloat() ?: 0f)) {
-            return Pair(true, stringResource(R.string.error_max_value, fieldsData.minLength))
-        }
+    if (inputText.toFloat() > (fieldsData.minValue?.toFloat() ?: 0f)) {
+        return Pair(true, stringResource(R.string.error_max_value, fieldsData.minLength))
+    }
 
-        if (fieldsData.enableFractions) {
-            if (this.toFloatOrNull() != null) {
-                return Pair(true, stringResource(R.string.error_invalid_format))
-            }
+    if (fieldsData.enableFractions) {
+        if (inputText.toFloatOrNull() != null) {
+            return Pair(true, stringResource(R.string.error_invalid_format))
         }
     }
 

@@ -21,17 +21,23 @@ fun AmountInputField(
         keyboardType = KeyboardType.Number,
     )
 
-    var leadingIcon: @Composable () -> Unit = {}
+    val leadingIcon: @Composable () -> Unit = when {
+        !fieldsData.currency.isNullOrEmpty() -> {
+            {
+                Text(text = fieldsData.currency ?: "$")
+            }
+        }
 
-    if (!fieldsData.currency.isNullOrEmpty()) {
-        leadingIcon = {
-            Text(text = fieldsData.currency ?: "$")
+        else -> {
+            {
+                Text(text = "$")
+            }
         }
     }
 
     val errorData = isValidInput(inputText = textFieldValue, fieldsData = fieldsData)
 
-    InputField(
+    InputFieldWithLeading(
         maxLines = 1,
         textFieldValue = textFieldValue,
         onValueChanged = onValueChanged,
@@ -57,18 +63,19 @@ fun isValidInput(inputText: String?, fieldsData: FieldsData): Pair<Boolean, Stri
         return errorData
     }
 
-    if (inputText.toFloat() < (fieldsData.minValue?.toFloat() ?: 0f)) {
-        return Pair(true, stringResource(R.string.error_min_value, fieldsData.minLength))
+    if (inputText.toFloatOrNull() == null) {
+        return Pair(true, stringResource(R.string.error_invalid_format))
     }
 
-    if (inputText.toFloat() > (fieldsData.minValue?.toFloat() ?: 0f)) {
-        return Pair(true, stringResource(R.string.error_max_value, fieldsData.minLength))
+    val minValue = fieldsData.minValue?.toFloat() ?: 0f
+    val maxValue = fieldsData.maxValue?.toFloat() ?: 0f
+
+    if (inputText.toFloat() < minValue) {
+        return Pair(true, stringResource(R.string.error_min_value, minValue.toInt()))
     }
 
-    if (fieldsData.enableFractions) {
-        if (inputText.toFloatOrNull() != null) {
-            return Pair(true, stringResource(R.string.error_invalid_format))
-        }
+    if (inputText.toFloat() > maxValue) {
+        return Pair(true, stringResource(R.string.error_max_value, maxValue.toInt()))
     }
 
     return errorData

@@ -42,6 +42,9 @@ fun InputField(
     onValueChanged: (String) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
     keyboardOptions: KeyboardOptions,
+    leadingIcon: @Composable () -> Unit = {},
+    isError: Boolean = false,
+    errorMessage: String = "",
 ) {
     var selectionState by remember { mutableIntStateOf(0) }
     var isError by remember { mutableStateOf(false) }
@@ -67,14 +70,6 @@ fun InputField(
         modifiedModifier.height(100.dp)
     } else {
         modifiedModifier
-    }
-
-    isError = !textFieldValue.isNullOrEmpty() && textFieldValue.length < fieldsData.minLength
-
-    val errorMessage = if (isError) {
-        stringResource(R.string.error_min_length, fieldsData.minLength)
-    } else {
-        ""
     }
 
     val customTextFieldColors = OutlinedTextFieldDefaults.colors(
@@ -126,6 +121,7 @@ fun InputField(
         keyboardOptions = keyboardOptions, // Set keyboard type
         keyboardActions = keyboardActions,
         isError = isError,
+        leadingIcon = leadingIcon,
         trailingIcon = {
             if (focusState && !textFieldValue.isNullOrEmpty()) {
                 val iconSize = with(LocalDensity.current) { 24.dp.toPx() }

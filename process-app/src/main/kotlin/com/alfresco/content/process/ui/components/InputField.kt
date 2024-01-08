@@ -85,7 +85,6 @@ fun InputField(
         }
     }
 
-
     OutlinedTextField(
         colors = customTextFieldColors,
         value = textFieldValue ?: "", // Initial value of the text field
@@ -206,7 +205,6 @@ fun InputFieldWithLeading(
             }
         }
     }
-
 
     OutlinedTextField(
         colors = customTextFieldColors,

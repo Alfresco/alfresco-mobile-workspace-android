@@ -24,7 +24,6 @@ fun IntegerInputField(
     var errorMessage = ""
 
     if (!textFieldValue.isNullOrEmpty()) {
-
         val minValue = fieldsData.minValue?.toInt() ?: 0
         val maxValue = fieldsData.maxValue?.toInt() ?: 0
 

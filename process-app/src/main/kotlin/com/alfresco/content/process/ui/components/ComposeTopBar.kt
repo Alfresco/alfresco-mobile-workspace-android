@@ -6,7 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.BackButton
 import com.alfresco.content.process.ui.theme.SeparateColorGray
 
@@ -18,7 +20,7 @@ fun ComposeTopBar() {
         TopAppBar(
             title = {
                 Text(
-                    text = "Workflow form",
+                    text = stringResource(id = R.string.action_start_workflow),
                 )
             },
             navigationIcon = {

@@ -38,6 +38,7 @@ import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
+import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
@@ -129,6 +130,18 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
                 FieldType.INTEGER.value() -> {
                     var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
                     IntegerInputField(
+                        textFieldValue = textFieldValue,
+                        onValueChanged = { newText ->
+                            textFieldValue = newText
+                            viewModel.updateFieldValue(field.id, newText, state)
+                        },
+                        field,
+                    )
+                }
+
+                FieldType.AMOUNT.value() -> {
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    AmountInputField(
                         textFieldValue = textFieldValue,
                         onValueChanged = { newText ->
                             textFieldValue = newText

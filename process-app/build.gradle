@@ -46,6 +46,7 @@ dependencies {
 
     implementation project(':base')
     implementation project(':common')
+    implementation project(':actions')
     implementation project(':data')
 
     implementation libs.androidx.core
@@ -61,5 +62,6 @@ dependencies {
     implementation libs.navigation.compose
     implementation libs.mavericks.compose
     implementation libs.androidx.compose.material.iconsExtended
+    debugImplementation libs.androidx.ui.tooling
 
 }

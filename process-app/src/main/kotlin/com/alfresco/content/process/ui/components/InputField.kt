@@ -42,9 +42,10 @@ fun InputField(
     onValueChanged: (String) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
     keyboardOptions: KeyboardOptions,
+    isError: Boolean = false,
+    errorMessage: String = "",
 ) {
     var selectionState by remember { mutableIntStateOf(0) }
-    var isError by remember { mutableStateOf(false) }
     // State to keep track of focus state
     var focusState by remember { mutableStateOf(false) }
 
@@ -67,14 +68,6 @@ fun InputField(
         modifiedModifier.height(100.dp)
     } else {
         modifiedModifier
-    }
-
-    isError = !textFieldValue.isNullOrEmpty() && textFieldValue.length < fieldsData.minLength
-
-    val errorMessage = if (isError) {
-        stringResource(R.string.error_min_length, fieldsData.minLength)
-    } else {
-        ""
     }
 
     val customTextFieldColors = OutlinedTextFieldDefaults.colors(
@@ -126,6 +119,128 @@ fun InputField(
         keyboardOptions = keyboardOptions, // Set keyboard type
         keyboardActions = keyboardActions,
         isError = isError,
+        trailingIcon = {
+            if (focusState && !textFieldValue.isNullOrEmpty()) {
+                val iconSize = with(LocalDensity.current) { 24.dp.toPx() }
+                if (isError) {
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        contentDescription = errorMessage,
+                        tint = AlfrescoError,
+                    )
+                } else {
+                    IconButton(
+                        onClick = {
+                            onValueChanged("")
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Cancel,
+                            contentDescription = stringResource(R.string.accessibility_clear_text),
+                        )
+                    }
+                }
+            }
+        },
+        supportingText = {
+            if (focusState) {
+                Text(
+                    text = errorMessage,
+                    color = AlfrescoError,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Clip,
+                )
+            }
+        },
+    )
+}
+
+@Composable
+fun InputFieldWithLeading(
+    maxLines: Int = 1,
+    textFieldValue: String? = null,
+    onValueChanged: (String) -> Unit = { },
+    fieldsData: FieldsData = FieldsData(),
+    keyboardOptions: KeyboardOptions,
+    leadingIcon: @Composable () -> Unit = {},
+    isError: Boolean = false,
+    errorMessage: String = "",
+) {
+    var selectionState by remember { mutableIntStateOf(0) }
+    // State to keep track of focus state
+    var focusState by remember { mutableStateOf(false) }
+
+    val keyboardActions = KeyboardActions(
+        onDone = {
+            // Handle the action when the "Done" button on the keyboard is pressed
+        },
+    )
+
+    val onFocusChanged: (FocusState) -> Unit = {
+        focusState = it.isFocused
+    }
+
+    val modifiedModifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp, top = 12.dp) // Add padding or other modifiers as needed
+        .onFocusChanged(onFocusChanged)
+
+    val adjustedModifier = if (maxLines > 1) {
+        modifiedModifier.height(100.dp)
+    } else {
+        modifiedModifier
+    }
+
+    val customTextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = MaterialTheme.colorScheme.primary, // Change focused border color
+        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface, // Change unfocused border color
+        errorBorderColor = AlfrescoError, // Change error border color
+    )
+
+    val labelWithAsterisk = buildAnnotatedString {
+        append(fieldsData.name)
+        if (fieldsData.required) {
+            withStyle(style = SpanStyle(color = AlfrescoError)) {
+                append(" *") // Adding a red asterisk for mandatory fields
+            }
+        }
+    }
+
+    OutlinedTextField(
+        colors = customTextFieldColors,
+        value = textFieldValue ?: "", // Initial value of the text field
+        onValueChange = { newValue ->
+            val newText = if (fieldsData.maxLength > 0) {
+                if (newValue.length <= fieldsData.maxLength) {
+                    newValue
+                } else {
+                    newValue.take(fieldsData.maxLength)
+                }
+            } else {
+                newValue
+            }
+            // Calculate the selection range based on the cursor position
+            val cursorPosition = if (selectionState > newText.length) newText.length else selectionState
+
+            if (textFieldValue != newText) {
+                // Set the cursor position after updating the text
+                onValueChanged(newText)
+                selectionState = cursorPosition
+            }
+        },
+        modifier = adjustedModifier,
+        label = {
+            Text(
+                text = labelWithAsterisk,
+                modifier = Modifier.padding(end = 4.dp),
+            )
+        }, // Label for the text field
+        placeholder = { Text(fieldsData.placeHolder ?: "") }, // Placeholder text
+        maxLines = maxLines, // Set the maximum number of lines to the specified value
+        keyboardOptions = keyboardOptions, // Set keyboard type
+        keyboardActions = keyboardActions,
+        isError = isError,
+        leadingIcon = leadingIcon,
         trailingIcon = {
             if (focusState && !textFieldValue.isNullOrEmpty()) {
                 val iconSize = with(LocalDensity.current) { 24.dp.toPx() }

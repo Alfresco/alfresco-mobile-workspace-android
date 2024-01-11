@@ -2,10 +2,12 @@ package com.alfresco.content.process.ui.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.process.R
 
 @Composable
 fun SingleLineInputField(
@@ -17,7 +19,24 @@ fun SingleLineInputField(
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Text,
     )
-    InputField(1, textFieldValue, onValueChanged, fieldsData, keyboardOptions)
+
+    val isError = !textFieldValue.isNullOrEmpty() && textFieldValue.length < fieldsData.minLength
+
+    val errorMessage = if (isError) {
+        stringResource(R.string.error_min_length, fieldsData.minLength)
+    } else {
+        ""
+    }
+
+    InputField(
+        maxLines = 1,
+        textFieldValue = textFieldValue,
+        onValueChanged = onValueChanged,
+        fieldsData = fieldsData,
+        keyboardOptions = keyboardOptions,
+        isError = isError,
+        errorMessage = errorMessage,
+    )
 }
 
 @Preview

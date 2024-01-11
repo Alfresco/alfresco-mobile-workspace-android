@@ -2,6 +2,7 @@ package com.alfresco.content.data.payloads
 
 import android.os.Parcelable
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.process.models.FieldParams
 import com.alfresco.process.models.Fields
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
@@ -26,7 +27,11 @@ data class FieldsData(
     var required: Boolean = false,
     var readOnly: Boolean = false,
     var overrideId: Boolean = false,
+    var enableFractions: Boolean = false,
+    var enablePeriodSeparator: Boolean = false,
+    var currency: String? = null,
     var fields: List<FieldsData> = emptyList(),
+    var params: Params? = null,
     var options: List<OptionsModel> = emptyList(),
 ) : Parcelable {
 
@@ -51,6 +56,10 @@ data class FieldsData(
                 required = raw.required ?: false,
                 readOnly = raw.readOnly ?: false,
                 overrideId = raw.overrideId ?: false,
+                params = Params.with(raw.params),
+                currency = raw.currency,
+                enableFractions = raw.enableFractions ?: false,
+                enablePeriodSeparator = raw.enablePeriodSeparator ?: false,
                 options = raw.options?.map { OptionsModel.with(it) } ?: emptyList(),
                 fields = raw.getFieldMapAsList()?.map { with(it) } ?: emptyList(),
             )
@@ -62,7 +71,17 @@ enum class FieldType {
     TEXT,
     MULTI_LINE_TEXT,
     INTEGER,
+    AMOUNT,
     ;
 
     fun value() = name.lowercase()
+}
+
+@Parcelize
+data class Params(val fractionLength: Int = 0) : Parcelable {
+    companion object {
+        fun with(raw: FieldParams?): Params {
+            return Params(raw?.fractionLength ?: 0)
+        }
+    }
 }

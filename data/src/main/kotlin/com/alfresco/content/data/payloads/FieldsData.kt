@@ -72,6 +72,7 @@ enum class FieldType {
     MULTI_LINE_TEXT,
     INTEGER,
     AMOUNT,
+    BOOLEAN,
     ;
 
     fun value() = name.lowercase()

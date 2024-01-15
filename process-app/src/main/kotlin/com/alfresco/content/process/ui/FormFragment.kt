@@ -39,6 +39,7 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.ui.components.AmountInputField
+import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
@@ -146,6 +147,17 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
                         onValueChanged = { newText ->
                             textFieldValue = newText
                             viewModel.updateFieldValue(field.id, newText, state)
+                        },
+                        field,
+                    )
+                }
+
+                FieldType.BOOLEAN.value() -> {
+                    var checkedValue by remember { mutableStateOf(field.value as? Boolean ?: false) }
+                    CheckBoxField(
+                        checkedValue = checkedValue,
+                        onCheckChanged = { newChecked ->
+                            checkedValue = newChecked
                         },
                         field,
                     )

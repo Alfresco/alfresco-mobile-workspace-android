@@ -14,12 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
@@ -28,7 +30,6 @@ fun CheckBoxField(
     onCheckChanged: (Boolean) -> Unit = {},
     fieldsData: FieldsData = FieldsData(),
 ) {
-
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
         if (fieldsData.required) {
@@ -42,20 +43,21 @@ fun CheckBoxField(
 
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Checkbox(
                 checked = checkedValue,
                 onCheckedChange = { isChecked ->
                     onCheckChanged(isChecked)
-                    if (fieldsData.required)
+                    if (fieldsData.required) {
                         showError = !isChecked
-                }
+                    }
+                },
             )
             Text(
                 text = labelWithAsterisk,
@@ -65,15 +67,13 @@ fun CheckBoxField(
 
         if (showError) {
             Text(
-                text = "This is a required field.",
+                text = stringResource(R.string.error_required_field),
                 color = AlfrescoError,
                 modifier = Modifier
                     .padding(start = 16.dp, top = 0.dp), // Adjust padding as needed
                 style = MaterialTheme.typography.titleSmall,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
         }
-
     }
-
 }

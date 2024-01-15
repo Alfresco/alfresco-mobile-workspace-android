@@ -4,4 +4,5 @@
     <string name="error_min_value">Can\'t be less than %1$d</string>
     <string name="error_max_value">Can\'t be greater than %1$d</string>
     <string name="error_invalid_format">Use a different number format</string>
+    <string name="error_required_field">This is a required field.</string>
 </resources>

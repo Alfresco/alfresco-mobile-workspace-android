@@ -73,6 +73,8 @@ enum class FieldType {
     INTEGER,
     AMOUNT,
     BOOLEAN,
+    DATETIME,
+    DATE,
     ;
 
     fun value() = name.lowercase()

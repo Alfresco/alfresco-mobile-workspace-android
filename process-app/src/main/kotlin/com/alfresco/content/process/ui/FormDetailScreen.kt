@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -41,6 +37,7 @@ import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
+import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.SingleLineInputField
@@ -75,13 +72,6 @@ fun FormFragment(navController: NavController) {
             }
         },
     )
-}
-
-@Composable
-fun BackButton(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
-        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -158,6 +148,17 @@ fun FormDetailScreen(padding: PaddingValues, state: FormViewState, viewModel: Fo
                         checkedValue = checkedValue,
                         onCheckChanged = { newChecked ->
                             checkedValue = newChecked
+                        },
+                        field,
+                    )
+                }
+
+                FieldType.DATETIME.value(), FieldType.DATE.value() -> {
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    DateTimeField(
+                        dateTimeValue = textFieldValue,
+                        onValueChanged = { newText ->
+                            textFieldValue = newText
                         },
                         field,
                     )

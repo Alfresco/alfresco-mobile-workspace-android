@@ -17,7 +17,7 @@ fun NavigationComponent() {
         NavHost(navController = navController, startDestination = "first_screen") {
             composable("first_screen") {
                 // Replace with the content of your first fragment
-                FormFragment(navController = navController)
+                FormFragment(navController)
             }
             // Add more composable entries for other fragments in your navigation graph
         }

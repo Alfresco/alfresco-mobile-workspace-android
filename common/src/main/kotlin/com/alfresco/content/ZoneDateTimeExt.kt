@@ -7,6 +7,7 @@ import java.util.TimeZone
 
 const val DATE_FORMAT_1 = "yyyy-MM-dd"
 const val DATE_FORMAT_2 = "dd-MMM-yyyy"
+const val DATE_FORMAT_2_1 = "dd-MM-yyyy"
 const val DATE_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 const val DATE_FORMAT_4 = "dd MMM yyyy"
 const val DATE_FORMAT_5 = "yyyy-MM-dd'T'HH:mm:ss'Z'"

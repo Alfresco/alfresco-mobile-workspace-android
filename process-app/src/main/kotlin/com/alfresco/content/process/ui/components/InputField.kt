@@ -1,6 +1,5 @@
 package com.alfresco.content.process.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -14,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,9 +34,12 @@ import androidx.compose.ui.unit.dp
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoError
+import trailingIconColor
 
 @Composable
 fun InputField(
+    modifier: Modifier = Modifier,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     maxLines: Int = 1,
     textFieldValue: String? = null,
     onValueChanged: (String) -> Unit = { },
@@ -44,6 +47,7 @@ fun InputField(
     keyboardOptions: KeyboardOptions,
     isError: Boolean = false,
     errorMessage: String = "",
+    isEnabled: Boolean = true,
 ) {
     var selectionState by remember { mutableIntStateOf(0) }
     // State to keep track of focus state
@@ -59,22 +63,13 @@ fun InputField(
         focusState = it.isFocused
     }
 
-    val modifiedModifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp, top = 12.dp) // Add padding or other modifiers as needed
-        .onFocusChanged(onFocusChanged)
+    modifier.onFocusChanged(onFocusChanged)
 
     val adjustedModifier = if (maxLines > 1) {
-        modifiedModifier.height(100.dp)
+        modifier.height(100.dp)
     } else {
-        modifiedModifier
+        modifier
     }
-
-    val customTextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = MaterialTheme.colorScheme.primary, // Change focused border color
-        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface, // Change unfocused border color
-        errorBorderColor = AlfrescoError, // Change error border color
-    )
 
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
@@ -86,7 +81,8 @@ fun InputField(
     }
 
     OutlinedTextField(
-        colors = customTextFieldColors,
+        colors = colors,
+        enabled = isEnabled,
         value = textFieldValue ?: "", // Initial value of the text field
         onValueChange = { newValue ->
             val newText = if (fieldsData.maxLength > 0) {
@@ -120,27 +116,14 @@ fun InputField(
         keyboardActions = keyboardActions,
         isError = isError,
         trailingIcon = {
-            if (focusState && !textFieldValue.isNullOrEmpty()) {
-                val iconSize = with(LocalDensity.current) { 24.dp.toPx() }
-                if (isError) {
-                    Icon(
-                        imageVector = Icons.Default.Error,
-                        contentDescription = errorMessage,
-                        tint = AlfrescoError,
-                    )
-                } else {
-                    IconButton(
-                        onClick = {
-                            onValueChanged("")
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Cancel,
-                            contentDescription = stringResource(R.string.accessibility_clear_text),
-                        )
-                    }
-                }
-            }
+            TrailingInputField(
+                focusState = focusState,
+                textValue = textFieldValue,
+                errorMessage = errorMessage,
+                isError = isError,
+                fieldsData = fieldsData,
+                onValueChanged = onValueChanged,
+            )
         },
         supportingText = {
             if (focusState) {
@@ -156,7 +139,13 @@ fun InputField(
 }
 
 @Composable
+fun trailingIcon() {
+}
+
+@Composable
 fun InputFieldWithLeading(
+    modifier: Modifier = Modifier,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     maxLines: Int = 1,
     textFieldValue: String? = null,
     onValueChanged: (String) -> Unit = { },
@@ -180,22 +169,13 @@ fun InputFieldWithLeading(
         focusState = it.isFocused
     }
 
-    val modifiedModifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp, top = 12.dp) // Add padding or other modifiers as needed
-        .onFocusChanged(onFocusChanged)
+    modifier.onFocusChanged(onFocusChanged)
 
     val adjustedModifier = if (maxLines > 1) {
-        modifiedModifier.height(100.dp)
+        modifier.height(100.dp)
     } else {
-        modifiedModifier
+        modifier
     }
-
-    val customTextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = MaterialTheme.colorScheme.primary, // Change focused border color
-        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface, // Change unfocused border color
-        errorBorderColor = AlfrescoError, // Change error border color
-    )
 
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
@@ -207,7 +187,7 @@ fun InputFieldWithLeading(
     }
 
     OutlinedTextField(
-        colors = customTextFieldColors,
+        colors = colors,
         value = textFieldValue ?: "", // Initial value of the text field
         onValueChange = { newValue ->
             val newText = if (fieldsData.maxLength > 0) {
@@ -248,7 +228,7 @@ fun InputFieldWithLeading(
                     Icon(
                         imageVector = Icons.Default.Error,
                         contentDescription = errorMessage,
-                        tint = AlfrescoError,
+                        tint = MaterialTheme.colorScheme.error,
                     )
                 } else {
                     IconButton(
@@ -259,6 +239,7 @@ fun InputFieldWithLeading(
                         Icon(
                             imageVector = Icons.Default.Cancel,
                             contentDescription = stringResource(R.string.accessibility_clear_text),
+                            tint = trailingIconColor(),
                         )
                     }
                 }

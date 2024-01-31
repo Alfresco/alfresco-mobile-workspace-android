@@ -11,16 +11,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.alfresco.content.DATE_FORMAT_4
-import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.component.ComponentBuilder
+import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import inputField
 
 @Composable
-fun DateTimeField(
-    dateTimeValue: String = "",
-    onValueChanged: (String) -> Unit = { },
+fun DropdownField(
+    nameText: String = "",
+    queryText: String = "",
+    onValueChanged: (Pair<String, String>) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
 ) {
     val keyboardOptions = KeyboardOptions.Default.copy(
@@ -28,7 +29,7 @@ fun DateTimeField(
         keyboardType = KeyboardType.Text,
     )
 
-    val isError = dateTimeValue.isNotEmpty() && dateTimeValue.length < fieldsData.minLength
+    val isError = nameText.isNotEmpty() && nameText.length < fieldsData.minLength
 
     val errorMessage = if (isError) {
         stringResource(R.string.error_required_field, fieldsData.minLength)
@@ -36,7 +37,7 @@ fun DateTimeField(
         ""
     }
 
-    val textFieldColors = if (dateTimeValue.isEmpty()) {
+    val textFieldColors = if (nameText.isEmpty()) {
         OutlinedTextFieldDefaults.colors(
             disabledBorderColor = MaterialTheme.colorScheme.primary,
             disabledTextColor = MaterialTheme.colorScheme.onSurface,
@@ -51,28 +52,31 @@ fun DateTimeField(
         )
 
     val context = LocalContext.current
+
     InputField(
         colors = textFieldColors,
         modifier = Modifier
             .inputField()
             .clickable {
-                DatePickerBuilder(
-                    context = context,
-                    fromDate = "",
-                    isFrom = true,
-                    isFutureDate = true,
-                    dateFormat = DATE_FORMAT_4,
-                    fieldsData = fieldsData,
+                val componentData = ComponentData.with(
+                    fieldsData,
+                    nameText,
+                    queryText,
                 )
-                    .onSuccess { date ->
-                        onValueChanged(date)
+                ComponentBuilder(context, componentData)
+                    .onApply { name, query, _ ->
+                        onValueChanged(Pair(name, query))
                     }
-                    .onFailure {}
+                    .onReset { name, query, _ ->
+                        onValueChanged(Pair(fieldsData.placeHolder ?: "", ""))
+                    }
+                    .onCancel {
+                        onValueChanged(Pair(nameText, queryText))
+                    }
                     .show()
             },
         maxLines = 1,
-        textFieldValue = dateTimeValue,
-        onValueChanged = onValueChanged,
+        textFieldValue = nameText,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
         isError = isError,
@@ -83,6 +87,6 @@ fun DateTimeField(
 
 @Preview
 @Composable
-fun DateTimeFieldPreview() {
-    DateTimeField()
+fun DropdownFieldPreview() {
+    DropdownField()
 }

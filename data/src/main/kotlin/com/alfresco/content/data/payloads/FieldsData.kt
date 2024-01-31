@@ -75,6 +75,7 @@ enum class FieldType {
     BOOLEAN,
     DATETIME,
     DATE,
+    DROPDOWN,
     ;
 
     fun value() = name.lowercase()

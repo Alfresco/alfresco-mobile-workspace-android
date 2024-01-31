@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alfresco.content.process.ui.FormFragment
+import com.alfresco.content.process.ui.components.FormScreen
 
 @Composable
 fun NavigationComponent() {
@@ -17,7 +17,7 @@ fun NavigationComponent() {
         NavHost(navController = navController, startDestination = "first_screen") {
             composable("first_screen") {
                 // Replace with the content of your first fragment
-                FormFragment(navController)
+                FormScreen(navController)
             }
             // Add more composable entries for other fragments in your navigation graph
         }

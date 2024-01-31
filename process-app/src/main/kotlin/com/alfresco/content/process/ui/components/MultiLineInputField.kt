@@ -32,7 +32,7 @@ fun MultiLineInputField(
 
     InputField(
         modifier = Modifier.inputField(),
-        maxLines = 4,
+        maxLines = 5,
         textFieldValue = textFieldValue,
         onValueChanged = onValueChanged,
         fieldsData = fieldsData,

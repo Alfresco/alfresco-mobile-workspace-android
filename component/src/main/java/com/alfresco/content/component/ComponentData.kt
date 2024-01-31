@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.alfresco.content.data.Facets
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
+import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.models.CategoriesItem
 import kotlinx.parcelize.Parcelize
 
@@ -38,6 +39,23 @@ data class ComponentData(
                 selector = category?.component?.selector ?: "",
                 options = category?.component?.settings?.options?.map { ComponentOptions.with(it) },
                 properties = ComponentProperties.with(category?.component?.settings),
+                selectedName = name,
+                selectedQuery = query,
+            )
+        }
+
+        /**
+         * update the ComponentData obj after getting the result (name and id) from field options
+         * @param fieldsData
+         * @param name
+         * @param query
+         */
+        fun with(fieldsData: FieldsData, name: String, query: String): ComponentData {
+            return ComponentData(
+                id = fieldsData.id,
+                name = fieldsData.name,
+                selector = ComponentType.RADIO.value,
+                options = fieldsData.options.filter { it.id != "empty" }.map { ComponentOptions.withProcess(it) },
                 selectedName = name,
                 selectedQuery = query,
             )

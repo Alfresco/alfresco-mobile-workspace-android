@@ -27,6 +27,7 @@ import com.alfresco.content.process.ui.components.DropdownField
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.RadioButtonField
+import com.alfresco.content.process.ui.components.ReadOnlyField
 import com.alfresco.content.process.ui.components.SingleLineInputField
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -143,6 +144,14 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                             textFieldValue = newText
                             textFieldQuery = newQuery
                         },
+                        fieldsData = field,
+                    )
+                }
+
+                FieldType.READONLY_TEXT.value(), FieldType.READONLY.value() -> {
+                    val textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    ReadOnlyField(
+                        textFieldValue = textFieldValue,
                         fieldsData = field,
                     )
                 }

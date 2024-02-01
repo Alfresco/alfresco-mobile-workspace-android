@@ -26,6 +26,7 @@ import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.DropdownField
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
+import com.alfresco.content.process.ui.components.RadioButtonField
 import com.alfresco.content.process.ui.components.SingleLineInputField
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -125,6 +126,20 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                         nameText = textFieldValue,
                         queryText = textFieldQuery,
                         onValueChanged = { (newText, newQuery) ->
+                            textFieldValue = newText
+                            textFieldQuery = newQuery
+                        },
+                        fieldsData = field,
+                    )
+                }
+
+                FieldType.RADIO_BUTTONS.value() -> {
+                    var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+                    var textFieldQuery by remember { mutableStateOf("") }
+                    RadioButtonField(
+                        selectedOption = textFieldValue,
+                        selectedQuery = textFieldQuery,
+                        onSelectedOption = { (newText, newQuery) ->
                             textFieldValue = newText
                             textFieldQuery = newQuery
                         },

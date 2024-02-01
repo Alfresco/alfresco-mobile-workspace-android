@@ -79,6 +79,7 @@ enum class FieldType {
     RADIO_BUTTONS,
     READONLY_TEXT,
     READONLY,
+    PEOPLE,
     ;
 
     fun value() = name.lowercase()

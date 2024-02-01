@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
@@ -26,6 +27,7 @@ import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.DropdownField
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
+import com.alfresco.content.process.ui.components.PeopleField
 import com.alfresco.content.process.ui.components.RadioButtonField
 import com.alfresco.content.process.ui.components.ReadOnlyField
 import com.alfresco.content.process.ui.components.SingleLineInputField
@@ -153,6 +155,18 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                     ReadOnlyField(
                         textFieldValue = textFieldValue,
                         fieldsData = field,
+                    )
+                }
+
+                FieldType.PEOPLE.value() -> {
+                    var userDetailValue by remember { mutableStateOf<UserGroupDetails?>(null) }
+                    PeopleField(
+                        userDetail = userDetailValue,
+                        onAssigneeSelected = { userDetails ->
+                            userDetailValue = userDetails
+                        },
+                        fieldsData = field,
+                        processEntry = state.parent,
                     )
                 }
             }

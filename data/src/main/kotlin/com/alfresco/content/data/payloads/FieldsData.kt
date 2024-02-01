@@ -76,6 +76,7 @@ enum class FieldType {
     DATETIME,
     DATE,
     DROPDOWN,
+    RADIO_BUTTONS,
     ;
 
     fun value() = name.lowercase()

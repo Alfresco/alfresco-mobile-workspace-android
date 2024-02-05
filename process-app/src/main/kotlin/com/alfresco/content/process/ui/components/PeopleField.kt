@@ -1,13 +1,18 @@
 package com.alfresco.content.process.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -17,6 +22,7 @@ import com.alfresco.content.component.searchusergroup.SearchUserGroupComponentBu
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
@@ -41,21 +47,32 @@ fun PeopleField(
             .fillMaxSize()
             .padding(all = 16.dp),
     ) {
-        Text(
-            text = labelWithAsterisk,
-            modifier = Modifier
-                .padding(end = 4.dp)
-                .clickable {
-                    SearchUserGroupComponentBuilder(context, processEntry)
-                        .onApply { userDetails ->
-                            onAssigneeSelected(userDetails)
-                        }
-                        .onCancel {
-                            onAssigneeSelected(null)
-                        }
-                        .show()
-                },
-        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = labelWithAsterisk,
+                modifier = Modifier
+                    .padding(end = 4.dp),
+            )
+
+            IconButton(onClick = {
+                SearchUserGroupComponentBuilder(context, processEntry)
+                    .onApply { userDetails ->
+                        onAssigneeSelected(userDetails)
+                    }
+                    .onCancel {
+                        onAssigneeSelected(null)
+                    }
+                    .show()
+            }) {
+                Icon(
+                    painterResource(R.drawable.ic_add),
+                    contentDescription = "",
+                )
+            }
+        }
         if (userDetail != null) {
             InputChip(context, userDetail)
         }

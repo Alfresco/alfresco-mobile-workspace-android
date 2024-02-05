@@ -16,9 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.getLocalizedName
-import com.alfresco.content.process.ui.theme.SeparateColorGray
-import com.alfresco.content.process.ui.theme.chipBackgroundColorGray
-import com.alfresco.content.process.ui.theme.chipColorGray
+import com.alfresco.content.process.ui.theme.SeparateColorGrayDT
+import com.alfresco.content.process.ui.theme.SeparateColorGrayLT
+import com.alfresco.content.process.ui.theme.chipBackgroundColorGrayDT
+import com.alfresco.content.process.ui.theme.chipBackgroundColorGrayLT
+import com.alfresco.content.process.ui.theme.chipColorGrayDT
+import com.alfresco.content.process.ui.theme.chipColorGrayLT
+import com.alfresco.content.process.ui.theme.isNightMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +30,7 @@ fun InputChip(
     context: Context,
     userDetail: UserGroupDetails,
 ) {
+    val isNightMode = isNightMode()
     InputChip(
         modifier = Modifier.padding(vertical = 8.dp),
         onClick = {
@@ -37,20 +42,15 @@ fun InputChip(
             selectedBorderWidth = 0.dp,
 
         ),
-        colors = InputChipDefaults.inputChipColors(
-            labelColor = SeparateColorGray,
-            selectedLabelColor = SeparateColorGray,
-            selectedLeadingIconColor = SeparateColorGray,
-            selectedContainerColor = chipBackgroundColorGray,
-        ),
+        colors = getInputChipColors(),
         leadingIcon = {
             Text(
-                color = SeparateColorGray,
+                color = if (isNightMode) SeparateColorGrayDT else SeparateColorGrayLT,
                 modifier = Modifier
                     .padding(16.dp)
                     .drawBehind {
                         drawCircle(
-                            color = chipColorGray,
+                            color = if (isNightMode) chipColorGrayDT else chipColorGrayLT,
                             radius = this.size.maxDimension,
                         )
                     },
@@ -66,3 +66,20 @@ fun InputChip(
 fun InputChipPreview() {
     InputChip(LocalContext.current, UserGroupDetails())
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun getInputChipColors() = if (isNightMode()) {
+    InputChipDefaults.inputChipColors(
+        labelColor = SeparateColorGrayDT,
+        selectedLabelColor = SeparateColorGrayDT,
+        selectedLeadingIconColor = SeparateColorGrayDT,
+        selectedContainerColor = chipBackgroundColorGrayDT,
+    )
+} else
+    InputChipDefaults.inputChipColors(
+        labelColor = SeparateColorGrayLT,
+        selectedLabelColor = SeparateColorGrayLT,
+        selectedLeadingIconColor = SeparateColorGrayLT,
+        selectedContainerColor = chipBackgroundColorGrayLT,
+    )

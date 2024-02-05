@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.BackButton
-import com.alfresco.content.process.ui.theme.SeparateColorGray
+import com.alfresco.content.process.ui.theme.SeparateColorGrayLT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +27,6 @@ fun ComposeTopBar() {
                 BackButton(onClick = { (context as Activity).finish() })
             },
         )
-        Divider(color = SeparateColorGray, thickness = 1.dp)
+        Divider(color = SeparateColorGrayLT, thickness = 1.dp)
     }
 }

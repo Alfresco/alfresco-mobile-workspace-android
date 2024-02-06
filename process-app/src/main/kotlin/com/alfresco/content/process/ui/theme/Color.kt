@@ -24,4 +24,10 @@ val White = Color.White
 val White15 = Color(0x26FFFFFF)
 val White60 = Color(0x99FFFFFF)
 val ActionModeColor = AlfrescoBlue700 // Using AlfrescoBlue700 as action mode color
-val SeparateColorGray = Color(0xFF212121)
+val SeparateColorGrayLT = Color(0xFF212121)
+val chipColorGrayLT = Color(0x1F212121)
+val chipBackgroundColorGrayLT = Color(0x0D212121)
+
+val SeparateColorGrayDT = Color(0xFFFFFFFF)
+val chipColorGrayDT = Color(0x1FFFFFFF)
+val chipBackgroundColorGrayDT = Color(0x0DFFFFFF)

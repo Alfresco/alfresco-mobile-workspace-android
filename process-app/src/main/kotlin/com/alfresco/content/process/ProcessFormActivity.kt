@@ -47,7 +47,14 @@ class ProcessFormActivity : AppCompatActivity() {
 
         fragmentManager
             .beginTransaction()
-            .replace(fragmentContainer.id, ProcessFormFragment(), "firstFragment")
+            .replace(
+                fragmentContainer.id,
+                ProcessFormFragment().apply {
+                    // Set your data using intent extras
+                    arguments = intent.extras
+                },
+                "firstFragment",
+            )
             .commit()
     }
 }

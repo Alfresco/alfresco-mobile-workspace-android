@@ -15,7 +15,6 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.component.DatePickerBuilder
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import inputField
 
 @Composable
 fun DateTimeField(

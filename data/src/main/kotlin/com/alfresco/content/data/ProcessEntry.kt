@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.os.Parcelable
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProcessInstanceEntry
 import kotlinx.parcelize.Parcelize
@@ -220,6 +221,38 @@ data class ProcessEntry(
                 if (it.type == ReviewerType.FUNCTIONAL_GROUP.value()) {
                     reviewerType = ReviewerType.FUNCTIONAL_GROUP
                 }
+            }
+
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = data.priority,
+                reviewerType = reviewerType,
+            )
+        }
+
+        fun withProcess(data:ProcessEntry, fieldType: String): ProcessEntry{
+            var reviewerType: ReviewerType = ReviewerType.PEOPLE
+
+            if (fieldType == FieldType.FUNCTIONAL_GROUP.value()) {
+                reviewerType = ReviewerType.FUNCTIONAL_GROUP
             }
 
             return ProcessEntry(

@@ -197,6 +197,11 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         binding.parentView.addView(binding.topView)
         binding.parentView.addView(binding.separator)
 
+        if (state.parent?.selector != ComponentType.DROPDOWN_RADIO.value) {
+            binding.bottomSeparator.visibility = View.VISIBLE
+            binding.bottomView.visibility = View.VISIBLE
+        }
+
         val replacedString = state.parent?.name?.replace(" ", ".") ?: ""
         val localizedName = requireContext().getLocalizedName(replacedString)
         if (localizedName == replacedString) {
@@ -211,7 +216,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             ComponentType.TASK_PROCESS_PRIORITY.value -> setupTaskPriorityComponent(state)
             ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
             ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
-            ComponentType.RADIO.value -> setupRadioListComponent(state, viewModel)
+            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> setupRadioListComponent(state, viewModel)
             ComponentType.NUMBER_RANGE.value -> setupNumberRangeComponent(state, viewModel)
             ComponentType.SLIDER.value -> setupSliderComponent(state, viewModel)
             ComponentType.DATE_RANGE.value, ComponentType.DATE_RANGE_FUTURE.value -> {
@@ -233,6 +238,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                 }
             }
+
             ComponentType.FACETS.value -> setupFacetComponent(state, viewModel)
         }
     }
@@ -251,6 +257,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                             dismiss()
                         }
                     }
+
                     ComponentType.DATE_RANGE_FUTURE.value -> {
                         if (viewModel.fromDate.isEmpty() && viewModel.toDate.isEmpty()) {
                             binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
@@ -259,6 +266,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                             dismiss()
                         }
                     }
+
                     else -> {
                         onApply?.invoke(state.parent?.selectedName ?: "", state.parent?.selectedQuery ?: "", state.parent?.selectedQueryMap ?: mapOf())
                         dismiss()
@@ -285,9 +293,11 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             ComponentType.CHECK_LIST.value -> {
                 epoxyCheckListController.requestModelBuild()
             }
-            ComponentType.RADIO.value -> {
+
+            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> {
                 epoxyRadioListController.requestModelBuild()
             }
+
             ComponentType.FACETS.value -> {
                 epoxyCheckFacetListController.requestModelBuild()
             }
@@ -317,10 +327,15 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     data(option)
                     optionSelected(viewModel.isOptionSelected(state, option))
                     clickListener { model, _, _, _ ->
-                        viewModel.updateSingleComponentData(
-                            requireContext().getLocalizedName(model.data().label),
-                            model.data().query,
-                        )
+                        if (state.parent.selector == ComponentType.DROPDOWN_RADIO.value) {
+                            onApply?.invoke(requireContext().getLocalizedName(model.data().label), model.data().query, mapOf())
+                            dismiss()
+                        } else {
+                            viewModel.updateSingleComponentData(
+                                requireContext().getLocalizedName(model.data().label),
+                                model.data().query,
+                            )
+                        }
                     }
                 }
             }

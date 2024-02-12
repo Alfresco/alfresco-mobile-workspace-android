@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:layout_height="match_parent">
+    android:paddingBottom="16dp">
 
 
     <LinearLayout
@@ -160,7 +160,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
-        android:background="@color/color_view_line" />
+        android:background="@color/color_view_line"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/bottom_view"
@@ -168,7 +169,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/component_default_margin"
         android:layout_marginEnd="@dimen/component_default_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

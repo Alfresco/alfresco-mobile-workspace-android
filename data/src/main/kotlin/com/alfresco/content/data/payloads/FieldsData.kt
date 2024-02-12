@@ -80,6 +80,7 @@ enum class FieldType {
     READONLY_TEXT,
     READONLY,
     PEOPLE,
+    FUNCTIONAL_GROUP,
     ;
 
     fun value() = name.lowercase()

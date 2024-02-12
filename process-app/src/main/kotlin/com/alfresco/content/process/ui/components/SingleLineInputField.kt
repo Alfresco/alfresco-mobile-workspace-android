@@ -4,12 +4,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import inputField
 
 @Composable
 fun SingleLineInputField(
@@ -31,7 +31,9 @@ fun SingleLineInputField(
     }
 
     InputField(
-        modifier = Modifier.inputField(),
+        modifier = Modifier
+            .inputField()
+            .semantics(mergeDescendants = true) {},
         maxLines = 1,
         textFieldValue = textFieldValue,
         onValueChanged = onValueChanged,

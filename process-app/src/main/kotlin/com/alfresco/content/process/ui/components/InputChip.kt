@@ -47,7 +47,7 @@ fun InputChip(
         border = InputChipDefaults.inputChipBorder(
             selectedBorderWidth = 0.dp,
 
-            ),
+        ),
         colors = getInputChipColors(),
         leadingIcon = {
             Text(

@@ -79,7 +79,6 @@
     <string name="icon_priority_edit">Icône Modifier la priorité</string>
     <string name="icon_due_date_clear">Icône Effacer la date d\'échéance</string>
     <string name="icon_due_date_edit">Icône Modifier la date d\'échéance</string>
-    <string name="suffix_view_all">&#8230;Afficher tout</string>
     <string name="dialog_title_save_progress">Progression de la tâche</string>
     <string name="dialog_message_save_progress">Voulez-vous enregistrer la progression ?</string>
     <string name="text_mark_as_complete">Marquer comme terminé</string>

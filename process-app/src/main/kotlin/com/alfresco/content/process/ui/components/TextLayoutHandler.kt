@@ -4,7 +4,7 @@ import androidx.compose.ui.text.TextLayoutResult
 
 class TextLayoutHandler(
     private val minimumLineLength: Int,
-    private val onEllipsisChanged: (Boolean) -> Unit
+    private val onEllipsisChanged: (Boolean) -> Unit,
 ) {
     fun handleTextLayout(textLayoutResult: TextLayoutResult) {
         if (textLayoutResult.lineCount > minimumLineLength - 1) {

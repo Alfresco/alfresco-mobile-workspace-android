@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository
@@ -24,6 +25,7 @@ import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.FormViewState
+import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.DateTimeField
@@ -53,10 +55,10 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+    ) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             items(items = formList) { field ->
                 when (field.type) {
@@ -111,6 +113,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                     FieldType.BOOLEAN.value() -> {
                         var checkedValue by remember { mutableStateOf(field.value as? Boolean ?: false) }
                         CheckBoxField(
+                            title = stringResource(id = R.string.title_workflow),
                             checkedValue = checkedValue,
                             onCheckChanged = { newChecked ->
                                 checkedValue = newChecked
@@ -130,7 +133,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                         )
                     }
 
-                    FieldType.DROPDOWN.value(),FieldType.RADIO_BUTTONS.value() -> {
+                    FieldType.DROPDOWN.value(), FieldType.RADIO_BUTTONS.value() -> {
                         var textFieldValue by remember { mutableStateOf(field.placeHolder ?: "") }
                         var textFieldQuery by remember { mutableStateOf("") }
                         DropdownField(
@@ -152,7 +155,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                         )
                     }
 
-                    FieldType.PEOPLE.value(),FieldType.FUNCTIONAL_GROUP.value() -> {
+                    FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
                         var userDetailValue by remember { mutableStateOf<UserGroupDetails?>(null) }
                         PeopleField(
                             userDetail = userDetailValue,
@@ -160,7 +163,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                                 userDetailValue = userDetails
                             },
                             fieldsData = field,
-                            processEntry = ProcessEntry.withProcess(state.parent,field.type),
+                            processEntry = ProcessEntry.withProcess(state.parent, field.type),
                         )
                     }
                 }

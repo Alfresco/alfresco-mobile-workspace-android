@@ -3,8 +3,6 @@ package com.alfresco.content.process.ui.components
 import ComposeTopBar
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -42,7 +40,6 @@ fun FormScreen(navController: NavController) {
                 }
                 FormDetailScreen(state, viewModel)
             }
-
         },
     )
 }

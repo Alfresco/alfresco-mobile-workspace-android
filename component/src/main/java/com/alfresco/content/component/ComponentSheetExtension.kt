@@ -189,7 +189,11 @@ fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: Compone
  */
 fun ComponentSheet.setupTextComponent(state: ComponentState) {
     binding.parentView.addView(binding.frameTitleDescription)
-    binding.titleDescriptionComponent.tvTitle.text = state.parent?.query ?: ""
+    if (state.parent?.query.isNullOrEmpty()) {
+        binding.titleDescriptionComponent.tvTitle.visibility = View.GONE
+    } else {
+        binding.titleDescriptionComponent.tvTitle.text = state.parent?.query ?: ""
+    }
     binding.titleDescriptionComponent.tvDescription.text = state.parent?.value ?: ""
 
     binding.bottomView.visibility = View.GONE

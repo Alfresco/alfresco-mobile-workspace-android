@@ -248,7 +248,7 @@ data class ProcessEntry(
             )
         }
 
-        fun withProcess(data:ProcessEntry, fieldType: String): ProcessEntry{
+        fun withProcess(data: ProcessEntry, fieldType: String): ProcessEntry {
             var reviewerType: ReviewerType = ReviewerType.PEOPLE
 
             if (fieldType == FieldType.FUNCTIONAL_GROUP.value()) {

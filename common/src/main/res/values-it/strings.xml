@@ -29,4 +29,5 @@
     <string name="none">Nessuno</string>
     <string name="title_action_mode">%d Selezionato</string>
     <string name="message_no_internet">Controlla la connessione Internet e riprova.</string>
+    <string name="suffix_view_all">...Visualizza tutto</string>
 </resources>

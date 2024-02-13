@@ -29,4 +29,6 @@
     <string name="none">None</string>
     <string name="title_action_mode">%d Selected</string>
     <string name="message_no_internet">Please check your internet connection and Try again.</string>
+    <string name="suffix_view_all">&#8230;View all</string>
+    <string name="title_workflow">Workflow</string>
 </resources>

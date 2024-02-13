@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,47 +15,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.alfresco.content.component.ComponentBuilder
+import com.alfresco.content.component.ComponentData
+import com.alfresco.content.component.ComponentType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
 fun CheckBoxField(
+    title: String = "",
     checkedValue: Boolean = false,
     onCheckChanged: (Boolean) -> Unit = {},
     fieldsData: FieldsData = FieldsData(),
 ) {
-    val labelWithAsterisk = buildAnnotatedString {
-        append(fieldsData.name)
-        if (fieldsData.required) {
-            withStyle(style = SpanStyle(color = AlfrescoError)) {
-                append(" *") // Adding a red asterisk for mandatory fields
-            }
-        }
-    }
-
+    val context = LocalContext.current
     var showError by remember { mutableStateOf(false) }
 
-    var expandedState by remember { mutableStateOf(false) }
-    var showReadMoreButtonState by remember { mutableStateOf(false) }
-    val minimumLineLength = 2   // Change this to your desired value
-    val maxLines = if (expandedState) Int.MAX_VALUE else minimumLineLength
+    val minimumLineLength = 2 // Change this to your desired value
 
-    val textLayoutHandler = remember {
-        TextLayoutHandler(minimumLineLength) { isEllipsized ->
-            showReadMoreButtonState = isEllipsized
-        }
-    }
+    var showReadMoreButtonState by remember { mutableStateOf(false) }
+
+    var visibleText by remember { mutableStateOf("") }
+    val spaceAsteric = " *"
+    val readMore = stringResource(id = R.string.suffix_view_all)
+    val suffix = spaceAsteric + readMore
+    var lineCount = 1
+
+    val labelWithAsterisk = customLabel(visibleText, showReadMoreButtonState, fieldsData, spaceAsteric, readMore)
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -76,36 +74,46 @@ fun CheckBoxField(
                     }
                 },
             )
-            Text(
+            ClickableText(
                 maxLines = minimumLineLength,
-                overflow = TextOverflow.Ellipsis,
-                text = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            textDecoration = TextDecoration.LineThrough,
-                            color = Color.Gray
+                text = labelWithAsterisk,
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
+                onClick = {
+                    labelWithAsterisk.getStringAnnotations(it, it).firstOrNull()?.let {
+                        ComponentBuilder(
+                            context,
+                            ComponentData(
+                                name = title,
+                                query = "",
+                                value = fieldsData.name,
+                                selector = ComponentType.VIEW_TEXT.value,
+                            ),
                         )
-                    ) {
-                        append(labelWithAsterisk)
+                            .onApply { name, query, _ ->
+                            }
+                            .onReset { name, query, _ ->
+                            }
+                            .onCancel {
+                            }
+                            .show()
                     }
                 },
                 modifier = Modifier
-                    .padding(end = 4.dp, top = 6.dp)
-                    .align(alignment = Alignment.Top),
+                    .padding(end = 4.dp, top = if (lineCount == 1) 0.dp else 6.dp)
+                    .align(alignment = if (lineCount == 1) Alignment.CenterVertically else Alignment.Top),
                 onTextLayout = { textLayoutResult: TextLayoutResult ->
-                    textLayoutHandler.handleTextLayout(textLayoutResult)
-                }
+                    lineCount = textLayoutResult.lineCount
+                    if (textLayoutResult.lineCount > minimumLineLength - 1 && !showReadMoreButtonState) {
+                        val endIndex = textLayoutResult.getLineEnd(minimumLineLength - 1)
+                        visibleText = with(labelWithAsterisk) {
+                            this.substring(0, endIndex = endIndex - suffix.length)
+                        }
+                        showReadMoreButtonState = true
+                    }
+                },
             )
-            /*if (showReadMoreButtonState) {
-                Text(
-                    text = if (expandedState) "Read Less" else "Read More",
-                    color = Color.Gray,
-                    modifier = Modifier.clickable {
-                        expandedState = !expandedState
-                    },
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }*/
         }
 
         if (showError) {
@@ -120,3 +128,49 @@ fun CheckBoxField(
         }
     }
 }
+
+@Composable
+private fun customLabel(visibleText: String, showReadMoreButtonState: Boolean, fieldsData: FieldsData, spaceAsteric: String, readMore: String) =
+    if (visibleText.isNotEmpty() && showReadMoreButtonState) {
+        buildAnnotatedString {
+            val labelReadMore = (visibleText) + spaceAsteric + readMore
+
+            val startIndexReadMore = labelReadMore.indexOf(readMore)
+            val endIndexReadMore = startIndexReadMore + readMore.length
+
+            val startIndexAsteric = labelReadMore.indexOf(spaceAsteric)
+            val endIndexAsteric = startIndexAsteric + spaceAsteric.length
+
+            append(labelReadMore)
+
+            if (fieldsData.required) {
+                addStyle(
+                    style = SpanStyle(color = AlfrescoError),
+                    start = startIndexAsteric,
+                    end = endIndexAsteric,
+                )
+            }
+
+            addStyle(
+                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                start = startIndexReadMore,
+                end = endIndexReadMore,
+            )
+
+            addStringAnnotation(
+                "tagMinified",
+                readMore,
+                start = startIndexReadMore,
+                end = endIndexReadMore,
+            )
+        }
+    } else {
+        buildAnnotatedString {
+            append(fieldsData.name)
+            if (fieldsData.required) {
+                withStyle(style = SpanStyle(color = AlfrescoError)) {
+                    append(" *") // Adding a red asterisk for mandatory fields
+                }
+            }
+        }
+    }

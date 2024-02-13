@@ -31,7 +31,7 @@ fun TrailingInputField(
                 tint = trailingIconColor(),
             )
         }
-        FieldType.DROPDOWN.value(),FieldType.RADIO_BUTTONS.value() -> {
+        FieldType.DROPDOWN.value(), FieldType.RADIO_BUTTONS.value() -> {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = stringResource(R.string.accessibility_date_icon),

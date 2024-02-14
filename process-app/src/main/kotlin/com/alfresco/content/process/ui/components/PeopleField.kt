@@ -47,7 +47,7 @@ fun PeopleField(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 16.dp),
+            .padding(top = 16.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

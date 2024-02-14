@@ -10,7 +10,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import inputField
 
 @Composable
 fun AmountInputField(

@@ -35,7 +35,13 @@ fun InputChip(
         modifier = Modifier.padding(vertical = 8.dp),
         onClick = {
         },
-        label = { Text(context.getLocalizedName(userDetail.name)) },
+        label = {
+            if (userDetail.groupName.isNotEmpty()) {
+                Text(context.getLocalizedName(userDetail.groupName))
+            } else {
+                Text(context.getLocalizedName(userDetail.name))
+            }
+        },
         selected = true,
         shape = RoundedCornerShape(24.dp),
         border = InputChipDefaults.inputChipBorder(

@@ -79,7 +79,6 @@
     <string name="icon_priority_edit">Icona Modifica priorità</string>
     <string name="icon_due_date_clear">Icona Cancella scadenza</string>
     <string name="icon_due_date_edit">Icona Modifica scadenza</string>
-    <string name="suffix_view_all">...Visualizza tutto</string>
     <string name="dialog_title_save_progress">Stato di avanzamento compito</string>
     <string name="dialog_message_save_progress">Vuoi salvare lo stato di avanzamento?</string>
     <string name="text_mark_as_complete">Contrassegna come completato</string>

@@ -13,6 +13,7 @@ enum class ComponentType(val value: String) {
     DATE_RANGE("date-range"),
     DATE_RANGE_FUTURE("date-range-future"),
     RADIO("radio"),
+    DROPDOWN_RADIO("dropdown_radio"),
     FACETS("facets"),
     TASK_PROCESS_PRIORITY("task-process-priority"),
     None("none"),

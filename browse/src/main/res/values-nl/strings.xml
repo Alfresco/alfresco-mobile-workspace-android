@@ -79,7 +79,6 @@
     <string name="icon_priority_edit">Pictogram Prioriteit bewerken</string>
     <string name="icon_due_date_clear">Pictogram Vervaldatum wissen</string>
     <string name="icon_due_date_edit">Pictogram Vervaldatum bewerken</string>
-    <string name="suffix_view_all">...Alle weergeven</string>
     <string name="dialog_title_save_progress">Voortgang van de taak</string>
     <string name="dialog_message_save_progress">Wilt u de voortgang opslaan?</string>
     <string name="text_mark_as_complete">Als voltooid markeren</string>

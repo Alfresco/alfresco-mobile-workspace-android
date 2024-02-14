@@ -29,4 +29,5 @@
     <string name="none">Geen</string>
     <string name="title_action_mode">%d Geselecteerd</string>
     <string name="message_no_internet">Controleer uw internetverbinding en probeer het opnieuw.</string>
+    <string name="suffix_view_all">...Alle weergeven</string>
 </resources>

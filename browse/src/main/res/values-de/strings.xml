@@ -79,7 +79,6 @@
     <string name="icon_priority_edit">Symbol \'Priorität bearbeiten\'</string>
     <string name="icon_due_date_clear">Symbol \'Fälligkeitsdatum löschen\'</string>
     <string name="icon_due_date_edit">Symbol \'Fälligkeitsdatum bearbeiten\'</string>
-    <string name="suffix_view_all">...Alle anzeigen</string>
     <string name="dialog_title_save_progress">Aufgabenfortschritt</string>
     <string name="dialog_message_save_progress">Möchten Sie den Fortschritt speichern?</string>
     <string name="text_mark_as_complete">Als abgeschlossen markieren</string>

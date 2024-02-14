@@ -1,11 +1,8 @@
 package com.alfresco.content.process.ui.components
 
 import ComposeTopBar
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -31,21 +28,17 @@ fun FormScreen(navController: NavController) {
 
             val colorScheme = MaterialTheme.colorScheme
             // Wrap the content in a Column with verticalScroll
-            Column(
+            Surface(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .padding(padding)
                     .statusBarsPadding(),
+                color = colorScheme.background,
+                contentColor = colorScheme.onBackground,
             ) {
-                Surface(
-                    color = colorScheme.background,
-                    contentColor = colorScheme.onBackground,
-                ) {
-                    if (state.requestStartForm is Loading) {
-                        CustomLinearProgressIndicator(padding)
-                    }
-                    FormDetailScreen(state, viewModel)
+                if (state.requestStartForm is Loading) {
+                    CustomLinearProgressIndicator(padding)
                 }
+                FormDetailScreen(state, viewModel)
             }
         },
     )

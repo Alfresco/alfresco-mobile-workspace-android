@@ -15,7 +15,6 @@ import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import inputField
 
 @Composable
 fun DropdownField(

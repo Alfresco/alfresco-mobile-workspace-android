@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -23,6 +24,7 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.theme.AlfrescoBlue700
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
@@ -45,7 +47,7 @@ fun PeopleField(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 16.dp),
+            .padding(top = 16.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -54,7 +56,8 @@ fun PeopleField(
             Text(
                 text = labelWithAsterisk,
                 modifier = Modifier
-                    .padding(end = 4.dp),
+                    .padding(end = 4.dp)
+                    .align(alignment = Alignment.CenterVertically),
             )
 
             IconButton(onClick = {
@@ -68,7 +71,8 @@ fun PeopleField(
                     .show()
             }) {
                 Icon(
-                    painterResource(R.drawable.ic_add),
+                    painterResource(R.drawable.ic_edit_blue),
+                    tint = AlfrescoBlue700,
                     contentDescription = "",
                 )
             }

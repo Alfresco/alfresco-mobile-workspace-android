@@ -54,7 +54,7 @@ data class ComponentData(
             return ComponentData(
                 id = fieldsData.id,
                 name = fieldsData.name,
-                selector = ComponentType.RADIO.value,
+                selector = ComponentType.DROPDOWN_RADIO.value,
                 options = fieldsData.options.filter { it.id != "empty" }.map { ComponentOptions.withProcess(it) },
                 selectedName = name,
                 selectedQuery = query,

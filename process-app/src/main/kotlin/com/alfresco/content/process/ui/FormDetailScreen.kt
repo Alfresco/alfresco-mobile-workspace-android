@@ -42,7 +42,9 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    val formList = state.formFields.map { it }
+    val formList by remember(state.formFields) {
+        mutableStateOf(state.formFields.map { it })
+    }
 
     Column(
         modifier = Modifier
@@ -55,7 +57,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
+        ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
@@ -117,6 +119,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                             checkedValue = checkedValue,
                             onCheckChanged = { newChecked ->
                                 checkedValue = newChecked
+                                viewModel.updateFieldValue(field.id, newChecked, state)
                             },
                             field,
                         )
@@ -128,6 +131,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                             dateTimeValue = textFieldValue,
                             onValueChanged = { newText ->
                                 textFieldValue = newText
+                                viewModel.updateFieldValue(field.id, newText, state)
                             },
                             field,
                         )
@@ -142,6 +146,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                             onValueChanged = { (newText, newQuery) ->
                                 textFieldValue = newText
                                 textFieldQuery = newQuery
+                                viewModel.updateFieldValue(field.id, newText, state)
                             },
                             fieldsData = field,
                         )
@@ -156,15 +161,20 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                     }
 
                     FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
-                        var userDetailValue by remember { mutableStateOf<UserGroupDetails?>(null) }
+                        var userDetailValue by remember { mutableStateOf(field.value as? UserGroupDetails) }
                         PeopleField(
                             userDetail = userDetailValue,
                             onAssigneeSelected = { userDetails ->
                                 userDetailValue = userDetails
+                                viewModel.updateFieldValue(field.id, userDetails, state)
                             },
                             fieldsData = field,
                             processEntry = ProcessEntry.withProcess(state.parent, field.type),
                         )
+                    }
+
+                    FieldType.HYPERLINK.value() -> {
+
                     }
                 }
             }

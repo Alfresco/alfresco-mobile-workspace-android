@@ -14,7 +14,6 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch

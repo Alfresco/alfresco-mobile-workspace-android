@@ -33,6 +33,9 @@ data class FieldsData(
     var fields: List<FieldsData> = emptyList(),
     var params: Params? = null,
     var options: List<OptionsModel> = emptyList(),
+    var dateDisplayFormat: String? = null,
+    var hyperlinkUrl: String? = null,
+    var displayText: String? = null,
 ) : Parcelable {
 
     companion object {
@@ -62,6 +65,9 @@ data class FieldsData(
                 enablePeriodSeparator = raw.enablePeriodSeparator ?: false,
                 options = raw.options?.map { OptionsModel.with(it) } ?: emptyList(),
                 fields = raw.getFieldMapAsList()?.map { with(it) } ?: emptyList(),
+                dateDisplayFormat = raw.dateDisplayFormat,
+                hyperlinkUrl = raw.hyperlinkUrl,
+                displayText = raw.displayText,
             )
         }
     }

@@ -30,6 +30,7 @@ import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.DropdownField
+import com.alfresco.content.process.ui.components.HyperLinkField
 import com.alfresco.content.process.ui.components.IntegerInputField
 import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.PeopleField
@@ -57,7 +58,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
@@ -174,7 +175,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel) {
                     }
 
                     FieldType.HYPERLINK.value() -> {
-
+                        HyperLinkField(field)
                     }
                 }
             }

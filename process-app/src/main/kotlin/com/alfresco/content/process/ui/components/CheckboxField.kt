@@ -138,8 +138,6 @@ private fun customLabel(visibleText: String, showReadMoreButtonState: Boolean, f
             val startIndexReadMore = labelReadMore.indexOf(readMore)
             val endIndexReadMore = startIndexReadMore + readMore.length
 
-            println("startIndexReadMore == $startIndexReadMore")
-
             val startIndexAsteric = labelReadMore.indexOf(spaceAsteric)
             val endIndexAsteric = startIndexAsteric + spaceAsteric.length
 
@@ -152,7 +150,6 @@ private fun customLabel(visibleText: String, showReadMoreButtonState: Boolean, f
                     end = endIndexAsteric,
                 )
             }
-
             addStyle(
                 style = SpanStyle(color = MaterialTheme.colorScheme.primary),
                 start = startIndexReadMore + 1,

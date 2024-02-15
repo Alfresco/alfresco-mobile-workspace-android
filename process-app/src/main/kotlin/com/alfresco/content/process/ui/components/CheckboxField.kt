@@ -150,10 +150,9 @@ private fun customLabel(visibleText: String, showReadMoreButtonState: Boolean, f
                     end = endIndexAsteric,
                 )
             }
-
             addStyle(
                 style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                start = startIndexReadMore,
+                start = startIndexReadMore + 1,
                 end = endIndexReadMore,
             )
 

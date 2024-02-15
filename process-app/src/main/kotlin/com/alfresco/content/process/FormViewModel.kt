@@ -91,7 +91,7 @@ class FormViewModel(
         }
     }
 
-    fun updateFieldValue(fieldId: String, newValue: String, state: FormViewState) {
+    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
         val updatedFields = state.copy(
             formFields = state.formFields.map { field ->
                 if (field.id == fieldId) {

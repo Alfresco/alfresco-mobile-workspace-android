@@ -15,6 +15,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alfresco.content.data.payloads.FieldsData
@@ -53,6 +54,7 @@ fun HyperLinkField(
             text = fieldsData.name,
             style = TextStyle(
                 fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline,
                 color = MaterialTheme.colorScheme.onSurface,
             ),
         )

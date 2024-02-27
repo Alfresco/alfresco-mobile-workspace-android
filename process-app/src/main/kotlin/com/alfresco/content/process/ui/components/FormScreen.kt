@@ -3,6 +3,7 @@ package com.alfresco.content.process.ui.components
 import ComposeTopBar
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -21,6 +22,7 @@ fun FormScreen(navController: NavController) {
     // This will get or create a ViewModel scoped to the Activity.
     val viewModel: FormViewModel = mavericksActivityViewModel()
     val state by viewModel.collectAsState()
+    val has2Coutcomes = state.formFields
 
     Scaffold(
         topBar = { ComposeTopBar() },
@@ -41,5 +43,7 @@ fun FormScreen(navController: NavController) {
                 FormDetailScreen(state, viewModel)
             }
         },
+        floatingActionButton = { FloatingActionButton() },
+        floatingActionButtonPosition = FabPosition.End
     )
 }

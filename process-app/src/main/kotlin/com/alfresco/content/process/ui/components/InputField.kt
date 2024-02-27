@@ -135,6 +135,7 @@ fun InputFieldWithLeading(
     leadingIcon: @Composable () -> Unit = {},
     isError: Boolean = false,
     errorMessage: String = "",
+    isEnabled: Boolean = true,
 ) {
     var selectionState by remember { mutableIntStateOf(0) }
     // State to keep track of focus state
@@ -163,6 +164,7 @@ fun InputFieldWithLeading(
 
     OutlinedTextField(
         colors = colors,
+        enabled = isEnabled,
         value = textFieldValue ?: "", // Initial value of the text field
         onValueChange = { newValue ->
             val newText = if (fieldsData.maxLength > 0) {

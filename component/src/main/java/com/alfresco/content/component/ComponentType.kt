@@ -16,5 +16,6 @@ enum class ComponentType(val value: String) {
     DROPDOWN_RADIO("dropdown_radio"),
     FACETS("facets"),
     TASK_PROCESS_PRIORITY("task-process-priority"),
+    PROCESS_ACTION("process-actions"),
     None("none"),
 }

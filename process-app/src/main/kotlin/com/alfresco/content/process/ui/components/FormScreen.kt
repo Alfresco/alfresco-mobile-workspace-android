@@ -9,11 +9,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.compose.collectAsState
 import com.airbnb.mvrx.compose.mavericksActivityViewModel
+import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.ui.FormDetailScreen
 
@@ -22,16 +22,20 @@ fun FormScreen(navController: NavController) {
     // This will get or create a ViewModel scoped to the Activity.
     val viewModel: FormViewModel = mavericksActivityViewModel()
     val state by viewModel.collectAsState()
-    val has2Coutcomes = state.formFields
+    val customOutcomes = state.processOutcomes.ifEmpty {
+        listOf(
+            OptionsModel(name = "Start workflow"),
+        )
+    }
 
-    Scaffold(
-        topBar = { ComposeTopBar() },
-        content = { padding ->
-
+    if (customOutcomes.size < 3) {
+        Scaffold(
+            topBar = { ComposeTopBar() },
+        ) { padding ->
             val colorScheme = MaterialTheme.colorScheme
             // Wrap the content in a Column with verticalScroll
             Surface(
-                modifier = Modifier
+                modifier = androidx.compose.ui.Modifier
                     .padding(padding)
                     .statusBarsPadding(),
                 color = colorScheme.background,
@@ -40,10 +44,29 @@ fun FormScreen(navController: NavController) {
                 if (state.requestStartForm is Loading) {
                     CustomLinearProgressIndicator(padding)
                 }
-                FormDetailScreen(state, viewModel)
+                FormDetailScreen(state, viewModel, customOutcomes)
             }
-        },
-        floatingActionButton = { FloatingActionButton() },
-        floatingActionButtonPosition = FabPosition.End
-    )
+        }
+    } else {
+        Scaffold(
+            topBar = { ComposeTopBar() },
+            floatingActionButton = { FloatingActionButton(customOutcomes) },
+            floatingActionButtonPosition = FabPosition.End,
+        ) { padding ->
+            val colorScheme = MaterialTheme.colorScheme
+            // Wrap the content in a Column with verticalScroll
+            Surface(
+                modifier = androidx.compose.ui.Modifier
+                    .padding(padding)
+                    .statusBarsPadding(),
+                color = colorScheme.background,
+                contentColor = colorScheme.onBackground,
+            ) {
+                if (state.requestStartForm is Loading) {
+                    CustomLinearProgressIndicator(padding)
+                }
+                FormDetailScreen(state, viewModel, customOutcomes)
+            }
+        }
+    }
 }

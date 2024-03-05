@@ -10,9 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.process.R
 
 @Composable
 fun FloatingActionButton(outcomes: List<OptionsModel>) {
@@ -35,8 +37,8 @@ fun FloatingActionButton(outcomes: List<OptionsModel>) {
                 .show()
         },
         containerColor = MaterialTheme.colorScheme.primary,
-        icon = { Icon(Icons.Filled.PlaylistAdd, "Extended floating action button.") },
-        text = { Text(text = "Actions") },
+        icon = { Icon(Icons.Filled.PlaylistAdd, stringResource(id = R.string.accessibility_process_actions)) },
+        text = { Text(text = stringResource(id = R.string.title_actions)) },
         modifier = Modifier.navigationBarsPadding(),
     )
 }

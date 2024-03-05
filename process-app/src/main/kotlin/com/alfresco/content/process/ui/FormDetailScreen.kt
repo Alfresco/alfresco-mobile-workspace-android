@@ -50,7 +50,9 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(items = formList) { field ->
+            items(key = {
+                it.id
+            }, items = formList) { field ->
                 FormScrollContent(field, viewModel, state)
             }
         }

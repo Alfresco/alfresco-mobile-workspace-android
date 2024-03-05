@@ -49,6 +49,7 @@ dependencies {
     implementation project(':actions')
     implementation project(':data')
     implementation project(':component')
+    implementation project(':viewer')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat

@@ -1,75 +1,88 @@
 package com.alfresco.content.process.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.ClickableText
+import android.content.Intent
+import android.provider.MediaStore.Audio.AudioColumns.TITLE_KEY
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.UrlAnnotation
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.startActivity
+import com.alfresco.content.common.SharedURLParser
+import com.alfresco.content.common.SharedURLParser.Companion.ID_KEY
+import com.alfresco.content.common.SharedURLParser.Companion.MODE_KEY
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.process.R
+import com.alfresco.content.viewer.ViewerActivity
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun HyperLinkField(
     fieldsData: FieldsData = FieldsData(),
 ) {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
-    val hyperlinkData = buildAnnotatedString {
-        append(fieldsData.displayText)
-        addStyle(
-            style = SpanStyle(
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary,
-            ),
-            start = 0,
-            end = fieldsData.displayText?.length ?: 0,
-        )
-        addUrlAnnotation(
-            UrlAnnotation(fieldsData.hyperlinkUrl ?: ""),
-            start = 0,
-            end = fieldsData.displayText?.length ?: 0,
+    val keyboardOptions = KeyboardOptions.Default.copy(
+        imeAction = ImeAction.Next,
+        keyboardType = KeyboardType.Text,
+    )
+
+    val leadingIcon: @Composable () -> Unit = {
+        Icon(
+            imageVector = Icons.Default.Link,
+            contentDescription = stringResource(R.string.accessibility_link_icon),
+            tint = trailingIconColor(),
         )
     }
 
-    Column(
+    InputFieldWithLeading(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Text(
-            text = fieldsData.name,
-            style = TextStyle(
-                fontSize = 16.sp,
-                textDecoration = TextDecoration.Underline,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-        )
-        ClickableText(
-            text = hyperlinkData,
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-            onClick = {
-                hyperlinkData
-                    .getUrlAnnotations(it, it)
-                    .firstOrNull()?.let { annotation ->
-                        uriHandler.openUri(annotation.item.url)
-                    }
+            .inputField()
+            .clickable {
+                val urlData =
+                    SharedURLParser().getEntryIdFromShareURL(fieldsData.hyperlinkUrl ?: "", true)
+
+                if (urlData.second.isNotEmpty()) {
+                    context.startActivity(
+                        Intent(context, ViewerActivity::class.java)
+                            .putExtra(ID_KEY, urlData.second)
+                            .putExtra(
+                                MODE_KEY,
+                                if (urlData.first) SharedURLParser.VALUE_SHARE else SharedURLParser.VALUE_REMOTE,
+                            )
+                            .putExtra(TITLE_KEY, "Preview"),
+                    )
+                } else {
+                    uriHandler.openUri(fieldsData.hyperlinkUrl ?: "")
+                }
             },
-        )
-    }
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledLabelColor = MaterialTheme.colorScheme.onSurface,
+            disabledBorderColor = MaterialTheme.colorScheme.onSurface,
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        maxLines = 1,
+        textFieldValue = fieldsData.displayText,
+        fieldsData = fieldsData,
+        keyboardOptions = keyboardOptions,
+        leadingIcon = leadingIcon,
+        isEnabled = false,
+    )
+}
+
+@Preview
+@Composable
+fun HyperLinkFieldPreview() {
+    HyperLinkField()
 }

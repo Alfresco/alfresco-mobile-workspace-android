@@ -10,6 +10,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
@@ -23,6 +24,7 @@ data class FormViewState(
     val requestStartForm: Async<ResponseListForm> = Uninitialized,
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val formFields: List<FieldsData> = emptyList(),
+    val processOutcomes: List<OptionsModel> = emptyList(),
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
 
@@ -80,7 +82,11 @@ class FormViewModel(
                     }
 
                     is Success -> {
-                        copy(formFields = it().fields.flatMap { listData -> listData.fields }, requestStartForm = Success(it()))
+                        copy(
+                            formFields = it().fields.flatMap { listData -> listData.fields },
+                            processOutcomes = it().outcomes,
+                            requestStartForm = Success(it()),
+                        )
                     }
 
                     else -> {

@@ -2,8 +2,11 @@
     <string name="error_min_length">Enter at least %1$d characters</string>
     <string name="accessibility_clear_text">Clear Text</string>
     <string name="accessibility_date_icon">Date Icon</string>
+    <string name="accessibility_link_icon">Link Icon</string>
     <string name="error_min_value">Can\'t be less than %1$d</string>
     <string name="error_max_value">Can\'t be greater than %1$d</string>
     <string name="error_invalid_format">Use a different number format</string>
     <string name="error_required_field">This is a required field.</string>
+    <string name="title_actions">Actions</string>
+    <string name="accessibility_process_actions">Process Actions Button</string>
 </resources>

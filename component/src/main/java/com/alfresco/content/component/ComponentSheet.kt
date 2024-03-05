@@ -203,7 +203,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
         when {
             (state.parent?.selector == ComponentType.DROPDOWN_RADIO.value) ||
-                (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
+                    (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
             }
 
             else -> {
@@ -415,10 +415,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     id(bucket.hashCode())
                     data(bucket)
                     clickListener { model, _, _, _ ->
-//                        viewModel.updateMultipleComponentData(
-//                            requireContext().getLocalizedName(model.data().label),
-//                            model.data().query,
-//                        )
+                        dismiss()
                     }
                 }
             }

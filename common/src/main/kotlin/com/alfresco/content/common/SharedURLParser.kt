@@ -1,8 +1,22 @@
 package com.alfresco.content.common
 
+import com.alfresco.content.session.Session
+import com.alfresco.content.session.SessionManager
+import com.alfresco.content.session.SessionNotFoundException
+import java.net.URL
 import java.net.URLDecoder
 
 class SharedURLParser {
+
+    lateinit var session: Session
+
+    init {
+        try {
+            session = SessionManager.requireSession
+        } catch (e: SessionNotFoundException) {
+            e.printStackTrace()
+        }
+    }
 
     /**
      * isPreview (Boolean)
@@ -11,6 +25,19 @@ class SharedURLParser {
      */
     fun getEntryIdFromShareURL(url: String, isHyperLink: Boolean = false): Triple<Boolean, String, Boolean> {
         val extData = URLDecoder.decode(url, "UTF-8")
+
+        val hostname = URL(session.baseUrl).host
+
+        println("Url 1 $hostname")
+        println("Url 2 $url")
+
+        if (!url.contains(hostname)) {
+            return Triple(
+                true,
+                "",
+                false,
+            )
+        }
 
         if (!isHyperLink && !extData.contains(SCHEME)) return Triple(false, "", false)
 

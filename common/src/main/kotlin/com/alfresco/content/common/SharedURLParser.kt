@@ -28,9 +28,6 @@ class SharedURLParser {
 
         val hostname = URL(session.baseUrl).host
 
-        println("Url 1 $hostname")
-        println("Url 2 $url")
-
         if (!url.contains(hostname)) {
             return Triple(
                 true,

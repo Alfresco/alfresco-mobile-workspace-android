@@ -36,23 +36,27 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                // Hide the keyboard on click outside of input fields
+//                keyboardController?.hide()
+//                focusManager.clearFocus()
+            },
     ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f, false)
-                .clickable {
-                    // Hide the keyboard on click outside of input fields
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                },
+                .weight(1f, false),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(key = {
-                it.id
-            }, items = formList) { field ->
+            items(
+                key = {
+                    it.id
+                },
+                items = formList,
+            ) { field ->
                 FormScrollContent(field, viewModel, state)
             }
         }
@@ -63,7 +67,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
                     .fillMaxWidth()
                     .align(alignment = Alignment.CenterHorizontally),
             ) {
-                Outcomes(outcomes = outcomes)
+                Outcomes(outcomes = outcomes, state.enabledOutcomes)
             }
         }
     }

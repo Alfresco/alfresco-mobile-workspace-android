@@ -13,7 +13,7 @@ import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.process.ui.theme.AlfrescoGray900
 
 @Composable
-fun Outcomes(outcomes: List<OptionsModel>) {
+fun Outcomes(outcomes: List<OptionsModel>, enabledOutcomes: Boolean) {
     outcomes.forEach {
         Button(
             modifier = Modifier
@@ -21,6 +21,7 @@ fun Outcomes(outcomes: List<OptionsModel>) {
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             onClick = { },
             shape = RoundedCornerShape(4.dp),
+            enabled = enabledOutcomes,
             colors = ButtonDefaults.buttonColors(
                 contentColor = AlfrescoGray900,
             ),

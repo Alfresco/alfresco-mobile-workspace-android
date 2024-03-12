@@ -62,7 +62,7 @@ fun FormScreen(navController: NavController) {
         else -> {
             Scaffold(
                 topBar = { ComposeTopBar() },
-                floatingActionButton = { FloatingActionButton(customOutcomes, state.enabledOutcomes) },
+                floatingActionButton = { FloatingActionButton(customOutcomes) },
                 floatingActionButtonPosition = FabPosition.End,
             ) { padding ->
                 val colorScheme = MaterialTheme.colorScheme

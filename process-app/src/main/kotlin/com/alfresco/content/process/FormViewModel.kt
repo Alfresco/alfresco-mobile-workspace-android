@@ -25,6 +25,7 @@ data class FormViewState(
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val formFields: List<FieldsData> = emptyList(),
     val processOutcomes: List<OptionsModel> = emptyList(),
+    val enabledOutcomes: Boolean = false,
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
 
@@ -98,7 +99,7 @@ class FormViewModel(
     }
 
     fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
-        val updatedFields = state.copy(
+        val updatedState = state.copy(
             formFields = state.formFields.map { field ->
                 if (field.id == fieldId) {
                     field.copy(value = newValue)
@@ -107,7 +108,10 @@ class FormViewModel(
                 }
             },
         )
-        setState { updatedFields }
+
+        val hasAllRequiredData = updatedState.formFields.filter { it.required }.all { it.value != null }
+
+        setState { updatedState.copy(enabledOutcomes = hasAllRequiredData) }
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

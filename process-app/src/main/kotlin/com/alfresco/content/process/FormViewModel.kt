@@ -15,6 +15,7 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
@@ -102,16 +103,34 @@ class FormViewModel(
         val updatedState = state.copy(
             formFields = state.formFields.map { field ->
                 if (field.id == fieldId) {
-                    field.copy(value = newValue)
+                    var updateValue = newValue
+                    when {
+                        (updateValue is String) && updateValue.isEmpty() -> {
+                            updateValue = null
+                        }
+
+                        (updateValue is Boolean) && !updateValue -> {
+                            updateValue = null
+                        }
+
+                        (updateValue is UserGroupDetails) && updateValue.id == 0 -> {
+                            updateValue = null
+                        }
+                    }
+                    field.copy(value = updateValue)
                 } else {
                     field
                 }
             },
         )
 
-        val hasAllRequiredData = updatedState.formFields.filter { it.required }.all { it.value != null }
+        val hasAllRequiredData = hasFieldRequiredData(updatedState)
 
         setState { updatedState.copy(enabledOutcomes = hasAllRequiredData) }
+    }
+
+    private fun hasFieldRequiredData(state: FormViewState): Boolean {
+        return !state.formFields.filter { it.required }.any { it.value == null }
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

@@ -203,7 +203,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
         when {
             (state.parent?.selector == ComponentType.DROPDOWN_RADIO.value) ||
-                (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
+                    (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
             }
 
             else -> {

@@ -15,6 +15,7 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ data class FormViewState(
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val formFields: List<FieldsData> = emptyList(),
     val processOutcomes: List<OptionsModel> = emptyList(),
+    val enabledOutcomes: Boolean = false,
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
 
@@ -98,16 +100,37 @@ class FormViewModel(
     }
 
     fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
-        val updatedFields = state.copy(
+        val updatedState = state.copy(
             formFields = state.formFields.map { field ->
                 if (field.id == fieldId) {
-                    field.copy(value = newValue)
+                    var updateValue = newValue
+                    when {
+                        (updateValue is String) && updateValue.isEmpty() -> {
+                            updateValue = null
+                        }
+
+                        (updateValue is Boolean) && !updateValue -> {
+                            updateValue = null
+                        }
+
+                        (updateValue is UserGroupDetails) && updateValue.id == 0 -> {
+                            updateValue = null
+                        }
+                    }
+                    field.copy(value = updateValue)
                 } else {
                     field
                 }
             },
         )
-        setState { updatedFields }
+
+        val hasAllRequiredData = hasFieldRequiredData(updatedState)
+
+        setState { updatedState.copy(enabledOutcomes = hasAllRequiredData) }
+    }
+
+    private fun hasFieldRequiredData(state: FormViewState): Boolean {
+        return !state.formFields.filter { it.required }.any { it.value == null }
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

@@ -17,28 +17,31 @@ import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.process.R
 
 @Composable
-fun FloatingActionButton(outcomes: List<OptionsModel>) {
+fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean) {
     val context = LocalContext.current
 
     ExtendedFloatingActionButton(
         onClick = {
-            val componentData = ComponentData.with(
-                outcomes,
-                "",
-                "",
-            )
-            ComponentBuilder(context, componentData)
-                .onApply { name, query, _ ->
-                }
-                .onReset { name, query, _ ->
-                }
-                .onCancel {
-                }
-                .show()
+            if (enabledOutcomes) {
+                val componentData = ComponentData.with(
+                    outcomes,
+                    "",
+                    "",
+                )
+                ComponentBuilder(context, componentData)
+                    .onApply { name, query, _ ->
+                    }
+                    .onReset { name, query, _ ->
+                    }
+                    .onCancel {
+                    }
+                    .show()
+            }
         },
         containerColor = MaterialTheme.colorScheme.primary,
         icon = { Icon(Icons.Filled.PlaylistAdd, stringResource(id = R.string.accessibility_process_actions)) },
         text = { Text(text = stringResource(id = R.string.title_actions)) },
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier
+            .navigationBarsPadding(),
     )
 }

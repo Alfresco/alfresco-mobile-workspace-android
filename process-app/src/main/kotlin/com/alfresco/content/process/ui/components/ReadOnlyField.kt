@@ -20,22 +20,13 @@ fun ReadOnlyField(
         keyboardType = KeyboardType.Text,
     )
 
-    val textFieldColors = if (textFieldValue.isEmpty()) {
-        OutlinedTextFieldDefaults.colors(
-            disabledBorderColor = MaterialTheme.colorScheme.primary,
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.primary,
-        )
-    } else
-        OutlinedTextFieldDefaults.colors(
-            disabledBorderColor = MaterialTheme.colorScheme.primary,
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.primary,
-            disabledLabelColor = MaterialTheme.colorScheme.primary,
-        )
-
     InputField(
-        colors = textFieldColors,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
         modifier = Modifier
             .inputField(),
         maxLines = 1,

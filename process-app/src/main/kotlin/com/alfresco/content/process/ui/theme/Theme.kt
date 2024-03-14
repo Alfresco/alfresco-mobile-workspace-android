@@ -15,8 +15,8 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = AlfrescoBlue700,
-    onSurface = Color.White,
-    onSurfaceVariant = Color.White,
+    onSurface = White60,
+    onSurfaceVariant = White60,
     onBackground = Color.White,
     background = designDefaultDarkBackgroundColor,
     error = AlfrescoError,
@@ -24,8 +24,8 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = AlfrescoBlue700,
     onSurface = AlfrescoGray900,
-    onSurfaceVariant = AlfrescoGray900,
-    outline = AlfrescoGray90015,
+    onSurfaceVariant = AlfrescoGray90030,
+    outline = AlfrescoGray90030,
     error = AlfrescoError,
 )
 

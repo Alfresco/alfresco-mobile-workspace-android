@@ -67,10 +67,10 @@ fun HyperLinkField(
                 }
             },
         colors = OutlinedTextFieldDefaults.colors(
-            disabledLabelColor = MaterialTheme.colorScheme.onSurface,
-            disabledBorderColor = MaterialTheme.colorScheme.onSurface,
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
         maxLines = 1,
         textFieldValue = fieldsData.displayText,

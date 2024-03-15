@@ -29,6 +29,7 @@ import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
@@ -151,7 +152,7 @@ private fun customLabel(visibleText: String, showReadMoreButtonState: Boolean, f
                 )
             }
             addStyle(
-                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                style = SpanStyle(color = AlfrescoBlue300),
                 start = startIndexReadMore + 1,
                 end = endIndexReadMore,
             )

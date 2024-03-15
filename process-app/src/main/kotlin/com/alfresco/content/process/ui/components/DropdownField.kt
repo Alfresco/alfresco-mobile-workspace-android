@@ -36,24 +36,15 @@ fun DropdownField(
         ""
     }
 
-    val textFieldColors = if (nameText.isEmpty()) {
-        OutlinedTextFieldDefaults.colors(
-            disabledBorderColor = MaterialTheme.colorScheme.primary,
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.primary,
-        )
-    } else
-        OutlinedTextFieldDefaults.colors(
-            disabledBorderColor = MaterialTheme.colorScheme.primary,
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.primary,
-            disabledLabelColor = MaterialTheme.colorScheme.primary,
-        )
-
     val context = LocalContext.current
 
     InputField(
-        colors = textFieldColors,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
         modifier = Modifier
             .inputField()
             .clickable {

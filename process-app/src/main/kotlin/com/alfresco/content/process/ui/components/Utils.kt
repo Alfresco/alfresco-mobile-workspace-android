@@ -2,15 +2,13 @@ package com.alfresco.content.process.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.alfresco.content.process.ui.theme.AlfrescoGray90060
-import com.alfresco.content.process.ui.theme.White60
-import com.alfresco.content.process.ui.theme.isNightMode
 
 @Composable
-fun trailingIconColor() = if (isNightMode()) White60 else AlfrescoGray90060
+fun trailingIconColor() = MaterialTheme.colorScheme.onSurfaceVariant
 
 fun Modifier.inputField() =
     this

@@ -24,7 +24,7 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import com.alfresco.content.process.ui.theme.AlfrescoBlue700
+import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
@@ -72,7 +72,7 @@ fun PeopleField(
             }) {
                 Icon(
                     painterResource(R.drawable.ic_edit_blue),
-                    tint = AlfrescoBlue700,
+                    tint = AlfrescoBlue300,
                     contentDescription = "",
                 )
             }

@@ -1,8 +1,8 @@
 package com.alfresco.content.process.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
@@ -26,7 +26,7 @@ fun TrailingInputField(
     when (fieldsData.type) {
         FieldType.DATETIME.value(), FieldType.DATE.value() -> {
             Icon(
-                imageVector = Icons.Default.DateRange,
+                imageVector = Icons.Default.CalendarToday,
                 contentDescription = stringResource(R.string.accessibility_date_icon),
                 tint = trailingIconColor(),
             )

@@ -67,7 +67,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
                     .fillMaxWidth()
                     .align(alignment = Alignment.CenterHorizontally),
             ) {
-                Outcomes(outcomes = outcomes, state.enabledOutcomes)
+                Outcomes(outcomes = outcomes, state.enabledOutcomes, viewModel)
             }
         }
     }

@@ -12,10 +12,11 @@ import androidx.compose.ui.res.stringResource
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.R
 
 @Composable
-fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean) {
+fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: FormViewModel) {
     val context = LocalContext.current
 
     ExtendedFloatingActionButton(
@@ -28,6 +29,8 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean)
                 )
                 ComponentBuilder(context, componentData)
                     .onApply { name, query, _ ->
+
+                        viewModel.startWorkflow()
                     }
                     .onReset { name, query, _ ->
                     }

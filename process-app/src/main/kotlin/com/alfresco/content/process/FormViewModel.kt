@@ -27,6 +27,7 @@ data class FormViewState(
     val formFields: List<FieldsData> = emptyList(),
     val processOutcomes: List<OptionsModel> = emptyList(),
     val enabledOutcomes: Boolean = false,
+    val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
 
@@ -85,6 +86,7 @@ class FormViewModel(
 
                     is Success -> {
                         copy(
+                            parent = processEntry,
                             formFields = it().fields.flatMap { listData -> listData.fields },
                             processOutcomes = it().outcomes,
                             requestStartForm = Success(it()),
@@ -127,6 +129,19 @@ class FormViewModel(
         val hasAllRequiredData = hasFieldRequiredData(updatedState)
 
         setState { updatedState.copy(enabledOutcomes = hasAllRequiredData) }
+    }
+
+    fun startWorkflow() = withState { state ->
+        viewModelScope.launch {
+            repository::startWorkflow.asFlow(state.parent, "", state.formFields).execute {
+                when (it) {
+                    is Loading -> copy(requestStartWorkflow = Loading())
+                    is Fail -> copy(requestStartWorkflow = Fail(it.error))
+                    is Success -> copy(requestStartWorkflow = Success(it()))
+                    else -> this
+                }
+            }
+        }
     }
 
     private fun hasFieldRequiredData(state: FormViewState): Boolean {

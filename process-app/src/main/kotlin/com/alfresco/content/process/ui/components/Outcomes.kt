@@ -10,16 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.process.FormViewModel
 
 @Composable
-fun Outcomes(outcomes: List<OptionsModel>, enabledOutcomes: Boolean) {
+fun Outcomes(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: FormViewModel) {
     outcomes.forEach {
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 4.dp),
-            onClick = { },
+            onClick = {
+                viewModel.startWorkflow()
+            },
             shape = RoundedCornerShape(6.dp),
             enabled = enabledOutcomes,
             colors = ButtonDefaults.buttonColors(

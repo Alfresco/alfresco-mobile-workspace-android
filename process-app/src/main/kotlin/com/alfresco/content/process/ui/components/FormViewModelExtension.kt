@@ -1,6 +1,6 @@
-package com.alfresco.content.browse.processes.details
+package com.alfresco.content.process.ui.components
 
-import com.alfresco.content.browse.tasks.list.UpdateTasksData
+import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.ui.UpdateProcessData
 import com.alfresco.events.EventBus
 import kotlinx.coroutines.launch
@@ -8,9 +8,8 @@ import kotlinx.coroutines.launch
 /**
  * update the list of workflow if new entry created
  */
-fun ProcessDetailViewModel.updateProcessList() {
+fun FormViewModel.updateProcessList() {
     viewModelScope.launch {
         EventBus.default.send(UpdateProcessData(isRefresh = true))
-        EventBus.default.send(UpdateTasksData(isRefresh = true))
     }
 }

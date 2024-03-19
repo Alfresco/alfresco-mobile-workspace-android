@@ -415,6 +415,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     id(bucket.hashCode())
                     data(bucket)
                     clickListener { model, _, _, _ ->
+                        onApply?.invoke("", "", mapOf())
                         dismiss()
                     }
                 }

@@ -17,7 +17,7 @@ ui-tooling = "1.5.4"
 alfresco-auth = "com.alfresco.android:auth:0.8.1-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.4-SNAPSHOT"
 alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.2-SNAPSHOT"
-alfresco-process = "com.alfresco.android:process:0.1.2-SNAPSHOT"
+alfresco-process = "com.alfresco.android:process:0.1.3-SNAPSHOT"
 
 android-desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
 android-gradle = "com.android.tools.build:gradle:8.0.2"

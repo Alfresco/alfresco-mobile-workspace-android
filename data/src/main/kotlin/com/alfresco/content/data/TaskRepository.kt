@@ -410,12 +410,12 @@ class TaskRepository {
     private fun getUserOrGroup(userGroupInfo: UserGroupDetails?): Map<String, Any?> {
         return if (userGroupInfo?.isGroup == true) {
             mapOf<String, Any?>(
-                "id" to userGroupInfo?.id,
-                "name" to userGroupInfo?.name,
-                "externalId" to userGroupInfo?.externalId,
-                "status" to userGroupInfo?.status,
-                "parentGroupId" to userGroupInfo?.parentGroupId,
-                "groups" to userGroupInfo?.groups,
+                "id" to userGroupInfo.id,
+                "name" to userGroupInfo.name,
+                "externalId" to userGroupInfo.externalId,
+                "status" to userGroupInfo.status,
+                "parentGroupId" to userGroupInfo.parentGroupId,
+                "groups" to userGroupInfo.groups,
             )
         } else {
             mapOf<String, Any?>(

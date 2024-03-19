@@ -131,5 +131,9 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.HYPERLINK.value() -> {
             HyperLinkField(field)
         }
+
+        FieldType.UPLOAD.value() -> {
+            AttachFilesField(fieldsData = field)
+        }
     }
 }

@@ -63,7 +63,6 @@
     <string name="text_view_all">Visualizza tutto</string>
     <string name="text_multiple_comments">%d commenti</string>
     <string name="text_attached_files">File allegati</string>
-    <string name="text_multiple_attachment">%d allegati</string>
     <string name="no_attached_files">Nessun file allegato</string>
     <string name="empty_no_due_date">Nessuna scadenza</string>
     <string name="title_attached_files">File allegati</string>

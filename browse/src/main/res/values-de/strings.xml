@@ -63,7 +63,6 @@
     <string name="text_view_all">Alle anzeigen</string>
     <string name="text_multiple_comments">%d Kommentare</string>
     <string name="text_attached_files">Angehängte Dateien</string>
-    <string name="text_multiple_attachment">%d Anhänge</string>
     <string name="no_attached_files">Keine angehängten Dateien</string>
     <string name="empty_no_due_date">Kein Fälligkeitsdatum</string>
     <string name="title_attached_files">Angehängte Dateien</string>

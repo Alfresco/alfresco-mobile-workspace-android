@@ -30,4 +30,5 @@
     <string name="title_action_mode">%d Seleccionado</string>
     <string name="message_no_internet">Verifique su conexión a Internet y vuelva a intentarlo.</string>
     <string name="suffix_view_all">...Ver todo</string>
+    <string name="text_multiple_attachment">%d adjuntos</string>
 </resources>

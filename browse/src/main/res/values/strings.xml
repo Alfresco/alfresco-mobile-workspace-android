@@ -63,7 +63,6 @@
     <string name="text_view_all">View all</string>
     <string name="text_multiple_comments">%d comments</string>
     <string name="text_attached_files">Attached files</string>
-    <string name="text_multiple_attachment">%d attachments</string>
     <string name="no_attached_files">No Attached Files</string>
     <string name="empty_no_due_date">No due date</string>
     <string name="title_attached_files">Attached files</string>

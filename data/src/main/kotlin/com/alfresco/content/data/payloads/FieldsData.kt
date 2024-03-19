@@ -88,6 +88,7 @@ enum class FieldType {
     PEOPLE,
     FUNCTIONAL_GROUP,
     HYPERLINK,
+    UPLOAD,
     ;
 
     fun value() = name.lowercase()

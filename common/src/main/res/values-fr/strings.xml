@@ -31,4 +31,8 @@
     <string name="message_no_internet">Veuillez vérifier votre connexion Internet et réessayer.</string>
     <string name="suffix_view_all">&#8230;Afficher tout</string>
     <string name="text_multiple_attachment">%d pièces jointes</string>
+    <string name="text_add_attachments">Ajouter des pièces jointes</string>
+    <string name="title_attached_files">Fichiers joints</string>
+    <string name="icon_file">Icône de fichier</string>
+    <string name="icon_delete_attachment">Icône Supprimer la pièce jointe</string>
 </resources>

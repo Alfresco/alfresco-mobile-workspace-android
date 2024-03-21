@@ -24,19 +24,19 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.alfresco.content.data.Entry
-import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.composeviews.NavigationScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
 fun AttachFilesField(
     contents: List<Entry> = emptyList(),
-    onContentUpdate: (List<Entry>) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
-    processEntry: ProcessEntry = ProcessEntry(),
+    navController: NavController,
 ) {
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
@@ -71,6 +71,9 @@ fun AttachFilesField(
             )
 
             IconButton(onClick = {
+                navController.navigate(
+                    NavigationScreen.ATTACHED_FILES_SCREEN.value(),
+                )
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,
@@ -83,10 +86,10 @@ fun AttachFilesField(
             text = contentValue,
             style = TextStyle(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 8.sp,
+                fontSize = 12.sp,
             ),
             modifier = Modifier
-                .padding(end = 4.dp)
+                .padding(start = 4.dp, top = 0.dp)
                 .align(alignment = Alignment.Start),
         )
     }
@@ -95,5 +98,5 @@ fun AttachFilesField(
 @Preview
 @Composable
 fun AttachFilesFieldPreview() {
-    AttachFilesField()
+//    AttachFilesField()
 }

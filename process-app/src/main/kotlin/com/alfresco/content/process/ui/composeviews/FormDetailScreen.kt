@@ -1,4 +1,4 @@
-package com.alfresco.content.process.ui
+package com.alfresco.content.process.ui.composeviews
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,16 +18,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.process.FormViewModel
-import com.alfresco.content.process.FormViewState
-import com.alfresco.content.process.ui.components.FormScrollContent
 import com.alfresco.content.process.ui.components.Outcomes
+import com.alfresco.content.process.ui.fragments.FormViewModel
+import com.alfresco.content.process.ui.fragments.FormViewState
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: List<OptionsModel>) {
+fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -57,7 +58,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
                 },
                 items = formList,
             ) { field ->
-                FormScrollContent(field, viewModel, state)
+                FormScrollContent(field, viewModel, state, navController)
             }
         }
 
@@ -85,5 +86,6 @@ fun PreviewProcessDetailScreen() {
             TaskRepository(),
         ),
         emptyList(),
+        rememberNavController(),
     )
 }

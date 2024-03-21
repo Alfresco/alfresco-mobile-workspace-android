@@ -31,4 +31,8 @@
     <string name="message_no_internet">Verifique su conexión a Internet y vuelva a intentarlo.</string>
     <string name="suffix_view_all">...Ver todo</string>
     <string name="text_multiple_attachment">%d adjuntos</string>
+    <string name="text_add_attachments">Añadir adjuntos</string>
+    <string name="title_attached_files">Ficheros adjuntos</string>
+    <string name="icon_file">Icono de fichero</string>
+    <string name="icon_delete_attachment">Icono de eliminación de adjuntos</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.alfresco.content.process.ui.components
+package com.alfresco.content.process.ui.composeviews
 
 import ComposeTopBar
 import android.app.Activity
@@ -18,9 +18,11 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
 import com.airbnb.mvrx.compose.mavericksActivityViewModel
 import com.alfresco.content.data.OptionsModel
-import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.R
-import com.alfresco.content.process.ui.FormDetailScreen
+import com.alfresco.content.process.ui.components.CustomLinearProgressIndicator
+import com.alfresco.content.process.ui.components.FloatingActionButton
+import com.alfresco.content.process.ui.components.updateProcessList
+import com.alfresco.content.process.ui.fragments.FormViewModel
 
 @Composable
 fun FormScreen(navController: NavController) {
@@ -63,7 +65,7 @@ fun FormScreen(navController: NavController) {
                     if (state.requestStartForm is Loading) {
                         CustomLinearProgressIndicator(padding)
                     }
-                    FormDetailScreen(state, viewModel, customOutcomes)
+                    FormDetailScreen(state, viewModel, customOutcomes, navController)
                 }
             }
         }
@@ -86,7 +88,7 @@ fun FormScreen(navController: NavController) {
                     if (state.requestStartForm is Loading || state.requestStartWorkflow is Loading) {
                         CustomLinearProgressIndicator(padding)
                     }
-                    FormDetailScreen(state, viewModel, emptyList())
+                    FormDetailScreen(state, viewModel, emptyList(), navController)
                 }
             }
         }

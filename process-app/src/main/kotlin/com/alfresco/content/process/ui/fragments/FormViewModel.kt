@@ -1,47 +1,22 @@
-package com.alfresco.content.process
+package com.alfresco.content.process.ui.fragments
 
 import android.content.Context
-import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
-import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
-import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ProcessEntry
-import com.alfresco.content.data.ResponseListForm
-import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
-import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.coroutines.asFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-data class FormViewState(
-    val parent: ProcessEntry = ProcessEntry(),
-    val requestStartForm: Async<ResponseListForm> = Uninitialized,
-    val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
-    val formFields: List<FieldsData> = emptyList(),
-    val processOutcomes: List<OptionsModel> = emptyList(),
-    val enabledOutcomes: Boolean = false,
-    val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
-) : MavericksState {
-    constructor(target: ProcessEntry) : this(parent = target)
-
-    /**
-     * update the single process definition entry
-     */
-    fun updateSingleProcessDefinition(response: ResponseListProcessDefinition): FormViewState {
-        if (parent == null) {
-            return this
-        }
-        val processEntry = ProcessEntry.with(response.listProcessDefinitions.first(), parent)
-        return copy(parent = processEntry)
-    }
-}
+import java.util.UUID
 
 class FormViewModel(
     val state: FormViewState,
@@ -49,8 +24,45 @@ class FormViewModel(
     private val repository: TaskRepository,
 ) : MavericksViewModel<FormViewState>(state) {
 
+    private var observeUploadsJob: Job? = null
+    var entryListener: EntryListener? = null
+    var observerID: String = ""
+    private var isExecuted = false
+
     init {
+        observerID = UUID.randomUUID().toString()
         singleProcessDefinition(state.parent.id)
+    }
+
+    /**
+     * returns the current logged in APS user profile data
+     */
+    fun getAPSUser() = repository.getAPSUser()
+
+    /**
+     * delete content locally
+     */
+    fun deleteAttachment(contentId: String) = stateFlow.execute {
+        deleteUploads(contentId)
+    }
+
+    private fun observeUploads(state: FormViewState) {
+        requireNotNull(state.parent)
+
+        val repo = OfflineRepository()
+
+        // On refresh clean completed uploads
+        repo.removeCompletedUploads()
+
+        observeUploadsJob?.cancel()
+        observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
+            .execute {
+                if (it is Success) {
+                    updateUploads(it())
+                } else {
+                    this
+                }
+            }
     }
 
     private fun singleProcessDefinition(appDefinitionId: String) = withState { state ->
@@ -61,7 +73,10 @@ class FormViewModel(
                     is Fail -> copy(requestProcessDefinition = Fail(it.error))
                     is Success -> {
                         val updatedState = updateSingleProcessDefinition(it())
-                        getStartForm(updatedState.parent)
+                        observeUploads(updatedState)
+                        updatedState.parent.let { processEntry ->
+                            getStartForm(processEntry)
+                        }
                         copy(requestProcessDefinition = Success(it()))
                     }
 

@@ -128,6 +128,7 @@ ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+ui-compose-viewbinding = "androidx.compose.ui:ui-viewbinding:1.6.3"
 
 navigation-compose = "androidx.navigation:navigation-compose:2.7.6"
 compose-runtime = "androidx.compose.runtime:runtime:1.5.4"

@@ -5,7 +5,7 @@ import com.alfresco.content.browse.tasks.list.UpdateTasksData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.UserGroupDetails
-import com.alfresco.content.process.ui.UpdateProcessData
+import com.alfresco.content.process.ui.models.UpdateProcessData
 import com.alfresco.events.EventBus
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

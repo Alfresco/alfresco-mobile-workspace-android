@@ -1,4 +1,4 @@
-package com.alfresco.content.process.ui
+package com.alfresco.content.process.ui.models
 
 /**
  * Mark as UpdateProcessData data class

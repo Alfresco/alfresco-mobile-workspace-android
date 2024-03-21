@@ -46,7 +46,6 @@
     <string name="account">Account</string>
     <string name="icon_due_date">Due date icon</string>
     <string name="icon_user_profile">User profile icon</string>
-    <string name="icon_file">File icon</string>
     <string name="icon_priority">Priority icon</string>
     <string name="icon_assigned">Assigned icon</string>
     <string name="icon_status">Status icon</string>
@@ -65,7 +64,6 @@
     <string name="text_attached_files">Attached files</string>
     <string name="no_attached_files">No Attached Files</string>
     <string name="empty_no_due_date">No due date</string>
-    <string name="title_attached_files">Attached files</string>
     <string name="text_complete">Complete</string>
     <string name="dialog_title_complete_task">Complete Task</string>
     <string name="dialog_message_complete_task">Are you sure you want to complete this task? You will no longer be able to make any changes.</string>
@@ -86,9 +84,7 @@
     <string name="text_create_task">Create task</string>
     <string name="dialog_title_discard_task">Discard</string>
     <string name="dialog_message_discard_task">Do you want to discard the changes?</string>
-    <string name="icon_delete_attachment">Icon delete attachment</string>
     <string name="dialog_title_delete_content">Delete a file?</string>
-    <string name="text_add_attachments">Add attachments</string>
     <string name="icon_add_attachment">Add attachment icon</string>
     <string name="dialog_message_complete_task_files_queue">Are you sure you want to complete the task? Once completed, some files could not be uploaded and no changes can be made.</string>
 

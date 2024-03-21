@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -29,7 +30,8 @@ android {
     }
 
     buildFeatures {
-        compose = true
+        compose  true
+        viewBinding  true
     }
 
     composeOptions {
@@ -48,8 +50,15 @@ dependencies {
     implementation project(':common')
     implementation project(':actions')
     implementation project(':data')
+    implementation project(':listview')
     implementation project(':component')
+    implementation project(':viewer-common')
+    implementation project(':viewer-image')
+    implementation project(':viewer-media')
+    implementation project(':viewer-pdf')
+    implementation project(':viewer-text')
     implementation project(':viewer')
+    implementation project(':mimetype')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
@@ -59,6 +68,7 @@ dependencies {
     implementation libs.ui
     implementation libs.activity.compose
     implementation libs.ui.graphics
+    implementation libs.ui.compose.viewbinding
     implementation libs.ui.tooling.preview
     implementation libs.material3
 
@@ -66,5 +76,11 @@ dependencies {
     implementation libs.mavericks.compose
     implementation libs.androidx.compose.material.iconsExtended
     debugImplementation libs.androidx.ui.tooling
+
+
+    implementation libs.androidx.swiperefreshlayout
+    implementation libs.mavericks
+    implementation libs.epoxy.core
+    kapt libs.epoxy.processor
 
 }

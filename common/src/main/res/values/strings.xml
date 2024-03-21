@@ -32,4 +32,8 @@
     <string name="suffix_view_all">&#8230;View all</string>
     <string name="title_workflow">Workflow</string>
     <string name="text_multiple_attachment">%d attachments</string>
+    <string name="text_add_attachments">Add attachments</string>
+    <string name="title_attached_files">Attached files</string>
+    <string name="icon_file">File icon</string>
+    <string name="icon_delete_attachment">Icon delete attachment</string>
 </resources>

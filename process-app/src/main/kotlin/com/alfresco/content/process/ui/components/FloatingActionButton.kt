@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.OptionsModel
-import com.alfresco.content.process.FormViewModel
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.fragments.FormViewModel
 
 @Composable
 fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: FormViewModel) {

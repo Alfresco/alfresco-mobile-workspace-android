@@ -46,7 +46,6 @@
     <string name="account">Account</string>
     <string name="icon_due_date">Pictogram Vervaldatum</string>
     <string name="icon_user_profile">Pictogram Gebruikersprofiel</string>
-    <string name="icon_file">Pictogram Bestand</string>
     <string name="icon_priority">Pictogram Prioriteit</string>
     <string name="icon_assigned">Pictogram Toegewezen</string>
     <string name="icon_status">Pictogram Status</string>
@@ -65,7 +64,6 @@
     <string name="text_attached_files">Bijgevoegde bestanden</string>
     <string name="no_attached_files">Geen bijgevoegde bestanden</string>
     <string name="empty_no_due_date">Geen vervaldatum</string>
-    <string name="title_attached_files">Bijgevoegde bestanden</string>
     <string name="text_complete">Voltooien</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
     <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>
@@ -86,9 +84,7 @@
     <string name="text_create_task">Taak creëren</string>
     <string name="dialog_title_discard_task">Negeren</string>
     <string name="dialog_message_discard_task">Wilt u de wijzigingen negeren?</string>
-    <string name="icon_delete_attachment">Pictogram Bijlage verwijderen</string>
     <string name="dialog_title_delete_content">Bestand verwijderen?</string>
-    <string name="text_add_attachments">Bijlagen toevoegen</string>
     <string name="icon_add_attachment">Pictogram Bijlage toevoegen</string>
     <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien? Nadat de taak is voltooid, kunnen sommige bestanden niet worden geüpload en kunnen geen wijzigingen worden aangebracht.</string>
 

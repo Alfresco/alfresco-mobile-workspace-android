@@ -18,6 +18,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentAttachedFilesBinding
@@ -75,8 +76,12 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
         val handler = Handler(Looper.getMainLooper())
         binding.refreshLayout.isRefreshing = false
         binding.loading.isVisible = false
+
+        val fields = state.formFields.find { it.type == FieldType.UPLOAD.value() }!!
+
         handler.post {
-            if (state.listContents.size > 0) {
+            if (state.listContents.isNotEmpty()) {
+                viewModel.updateFieldValue(fields.id, state.listContents, state)
                 binding.tvNoOfAttachments.visibility = View.VISIBLE
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             } else {

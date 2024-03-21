@@ -189,6 +189,10 @@ class FormViewModel(
                     values[it.id] = repository.mapStringToOptionValues(it)
                 }
 
+                FieldType.UPLOAD.value() -> {
+                    values[it.id] = state.listContents.joinToString(separator = ",") { content -> content.id }
+                }
+
                 else -> {
                     values[it.id] = it.value
                 }

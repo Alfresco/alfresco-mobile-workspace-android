@@ -64,8 +64,7 @@ fun ProcessAttachedFilesScreen(navController: NavHostController) {
             context.resources.getDimensionPixelSize(R.dimen.default_bottom_controller_height),
         )
 
-        val myFragment = fragmentContainerView.getFragment<ProcessAttachedFilesFragment>()
-        // ...
+        fragmentContainerView.getFragment<ProcessAttachedFilesFragment>()
     }
 }
 

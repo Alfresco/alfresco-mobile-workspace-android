@@ -42,7 +42,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
             .clickable {
                 // Hide the keyboard on click outside of input fields
 //                keyboardController?.hide()
-//                focusManager.clearFocus()
+                focusManager.clearFocus()
             },
     ) {
         LazyColumn(

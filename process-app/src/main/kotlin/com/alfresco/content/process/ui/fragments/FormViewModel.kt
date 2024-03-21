@@ -7,12 +7,18 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
+import com.alfresco.content.data.payloads.FieldType
+import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.getFormattedDate
 import com.alfresco.coroutines.asFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -100,12 +106,14 @@ class FormViewModel(
                     }
 
                     is Success -> {
-                        copy(
+                        val updatedState = copy(
                             parent = processEntry,
                             formFields = it().fields.flatMap { listData -> listData.fields },
                             processOutcomes = it().outcomes,
                             requestStartForm = Success(it()),
                         )
+                        enableDisableActions(updatedState)
+                        updatedState
                     }
 
                     else -> {
@@ -117,38 +125,42 @@ class FormViewModel(
     }
 
     fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
-        val updatedState = state.copy(
-            formFields = state.formFields.map { field ->
-                if (field.id == fieldId) {
-                    var updateValue = newValue
-                    when {
-                        (updateValue is String) && updateValue.isEmpty() -> {
-                            updateValue = null
-                        }
-
-                        (updateValue is Boolean) && !updateValue -> {
-                            updateValue = null
-                        }
-
-                        (updateValue is UserGroupDetails) && updateValue.id == 0 -> {
-                            updateValue = null
-                        }
+        val updatedFieldList = state.formFields.map { field ->
+            if (field.id == fieldId) {
+                var updatedValue = newValue
+                when {
+                    (updatedValue is String) && updatedValue.isEmpty() -> {
+                        updatedValue = null
                     }
-                    field.copy(value = updateValue)
-                } else {
-                    field
+
+                    (updatedValue is Boolean) && !updatedValue -> {
+                        updatedValue = null
+                    }
+
+                    (updatedValue is UserGroupDetails) && updatedValue.id == 0 -> {
+                        updatedValue = null
+                    }
+
+                    (updatedValue is OptionsModel) && updatedValue.id.isEmpty() -> {
+                        updatedValue = null
+                    }
                 }
-            },
+                field.copy(value = updatedValue)
+            } else {
+                field
+            }
+        }
+
+        val updatedState = state.copy(
+            formFields = updatedFieldList,
         )
 
-        val hasAllRequiredData = hasFieldRequiredData(updatedState)
-
-        setState { updatedState.copy(enabledOutcomes = hasAllRequiredData) }
+        enableDisableActions(updatedState)
     }
 
     fun startWorkflow() = withState { state ->
         viewModelScope.launch {
-            repository::startWorkflow.asFlow(state.parent, "", state.formFields).execute {
+            repository::startWorkflow.asFlow(state.parent, "", convertFieldsToValues(state.formFields)).execute {
                 when (it) {
                     is Loading -> copy(requestStartWorkflow = Loading())
                     is Fail -> copy(requestStartWorkflow = Fail(it.error))
@@ -157,6 +169,39 @@ class FormViewModel(
                 }
             }
         }
+    }
+
+    private fun convertFieldsToValues(fields: List<FieldsData>): Map<String, Any?> {
+        val values = mutableMapOf<String, Any?>()
+
+        fields.forEach {
+            when (it.type) {
+                FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
+                    values[it.id] = repository.getUserOrGroup(it.value as UserGroupDetails)
+                }
+
+                FieldType.DATETIME.value(), FieldType.DATE.value() -> {
+                    val convertedDate = (it.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
+                    values[it.id] = convertedDate
+                }
+
+                FieldType.RADIO_BUTTONS.value(), FieldType.DROPDOWN.value() -> {
+                    values[it.id] = repository.mapStringToOptionValues(it)
+                }
+
+                else -> {
+                    values[it.id] = it.value
+                }
+            }
+        }
+
+        return values
+    }
+
+    private fun enableDisableActions(state: FormViewState) {
+        val hasAllRequiredData = hasFieldRequiredData(state)
+
+        setState { state.copy(enabledOutcomes = hasAllRequiredData) }
     }
 
     private fun hasFieldRequiredData(state: FormViewState): Boolean {

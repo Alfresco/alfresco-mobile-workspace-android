@@ -36,4 +36,7 @@
     <string name="title_attached_files">Attached files</string>
     <string name="icon_file">File icon</string>
     <string name="icon_delete_attachment">Icon delete attachment</string>
+    <string name="dialog_title_delete_content">Delete a file?</string>
+    <string name="dialog_negative_button_task">Cancel</string>
+    <string name="dialog_positive_button_task">Confirm</string>
 </resources>

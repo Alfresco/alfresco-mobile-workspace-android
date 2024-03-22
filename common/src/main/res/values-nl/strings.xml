@@ -35,4 +35,7 @@
     <string name="title_attached_files">Bijgevoegde bestanden</string>
     <string name="icon_file">Pictogram Bestand</string>
     <string name="icon_delete_attachment">Pictogram Bijlage verwijderen</string>
+    <string name="dialog_title_delete_content">Bestand verwijderen?</string>
+    <string name="dialog_negative_button_task">Annuleren</string>
+    <string name="dialog_positive_button_task">Bevestigen</string>
 </resources>

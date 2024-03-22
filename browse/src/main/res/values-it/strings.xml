@@ -82,9 +82,6 @@
     <string name="icon_assignee_edit">Icona Modifica assegnatario</string>
     <string name="icon_name_description_edit">Icona Modifica nome e descrizione</string>
     <string name="text_create_task">Crea compito</string>
-    <string name="dialog_title_discard_task">Ignora</string>
-    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
-    <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
     <string name="icon_add_attachment">Icona Aggiungi allegati</string>
     <string name="dialog_message_complete_task_files_queue">Vuoi completare il compito? Una volta completato, non sarà possibile caricare alcuni file né apportare modifiche.</string>
 

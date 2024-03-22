@@ -27,25 +27,6 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         listener = this
     }
 
-    /**
-     * confirmation dialog before deleting the content related to task.
-     */
-    /*fun deleteContentPrompt(contentEntry: Entry) {
-        AnalyticsManager().taskEvent(EventName.DeleteTaskAttachment)
-        val oldDialog = deleteContentDialog.get()
-        if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setCancelable(false)
-            .setTitle(getString(R.string.dialog_title_delete_content))
-            .setMessage(contentEntry.name)
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                listener.onConfirmDelete(contentEntry.id.toString())
-            }
-            .show()
-        deleteContentDialog = WeakReference(dialog)
-    }*/
-
     internal fun showCreateSheet(state: FormViewState, observerID: String) {
         AnalyticsManager().taskEvent(EventName.UploadProcessAttachment)
         CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID)).show(childFragmentManager, null)
@@ -72,10 +53,14 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
     /**
      * This intent will open the local file
      */
-//    fun localViewerIntent(contentEntry: Entry) = startActivity(
-//        Intent(requireActivity(), LocalPreviewActivity::class.java)
-//            .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry),
-//    )
+    fun localViewerIntent(contentEntry: Entry) {
+        val intent = Intent(
+            requireActivity(),
+            Class.forName("com.alfresco.content.browse.preview.LocalPreviewActivity"),
+        )
+        intent.putExtra(KEY_ENTRY_OBJ, contentEntry)
+        startActivity(intent)
+    }
 
     /**
      * showing Snackbar
@@ -85,6 +70,10 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
         message,
         Snackbar.LENGTH_SHORT,
     ).show()
+
+    companion object {
+        const val KEY_ENTRY_OBJ = "entryObj"
+    }
 }
 
 /**

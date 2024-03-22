@@ -35,4 +35,7 @@
     <string name="title_attached_files">Ficheros adjuntos</string>
     <string name="icon_file">Icono de fichero</string>
     <string name="icon_delete_attachment">Icono de eliminación de adjuntos</string>
+    <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
+    <string name="dialog_negative_button_task">Cancelar</string>
+    <string name="dialog_positive_button_task">Confirmar</string>
 </resources>

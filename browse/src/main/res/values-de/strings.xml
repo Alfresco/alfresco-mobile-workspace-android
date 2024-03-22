@@ -67,8 +67,6 @@
     <string name="text_complete">Abgeschlossen</string>
     <string name="dialog_title_complete_task">Aufgabe abschließen</string>
     <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie diese Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
-    <string name="dialog_negative_button_task">Abbrechen</string>
-    <string name="dialog_positive_button_task">Bestätigen</string>
     <string name="icon_send_description">Schaltfläche „Senden“</string>
     <string name="empty_description">Keine Beschreibung</string>
     <string name="icon_completed">Abgeschlossen-Symbol</string>
@@ -84,7 +82,6 @@
     <string name="text_create_task">Aufgabe erstellen</string>
     <string name="dialog_title_discard_task">Verwerfen</string>
     <string name="dialog_message_discard_task">Sollen die Änderungen verworfen werden?</string>
-    <string name="dialog_title_delete_content">Eine Datei löschen?</string>
     <string name="icon_add_attachment">Symbol \'Anhang hinzufügen\'</string>
     <string name="dialog_message_complete_task_files_queue">Sind Sie sicher, dass Sie die Aufgabe abschließen wollen? Nach Abschluss der Aufgabe können einige Dateien nicht hochgeladen werden und es können keine Änderungen vorgenommen werden.</string>
 

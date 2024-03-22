@@ -94,8 +94,6 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
             showCreateSheet(state, viewModel.observerID)
         }
 
-//        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
-
         epoxyController.requestModelBuild()
     }
 
@@ -123,13 +121,13 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
                 remoteViewerIntent(entry)
             }
         } else {
-//            localViewerIntent(contentEntry)
+            localViewerIntent(contentEntry)
         }
     }
 
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded) {
-//            localViewerIntent(entry as Entry)
+            localViewerIntent(entry as Entry)
         }
     }
 }

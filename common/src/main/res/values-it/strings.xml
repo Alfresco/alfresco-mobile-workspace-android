@@ -35,4 +35,7 @@
     <string name="title_attached_files">File allegati</string>
     <string name="icon_file">Icona file</string>
     <string name="icon_delete_attachment">Icona Elimina allegato</string>
+    <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
+    <string name="dialog_title_discard_task">Ignora</string>
+    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
 </resources>

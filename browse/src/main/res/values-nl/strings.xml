@@ -67,8 +67,6 @@
     <string name="text_complete">Voltooien</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
     <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>
-    <string name="dialog_negative_button_task">Annuleren</string>
-    <string name="dialog_positive_button_task">Bevestigen</string>
     <string name="icon_send_description">Knop Verzenden</string>
     <string name="empty_description">Geen beschrijving</string>
     <string name="icon_completed">Pictogram Voltooid</string>
@@ -84,7 +82,6 @@
     <string name="text_create_task">Taak creëren</string>
     <string name="dialog_title_discard_task">Negeren</string>
     <string name="dialog_message_discard_task">Wilt u de wijzigingen negeren?</string>
-    <string name="dialog_title_delete_content">Bestand verwijderen?</string>
     <string name="icon_add_attachment">Pictogram Bijlage toevoegen</string>
     <string name="dialog_message_complete_task_files_queue">Weet u zeker dat u de taak wilt voltooien? Nadat de taak is voltooid, kunnen sommige bestanden niet worden geüpload en kunnen geen wijzigingen worden aangebracht.</string>
 

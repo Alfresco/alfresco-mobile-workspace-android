@@ -177,7 +177,14 @@ class FormViewModel(
         fields.forEach {
             when (it.type) {
                 FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
-                    values[it.id] = repository.getUserOrGroup(it.value as UserGroupDetails)
+                    when {
+                        it.value != null -> {
+                            values[it.id] = repository.getUserOrGroup(it.value as? UserGroupDetails)
+                        }
+                        else -> {
+                            values[it.id] = null
+                        }
+                    }
                 }
 
                 FieldType.DATETIME.value(), FieldType.DATE.value() -> {

@@ -25,15 +25,15 @@ fun IntegerInputField(
     var errorMessage = ""
 
     if (!textFieldValue.isNullOrEmpty()) {
-        val minValue = fieldsData.minValue?.toInt() ?: 0
-        val maxValue = fieldsData.maxValue?.toInt() ?: 0
+        val minValue = fieldsData.minValue?.toLong() ?: 0
+        val maxValue = fieldsData.maxValue?.toLong() ?: 0
 
-        if (textFieldValue.toInt() < minValue) {
+        if (textFieldValue.toLong() < minValue) {
             isError = true
             errorMessage = stringResource(R.string.error_min_value, minValue)
         }
 
-        if (textFieldValue.toInt() > maxValue) {
+        if (textFieldValue.toLong() > maxValue) {
             isError = true
             errorMessage = stringResource(R.string.error_max_value, maxValue)
         }

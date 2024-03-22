@@ -36,11 +36,14 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 fun CheckBoxField(
     title: String = "",
     checkedValue: Boolean = false,
-    onCheckChanged: (Boolean) -> Unit = {},
+    onCheckChanged: (Boolean) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
+    errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
     val context = LocalContext.current
-    var showError by remember { mutableStateOf(false) }
+
+    val isError by remember { mutableStateOf(errorData.first) }
+    val errorMessage by remember { mutableStateOf(errorData.second) }
 
     val minimumLineLength = 2 // Change this to your desired value
 
@@ -70,9 +73,6 @@ fun CheckBoxField(
                 checked = checkedValue,
                 onCheckedChange = { isChecked ->
                     onCheckChanged(isChecked)
-                    if (fieldsData.required) {
-                        showError = !isChecked
-                    }
                 },
             )
             ClickableText(
@@ -117,9 +117,9 @@ fun CheckBoxField(
             )
         }
 
-        if (showError) {
+        if (isError) {
             Text(
-                text = stringResource(R.string.error_required_field),
+                text = errorMessage,
                 color = AlfrescoError,
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 0.dp), // Adjust padding as needed

@@ -31,6 +31,7 @@ fun TrailingInputField(
                 tint = trailingIconColor(),
             )
         }
+
         FieldType.DROPDOWN.value(), FieldType.RADIO_BUTTONS.value() -> {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
@@ -38,6 +39,7 @@ fun TrailingInputField(
                 tint = trailingIconColor(),
             )
         }
+
         else -> {
             if (focusState && !textValue.isNullOrEmpty()) {
                 if (isError) {

@@ -30,10 +30,12 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 @Composable
 fun PeopleField(
     userDetail: UserGroupDetails? = null,
-    onAssigneeSelected: (UserGroupDetails?) -> Unit = { },
+    onAssigneeSelected: (UserGroupDetails?, Boolean) -> Unit = { _: UserGroupDetails?, _: Boolean -> },
     fieldsData: FieldsData = FieldsData(),
     processEntry: ProcessEntry = ProcessEntry(),
 ) {
+    val isError = (fieldsData.required && userDetail == null)
+
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
         if (fieldsData.required) {
@@ -63,10 +65,10 @@ fun PeopleField(
             IconButton(onClick = {
                 SearchUserGroupComponentBuilder(context, processEntry)
                     .onApply { userDetails ->
-                        onAssigneeSelected(userDetails)
+                        onAssigneeSelected(userDetails, isError)
                     }
                     .onCancel {
-                        onAssigneeSelected(null)
+                        onAssigneeSelected(null, isError)
                     }
                     .show()
             }) {

@@ -36,6 +36,7 @@ data class FieldsData(
     var dateDisplayFormat: String? = null,
     var hyperlinkUrl: String? = null,
     var displayText: String? = null,
+    var hasErrorInValue: Boolean = false,
 ) : Parcelable {
 
     companion object {

@@ -124,7 +124,7 @@ class FormViewModel(
         }
     }
 
-    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
+    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState, hasError: Boolean) {
         val updatedFieldList = state.formFields.map { field ->
             if (field.id == fieldId) {
                 var updatedValue = newValue
@@ -145,7 +145,7 @@ class FormViewModel(
                         updatedValue = null
                     }
                 }
-                field.copy(value = updatedValue)
+                field.copy(value = updatedValue, hasErrorInValue = hasError)
             } else {
                 field
             }
@@ -181,6 +181,7 @@ class FormViewModel(
                         it.value != null -> {
                             values[it.id] = repository.getUserOrGroup(it.value as? UserGroupDetails)
                         }
+
                         else -> {
                             values[it.id] = null
                         }
@@ -210,13 +211,17 @@ class FormViewModel(
     }
 
     private fun enableDisableActions(state: FormViewState) {
-        val hasAllRequiredData = hasFieldRequiredData(state)
+        val hasAllRequiredData = hasFieldValidData(state)
 
         setState { state.copy(enabledOutcomes = hasAllRequiredData) }
     }
 
-    private fun hasFieldRequiredData(state: FormViewState): Boolean {
-        return !state.formFields.filter { it.required }.any { it.value == null }
+    private fun hasFieldValidData(state: FormViewState): Boolean {
+        val hasValidDataInRequiredFields = !state.formFields.filter { it.required }.any { (it.value == null || it.hasErrorInValue) }
+        val hasValidDataInOtherFields = !state.formFields.filter { !it.required }.any { it.hasErrorInValue }
+        println("Test 1 == $hasValidDataInRequiredFields || $hasValidDataInOtherFields")
+
+        return (hasValidDataInRequiredFields && hasValidDataInOtherFields)
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

@@ -1,23 +1,33 @@
-package com.alfresco.content.process.ui.components
+package com.alfresco.content.process.ui.composeviews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
-import com.alfresco.content.process.FormViewModel
-import com.alfresco.content.process.FormViewState
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.components.AmountInputField
+import com.alfresco.content.process.ui.components.AttachFilesField
+import com.alfresco.content.process.ui.components.CheckBoxField
+import com.alfresco.content.process.ui.components.DateTimeField
+import com.alfresco.content.process.ui.components.DropdownField
+import com.alfresco.content.process.ui.components.HyperLinkField
+import com.alfresco.content.process.ui.components.IntegerInputField
+import com.alfresco.content.process.ui.components.MultiLineInputField
+import com.alfresco.content.process.ui.components.PeopleField
+import com.alfresco.content.process.ui.components.ReadOnlyField
+import com.alfresco.content.process.ui.components.SingleLineInputField
+import com.alfresco.content.process.ui.fragments.FormViewModel
+import com.alfresco.content.process.ui.fragments.FormViewState
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormViewState) {
+fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormViewState, navController: NavController) {
     when (field.type) {
         FieldType.TEXT.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
@@ -93,8 +103,9 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.DROPDOWN.value(), FieldType.RADIO_BUTTONS.value() -> {
-            var textFieldValue by remember { mutableStateOf(field.placeHolder ?: "") }
-            var textFieldQuery by remember { mutableStateOf("") }
+            var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+            var textFieldQuery by remember { mutableStateOf(field.options.find { it.name == textFieldValue }?.id ?: "") }
+
             DropdownField(
                 nameText = textFieldValue,
                 queryText = textFieldQuery,
@@ -130,6 +141,14 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.HYPERLINK.value() -> {
             HyperLinkField(field)
+        }
+
+        FieldType.UPLOAD.value() -> {
+            AttachFilesField(
+                contents = state.listContents,
+                fieldsData = field,
+                navController = navController,
+            )
         }
     }
 }

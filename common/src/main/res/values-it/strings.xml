@@ -30,4 +30,12 @@
     <string name="title_action_mode">%d Selezionato</string>
     <string name="message_no_internet">Controlla la connessione Internet e riprova.</string>
     <string name="suffix_view_all">...Visualizza tutto</string>
+    <string name="text_multiple_attachment">%d allegati</string>
+    <string name="text_add_attachments">Aggiungi allegati</string>
+    <string name="title_attached_files">File allegati</string>
+    <string name="icon_file">Icona file</string>
+    <string name="icon_delete_attachment">Icona Elimina allegato</string>
+    <string name="dialog_title_delete_content">Vuoi eliminare un file?</string>
+    <string name="dialog_title_discard_task">Ignora</string>
+    <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
 </resources>

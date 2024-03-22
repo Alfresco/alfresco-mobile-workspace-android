@@ -30,4 +30,12 @@
     <string name="title_action_mode">%d Geselecteerd</string>
     <string name="message_no_internet">Controleer uw internetverbinding en probeer het opnieuw.</string>
     <string name="suffix_view_all">...Alle weergeven</string>
+    <string name="text_multiple_attachment">%d bijlagen</string>
+    <string name="text_add_attachments">Bijlagen toevoegen</string>
+    <string name="title_attached_files">Bijgevoegde bestanden</string>
+    <string name="icon_file">Pictogram Bestand</string>
+    <string name="icon_delete_attachment">Pictogram Bijlage verwijderen</string>
+    <string name="dialog_title_delete_content">Bestand verwijderen?</string>
+    <string name="dialog_negative_button_task">Annuleren</string>
+    <string name="dialog_positive_button_task">Bevestigen</string>
 </resources>

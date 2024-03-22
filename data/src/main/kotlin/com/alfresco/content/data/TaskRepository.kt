@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.data.payloads.CommentPayload
-import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
@@ -383,31 +382,17 @@ class TaskRepository {
     /**
      * Execute the start flow integration
      */
-    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String, fields: List<FieldsData>) = ProcessEntry.with(
+    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String, values: Map<String, Any?>) = ProcessEntry.with(
         processesService.createProcessInstance(
             RequestProcessInstances(
                 name = processEntry?.name,
                 processDefinitionId = processEntry?.id,
-                values = convertFieldsToValues(fields),
+                values = values,
             ),
         ),
     )
 
-    private fun convertFieldsToValues(fields: List<FieldsData>): Map<String, Any?> {
-        val values = mutableMapOf<String, Any?>()
-
-        fields.forEach {
-            if (it.type == FieldType.PEOPLE.value() || it.type == FieldType.FUNCTIONAL_GROUP.value()) {
-                values[it.id] = getUserOrGroup(it.value as UserGroupDetails)
-            } else {
-                values[it.id] = it.value
-            }
-        }
-
-        return values
-    }
-
-    private fun getUserOrGroup(userGroupInfo: UserGroupDetails?): Map<String, Any?> {
+    fun getUserOrGroup(userGroupInfo: UserGroupDetails?): Map<String, Any?> {
         return if (userGroupInfo?.isGroup == true) {
             mapOf<String, Any?>(
                 "id" to userGroupInfo.id,
@@ -425,6 +410,17 @@ class TaskRepository {
                 "email" to userGroupInfo?.email,
             )
         }
+    }
+
+    fun mapStringToOptionValues(fieldsData: FieldsData): Map<String, Any?> {
+        val id = fieldsData.options.find { it.name == fieldsData.value }?.id
+
+        requireNotNull(id)
+
+        return mapOf<String, Any?>(
+            "id" to id,
+            "name" to fieldsData.name,
+        )
     }
 
     /**

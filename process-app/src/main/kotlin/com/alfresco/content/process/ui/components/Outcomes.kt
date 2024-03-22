@@ -10,9 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alfresco.content.data.OptionsModel
-import com.alfresco.content.process.FormViewModel
+import com.alfresco.content.process.ui.fragments.FormViewModel
 
 @Composable
 fun Outcomes(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: FormViewModel) {

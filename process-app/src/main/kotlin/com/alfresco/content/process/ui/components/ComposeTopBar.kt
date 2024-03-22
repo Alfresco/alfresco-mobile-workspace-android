@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alfresco.content.process.R
-import com.alfresco.content.process.ui.BackButton
+import com.alfresco.content.process.ui.composeviews.BackButton
 import com.alfresco.content.process.ui.theme.SeparateColorGrayLT
 
 @OptIn(ExperimentalMaterial3Api::class)

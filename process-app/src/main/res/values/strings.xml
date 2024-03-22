@@ -9,4 +9,5 @@
     <string name="error_required_field">This is a required field.</string>
     <string name="title_actions">Actions</string>
     <string name="accessibility_process_actions">Process Actions Button</string>
+    <string name="no_attachments">No Attachments</string>
 </resources>

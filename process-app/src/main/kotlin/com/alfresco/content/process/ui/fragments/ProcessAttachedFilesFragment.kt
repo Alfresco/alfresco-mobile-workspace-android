@@ -1,6 +1,5 @@
-package com.alfresco.content.browse.tasks.attachments
+package com.alfresco.content.process.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,36 +9,29 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
-import com.alfresco.content.actions.ActionOpenWith
-import com.alfresco.content.browse.R
-import com.alfresco.content.browse.databinding.FragmentAttachedFilesBinding
-import com.alfresco.content.browse.preview.LocalPreviewActivity
-import com.alfresco.content.browse.tasks.BaseDetailFragment
-import com.alfresco.content.browse.tasks.detail.TaskDetailViewModel
-import com.alfresco.content.browse.tasks.detail.executePreview
-import com.alfresco.content.browse.tasks.detail.isTaskCompleted
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.mimetype.MimeType
-import com.alfresco.content.process.ui.fragments.BaseDetailFragment.Companion.KEY_ENTRY_OBJ
+import com.alfresco.content.process.R
+import com.alfresco.content.process.databinding.FragmentAttachedFilesBinding
+import com.alfresco.content.process.ui.epoxy.listViewAttachmentRow
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 
 /**
- * Marked as AttachedFilesFragment class
+ * Marked as ProcessAttachedFilesFragment class
  */
-class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
+class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
-    val viewModel: TaskDetailViewModel by activityViewModel()
+    val viewModel: FormViewModel by activityViewModel()
     private lateinit var binding: FragmentAttachedFilesBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
@@ -56,7 +48,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
-
+        binding.refreshLayout.isEnabled = false
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
@@ -74,11 +66,6 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
                 }
             }
         })
-        binding.refreshLayout.setOnRefreshListener {
-            viewModel.getContents()
-        }
-
-        viewModel.setListener(this)
     }
 
     override fun onConfirmDelete(contentId: String) {
@@ -87,13 +74,14 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     override fun invalidate() = withState(viewModel) { state ->
         val handler = Handler(Looper.getMainLooper())
-        binding.loading.isVisible = state.requestDeleteContent is Loading
+        binding.refreshLayout.isRefreshing = false
+        binding.loading.isVisible = false
 
-        if (state.requestContents.complete) {
-            binding.refreshLayout.isRefreshing = false
-        }
+        val fields = state.formFields.find { it.type == FieldType.UPLOAD.value() }!!
+
         handler.post {
-            if (state.listContents.size > 4) {
+            if (state.listContents.isNotEmpty()) {
+                viewModel.updateFieldValue(fields.id, state.listContents, state)
                 binding.tvNoOfAttachments.visibility = View.VISIBLE
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             } else {
@@ -101,16 +89,10 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
             }
         }
 
-        if (state.requestContents is Success && !viewModel.isTaskCompleted(state)) {
-            binding.fabAddAttachments.visibility = View.VISIBLE
-            binding.fabAddAttachments.setOnClickListener {
-                showCreateSheet(state)
-            }
+        binding.fabAddAttachments.visibility = View.VISIBLE
+        binding.fabAddAttachments.setOnClickListener {
+            showCreateSheet(state, viewModel.observerID)
         }
-
-        binding.recyclerView.isNestedScrollingEnabled = !viewModel.isTaskCompleted(state)
-
-        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
 
         epoxyController.requestModelBuild()
     }
@@ -122,8 +104,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
-                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
+                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
                 }
             }
         }
@@ -131,15 +112,14 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
-            val entry = Entry.convertContentEntryToEntry(
-                contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType),
-                UploadServerType.UPLOAD_TO_TASK,
-            )
             if (!contentEntry.source.isNullOrEmpty()) {
+                val entry = Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType),
+                    UploadServerType.UPLOAD_TO_PROCESS,
+                )
                 remoteViewerIntent(entry)
-            } else
-                viewModel.executePreview(ActionOpenWith(entry))
+            }
         } else {
             localViewerIntent(contentEntry)
         }
@@ -147,10 +127,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded) {
-            startActivity(
-                Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(KEY_ENTRY_OBJ, entry as Entry),
-            )
+            localViewerIntent(entry as Entry)
         }
     }
 }

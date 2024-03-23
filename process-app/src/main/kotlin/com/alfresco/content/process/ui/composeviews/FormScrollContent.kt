@@ -31,6 +31,7 @@ import com.alfresco.content.process.ui.components.dropDownRadioInputError
 import com.alfresco.content.process.ui.components.integerInputError
 import com.alfresco.content.process.ui.components.multiLineInputError
 import com.alfresco.content.process.ui.components.singleLineInputError
+import com.alfresco.content.process.ui.components.userGroupInputError
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
 
@@ -41,12 +42,13 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.TEXT.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             SingleLineInputField(
                 textFieldValue = textFieldValue,
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = singleLineInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -57,12 +59,13 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.MULTI_LINE_TEXT.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             MultiLineInputField(
                 textFieldValue = textFieldValue,
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = multiLineInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -71,13 +74,14 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.INTEGER.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
-            var errorData by remember { mutableStateOf(Pair(false, "")) }
+            var errorData by remember { mutableStateOf(field.errorData) }
+
             IntegerInputField(
                 textFieldValue = textFieldValue,
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = integerInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -87,12 +91,13 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.AMOUNT.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             AmountInputField(
                 textFieldValue = textFieldValue,
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = amountInputError(textFieldValue, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -102,13 +107,14 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.BOOLEAN.value() -> {
             var checkedValue by remember { mutableStateOf(field.value as? Boolean ?: false) }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             CheckBoxField(
                 title = stringResource(id = R.string.title_workflow),
                 checkedValue = checkedValue,
                 onCheckChanged = { newChecked ->
                     checkedValue = newChecked
                     errorData = booleanInputError(newChecked, field, context)
-                    viewModel.updateFieldValue(field.id, newChecked, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newChecked, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -118,12 +124,13 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         FieldType.DATETIME.value(), FieldType.DATE.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             DateTimeField(
                 dateTimeValue = textFieldValue,
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = dateTimeInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -142,7 +149,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                     textFieldValue = newText
                     textFieldQuery = newQuery
                     errorData = dropDownRadioInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData.first)
+                    viewModel.updateFieldValue(field.id, newText, state, errorData)
                 },
 
                 errorData = errorData,
@@ -152,6 +159,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.READONLY_TEXT.value(), FieldType.READONLY.value() -> {
             val textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+
             ReadOnlyField(
                 textFieldValue = textFieldValue,
                 fieldsData = field,
@@ -160,13 +168,17 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
             var userDetailValue by remember { mutableStateOf(field.value as? UserGroupDetails) }
+            var errorData by remember { mutableStateOf(Pair(false, "")) }
+
             PeopleField(
                 userDetail = userDetailValue,
-                onAssigneeSelected = { userDetails, hasError ->
+                onAssigneeSelected = { userDetails ->
                     userDetailValue = userDetails
-                    viewModel.updateFieldValue(field.id, userDetails, state, hasError)
+                    errorData = userGroupInputError(userDetails, field, context)
+                    viewModel.updateFieldValue(field.id, userDetails, state, errorData)
                 },
                 fieldsData = field,
+                errorData = errorData,
                 processEntry = ProcessEntry.withProcess(state.parent, field.type),
             )
         }

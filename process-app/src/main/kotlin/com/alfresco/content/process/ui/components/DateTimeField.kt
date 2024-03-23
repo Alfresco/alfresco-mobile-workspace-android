@@ -6,8 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -28,9 +26,6 @@ fun DateTimeField(
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Text,
     )
-
-    val isError by remember { mutableStateOf(errorData.first) }
-    val errorMessage by remember { mutableStateOf(errorData.second) }
 
     val context = LocalContext.current
     InputField(
@@ -62,8 +57,8 @@ fun DateTimeField(
         onValueChanged = onValueChanged,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
-        isError = isError,
-        errorMessage = errorMessage,
+        isError = errorData.first,
+        errorMessage = errorData.second,
         isEnabled = false,
     )
 }

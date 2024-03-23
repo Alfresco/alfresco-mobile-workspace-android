@@ -106,13 +106,18 @@ class FormViewModel(
                     }
 
                     is Success -> {
+                        val fields = it().fields.flatMap { listData -> listData.fields }
+
                         val updatedState = copy(
                             parent = processEntry,
-                            formFields = it().fields.flatMap { listData -> listData.fields },
+                            formFields = fields,
                             processOutcomes = it().outcomes,
                             requestStartForm = Success(it()),
                         )
-                        enableDisableActions(updatedState)
+
+                        val hasAllRequiredData = hasFieldValidData(fields)
+                        updateStateData(hasAllRequiredData, fields)
+
                         updatedState
                     }
 
@@ -124,8 +129,10 @@ class FormViewModel(
         }
     }
 
-    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState, hasError: Boolean) {
-        val updatedFieldList = state.formFields.map { field ->
+    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState, errorData: Pair<Boolean, String>) {
+        val updatedFieldList: MutableList<FieldsData> = mutableListOf()
+
+        state.formFields.forEach { field ->
             if (field.id == fieldId) {
                 var updatedValue = newValue
                 when {
@@ -145,17 +152,15 @@ class FormViewModel(
                         updatedValue = null
                     }
                 }
-                field.copy(value = updatedValue, hasErrorInValue = hasError)
+                updatedFieldList.add(FieldsData.withUpdateField(field, updatedValue, errorData))
             } else {
-                field
+                updatedFieldList.add(field)
             }
         }
 
-        val updatedState = state.copy(
-            formFields = updatedFieldList,
-        )
+        val hasAllRequiredData = hasFieldValidData(updatedFieldList)
 
-        enableDisableActions(updatedState)
+        updateStateData(hasAllRequiredData, updatedFieldList)
     }
 
     fun startWorkflow() = withState { state ->
@@ -210,17 +215,13 @@ class FormViewModel(
         return values
     }
 
-    private fun enableDisableActions(state: FormViewState) {
-        val hasAllRequiredData = hasFieldValidData(state)
-
-        setState { state.copy(enabledOutcomes = hasAllRequiredData) }
+    private fun updateStateData(enabledOutcomes: Boolean, fields: List<FieldsData>) {
+        setState { copy(enabledOutcomes = enabledOutcomes, formFields = fields) }
     }
 
-    private fun hasFieldValidData(state: FormViewState): Boolean {
-        val hasValidDataInRequiredFields = !state.formFields.filter { it.required }.any { (it.value == null || it.hasErrorInValue) }
-        val hasValidDataInOtherFields = !state.formFields.filter { !it.required }.any { it.hasErrorInValue }
-        println("Test 1 == $hasValidDataInRequiredFields || $hasValidDataInOtherFields")
-
+    private fun hasFieldValidData(fields: List<FieldsData>): Boolean {
+        val hasValidDataInRequiredFields = !fields.filter { it.required }.any { (it.value == null || it.errorData.first) }
+        val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
         return (hasValidDataInRequiredFields && hasValidDataInOtherFields)
     }
 

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 
@@ -20,19 +21,24 @@ fun Modifier.inputField() =
         .padding(start = 16.dp, end = 16.dp, top = 12.dp) // Add padding or other modifiers as needed
 
 fun integerInputError(value: String?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
+    var errorData = Pair(false, "")
+
     if (!value.isNullOrEmpty()) {
         val minValue = fieldsData.minValue?.toLong() ?: 0
         val maxValue = fieldsData.maxValue?.toLong() ?: 0
 
         if (value.toLong() < minValue) {
-            return Pair(true, context.getString(R.string.error_min_value, minValue))
+            errorData = Pair(true, context.getString(R.string.error_min_value, minValue))
         }
 
         if (value.toLong() > maxValue) {
-            return Pair(true, context.getString(R.string.error_max_value, maxValue))
+            errorData = Pair(true, context.getString(R.string.error_max_value, maxValue))
         }
     }
-    return Pair(false, "")
+
+    println("IntegerInputField 3 == $errorData")
+
+    return errorData
 }
 
 fun singleLineInputError(value: String?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
@@ -131,5 +137,13 @@ fun dropDownRadioInputError(value: String?, fieldsData: FieldsData, context: Con
     } else {
         ""
     }
+    return Pair(isError, errorMessage)
+}
+
+fun userGroupInputError(value: UserGroupDetails?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
+    val isError = (fieldsData.required && value == null)
+
+    val errorMessage = ""
+
     return Pair(isError, errorMessage)
 }

@@ -3,9 +3,6 @@ package com.alfresco.content.process.ui.components
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,9 +21,6 @@ fun IntegerInputField(
         keyboardType = KeyboardType.Number,
     )
 
-    val isError by remember { mutableStateOf(errorData.first) }
-    val errorMessage by remember { mutableStateOf(errorData.second) }
-
     InputField(
         modifier = Modifier.inputField(),
         maxLines = 1,
@@ -34,8 +28,8 @@ fun IntegerInputField(
         onValueChanged = onValueChanged,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
-        isError = isError,
-        errorMessage = errorMessage,
+        isError = errorData.first,
+        errorMessage = errorData.second,
     )
 }
 

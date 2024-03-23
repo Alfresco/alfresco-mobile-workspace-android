@@ -6,8 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -31,9 +29,6 @@ fun DropdownField(
     )
 
     val context = LocalContext.current
-
-    val isError by remember { mutableStateOf(errorData.first) }
-    val errorMessage by remember { mutableStateOf(errorData.second) }
 
     InputField(
         colors = OutlinedTextFieldDefaults.colors(
@@ -66,8 +61,8 @@ fun DropdownField(
         textFieldValue = nameText,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
-        isError = isError,
-        errorMessage = errorMessage,
+        isError = errorData.first,
+        errorMessage = errorData.second,
         isEnabled = false,
     )
 }

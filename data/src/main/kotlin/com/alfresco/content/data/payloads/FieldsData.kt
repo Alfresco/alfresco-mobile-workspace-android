@@ -36,7 +36,7 @@ data class FieldsData(
     var dateDisplayFormat: String? = null,
     var hyperlinkUrl: String? = null,
     var displayText: String? = null,
-    var hasErrorInValue: Boolean = false,
+    var errorData: Pair<Boolean, String> = Pair(false, ""),
 ) : Parcelable {
 
     companion object {
@@ -69,6 +69,39 @@ data class FieldsData(
                 dateDisplayFormat = raw.dateDisplayFormat,
                 hyperlinkUrl = raw.hyperlinkUrl,
                 displayText = raw.displayText,
+            )
+        }
+
+        /**
+         * returns the FieldsData obj by using Fields obj
+         */
+        fun withUpdateField(raw: FieldsData, value: Any?, errorData: Pair<Boolean, String>): FieldsData {
+            return FieldsData(
+                fieldType = raw.fieldType,
+                id = raw.id,
+                name = raw.name,
+                message = raw.message,
+                type = raw.type,
+                placeHolder = raw.placeHolder,
+                value = value,
+                minLength = raw.minLength,
+                maxLength = raw.maxLength,
+                minValue = raw.minValue,
+                maxValue = raw.maxValue,
+                regexPattern = raw.regexPattern,
+                required = raw.required,
+                readOnly = raw.readOnly,
+                overrideId = raw.overrideId,
+                params = raw.params,
+                currency = raw.currency,
+                enableFractions = raw.enableFractions,
+                enablePeriodSeparator = raw.enablePeriodSeparator,
+                options = raw.options,
+                fields = raw.fields,
+                dateDisplayFormat = raw.dateDisplayFormat,
+                hyperlinkUrl = raw.hyperlinkUrl,
+                displayText = raw.displayText,
+                errorData = errorData,
             )
         }
     }

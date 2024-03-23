@@ -42,9 +42,6 @@ fun CheckBoxField(
 ) {
     val context = LocalContext.current
 
-    val isError by remember { mutableStateOf(errorData.first) }
-    val errorMessage by remember { mutableStateOf(errorData.second) }
-
     val minimumLineLength = 2 // Change this to your desired value
 
     var showReadMoreButtonState by remember { mutableStateOf(false) }
@@ -117,9 +114,9 @@ fun CheckBoxField(
             )
         }
 
-        if (isError) {
+        if (errorData.first) {
             Text(
-                text = errorMessage,
+                text = errorData.second,
                 color = AlfrescoError,
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 0.dp), // Adjust padding as needed

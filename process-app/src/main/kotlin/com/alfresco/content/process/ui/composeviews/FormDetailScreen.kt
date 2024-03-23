@@ -1,5 +1,6 @@
 package com.alfresco.content.process.ui.composeviews
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,11 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -26,15 +23,11 @@ import com.alfresco.content.process.ui.components.Outcomes
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
 
-@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
-    val formList by remember(state.formFields) {
-        mutableStateOf(state.formFields.map { it })
-    }
 
     Column(
         modifier = Modifier
@@ -56,7 +49,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
                 key = {
                     it.id
                 },
-                items = formList,
+                items = state.formFields,
             ) { field ->
                 FormScrollContent(field, viewModel, state, navController)
             }

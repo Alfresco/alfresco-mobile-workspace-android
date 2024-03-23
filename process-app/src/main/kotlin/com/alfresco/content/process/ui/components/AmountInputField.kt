@@ -4,8 +4,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,9 +21,6 @@ fun AmountInputField(
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Number,
     )
-
-    val isError by remember { mutableStateOf(errorData.first) }
-    val errorMessage by remember { mutableStateOf(errorData.second) }
 
     val leadingIcon: @Composable () -> Unit = when {
         !fieldsData.currency.isNullOrEmpty() -> {
@@ -49,8 +44,8 @@ fun AmountInputField(
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
         leadingIcon = leadingIcon,
-        isError = isError,
-        errorMessage = errorMessage,
+        isError = errorData.first,
+        errorMessage = errorData.second,
     )
 }
 

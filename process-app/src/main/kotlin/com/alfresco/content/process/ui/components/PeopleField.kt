@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,12 +31,11 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 @Composable
 fun PeopleField(
     userDetail: UserGroupDetails? = null,
-    onAssigneeSelected: (UserGroupDetails?, Boolean) -> Unit = { _: UserGroupDetails?, _: Boolean -> },
+    onAssigneeSelected: (UserGroupDetails?) -> Unit = {},
     fieldsData: FieldsData = FieldsData(),
     processEntry: ProcessEntry = ProcessEntry(),
+    errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
-    val isError = (fieldsData.required && userDetail == null)
-
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)
         if (fieldsData.required) {
@@ -65,10 +65,10 @@ fun PeopleField(
             IconButton(onClick = {
                 SearchUserGroupComponentBuilder(context, processEntry)
                     .onApply { userDetails ->
-                        onAssigneeSelected(userDetails, isError)
+                        onAssigneeSelected(userDetails)
                     }
                     .onCancel {
-                        onAssigneeSelected(null, isError)
+                        onAssigneeSelected(null)
                     }
                     .show()
             }) {

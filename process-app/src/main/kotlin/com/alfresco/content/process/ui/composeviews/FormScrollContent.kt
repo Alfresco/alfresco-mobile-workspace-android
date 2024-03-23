@@ -15,6 +15,7 @@ import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.AttachFilesField
+import com.alfresco.content.process.ui.components.AttachFolderField
 import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.DropdownField
@@ -189,6 +190,14 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.UPLOAD.value() -> {
             AttachFilesField(
+                contents = state.listContents,
+                fieldsData = field,
+                navController = navController,
+            )
+        }
+
+        FieldType.SELECT_FOLDER.value() -> {
+            AttachFolderField(
                 contents = state.listContents,
                 fieldsData = field,
                 navController = navController,

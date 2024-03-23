@@ -10,4 +10,6 @@
     <string name="title_actions">Actions</string>
     <string name="accessibility_process_actions">Process Actions Button</string>
     <string name="no_attachments">No Attachments</string>
+    <string name="no_attached_folder">No Folder Attached</string>
+    <string name="text_attached_folder">%d folders</string>
 </resources>

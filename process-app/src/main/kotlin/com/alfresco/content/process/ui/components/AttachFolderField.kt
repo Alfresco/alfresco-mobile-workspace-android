@@ -34,7 +34,7 @@ import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
-fun AttachFilesField(
+fun AttachFolderField(
     contents: List<Entry> = emptyList(),
     fieldsData: FieldsData = FieldsData(),
     navController: NavController,
@@ -50,9 +50,9 @@ fun AttachFilesField(
     }
 
     val contentValue = if (contents.isEmpty()) {
-        stringResource(id = R.string.no_attachments)
+        stringResource(id = R.string.no_attached_folder)
     } else {
-        stringResource(id = R.string.text_multiple_attachment, contents.size)
+        stringResource(id = R.string.text_attached_folder, contents.size)
     }
 
     val context = LocalContext.current
@@ -74,7 +74,7 @@ fun AttachFilesField(
 
             IconButton(onClick = {
                 navController.navigate(
-                    NavigationScreen.ATTACHED_FILES_SCREEN.value(),
+                    NavigationScreen.SEARCH_FOLDER_SCREEN.value(),
                 )
             }) {
                 Icon(
@@ -99,6 +99,6 @@ fun AttachFilesField(
 
 @Preview
 @Composable
-fun AttachFilesFieldPreview() {
-    AttachFilesField(navController = rememberNavController())
+fun AttachFolderFieldPreview() {
+    AttachFolderField(navController = rememberNavController())
 }

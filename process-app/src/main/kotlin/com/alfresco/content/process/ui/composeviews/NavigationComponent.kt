@@ -1,9 +1,12 @@
 package com.alfresco.content.process.ui.composeviews
 
+import ComposeTopBar
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,17 +25,20 @@ import com.alfresco.content.search.SearchFragment
 @Composable
 fun NavigationComponent() {
     val navController = rememberNavController()
-
-    Surface(modifier = Modifier.fillMaxSize()) {
-        NavHost(navController = navController, startDestination = NavigationScreen.FIRST_SCREEN.value()) {
-            composable(NavigationScreen.FIRST_SCREEN.value()) {
-                FormScreen(navController)
-            }
-            composable(NavigationScreen.ATTACHED_FILES_SCREEN.value()) {
-                ProcessAttachedFilesScreen(navController)
-            }
-            composable(NavigationScreen.SEARCH_FOLDER_SCREEN.value()) {
-                SearchFolderScreen(navController)
+    Scaffold(
+        topBar = { ComposeTopBar() },
+    ) { padding ->
+        Surface(modifier = Modifier.fillMaxSize()) {
+            NavHost(navController = navController, startDestination = NavigationScreen.FIRST_SCREEN.value()) {
+                composable(NavigationScreen.FIRST_SCREEN.value()) {
+                    FormScreen(navController, padding)
+                }
+                composable(NavigationScreen.ATTACHED_FILES_SCREEN.value()) {
+                    ProcessAttachedFilesScreen(navController)
+                }
+                composable(NavigationScreen.SEARCH_FOLDER_SCREEN.value()) {
+                    SearchFolderScreen(navController)
+                }
             }
         }
     }
@@ -66,6 +72,7 @@ fun ProcessAttachedFilesScreen(navController: NavHostController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchFolderScreen(navController: NavHostController) {
     val context = LocalContext.current
@@ -89,8 +96,8 @@ fun SearchFolderScreen(navController: NavHostController) {
             fragmentContainerView.paddingRight,
             context.resources.getDimensionPixelSize(R.dimen.default_bottom_controller_height),
         )
-
-        fragmentContainerView.getFragment<SearchFragment>()
+        // Fragment content
+        val fragment = fragmentContainerView.getFragment<SearchFragment>()
     }
 }
 

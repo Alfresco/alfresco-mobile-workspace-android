@@ -2,6 +2,7 @@ package com.alfresco.content.process.ui.composeviews
 
 import ComposeTopBar
 import android.app.Activity
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.FabPosition
@@ -25,7 +26,7 @@ import com.alfresco.content.process.ui.components.updateProcessList
 import com.alfresco.content.process.ui.fragments.FormViewModel
 
 @Composable
-fun FormScreen(navController: NavController) {
+fun FormScreen(navController: NavController, padding: PaddingValues) {
     // This will get or create a ViewModel scoped to the Activity.
     val viewModel: FormViewModel = mavericksActivityViewModel()
     val state by viewModel.collectAsState()

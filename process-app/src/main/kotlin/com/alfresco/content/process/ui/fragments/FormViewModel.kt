@@ -9,7 +9,7 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
-import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
@@ -20,6 +20,7 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.getFormattedDate
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.on
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -31,13 +32,21 @@ class FormViewModel(
 ) : MavericksViewModel<FormViewState>(state) {
 
     private var observeUploadsJob: Job? = null
-    var entryListener: EntryListener? = null
     var observerID: String = ""
-    private var isExecuted = false
+    var folderFieldId = ""
 
     init {
         observerID = UUID.randomUUID().toString()
         singleProcessDefinition(state.parent.id)
+
+        viewModelScope.on<AttachFolderSearchData> {
+            it.entry?.let { entry ->
+                println("FormViewModel 1 == $entry")
+                println("FormViewModel 2 == $folderFieldId")
+                updateFieldValue(folderFieldId, entry.id, state, Pair(false, ""))
+                folderFieldId = ""
+            }
+        }
     }
 
     /**

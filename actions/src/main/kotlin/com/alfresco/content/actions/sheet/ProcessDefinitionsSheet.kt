@@ -83,7 +83,8 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
 
                             val intent = Intent(
                                 requireActivity(),
-                                Class.forName("com.alfresco.content.process.ui.ProcessFormActivity"),
+                                Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
+//                                Class.forName("com.alfresco.content.process.ui.ProcessFormActivity"),
                             )
                             intent.putExtra(Mavericks.KEY_ARG, processEntry)
                             startActivity(intent)

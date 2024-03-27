@@ -29,7 +29,6 @@ import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
-import com.alfresco.content.process.ui.composeviews.NavigationScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
@@ -74,7 +73,7 @@ fun AttachFilesField(
 
             IconButton(onClick = {
                 navController.navigate(
-                    NavigationScreen.ATTACHED_FILES_SCREEN.value(),
+                    R.id.action_nav_process_form_to_nav_attach_files,
                 )
             }) {
                 Icon(

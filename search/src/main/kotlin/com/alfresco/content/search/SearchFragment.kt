@@ -60,12 +60,14 @@ data class ContextualSearchArgs(
     val title: String?,
     val moveId: String,
     val isExtension: Boolean,
+    val isProcess: Boolean? = null,
 ) : Parcelable {
     companion object {
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
         private const val EXTENSION_KEY = "extension"
         private const val MOVE_ID_KEY = "moveId"
+        private const val PROCESS_KEY = "process"
 
         fun with(args: Bundle?): ContextualSearchArgs? {
             if (args == null) return null
@@ -74,6 +76,7 @@ data class ContextualSearchArgs(
                 args.getString(TITLE_KEY, null),
                 args.getString(MOVE_ID_KEY, ""),
                 args.getBoolean(EXTENSION_KEY, false),
+                args.getBoolean(PROCESS_KEY, false),
             )
         }
     }
@@ -134,10 +137,16 @@ class SearchFragment : Fragment(), MavericksView {
         binding.recyclerViewChips.setController(epoxyController)
 
         withState(viewModel) { state ->
-            if (!state.isExtension) {
-                setAdvanceSearchFiltersData()
-            } else {
+            println("SearchFragment.onViewCreated  ${state.isProcess}")
+
+            if (state.isProcess == true) {
                 binding.parentAdvanceSearch.visibility = View.GONE
+            } else {
+                if (!state.isExtension) {
+                    setAdvanceSearchFiltersData()
+                } else {
+                    binding.parentAdvanceSearch.visibility = View.GONE
+                }
             }
         }
 
@@ -147,14 +156,16 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
-            if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
-                binding.parentAdvanceSearch.visibility = View.VISIBLE
-                binding.chipGroup.visibility = View.GONE
-                setupDropDown()
-            } else {
-                binding.parentAdvanceSearch.visibility = View.GONE
-                binding.chipGroup.visibility = View.VISIBLE
-                setupChips()
+            if (it.isProcess == null) {
+                if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
+                    binding.parentAdvanceSearch.visibility = View.VISIBLE
+                    binding.chipGroup.visibility = View.GONE
+                    setupDropDown()
+                } else {
+                    binding.parentAdvanceSearch.visibility = View.GONE
+                    binding.chipGroup.visibility = View.VISIBLE
+                    setupChips()
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.alfresco.content.process.ui.components
+package com.alfresco.content.process.ui.utils
 
 import android.annotation.SuppressLint
 import android.content.Context

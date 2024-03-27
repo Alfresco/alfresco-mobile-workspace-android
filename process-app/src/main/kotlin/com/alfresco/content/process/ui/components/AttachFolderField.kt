@@ -28,8 +28,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.process.R
-import com.alfresco.content.process.ui.composeviews.NavigationScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
@@ -37,6 +37,7 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 fun AttachFolderField(
     contents: List<Entry> = emptyList(),
     fieldsData: FieldsData = FieldsData(),
+    onUserTap: (Boolean) -> Unit = { },
     navController: NavController,
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
@@ -73,9 +74,8 @@ fun AttachFolderField(
             )
 
             IconButton(onClick = {
-                navController.navigate(
-                    NavigationScreen.SEARCH_FOLDER_SCREEN.value(),
-                )
+                onUserTap(true)
+                navController.navigateToContextualSearch("Search Folder", true)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,

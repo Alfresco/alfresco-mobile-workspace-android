@@ -17,7 +17,7 @@ fun ProcessAttachedFiles() {
         modifier = Modifier.fillMaxSize(),
         factory = { context ->
             // Inflate your XML layout here
-            LayoutInflater.from(context).inflate(R.layout.fragment_attached_files, null)
+            LayoutInflater.from(context).inflate(R.layout.fragment_attach_files, null)
         },
     )
 }

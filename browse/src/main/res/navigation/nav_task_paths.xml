@@ -30,12 +30,12 @@
     <fragment
         android:id="@+id/nav_attached_files"
         android:name="com.alfresco.content.browse.tasks.attachments.AttachedFilesFragment"
-        tools:layout="@layout/fragment_attached_files" />
+        tools:layout="@layout/fragment_attach_files" />
 
     <fragment
         android:id="@+id/nav_process_attached_files"
         android:name="com.alfresco.content.browse.processes.attachments.ProcessAttachedFilesFragment"
-        tools:layout="@layout/fragment_attached_files" />
+        tools:layout="@layout/fragment_attach_files" />
 
     <fragment
         android:id="@+id/nav_process_details"

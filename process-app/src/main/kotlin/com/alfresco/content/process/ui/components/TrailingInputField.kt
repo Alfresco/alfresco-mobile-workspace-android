@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.utils.trailingIconColor
 
 @Composable
 fun TrailingInputField(

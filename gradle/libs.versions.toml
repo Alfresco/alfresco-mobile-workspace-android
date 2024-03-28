@@ -12,6 +12,9 @@ test = "1.5.0"
 activity-compose = "1.7.0"
 compose-bom = "2023.10.01"
 ui-tooling = "1.5.4"
+appcompat = "1.6.1"
+material = "1.11.0"
+constraintlayout = "2.1.4"
 
 [libraries]
 alfresco-auth = "com.alfresco.android:auth:0.8.1-SNAPSHOT"
@@ -133,4 +136,7 @@ ui-compose-viewbinding = "androidx.compose.ui:ui-viewbinding:1.6.3"
 navigation-compose = "androidx.navigation:navigation-compose:2.7.6"
 compose-runtime = "androidx.compose.runtime:runtime:1.5.4"
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 

@@ -15,6 +15,7 @@ import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.AttachFilesField
+import com.alfresco.content.process.ui.components.AttachFolderField
 import com.alfresco.content.process.ui.components.CheckBoxField
 import com.alfresco.content.process.ui.components.DateTimeField
 import com.alfresco.content.process.ui.components.DropdownField
@@ -24,16 +25,16 @@ import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.PeopleField
 import com.alfresco.content.process.ui.components.ReadOnlyField
 import com.alfresco.content.process.ui.components.SingleLineInputField
-import com.alfresco.content.process.ui.components.amountInputError
-import com.alfresco.content.process.ui.components.booleanInputError
-import com.alfresco.content.process.ui.components.dateTimeInputError
-import com.alfresco.content.process.ui.components.dropDownRadioInputError
-import com.alfresco.content.process.ui.components.integerInputError
-import com.alfresco.content.process.ui.components.multiLineInputError
-import com.alfresco.content.process.ui.components.singleLineInputError
-import com.alfresco.content.process.ui.components.userGroupInputError
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
+import com.alfresco.content.process.ui.utils.amountInputError
+import com.alfresco.content.process.ui.utils.booleanInputError
+import com.alfresco.content.process.ui.utils.dateTimeInputError
+import com.alfresco.content.process.ui.utils.dropDownRadioInputError
+import com.alfresco.content.process.ui.utils.integerInputError
+import com.alfresco.content.process.ui.utils.multiLineInputError
+import com.alfresco.content.process.ui.utils.singleLineInputError
+import com.alfresco.content.process.ui.utils.userGroupInputError
 
 @Composable
 fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormViewState, navController: NavController) {
@@ -192,6 +193,18 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 contents = state.listContents,
                 fieldsData = field,
                 navController = navController,
+            )
+        }
+
+        FieldType.SELECT_FOLDER.value() -> {
+            AttachFolderField(
+                fieldsData = field,
+                navController = navController,
+                onUserTap = {
+                    if (it) {
+                        viewModel.folderFieldId = field.id
+                    }
+                },
             )
         }
     }

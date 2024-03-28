@@ -30,7 +30,7 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.mimetype.MimeType
-import com.alfresco.content.process.ui.fragments.BaseDetailFragment.Companion.KEY_ENTRY_OBJ
+import com.alfresco.content.process.ui.fragments.ProcessBaseFragment.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 

@@ -82,15 +82,29 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     override fun onItemClicked(entry: Entry) {
         viewModel.saveSearch()
         withState(viewModel) { state ->
-            if (!state.isExtension) {
-                findNavController().navigateTo(entry)
-            } else if (entry.isFolder) {
-                if (state.moveId.isNotEmpty()) {
-                    val parentId = entry.parentPaths.find { it == state.moveId }
-                    if (parentId.isNullOrEmpty()) {
-                        findNavController().navigateToFolder(entry, state.moveId)
-                    } else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
-                } else findNavController().navigateToExtensionFolder(entry)
+            when {
+                state.isProcess != null -> {
+                    if (entry.isFolder) {
+                        viewModel.setSearchResult(entry)
+                        requireActivity().onBackPressed()
+                    }
+                }
+                else -> {
+                    if (!state.isExtension) {
+                        findNavController().navigateTo(entry)
+                    } else if (entry.isFolder) {
+                        when {
+                            state.moveId.isNotEmpty() -> {
+                                val parentId = entry.parentPaths.find { it == state.moveId }
+                                if (parentId.isNullOrEmpty()) {
+                                    findNavController().navigateToFolder(entry, state.moveId)
+                                } else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
+                            }
+
+                            else -> findNavController().navigateToExtensionFolder(entry)
+                        }
+                    }
+                }
             }
         }
     }

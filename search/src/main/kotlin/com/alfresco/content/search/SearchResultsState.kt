@@ -39,10 +39,17 @@ data class SearchResultsState(
     val contextId: String? = null,
     val contextTitle: String? = null,
     val isExtension: Boolean = false,
+    val isProcess: Boolean? = null,
     val moveId: String = "",
 ) : ListViewState {
 
-    constructor(args: ContextualSearchArgs) : this(contextId = args.id, contextTitle = args.title, isExtension = args.isExtension, moveId = args.moveId)
+    constructor(args: ContextualSearchArgs) : this(
+        contextId = args.id,
+        contextTitle = args.title,
+        isExtension = args.isExtension,
+        moveId = args.moveId,
+        isProcess = args.isProcess,
+    )
 
     val isContextual: Boolean
         get() {

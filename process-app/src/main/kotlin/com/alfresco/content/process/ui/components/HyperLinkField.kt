@@ -17,12 +17,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat.startActivity
 import com.alfresco.content.common.SharedURLParser
 import com.alfresco.content.common.SharedURLParser.Companion.ID_KEY
 import com.alfresco.content.common.SharedURLParser.Companion.MODE_KEY
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.utils.inputField
+import com.alfresco.content.process.ui.utils.trailingIconColor
 import com.alfresco.content.viewer.ViewerActivity
 
 @Composable

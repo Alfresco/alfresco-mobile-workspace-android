@@ -21,18 +21,17 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.process.R
-import com.alfresco.content.process.databinding.FragmentAttachedFilesBinding
+import com.alfresco.content.process.databinding.FragmentAttachFilesBinding
 import com.alfresco.content.process.ui.epoxy.listViewAttachmentRow
 import com.alfresco.content.simpleController
-import com.alfresco.ui.getDrawableForAttribute
 
 /**
- * Marked as ProcessAttachedFilesFragment class
+ * Marked as ProcessAttachFilesFragment class
  */
-class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
+class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryListener {
 
     val viewModel: FormViewModel by activityViewModel()
-    private lateinit var binding: FragmentAttachedFilesBinding
+    private lateinit var binding: FragmentAttachFilesBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
     override fun onCreateView(
@@ -40,7 +39,7 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentAttachedFilesBinding.inflate(inflater, container, false)
+        binding = FragmentAttachFilesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,12 +48,6 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
         binding.refreshLayout.isEnabled = false
-        binding.toolbar.apply {
-            navigationContentDescription = getString(R.string.label_navigation_back)
-            navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
-            setNavigationOnClickListener { requireActivity().onBackPressed() }
-            title = resources.getString(R.string.title_attached_files)
-        }
 
         binding.recyclerView.setController(epoxyController)
 

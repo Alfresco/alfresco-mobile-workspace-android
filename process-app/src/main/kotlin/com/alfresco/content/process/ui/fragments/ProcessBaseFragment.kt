@@ -3,7 +3,6 @@ package com.alfresco.content.process.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.alfresco.content.REMOTE
 import com.alfresco.content.actions.CreateActionsSheet
@@ -12,14 +11,12 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
 import com.alfresco.content.viewer.ViewerActivity
 import com.google.android.material.snackbar.Snackbar
-import java.lang.ref.WeakReference
 
 /**
  * Marked as BaseDetailFragment class
  */
-abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
+abstract class ProcessBaseFragment : Fragment(), DeleteContentListener {
 
-    private var deleteContentDialog = WeakReference<AlertDialog>(null)
     lateinit var listener: DeleteContentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="Amanpal"
-        android:background="@drawable/bottom_separator" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -75,6 +68,4 @@
             android:src="@drawable/ic_add_fab"
             android:visibility="gone" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 </LinearLayout>

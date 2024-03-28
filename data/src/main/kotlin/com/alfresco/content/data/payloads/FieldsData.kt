@@ -123,6 +123,7 @@ enum class FieldType {
     FUNCTIONAL_GROUP,
     HYPERLINK,
     UPLOAD,
+    SELECT_FOLDER,
     ;
 
     fun value() = name.lowercase()

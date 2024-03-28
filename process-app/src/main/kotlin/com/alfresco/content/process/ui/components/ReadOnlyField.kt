@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.process.ui.utils.inputField
 
 @Composable
 fun ReadOnlyField(

@@ -69,6 +69,13 @@ fun NavController.navigateToContextualSearch(id: String, title: String, isExtens
 }
 
 /**
+ * navigate to contextual search from process app
+ */
+fun NavController.navigateToContextualSearch(title: String, isProcess: Boolean) {
+    navigate(Uri.parse("$BASE_URI/search/folder?title=${Uri.encode(title)},process=$isProcess"))
+}
+
+/**
  * navigate to browse parent folder
  */
 fun NavController.navigateToParent(id: String, title: String, mode: String = REMOTE) {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_process_app"
+    app:startDestination="@id/nav_process_form">
+
+
+    <fragment
+        android:id="@+id/nav_process_form"
+        android:name="com.alfresco.content.process.ui.fragments.ProcessFragment"
+        android:label="@string/action_start_workflow"
+        tools:layout="@layout/fragment_process">
+
+        <action
+            android:id="@+id/action_nav_process_form_to_nav_attach_files"
+            app:destination="@id/nav_attach_files" />
+
+        <action
+            android:id="@+id/action_nav_process_form_to_nav_search"
+            app:destination="@id/nav_search" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_attach_files"
+        android:name="com.alfresco.content.process.ui.fragments.ProcessAttachFilesFragment"
+        android:label="@string/title_attached_files"
+        tools:layout="@layout/fragment_attach_files" />
+
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.alfresco.content.search.SearchFragment"
+        android:label=""
+        tools:layout="@layout/fragment_search">
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue=""/>
+
+        <argument
+            android:name="process"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+
+        <deepLink app:uri="alfresco://content/search/folder?title={title},process={process}" />
+
+    </fragment>
+
+</navigation>

@@ -59,6 +59,7 @@ dependencies {
     implementation project(':viewer-text')
     implementation project(':viewer')
     implementation project(':mimetype')
+    implementation project(':search')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat

@@ -26,16 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
-fun AttachFilesField(
-    contents: List<Entry> = emptyList(),
+fun AttachFolderField(
     fieldsData: FieldsData = FieldsData(),
+    onUserTap: (Boolean) -> Unit = { },
     navController: NavController,
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
@@ -48,10 +48,10 @@ fun AttachFilesField(
         }
     }
 
-    val contentValue = if (contents.isEmpty()) {
-        stringResource(id = R.string.no_attachments)
+    val contentValue = if (fieldsData.value == null) {
+        stringResource(id = R.string.no_attached_folder)
     } else {
-        stringResource(id = R.string.text_multiple_attachment, contents.size)
+        stringResource(id = R.string.text_attached_folder, 1)
     }
 
     val context = LocalContext.current
@@ -72,9 +72,8 @@ fun AttachFilesField(
             )
 
             IconButton(onClick = {
-                navController.navigate(
-                    R.id.action_nav_process_form_to_nav_attach_files,
-                )
+                onUserTap(true)
+                navController.navigateToContextualSearch("Search Folder", true)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,
@@ -98,6 +97,6 @@ fun AttachFilesField(
 
 @Preview
 @Composable
-fun AttachFilesFieldPreview() {
-    AttachFilesField(navController = rememberNavController())
+fun AttachFolderFieldPreview() {
+    AttachFolderField(navController = rememberNavController())
 }

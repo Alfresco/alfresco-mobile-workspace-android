@@ -8,7 +8,7 @@ import com.alfresco.content.actions.Action
 import com.alfresco.content.browse.R
 import com.alfresco.content.browse.databinding.ActivityLocalPreviewBinding
 import com.alfresco.content.data.Entry
-import com.alfresco.content.process.ui.fragments.BaseDetailFragment.Companion.KEY_ENTRY_OBJ
+import com.alfresco.content.process.ui.fragments.ProcessBaseFragment.Companion.KEY_ENTRY_OBJ
 
 /**
  * Mark as Preview Activity

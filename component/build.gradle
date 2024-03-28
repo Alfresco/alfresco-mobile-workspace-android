@@ -13,6 +13,12 @@ android {
     buildFeatures {
         viewBinding true
     }
+    buildFeatures { // Enables Jetpack Compose for this module
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
+    }
 }
 
 kapt {
@@ -39,6 +45,9 @@ dependencies {
 
     implementation libs.epoxy.core
     kapt libs.epoxy.processor
+
+    implementation libs.ui
+    implementation libs.activity.compose
 
     // Testing
     testImplementation libs.junit

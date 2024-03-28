@@ -6,10 +6,15 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.alfresco.android.aims.R
+import com.alfresco.content.common.SharedURLParser
+import com.alfresco.content.common.SharedURLParser.Companion.ID_KEY
+import com.alfresco.content.common.SharedURLParser.Companion.KEY_FOLDER
+import com.alfresco.content.common.SharedURLParser.Companion.MODE_KEY
+import com.alfresco.content.common.SharedURLParser.Companion.VALUE_REMOTE
+import com.alfresco.content.common.SharedURLParser.Companion.VALUE_SHARE
 import com.alfresco.content.data.rooted.CheckForRootWorker
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.net.URLDecoder
 
 abstract class SplashActivity : AppCompatActivity() {
 
@@ -22,7 +27,10 @@ abstract class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         if (intent.data != null && intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0) {
             // Handle the url passed through the intent
-            entryId = getEntryIdFromShareURL()
+            val urlData = SharedURLParser().getEntryIdFromShareURL(intent.data.toString())
+            isRemoteFolder = urlData.third
+            entryId = urlData.second
+            isPreview = urlData.first
         }
         setContentView(R.layout.activity_alfresco_splash)
     }
@@ -32,28 +40,6 @@ abstract class SplashActivity : AppCompatActivity() {
 
         // On configuration change and on background cancel previous handler
         handler.removeCallbacksAndMessages(null)
-    }
-
-    private fun getEntryIdFromShareURL(): String {
-        isPreview = false
-        isRemoteFolder = false
-        val extData = URLDecoder.decode(intent.data.toString(), "UTF-8")
-
-        if (!extData.contains(SCHEME)) return ""
-
-        if (extData.contains(IDENTIFIER_PREVIEW)) {
-            isPreview = true
-            return extData.substringAfter(SCHEME)
-        }
-
-        if (!extData.contains(IDENTIFIER_PERSONAL_FILES)) return ""
-
-        return if (extData.contains(IDENTIFIER_VIEWER)) {
-            extData.substringAfter(IDENTIFIER_VIEWER).substringBefore(DELIMITER_BRACKET)
-        } else {
-            isRemoteFolder = true
-            extData.substringAfter(IDENTIFIER_PERSONAL_FILES).substringBefore(DELIMITER_FORWARD_SLASH)
-        }
     }
 
     override fun onResume() {
@@ -90,16 +76,5 @@ abstract class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val DISPLAY_TIMEOUT = 100L
-        private const val ID_KEY = "id"
-        private const val MODE_KEY = "mode"
-        private const val VALUE_REMOTE = "remote"
-        private const val VALUE_SHARE = "share"
-        const val KEY_FOLDER = "folder"
-        const val SCHEME = "androidamw:///"
-        const val IDENTIFIER_PREVIEW = "/preview"
-        const val IDENTIFIER_VIEWER = "viewer:view/"
-        const val IDENTIFIER_PERSONAL_FILES = "/personal-files/"
-        const val DELIMITER_BRACKET = ")"
-        const val DELIMITER_FORWARD_SLASH = "/"
     }
 }

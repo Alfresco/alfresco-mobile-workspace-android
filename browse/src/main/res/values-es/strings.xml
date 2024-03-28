@@ -46,7 +46,6 @@
     <string name="account">Cuenta</string>
     <string name="icon_due_date">Icono de fecha de vencimiento</string>
     <string name="icon_user_profile">Icono de perfil de usuario</string>
-    <string name="icon_file">Icono de fichero</string>
     <string name="icon_priority">Icono de prioridad</string>
     <string name="icon_assigned">Icono de usuario asignado</string>
     <string name="icon_status">Icono de estado</string>
@@ -63,15 +62,11 @@
     <string name="text_view_all">Ver todo</string>
     <string name="text_multiple_comments">%d comentarios</string>
     <string name="text_attached_files">Ficheros adjuntos</string>
-    <string name="text_multiple_attachment">%d adjuntos</string>
     <string name="no_attached_files">No hay ficheros adjuntos</string>
     <string name="empty_no_due_date">Sin fecha de vencimiento</string>
-    <string name="title_attached_files">Ficheros adjuntos</string>
     <string name="text_complete">Por completar</string>
     <string name="dialog_title_complete_task">Completar tarea</string>
     <string name="dialog_message_complete_task">¿Está seguro de que desea completar esta tarea? Ya no podrá realizar ningún cambio.</string>
-    <string name="dialog_negative_button_task">Cancelar</string>
-    <string name="dialog_positive_button_task">Confirmar</string>
     <string name="icon_send_description">Botón Enviar</string>
     <string name="empty_description">Sin descripción</string>
     <string name="icon_completed">Icono completado</string>
@@ -88,9 +83,6 @@
     <string name="text_create_task">Crear tarea</string>
     <string name="dialog_title_discard_task">Descartar</string>
     <string name="dialog_message_discard_task">¿Desea descartar los cambios?</string>
-    <string name="icon_delete_attachment">Icono de eliminación de adjuntos</string>
-    <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
-    <string name="text_add_attachments">Añadir adjuntos</string>
     <string name="icon_add_attachment">Añadir icono adjunto</string>
     <string name="dialog_message_complete_task_files_queue">¿Está seguro de que quiere completar la tarea? Una vez completada, algunos ficheros no se pudieron cargar y no se pueden realizar cambios.</string>
 

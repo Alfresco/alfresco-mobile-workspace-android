@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:fillColor="@color/alfresco_blue_700"
+        android:fillType="evenOdd"
+        android:pathData="M25.659,11C25.409,11 25.149,11.1 24.959,11.29L23.129,13.12L26.879,16.87L28.709,15.04C29.099,14.65 29.099,14.02 28.709,13.63L26.369,11.29C26.169,11.09 25.919,11 25.659,11ZM22.059,17.02L22.979,17.94L13.919,27H12.999V26.08L22.059,17.02ZM10.999,25.25L22.059,14.19L25.809,17.94L14.749,29H10.999V25.25Z" />
+</vector>

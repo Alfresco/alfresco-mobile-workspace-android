@@ -68,5 +68,18 @@ data class ComponentOptions(
 
             )
         }
+
+        /**
+         * return the updated ComponentOptions obj by using Options obj
+         * @param options
+         */
+        fun withProcess(options: OptionsModel): ComponentOptions {
+            return ComponentOptions(
+                label = options.name,
+                query = options.id,
+                default = options.default,
+
+            )
+        }
     }
 }

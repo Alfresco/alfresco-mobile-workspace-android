@@ -38,6 +38,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     val epoxyCheckListController: AsyncEpoxyController by lazy { epoxyCheckListController() }
     val epoxyRadioListController: AsyncEpoxyController by lazy { epoxyRadioListController() }
     val epoxyCheckFacetListController: AsyncEpoxyController by lazy { epoxyCheckFacetListController() }
+    val epoxyActionListController: AsyncEpoxyController by lazy { epoxyActionListController() }
 
     private var executedPicker = false
     val minVisibleItem = 10
@@ -194,11 +195,26 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
 
     private fun setupComponents() = withState(viewModel) { state ->
         binding.parentView.removeAllViews()
-        binding.parentView.addView(binding.topView)
-        binding.parentView.addView(binding.separator)
+
+        if (state.parent?.selector != ComponentType.PROCESS_ACTION.value) {
+            binding.parentView.addView(binding.topView)
+            binding.parentView.addView(binding.separator)
+        }
+
+        when {
+            (state.parent?.selector == ComponentType.DROPDOWN_RADIO.value) ||
+                (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
+            }
+
+            else -> {
+                binding.bottomSeparator.visibility = View.VISIBLE
+                binding.bottomView.visibility = View.VISIBLE
+            }
+        }
 
         val replacedString = state.parent?.name?.replace(" ", ".") ?: ""
         val localizedName = requireContext().getLocalizedName(replacedString)
+
         if (localizedName == replacedString) {
             binding.title.text = state.parent?.name ?: ""
         } else if (state.parent?.name?.lowercase().equals(textFileSize)) {
@@ -211,7 +227,7 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             ComponentType.TASK_PROCESS_PRIORITY.value -> setupTaskPriorityComponent(state)
             ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
             ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
-            ComponentType.RADIO.value -> setupRadioListComponent(state, viewModel)
+            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> setupRadioListComponent(state, viewModel)
             ComponentType.NUMBER_RANGE.value -> setupNumberRangeComponent(state, viewModel)
             ComponentType.SLIDER.value -> setupSliderComponent(state, viewModel)
             ComponentType.DATE_RANGE.value, ComponentType.DATE_RANGE_FUTURE.value -> {
@@ -233,7 +249,9 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     }
                 }
             }
+
             ComponentType.FACETS.value -> setupFacetComponent(state, viewModel)
+            ComponentType.PROCESS_ACTION.value -> setupProcessActionsComponent(state, viewModel)
         }
     }
 
@@ -243,24 +261,41 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                 when (state.parent?.selector) {
                     ComponentType.DATE_RANGE.value -> {
                         if (viewModel.fromDate.isEmpty()) {
-                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                            binding.dateRangeComponent.fromInputLayout.error =
+                                getString(R.string.component_number_range_empty)
                         } else if (viewModel.toDate.isEmpty()) {
-                            binding.dateRangeComponent.toInputLayout.error = getString(R.string.component_number_range_empty)
+                            binding.dateRangeComponent.toInputLayout.error =
+                                getString(R.string.component_number_range_empty)
                         } else {
-                            onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
+                            onApply?.invoke(
+                                state.parent.selectedName,
+                                state.parent.selectedQuery,
+                                state.parent.selectedQueryMap,
+                            )
                             dismiss()
                         }
                     }
+
                     ComponentType.DATE_RANGE_FUTURE.value -> {
                         if (viewModel.fromDate.isEmpty() && viewModel.toDate.isEmpty()) {
-                            binding.dateRangeComponent.fromInputLayout.error = getString(R.string.component_number_range_empty)
+                            binding.dateRangeComponent.fromInputLayout.error =
+                                getString(R.string.component_number_range_empty)
                         } else {
-                            onApply?.invoke(state.parent.selectedName, state.parent.selectedQuery, state.parent.selectedQueryMap)
+                            onApply?.invoke(
+                                state.parent.selectedName,
+                                state.parent.selectedQuery,
+                                state.parent.selectedQueryMap,
+                            )
                             dismiss()
                         }
                     }
+
                     else -> {
-                        onApply?.invoke(state.parent?.selectedName ?: "", state.parent?.selectedQuery ?: "", state.parent?.selectedQueryMap ?: mapOf())
+                        onApply?.invoke(
+                            state.parent?.selectedName ?: "",
+                            state.parent?.selectedQuery ?: "",
+                            state.parent?.selectedQueryMap ?: mapOf(),
+                        )
                         dismiss()
                     }
                 }
@@ -285,11 +320,17 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
             ComponentType.CHECK_LIST.value -> {
                 epoxyCheckListController.requestModelBuild()
             }
-            ComponentType.RADIO.value -> {
+
+            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> {
                 epoxyRadioListController.requestModelBuild()
             }
+
             ComponentType.FACETS.value -> {
                 epoxyCheckFacetListController.requestModelBuild()
+            }
+
+            ComponentType.PROCESS_ACTION.value -> {
+                epoxyActionListController.requestModelBuild()
             }
         }
     }
@@ -302,7 +343,10 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     data(option)
                     optionSelected(viewModel.isOptionSelected(state, option))
                     clickListener { model, _, _, _ ->
-                        viewModel.updateMultipleComponentData(model.data().label, model.data().value)
+                        viewModel.updateMultipleComponentData(
+                            model.data().label,
+                            model.data().value,
+                        )
                     }
                 }
             }
@@ -317,10 +361,19 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                     data(option)
                     optionSelected(viewModel.isOptionSelected(state, option))
                     clickListener { model, _, _, _ ->
-                        viewModel.updateSingleComponentData(
-                            requireContext().getLocalizedName(model.data().label),
-                            model.data().query,
-                        )
+                        if (state.parent.selector == ComponentType.DROPDOWN_RADIO.value) {
+                            onApply?.invoke(
+                                requireContext().getLocalizedName(model.data().label),
+                                model.data().query,
+                                mapOf(),
+                            )
+                            dismiss()
+                        } else {
+                            viewModel.updateSingleComponentData(
+                                requireContext().getLocalizedName(model.data().label),
+                                model.data().query,
+                            )
+                        }
                     }
                 }
             }
@@ -348,6 +401,22 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                             requireContext().getLocalizedName(model.data().label),
                             model.data().query,
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun epoxyActionListController() = simpleController(viewModel) { state ->
+
+        if (state.parent?.options?.isNotEmpty() == true) {
+            state.parent.options.forEach { bucket ->
+                listViewActionsRow {
+                    id(bucket.hashCode())
+                    data(bucket)
+                    clickListener { model, _, _, _ ->
+                        onApply?.invoke("", "", mapOf())
+                        dismiss()
                     }
                 }
             }

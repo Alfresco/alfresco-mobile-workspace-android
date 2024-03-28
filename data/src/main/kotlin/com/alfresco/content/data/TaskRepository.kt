@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.data.payloads.CommentPayload
+import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
@@ -16,7 +17,6 @@ import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
 import com.alfresco.process.models.CommonOptionModel
-import com.alfresco.process.models.GroupInfo
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
@@ -26,7 +26,6 @@ import com.alfresco.process.models.RequestProcessInstancesQuery
 import com.alfresco.process.models.RequestSaveForm
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
-import com.alfresco.process.models.UserInfo
 import com.alfresco.process.models.ValuesModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -383,57 +382,45 @@ class TaskRepository {
     /**
      * Execute the start flow integration
      */
-    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String) = ProcessEntry.with(
+    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String, values: Map<String, Any?>) = ProcessEntry.with(
         processesService.createProcessInstance(
             RequestProcessInstances(
                 name = processEntry?.name,
                 processDefinitionId = processEntry?.id,
-                values = ValuesModel(
-                    due = processEntry?.formattedDueDate,
-                    message = processEntry?.description,
-                    priority = if (processEntry?.priority != -1) {
-                        CommonOptionModel(
-                            id = getTaskPriority(processEntry?.priority ?: 0).name,
-                            name = getTaskPriority(processEntry?.priority ?: 0).name,
-                        )
-                    } else {
-                        null
-                    },
-                    reviewer = getUser(processEntry?.startedBy),
-                    reviewGroups = getGroup(processEntry?.startedBy),
-                    items = items,
-                    sendEmailNotifications = false,
-                ),
+                values = values,
             ),
         ),
     )
 
-    private fun getUser(userGroupInfo: UserGroupDetails?): UserInfo? {
+    fun getUserOrGroup(userGroupInfo: UserGroupDetails?): Map<String, Any?> {
         return if (userGroupInfo?.isGroup == true) {
-            null
+            mapOf<String, Any?>(
+                "id" to userGroupInfo.id,
+                "name" to userGroupInfo.name,
+                "externalId" to userGroupInfo.externalId,
+                "status" to userGroupInfo.status,
+                "parentGroupId" to userGroupInfo.parentGroupId,
+                "groups" to userGroupInfo.groups,
+            )
         } else {
-            UserInfo(
-                id = userGroupInfo?.id,
-                firstName = userGroupInfo?.firstName,
-                lastName = userGroupInfo?.lastName,
-                email = userGroupInfo?.email,
+            mapOf<String, Any?>(
+                "id" to userGroupInfo?.id,
+                "firstName" to userGroupInfo?.firstName,
+                "lastName" to userGroupInfo?.lastName,
+                "email" to userGroupInfo?.email,
             )
         }
     }
 
-    private fun getGroup(userGroupInfo: UserGroupDetails?): GroupInfo? {
-        return if (userGroupInfo?.isGroup == false) {
-            null
-        } else {
-            GroupInfo(
-                id = userGroupInfo?.id,
-                name = userGroupInfo?.name,
-                externalId = userGroupInfo?.externalId,
-                status = userGroupInfo?.status,
-                parentGroupId = userGroupInfo?.parentGroupId,
-                groups = userGroupInfo?.groups,
-            )
-        }
+    fun mapStringToOptionValues(fieldsData: FieldsData): Map<String, Any?> {
+        val id = fieldsData.options.find { it.name == fieldsData.value }?.id
+
+        requireNotNull(id)
+
+        return mapOf<String, Any?>(
+            "id" to id,
+            "name" to fieldsData.name,
+        )
     }
 
     /**

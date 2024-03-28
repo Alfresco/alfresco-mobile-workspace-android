@@ -30,6 +30,7 @@ import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.mimetype.MimeType
+import com.alfresco.content.process.ui.fragments.BaseDetailFragment.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.simpleController
 import com.alfresco.ui.getDrawableForAttribute
 
@@ -148,7 +149,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         if (isAdded) {
             startActivity(
                 Intent(requireActivity(), LocalPreviewActivity::class.java)
-                    .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, entry as Entry),
+                    .putExtra(KEY_ENTRY_OBJ, entry as Entry),
             )
         }
     }

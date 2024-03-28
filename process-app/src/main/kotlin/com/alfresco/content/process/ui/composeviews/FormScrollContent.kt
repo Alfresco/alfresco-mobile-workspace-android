@@ -25,14 +25,6 @@ import com.alfresco.content.process.ui.components.MultiLineInputField
 import com.alfresco.content.process.ui.components.PeopleField
 import com.alfresco.content.process.ui.components.ReadOnlyField
 import com.alfresco.content.process.ui.components.SingleLineInputField
-import com.alfresco.content.process.ui.components.amountInputError
-import com.alfresco.content.process.ui.components.booleanInputError
-import com.alfresco.content.process.ui.components.dateTimeInputError
-import com.alfresco.content.process.ui.components.dropDownRadioInputError
-import com.alfresco.content.process.ui.components.integerInputError
-import com.alfresco.content.process.ui.components.multiLineInputError
-import com.alfresco.content.process.ui.components.singleLineInputError
-import com.alfresco.content.process.ui.components.userGroupInputError
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
 import com.alfresco.content.process.ui.utils.amountInputError

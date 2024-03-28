@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,9 +31,10 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 @Composable
 fun PeopleField(
     userDetail: UserGroupDetails? = null,
-    onAssigneeSelected: (UserGroupDetails?) -> Unit = { },
+    onAssigneeSelected: (UserGroupDetails?) -> Unit = {},
     fieldsData: FieldsData = FieldsData(),
     processEntry: ProcessEntry = ProcessEntry(),
+    errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
     val labelWithAsterisk = buildAnnotatedString {
         append(fieldsData.name)

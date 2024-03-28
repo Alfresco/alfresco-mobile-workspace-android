@@ -80,8 +80,9 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
         val fields = state.formFields.find { it.type == FieldType.UPLOAD.value() }!!
 
         handler.post {
+            val isError = (fields.required && state.listContents.isEmpty())
             if (state.listContents.isNotEmpty()) {
-                viewModel.updateFieldValue(fields.id, state.listContents, state)
+                viewModel.updateFieldValue(fields.id, state.listContents, state, Pair(isError, ""))
                 binding.tvNoOfAttachments.visibility = View.VISIBLE
                 binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
             } else {

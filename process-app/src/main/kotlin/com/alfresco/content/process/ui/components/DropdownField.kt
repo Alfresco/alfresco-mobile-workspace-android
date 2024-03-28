@@ -5,16 +5,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.payloads.FieldsData
-import com.alfresco.content.process.R
 
 @Composable
 fun DropdownField(
@@ -22,19 +21,12 @@ fun DropdownField(
     queryText: String = "",
     onValueChanged: (Pair<String, String>) -> Unit = { },
     fieldsData: FieldsData = FieldsData(),
+    errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
     val keyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Text,
     )
-
-    val isError = nameText.isNotEmpty() && nameText.length < fieldsData.minLength
-
-    val errorMessage = if (isError) {
-        stringResource(R.string.error_required_field, fieldsData.minLength)
-    } else {
-        ""
-    }
 
     val context = LocalContext.current
 
@@ -69,8 +61,8 @@ fun DropdownField(
         textFieldValue = nameText,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
-        isError = isError,
-        errorMessage = errorMessage,
+        isError = errorData.first,
+        errorMessage = errorData.second,
         isEnabled = false,
     )
 }

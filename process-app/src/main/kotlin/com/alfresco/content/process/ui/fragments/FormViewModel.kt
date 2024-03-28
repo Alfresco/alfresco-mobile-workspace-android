@@ -106,13 +106,18 @@ class FormViewModel(
                     }
 
                     is Success -> {
+                        val fields = it().fields.flatMap { listData -> listData.fields }
+
                         val updatedState = copy(
                             parent = processEntry,
-                            formFields = it().fields.flatMap { listData -> listData.fields },
+                            formFields = fields,
                             processOutcomes = it().outcomes,
                             requestStartForm = Success(it()),
                         )
-                        enableDisableActions(updatedState)
+
+                        val hasAllRequiredData = hasFieldValidData(fields)
+                        updateStateData(hasAllRequiredData, fields)
+
                         updatedState
                     }
 
@@ -124,8 +129,10 @@ class FormViewModel(
         }
     }
 
-    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState) {
-        val updatedFieldList = state.formFields.map { field ->
+    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState, errorData: Pair<Boolean, String>) {
+        val updatedFieldList: MutableList<FieldsData> = mutableListOf()
+
+        state.formFields.forEach { field ->
             if (field.id == fieldId) {
                 var updatedValue = newValue
                 when {
@@ -145,17 +152,15 @@ class FormViewModel(
                         updatedValue = null
                     }
                 }
-                field.copy(value = updatedValue)
+                updatedFieldList.add(FieldsData.withUpdateField(field, updatedValue, errorData))
             } else {
-                field
+                updatedFieldList.add(field)
             }
         }
 
-        val updatedState = state.copy(
-            formFields = updatedFieldList,
-        )
+        val hasAllRequiredData = hasFieldValidData(updatedFieldList)
 
-        enableDisableActions(updatedState)
+        updateStateData(hasAllRequiredData, updatedFieldList)
     }
 
     fun startWorkflow() = withState { state ->
@@ -177,7 +182,15 @@ class FormViewModel(
         fields.forEach {
             when (it.type) {
                 FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
-                    values[it.id] = repository.getUserOrGroup(it.value as UserGroupDetails)
+                    when {
+                        it.value != null -> {
+                            values[it.id] = repository.getUserOrGroup(it.value as? UserGroupDetails)
+                        }
+
+                        else -> {
+                            values[it.id] = null
+                        }
+                    }
                 }
 
                 FieldType.DATETIME.value(), FieldType.DATE.value() -> {
@@ -202,14 +215,14 @@ class FormViewModel(
         return values
     }
 
-    private fun enableDisableActions(state: FormViewState) {
-        val hasAllRequiredData = hasFieldRequiredData(state)
-
-        setState { state.copy(enabledOutcomes = hasAllRequiredData) }
+    private fun updateStateData(enabledOutcomes: Boolean, fields: List<FieldsData>) {
+        setState { copy(enabledOutcomes = enabledOutcomes, formFields = fields) }
     }
 
-    private fun hasFieldRequiredData(state: FormViewState): Boolean {
-        return !state.formFields.filter { it.required }.any { it.value == null }
+    private fun hasFieldValidData(fields: List<FieldsData>): Boolean {
+        val hasValidDataInRequiredFields = !fields.filter { it.required }.any { (it.value == null || it.errorData.first) }
+        val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
+        return (hasValidDataInRequiredFields && hasValidDataInOtherFields)
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

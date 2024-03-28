@@ -9,6 +9,7 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
+import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
@@ -34,6 +35,7 @@ class FormViewModel(
     private var observeUploadsJob: Job? = null
     var observerID: String = ""
     var folderFieldId = ""
+    private var entryListener: EntryListener? = null
 
     init {
         observerID = UUID.randomUUID().toString()
@@ -41,10 +43,7 @@ class FormViewModel(
 
         viewModelScope.on<AttachFolderSearchData> {
             it.entry?.let { entry ->
-                println("FormViewModel 1 == $entry")
-                println("FormViewModel 2 == $folderFieldId")
-                updateFieldValue(folderFieldId, entry.id, state, Pair(false, ""))
-                folderFieldId = ""
+                entryListener?.onAttachFolder(entry)
             }
         }
     }
@@ -232,6 +231,10 @@ class FormViewModel(
         val hasValidDataInRequiredFields = !fields.filter { it.required }.any { (it.value == null || it.errorData.first) }
         val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
         return (hasValidDataInRequiredFields && hasValidDataInOtherFields)
+    }
+
+    fun setListener(listener: EntryListener) {
+        entryListener = listener
     }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {

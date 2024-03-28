@@ -13,12 +13,15 @@ import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.Entry
+import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentProcessBinding
 import com.alfresco.content.process.ui.composeviews.FormScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBaseTheme
 
-class ProcessFragment : Fragment(), MavericksView {
+class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
     val viewModel: FormViewModel by activityViewModel()
     lateinit var binding: FragmentProcessBinding
@@ -36,6 +39,8 @@ class ProcessFragment : Fragment(), MavericksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.setListener(this)
 
         val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -57,5 +62,17 @@ class ProcessFragment : Fragment(), MavericksView {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestStartForm is Loading || state.requestStartWorkflow is Loading
+    }
+
+    override fun onAttachFolder(entry: ParentEntry) = withState(viewModel) {
+        if (isAdded) {
+            viewModel.updateFieldValue(
+                viewModel.folderFieldId,
+                (entry as Entry).id,
+                it,
+                Pair(false, ""),
+            )
+            viewModel.folderFieldId = ""
+        }
     }
 }

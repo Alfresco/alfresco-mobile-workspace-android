@@ -198,7 +198,6 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
 
         FieldType.SELECT_FOLDER.value() -> {
             AttachFolderField(
-                contents = state.listContents,
                 fieldsData = field,
                 navController = navController,
                 onUserTap = {

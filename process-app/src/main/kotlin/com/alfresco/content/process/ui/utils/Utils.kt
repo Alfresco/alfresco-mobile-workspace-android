@@ -36,8 +36,6 @@ fun integerInputError(value: String?, fieldsData: FieldsData, context: Context):
         }
     }
 
-    println("IntegerInputField 3 == $errorData")
-
     return errorData
 }
 

@@ -16,4 +16,6 @@ interface EntryListener {
      * It will get called on tap of start workflow on the option list
      */
     fun onProcessStart(entries: List<ParentEntry>) {}
+
+    fun onAttachFolder(entry: ParentEntry) {}
 }

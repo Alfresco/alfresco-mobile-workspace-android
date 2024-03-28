@@ -108,7 +108,6 @@ data class DatePickerBuilder(
         timePicker.addOnPositiveButtonClickListener {
             val hour = timePicker.hour
             val minute = timePicker.minute
-            println("string date $stringDateTime || $hour || $minute")
             val combinedDateTime = "$stringDateTime $hour:$minute"
             onSuccess?.invoke(combinedDateTime)
         }

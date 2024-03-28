@@ -137,7 +137,6 @@ class SearchFragment : Fragment(), MavericksView {
         binding.recyclerViewChips.setController(epoxyController)
 
         withState(viewModel) { state ->
-            println("SearchFragment.onViewCreated  ${state.isProcess}")
 
             if (state.isProcess == true) {
                 binding.parentAdvanceSearch.visibility = View.GONE
@@ -539,7 +538,7 @@ class SearchFragment : Fragment(), MavericksView {
         resultsFragment.setFilters(advanceSearchFilter, facetData)
     }
 
-    fun clearMultiSelection() {
+    private fun clearMultiSelection() {
         resultsFragment.clearMultiSelection()
     }
 }

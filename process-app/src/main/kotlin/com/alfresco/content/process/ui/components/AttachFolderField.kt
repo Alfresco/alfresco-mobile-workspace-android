@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.process.R
@@ -35,7 +34,6 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 
 @Composable
 fun AttachFolderField(
-    contents: List<Entry> = emptyList(),
     fieldsData: FieldsData = FieldsData(),
     onUserTap: (Boolean) -> Unit = { },
     navController: NavController,
@@ -50,10 +48,10 @@ fun AttachFolderField(
         }
     }
 
-    val contentValue = if (contents.isEmpty()) {
+    val contentValue = if (fieldsData.value == null) {
         stringResource(id = R.string.no_attached_folder)
     } else {
-        stringResource(id = R.string.text_attached_folder, contents.size)
+        stringResource(id = R.string.text_attached_folder, 1)
     }
 
     val context = LocalContext.current

@@ -21,7 +21,7 @@ fun Outcomes(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: 
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             onClick = {
-                viewModel.startWorkflow()
+                viewModel.performOutcomes(it)
             },
             shape = RoundedCornerShape(6.dp),
             enabled = enabledOutcomes,

@@ -64,7 +64,6 @@
     <string name="text_attached_files">Angehängte Dateien</string>
     <string name="no_attached_files">Keine angehängten Dateien</string>
     <string name="empty_no_due_date">Kein Fälligkeitsdatum</string>
-    <string name="text_complete">Abgeschlossen</string>
     <string name="dialog_title_complete_task">Aufgabe abschließen</string>
     <string name="dialog_message_complete_task">Sind Sie sicher, dass Sie diese Aufgabe abschließen wollen? Sie werden keine Änderungen mehr vornehmen können.</string>
     <string name="icon_send_description">Schaltfläche „Senden“</string>

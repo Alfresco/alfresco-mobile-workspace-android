@@ -17,11 +17,9 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
-import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
-import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.button.MaterialButton
@@ -56,9 +54,13 @@ internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(
 }
 
 internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { state ->
+    binding.tvTitle.visibility = View.GONE
+    binding.tvDescription.visibility = View.GONE
     binding.clComment.visibility = View.GONE
-    binding.clIdentifier.visibility = View.GONE
-    binding.iconStatusNav.visibility = View.VISIBLE
+    binding.clDueDate.visibility = View.GONE
+    binding.clPriority.visibility = View.GONE
+    binding.clIdentifier.visibility = View.VISIBLE
+    binding.iconStatusNav.visibility = View.GONE
     binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
 
     binding.clStatus.setSafeOnClickListener {
@@ -113,7 +115,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                         makeClaimButton()
                     } else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_release).isVisible = true
-                        makeOutcomes()
+//                        makeOutcomes()
                     }
                 }
 
@@ -121,7 +123,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                     if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
                         viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
                     ) {
-                        makeOutcomes()
+//                        makeOutcomes()
                     }
                 }
             }
@@ -257,34 +259,6 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
                 selector = ComponentType.VIEW_TEXT.value,
             ),
         )
-    }
-}
-
-internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
-    if (binding.parentOutcomes.childCount == 0) {
-        state.parent?.outcomes?.forEach { dataObj ->
-            val button = if (dataObj.outcome.lowercase() == "reject") {
-                this.layoutInflater.inflate(R.layout.view_layout_negative_outcome, binding.parentOutcomes, false) as MaterialButton
-            } else {
-                this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
-            }
-            button.text = requireContext().getLocalizedName(dataObj.name)
-            button.setOnClickListener {
-                withState(viewModel) { newState ->
-                    if (viewModel.hasTaskStatusEnabled(newState) && !viewModel.hasTaskStatusValue(newState)
-                    ) {
-                        showSnackar(
-                            binding.root,
-                            getString(R.string.error_select_status),
-                        )
-                    } else {
-                        AnalyticsManager().taskFiltersEvent(dataObj.outcome)
-                        viewModel.actionOutcome(dataObj.outcome)
-                    }
-                }
-            }
-            binding.parentOutcomes.addView(button)
-        }
     }
 }
 

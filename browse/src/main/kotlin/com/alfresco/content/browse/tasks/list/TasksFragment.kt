@@ -26,6 +26,7 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.EventName
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.TaskFilterData
 import com.alfresco.content.hideSoftInput
@@ -189,11 +190,21 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
-        val intent = Intent(
-            requireActivity(),
-            Class.forName("com.alfresco.content.app.activity.TaskViewerActivity"),
-        )
-        intent.putExtra(Mavericks.KEY_ARG, entry)
+        val intent = if (entry.processInstanceId != null) {
+            Intent(
+                requireActivity(),
+                Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
+            ).apply {
+                putExtra(Mavericks.KEY_ARG, ProcessEntry.with(entry))
+            }
+        } else {
+            Intent(
+                requireActivity(),
+                Class.forName("com.alfresco.content.app.activity.TaskViewerActivity"),
+            ).apply {
+                putExtra(Mavericks.KEY_ARG, entry)
+            }
+        }
         startActivity(intent)
     }
 }

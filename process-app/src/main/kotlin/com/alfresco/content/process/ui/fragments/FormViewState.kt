@@ -10,15 +10,18 @@ import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
 import com.alfresco.content.data.payloads.FieldsData
+import retrofit2.Response
 
 data class FormViewState(
     val parent: ProcessEntry = ProcessEntry(),
-    val requestStartForm: Async<ResponseListForm> = Uninitialized,
+    val requestForm: Async<ResponseListForm> = Uninitialized,
     val requestProcessDefinition: Async<ResponseListProcessDefinition> = Uninitialized,
     val formFields: List<FieldsData> = emptyList(),
     val processOutcomes: List<OptionsModel> = emptyList(),
     val enabledOutcomes: Boolean = false,
     val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
+    val requestOutcomes: Async<Response<Unit>> = Uninitialized,
+    val requestSaveForm: Async<Response<Unit>> = Uninitialized,
     val listContents: List<Entry> = emptyList(),
     val baseEntries: List<Entry> = emptyList(),
     val uploads: List<Entry> = emptyList(),

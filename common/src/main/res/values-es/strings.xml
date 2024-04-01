@@ -38,4 +38,5 @@
     <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
     <string name="dialog_negative_button_task">Cancelar</string>
     <string name="dialog_positive_button_task">Confirmar</string>
+    <string name="text_complete">Por completar</string>
 </resources>

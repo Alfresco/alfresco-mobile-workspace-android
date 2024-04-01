@@ -4,10 +4,10 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
 import com.alfresco.content.data.payloads.CommentPayload
-import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
+import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -16,7 +16,6 @@ import com.alfresco.events.EventBus
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
-import com.alfresco.process.models.CommonOptionModel
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
@@ -26,7 +25,6 @@ import com.alfresco.process.models.RequestProcessInstancesQuery
 import com.alfresco.process.models.RequestSaveForm
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
-import com.alfresco.process.models.ValuesModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -392,37 +390,6 @@ class TaskRepository {
         ),
     )
 
-    fun getUserOrGroup(userGroupInfo: UserGroupDetails?): Map<String, Any?> {
-        return if (userGroupInfo?.isGroup == true) {
-            mapOf<String, Any?>(
-                "id" to userGroupInfo.id,
-                "name" to userGroupInfo.name,
-                "externalId" to userGroupInfo.externalId,
-                "status" to userGroupInfo.status,
-                "parentGroupId" to userGroupInfo.parentGroupId,
-                "groups" to userGroupInfo.groups,
-            )
-        } else {
-            mapOf<String, Any?>(
-                "id" to userGroupInfo?.id,
-                "firstName" to userGroupInfo?.firstName,
-                "lastName" to userGroupInfo?.lastName,
-                "email" to userGroupInfo?.email,
-            )
-        }
-    }
-
-    fun mapStringToOptionValues(fieldsData: FieldsData): Map<String, Any?> {
-        val id = fieldsData.options.find { it.name == fieldsData.value }?.id
-
-        requireNotNull(id)
-
-        return mapOf<String, Any?>(
-            "id" to id,
-            "name" to fieldsData.name,
-        )
-    }
-
     /**
      * saving the accountInfo data in preferences
      */
@@ -449,33 +416,17 @@ class TaskRepository {
         taskEntry.id,
         RequestOutcomes(
             outcome = outcome,
-            values = if (taskEntry.taskFormStatus != null) {
-                ValuesModel(
-                    status = CommonOptionModel(
-                        id = taskEntry.taskFormStatus,
-                        name = taskEntry.taskFormStatus,
-                    ),
-                    comment = taskEntry.comment,
-                )
-            } else {
-                null
-            },
+            values = convertModelToMapValues(taskEntry),
         ),
     )
 
     /**
      * Call to save the form data
      */
-    suspend fun saveForm(taskEntry: TaskEntry, comment: String) = tasksService.saveForm(
-        taskEntry.id,
+    suspend fun saveForm(taskID: String, values: Map<String, Any?>) = tasksService.saveForm(
+        taskID,
         RequestSaveForm(
-            values = ValuesModel(
-                status = CommonOptionModel(
-                    id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus,
-                ),
-                comment = comment,
-            ),
+            values = values,
         ),
     )
 

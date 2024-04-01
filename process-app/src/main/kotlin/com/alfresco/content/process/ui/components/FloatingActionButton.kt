@@ -30,7 +30,12 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean,
                 ComponentBuilder(context, componentData)
                     .onApply { name, query, _ ->
 
-                        viewModel.startWorkflow()
+                        viewModel.performOutcomes(
+                            OptionsModel(
+                                id = query,
+                                name = name,
+                            ),
+                        )
                     }
                     .onReset { name, query, _ ->
                     }

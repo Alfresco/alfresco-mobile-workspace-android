@@ -64,7 +64,6 @@
     <string name="text_attached_files">Ficheros adjuntos</string>
     <string name="no_attached_files">No hay ficheros adjuntos</string>
     <string name="empty_no_due_date">Sin fecha de vencimiento</string>
-    <string name="text_complete">Por completar</string>
     <string name="dialog_title_complete_task">Completar tarea</string>
     <string name="dialog_message_complete_task">¿Está seguro de que desea completar esta tarea? Ya no podrá realizar ningún cambio.</string>
     <string name="icon_send_description">Botón Enviar</string>

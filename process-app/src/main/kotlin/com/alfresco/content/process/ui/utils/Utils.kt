@@ -1,4 +1,4 @@
-package com.alfresco.content.process.ui.components
+package com.alfresco.content.process.ui.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -35,8 +35,6 @@ fun integerInputError(value: String?, fieldsData: FieldsData, context: Context):
             errorData = Pair(true, context.getString(R.string.error_max_value, maxValue))
         }
     }
-
-    println("IntegerInputField 3 == $errorData")
 
     return errorData
 }

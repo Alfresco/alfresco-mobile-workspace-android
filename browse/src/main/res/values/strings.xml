@@ -90,8 +90,6 @@
     <string name="text_filter_option">Filter Option %s</string>
     <string name="workflows_account_not_configured">Workflows are not enabled for this account.</string>
 
-    <string name="title_content_in_queue">Warning</string>
-    <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="text_send_approval_again">Send for Approval Again</string>

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,16 +18,19 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.mvrx.compose.collectAsState
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.process.ui.components.Outcomes
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
+import com.alfresco.content.process.ui.fragments.ProcessFragment
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController) {
+fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController, fragment: ProcessFragment) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -61,7 +65,7 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
                     .fillMaxWidth()
                     .align(alignment = Alignment.CenterHorizontally),
             ) {
-                Outcomes(outcomes = outcomes, state.enabledOutcomes, viewModel)
+                Outcomes(outcomes = outcomes, viewModel, fragment)
             }
         }
     }
@@ -72,7 +76,6 @@ fun FormDetailScreen(state: FormViewState, viewModel: FormViewModel, outcomes: L
 fun PreviewProcessDetailScreen() {
     val state = FormViewState()
     FormDetailScreen(
-        state,
         FormViewModel(
             state,
             LocalContext.current,
@@ -80,5 +83,6 @@ fun PreviewProcessDetailScreen() {
         ),
         emptyList(),
         rememberNavController(),
+        ProcessFragment(),
     )
 }

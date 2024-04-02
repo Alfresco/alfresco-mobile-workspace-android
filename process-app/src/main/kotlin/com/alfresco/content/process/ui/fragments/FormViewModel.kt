@@ -38,6 +38,7 @@ class FormViewModel(
     var observerID: String = ""
     var folderFieldId = ""
     private var entryListener: EntryListener? = null
+    var optionsModel: OptionsModel? = null
 
     init {
         observerID = UUID.randomUUID().toString()

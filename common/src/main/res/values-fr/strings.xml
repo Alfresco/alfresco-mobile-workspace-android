@@ -39,5 +39,6 @@
     <string name="dialog_negative_button_task">Annuler</string>
     <string name="dialog_positive_button_task">Confirmer</string>
     <string name="text_complete">Terminé</string>
-
+    <string name="title_content_in_queue">Avertissement</string>
+    <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
 </resources>

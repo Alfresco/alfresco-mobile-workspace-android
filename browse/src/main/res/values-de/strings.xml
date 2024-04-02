@@ -90,8 +90,6 @@
     <string name="text_filter_option">Filteroption %s</string>
     <string name="workflows_account_not_configured">Workflows sind für diesen Account nicht aktiviert.</string>
 
-    <string name="title_content_in_queue">Warnung</string>
-    <string name="message_content_in_queue">Das Hochladen von Dateien ist in Bearbeitung. Tippen Sie auf Bestätigen, um ohne laufende Dateien fortzufahren.</string>
     <string name="approve">Genehmigen</string>
     <string name="reject">Ablehnen</string>
     <string name="text_send_approval_again">Erneut zur Genehmigung senden</string>

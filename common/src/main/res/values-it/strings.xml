@@ -39,4 +39,6 @@
     <string name="dialog_title_discard_task">Ignora</string>
     <string name="dialog_message_discard_task">Vuoi ignorare le modifiche?</string>
     <string name="text_complete">Completato</string>
+    <string name="title_content_in_queue">Avviso</string>
+    <string name="message_content_in_queue">Il caricamento dei file è in corso. Toccare su Conferma per continuare senza questi file.</string>
 </resources>

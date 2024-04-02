@@ -7,21 +7,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.airbnb.mvrx.compose.collectAsState
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
+import com.alfresco.content.process.ui.fragments.ProcessFragment
 
 @Composable
-fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean, viewModel: FormViewModel) {
+fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment, viewModel: FormViewModel) {
     val context = LocalContext.current
+    val state by viewModel.collectAsState()
 
     ExtendedFloatingActionButton(
         onClick = {
-            if (enabledOutcomes) {
+            if (state.enabledOutcomes) {
                 val componentData = ComponentData.with(
                     outcomes,
                     "",
@@ -29,13 +33,18 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, enabledOutcomes: Boolean,
                 )
                 ComponentBuilder(context, componentData)
                     .onApply { name, query, _ ->
-
-                        viewModel.performOutcomes(
-                            OptionsModel(
-                                id = query,
-                                name = name,
-                            ),
-                        )
+                        val entry = state.listContents.find { it.isUpload }
+                        if (entry != null) {
+                            viewModel.optionsModel = OptionsModel(id = query, name = name)
+                            fragment.confirmContentQueuePrompt()
+                        } else {
+                            viewModel.performOutcomes(
+                                OptionsModel(
+                                    id = query,
+                                    name = name,
+                                ),
+                            )
+                        }
                     }
                     .onReset { name, query, _ ->
                     }

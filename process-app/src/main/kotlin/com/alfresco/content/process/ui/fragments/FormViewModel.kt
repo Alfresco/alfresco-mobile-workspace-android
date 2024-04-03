@@ -80,6 +80,7 @@ class FormViewModel(
         observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
+                    println("FormViewModel.observeUploads ${it.invoke()}")
                     updateUploads(it())
                 } else {
                     this

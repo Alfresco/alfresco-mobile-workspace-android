@@ -11,6 +11,7 @@ import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AttachFolderSearchData
+import com.alfresco.content.data.DefaultOutcomesID
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
@@ -19,6 +20,7 @@ import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.getFormattedDate
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
@@ -39,7 +41,12 @@ class FormViewModel(
 
     init {
         observerID = UUID.randomUUID().toString()
-        singleProcessDefinition(state.parent.id)
+
+        if (state.parent.processInstanceId != null) {
+            getTaskForms(state.parent)
+        } else {
+            singleProcessDefinition(state.parent.id)
+        }
 
         viewModelScope.on<AttachFolderSearchData> {
             it.entry?.let { entry ->
@@ -107,10 +114,10 @@ class FormViewModel(
         viewModelScope.launch {
             repository::startForm.asFlow(processEntry.id).execute {
                 when (it) {
-                    is Loading -> copy(requestStartForm = Loading())
+                    is Loading -> copy(requestForm = Loading())
                     is Fail -> {
                         it.error.printStackTrace()
-                        copy(requestStartForm = Fail(it.error))
+                        copy(requestForm = Fail(it.error))
                     }
 
                     is Success -> {
@@ -120,7 +127,41 @@ class FormViewModel(
                             parent = processEntry,
                             formFields = fields,
                             processOutcomes = it().outcomes,
-                            requestStartForm = Success(it()),
+                            requestForm = Success(it()),
+                        )
+
+                        val hasAllRequiredData = hasFieldValidData(fields)
+                        updateStateData(hasAllRequiredData, fields)
+
+                        updatedState
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getTaskForms(processEntry: ProcessEntry) = withState { state ->
+        viewModelScope.launch {
+            repository::getTaskForm.asFlow(processEntry.taskEntry.id).execute {
+                when (it) {
+                    is Loading -> copy(requestForm = Loading())
+                    is Fail -> {
+                        it.error.printStackTrace()
+                        copy(requestForm = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        val fields = it().fields.flatMap { listData -> listData.fields }
+
+                        val updatedState = copy(
+                            parent = processEntry,
+                            formFields = fields,
+                            processOutcomes = it().outcomes,
+                            requestForm = Success(it()),
                         )
 
                         val hasAllRequiredData = hasFieldValidData(fields)
@@ -171,7 +212,68 @@ class FormViewModel(
         updateStateData(hasAllRequiredData, updatedFieldList)
     }
 
-    fun startWorkflow() = withState { state ->
+    fun performOutcomes(optionsModel: OptionsModel) {
+        when (optionsModel.id) {
+            DefaultOutcomesID.DEFAULT_START_WORKFLOW.value() -> startWorkflow()
+            DefaultOutcomesID.DEFAULT_COMPLETE.value() -> completeTask()
+            DefaultOutcomesID.DEFAULT_SAVE.value() -> saveForm()
+            else -> actionOutcome(optionsModel.outcome)
+        }
+    }
+
+    private fun completeTask() = withState { state ->
+        viewModelScope.launch {
+            repository::completeTask.asFlow(state.parent.taskEntry.id).execute {
+                when (it) {
+                    is Loading -> copy(requestOutcomes = Loading())
+                    is Fail -> {
+                        copy(requestOutcomes = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestOutcomes = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the save-form api
+     */
+    private fun saveForm() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::saveForm.asFlow(
+                state.parent.taskEntry.id,
+                convertFieldsToValues(
+                    state.formFields
+                        .filter { it.type !in listOf(FieldType.READONLY.value(), FieldType.READONLY_TEXT.value()) },
+                ),
+            ).execute {
+                when (it) {
+                    is Loading -> copy(requestSaveForm = Loading())
+                    is Fail -> {
+                        copy(requestSaveForm = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestSaveForm = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    private fun startWorkflow() = withState { state ->
         viewModelScope.launch {
             repository::startWorkflow.asFlow(state.parent, "", convertFieldsToValues(state.formFields)).execute {
                 when (it) {
@@ -179,6 +281,31 @@ class FormViewModel(
                     is Fail -> copy(requestStartWorkflow = Fail(it.error))
                     is Success -> copy(requestStartWorkflow = Success(it()))
                     else -> this
+                }
+            }
+        }
+    }
+
+    /**
+     * execute the outcome api
+     */
+    private fun actionOutcome(outcome: String) = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::actionOutcomes.asFlow(outcome, state.parent.taskEntry).execute {
+                when (it) {
+                    is Loading -> copy(requestOutcomes = Loading())
+                    is Fail -> {
+                        copy(requestOutcomes = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestOutcomes = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
                 }
             }
         }
@@ -192,7 +319,7 @@ class FormViewModel(
                 FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
                     when {
                         it.value != null -> {
-                            values[it.id] = repository.getUserOrGroup(it.value as? UserGroupDetails)
+                            values[it.id] = convertModelToMapValues(it.value as? UserGroupDetails)
                         }
 
                         else -> {
@@ -207,7 +334,7 @@ class FormViewModel(
                 }
 
                 FieldType.RADIO_BUTTONS.value(), FieldType.DROPDOWN.value() -> {
-                    values[it.id] = repository.mapStringToOptionValues(it)
+                    values[it.id] = convertModelToMapValues(it)
                 }
 
                 FieldType.UPLOAD.value() -> {

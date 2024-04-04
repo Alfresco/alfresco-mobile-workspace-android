@@ -1,6 +1,5 @@
 package com.alfresco.content.process.ui.composeviews
 
-import android.app.Activity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.FabPosition
@@ -9,36 +8,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.compose.collectAsState
+import com.alfresco.content.data.DefaultOutcomesID
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.FloatingActionButton
-import com.alfresco.content.process.ui.components.updateProcessList
 import com.alfresco.content.process.ui.fragments.FormViewModel
+import com.alfresco.content.process.ui.fragments.FormViewState
 
 @Composable
 fun FormScreen(navController: NavController, viewModel: FormViewModel) {
     val state by viewModel.collectAsState()
-    val context = LocalContext.current
-
-    if (state.requestStartWorkflow is Success) {
-        viewModel.updateProcessList()
-        (context as Activity).finish()
-    }
 
     val customOutcomes = when {
         state.formFields.isNotEmpty() && state.processOutcomes.isEmpty() -> {
-            listOf(
-                OptionsModel(name = stringResource(id = R.string.action_start_workflow)),
-            )
+            defaultOutcomes(state)
         }
 
         else -> {
-            state.processOutcomes
+            customOutcomes(state)
         }
     }
 
@@ -46,7 +36,6 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel) {
         customOutcomes.size < 3 -> {
             Scaffold() { padding ->
                 val colorScheme = MaterialTheme.colorScheme
-                // Wrap the content in a Column with verticalScroll
                 Surface(
                     modifier = androidx.compose.ui.Modifier
                         .padding(padding)
@@ -65,7 +54,6 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel) {
                 floatingActionButtonPosition = FabPosition.End,
             ) { padding ->
                 val colorScheme = MaterialTheme.colorScheme
-                // Wrap the content in a Column with verticalScroll
                 Surface(
                     modifier = androidx.compose.ui.Modifier
                         .padding(padding)
@@ -77,5 +65,42 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun defaultOutcomes(state: FormViewState): List<OptionsModel> {
+    return if (state.parent.processInstanceId == null) {
+        listOf(
+            OptionsModel(
+                id = DefaultOutcomesID.DEFAULT_START_WORKFLOW.value(),
+                name = stringResource(id = R.string.action_start_workflow),
+            ),
+        )
+    } else {
+        listOf(
+            OptionsModel(
+                id = DefaultOutcomesID.DEFAULT_SAVE.value(),
+                name = stringResource(id = R.string.action_text_save),
+            ),
+            OptionsModel(
+                id = DefaultOutcomesID.DEFAULT_COMPLETE.value(),
+                name = stringResource(id = R.string.text_complete),
+            ),
+        )
+    }
+}
+
+@Composable
+private fun customOutcomes(state: FormViewState): List<OptionsModel> {
+    return if (state.parent.processInstanceId == null) {
+        state.processOutcomes
+    } else {
+        listOf(
+            OptionsModel(
+                id = DefaultOutcomesID.DEFAULT_SAVE.value(),
+                name = stringResource(id = R.string.action_text_save),
+            ),
+        ) + state.processOutcomes
     }
 }

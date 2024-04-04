@@ -17,6 +17,7 @@ data class ProcessEntry(
     val description: String = "",
     val businessKey: String? = null,
     val processDefinitionId: String? = null,
+    val processInstanceId: String? = null,
     val tenantId: String? = null,
     val started: ZonedDateTime? = null,
     val ended: ZonedDateTime? = null,
@@ -34,6 +35,7 @@ data class ProcessEntry(
     val formattedDueDate: String? = null,
     val defaultEntries: List<Entry> = emptyList(),
     val reviewerType: ReviewerType = ReviewerType.OTHER,
+    val taskEntry: TaskEntry = TaskEntry(),
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -73,6 +75,17 @@ data class ProcessEntry(
                 name = data.name ?: "",
                 description = data.description ?: "",
                 defaultEntries = entries,
+            )
+        }
+
+        /**
+         * return the ProcessEntry using TaskEntry
+         */
+        fun with(data: TaskEntry): ProcessEntry {
+            return ProcessEntry(
+                description = data.description ?: "",
+                processInstanceId = data.processInstanceId,
+                taskEntry = data,
             )
         }
 

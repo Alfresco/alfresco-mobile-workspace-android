@@ -1,8 +1,10 @@
 package com.alfresco.content.app.activity
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.airbnb.mvrx.MavericksView
+import com.alfresco.content.actions.Action
 import com.alfresco.content.app.R
 import com.alfresco.content.app.databinding.ActivityProcessBinding
 import com.alfresco.content.app.widget.ActionBarController
@@ -19,6 +21,7 @@ class ProcessActivity : BaseActivity(), MavericksView {
         binding = ActivityProcessBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureNav()
+        setupActionToasts()
     }
 
     private fun configureNav() {
@@ -34,6 +37,12 @@ class ProcessActivity : BaseActivity(), MavericksView {
 
         actionBarLayout.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
+
+    private fun setupActionToasts() = Action.showActionToasts(
+        lifecycleScope,
+        binding.root,
+        binding.bottomView,
+    )
 
     override fun invalidate() {
     }

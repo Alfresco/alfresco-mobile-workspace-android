@@ -90,8 +90,6 @@
     <string name="text_filter_option">Opzione di filtro %s</string>
     <string name="workflows_account_not_configured">I workflow non sono abilitati per questo account.</string>
 
-    <string name="title_content_in_queue">Avviso</string>
-    <string name="message_content_in_queue">Il caricamento dei file è in corso. Toccare su Conferma per continuare senza questi file.</string>
     <string name="approve">Approva</string>
     <string name="reject">Respingi</string>
     <string name="text_send_approval_again">Invia di nuovo per approvazione</string>

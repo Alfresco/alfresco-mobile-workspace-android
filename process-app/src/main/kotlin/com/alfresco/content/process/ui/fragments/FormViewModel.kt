@@ -38,6 +38,7 @@ class FormViewModel(
     var observerID: String = ""
     var folderFieldId = ""
     private var entryListener: EntryListener? = null
+    var optionsModel: OptionsModel? = null
 
     init {
         observerID = UUID.randomUUID().toString()
@@ -79,6 +80,7 @@ class FormViewModel(
         observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
+                    println("FormViewModel.observeUploads ${it.invoke()}")
                     updateUploads(it())
                 } else {
                     this

@@ -21,5 +21,12 @@
         android:layout_height="1dp"
         android:background="@android:color/white"
         android:backgroundTint="?attr/separatorColor" />
+    <View
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:backgroundTint="?attr/separatorColor"
+        android:visibility="visible" />
 
 </LinearLayout>

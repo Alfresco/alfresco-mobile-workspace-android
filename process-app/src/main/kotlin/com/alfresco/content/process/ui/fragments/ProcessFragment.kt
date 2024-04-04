@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
@@ -27,6 +28,8 @@ import com.alfresco.content.process.databinding.FragmentProcessBinding
 import com.alfresco.content.process.ui.components.updateProcessList
 import com.alfresco.content.process.ui.composeviews.FormScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBaseTheme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
@@ -34,6 +37,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     lateinit var binding: FragmentProcessBinding
     private var viewLayout: View? = null
     private var menu: Menu? = null
+    private var confirmContentQueueDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +101,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
                     FormScreen(
                         navController = findNavController(),
                         viewModel = viewModel,
+                        this@ProcessFragment,
                     )
                 }
             }
@@ -125,5 +130,27 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             )
             viewModel.folderFieldId = ""
         }
+    }
+
+    /**
+     * It will prompt if user trying to start workflow and if any of content file is in uploaded
+     */
+    fun confirmContentQueuePrompt() {
+        val oldDialog = confirmContentQueueDialog.get()
+        if (oldDialog != null && oldDialog.isShowing) return
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
+            .setTitle(getString(R.string.title_content_in_queue))
+            .setMessage(getString(R.string.message_content_in_queue))
+            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                viewModel.optionsModel?.let {
+                    viewModel.performOutcomes(
+                        it,
+                    )
+                }
+            }
+            .show()
+        confirmContentQueueDialog = WeakReference(dialog)
     }
 }

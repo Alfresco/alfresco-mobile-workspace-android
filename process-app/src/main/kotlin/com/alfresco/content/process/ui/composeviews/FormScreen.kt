@@ -17,19 +17,15 @@ import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.FloatingActionButton
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
+import com.alfresco.content.process.ui.fragments.ProcessFragment
 
 @Composable
-fun FormScreen(navController: NavController, viewModel: FormViewModel) {
+fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment: ProcessFragment) {
     val state by viewModel.collectAsState()
 
     val customOutcomes = when {
-        state.formFields.isNotEmpty() && state.processOutcomes.isEmpty() -> {
-            defaultOutcomes(state)
-        }
-
-        else -> {
-            customOutcomes(state)
-        }
+        state.formFields.isNotEmpty() && state.processOutcomes.isEmpty() -> defaultOutcomes(state)
+        else -> customOutcomes(state)
     }
 
     when {
@@ -43,14 +39,14 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel) {
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(state, viewModel, customOutcomes, navController)
+                    FormDetailScreen(viewModel, customOutcomes, navController, fragment)
                 }
             }
         }
 
         else -> {
             Scaffold(
-                floatingActionButton = { FloatingActionButton(customOutcomes, state.enabledOutcomes, viewModel) },
+                floatingActionButton = { FloatingActionButton(customOutcomes, fragment, viewModel) },
                 floatingActionButtonPosition = FabPosition.End,
             ) { padding ->
                 val colorScheme = MaterialTheme.colorScheme
@@ -61,7 +57,7 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel) {
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(state, viewModel, emptyList(), navController)
+                    FormDetailScreen(viewModel, emptyList(), navController, fragment)
                 }
             }
         }

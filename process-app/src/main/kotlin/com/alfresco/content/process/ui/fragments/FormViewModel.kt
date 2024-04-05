@@ -22,9 +22,11 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.getFormattedDate
+import com.alfresco.content.process.R
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -36,7 +38,7 @@ class FormViewModel(
 
     private var observeUploadsJob: Job? = null
     var observerID: String = ""
-    var folderFieldId = ""
+    var selectedField: FieldsData? = null
     private var entryListener: EntryListener? = null
     var optionsModel: OptionsModel? = null
 
@@ -80,7 +82,6 @@ class FormViewModel(
         observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
-                    println("FormViewModel.observeUploads ${it.invoke()}")
                     updateUploads(it())
                 } else {
                     this
@@ -96,10 +97,7 @@ class FormViewModel(
                     is Fail -> copy(requestProcessDefinition = Fail(it.error))
                     is Success -> {
                         val updatedState = updateSingleProcessDefinition(it())
-                        observeUploads(updatedState)
-                        updatedState.parent.let { processEntry ->
-                            getStartForm(processEntry)
-                        }
+                        getStartForm(updatedState.parent)
                         copy(requestProcessDefinition = Success(it()))
                     }
 
@@ -131,6 +129,8 @@ class FormViewModel(
                             processOutcomes = it().outcomes,
                             requestForm = Success(it()),
                         )
+
+                        observeUploads(updatedState)
 
                         val hasAllRequiredData = hasFieldValidData(fields)
                         updateStateData(hasAllRequiredData, fields)
@@ -200,6 +200,10 @@ class FormViewModel(
                     }
 
                     (updatedValue is OptionsModel) && updatedValue.id.isEmpty() -> {
+                        updatedValue = null
+                    }
+
+                    (updatedValue is List<*>) && updatedValue.isEmpty() -> {
                         updatedValue = null
                     }
                 }
@@ -365,6 +369,12 @@ class FormViewModel(
     fun setListener(listener: EntryListener) {
         entryListener = listener
     }
+
+    fun emptyMessageArgs(state: FormViewState) =
+        when {
+            else ->
+                Triple(R.drawable.ic_empty_files, R.string.no_attached_files, R.string.file_empty_message)
+        }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {
 

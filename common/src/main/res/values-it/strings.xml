@@ -41,4 +41,5 @@
     <string name="text_complete">Completato</string>
     <string name="title_content_in_queue">Avviso</string>
     <string name="message_content_in_queue">Il caricamento dei file è in corso. Toccare su Conferma per continuare senza questi file.</string>
+    <string name="no_attached_files">Nessun file allegato</string>
 </resources>

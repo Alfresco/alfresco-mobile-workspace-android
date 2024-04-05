@@ -62,7 +62,6 @@
     <string name="text_view_all">Alle weergeven</string>
     <string name="text_multiple_comments">%d opmerkingen</string>
     <string name="text_attached_files">Bijgevoegde bestanden</string>
-    <string name="no_attached_files">Geen bijgevoegde bestanden</string>
     <string name="empty_no_due_date">Geen vervaldatum</string>
     <string name="dialog_title_complete_task">Taak voltooien</string>
     <string name="dialog_message_complete_task">Weet u zeker dat u de taak wilt voltooien? U kunt geen wijzigingen meer aanbrengen.</string>

@@ -41,4 +41,5 @@
     <string name="text_complete">Abgeschlossen</string>
     <string name="title_content_in_queue">Warnung</string>
     <string name="message_content_in_queue">Das Hochladen von Dateien ist in Bearbeitung. Tippen Sie auf Bestätigen, um ohne laufende Dateien fortzufahren.</string>
+    <string name="no_attached_files">Keine angehängten Dateien</string>
 </resources>

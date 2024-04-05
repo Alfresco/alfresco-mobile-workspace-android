@@ -18,7 +18,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
-import com.alfresco.content.data.payloads.FieldType
+import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentAttachFilesBinding
@@ -70,16 +70,18 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         binding.refreshLayout.isRefreshing = false
         binding.loading.isVisible = false
 
-        val fields = state.formFields.find { it.type == FieldType.UPLOAD.value() }!!
+        val field = viewModel.selectedField
 
         handler.post {
-            val isError = (fields.required && state.listContents.isEmpty())
-            if (state.listContents.isNotEmpty()) {
-                viewModel.updateFieldValue(fields.id, state.listContents, state, Pair(isError, ""))
-                binding.tvNoOfAttachments.visibility = View.VISIBLE
-                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
-            } else {
-                binding.tvNoOfAttachments.visibility = View.GONE
+            field?.let { data ->
+                val isError = (data.required && state.listContents.isEmpty())
+                if (state.listContents.isNotEmpty()) {
+                    viewModel.updateFieldValue(data.id, state.listContents, state, Pair(isError, ""))
+                    binding.tvNoOfAttachments.visibility = View.VISIBLE
+                    binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                } else {
+                    binding.tvNoOfAttachments.visibility = View.GONE
+                }
             }
         }
 
@@ -93,7 +95,15 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
 
     private fun epoxyController() = simpleController(viewModel) { state ->
 
-        if (state.listContents.isNotEmpty()) {
+        if (state.listContents.isEmpty()) {
+            val args = viewModel.emptyMessageArgs(state)
+            listViewMessage {
+                id("empty_message")
+                iconRes(args.first)
+                title(args.second)
+                message(args.third)
+            }
+        } else if (state.listContents.isNotEmpty()) {
             state.listContents.forEach { obj ->
                 listViewAttachmentRow {
                     id(stableId(obj))

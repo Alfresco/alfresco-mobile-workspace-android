@@ -41,5 +41,5 @@
     <string name="dialog_positive_button_task">Confirm</string>
     <string name="text_complete">Complete</string><string name="title_content_in_queue">Warning</string>
     <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
-
+    <string name="no_attached_files">No Attached Files</string>
 </resources>

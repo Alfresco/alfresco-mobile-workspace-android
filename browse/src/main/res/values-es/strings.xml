@@ -62,7 +62,6 @@
     <string name="text_view_all">Ver todo</string>
     <string name="text_multiple_comments">%d comentarios</string>
     <string name="text_attached_files">Ficheros adjuntos</string>
-    <string name="no_attached_files">No hay ficheros adjuntos</string>
     <string name="empty_no_due_date">Sin fecha de vencimiento</string>
     <string name="dialog_title_complete_task">Completar tarea</string>
     <string name="dialog_message_complete_task">¿Está seguro de que desea completar esta tarea? Ya no podrá realizar ningún cambio.</string>

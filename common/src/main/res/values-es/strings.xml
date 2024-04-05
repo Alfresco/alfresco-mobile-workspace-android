@@ -41,4 +41,5 @@
     <string name="text_complete">Por completar</string>
     <string name="title_content_in_queue">Advertencia</string>
     <string name="message_content_in_queue">La carga de ficheros está en curso. Toque Confirmar para continuar sin los ficheros en curso.</string>
+    <string name="no_attached_files">No hay ficheros adjuntos</string>
 </resources>

@@ -53,7 +53,6 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 },
                 errorData = errorData,
                 fieldsData = field,
-
             )
         }
 
@@ -202,7 +201,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 navController = navController,
                 onUserTap = {
                     if (it) {
-                        viewModel.folderFieldId = field.id
+                        viewModel.selectedField = field
                     }
                 },
             )

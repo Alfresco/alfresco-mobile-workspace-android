@@ -62,7 +62,6 @@
     <string name="text_view_all">Afficher tout</string>
     <string name="text_multiple_comments">%d commentaires</string>
     <string name="text_attached_files">Fichiers joints</string>
-    <string name="no_attached_files">Aucun fichier joint</string>
     <string name="empty_no_due_date">Aucune date d\'échéance</string>
     <string name="dialog_title_complete_task">Terminer la tâche</string>
     <string name="dialog_message_complete_task">Voulez-vous vraiment terminer cette tâche ? Vous ne pourrez plus faire de modifications.</string>

@@ -3,6 +3,7 @@ package com.alfresco.content.data.payloads
 import android.os.Parcelable
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.process.models.FieldParams
+import com.alfresco.process.models.FieldSource
 import com.alfresco.process.models.Fields
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
@@ -130,10 +131,32 @@ enum class FieldType {
 }
 
 @Parcelize
-data class Params(val fractionLength: Int = 0) : Parcelable {
+data class Params(
+    val fractionLength: Int = 0,
+    val multiple: Boolean = false,
+    val fileSource: FileSourceData? = null,
+) : Parcelable {
     companion object {
         fun with(raw: FieldParams?): Params {
-            return Params(raw?.fractionLength ?: 0)
+            return Params(
+                raw?.fractionLength ?: 0,
+                raw?.multiple ?: false,
+                FileSourceData.with(raw?.fileSource),
+            )
+        }
+    }
+}
+
+@Parcelize
+data class FileSourceData(
+    val serviceId: String = "",
+    val name: String = "",
+) : Parcelable {
+    companion object {
+        fun with(
+            raw: FieldSource?,
+        ): FileSourceData {
+            return FileSourceData(raw?.serviceId ?: "", raw?.name ?: "")
         }
     }
 }

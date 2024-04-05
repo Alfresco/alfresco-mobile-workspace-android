@@ -123,12 +123,12 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     override fun onAttachFolder(entry: ParentEntry) = withState(viewModel) {
         if (isAdded) {
             viewModel.updateFieldValue(
-                viewModel.folderFieldId,
+                viewModel.selectedField?.id ?: "",
                 (entry as Entry).id,
                 it,
                 Pair(false, ""),
             )
-            viewModel.folderFieldId = ""
+            viewModel.selectedField = null
         }
     }
 

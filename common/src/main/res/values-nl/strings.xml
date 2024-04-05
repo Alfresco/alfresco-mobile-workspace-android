@@ -41,4 +41,5 @@
     <string name="text_complete">Voltooien</string>
     <string name="title_content_in_queue">Waarschuwing</string>
     <string name="message_content_in_queue">Er worden bestanden geüpload. Tik om te bevestigen dat u wilt doorgaan zonder de bestanden in uitvoering.</string>
+    <string name="no_attached_files">Geen bijgevoegde bestanden</string>
 </resources>

@@ -24,9 +24,9 @@ abstract class ProcessBaseFragment : Fragment(), DeleteContentListener {
         listener = this
     }
 
-    internal fun showCreateSheet(state: FormViewState, observerID: String) {
+    internal fun showCreateSheet(state: ProcessAttachFilesViewState, observerID: String) {
         AnalyticsManager().taskEvent(EventName.UploadProcessAttachment)
-        CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID)).show(childFragmentManager, null)
+        CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID, state.parent.field.id)).show(childFragmentManager, null)
     }
 
     /**

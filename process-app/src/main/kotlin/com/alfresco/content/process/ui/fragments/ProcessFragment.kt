@@ -23,6 +23,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentProcessBinding
 import com.alfresco.content.process.ui.components.updateProcessList
@@ -127,6 +128,21 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
                 (entry as Entry).id,
                 it,
                 Pair(false, ""),
+            )
+            viewModel.selectedField = null
+        }
+    }
+
+    override fun onAttachFiles(field: FieldsData) = withState(viewModel) { state ->
+        if (isAdded) {
+            val listContents = viewModel.getContents(state, field.id)
+            val isError = field.required && listContents.isEmpty()
+
+            viewModel.updateFieldValue(
+                field.id,
+                listContents,
+                state,
+                Pair(isError, ""),
             )
             viewModel.selectedField = null
         }

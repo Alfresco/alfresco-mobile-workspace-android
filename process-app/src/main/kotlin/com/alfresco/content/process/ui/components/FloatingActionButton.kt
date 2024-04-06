@@ -13,7 +13,9 @@ import androidx.compose.ui.res.stringResource
 import com.airbnb.mvrx.compose.collectAsState
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.ProcessFragment
@@ -33,7 +35,15 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                 )
                 ComponentBuilder(context, componentData)
                     .onApply { name, query, _ ->
-                        val entry = state.listContents.find { it.isUpload }
+                        val list = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
+                            .map { it.value as? List<*> ?: emptyList<Entry>() }.flatten()
+
+                        val uploadList = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
+
+                        val entry = uploadList.flatMap { fieldsData ->
+                            (fieldsData.value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
+                        }.find { !it.isUpload }
+
                         if (entry != null) {
                             viewModel.optionsModel = OptionsModel(id = query, name = name)
                             fragment.confirmContentQueuePrompt()

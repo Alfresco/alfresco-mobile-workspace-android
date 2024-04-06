@@ -1,5 +1,6 @@
 package com.alfresco.content.process.ui.composeviews
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,10 +9,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.airbnb.mvrx.Mavericks
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.data.payloads.UploadData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.components.AmountInputField
 import com.alfresco.content.process.ui.components.AttachFilesField
@@ -188,10 +192,31 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.UPLOAD.value() -> {
+            val listContents = (field.value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
+
             AttachFilesField(
-                contents = state.listContents,
+                contents = listContents,
                 fieldsData = field,
                 navController = navController,
+                onUserTap = {
+                    if (it) {
+                        viewModel.selectedField = field
+
+                        val bundle = Bundle().apply {
+                            putParcelable(
+                                Mavericks.KEY_ARG,
+                                UploadData(
+                                    field = field,
+                                    process = state.parent,
+                                ),
+                            )
+                        }
+                        navController.navigate(
+                            R.id.action_nav_process_form_to_nav_attach_files,
+                            bundle,
+                        )
+                    }
+                },
             )
         }
 

@@ -39,6 +39,7 @@ data class ActionUploadFiles(
                         }
                     }
                 }
+
                 else -> {}
             }
             withContext(Dispatchers.IO) {
@@ -48,6 +49,7 @@ data class ActionUploadFiles(
                         it,
                         getParentId(entry),
                         uploadServerType = entry.uploadServer,
+                        observerId = entry.observerID,
                     )
                 }
                 repository.setTotalTransferSize(result.size)

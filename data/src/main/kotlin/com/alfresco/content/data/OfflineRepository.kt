@@ -193,6 +193,7 @@ class OfflineRepository(otherSession: Session? = null) {
         parentId: String,
         isExtension: Boolean = false,
         uploadServerType: UploadServerType = UploadServerType.DEFAULT,
+        observerId: String? = null,
     ) {
         val resolver = context.contentResolver
         var name: String? = null
@@ -217,9 +218,12 @@ class OfflineRepository(otherSession: Session? = null) {
             offlineStatus = OfflineStatus.PENDING,
             isExtension = isExtension,
             uploadServer = uploadServerType,
+            observerID = observerId ?: "",
         )
 
-        clearData()
+        if (observerId == null) {
+            clearData()
+        }
 
         update(entry)
 
@@ -275,10 +279,37 @@ class OfflineRepository(otherSession: Session? = null) {
             .build()
             .find()
 
+    fun fetchProcessEntries(parentId: String, observerId: String): MutableList<Entry> {
+        val query = box.query()
+            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.observerID, observerId, StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
+            .order(Entry_.name)
+            .build()
+        val list = query.find()
+        return list
+    }
+
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
     fun observeUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT): Flow<List<Entry>> = callbackFlow {
+        val query = box.query()
+            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+            .equal(Entry_.isUpload, true)
+            .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
+            .order(Entry_.name)
+            .build()
+        val subscription = query.subscribe().observer {
+            trySendBlocking(it)
+        }
+        awaitClose { subscription.cancel() }
+    }
+
+    /**
+     * returns the list of uploads which is being uploaded on the server.
+     */
+    fun observeProcessUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT): Flow<List<Entry>> = callbackFlow {
         val query = box.query()
             .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
             .equal(Entry_.isUpload, true)

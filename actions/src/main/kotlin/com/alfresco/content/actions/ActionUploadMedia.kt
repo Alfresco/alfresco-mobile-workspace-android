@@ -36,6 +36,7 @@ data class ActionUploadMedia(
                         }
                     }
                 }
+
                 else -> {}
             }
             withContext(Dispatchers.IO) {
@@ -45,6 +46,7 @@ data class ActionUploadMedia(
                         it,
                         getParentId(entry),
                         uploadServerType = entry.uploadServer,
+                        observerId = entry.observerID,
                     )
                 }
                 repository.setTotalTransferSize(result.size)

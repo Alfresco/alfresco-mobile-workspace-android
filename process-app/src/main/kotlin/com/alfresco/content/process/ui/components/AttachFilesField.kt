@@ -35,6 +35,7 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 fun AttachFilesField(
     contents: List<Entry> = emptyList(),
     fieldsData: FieldsData = FieldsData(),
+    onUserTap: (Boolean) -> Unit = { },
     navController: NavController,
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
@@ -70,9 +71,7 @@ fun AttachFilesField(
             )
 
             IconButton(onClick = {
-                navController.navigate(
-                    R.id.action_nav_process_form_to_nav_attach_files,
-                )
+                onUserTap(true)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,

@@ -90,6 +90,7 @@ data class Entry(
     val uploadServer: UploadServerType = UploadServerType.DEFAULT,
     val isReadOnly: Boolean = false,
     var isSelectedForMultiSelection: Boolean = false,
+    var observerID: String = "",
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -146,6 +147,7 @@ data class Entry(
             isFavorite = other.isFavorite,
             canDelete = other.canDelete,
             otherId = other.otherId,
+            observerID = other.observerID,
         )
 
     enum class Type {
@@ -395,7 +397,7 @@ data class Entry(
         /**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj
          */
-        fun with(data: ContentDataEntry, parentId: String? = null, uploadServer: UploadServerType): Entry {
+        fun with(data: ContentDataEntry, parentId: String? = null, uploadServer: UploadServerType, observerID: String = ""): Entry {
             return Entry(
                 id = data.id?.toString() ?: "",
                 parentId = parentId,
@@ -412,6 +414,7 @@ data class Entry(
                 previewStatus = data.previewStatus,
                 thumbnailStatus = data.thumbnailStatus,
                 uploadServer = uploadServer,
+                observerID = observerID,
             )
         }
 
@@ -432,8 +435,8 @@ data class Entry(
         /**
          * return the default Workflow content entry obj
          */
-        fun defaultWorkflowEntry(id: String?): Entry {
-            return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id)
+        fun defaultWorkflowEntry(id: String?, fieldId: String = ""): Entry {
+            return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id, observerID = fieldId)
         }
 
         fun withSelectedEntries(entries: List<Entry>): Entry {

@@ -5,10 +5,11 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UploadServerType
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.R
 import kotlinx.coroutines.Job
 
@@ -19,11 +20,20 @@ class ProcessAttachFilesViewModel(
 ) : MavericksViewModel<ProcessAttachFilesViewState>(state) {
 
     private var observeUploadsJob: Job? = null
-    var observerID: String = ""
-    private var entryListener: EntryListener? = null
+    var parentId: String = ""
 
     init {
-        observeUploads(state)
+
+        val field = state.parent.field
+
+        when (field.type) {
+            FieldType.READONLY.value(), FieldType.READONLY_TEXT.value() -> {
+                setState { copy(listContents = field.getContentList(), baseEntries = field.getContentList()) }
+            }
+            else -> {
+                observeUploads(state)
+            }
+        }
     }
 
     /**
@@ -34,19 +44,20 @@ class ProcessAttachFilesViewModel(
     /**
      * delete content locally
      */
-    fun deleteAttachment(contentId: String) = stateFlow.execute {
-        deleteUploads(contentId, observerID)
+    fun deleteAttachment(entry: Entry) = stateFlow.execute {
+        OfflineRepository().remove(entry)
+        deleteUploads(entry.id)
     }
 
     private fun observeUploads(state: ProcessAttachFilesViewState) {
         val process = state.parent.process
 
-        observerID = process.id
+        parentId = process.id
 
         val repo = OfflineRepository()
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeProcessUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
+        observeUploadsJob = repo.observeProcessUploads(parentId, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
                     updateUploads(state.parent.field.id, it())
@@ -54,10 +65,6 @@ class ProcessAttachFilesViewModel(
                     this
                 }
             }
-    }
-
-    fun setListener(listener: EntryListener) {
-        entryListener = listener
     }
 
     fun emptyMessageArgs(state: ProcessAttachFilesViewState) =

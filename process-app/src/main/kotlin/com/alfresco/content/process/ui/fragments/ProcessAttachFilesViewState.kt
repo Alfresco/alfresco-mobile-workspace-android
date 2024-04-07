@@ -16,9 +16,9 @@ data class ProcessAttachFilesViewState(
     /**
      * delete content locally and update UI
      */
-    fun deleteUploads(contentId: String, observerId: String): ProcessAttachFilesViewState {
-        val listBaseEntries = baseEntries.filter { it.observerID == observerId }.filter { it.id != contentId }
-        val listUploads = uploads.filter { it.observerID == observerId }.filter { it.id != contentId }
+    fun deleteUploads(contentId: String): ProcessAttachFilesViewState {
+        val listBaseEntries = baseEntries.filter { it.observerID == parent.field.id }.filter { it.id != contentId }
+        val listUploads = uploads.filter { it.observerID == parent.field.id }.filter { it.id != contentId }
         return copyIncludingUploads(listBaseEntries, listUploads)
     }
 

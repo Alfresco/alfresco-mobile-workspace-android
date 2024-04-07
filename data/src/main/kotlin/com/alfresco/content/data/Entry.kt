@@ -378,6 +378,19 @@ data class Entry(
             ).withOfflineStatus()
         }
 
+        fun with(contentEntry: ContentEntry): Entry {
+            return Entry(
+                id = contentEntry.id.toString(),
+                name = contentEntry.name,
+                userGroupDetails = contentEntry.userDetails,
+                hasLink = contentEntry.hasLink,
+                isRelatedContent = contentEntry.isRelatedContent,
+                isContentAvailable = contentEntry.isContentAvailable,
+                mimeType = contentEntry.mimeType,
+
+            )
+        }
+
         /**
          * return the Entry obj by using the contentEntry obj.
          */

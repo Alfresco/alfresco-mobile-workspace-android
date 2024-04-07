@@ -23,8 +23,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
@@ -36,7 +34,6 @@ fun AttachFilesField(
     contents: List<Entry> = emptyList(),
     fieldsData: FieldsData = FieldsData(),
     onUserTap: (Boolean) -> Unit = { },
-    navController: NavController,
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
     val labelWithAsterisk = buildAnnotatedString {
@@ -96,5 +93,5 @@ fun AttachFilesField(
 @Preview
 @Composable
 fun AttachFilesFieldPreview() {
-    AttachFilesField(navController = rememberNavController())
+    AttachFilesField()
 }

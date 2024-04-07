@@ -81,5 +81,5 @@ interface DeleteContentListener {
     /**
      * It will get call on confirm delete.
      */
-    fun onConfirmDelete(contentId: String)
+    fun onConfirmDelete(entry: Entry)
 }

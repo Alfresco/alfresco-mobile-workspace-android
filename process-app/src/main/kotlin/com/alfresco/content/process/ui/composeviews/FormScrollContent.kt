@@ -167,6 +167,23 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
             ReadOnlyField(
                 textFieldValue = textFieldValue,
                 fieldsData = field,
+                onUserTap = {
+                    if (it && field.value is List<*>) {
+                        val bundle = Bundle().apply {
+                            putParcelable(
+                                Mavericks.KEY_ARG,
+                                UploadData(
+                                    field = field,
+                                    process = state.parent,
+                                ),
+                            )
+                        }
+                        navController.navigate(
+                            R.id.action_nav_process_form_to_nav_attach_files,
+                            bundle,
+                        )
+                    }
+                },
             )
         }
 
@@ -197,7 +214,6 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
             AttachFilesField(
                 contents = listContents,
                 fieldsData = field,
-                navController = navController,
                 onUserTap = {
                     if (it) {
                         viewModel.selectedField = field

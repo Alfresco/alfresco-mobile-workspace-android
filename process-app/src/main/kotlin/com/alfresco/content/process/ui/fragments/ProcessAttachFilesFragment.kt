@@ -19,6 +19,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.process.R
@@ -66,8 +67,8 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         })
     }
 
-    override fun onConfirmDelete(contentId: String) {
-        viewModel.deleteAttachment(contentId)
+    override fun onConfirmDelete(entry: Entry) {
+        viewModel.deleteAttachment(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -86,12 +87,20 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
             }
         }
 
-        binding.fabAddAttachments.visibility = View.VISIBLE
-        binding.fabAddAttachments.setOnClickListener {
-            showCreateSheet(state, viewModel.observerID)
-        }
+        binding.fabAddAttachments.visibility = if (hasContentAddButton(state)) View.VISIBLE else View.GONE
 
+        binding.fabAddAttachments.setOnClickListener {
+            showCreateSheet(state, viewModel.parentId)
+        }
         epoxyController.requestModelBuild()
+    }
+
+    private fun hasContentAddButton(state: ProcessAttachFilesViewState): Boolean {
+        val field = state.parent.field
+        if (field.type == FieldType.READONLY.value() || field.type == FieldType.READONLY_TEXT.value()) {
+            return false
+        }
+        return !(field.params?.multiple == false && state.listContents.isNotEmpty())
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
@@ -109,7 +118,7 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data()) }
                 }
             }
         }

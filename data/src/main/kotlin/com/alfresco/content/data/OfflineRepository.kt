@@ -250,6 +250,7 @@ class OfflineRepository(otherSession: Session? = null) {
         description: String,
         mimeType: String,
         uploadServerType: UploadServerType,
+        observerId: String? = null,
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
         val entry = Entry(
@@ -261,9 +262,13 @@ class OfflineRepository(otherSession: Session? = null) {
             isUpload = true,
             offlineStatus = OfflineStatus.PENDING,
             uploadServer = uploadServerType,
+            observerID = observerId ?: "",
         )
 
-        clearData()
+        if (observerId == null) {
+            clearData()
+        }
+
         update(entry)
 
         val dest = File(session.uploadDir, entry.boxId.toString())

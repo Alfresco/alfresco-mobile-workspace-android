@@ -28,7 +28,7 @@ data class ActionUploadFiles(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
+        val result = ContentPickerFragment.pickItems(context, MIME_TYPES, entry.isMultiple)
         if (result.isNotEmpty()) {
             when (entry.uploadServer) {
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {

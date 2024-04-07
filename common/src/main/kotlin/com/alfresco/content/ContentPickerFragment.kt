@@ -10,6 +10,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 class ContentPickerFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var requestLauncherSingle: ActivityResultLauncher<Array<String>>
     private var onResult: CancellableContinuation<List<Uri>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +19,20 @@ class ContentPickerFragment : Fragment() {
         requestLauncher = registerForActivityResult(GetMultipleContents()) {
             onResult?.resume(it, null)
         }
+
+        requestLauncherSingle = registerForActivityResult(GetSingleContent()) {
+            onResult?.resume(it, null)
+        }
     }
 
-    private suspend fun pickItems(mimeTypes: Array<String>): List<Uri> =
+    private suspend fun pickItems(mimeTypes: Array<String>, isMultiple: Boolean): List<Uri> =
         suspendCancellableCoroutine { continuation ->
             onResult = continuation
-            requestLauncher.launch(mimeTypes)
+            if (!isMultiple) {
+                requestLauncherSingle.launch(mimeTypes)
+            } else {
+                requestLauncher.launch(mimeTypes)
+            }
         }
 
     companion object {
@@ -32,11 +41,12 @@ class ContentPickerFragment : Fragment() {
         suspend fun pickItems(
             context: Context,
             mimeTypes: Array<String>,
+            isMultiple: Boolean = false,
         ): List<Uri> =
             withFragment(
                 context,
                 TAG,
-                { it.pickItems(mimeTypes) },
+                { it.pickItems(mimeTypes, isMultiple) },
                 { ContentPickerFragment() },
             )
     }

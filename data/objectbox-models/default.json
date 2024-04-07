@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3882697123829827748",
-      "lastPropertyId": "33:8784310188115192790",
+      "lastPropertyId": "34:9044184444890640140",
       "name": "Entry",
       "properties": [
         {
@@ -158,6 +158,11 @@
           "id": "33:8784310188115192790",
           "name": "observerID",
           "type": 9
+        },
+        {
+          "id": "34:9044184444890640140",
+          "name": "isMultiple",
+          "type": 1
         }
       ],
       "relations": []

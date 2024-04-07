@@ -91,6 +91,7 @@ data class Entry(
     val isReadOnly: Boolean = false,
     var isSelectedForMultiSelection: Boolean = false,
     var observerID: String = "",
+    var isMultiple: Boolean = false,
 ) : ParentEntry(), Parcelable {
 
     val isSynced: Boolean
@@ -448,8 +449,8 @@ data class Entry(
         /**
          * return the default Workflow content entry obj
          */
-        fun defaultWorkflowEntry(id: String?, fieldId: String = ""): Entry {
-            return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id, observerID = fieldId)
+        fun defaultWorkflowEntry(id: String?, fieldId: String = "", isMultiple: Boolean = false): Entry {
+            return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id, observerID = fieldId, isMultiple = isMultiple)
         }
 
         fun withSelectedEntries(entries: List<Entry>): Entry {

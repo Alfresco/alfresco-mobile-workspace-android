@@ -4,7 +4,6 @@ package com.alfresco.content.data
 import android.os.Parcelable
 import com.alfresco.process.models.ContentDataEntry
 import kotlinx.parcelize.Parcelize
-import java.time.ZonedDateTime
 
 /**
  * Marked as ContentEntry class
@@ -14,7 +13,6 @@ import java.time.ZonedDateTime
 data class ContentEntry(
     val id: Int = 0,
     val name: String = "",
-    val created: ZonedDateTime? = null,
     val userDetails: UserGroupDetails? = null,
     val isRelatedContent: Boolean? = false,
     val isContentAvailable: Boolean? = false,
@@ -34,7 +32,6 @@ data class ContentEntry(
             return ContentEntry(
                 id = data.id ?: 0,
                 name = data.name ?: "",
-                created = data.created,
                 userDetails = data.createdBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
                 isRelatedContent = data.relatedContent,
                 isContentAvailable = data.contentAvailable,

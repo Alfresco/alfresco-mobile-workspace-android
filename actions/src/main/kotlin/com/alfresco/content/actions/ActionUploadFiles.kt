@@ -28,7 +28,7 @@ data class ActionUploadFiles(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
+        val result = ContentPickerFragment.pickItems(context, MIME_TYPES, entry.isMultiple)
         if (result.isNotEmpty()) {
             when (entry.uploadServer) {
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
@@ -39,6 +39,7 @@ data class ActionUploadFiles(
                         }
                     }
                 }
+
                 else -> {}
             }
             withContext(Dispatchers.IO) {
@@ -48,6 +49,7 @@ data class ActionUploadFiles(
                         it,
                         getParentId(entry),
                         uploadServerType = entry.uploadServer,
+                        observerId = entry.observerID,
                     )
                 }
                 repository.setTotalTransferSize(result.size)

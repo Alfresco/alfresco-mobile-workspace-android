@@ -10,27 +10,33 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.activityViewModel
+import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.AttachFilesData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.UploadServerType
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.listview.listViewMessage
 import com.alfresco.content.mimetype.MimeType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentAttachFilesBinding
 import com.alfresco.content.process.ui.epoxy.listViewAttachmentRow
 import com.alfresco.content.simpleController
+import com.alfresco.events.EventBus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Marked as ProcessAttachFilesFragment class
  */
 class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryListener {
 
-    val viewModel: FormViewModel by activityViewModel()
+    val viewModel: ProcessAttachFilesViewModel by fragmentViewModel()
     private lateinit var binding: FragmentAttachFilesBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
 
@@ -61,8 +67,8 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         })
     }
 
-    override fun onConfirmDelete(contentId: String) {
-        viewModel.deleteAttachment(contentId)
+    override fun onConfirmDelete(entry: Entry) {
+        viewModel.deleteAttachment(entry)
     }
 
     override fun invalidate() = withState(viewModel) { state ->
@@ -70,13 +76,9 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         binding.refreshLayout.isRefreshing = false
         binding.loading.isVisible = false
 
-        val field = viewModel.selectedField
-
         handler.post {
-            field?.let { data ->
-                val isError = (data.required && state.listContents.isEmpty())
+            if (isAdded) {
                 if (state.listContents.isNotEmpty()) {
-                    viewModel.updateFieldValue(data.id, state.listContents, state, Pair(isError, ""))
                     binding.tvNoOfAttachments.visibility = View.VISIBLE
                     binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
                 } else {
@@ -85,12 +87,20 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
             }
         }
 
-        binding.fabAddAttachments.visibility = View.VISIBLE
-        binding.fabAddAttachments.setOnClickListener {
-            showCreateSheet(state, viewModel.observerID)
-        }
+        binding.fabAddAttachments.visibility = if (hasContentAddButton(state)) View.VISIBLE else View.GONE
 
+        binding.fabAddAttachments.setOnClickListener {
+            showCreateSheet(state, viewModel.parentId)
+        }
         epoxyController.requestModelBuild()
+    }
+
+    private fun hasContentAddButton(state: ProcessAttachFilesViewState): Boolean {
+        val field = state.parent.field
+        if (field.type == FieldType.READONLY.value() || field.type == FieldType.READONLY_TEXT.value()) {
+            return false
+        }
+        return !(field.params?.multiple == false && state.listContents.isNotEmpty())
     }
 
     private fun epoxyController() = simpleController(viewModel) { state ->
@@ -103,12 +113,12 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
                 title(args.second)
                 message(args.third)
             }
-        } else if (state.listContents.isNotEmpty()) {
+        } else {
             state.listContents.forEach { obj ->
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data()) }
                 }
             }
         }
@@ -133,5 +143,14 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         if (isAdded) {
             localViewerIntent(entry as Entry)
         }
+    }
+
+    override fun onDestroy() {
+        withState(viewModel) {
+            CoroutineScope(Dispatchers.Main).launch {
+                EventBus.default.send(AttachFilesData(it.parent.field))
+            }
+        }
+        super.onDestroy()
     }
 }

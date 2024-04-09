@@ -328,6 +328,7 @@ class TaskRepository {
                 ),
                 local.parentId,
                 uploadServer = uploadServerType,
+                observerID = local.observerID,
             )
 
             else -> Entry()

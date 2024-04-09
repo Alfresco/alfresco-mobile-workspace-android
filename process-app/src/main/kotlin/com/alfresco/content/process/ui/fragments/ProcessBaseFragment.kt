@@ -24,9 +24,10 @@ abstract class ProcessBaseFragment : Fragment(), DeleteContentListener {
         listener = this
     }
 
-    internal fun showCreateSheet(state: FormViewState, observerID: String) {
+    internal fun showCreateSheet(state: ProcessAttachFilesViewState, observerID: String) {
         AnalyticsManager().taskEvent(EventName.UploadProcessAttachment)
-        CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID)).show(childFragmentManager, null)
+        val field = state.parent.field
+        CreateActionsSheet.with(Entry.defaultWorkflowEntry(observerID, field.id, field.params?.multiple ?: false)).show(childFragmentManager, null)
     }
 
     /**
@@ -81,5 +82,5 @@ interface DeleteContentListener {
     /**
      * It will get call on confirm delete.
      */
-    fun onConfirmDelete(contentId: String)
+    fun onConfirmDelete(entry: Entry)
 }

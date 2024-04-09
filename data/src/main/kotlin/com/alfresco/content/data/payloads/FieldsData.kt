@@ -1,12 +1,16 @@
 package com.alfresco.content.data.payloads
 
 import android.os.Parcelable
+import com.alfresco.content.data.ContentEntry
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.process.models.FieldParams
 import com.alfresco.process.models.FieldSource
 import com.alfresco.process.models.Fields
+import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
+import org.json.JSONObject
 
 /**
  * Marked as FieldsData
@@ -39,6 +43,8 @@ data class FieldsData(
     var displayText: String? = null,
     var errorData: Pair<Boolean, String> = Pair(false, ""),
 ) : Parcelable {
+
+    fun getContentList() = (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it) } ?: emptyList()
 
     companion object {
         /**

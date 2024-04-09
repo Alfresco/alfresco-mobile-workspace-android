@@ -10,13 +10,14 @@ import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.AttachFilesData
 import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.DefaultOutcomesID
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.TaskRepository
-import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
@@ -25,10 +26,7 @@ import com.alfresco.content.getFormattedDate
 import com.alfresco.content.process.R
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class FormViewModel(
     val state: FormViewState,
@@ -36,14 +34,13 @@ class FormViewModel(
     private val repository: TaskRepository,
 ) : MavericksViewModel<FormViewState>(state) {
 
-    private var observeUploadsJob: Job? = null
-    var observerID: String = ""
     var selectedField: FieldsData? = null
     private var entryListener: EntryListener? = null
     var optionsModel: OptionsModel? = null
 
     init {
-        observerID = UUID.randomUUID().toString()
+
+        OfflineRepository().removeCompletedUploads()
 
         if (state.parent.processInstanceId != null) {
             getTaskForms(state.parent)
@@ -56,38 +53,18 @@ class FormViewModel(
                 entryListener?.onAttachFolder(entry)
             }
         }
+
+        viewModelScope.on<AttachFilesData> {
+            it.field?.let { field ->
+                entryListener?.onAttachFiles(field)
+            }
+        }
     }
 
     /**
      * returns the current logged in APS user profile data
      */
     fun getAPSUser() = repository.getAPSUser()
-
-    /**
-     * delete content locally
-     */
-    fun deleteAttachment(contentId: String) = stateFlow.execute {
-        deleteUploads(contentId)
-    }
-
-    private fun observeUploads(state: FormViewState) {
-        requireNotNull(state.parent)
-
-        val repo = OfflineRepository()
-
-        // On refresh clean completed uploads
-        repo.removeCompletedUploads()
-
-        observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
-            .execute {
-                if (it is Success) {
-                    updateUploads(it())
-                } else {
-                    this
-                }
-            }
-    }
 
     private fun singleProcessDefinition(appDefinitionId: String) = withState { state ->
         viewModelScope.launch {
@@ -129,9 +106,6 @@ class FormViewModel(
                             processOutcomes = it().outcomes,
                             requestForm = Success(it()),
                         )
-
-                        observeUploads(updatedState)
-
                         val hasAllRequiredData = hasFieldValidData(fields)
                         updateStateData(hasAllRequiredData, fields)
 
@@ -207,6 +181,7 @@ class FormViewModel(
                         updatedValue = null
                     }
                 }
+
                 updatedFieldList.add(FieldsData.withUpdateField(field, updatedValue, errorData))
             } else {
                 updatedFieldList.add(field)
@@ -320,35 +295,36 @@ class FormViewModel(
     private fun convertFieldsToValues(fields: List<FieldsData>): Map<String, Any?> {
         val values = mutableMapOf<String, Any?>()
 
-        fields.forEach {
-            when (it.type) {
+        fields.forEach { field ->
+            when (field.type) {
                 FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
                     when {
-                        it.value != null -> {
-                            values[it.id] = convertModelToMapValues(it.value as? UserGroupDetails)
+                        field.value != null -> {
+                            values[field.id] = convertModelToMapValues(field.value as? UserGroupDetails)
                         }
 
                         else -> {
-                            values[it.id] = null
+                            values[field.id] = null
                         }
                     }
                 }
 
                 FieldType.DATETIME.value(), FieldType.DATE.value() -> {
-                    val convertedDate = (it.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
-                    values[it.id] = convertedDate
+                    val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
+                    values[field.id] = convertedDate
                 }
 
                 FieldType.RADIO_BUTTONS.value(), FieldType.DROPDOWN.value() -> {
-                    values[it.id] = convertModelToMapValues(it)
+                    values[field.id] = convertModelToMapValues(field)
                 }
 
                 FieldType.UPLOAD.value() -> {
-                    values[it.id] = state.listContents.joinToString(separator = ",") { content -> content.id }
+                    val listContents = (field.value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
+                    values[field.id] = listContents.joinToString(separator = ",") { content -> content.id }
                 }
 
                 else -> {
-                    values[it.id] = it.value
+                    values[field.id] = field.value
                 }
             }
         }
@@ -369,6 +345,8 @@ class FormViewModel(
     fun setListener(listener: EntryListener) {
         entryListener = listener
     }
+
+    fun getContents(state: FormViewState, fieldId: String) = OfflineRepository().fetchProcessEntries(parentId = state.parent.id, observerId = fieldId)
 
     fun emptyMessageArgs(state: FormViewState) =
         when {

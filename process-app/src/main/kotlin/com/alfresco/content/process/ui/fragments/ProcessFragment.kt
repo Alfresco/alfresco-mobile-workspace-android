@@ -121,7 +121,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         binding.loading.isVisible = state.requestForm is Loading || state.requestStartWorkflow is Loading ||
             state.requestSaveForm is Loading || state.requestOutcomes is Loading
 
-        if (state.requestStartWorkflow is Success || state.requestSaveForm is Success) {
+        if (state.requestStartWorkflow is Success || state.requestSaveForm is Success || state.requestOutcomes is Success) {
             viewModel.updateProcessList()
             requireActivity().finish()
         }

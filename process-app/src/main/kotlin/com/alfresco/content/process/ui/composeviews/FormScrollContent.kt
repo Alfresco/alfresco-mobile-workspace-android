@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import com.airbnb.mvrx.Mavericks
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ProcessEntry
-import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.data.payloads.UploadData
@@ -162,10 +161,8 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.READONLY_TEXT.value(), FieldType.READONLY.value() -> {
-            val textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
-
             ReadOnlyField(
-                textFieldValue = textFieldValue,
+                viewModel = viewModel,
                 fieldsData = field,
                 onUserTap = {
                     if (it && field.value is List<*>) {
@@ -188,7 +185,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
-            var userDetailValue by remember { mutableStateOf(field.value as? UserGroupDetails) }
+            var userDetailValue by remember { mutableStateOf(field.getUserGroupDetails(viewModel.getAPSUser())) }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
 
             PeopleField(

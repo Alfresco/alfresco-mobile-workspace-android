@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.alfresco.content.data.ContentEntry
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OptionsModel
+import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.process.models.FieldParams
 import com.alfresco.process.models.FieldSource
 import com.alfresco.process.models.Fields
@@ -45,6 +46,22 @@ data class FieldsData(
 ) : Parcelable {
 
     fun getContentList() = (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it) } ?: emptyList()
+
+    fun getUserGroupDetails(apsUser: UserGroupDetails?): UserGroupDetails? {
+        if (value == null) {
+            return null
+        }
+
+        val userGroupDetails = Gson().fromJson(JSONObject(value as Map<String, UserGroupDetails>).toString(), UserGroupDetails::class.java)
+
+        val isAssigneeUser = apsUser?.id == userGroupDetails.id
+
+        if (isAssigneeUser) {
+            return UserGroupDetails.with(userGroupDetails)
+        }
+
+        return userGroupDetails
+    }
 
     companion object {
         /**
@@ -141,6 +158,8 @@ data class Params(
     val fractionLength: Int = 0,
     val multiple: Boolean = false,
     val fileSource: FileSourceData? = null,
+    val field: FieldsData? = null,
+    var dateDisplayFormat: String? = null,
 ) : Parcelable {
     companion object {
         fun with(raw: FieldParams?): Params {
@@ -148,6 +167,8 @@ data class Params(
                 raw?.fractionLength ?: 0,
                 raw?.multiple ?: false,
                 FileSourceData.with(raw?.fileSource),
+                field = raw?.field?.let { FieldsData.with(it) },
+                dateDisplayFormat = raw?.dateDisplayFormat,
             )
         }
     }

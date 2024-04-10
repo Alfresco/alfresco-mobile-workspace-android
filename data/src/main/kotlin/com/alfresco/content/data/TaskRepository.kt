@@ -411,6 +411,11 @@ class TaskRepository {
     suspend fun getTaskForm(taskID: String) = ResponseListForm.with(tasksService.taskForm(taskID))
 
     /**
+     * Call to fetch the task's form variables related to workflow
+     */
+    suspend fun getTaskFormVariables(taskID: String) = ResponseFormVariables.with(tasksService.taskFormVariables(taskID))
+
+    /**
      * Call to perform the outcomes
      */
     suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry) = tasksService.taskFormAction(
@@ -418,6 +423,17 @@ class TaskRepository {
         RequestOutcomes(
             outcome = outcome,
             values = convertModelToMapValues(taskEntry),
+        ),
+    )
+
+    /**
+     * Call to perform the outcomes
+     */
+    suspend fun actionCompleteOutcome(taskID: String, values: Map<String, Any?>) = tasksService.taskFormAction(
+        taskID,
+        RequestOutcomes(
+            outcome = null,
+            values = values,
         ),
     )
 

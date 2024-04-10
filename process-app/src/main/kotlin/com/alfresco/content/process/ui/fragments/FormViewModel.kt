@@ -204,7 +204,7 @@ class FormViewModel(
 
     private fun completeTask() = withState { state ->
         viewModelScope.launch {
-            repository::completeTask.asFlow(state.parent.taskEntry.id).execute {
+            repository::actionCompleteOutcome.asFlow(state.parent.taskEntry.id, convertFieldsToValues(state.formFields)).execute {
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
                     is Fail -> {

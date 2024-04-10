@@ -24,7 +24,8 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
     val state by viewModel.collectAsState()
 
     val customOutcomes = when {
-        state.formFields.isNotEmpty() && state.processOutcomes.isEmpty() -> defaultOutcomes(state)
+        state.formFields.isEmpty() -> emptyList()
+        state.processOutcomes.isEmpty() -> defaultOutcomes(state)
         else -> customOutcomes(state)
     }
 
@@ -66,24 +67,32 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
 
 @Composable
 private fun defaultOutcomes(state: FormViewState): List<OptionsModel> {
-    return if (state.parent.processInstanceId == null) {
-        listOf(
-            OptionsModel(
-                id = DefaultOutcomesID.DEFAULT_START_WORKFLOW.value(),
-                name = stringResource(id = R.string.action_start_workflow),
-            ),
-        )
-    } else {
-        listOf(
-            OptionsModel(
-                id = DefaultOutcomesID.DEFAULT_SAVE.value(),
-                name = stringResource(id = R.string.action_text_save),
-            ),
-            OptionsModel(
-                id = DefaultOutcomesID.DEFAULT_COMPLETE.value(),
-                name = stringResource(id = R.string.text_complete),
-            ),
-        )
+    if (state.parent.taskEntry.endDate != null) {
+        return emptyList()
+    }
+
+    return when (state.parent.processInstanceId) {
+        null -> {
+            listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_START_WORKFLOW.value(),
+                    name = stringResource(id = R.string.action_start_workflow),
+                ),
+            )
+        }
+
+        else -> {
+            listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_SAVE.value(),
+                    name = stringResource(id = R.string.action_text_save),
+                ),
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_COMPLETE.value(),
+                    name = stringResource(id = R.string.text_complete),
+                ),
+            )
+        }
     }
 }
 

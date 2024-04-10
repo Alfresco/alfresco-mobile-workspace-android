@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.airbnb.mvrx.Mavericks
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ProcessEntry
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
@@ -206,7 +205,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.UPLOAD.value() -> {
-            val listContents = (field.value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
+            val listContents = field.getContentList()
 
             AttachFilesField(
                 contents = listContents,

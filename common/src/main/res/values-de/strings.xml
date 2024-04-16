@@ -30,8 +30,9 @@
     <string name="title_action_mode">%d Ausgewählt</string>
     <string name="message_no_internet">Bitte überprüfen Sie Ihre Internetverbindung und starten anschließend den Vorgang erneut.</string>
     <string name="suffix_view_all">...Alle anzeigen</string>
+    <string name="title_workflow">Workflow</string>
     <string name="text_multiple_attachment">%d Anhänge</string>
-    <string name="text_add_attachments">Anhänge hinzufügen</string>
+    <string name="text_add_attachments">Dateien anhängen</string>
     <string name="title_attached_files">Angehängte Dateien</string>
     <string name="icon_file">Symbol für Datei</string>
     <string name="icon_delete_attachment">Symbol \'Anhang löschen\'</string>

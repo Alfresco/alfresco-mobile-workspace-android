@@ -27,9 +27,10 @@
     <string name="group_title">Groep</string>
     <string name="warning_message_uploading_in_progress">De upload is momenteel bezig. Wilt u doorgaan zonder uploaden?</string>
     <string name="none">Geen</string>
-    <string name="title_action_mode">%d Geselecteerd</string>
+    <string name="title_action_mode">%d seselecteerd</string>
     <string name="message_no_internet">Controleer uw internetverbinding en probeer het opnieuw.</string>
     <string name="suffix_view_all">...Alle weergeven</string>
+    <string name="title_workflow">Workflow</string>
     <string name="text_multiple_attachment">%d bijlagen</string>
     <string name="text_add_attachments">Bijlagen toevoegen</string>
     <string name="title_attached_files">Bijgevoegde bestanden</string>

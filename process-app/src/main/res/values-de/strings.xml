@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_min_length">Geben Sie mindestens %1$d Zeichen ein</string>
+    <string name="accessibility_clear_text">Text löschen</string>
+    <string name="accessibility_date_icon">Symbol für Datum</string>
+    <string name="accessibility_link_icon">Symbol für Verknüpfung</string>
+    <string name="error_min_value">Darf nicht kleiner als %1$d sein</string>
+    <string name="error_max_value">Darf nicht größer als %1$d sein</string>
+    <string name="error_invalid_format">Verwenden Sie ein anderes Zahlenformat</string>
+    <string name="error_required_field">Dies ist ein Pflichtfeld.</string>
+    <string name="title_actions">Aktionen</string>
+    <string name="accessibility_process_actions">Schaltfläche „Aktionen verarbeiten“</string>
+    <string name="no_attachments">Keine Anhänge</string>
+</resources>

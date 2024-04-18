@@ -1,5 +1,5 @@
 <resources>
-    <string name="error_min_length">Veuillez saisir au moins %1$d caractères</string>
+    <string name="error_min_length">Veuillez saisir au moins %1$d caractères</string>
     <string name="accessibility_clear_text">Effacer le texte</string>
     <string name="accessibility_date_icon">Icône de date</string>
     <string name="accessibility_link_icon">Icône de lien</string>
@@ -8,6 +8,6 @@
     <string name="error_invalid_format">Utiliser un format numérique différent</string>
     <string name="error_required_field">Ceci est un champ obligatoire.</string>
     <string name="title_actions">Actions</string>
-    <string name="accessibility_process_actions">Bouton d'actions de traitement</string>
+    <string name="accessibility_process_actions">Bouton d\'actions de traitement</string>
     <string name="no_attachments">Aucune pièce jointe</string>
 </resources>

@@ -51,7 +51,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = singleLineInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -67,7 +67,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = multiLineInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -83,7 +83,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = integerInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -99,7 +99,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = amountInputError(textFieldValue, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -116,7 +116,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onCheckChanged = { newChecked ->
                     checkedValue = newChecked
                     errorData = booleanInputError(newChecked, field, context)
-                    viewModel.updateFieldValue(field.id, newChecked, state, errorData)
+                    viewModel.updateFieldValue(field.id, newChecked, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -132,7 +132,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onValueChanged = { newText ->
                     textFieldValue = newText
                     errorData = dateTimeInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
                 errorData = errorData,
                 fieldsData = field,
@@ -151,7 +151,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                     textFieldValue = newText
                     textFieldQuery = newQuery
                     errorData = dropDownRadioInputError(newText, field, context)
-                    viewModel.updateFieldValue(field.id, newText, state, errorData)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
                 },
 
                 errorData = errorData,
@@ -192,7 +192,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onAssigneeSelected = { userDetails ->
                     userDetailValue = userDetails
                     errorData = userGroupInputError(userDetails, field, context)
-                    viewModel.updateFieldValue(field.id, userDetails, state, errorData)
+                    viewModel.updateFieldValue(field.id, userDetails, errorData)
                 },
                 fieldsData = field,
                 errorData = errorData,

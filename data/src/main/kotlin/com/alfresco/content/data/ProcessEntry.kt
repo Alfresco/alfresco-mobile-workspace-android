@@ -79,6 +79,13 @@ data class ProcessEntry(
         }
 
         /**
+         * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
+         */
+        fun with(data: ProcessEntry, entries: List<Entry>): ProcessEntry {
+            return data.copy(defaultEntries = entries)
+        }
+
+        /**
          * return the ProcessEntry using TaskEntry
          */
         fun with(data: TaskEntry): ProcessEntry {

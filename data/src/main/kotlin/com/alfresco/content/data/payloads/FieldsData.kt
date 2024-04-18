@@ -58,11 +58,15 @@ data class FieldsData(
             return null
         }
 
-        val userGroupDetails = Gson().fromJson(JSONObject(value as Map<String, UserGroupDetails>).toString(), UserGroupDetails::class.java)
+        val userGroupDetails: UserGroupDetails? = if ((value is Map<*, *>)) {
+            Gson().fromJson(JSONObject(value as Map<String, UserGroupDetails>).toString(), UserGroupDetails::class.java)
+        } else {
+            value as? UserGroupDetails
+        }
 
-        val isAssigneeUser = apsUser?.id == userGroupDetails.id
+        val isAssigneeUser = apsUser?.id == userGroupDetails?.id
 
-        if (isAssigneeUser) {
+        if (isAssigneeUser && userGroupDetails != null) {
             return UserGroupDetails.with(userGroupDetails)
         }
 

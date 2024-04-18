@@ -1,11 +1,13 @@
 package com.alfresco.content.process.ui.fragments
 
 import android.content.Context
+import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_4
 import com.alfresco.content.DATE_FORMAT_5
@@ -17,15 +19,19 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.ProcessEntry
+import com.alfresco.content.data.ResponseAccountInfo
+import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.TaskRepository
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.getFormattedDate
-import com.alfresco.content.process.R
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FormViewModel(
@@ -34,9 +40,12 @@ class FormViewModel(
     private val repository: TaskRepository,
 ) : MavericksViewModel<FormViewState>(state) {
 
+    private var observeUploadsJob: Job? = null
     var selectedField: FieldsData? = null
     private var entryListener: EntryListener? = null
     var optionsModel: OptionsModel? = null
+    var onLinkContentToProcess: ((Pair<Entry, FieldsData?>) -> Unit)? = null
+    private var successLinkContent = false
 
     init {
 
@@ -59,6 +68,29 @@ class FormViewModel(
                 entryListener?.onAttachFiles(field)
             }
         }
+    }
+
+    fun observeUploads(state: FormViewState) {
+        val parentId = state.parent.id
+
+        val repo = OfflineRepository()
+
+        observeUploadsJob?.cancel()
+        observeUploadsJob = repo.observeProcessUploads(parentId, UploadServerType.UPLOAD_TO_PROCESS)
+            .execute {
+                if (it is Success) {
+                    val listFields = state.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
+                    println("Test 1 = ${listFields.size}")
+                    listFields.forEach { field ->
+                        val listContents = it().filter { content -> content.observerID == field.id }
+                        val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
+                        updateFieldValue(field.id, listContents, Pair(isError, ""))
+                    }
+                    this
+                } else {
+                    this
+                }
+            }
     }
 
     /**
@@ -106,10 +138,11 @@ class FormViewModel(
                             processOutcomes = it().outcomes,
                             requestForm = Success(it()),
                         )
+
                         val hasAllRequiredData = hasFieldValidData(fields)
                         updateStateData(hasAllRequiredData, fields)
 
-                        updatedState
+                        updatedState.copy(requestForm = Success(it()))
                     }
 
                     else -> {
@@ -119,6 +152,81 @@ class FormViewModel(
             }
         }
     }
+
+    fun fetchUserProfile() {
+        if (repository.isAcsAndApsSameUser()) {
+            return
+        }
+        viewModelScope.launch {
+            // Fetch APS user profile data
+            repository::getProcessUserProfile.execute {
+                when (it) {
+                    is Loading -> copy(requestProfile = Loading())
+                    is Fail -> copy(requestProfile = Fail(it.error))
+                    is Success -> {
+                        val response = it()
+                        repository.saveProcessUserDetails(response)
+                        copy(requestProfile = Success(response))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun fetchAccountInfo() = withState { state ->
+        viewModelScope.launch {
+            repository::getAccountInfo.execute {
+                when (it) {
+                    is Loading -> copy(requestAccountInfo = Loading())
+                    is Fail -> copy(requestAccountInfo = Fail(it.error))
+                    is Success -> {
+                        val response = it()
+                        repository.saveSourceName(response.listAccounts.first())
+                        updateAccountInfo(response).copy(requestAccountInfo = Success(response))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    fun linkContentToProcess(state: FormViewState, entry: Entry, sourceName: String, field: FieldsData?) =
+        viewModelScope.launch {
+            repository::linkADWContentToProcess
+                .asFlow(LinkContentPayload.with(entry, sourceName))
+                .execute {
+                    when (it) {
+                        is Loading -> copy(requestContent = Loading())
+                        is Fail -> copy(requestContent = Fail(it.error))
+                        is Success -> {
+                            if (!successLinkContent) {
+                                successLinkContent = true
+                                println("FormViewModel.linkContentToProcess ${it.invoke()}")
+                                val updateEntry = Entry.with(
+                                    data = entry,
+                                    parentId = state.parent.id,
+                                    observerID = field?.id ?: "",
+                                )
+
+                                OfflineRepository().update(updateEntry)
+
+                                onLinkContentToProcess?.invoke(Pair(updateEntry, field))
+                            }
+
+                            copy(requestContent = Success(it()))
+                        }
+
+                        else -> this
+                    }
+                }
+        }
 
     private fun getTaskForms(processEntry: ProcessEntry) = withState { state ->
         viewModelScope.launch {
@@ -154,7 +262,7 @@ class FormViewModel(
         }
     }
 
-    fun updateFieldValue(fieldId: String, newValue: Any?, state: FormViewState, errorData: Pair<Boolean, String>) {
+    fun updateFieldValue(fieldId: String, newValue: Any?, errorData: Pair<Boolean, String>) = withState { state ->
         val updatedFieldList: MutableList<FieldsData> = mutableListOf()
 
         state.formFields.forEach { field ->
@@ -348,11 +456,21 @@ class FormViewModel(
 
     fun getContents(state: FormViewState, fieldId: String) = OfflineRepository().fetchProcessEntries(parentId = state.parent.id, observerId = fieldId)
 
-    fun emptyMessageArgs(state: FormViewState) =
-        when {
-            else ->
-                Triple(R.drawable.ic_empty_files, R.string.no_attached_files, R.string.file_empty_message)
+    fun resetRequestState(request: Async<*>) {
+        when (request.invoke()) {
+            is ResponseListForm -> {
+                setState { copy(requestForm = Uninitialized) }
+            }
+
+            is ResponseAccountInfo -> {
+                setState { copy(requestAccountInfo = Uninitialized) }
+            }
+
+            is Entry -> {
+                setState { copy(requestContent = Uninitialized) }
+            }
         }
+    }
 
     companion object : MavericksViewModelFactory<FormViewModel, FormViewState> {
 

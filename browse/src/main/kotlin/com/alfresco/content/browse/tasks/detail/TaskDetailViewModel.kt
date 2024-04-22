@@ -61,9 +61,9 @@ class TaskDetailViewModel(
         if (!isWorkflowTask) {
             getComments()
             getContents()
-            viewModelScope.on<ActionUpdateNameDescription> {
-                setState { copy(parent = it.entry as TaskEntry) }
-            }
+        }
+        viewModelScope.on<ActionUpdateNameDescription> {
+            setState { copy(parent = it.entry as TaskEntry) }
         }
     }
 

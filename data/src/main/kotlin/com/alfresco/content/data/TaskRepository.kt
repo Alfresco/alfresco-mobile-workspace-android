@@ -348,7 +348,7 @@ class TaskRepository {
             processesService.linkContentToProcess(
                 includeLinkContent(linkContentPayload),
             ),
-            uploadServer = UploadServerType.NONE,
+            uploadServer = UploadServerType.UPLOAD_TO_PROCESS,
         )
 
     private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {

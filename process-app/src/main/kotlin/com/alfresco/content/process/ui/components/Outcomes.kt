@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.compose.collectAsState
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.ui.fragments.FormViewModel
@@ -29,11 +28,9 @@ fun Outcomes(outcomes: List<OptionsModel>, viewModel: FormViewModel, fragment: P
             onClick = {
                 val uploadList = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
 
-                val entry = uploadList.flatMap { fieldsData ->
-                    (fieldsData.value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
-                }.find { !it.isUpload }
+                val contentList = uploadList.flatMap { it.getContentList() }.filter { !it.isUpload }
 
-                if (entry != null) {
+                if (contentList.isNotEmpty()) {
                     viewModel.optionsModel = it
                     fragment.confirmContentQueuePrompt()
                 } else {

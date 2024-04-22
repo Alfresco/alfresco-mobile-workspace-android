@@ -54,18 +54,13 @@ internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(
 }
 
 internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { state ->
-    binding.tvTitle.visibility = View.GONE
-    binding.tvDescription.visibility = View.GONE
     binding.clComment.visibility = View.GONE
-    binding.clDueDate.visibility = View.GONE
-    binding.clPriority.visibility = View.GONE
     binding.clIdentifier.visibility = View.VISIBLE
-    binding.iconStatusNav.visibility = View.GONE
-    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
+//    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
 
-    binding.clStatus.setSafeOnClickListener {
+    /*binding.clStatus.setSafeOnClickListener {
         findNavController().navigate(R.id.action_nav_task_detail_to_nav_task_status)
-    }
+    }*/
 }
 
 internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
@@ -94,20 +89,13 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
             }
-            binding.clStatus.visibility = if (viewModel.isWorkflowTask && viewModel.hasTaskStatusEnabled(state)) {
-                binding.tvStatusValue.text = dataObj.taskFormStatus
-                View.VISIBLE
-            } else View.GONE
+            binding.clStatus.visibility = View.GONE
         } else {
             binding.clCompleted.visibility = View.GONE
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
             }
-            binding.clStatus.visibility = if (viewModel.isWorkflowTask && !viewModel.hasTaskStatusEnabled(state)) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
+            binding.clStatus.visibility = View.VISIBLE
 
             when (dataObj.memberOfCandidateGroup) {
                 true -> {
@@ -128,9 +116,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                 }
             }
 
-            binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {
-                getString(R.string.status_active)
-            } else dataObj.taskFormStatus
+            binding.tvStatusValue.text = getString(R.string.status_active)
         }
     }
 }

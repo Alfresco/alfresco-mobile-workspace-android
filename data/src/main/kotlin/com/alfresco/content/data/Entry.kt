@@ -433,6 +433,33 @@ data class Entry(
         }
 
         /**
+         * return the Entry obj
+         */
+        fun with(data: Entry, parentId: String? = null, observerID: String = ""): Entry {
+            return Entry(
+                id = data.id,
+                parentId = parentId,
+                name = data.name,
+                type = data.type,
+                created = data.created,
+                userGroupDetails = data.userGroupDetails,
+                isRelatedContent = data.isRelatedContent,
+                isContentAvailable = data.isContentAvailable,
+                mimeType = data.mimeType,
+                simpleType = data.simpleType,
+                source = data.source,
+                sourceId = data.sourceId,
+                previewStatus = data.previewStatus,
+                thumbnailStatus = data.thumbnailStatus,
+                uploadServer = UploadServerType.UPLOAD_TO_PROCESS,
+                observerID = observerID,
+                offlineStatus = OfflineStatus.SYNCED,
+                path = data.path,
+                isUpload = true,
+            )
+        }
+
+        /**
          * update entry after downloading content from process services.
          */
         fun updateDownloadEntry(entry: Entry, path: String): Entry {

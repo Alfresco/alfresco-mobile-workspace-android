@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_min_length">Immettere almeno %1$d caratteri</string>
+    <string name="accessibility_clear_text">Elimina testo</string>
+    <string name="accessibility_date_icon">Icona data</string>
+    <string name="accessibility_link_icon">Icona link</string>
+    <string name="error_min_value">Non deve essere inferiore a %1$d</string>
+    <string name="error_max_value">Non deve essere superiore a %1$d</string>
+    <string name="error_invalid_format">Usare un formato numerico diverso</string>
+    <string name="error_required_field">Questo è un campo obbligatorio.</string>
+    <string name="title_actions">Azioni</string>
+    <string name="accessibility_process_actions">Pulsante Elabora azioni</string>
+    <string name="no_attachments">Nessun allegato</string>
+</resources>

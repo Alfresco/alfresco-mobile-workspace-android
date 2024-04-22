@@ -39,6 +39,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     lateinit var binding: FragmentProcessBinding
     private var viewLayout: View? = null
     private var menu: Menu? = null
+    private var isExecuted = false
     private var confirmContentQueueDialog = WeakReference<AlertDialog>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,17 +116,62 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
                 }
             }
         }
+
+        viewModel.onLinkContentToProcess = {
+            withState(viewModel) { state ->
+                it.second?.apply {
+                    val listContents = listOf(it.first)
+                    val isError = this.required && listContents.isEmpty()
+                    viewModel.updateFieldValue(this.id, listContents, Pair(isError, ""))
+                }
+            }
+        }
     }
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestForm is Loading || state.requestStartWorkflow is Loading ||
-            state.requestSaveForm is Loading || state.requestOutcomes is Loading
+            state.requestSaveForm is Loading || state.requestOutcomes is Loading || state.requestProfile is Loading ||
+            state.requestAccountInfo is Loading || state.requestContent is Loading
 
-        if (state.requestStartWorkflow is Success || state.requestSaveForm is Success || state.requestOutcomes is Success) {
-            viewModel.updateProcessList()
-            requireActivity().finish()
+        when {
+            state.requestStartWorkflow is Success || state.requestSaveForm is Success || state.requestOutcomes is Success -> {
+                viewModel.updateProcessList()
+                requireActivity().finish()
+            }
+
+            state.requestForm is Success -> {
+                val hasUploadField = state.formFields.any { it.type == FieldType.UPLOAD.value() }
+
+                if (hasUploadField && state.parent.defaultEntries.isNotEmpty()) {
+                    viewModel.fetchUserProfile()
+                    viewModel.fetchAccountInfo()
+                }
+
+                if (hasUploadField) {
+                    viewModel.observeUploads(state)
+                }
+
+                viewModel.resetRequestState(state.requestForm)
+            }
+
+            state.requestAccountInfo is Success -> {
+                val uploadingFields = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
+                val field = uploadingFields.find { it.params?.multiple == false } ?: uploadingFields.firstOrNull()
+                val sourceName = state.listAccountInfo.firstOrNull()?.sourceName ?: ""
+
+                if (!isExecuted) {
+                    isExecuted = true
+                    state.parent.defaultEntries.map { entry ->
+                        viewModel.linkContentToProcess(state, entry, sourceName, field)
+                    }
+                }
+                viewModel.resetRequestState(state.requestAccountInfo)
+            }
+
+            state.requestContent is Success -> {
+                viewModel.resetRequestState(state.requestContent)
+            }
         }
-
         menu?.findItem(R.id.action_info)?.isVisible = state.parent.processInstanceId != null
     }
 
@@ -134,7 +180,6 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             viewModel.updateFieldValue(
                 viewModel.selectedField?.id ?: "",
                 (entry as Entry).id,
-                it,
                 Pair(false, ""),
             )
             viewModel.selectedField = null
@@ -146,7 +191,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             val listContents = viewModel.getContents(state, field.id)
             val isError = field.required && listContents.isEmpty()
 
-            viewModel.updateFieldValue(field.id, listContents, state, Pair(isError, ""))
+            viewModel.updateFieldValue(field.id, listContents, Pair(isError, ""))
 
             viewModel.selectedField = null
         }

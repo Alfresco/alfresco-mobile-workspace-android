@@ -12,6 +12,7 @@ val AlfrescoGray90015 = Color(0x26212328)
 val AlfrescoGray90030 = Color(0x4D212328)
 val AlfrescoGray90060 = Color(0x99212328)
 val AlfrescoGray90070 = Color(0xB3212328)
+val AlfrescoGray90024 = Color(0x3D212328)
 val AlfrescoGray100 = Color(0xFFF5F5F5)
 
 val AlfrescoError = Color(0xFFB8082A)

@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 private val DarkColorScheme = darkColorScheme(
     primary = AlfrescoBlue700,
     onSurface = White60,
+    onPrimary = White60,
     onSurfaceVariant = White60,
     onBackground = Color.White,
     background = designDefaultDarkBackgroundColor,
@@ -18,9 +19,10 @@ private val DarkColorScheme = darkColorScheme(
 )
 private val LightColorScheme = lightColorScheme(
     primary = AlfrescoBlue700,
+    onPrimary = AlfrescoGray90070,
     onSurface = AlfrescoGray900,
-    onSurfaceVariant = AlfrescoGray90030,
-    outline = AlfrescoGray90030,
+    onSurfaceVariant = AlfrescoGray90015,
+    outline = AlfrescoGray90015,
     error = AlfrescoError,
 )
 

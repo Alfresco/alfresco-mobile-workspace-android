@@ -13,7 +13,7 @@ import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 
 @Composable
-fun trailingIconColor() = MaterialTheme.colorScheme.onSurfaceVariant
+fun trailingIconColor() = MaterialTheme.colorScheme.onPrimary
 
 fun Modifier.inputField() =
     this

@@ -70,9 +70,9 @@ fun ReadOnlyField(
     InputField(
         colors = OutlinedTextFieldDefaults.colors(
             disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTextColor = MaterialTheme.colorScheme.onPrimary,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+            disabledLabelColor = MaterialTheme.colorScheme.onPrimary,
         ),
         modifier = Modifier
             .inputField()

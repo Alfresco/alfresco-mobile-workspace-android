@@ -80,7 +80,7 @@ fun AttachFilesField(
         Text(
             text = contentValue,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 12.sp,
             ),
             modifier = Modifier

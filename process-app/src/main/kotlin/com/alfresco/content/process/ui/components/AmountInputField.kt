@@ -1,6 +1,8 @@
 package com.alfresco.content.process.ui.components
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,18 +27,30 @@ fun AmountInputField(
     val leadingIcon: @Composable () -> Unit = when {
         !fieldsData.currency.isNullOrEmpty() -> {
             {
-                Text(text = fieldsData.currency ?: "$")
+                Text(
+                    text = fieldsData.currency ?: "$",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
             }
         }
 
         else -> {
             {
-                Text(text = "$")
+                Text(
+                    text = "$",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
             }
         }
     }
 
     InputFieldWithLeading(
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+        ),
         modifier = Modifier.inputField(),
         maxLines = 1,
         textFieldValue = textFieldValue,

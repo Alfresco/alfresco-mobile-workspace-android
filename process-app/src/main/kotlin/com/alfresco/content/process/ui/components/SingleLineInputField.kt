@@ -1,6 +1,8 @@
 package com.alfresco.content.process.ui.components
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
@@ -23,6 +25,12 @@ fun SingleLineInputField(
     )
 
     InputField(
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+        ),
         modifier = Modifier
             .inputField()
             .semantics(mergeDescendants = true) {},

@@ -11,7 +11,6 @@ import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.component.models.SearchChipCategory
 import com.alfresco.content.data.AdvanceSearchFilter
 import com.alfresco.content.data.AdvanceSearchFilters
-import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.SearchFacetData
 import com.alfresco.content.data.SearchFacetFields
@@ -29,9 +28,6 @@ import com.alfresco.content.listview.ListViewState
 import com.alfresco.content.models.AppConfigModel
 import com.alfresco.content.models.SearchItem
 import com.alfresco.content.network.ConnectivityTracker
-import com.alfresco.events.EventBus
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -102,7 +98,7 @@ class SearchViewModel(
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
                 if (canSearchOverCurrentNetwork()) {
-                    if (state.isExtension) {
+                    if (state.isExtension || state.isProcess == true) {
                         repository.search(
                             it.terms,
                             it.contextId,
@@ -481,11 +477,6 @@ class SearchViewModel(
     fun canSearchOverCurrentNetwork() = ConnectivityTracker.isActiveNetwork(context)
 
     override fun emptyMessageArgs(state: ListViewState) = Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)
-    fun setSearchResult(entry: Entry) {
-        CoroutineScope(Dispatchers.Main).launch {
-            EventBus.default.send(AttachFolderSearchData(entry))
-        }
-    }
 
     companion object : MavericksViewModelFactory<SearchViewModel, SearchResultsState> {
         const val MIN_QUERY_LENGTH = 3

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_share_extension"
+    android:id="@+id/nav_move_paths"
     app:startDestination="@id/nav_move">
 
     <fragment
@@ -26,19 +26,27 @@
 
         <argument
             android:name="path"
+            android:defaultValue=""
             app:argType="string" />
         <argument
             android:name="id"
+            android:defaultValue=""
             app:argType="string" />
         <argument
             android:name="moveId"
+            android:defaultValue=""
             app:argType="string" />
         <argument
+            android:name="isProcess"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
 
-        <deepLink app:uri="alfresco://content/browse_child/{path}/remote/{id}/{moveId}?title={title}" />
+        <deepLink app:uri="alfresco://content/browse_move_child/remote/{id}?title={title},isProcess={isProcess},path={path}" />
+        <deepLink app:uri="alfresco://content/browse_move_child/remote/{id}?title={title},moveId={moveId},path={path}" />
 
     </fragment>
 
@@ -49,19 +57,25 @@
 
         <argument
             android:name="path"
+            android:defaultValue=""
             app:argType="string" />
         <argument
             android:name="id"
+            android:defaultValue=""
             app:argType="string" />
         <argument
             android:name="moveId"
             app:argType="string" />
         <argument
+            android:name="isProcess"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
 
-        <deepLink app:uri="alfresco://content/browse_move_parent/{id}?title={title},moveId={moveId},path={path}" />
+        <deepLink app:uri="alfresco://content/browse_move_parent/{id}?title={title},moveId={moveId},path={path},isProcess={isProcess}" />
 
     </fragment>
 
@@ -71,23 +85,31 @@
         android:label="SearchFragment">
         <argument
             android:name="id"
+            android:defaultValue=""
             app:argType="string" />
 
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
 
         <argument
             android:name="extension"
-            app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            app:argType="boolean" />
 
         <argument
             android:name="moveId"
+            android:defaultValue=""
             app:argType="string" />
 
+        <argument
+            android:name="isProcess"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
         <deepLink app:uri="alfresco://content/search/folder/{id}?title={title},extension={extension},moveId={moveId}" />
+        <deepLink app:uri="alfresco://content/search/folder/{id}?title={title},isProcess={isProcess}" />
     </fragment>
 
 </navigation>

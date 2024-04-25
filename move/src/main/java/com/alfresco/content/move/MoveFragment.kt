@@ -48,8 +48,12 @@ class MoveFragment : Fragment(), MavericksView {
     override fun onStart() {
         super.onStart()
         val nodeId = viewModel.getMyFilesNodeId()
-        args.entryObj?.let {
-            findNavController().navigateToMoveParent(nodeId, it.id, getString(R.string.browse_menu_personal))
+
+        val entryObj = args.entryObj
+        if (args.entryObj != null) {
+            entryObj?.id?.let { findNavController().navigateToMoveParent(nodeId, it, getString(R.string.browse_menu_personal)) }
+        } else {
+            findNavController().navigateToMoveParent(nodeId, "", getString(R.string.browse_menu_personal), true)
         }
     }
 

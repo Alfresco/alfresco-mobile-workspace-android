@@ -1,5 +1,6 @@
 package com.alfresco.content.process.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.alfresco.content.data.payloads.FieldsData
-import com.alfresco.content.navigateToContextualSearch
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
 import com.alfresco.content.process.ui.theme.AlfrescoError
@@ -73,7 +73,12 @@ fun AttachFolderField(
 
             IconButton(onClick = {
                 onUserTap(true)
-                navController.navigateToContextualSearch("Search Folder", true)
+                val intent = Intent(
+                    context,
+                    Class.forName("com.alfresco.content.app.activity.MoveActivity"),
+                )
+                context.startActivity(intent)
+//                navController.navigateToContextualSearch(context.getString(R.string.title_search_folder), true)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,

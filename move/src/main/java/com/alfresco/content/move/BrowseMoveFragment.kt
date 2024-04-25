@@ -45,14 +45,27 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (args.isProcess) {
+            moveHereButton?.text = getString(R.string.select_button)
+        } else {
+            moveHereButton?.text = getString(R.string.move_button)
+        }
+
         moveHereButton?.setOnClickListener {
             withState(viewModel) { state ->
-                val activity = requireActivity()
-                val intent = Intent().apply {
-                    putExtra(MoveResultContract.OUTPUT_KEY, state.nodeId)
+                if (args.isProcess) {
+                    state.parent?.let {
+                        viewModel.setSearchResult(it)
+                    }
+                    requireActivity().finish()
+                } else {
+                    val activity = requireActivity()
+                    val intent = Intent().apply {
+                        putExtra(MoveResultContract.OUTPUT_KEY, state.nodeId)
+                    }
+                    activity.setResult(Activity.RESULT_OK, intent)
+                    activity.finish()
                 }
-                activity.setResult(Activity.RESULT_OK, intent)
-                activity.finish()
             }
         }
 
@@ -68,23 +81,33 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_browse_extension, menu)
+        if (args.isProcess) {
+            inflater.inflate(R.menu.menu_browse_folder, menu)
+        } else {
+            inflater.inflate(R.menu.menu_browse_extension, menu)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
                 withState(viewModel) { state ->
-                    findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true, state.moveId)
+                    if (args.isProcess) {
+                        findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", args.isProcess)
+                    } else {
+                        findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true, state.moveId)
+                    }
                 }
                 true
             }
+
             R.id.new_folder -> {
                 withState(viewModel) {
                     viewModel.createFolder(it)
                 }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -99,6 +122,12 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         if (state.path == getString(R.string.nav_path_move)) {
             super.disableRefreshLayout()
         }
+
+        if (state.title != null) {
+            bottomMoveButtonLayout?.visibility = View.VISIBLE
+        } else {
+            bottomMoveButtonLayout?.visibility = View.INVISIBLE
+        }
         super.invalidate()
     }
 
@@ -108,7 +137,7 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
     override fun onItemClicked(entry: Entry) {
         if (!entry.isFolder) return
         withState(viewModel) { state ->
-            findNavController().navigateToFolder(entry, state.moveId)
+            findNavController().navigateToFolder(entry, state.moveId, isProcess = args.isProcess)
         }
     }
 }

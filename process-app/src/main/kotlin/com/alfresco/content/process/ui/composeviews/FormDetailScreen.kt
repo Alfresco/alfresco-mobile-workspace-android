@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,7 +29,7 @@ import com.alfresco.content.process.ui.fragments.ProcessFragment
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController, fragment: ProcessFragment) {
+fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController, fragment: ProcessFragment, snackbarHostState: SnackbarHostState) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -55,7 +56,7 @@ fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, nav
                 },
                 items = state.formFields,
             ) { field ->
-                FormScrollContent(field, viewModel, state, navController)
+                FormScrollContent(field, viewModel, state, navController, snackbarHostState)
             }
         }
 
@@ -84,5 +85,6 @@ fun PreviewProcessDetailScreen() {
         emptyList(),
         rememberNavController(),
         ProcessFragment(),
+        SnackbarHostState(),
     )
 }

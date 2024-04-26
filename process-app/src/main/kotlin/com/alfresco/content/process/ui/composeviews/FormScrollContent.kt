@@ -1,6 +1,7 @@
 package com.alfresco.content.process.ui.composeviews
 
 import android.os.Bundle
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,7 @@ import com.alfresco.content.process.ui.utils.singleLineInputError
 import com.alfresco.content.process.ui.utils.userGroupInputError
 
 @Composable
-fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormViewState, navController: NavController) {
+fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormViewState, navController: NavController, snackbarHostState: SnackbarHostState) {
     val context = LocalContext.current
     when (field.type) {
         FieldType.TEXT.value() -> {
@@ -201,7 +202,10 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.HYPERLINK.value() -> {
-            HyperLinkField(field)
+            HyperLinkField(
+                field,
+                snackbarHostState,
+            )
         }
 
         FieldType.UPLOAD.value() -> {

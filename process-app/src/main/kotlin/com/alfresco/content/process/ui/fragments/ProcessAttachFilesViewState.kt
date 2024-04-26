@@ -13,6 +13,12 @@ data class ProcessAttachFilesViewState(
 ) : MavericksState {
     constructor(target: UploadData) : this(parent = target)
 
+    val isProcessInstance: Boolean
+        get() = when (parent.process.processInstanceId) {
+            null -> false
+            else -> true
+        }
+
     /**
      * delete content locally and update UI
      */

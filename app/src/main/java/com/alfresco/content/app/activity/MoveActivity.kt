@@ -40,7 +40,7 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         setContentView(R.layout.activity_move)
 
         if (intent.extras != null) {
-            entryObj = intent.getParcelableExtra(ENTRY_OBJ_KEY) as Entry?
+            entryObj = intent.getParcelableExtra(ENTRY_OBJ_KEY) as? Entry?
         }
 
         configure()
@@ -54,7 +54,9 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
         graph.setStartDestination(R.id.nav_move)
         val bundle = Bundle().apply {
-            putParcelable(ENTRY_OBJ_KEY, entryObj)
+            if (entryObj != null) {
+                putParcelable(ENTRY_OBJ_KEY, entryObj)
+            }
         }
         navController.setGraph(graph, bundle)
         setupActionToasts()

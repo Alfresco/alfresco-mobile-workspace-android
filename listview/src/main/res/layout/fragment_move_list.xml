@@ -54,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:layout_marginStart="@dimen/list_layout_margin_button"
         android:layout_marginTop="@dimen/list_layout_margin_button"
         android:layout_marginEnd="@dimen/list_layout_margin_button"
@@ -79,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginStart="14dp"
-            android:text="@string/move_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cancel_button" />

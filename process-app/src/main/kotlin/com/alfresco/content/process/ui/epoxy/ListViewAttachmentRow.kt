@@ -28,6 +28,7 @@ class ListViewAttachmentRow @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewListAttachmentRowBinding.inflate(LayoutInflater.from(context), this)
+    private var isProcessInstance: Boolean = false
 
     /**
      * set the content data on list row
@@ -40,6 +41,11 @@ class ListViewAttachmentRow @JvmOverloads constructor(
         configureOfflineStatus(data)
 
         binding.deleteContentButton.visibility = if (actionButtonVisibility(data)) View.VISIBLE else View.INVISIBLE
+    }
+
+    @ModelProp
+    fun setProcessData(isProcessInstance: Boolean) {
+        this.isProcessInstance = isProcessInstance
     }
 
     private fun configureOfflineStatus(entry: Entry) {
@@ -87,7 +93,9 @@ class ListViewAttachmentRow @JvmOverloads constructor(
     private fun actionButtonVisibility(entry: Entry) =
         !entry.isLink && !entry.isUpload &&
             // Child folder in offline tab
-            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
+            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly &&
+            // If process is created
+            !isProcessInstance
 
     /**
      * list row click listener

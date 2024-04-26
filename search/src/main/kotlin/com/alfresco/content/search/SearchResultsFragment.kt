@@ -85,8 +85,7 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
             when {
                 state.isProcess != null -> {
                     if (entry.isFolder) {
-                        viewModel.setSearchResult(entry)
-                        requireActivity().onBackPressed()
+                        findNavController().navigateToFolder(entry, isProcess = true)
                     }
                 }
                 else -> {

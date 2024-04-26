@@ -12,6 +12,7 @@ import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AttachFilesData
@@ -53,6 +54,9 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
+
+        viewModel.setListener(this)
+
         binding.refreshLayout.isEnabled = false
 
         binding.recyclerView.setController(epoxyController)
@@ -118,6 +122,12 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
+                    processData(state.isProcessInstance)
+                    clickListener { model, _, _, _ ->
+                        if (state.isProcessInstance) {
+                            onItemClicked(model.data())
+                        }
+                    }
                     deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data()) }
                 }
             }
@@ -126,14 +136,15 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
+            val entry = Entry.convertContentEntryToEntry(
+                contentEntry,
+                MimeType.isDocFile(contentEntry.mimeType),
+                UploadServerType.UPLOAD_TO_TASK,
+            )
             if (!contentEntry.source.isNullOrEmpty()) {
-                val entry = Entry.convertContentEntryToEntry(
-                    contentEntry,
-                    MimeType.isDocFile(contentEntry.mimeType),
-                    UploadServerType.UPLOAD_TO_PROCESS,
-                )
                 remoteViewerIntent(entry)
-            }
+            } else
+                viewModel.executePreview(ActionOpenWith(entry))
         } else {
             localViewerIntent(contentEntry)
         }

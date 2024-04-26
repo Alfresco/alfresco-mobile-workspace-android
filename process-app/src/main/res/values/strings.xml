@@ -14,4 +14,5 @@
     <string name="text_attached_folder">%d folders</string>
     <string name="action_info">Info</string>
     <string name="file_empty_message">Looks like you haven’t\nadded any files yet.</string>
+    <string name="title_search_folder">Search Folder</string>
 </resources>

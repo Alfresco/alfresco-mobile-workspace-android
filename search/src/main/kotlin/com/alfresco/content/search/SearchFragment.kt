@@ -67,7 +67,7 @@ data class ContextualSearchArgs(
         private const val TITLE_KEY = "title"
         private const val EXTENSION_KEY = "extension"
         private const val MOVE_ID_KEY = "moveId"
-        private const val PROCESS_KEY = "process"
+        private const val PROCESS_KEY = "isProcess"
 
         fun with(args: Bundle?): ContextualSearchArgs? {
             if (args == null) return null
@@ -155,7 +155,7 @@ class SearchFragment : Fragment(), MavericksView {
 
     private fun setAdvanceSearchFiltersData() {
         withState(viewModel) {
-            if (it.isProcess == null) {
+            if (it.isProcess == null || it.isProcess == false) {
                 if (viewModel.isShowAdvanceFilterView(it.listSearchFilters)) {
                     binding.parentAdvanceSearch.visibility = View.VISIBLE
                     binding.chipGroup.visibility = View.GONE

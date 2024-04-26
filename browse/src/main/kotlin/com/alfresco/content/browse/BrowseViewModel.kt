@@ -16,6 +16,7 @@ import com.alfresco.content.actions.ActionRemoveFavorite
 import com.alfresco.content.actions.ActionRestore
 import com.alfresco.content.actions.ActionUploadExtensionFiles
 import com.alfresco.content.data.AnalyticsManager
+import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
@@ -29,7 +30,10 @@ import com.alfresco.content.data.TrashCanRepository
 import com.alfresco.content.listview.ListViewModel
 import com.alfresco.content.listview.ListViewState
 import com.alfresco.coroutines.asFlow
+import com.alfresco.events.EventBus
 import com.alfresco.events.on
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -352,6 +356,12 @@ class BrowseViewModel(
             selectedEntries = emptyList(),
             maxLimitReachedForMultiSelection = false,
         )
+    }
+
+    fun setSearchResult(entry: Entry) {
+        CoroutineScope(Dispatchers.Main).launch {
+            EventBus.default.send(AttachFolderSearchData(entry))
+        }
     }
 
     override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }

@@ -75,7 +75,8 @@ fun HyperLinkField(
                     }
                 } else {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Invalid URL")
+                        val message = context.getString(R.string.error_hyperlink_invalid_url, fieldsData.name)
+                        snackbarHostState.showSnackbar(message)
                     }
                 }
             },

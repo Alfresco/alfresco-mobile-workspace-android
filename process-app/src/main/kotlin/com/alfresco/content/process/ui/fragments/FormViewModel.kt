@@ -80,7 +80,6 @@ class FormViewModel(
             .execute {
                 if (it is Success) {
                     val listFields = state.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
-                    println("Test 1 = ${listFields.size}")
                     listFields.forEach { field ->
                         val listContents = it().filter { content -> content.observerID == field.id }
                         val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
@@ -208,7 +207,6 @@ class FormViewModel(
                         is Success -> {
                             if (!successLinkContent) {
                                 successLinkContent = true
-                                println("FormViewModel.linkContentToProcess ${it.invoke()}")
                                 val updateEntry = Entry.with(
                                     data = entry,
                                     parentId = state.parent.id,

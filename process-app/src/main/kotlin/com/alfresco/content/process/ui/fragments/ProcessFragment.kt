@@ -1,11 +1,13 @@
 package com.alfresco.content.process.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -25,6 +27,7 @@ import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.hideSoftInput
 import com.alfresco.content.process.R
 import com.alfresco.content.process.databinding.FragmentProcessBinding
 import com.alfresco.content.process.ui.components.updateProcessList
@@ -87,6 +90,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -119,6 +123,14 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
                     )
                 }
             }
+        }
+
+        binding.flComposeParent.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                println("Test 1 == touch down")
+                hideSoftInput()
+            }
+            false
         }
 
         viewModel.onLinkContentToProcess = {

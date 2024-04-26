@@ -2,6 +2,7 @@ package com.alfresco.content.process.ui.composeviews
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -33,13 +40,27 @@ fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, nav
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
 
+    val interactionSource = remember { MutableInteractionSource() }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                // Hide the keyboard on click outside of input fields
-//                keyboardController?.hide()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+            ) {
                 focusManager.clearFocus()
+                keyboardController?.hide()
+            }
+            .onKeyEvent { event ->
+                if (event.type == KeyEventType.KeyUp && event.key == Key.Enter) {
+                    // If Enter key is pressed, consume the event
+                    println("Test 2 == ")
+                    true
+                } else {
+                    println("Test 4 == ")
+                    false
+                }
             },
     ) {
         LazyColumn(

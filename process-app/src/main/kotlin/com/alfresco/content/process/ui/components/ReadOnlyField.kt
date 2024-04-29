@@ -11,11 +11,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.alfresco.content.DATE_FORMAT_1
-import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.DATE_FORMAT_2_1
+import com.alfresco.content.DATE_FORMAT_3
+import com.alfresco.content.DATE_FORMAT_8
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
-import com.alfresco.content.getFormattedDate
+import com.alfresco.content.getLocalFormattedDate
+import com.alfresco.content.getLocalFormattedDate1
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
@@ -46,8 +48,22 @@ fun ReadOnlyField(
             }
         }
 
-        FieldType.DATE.value(), FieldType.DATETIME.value() -> {
-            (fieldsData.value as? String ?: "").getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+        FieldType.DATE.value() -> {
+            val date = fieldsData.value as? String ?: ""
+            if (date.isNotEmpty()) {
+                date.getLocalFormattedDate(DATE_FORMAT_3, DATE_FORMAT_2_1)
+            } else {
+                date
+            }
+        }
+
+        FieldType.DATETIME.value() -> {
+            val dateTime = fieldsData.value as? String ?: ""
+            if (dateTime.isNotEmpty()) {
+                dateTime.getLocalFormattedDate1(DATE_FORMAT_3, DATE_FORMAT_8)
+            } else {
+                dateTime
+            }
         }
 
         else -> {

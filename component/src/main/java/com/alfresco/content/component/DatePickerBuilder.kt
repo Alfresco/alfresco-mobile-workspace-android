@@ -106,9 +106,11 @@ data class DatePickerBuilder(
         }
 
         timePicker.addOnPositiveButtonClickListener {
-            val hour = timePicker.hour
-            val minute = timePicker.minute
-            val combinedDateTime = "$stringDateTime $hour:$minute"
+            val hour = if (timePicker.hour == 0) 12 else timePicker.hour
+            val minute = if (timePicker.minute == 0) "00" else timePicker.minute.toString()
+            val amPm = if (timePicker.hour < 12) "AM" else "PM"
+
+            val combinedDateTime = "$stringDateTime $hour:$minute $amPm"
             onSuccess?.invoke(combinedDateTime)
         }
 

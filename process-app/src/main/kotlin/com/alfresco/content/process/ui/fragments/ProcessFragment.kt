@@ -127,7 +127,6 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
         binding.flComposeParent.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                println("Test 1 == touch down")
                 hideSoftInput()
             }
             false

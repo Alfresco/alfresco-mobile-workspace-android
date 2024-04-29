@@ -54,11 +54,8 @@ fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, nav
             }
             .onKeyEvent { event ->
                 if (event.type == KeyEventType.KeyUp && event.key == Key.Enter) {
-                    // If Enter key is pressed, consume the event
-                    println("Test 2 == ")
                     true
                 } else {
-                    println("Test 4 == ")
                     false
                 }
             },

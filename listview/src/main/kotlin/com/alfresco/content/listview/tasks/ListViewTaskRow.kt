@@ -38,7 +38,7 @@ class ListViewTaskRow @JvmOverloads constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     @ModelProp
     fun setData(entry: TaskEntry) {
-        binding.title.text = entry.name
+        binding.title.text = entry.name.ifEmpty { context.getString(R.string.title_no_name) }
         val localizedName = context.getLocalizedName(entry.assignee?.name ?: "")
         binding.subtitle.visibility = if (localizedName.trim().isNotEmpty()) View.VISIBLE else View.GONE
         binding.subtitle.text = localizedName

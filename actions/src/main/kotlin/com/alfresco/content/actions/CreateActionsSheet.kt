@@ -2,6 +2,7 @@ package com.alfresco.content.actions
 
 import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.databinding.SheetActionCreateBinding
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.Settings
 import com.alfresco.content.data.UploadServerType
 import com.alfresco.ui.BottomSheetDialogFragment
 import kotlinx.coroutines.GlobalScope
@@ -72,6 +74,16 @@ internal class ActionCreateViewModel(
 class CreateActionsSheet : BottomSheetDialogFragment(), MavericksView {
     private val viewModel: ActionCreateViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionCreateBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        withState(viewModel) {
+            val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val editor = sharedPrefs.edit()
+            editor.putBoolean(Settings.IS_PROCESS_UPLOAD_KEY, it.parent.observerID.isNotEmpty())
+            editor.apply()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

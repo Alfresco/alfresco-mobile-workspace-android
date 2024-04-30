@@ -218,10 +218,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 layout.shutterButton.simulateClick()
                 true
             }
+
             KeyEvent.KEYCODE_BACK -> {
                 goBack()
                 true
             }
+
             else -> false
         }
     }
@@ -305,6 +307,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                 ImageCapture.OutputFileOptions.Builder(photoFile)
                     .setMetadata(viewModel.getMetaData()).build()
             }
+
             else -> {
                 ImageCapture.OutputFileOptions.Builder(photoFile).build()
             }
@@ -367,7 +370,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                             val file = File(it)
                             val length = file.length()
                             if (length > 0L) {
-                                if (!GetMultipleContents.isFileSizeExceed(length)) {
+                                if (!GetMultipleContents.isFileSizeExceed(length, if (viewModel.isProcessUpload) GetMultipleContents.MAX_FILE_SIZE_10 else GetMultipleContents.MAX_FILE_SIZE_100)) {
                                     viewModel.onCaptureVideo(savedUri)
                                     navigateToSave()
                                 } else {

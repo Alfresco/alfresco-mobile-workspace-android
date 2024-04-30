@@ -10,6 +10,7 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.DATE_FORMAT_4_1
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.AttachFilesData
@@ -80,7 +81,6 @@ class FormViewModel(
             .execute {
                 if (it is Success) {
                     val listFields = state.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
-                    println("Test 1 = ${listFields.size}")
                     listFields.forEach { field ->
                         val listContents = it().filter { content -> content.observerID == field.id }
                         val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
@@ -208,7 +208,6 @@ class FormViewModel(
                         is Success -> {
                             if (!successLinkContent) {
                                 successLinkContent = true
-                                println("FormViewModel.linkContentToProcess ${it.invoke()}")
                                 val updateEntry = Entry.with(
                                     data = entry,
                                     parentId = state.parent.id,
@@ -417,7 +416,11 @@ class FormViewModel(
                     }
                 }
 
-                FieldType.DATETIME.value(), FieldType.DATE.value() -> {
+                FieldType.DATETIME.value() -> {
+                    val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4_1, DATE_FORMAT_5)
+                    values[field.id] = convertedDate
+                }
+                FieldType.DATE.value() -> {
                     val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
                     values[field.id] = convertedDate
                 }

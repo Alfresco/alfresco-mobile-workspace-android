@@ -28,7 +28,7 @@ fun TrailingInputField(
         FieldType.DATETIME.value(), FieldType.DATE.value() -> {
             Icon(
                 imageVector = Icons.Default.CalendarToday,
-                contentDescription = stringResource(R.string.accessibility_date_icon),
+                contentDescription = null,
                 tint = trailingIconColor(),
             )
         }
@@ -36,7 +36,7 @@ fun TrailingInputField(
         FieldType.DROPDOWN.value(), FieldType.RADIO_BUTTONS.value() -> {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = stringResource(R.string.accessibility_date_icon),
+                contentDescription = null,
                 tint = trailingIconColor(),
             )
         }

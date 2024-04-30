@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -66,7 +67,8 @@ fun CheckBoxField(
                 .padding(horizontal = 16.dp),
         ) {
             Checkbox(
-                modifier = Modifier.align(alignment = Alignment.Top),
+                modifier = Modifier
+                    .align(alignment = Alignment.Top),
                 checked = checkedValue,
                 onCheckedChange = { isChecked ->
                     onCheckChanged(isChecked)
@@ -100,7 +102,8 @@ fun CheckBoxField(
                 },
                 modifier = Modifier
                     .padding(end = 4.dp, top = if (lineCount == 1) 0.dp else 6.dp)
-                    .align(alignment = if (lineCount == 1) Alignment.CenterVertically else Alignment.Top),
+                    .align(alignment = if (lineCount == 1) Alignment.CenterVertically else Alignment.Top)
+                    .clearAndSetSemantics { },
                 onTextLayout = { textLayoutResult: TextLayoutResult ->
                     lineCount = textLayoutResult.lineCount
                     if (textLayoutResult.lineCount > minimumLineLength - 1 && !showReadMoreButtonState) {

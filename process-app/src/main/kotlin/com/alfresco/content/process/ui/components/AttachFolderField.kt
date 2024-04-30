@@ -78,7 +78,6 @@ fun AttachFolderField(
                     Class.forName("com.alfresco.content.app.activity.MoveActivity"),
                 )
                 context.startActivity(intent)
-//                navController.navigateToContextualSearch(context.getString(R.string.title_search_folder), true)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,

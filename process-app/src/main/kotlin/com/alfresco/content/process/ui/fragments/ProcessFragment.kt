@@ -34,6 +34,7 @@ import com.alfresco.content.process.ui.components.updateProcessList
 import com.alfresco.content.process.ui.composeviews.FormScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBaseTheme
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.lang.ref.WeakReference
 
 class ProcessFragment : Fragment(), MavericksView, EntryListener {
@@ -48,6 +49,10 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    fun showSnackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(

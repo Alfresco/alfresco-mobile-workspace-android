@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.airbnb.mvrx.compose.collectAsState
@@ -21,6 +24,8 @@ import com.alfresco.content.process.ui.fragments.ProcessFragment
 
 @Composable
 fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment: ProcessFragment) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val state by viewModel.collectAsState()
 
     val customOutcomes = when {
@@ -31,7 +36,9 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
 
     when {
         customOutcomes.size < 3 -> {
-            Scaffold() { padding ->
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+            ) { padding ->
                 val colorScheme = MaterialTheme.colorScheme
                 Surface(
                     modifier = androidx.compose.ui.Modifier
@@ -40,13 +47,14 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(viewModel, customOutcomes, navController, fragment)
+                    FormDetailScreen(viewModel, customOutcomes, navController, fragment, snackbarHostState)
                 }
             }
         }
 
         else -> {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 floatingActionButton = { FloatingActionButton(customOutcomes, fragment, viewModel) },
                 floatingActionButtonPosition = FabPosition.End,
             ) { padding ->
@@ -58,7 +66,7 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(viewModel, emptyList(), navController, fragment)
+                    FormDetailScreen(viewModel, emptyList(), navController, fragment, snackbarHostState)
                 }
             }
         }

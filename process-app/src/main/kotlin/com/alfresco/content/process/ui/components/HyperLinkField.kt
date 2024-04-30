@@ -9,7 +9,9 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -25,13 +27,17 @@ import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.utils.inputField
 import com.alfresco.content.process.ui.utils.trailingIconColor
 import com.alfresco.content.viewer.ViewerActivity
+import kotlinx.coroutines.launch
+import java.net.URL
 
 @Composable
 fun HyperLinkField(
     fieldsData: FieldsData = FieldsData(),
+    snackbarHostState: SnackbarHostState,
 ) {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val keyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Next,
@@ -50,21 +56,28 @@ fun HyperLinkField(
         modifier = Modifier
             .inputField()
             .clickable {
-                val urlData =
-                    SharedURLParser().getEntryIdFromShareURL(fieldsData.hyperlinkUrl ?: "", true)
-
-                if (urlData.second.isNotEmpty()) {
-                    context.startActivity(
-                        Intent(context, ViewerActivity::class.java)
-                            .putExtra(ID_KEY, urlData.second)
-                            .putExtra(
-                                MODE_KEY,
-                                if (urlData.first) SharedURLParser.VALUE_SHARE else SharedURLParser.VALUE_REMOTE,
-                            )
-                            .putExtra(TITLE_KEY, "Preview"),
-                    )
+                val url = fieldsData.hyperlinkUrl ?: ""
+                if (isValidUrl(url)) {
+                    val urlData =
+                        SharedURLParser().getEntryIdFromShareURL(url, true)
+                    if (urlData.second.isNotEmpty()) {
+                        context.startActivity(
+                            Intent(context, ViewerActivity::class.java)
+                                .putExtra(ID_KEY, urlData.second)
+                                .putExtra(
+                                    MODE_KEY,
+                                    if (urlData.first) SharedURLParser.VALUE_SHARE else SharedURLParser.VALUE_REMOTE,
+                                )
+                                .putExtra(TITLE_KEY, "Preview"),
+                        )
+                    } else {
+                        uriHandler.openUri(url)
+                    }
                 } else {
-                    uriHandler.openUri(fieldsData.hyperlinkUrl ?: "")
+                    scope.launch {
+                        val message = context.getString(R.string.error_hyperlink_invalid_url, fieldsData.name)
+                        snackbarHostState.showSnackbar(message)
+                    }
                 }
             },
         colors = OutlinedTextFieldDefaults.colors(
@@ -82,8 +95,17 @@ fun HyperLinkField(
     )
 }
 
+fun isValidUrl(url: String): Boolean {
+    return try {
+        URL(url).toURI()
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
 @Preview
 @Composable
 fun HyperLinkFieldPreview() {
-    HyperLinkField()
+    HyperLinkField(snackbarHostState = SnackbarHostState())
 }

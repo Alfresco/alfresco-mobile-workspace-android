@@ -15,4 +15,5 @@
     <string name="action_info">Info</string>
     <string name="file_empty_message">Looks like you haven’t\nadded any files yet.</string>
     <string name="title_search_folder">Search Folder</string>
+    <string name="error_hyperlink_invalid_url">%1$s has Invalid URL</string>
 </resources>

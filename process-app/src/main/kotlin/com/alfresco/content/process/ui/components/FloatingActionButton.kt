@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlaylistAdd
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +17,7 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.ProcessFragment
+import com.alfresco.content.process.ui.theme.White60
 
 @Composable
 fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment, viewModel: FormViewModel) {
@@ -58,7 +58,7 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                     .show()
             }
         },
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = White60,
         icon = { Icon(Icons.Filled.PlaylistAdd, stringResource(id = R.string.accessibility_process_actions)) },
         text = { Text(text = stringResource(id = R.string.title_actions)) },
     )

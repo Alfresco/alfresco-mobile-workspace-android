@@ -198,6 +198,11 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 fieldsData = field,
                 errorData = errorData,
                 processEntry = ProcessEntry.withProcess(state.parent, field.type),
+                onValueChanged = { userDetails ->
+                    userDetailValue = userDetails
+                    errorData = userGroupInputError(userDetails, field, context)
+                    viewModel.updateFieldValue(field.id, userDetails, errorData)
+                },
             )
         }
 

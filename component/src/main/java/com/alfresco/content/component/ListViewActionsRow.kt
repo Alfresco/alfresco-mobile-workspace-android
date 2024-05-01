@@ -24,13 +24,8 @@ internal class ListViewActionsRow @JvmOverloads constructor(
         binding.actionButton.text = context.getLocalizedName(options.label ?: "")
     }
 
-    @ModelProp
-    fun setOptionSelected(isSelected: Boolean) {
-//        binding.checkBox.isChecked = isSelected
-    }
-
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
-//        binding.parentListRow.setOnClickListener(listener)
+        binding.actionButton.setOnClickListener(listener)
     }
 }

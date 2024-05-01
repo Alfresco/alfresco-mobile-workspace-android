@@ -11,7 +11,7 @@
     <string name="accessibility_process_actions">Process Actions Button</string>
     <string name="no_attachments">No attachment(s)</string>
     <string name="no_attached_folder">No Folder Attached</string>
-    <string name="text_attached_folder">%d folders</string>
+    <string name="text_attached_folder">%d folder(s)</string>
     <string name="action_info">Info</string>
     <string name="file_empty_message">Looks like you haven’t\nadded any files yet.</string>
     <string name="title_search_folder">Search Folder</string>

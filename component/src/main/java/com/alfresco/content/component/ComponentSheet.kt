@@ -410,12 +410,12 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     private fun epoxyActionListController() = simpleController(viewModel) { state ->
 
         if (state.parent?.options?.isNotEmpty() == true) {
-            state.parent.options.forEach { bucket ->
+            state.parent.options.forEach { option ->
                 listViewActionsRow {
-                    id(bucket.hashCode())
-                    data(bucket)
+                    id(option.hashCode())
+                    data(option)
                     clickListener { model, _, _, _ ->
-                        onApply?.invoke("", "", mapOf())
+                        onApply?.invoke(model.data().label, model.data().query, mapOf())
                         dismiss()
                     }
                 }

@@ -10,7 +10,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +33,7 @@ fun PeopleField(
     onAssigneeSelected: (UserGroupDetails?) -> Unit = {},
     fieldsData: FieldsData = FieldsData(),
     processEntry: ProcessEntry = ProcessEntry(),
+    onValueChanged: (UserGroupDetails?) -> Unit = { },
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
     val labelWithAsterisk = buildAnnotatedString {
@@ -80,7 +80,7 @@ fun PeopleField(
             }
         }
         if (userDetail != null) {
-            InputChip(context, userDetail)
+            InputChip(context, userDetail, onValueChanged)
         }
     }
 }

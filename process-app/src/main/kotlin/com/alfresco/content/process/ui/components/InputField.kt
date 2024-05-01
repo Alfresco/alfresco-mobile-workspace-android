@@ -37,6 +37,7 @@ fun InputField(
     isError: Boolean = false,
     errorMessage: String = "",
     isEnabled: Boolean = true,
+    dateFormat: String? = null,
 ) {
     var selectionState by remember { mutableIntStateOf(0) }
     // State to keep track of focus state
@@ -60,6 +61,9 @@ fun InputField(
             withStyle(style = SpanStyle(color = AlfrescoError)) {
                 append(" *") // Adding a red asterisk for mandatory fields
             }
+        }
+        if (dateFormat != null) {
+            append(" ($dateFormat)")
         }
     }
 

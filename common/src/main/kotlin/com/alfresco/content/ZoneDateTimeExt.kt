@@ -84,3 +84,16 @@ fun String.getLocalFormattedDate1(currentFormat: String, convertFormat: String):
     }
     return ""
 }
+
+fun updateDateFormat(originalDateString: String?): String? {
+    originalDateString ?: return null
+
+    val (datePart, timePart) = originalDateString.split(" ", limit = 2)
+    val updatedDatePart = datePart.split("-").joinToString("-") { part ->
+        if (part.equals("MM", ignoreCase = true)) {
+            part // Keep "MM" as is
+        } else part.lowercase() // Convert "DD" and "YYYY" to lowercase
+    }
+
+    return if (timePart.isNotEmpty()) "$updatedDatePart $timePart" else updatedDatePart
+}

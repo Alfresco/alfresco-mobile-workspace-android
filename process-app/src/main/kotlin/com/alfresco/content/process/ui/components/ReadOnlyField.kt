@@ -22,6 +22,7 @@ import com.alfresco.content.getLocalizedName
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.utils.inputField
+import com.alfresco.content.updateDateFormat
 
 @Composable
 fun ReadOnlyField(
@@ -33,6 +34,8 @@ fun ReadOnlyField(
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Text,
     )
+
+    var dateFormat: String? = null
 
     val textValue = when (fieldsData.params?.field?.type?.lowercase()) {
         FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
@@ -51,7 +54,8 @@ fun ReadOnlyField(
         FieldType.DATE.value() -> {
             val date = fieldsData.value as? String ?: ""
             if (date.isNotEmpty()) {
-                date.getLocalFormattedDate(DATE_FORMAT_3, DATE_FORMAT_2_1)
+                dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_2_1
+                date.getLocalFormattedDate(DATE_FORMAT_3, dateFormat)
             } else {
                 date
             }
@@ -60,7 +64,8 @@ fun ReadOnlyField(
         FieldType.DATETIME.value() -> {
             val dateTime = fieldsData.value as? String ?: ""
             if (dateTime.isNotEmpty()) {
-                dateTime.getLocalFormattedDate1(DATE_FORMAT_3, DATE_FORMAT_8)
+                dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_8
+                dateTime.getLocalFormattedDate1(DATE_FORMAT_3, dateFormat)
             } else {
                 dateTime
             }
@@ -100,6 +105,7 @@ fun ReadOnlyField(
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,
         isEnabled = false,
+        dateFormat = dateFormat,
     )
 }
 

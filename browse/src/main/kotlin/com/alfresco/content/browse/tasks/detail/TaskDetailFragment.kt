@@ -126,8 +126,10 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 }
             }
         } else {
-            inflater.inflate(R.menu.menu_workflow_task_detail, menu)
+            inflater.inflate(R.menu.menu_task_detail, menu)
             menuDetail = menu
+            menu.findItem(R.id.action_done).isVisible = false
+            menu.findItem(R.id.action_edit).isVisible = true
         }
     }
 

@@ -46,7 +46,6 @@
     <string name="account">Compte</string>
     <string name="icon_due_date">Icône Date d\'échéance</string>
     <string name="icon_user_profile">Icône du profil d\'utilisateur</string>
-    <string name="icon_file">Icône de fichier</string>
     <string name="icon_priority">Icône de priorité</string>
     <string name="icon_assigned">Icône Assigné</string>
     <string name="icon_status">Icône du statut</string>
@@ -63,15 +62,9 @@
     <string name="text_view_all">Afficher tout</string>
     <string name="text_multiple_comments">%d commentaires</string>
     <string name="text_attached_files">Fichiers joints</string>
-    <string name="text_multiple_attachment">%d pièces jointes</string>
-    <string name="no_attached_files">Aucun fichier joint</string>
     <string name="empty_no_due_date">Aucune date d\'échéance</string>
-    <string name="title_attached_files">Fichiers joints</string>
-    <string name="text_complete">Terminé</string>
     <string name="dialog_title_complete_task">Terminer la tâche</string>
     <string name="dialog_message_complete_task">Voulez-vous vraiment terminer cette tâche ? Vous ne pourrez plus faire de modifications.</string>
-    <string name="dialog_negative_button_task">Annuler</string>
-    <string name="dialog_positive_button_task">Confirmer</string>
     <string name="icon_send_description">Bouton Envoyer</string>
     <string name="empty_description">Aucune description</string>
     <string name="icon_completed">Icône Terminé</string>
@@ -79,7 +72,6 @@
     <string name="icon_priority_edit">Icône Modifier la priorité</string>
     <string name="icon_due_date_clear">Icône Effacer la date d\'échéance</string>
     <string name="icon_due_date_edit">Icône Modifier la date d\'échéance</string>
-    <string name="suffix_view_all">&#8230;Afficher tout</string>
     <string name="dialog_title_save_progress">Progression de la tâche</string>
     <string name="dialog_message_save_progress">Voulez-vous enregistrer la progression ?</string>
     <string name="text_mark_as_complete">Marquer comme terminé</string>
@@ -88,9 +80,6 @@
     <string name="text_create_task">Créer une tâche</string>
     <string name="dialog_title_discard_task">Ignorer</string>
     <string name="dialog_message_discard_task">Voulez-vous ignorer les modifications ?</string>
-    <string name="icon_delete_attachment">Icône Supprimer la pièce jointe</string>
-    <string name="dialog_title_delete_content">Supprimer un fichier ?</string>
-    <string name="text_add_attachments">Ajouter des pièces jointes</string>
     <string name="icon_add_attachment">Icône Ajouter une pièce jointe</string>
     <string name="dialog_message_complete_task_files_queue">Voulez-vous vraiment terminer la tâche ? Une fois terminée, certains fichiers ne pourront plus être importés et aucun changement ne pourra être effectué.</string>
 
@@ -100,8 +89,6 @@
     <string name="text_filter_option">Option de filtre %s</string>
     <string name="workflows_account_not_configured">Les workflows ne sont pas activées pour ce compte.</string>
 
-    <string name="title_content_in_queue">Avertissement</string>
-    <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
     <string name="approve">Approuver</string>
     <string name="reject">Rejeter</string>
     <string name="text_send_approval_again">Envoyer à nouveau pour approbation</string>

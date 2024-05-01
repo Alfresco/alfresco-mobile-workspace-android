@@ -13,6 +13,7 @@ import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.processes.ProcessListViewModel
 import com.alfresco.content.listview.processes.ProcessListViewState
+import com.alfresco.content.process.ui.models.UpdateProcessData
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.launch
@@ -117,8 +118,3 @@ class ProcessesViewModel(
         fetchInitial()
     }
 }
-
-/**
- * Mark as UpdateProcessData data class
- */
-data class UpdateProcessData(val isRefresh: Boolean)

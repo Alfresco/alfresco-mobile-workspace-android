@@ -98,7 +98,7 @@ class SearchViewModel(
                 it.terms.length >= MIN_QUERY_LENGTH
             }.executeOnLatest({
                 if (canSearchOverCurrentNetwork()) {
-                    if (state.isExtension) {
+                    if (state.isExtension || state.isProcess == true) {
                         repository.search(
                             it.terms,
                             it.contextId,
@@ -468,6 +468,7 @@ class SearchViewModel(
             maxLimitReachedForMultiSelection = false,
         )
     }
+
     override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
 
     /**

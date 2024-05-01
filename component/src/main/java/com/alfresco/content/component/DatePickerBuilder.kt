@@ -3,11 +3,16 @@ package com.alfresco.content.component
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.alfresco.content.DATE_FORMAT_2_1
+import com.alfresco.content.DATE_FORMAT_6
+import com.alfresco.content.data.payloads.FieldType
+import com.alfresco.content.data.payloads.FieldsData
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -29,6 +34,7 @@ data class DatePickerBuilder(
     var isFutureDate: Boolean = false,
     var onSuccess: DatePickerOnSuccess? = null,
     var onFailure: DatePickerOnFailure? = null,
+    var fieldsData: FieldsData? = null,
 ) {
 
     private val dateFormatddMMMyy = "dd-MMM-yy"
@@ -65,13 +71,17 @@ data class DatePickerBuilder(
 
         val constraintsBuilder = CalendarConstraints.Builder()
 
-        constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators()))
+        constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators(fieldsData)))
 
         val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            if (isFrom) {
-                setTitleText(context.getString(R.string.hint_range_from_date))
+            if (fieldsData != null) {
+                setTitleText(fieldsData?.name)
             } else {
-                setTitleText(context.getString(R.string.hint_range_to_date))
+                if (isFrom) {
+                    setTitleText(context.getString(R.string.hint_range_from_date))
+                } else {
+                    setTitleText(context.getString(R.string.hint_range_to_date))
+                }
             }
             setSelection(getSelectionDate())
             setCalendarConstraints(constraintsBuilder.build())
@@ -79,11 +89,39 @@ data class DatePickerBuilder(
 
         datePicker.show(fragmentManager, DatePickerBuilder::class.java.simpleName)
 
+        val timePicker = MaterialTimePicker
+            .Builder()
+            .setTitleText(fieldsData?.name)
+            .build()
+
+        var stringDateTime = ""
         datePicker.addOnPositiveButtonClickListener {
             val date = Date(it)
-            val stringDate = getFormatDate(date)
-            onSuccess?.invoke(stringDate)
+            if (fieldsData?.type == FieldType.DATETIME.value()) {
+                stringDateTime = getFormatDate(date)
+                timePicker.show(fragmentManager, DatePickerBuilder::class.java.name)
+            } else if (fieldsData?.type == FieldType.DATE.value()) {
+                onSuccess?.invoke(getFormatDate(date))
+            }
         }
+
+        timePicker.addOnPositiveButtonClickListener {
+            val hour = if (timePicker.hour == 0) 12 else timePicker.hour
+            val minute = if (timePicker.minute == 0) "00" else timePicker.minute.toString()
+            val amPm = if (timePicker.hour < 12) "AM" else "PM"
+
+            val combinedDateTime = "$stringDateTime $hour:$minute $amPm"
+            onSuccess?.invoke(combinedDateTime)
+        }
+
+        timePicker.addOnNegativeButtonClickListener {
+            onFailure?.invoke()
+        }
+
+        timePicker.addOnCancelListener {
+            onFailure?.invoke()
+        }
+
         datePicker.addOnCancelListener {
             onFailure?.invoke()
         }
@@ -92,27 +130,42 @@ data class DatePickerBuilder(
         }
     }
 
-    private fun getValidators(): ArrayList<CalendarConstraints.DateValidator> {
+    private fun getValidators(fieldsData: FieldsData? = null): ArrayList<CalendarConstraints.DateValidator> {
         val validators: ArrayList<CalendarConstraints.DateValidator> = ArrayList()
         var endDate = MaterialDatePicker.todayInUtcMilliseconds()
         var requiredEndDate = false
-        if (isFrom) {
-            if (toDate.isNotEmpty()) {
-                toDate.getDateFromString()?.let { date ->
-                    endDate = Date(date.time.plus(addOneDay)).time
-                }
-                requiredEndDate = true
-            }
-        } else {
-            if (fromDate.isNotEmpty()) {
-                fromDate.getDateFromString()?.let { date ->
+
+        if (fieldsData != null) {
+            fieldsData.minValue?.apply {
+                this.getDateFromString(getFieldDateFormat(fieldsData))?.let { date ->
                     validators.add(DateValidatorPointForward.from(date.time))
                 }
-                requiredEndDate = !isFutureDate
             }
-        }
-        if (requiredEndDate) {
-            validators.add(DateValidatorPointBackward.before(endDate))
+
+            fieldsData.maxValue?.apply {
+                this.getDateFromString(getFieldDateFormat(fieldsData))?.let { date ->
+                    validators.add(DateValidatorPointBackward.before(date.time))
+                }
+            }
+        } else {
+            if (isFrom) {
+                if (toDate.isNotEmpty()) {
+                    toDate.getDateFromString()?.let { date ->
+                        endDate = Date(date.time.plus(addOneDay)).time
+                    }
+                    requiredEndDate = true
+                }
+            } else {
+                if (fromDate.isNotEmpty()) {
+                    fromDate.getDateFromString()?.let { date ->
+                        validators.add(DateValidatorPointForward.from(date.time))
+                    }
+                    requiredEndDate = !isFutureDate
+                }
+            }
+            if (requiredEndDate) {
+                validators.add(DateValidatorPointBackward.before(endDate))
+            }
         }
 
         return validators
@@ -140,8 +193,8 @@ data class DatePickerBuilder(
         return SimpleDateFormat(dateFormat, Locale.ENGLISH).format(currentTime)
     }
 
-    private fun String.getDateFromString(): Date? {
-        return SimpleDateFormat(dateFormat, Locale.ENGLISH).parse(this)
+    private fun String.getDateFromString(format: String = dateFormat): Date? {
+        return SimpleDateFormat(format, Locale.ENGLISH).parse(this)
     }
 
     private fun String.getddMMyyyyStringDate(): String? {
@@ -161,5 +214,13 @@ data class DatePickerBuilder(
         calendar[Calendar.MONTH] = splitDate[1].toInt().minus(1)
         calendar[Calendar.YEAR] = splitDate[2].toInt()
         return calendar.timeInMillis
+    }
+
+    private fun getFieldDateFormat(fieldsData: FieldsData? = null): String {
+        return when (fieldsData?.type) {
+            FieldType.DATETIME.value() -> DATE_FORMAT_6
+            FieldType.DATE.value() -> DATE_FORMAT_2_1
+            else -> dateFormat
+        }
     }
 }

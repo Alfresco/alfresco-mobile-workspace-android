@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -189,6 +190,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
     private var isViewRequiredMultiSelection = false
+    var bottomMoveButtonLayout: ConstraintLayout? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -201,6 +203,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
         uploadButton = view.findViewById(R.id.upload_button)
         moveHereButton = view.findViewById(R.id.move_here_button)
+        bottomMoveButtonLayout = view.findViewById(R.id.bottom_button_layout)
         cancelButton = view.findViewById(R.id.cancel_button)
         tvUploadingFiles = view.findViewById(R.id.tv_uploading_files)
         tvPercentage = view.findViewById(R.id.tv_percentage)
@@ -256,6 +259,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         if (state.request.complete) {
             refreshLayout.isRefreshing = false
         }
+
         epoxyController.requestModelBuild()
     }
 

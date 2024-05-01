@@ -20,10 +20,15 @@ class Settings(
 
     private val listener =
         SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-            if (key != IS_PROCESS_ENABLED_KEY) {
-                AnalyticsManager().theme(prefs.getString(key, "") ?: "")
+            when (key) {
+                IS_PROCESS_ENABLED_KEY, IS_PROCESS_UPLOAD_KEY -> {}
+                else -> {
+                    AnalyticsManager().theme(prefs.getString(key, "") ?: "")
+                }
             }
-            preferenceChangedFlow.tryEmit(key)
+            key?.apply {
+                preferenceChangedFlow.tryEmit(this)
+            }
         }
 
     fun observeChanges() {
@@ -63,6 +68,8 @@ class Settings(
 
     var isProcessEnabled = sharedPref.getBoolean(IS_PROCESS_ENABLED_KEY, false)
 
+    var isProcessUpload = sharedPref.getBoolean(IS_PROCESS_UPLOAD_KEY, false)
+
     enum class Theme {
         Light,
         Dark,
@@ -76,5 +83,6 @@ class Settings(
 
     companion object {
         const val IS_PROCESS_ENABLED_KEY = "is_process_enabled"
+        const val IS_PROCESS_UPLOAD_KEY = "is_process_upload"
     }
 }

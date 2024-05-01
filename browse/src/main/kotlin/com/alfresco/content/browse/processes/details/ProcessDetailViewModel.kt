@@ -192,7 +192,7 @@ class ProcessDetailViewModel(
     fun startWorkflow() = withState { state ->
         val items = state.listContents.joinToString(separator = ",") { it.id }
         viewModelScope.launch {
-            repository::startWorkflow.asFlow(state.parent, items).execute {
+            repository::startWorkflow.asFlow(state.parent, items, mapOf()).execute {
                 when (it) {
                     is Loading -> copy(requestStartWorkflow = Loading())
                     is Fail -> copy(requestStartWorkflow = Fail(it.error))

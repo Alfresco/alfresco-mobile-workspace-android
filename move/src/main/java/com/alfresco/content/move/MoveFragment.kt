@@ -1,6 +1,5 @@
 package com.alfresco.content.move
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
@@ -46,23 +45,20 @@ class MoveFragment : Fragment(), MavericksView {
     @OptIn(InternalMavericksApi::class)
     val viewModel: MoveViewModel by fragmentViewModelWithArgs { args }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        println("MoveFragment.onAttach")
-    }
-
     override fun onStart() {
         super.onStart()
-        println("MoveFragment.onStart")
         val nodeId = viewModel.getMyFilesNodeId()
-        args.entryObj?.let {
-            findNavController().navigateToMoveParent(nodeId, it.id, getString(R.string.browse_menu_personal))
+
+        val entryObj = args.entryObj
+        if (args.entryObj != null) {
+            entryObj?.id?.let { findNavController().navigateToMoveParent(nodeId, it, getString(R.string.browse_menu_personal)) }
+        } else {
+            findNavController().navigateToMoveParent(nodeId, "", getString(R.string.browse_menu_personal), true)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("MoveFragment.onCreate")
         args = MoveArgs.with(requireArguments())
     }
 

@@ -18,8 +18,8 @@
     <string name="accessibility_text_header">Intestazione: %s</string>
     <string name="accessibility_text_more">Altro</string>
     <string name="accessibility_text_download">Scarica</string>
-    <string name="accessibility_text_add_favorite">Aggiungi a Preferiti</string>
-    <string name="accessibility_text_remove_favorite">Rimuovi da Preferiti</string>
+    <string name="accessibility_text_add_favorite">Aggiungi preferito</string>
+    <string name="accessibility_text_remove_favorite">Rimuovi preferito</string>
     <string name="accessibility_text_create_button">Crea</string>
     <string name="error_duplicate_folder">Esiste già una cartella con questo nome. Provare un nome diverso.</string>
     <string name="accessibility_text_process_row">Titolo: %s Assegnatario: %s</string>
@@ -27,6 +27,20 @@
     <string name="group_title">Gruppo</string>
     <string name="warning_message_uploading_in_progress">Il caricamento è attualmente in corso. Continuare senza eseguire il caricamento?</string>
     <string name="none">Nessuno</string>
-    <string name="title_action_mode">%d Selezionato</string>
-    <string name="message_no_internet">Controlla la connessione Internet e riprova.</string>
+    <string name="title_action_mode">%d selezionato/i</string>
+    <string name="message_no_internet">Controllare la connessione Internet e riprovare.</string>
+    <string name="suffix_view_all">...Visualizza tutto</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="text_multiple_attachment">%d allegati</string>
+    <string name="text_add_attachments">Aggiungi allegati</string>
+    <string name="title_attached_files">File allegati</string>
+    <string name="icon_file">Icona file</string>
+    <string name="icon_delete_attachment">Icona Elimina allegato</string>
+    <string name="dialog_title_delete_content">Eliminare un file?</string>
+    <string name="dialog_negative_button_task">Annulla</string>
+    <string name="dialog_positive_button_task">Conferma</string>
+    <string name="text_complete">Completato</string>
+    <string name="title_content_in_queue">Avviso</string>
+    <string name="message_content_in_queue">Il caricamento dei file è in corso. Toccare su Conferma per continuare senza questi file.</string>
+    <string name="no_attached_files">Nessun file allegato</string>
 </resources>

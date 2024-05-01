@@ -84,6 +84,7 @@ class BrowseRepository(otherSession: Session? = null) {
                 skipCount,
                 maxItems,
                 include = extraFields(),
+                includeSource = true,
             ),
         )
 

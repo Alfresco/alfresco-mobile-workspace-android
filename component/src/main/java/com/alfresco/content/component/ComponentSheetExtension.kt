@@ -184,12 +184,31 @@ fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: Compone
 }
 
 /**
+ * setup the Process Actions Component
+ * @param state
+ * @param viewModel
+ */
+@SuppressLint("ClickableViewAccessibility")
+fun ComponentSheet.setupProcessActionsComponent(state: ComponentState, viewModel: ComponentViewModel) {
+    viewModel.buildCheckListModel()
+    binding.parentView.addView(binding.frameActions)
+
+    binding.processActions.componentParent.visibility = View.VISIBLE
+
+    binding.processActions.recyclerView.setController(epoxyActionListController)
+}
+
+/**
  * setup the Title Description Component
  * @param state
  */
 fun ComponentSheet.setupTextComponent(state: ComponentState) {
     binding.parentView.addView(binding.frameTitleDescription)
-    binding.titleDescriptionComponent.tvTitle.text = state.parent?.query ?: ""
+    if (state.parent?.query.isNullOrEmpty()) {
+        binding.titleDescriptionComponent.tvTitle.visibility = View.GONE
+    } else {
+        binding.titleDescriptionComponent.tvTitle.text = state.parent?.query ?: ""
+    }
     binding.titleDescriptionComponent.tvDescription.text = state.parent?.value ?: ""
 
     binding.bottomView.visibility = View.GONE

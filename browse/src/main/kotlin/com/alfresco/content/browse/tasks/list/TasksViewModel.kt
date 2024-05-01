@@ -16,6 +16,7 @@ import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
 import com.alfresco.content.getLocalizedName
 import com.alfresco.content.listview.tasks.TaskListViewModel
 import com.alfresco.content.listview.tasks.TaskListViewState
+import com.alfresco.content.process.ui.models.UpdateTasksData
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
@@ -233,8 +234,3 @@ class TasksViewModel(
         ) = TasksViewModel(state, viewModelContext.activity, TaskRepository())
     }
 }
-
-/**
- * Mark as UpdateTasksData data class
- */
-data class UpdateTasksData(val isRefresh: Boolean)

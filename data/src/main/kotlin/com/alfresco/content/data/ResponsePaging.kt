@@ -22,6 +22,7 @@ data class ResponsePaging(
             return ResponsePaging(
                 raw.list?.entries?.map { Entry.with(it.entry, true) } ?: emptyList(),
                 Pagination.with(raw.list!!.pagination!!),
+                Source.with(raw.list?.source),
             )
         }
 

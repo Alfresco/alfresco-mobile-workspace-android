@@ -1,0 +1,19 @@
+<resources>
+    <string name="error_min_length">Enter at least %1$d characters</string>
+    <string name="accessibility_clear_text">Clear Text</string>
+    <string name="accessibility_date_icon">Date Icon</string>
+    <string name="accessibility_link_icon">Link Icon</string>
+    <string name="error_min_value">Can\'t be less than %1$d</string>
+    <string name="error_max_value">Can\'t be greater than %1$d</string>
+    <string name="error_invalid_format">Use a different number format</string>
+    <string name="error_required_field">This is a required field.</string>
+    <string name="title_actions">Actions</string>
+    <string name="accessibility_process_actions">Process Actions Button</string>
+    <string name="no_attachments">No attachment(s)</string>
+    <string name="no_attached_folder">No Folder Attached</string>
+    <string name="text_attached_folder">%d folder(s)</string>
+    <string name="action_info">Info</string>
+    <string name="file_empty_message">Looks like you haven’t\nadded any files yet.</string>
+    <string name="title_search_folder">Search Folder</string>
+    <string name="error_hyperlink_invalid_url">%1$s has Invalid URL</string>
+</resources>

@@ -61,9 +61,9 @@ class TaskDetailViewModel(
         if (!isWorkflowTask) {
             getComments()
             getContents()
-            viewModelScope.on<ActionUpdateNameDescription> {
-                setState { copy(parent = it.entry as TaskEntry) }
-            }
+        }
+        viewModelScope.on<ActionUpdateNameDescription> {
+            setState { copy(parent = it.entry as TaskEntry) }
         }
     }
 
@@ -88,7 +88,6 @@ class TaskDetailViewModel(
                     is Fail -> copy(request = Fail(it.error))
                     is Success -> {
                         val updateState = update(it())
-                        if (isWorkflowTask) getTaskForms(updateState)
                         updateState.copy(request = Success(it()))
                     }
 
@@ -377,29 +376,6 @@ class TaskDetailViewModel(
         }
     }
 
-    private fun getTaskForms(oldState: TaskDetailViewState) = withState { state ->
-        requireNotNull(oldState.parent)
-        viewModelScope.launch {
-            repository::getTaskForm.asFlow(oldState.parent.id).execute {
-                when (it) {
-                    is Loading -> copy(requestTaskForm = Loading())
-                    is Fail -> {
-                        it.error.printStackTrace()
-                        copy(requestTaskForm = Fail(it.error))
-                    }
-
-                    is Success -> {
-                        update(oldState.parent, it()).copy(requestTaskForm = Success(it()))
-                    }
-
-                    else -> {
-                        this
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * update the status of task related to workflow
      */
@@ -436,31 +412,6 @@ class TaskDetailViewModel(
 
                     is Success -> {
                         copy(requestOutcomes = Success(it()))
-                    }
-
-                    else -> {
-                        this
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * execute the save-form api
-     */
-    fun saveForm(comment: String) = withState { state ->
-        requireNotNull(state.parent)
-        viewModelScope.launch {
-            repository::saveForm.asFlow(state.parent, comment).execute {
-                when (it) {
-                    is Loading -> copy(requestSaveForm = Loading())
-                    is Fail -> {
-                        copy(requestSaveForm = Fail(it.error))
-                    }
-
-                    is Success -> {
-                        copy(requestSaveForm = Success(it()))
                     }
 
                     else -> {

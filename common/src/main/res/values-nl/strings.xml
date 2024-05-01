@@ -27,6 +27,20 @@
     <string name="group_title">Groep</string>
     <string name="warning_message_uploading_in_progress">De upload is momenteel bezig. Wilt u doorgaan zonder uploaden?</string>
     <string name="none">Geen</string>
-    <string name="title_action_mode">%d Geselecteerd</string>
+    <string name="title_action_mode">%d seselecteerd</string>
     <string name="message_no_internet">Controleer uw internetverbinding en probeer het opnieuw.</string>
+    <string name="suffix_view_all">...Alle weergeven</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="text_multiple_attachment">%d bijlagen</string>
+    <string name="text_add_attachments">Bijlagen toevoegen</string>
+    <string name="title_attached_files">Bijgevoegde bestanden</string>
+    <string name="icon_file">Pictogram Bestand</string>
+    <string name="icon_delete_attachment">Pictogram Bijlage verwijderen</string>
+    <string name="dialog_title_delete_content">Bestand verwijderen?</string>
+    <string name="dialog_negative_button_task">Annuleren</string>
+    <string name="dialog_positive_button_task">Bevestigen</string>
+    <string name="text_complete">Voltooien</string>
+    <string name="title_content_in_queue">Waarschuwing</string>
+    <string name="message_content_in_queue">Er worden bestanden geüpload. Tik om te bevestigen dat u wilt doorgaan zonder de bestanden in uitvoering.</string>
+    <string name="no_attached_files">Geen bijgevoegde bestanden</string>
 </resources>

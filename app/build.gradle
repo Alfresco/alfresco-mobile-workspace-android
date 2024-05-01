@@ -54,6 +54,8 @@ android {
         viewBinding = true
     }
 
+
+
     compileOptions {
         coreLibraryDesugaringEnabled true
     }
@@ -98,7 +100,7 @@ dependencies {
     implementation project(':viewer')
     implementation project(':shareextension')
     implementation project(':move')
-
+    implementation project(':process-app')
     implementation project(':data')
     implementation libs.alfresco.content
 
@@ -119,6 +121,8 @@ dependencies {
 
     implementation libs.coil.core
     implementation libs.gson
+    implementation libs.compose.runtime
+    implementation libs.constraintlayout
 
     coreLibraryDesugaring libs.android.desugar
 

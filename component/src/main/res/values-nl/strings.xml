@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-2
     <string name="search_hint">Zoeken</string>
     <string name="advance_search_title">Geavanceerd zoeken</string>
     <string name="hint_range_from">Van</string>

@@ -17,11 +17,9 @@ import com.alfresco.content.common.updatePriorityView
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.component.ComponentType
 import com.alfresco.content.component.DatePickerBuilder
-import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.formatDate
 import com.alfresco.content.getFormattedDate
-import com.alfresco.content.getLocalizedName
 import com.alfresco.content.parseDate
 import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.button.MaterialButton
@@ -57,13 +55,12 @@ internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(
 
 internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { state ->
     binding.clComment.visibility = View.GONE
-    binding.clIdentifier.visibility = View.GONE
-    binding.iconStatusNav.visibility = View.VISIBLE
-    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
+    binding.clIdentifier.visibility = View.VISIBLE
+//    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
 
-    binding.clStatus.setSafeOnClickListener {
+    /*binding.clStatus.setSafeOnClickListener {
         findNavController().navigate(R.id.action_nav_task_detail_to_nav_task_status)
-    }
+    }*/
 }
 
 internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
@@ -92,20 +89,13 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
             }
-            binding.clStatus.visibility = if (viewModel.isWorkflowTask && viewModel.hasTaskStatusEnabled(state)) {
-                binding.tvStatusValue.text = dataObj.taskFormStatus
-                View.VISIBLE
-            } else View.GONE
+            binding.clStatus.visibility = View.GONE
         } else {
             binding.clCompleted.visibility = View.GONE
             (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
                 topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
             }
-            binding.clStatus.visibility = if (viewModel.isWorkflowTask && !viewModel.hasTaskStatusEnabled(state)) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
+            binding.clStatus.visibility = View.VISIBLE
 
             when (dataObj.memberOfCandidateGroup) {
                 true -> {
@@ -113,7 +103,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                         makeClaimButton()
                     } else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_release).isVisible = true
-                        makeOutcomes()
+//                        makeOutcomes()
                     }
                 }
 
@@ -121,14 +111,12 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
                     if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
                         viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
                     ) {
-                        makeOutcomes()
+//                        makeOutcomes()
                     }
                 }
             }
 
-            binding.tvStatusValue.text = if (!viewModel.isWorkflowTask) {
-                getString(R.string.status_active)
-            } else dataObj.taskFormStatus
+            binding.tvStatusValue.text = getString(R.string.status_active)
         }
     }
 }
@@ -257,34 +245,6 @@ internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(view
                 selector = ComponentType.VIEW_TEXT.value,
             ),
         )
-    }
-}
-
-internal fun TaskDetailFragment.makeOutcomes() = withState(viewModel) { state ->
-    if (binding.parentOutcomes.childCount == 0) {
-        state.parent?.outcomes?.forEach { dataObj ->
-            val button = if (dataObj.outcome.lowercase() == "reject") {
-                this.layoutInflater.inflate(R.layout.view_layout_negative_outcome, binding.parentOutcomes, false) as MaterialButton
-            } else {
-                this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
-            }
-            button.text = requireContext().getLocalizedName(dataObj.name)
-            button.setOnClickListener {
-                withState(viewModel) { newState ->
-                    if (viewModel.hasTaskStatusEnabled(newState) && !viewModel.hasTaskStatusValue(newState)
-                    ) {
-                        showSnackar(
-                            binding.root,
-                            getString(R.string.error_select_status),
-                        )
-                    } else {
-                        AnalyticsManager().taskFiltersEvent(dataObj.outcome)
-                        viewModel.actionOutcome(dataObj.outcome)
-                    }
-                }
-            }
-            binding.parentOutcomes.addView(button)
-        }
     }
 }
 

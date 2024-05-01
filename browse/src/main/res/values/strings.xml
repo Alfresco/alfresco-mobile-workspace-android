@@ -46,7 +46,6 @@
     <string name="account">Account</string>
     <string name="icon_due_date">Due date icon</string>
     <string name="icon_user_profile">User profile icon</string>
-    <string name="icon_file">File icon</string>
     <string name="icon_priority">Priority icon</string>
     <string name="icon_assigned">Assigned icon</string>
     <string name="icon_status">Status icon</string>
@@ -63,15 +62,9 @@
     <string name="text_view_all">View all</string>
     <string name="text_multiple_comments">%d comments</string>
     <string name="text_attached_files">Attached files</string>
-    <string name="text_multiple_attachment">%d attachments</string>
-    <string name="no_attached_files">No Attached Files</string>
     <string name="empty_no_due_date">No due date</string>
-    <string name="title_attached_files">Attached files</string>
-    <string name="text_complete">Complete</string>
     <string name="dialog_title_complete_task">Complete Task</string>
     <string name="dialog_message_complete_task">Are you sure you want to complete this task? You will no longer be able to make any changes.</string>
-    <string name="dialog_negative_button_task">Cancel</string>
-    <string name="dialog_positive_button_task">Confirm</string>
     <string name="icon_send_description">Send Button</string>
     <string name="empty_description">No description</string>
     <string name="icon_completed">Completed icon</string>
@@ -79,7 +72,6 @@
     <string name="icon_priority_edit">Edit priority icon</string>
     <string name="icon_due_date_clear">Clear due date icon</string>
     <string name="icon_due_date_edit">Edit due date icon</string>
-    <string name="suffix_view_all">&#8230;View all</string>
     <string name="dialog_title_save_progress">Task Progress</string>
     <string name="dialog_message_save_progress">Do you want to save progress?</string>
     <string name="text_mark_as_complete">Mark as complete</string>
@@ -88,9 +80,6 @@
     <string name="text_create_task">Create task</string>
     <string name="dialog_title_discard_task">Discard</string>
     <string name="dialog_message_discard_task">Do you want to discard the changes?</string>
-    <string name="icon_delete_attachment">Icon delete attachment</string>
-    <string name="dialog_title_delete_content">Delete a file?</string>
-    <string name="text_add_attachments">Add attachments</string>
     <string name="icon_add_attachment">Add attachment icon</string>
     <string name="dialog_message_complete_task_files_queue">Are you sure you want to complete the task? Once completed, some files could not be uploaded and no changes can be made.</string>
 
@@ -100,8 +89,6 @@
     <string name="text_filter_option">Filter Option %s</string>
     <string name="workflows_account_not_configured">Workflows are not enabled for this account.</string>
 
-    <string name="title_content_in_queue">Warning</string>
-    <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="text_send_approval_again">Send for Approval Again</string>

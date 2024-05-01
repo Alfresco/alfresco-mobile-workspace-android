@@ -7,6 +7,7 @@ import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
+import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -15,8 +16,6 @@ import com.alfresco.events.EventBus
 import com.alfresco.process.apis.ProcessAPI
 import com.alfresco.process.apis.TaskAPI
 import com.alfresco.process.models.AssignUserBody
-import com.alfresco.process.models.CommonOptionModel
-import com.alfresco.process.models.GroupInfo
 import com.alfresco.process.models.ProfileData
 import com.alfresco.process.models.RequestComment
 import com.alfresco.process.models.RequestLinkContent
@@ -26,8 +25,6 @@ import com.alfresco.process.models.RequestProcessInstancesQuery
 import com.alfresco.process.models.RequestSaveForm
 import com.alfresco.process.models.RequestTaskFilters
 import com.alfresco.process.models.TaskBodyCreate
-import com.alfresco.process.models.UserInfo
-import com.alfresco.process.models.ValuesModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -331,6 +328,7 @@ class TaskRepository {
                 ),
                 local.parentId,
                 uploadServer = uploadServerType,
+                observerID = local.observerID,
             )
 
             else -> Entry()
@@ -350,7 +348,7 @@ class TaskRepository {
             processesService.linkContentToProcess(
                 includeLinkContent(linkContentPayload),
             ),
-            uploadServer = UploadServerType.NONE,
+            uploadServer = UploadServerType.UPLOAD_TO_PROCESS,
         )
 
     private fun includeLinkContent(payload: LinkContentPayload): RequestLinkContent {
@@ -383,58 +381,15 @@ class TaskRepository {
     /**
      * Execute the start flow integration
      */
-    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String) = ProcessEntry.with(
+    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String, values: Map<String, Any?>) = ProcessEntry.with(
         processesService.createProcessInstance(
             RequestProcessInstances(
                 name = processEntry?.name,
                 processDefinitionId = processEntry?.id,
-                values = ValuesModel(
-                    due = processEntry?.formattedDueDate,
-                    message = processEntry?.description,
-                    priority = if (processEntry?.priority != -1) {
-                        CommonOptionModel(
-                            id = getTaskPriority(processEntry?.priority ?: 0).name,
-                            name = getTaskPriority(processEntry?.priority ?: 0).name,
-                        )
-                    } else {
-                        null
-                    },
-                    reviewer = getUser(processEntry?.startedBy),
-                    reviewGroups = getGroup(processEntry?.startedBy),
-                    items = items,
-                    sendEmailNotifications = false,
-                ),
+                values = values,
             ),
         ),
     )
-
-    private fun getUser(userGroupInfo: UserGroupDetails?): UserInfo? {
-        return if (userGroupInfo?.isGroup == true) {
-            null
-        } else {
-            UserInfo(
-                id = userGroupInfo?.id,
-                firstName = userGroupInfo?.firstName,
-                lastName = userGroupInfo?.lastName,
-                email = userGroupInfo?.email,
-            )
-        }
-    }
-
-    private fun getGroup(userGroupInfo: UserGroupDetails?): GroupInfo? {
-        return if (userGroupInfo?.isGroup == false) {
-            null
-        } else {
-            GroupInfo(
-                id = userGroupInfo?.id,
-                name = userGroupInfo?.name,
-                externalId = userGroupInfo?.externalId,
-                status = userGroupInfo?.status,
-                parentGroupId = userGroupInfo?.parentGroupId,
-                groups = userGroupInfo?.groups,
-            )
-        }
-    }
 
     /**
      * saving the accountInfo data in preferences
@@ -456,39 +411,39 @@ class TaskRepository {
     suspend fun getTaskForm(taskID: String) = ResponseListForm.with(tasksService.taskForm(taskID))
 
     /**
+     * Call to fetch the task's form variables related to workflow
+     */
+    suspend fun getTaskFormVariables(taskID: String) = ResponseFormVariables.with(tasksService.taskFormVariables(taskID))
+
+    /**
      * Call to perform the outcomes
      */
     suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry) = tasksService.taskFormAction(
         taskEntry.id,
         RequestOutcomes(
             outcome = outcome,
-            values = if (taskEntry.taskFormStatus != null) {
-                ValuesModel(
-                    status = CommonOptionModel(
-                        id = taskEntry.taskFormStatus,
-                        name = taskEntry.taskFormStatus,
-                    ),
-                    comment = taskEntry.comment,
-                )
-            } else {
-                null
-            },
+            values = convertModelToMapValues(taskEntry),
+        ),
+    )
+
+    /**
+     * Call to perform the outcomes
+     */
+    suspend fun actionCompleteOutcome(taskID: String, values: Map<String, Any?>) = tasksService.taskFormAction(
+        taskID,
+        RequestOutcomes(
+            outcome = null,
+            values = values,
         ),
     )
 
     /**
      * Call to save the form data
      */
-    suspend fun saveForm(taskEntry: TaskEntry, comment: String) = tasksService.saveForm(
-        taskEntry.id,
+    suspend fun saveForm(taskID: String, values: Map<String, Any?>) = tasksService.saveForm(
+        taskID,
         RequestSaveForm(
-            values = ValuesModel(
-                status = CommonOptionModel(
-                    id = taskEntry.taskFormStatus,
-                    name = taskEntry.taskFormStatus,
-                ),
-                comment = comment,
-            ),
+            values = values,
         ),
     )
 

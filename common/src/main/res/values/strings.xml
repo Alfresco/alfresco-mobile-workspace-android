@@ -29,4 +29,18 @@
     <string name="none">None</string>
     <string name="title_action_mode">%d Selected</string>
     <string name="message_no_internet">Please check your internet connection and Try again.</string>
+    <string name="suffix_view_all">&#8230;View all</string>
+    <string name="title_workflow">Workflow</string>
+    <string name="text_multiple_attachment">%d attachment(s)</string>
+    <string name="text_add_attachments">Add attachments</string>
+    <string name="title_attached_files">Attached files</string>
+    <string name="icon_file">File icon</string>
+    <string name="icon_delete_attachment">Icon delete attachment</string>
+    <string name="dialog_title_delete_content">Delete a file?</string>
+    <string name="dialog_negative_button_task">Cancel</string>
+    <string name="dialog_positive_button_task">Confirm</string>
+    <string name="text_complete">Complete</string><string name="title_content_in_queue">Warning</string>
+    <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
+    <string name="no_attached_files">No Attached Files</string>
+    <string name="title_no_name">No Name</string>
 </resources>

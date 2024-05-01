@@ -1,6 +1,7 @@
 package com.alfresco.content.data
 
 import android.os.Parcelable
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProcessInstanceEntry
 import kotlinx.parcelize.Parcelize
@@ -16,6 +17,7 @@ data class ProcessEntry(
     val description: String = "",
     val businessKey: String? = null,
     val processDefinitionId: String? = null,
+    val processInstanceId: String? = null,
     val tenantId: String? = null,
     val started: ZonedDateTime? = null,
     val ended: ZonedDateTime? = null,
@@ -33,6 +35,7 @@ data class ProcessEntry(
     val formattedDueDate: String? = null,
     val defaultEntries: List<Entry> = emptyList(),
     val reviewerType: ReviewerType = ReviewerType.OTHER,
+    val taskEntry: TaskEntry = TaskEntry(),
 ) : ParentEntry(), Parcelable {
 
     companion object {
@@ -72,6 +75,24 @@ data class ProcessEntry(
                 name = data.name ?: "",
                 description = data.description ?: "",
                 defaultEntries = entries,
+            )
+        }
+
+        /**
+         * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
+         */
+        fun with(data: ProcessEntry, entries: List<Entry>): ProcessEntry {
+            return data.copy(defaultEntries = entries)
+        }
+
+        /**
+         * return the ProcessEntry using TaskEntry
+         */
+        fun with(data: TaskEntry): ProcessEntry {
+            return ProcessEntry(
+                description = data.description ?: "",
+                processInstanceId = data.processInstanceId,
+                taskEntry = data,
             )
         }
 
@@ -220,6 +241,38 @@ data class ProcessEntry(
                 if (it.type == ReviewerType.FUNCTIONAL_GROUP.value()) {
                     reviewerType = ReviewerType.FUNCTIONAL_GROUP
                 }
+            }
+
+            return ProcessEntry(
+                id = data.id,
+                name = data.name,
+                description = data.description,
+                businessKey = data.businessKey,
+                processDefinitionId = data.processDefinitionId,
+                tenantId = data.tenantId,
+                started = data.started,
+                ended = data.ended,
+                startedBy = data.startedBy,
+                processDefinitionName = data.processDefinitionName,
+                processDefinitionDescription = data.processDefinitionDescription,
+                processDefinitionKey = data.processDefinitionKey,
+                processDefinitionCategory = data.processDefinitionCategory,
+                processDefinitionVersion = data.processDefinitionVersion,
+                processDefinitionDeploymentId = data.processDefinitionDeploymentId,
+                graphicalNotationDefined = data.graphicalNotationDefined,
+                startFormDefined = data.startFormDefined,
+                suspended = data.suspended,
+                formattedDueDate = data.formattedDueDate,
+                priority = data.priority,
+                reviewerType = reviewerType,
+            )
+        }
+
+        fun withProcess(data: ProcessEntry, fieldType: String): ProcessEntry {
+            var reviewerType: ReviewerType = ReviewerType.PEOPLE
+
+            if (fieldType == FieldType.FUNCTIONAL_GROUP.value()) {
+                reviewerType = ReviewerType.FUNCTIONAL_GROUP
             }
 
             return ProcessEntry(

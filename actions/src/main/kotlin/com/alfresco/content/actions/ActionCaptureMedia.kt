@@ -41,6 +41,7 @@ data class ActionCaptureMedia(
                             item.description,
                             item.mimeType,
                             entry.uploadServer,
+                            observerId = entry.observerID,
                         )
                     }
                     repository.setTotalTransferSize(result.size)

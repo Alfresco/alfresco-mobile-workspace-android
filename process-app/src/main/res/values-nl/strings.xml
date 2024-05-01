@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_min_length">Voer minstens %1$d tekens in</string>
+    <string name="accessibility_clear_text">Tekst wissen</string>
+    <string name="accessibility_date_icon">Datumpictogram</string>
+    <string name="accessibility_link_icon">Koppelingpictogram</string>
+    <string name="error_min_value">Mag niet minder zijn dan %1$d</string>
+    <string name="error_max_value">Mag niet meer zijn dan %1$d</string>
+    <string name="error_invalid_format">Gebruik een andere getalnotatie</string>
+    <string name="error_required_field">Dit is een verplicht veld.</string>
+    <string name="title_actions">Acties</string>
+    <string name="accessibility_process_actions">Knop Procesacties</string>
+    <string name="no_attachments">Geen bijlagen</string>
+</resources>

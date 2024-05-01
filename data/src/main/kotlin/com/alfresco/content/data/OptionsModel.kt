@@ -46,3 +46,11 @@ data class OptionsModel(
         }
     }
 }
+
+enum class DefaultOutcomesID {
+    DEFAULT_START_WORKFLOW,
+    DEFAULT_SAVE,
+    DEFAULT_COMPLETE,
+    ;
+    fun value() = name.lowercase()
+}

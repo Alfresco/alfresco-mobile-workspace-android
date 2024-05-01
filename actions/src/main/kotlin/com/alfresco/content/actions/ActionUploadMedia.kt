@@ -25,17 +25,18 @@ data class ActionUploadMedia(
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
-        val result = ContentPickerFragment.pickItems(context, MIME_TYPES)
+        val result = ContentPickerFragment.pickItems(context, MIME_TYPES, entry.isMultiple)
         if (result.isNotEmpty()) {
             when (entry.uploadServer) {
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
                     result.forEach {
                         val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
-                        if (GetMultipleContents.isFileSizeExceed(fileLength)) {
+                        if (GetMultipleContents.isFileSizeExceed(fileLength, if (entry.observerID.isNotEmpty()) GetMultipleContents.MAX_FILE_SIZE_10 else GetMultipleContents.MAX_FILE_SIZE_100)) {
                             throw CancellationException(ERROR_FILE_SIZE_EXCEED)
                         }
                     }
                 }
+
                 else -> {}
             }
             withContext(Dispatchers.IO) {
@@ -45,6 +46,7 @@ data class ActionUploadMedia(
                         it,
                         getParentId(entry),
                         uploadServerType = entry.uploadServer,
+                        observerId = entry.observerID,
                     )
                 }
                 repository.setTotalTransferSize(result.size)

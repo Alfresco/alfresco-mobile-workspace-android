@@ -14,6 +14,7 @@ import com.alfresco.content.browse.tasks.detail.TaskDetailViewState
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.EventName
+import com.alfresco.content.process.ui.fragments.ProcessBaseFragment.Companion.KEY_ENTRY_OBJ
 import com.alfresco.content.viewer.ViewerActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -84,7 +85,7 @@ abstract class BaseDetailFragment : Fragment(), DeleteContentListener {
      */
     fun localViewerIntent(contentEntry: Entry) = startActivity(
         Intent(requireActivity(), LocalPreviewActivity::class.java)
-            .putExtra(LocalPreviewActivity.KEY_ENTRY_OBJ, contentEntry),
+            .putExtra(KEY_ENTRY_OBJ, contentEntry),
     )
 
     /**

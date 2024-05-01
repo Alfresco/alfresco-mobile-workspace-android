@@ -1,0 +1,13 @@
+<resources>
+    <string name="error_min_length">Introduzca al menos %1$d caracteres</string>
+    <string name="accessibility_clear_text">Borrar texto</string>
+    <string name="accessibility_date_icon">Icono de fecha</string>
+    <string name="accessibility_link_icon">Icono de enlace</string>
+    <string name="error_min_value">No puede ser menor que %1$d</string>
+    <string name="error_max_value">No puede ser mayor que %1$d</string>
+    <string name="error_invalid_format">Utilice un formato de número distinto</string>
+    <string name="error_required_field">Este campo es obligatorio.</string>
+    <string name="title_actions">Acciones</string>
+    <string name="accessibility_process_actions">Botón de acciones de procesos</string>
+    <string name="no_attachments">Sin adjuntos</string>
+</resources>

@@ -1,11 +1,11 @@
 package com.alfresco.content.browse.tasks.detail
 
 import com.alfresco.content.actions.Action
-import com.alfresco.content.browse.processes.list.UpdateProcessData
-import com.alfresco.content.browse.tasks.list.UpdateTasksData
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.UserGroupDetails
+import com.alfresco.content.process.ui.models.UpdateProcessData
+import com.alfresco.content.process.ui.models.UpdateTasksData
 import com.alfresco.events.EventBus
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -74,5 +74,5 @@ internal fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
 
 internal fun TaskDetailViewModel.isAssigneeAndLoggedInSame(assignee: UserGroupDetails?) = getAPSUser().id == assignee?.id
 internal fun TaskDetailViewModel.isStartedByAndLoggedInSame(initiatorId: String?) = getAPSUser().id.toString() == initiatorId
-internal fun TaskDetailViewModel.isTaskFormAndDetailRequestCompleted(state: TaskDetailViewState) = isWorkflowTask && state.requestTaskForm.complete
+internal fun TaskDetailViewModel.isTaskFormAndDetailRequestCompleted(state: TaskDetailViewState) = isWorkflowTask && state.request.complete
 internal fun TaskDetailViewModel.isTaskDetailRequestCompleted(state: TaskDetailViewState) = !isWorkflowTask && state.request.complete

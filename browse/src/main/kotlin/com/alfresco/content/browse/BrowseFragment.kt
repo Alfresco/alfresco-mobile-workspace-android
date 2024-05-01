@@ -48,18 +48,21 @@ data class BrowseArgs(
     val path: String,
     val id: String?,
     val moveId: String,
+    val isProcess: Boolean,
     val title: String?,
 ) : Parcelable {
     companion object {
         private const val PATH_KEY = "path"
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
+        private const val IS_PROCESS_KEY = "isProcess"
 
         fun with(args: Bundle): BrowseArgs {
             return BrowseArgs(
                 args.getString(PATH_KEY, ""),
                 args.getString(ID_KEY, null),
                 args.getString(MOVE_ID_KEY, ""),
+                args.getBoolean(IS_PROCESS_KEY, false),
                 args.getString(TITLE_KEY, null),
             )
         }
@@ -194,7 +197,7 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", false)
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", isExtension = false)
                 true
             }
 

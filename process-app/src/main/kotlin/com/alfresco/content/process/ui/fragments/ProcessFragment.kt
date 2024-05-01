@@ -108,7 +108,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         withState(viewModel) {
             if (it.parent.processInstanceId != null) {
                 if (it.parent.processInstanceId != null) {
-                    supportActionBar?.title = it.parent.taskEntry.name
+                    supportActionBar?.title = it.parent.taskEntry.name.ifEmpty { getString(R.string.title_no_name) }
                 } else {
                     supportActionBar?.title = getString(R.string.title_workflow)
                 }

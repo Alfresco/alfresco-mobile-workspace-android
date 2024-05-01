@@ -31,7 +31,7 @@ data class ActionUploadMedia(
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
                     result.forEach {
                         val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
-                        if (GetMultipleContents.isFileSizeExceed(fileLength)) {
+                        if (GetMultipleContents.isFileSizeExceed(fileLength, if (entry.observerID.isNotEmpty()) GetMultipleContents.MAX_FILE_SIZE_10 else GetMultipleContents.MAX_FILE_SIZE_100)) {
                             throw CancellationException(ERROR_FILE_SIZE_EXCEED)
                         }
                     }

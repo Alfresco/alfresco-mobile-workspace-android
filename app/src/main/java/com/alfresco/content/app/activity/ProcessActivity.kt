@@ -1,5 +1,6 @@
 package com.alfresco.content.app.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +21,11 @@ class ProcessActivity : BaseActivity(), MavericksView {
         super.onCreate(savedInstanceState)
         binding = ActivityProcessBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (!resources.getBoolean(R.bool.isTablet)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
         configureNav()
         setupActionToasts()
     }

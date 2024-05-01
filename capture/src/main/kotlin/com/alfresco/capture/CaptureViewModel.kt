@@ -8,6 +8,7 @@ import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.data.Settings
 import com.alfresco.content.session.SessionManager
 import java.io.File
 
@@ -28,6 +29,7 @@ class CaptureViewModel(
     var mode: CaptureMode = CaptureMode.Photo
     var flashMode = ImageCapture.FLASH_MODE_AUTO
     var lensFacing = -1
+    var isProcessUpload = Settings(context).isProcessUpload
 
     init {
         // Clear any pending captures from a previous session

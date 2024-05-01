@@ -32,6 +32,7 @@ interface Action {
     suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> {
         return Pair(entry, entries)
     }
+
     fun copy(_entry: ParentEntry): Action
     fun copy(_entries: List<Entry>): Action {
         return this
@@ -49,10 +50,15 @@ interface Action {
             bus.send(newAction)
         } catch (ex: CancellationException) {
             // no-op
-            if (entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
-                ex.message == ERROR_FILE_SIZE_EXCEED
-            ) {
-                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+            when {
+                entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
+                    ex.message == ERROR_FILE_SIZE_EXCEED -> {
+                    bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+                }
+                entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_PROCESS &&
+                    ex.message == ERROR_FILE_SIZE_EXCEED -> {
+                    bus.send(Error(context.getString(R.string.error_file_size_exceed_10mb)))
+                }
             }
         } catch (ex: Exception) {
             sendAnalytics(false)
@@ -69,6 +75,7 @@ interface Action {
                         bus.send(Error(context.getString(R.string.error_duplicate_folder)))
                     }
                 }
+
                 else -> bus.send(Error(context.getString(R.string.action_generic_error)))
             }
         }
@@ -106,6 +113,7 @@ interface Action {
                         bus.send(Error(context.getString(R.string.error_duplicate_folder)))
                     }
                 }
+
                 else -> bus.send(Error(context.getString(R.string.action_generic_error)))
             }
         }

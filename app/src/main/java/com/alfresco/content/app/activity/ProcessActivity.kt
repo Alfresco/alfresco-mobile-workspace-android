@@ -46,7 +46,7 @@ class ProcessActivity : BaseActivity(), MavericksView {
 
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
-        binding.root,
+        binding.parentView,
         binding.bottomView,
     )
 

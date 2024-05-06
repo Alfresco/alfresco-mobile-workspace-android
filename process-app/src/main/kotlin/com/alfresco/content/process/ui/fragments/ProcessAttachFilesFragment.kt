@@ -122,7 +122,7 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
                 listViewAttachmentRow {
                     id(stableId(obj))
                     data(obj)
-                    processData(state.isProcessInstance)
+                    processData(state.isProcessInstance && state.isReadOnlyField)
                     clickListener { model, _, _, _ ->
                         if (state.isProcessInstance) {
                             onItemClicked(model.data())

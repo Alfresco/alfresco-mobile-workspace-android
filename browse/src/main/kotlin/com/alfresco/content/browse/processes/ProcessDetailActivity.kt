@@ -35,7 +35,7 @@ class ProcessDetailActivity : AppCompatActivity() {
 
     private fun setupActionToasts() = Action.showActionToasts(
         lifecycleScope,
-        binding.root,
+        binding.parentView,
         binding.bottomView,
     )
 }

@@ -3,6 +3,7 @@ package com.alfresco.content.process.ui.fragments
 import com.airbnb.mvrx.MavericksState
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineStatus
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.UploadData
 
 data class ProcessAttachFilesViewState(
@@ -17,6 +18,12 @@ data class ProcessAttachFilesViewState(
         get() = when (parent.process.processInstanceId) {
             null -> false
             else -> true
+        }
+
+    val isReadOnlyField: Boolean
+        get() = when (parent.field.type) {
+            FieldType.READONLY.value(), FieldType.READONLY_TEXT.value() -> true
+            else -> false
         }
 
     /**

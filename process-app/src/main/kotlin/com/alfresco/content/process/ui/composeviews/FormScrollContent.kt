@@ -165,7 +165,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 viewModel = viewModel,
                 fieldsData = field,
                 onUserTap = {
-                    if (it && field.value is List<*>) {
+                    if (it && field.value is List<*> && (field.value as List<*>).isNotEmpty()) {
                         val bundle = Bundle().apply {
                             putParcelable(
                                 Mavericks.KEY_ARG,

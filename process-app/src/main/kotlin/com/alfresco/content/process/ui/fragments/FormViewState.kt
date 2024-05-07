@@ -30,6 +30,7 @@ data class FormViewState(
     val requestContent: Async<Entry> = Uninitialized,
     val requestAccountInfo: Async<ResponseAccountInfo> = Uninitialized,
     val requestProfile: Async<ProfileData> = Uninitialized,
+    val requestClaimRelease: Async<Response<Unit>> = Uninitialized,
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
 

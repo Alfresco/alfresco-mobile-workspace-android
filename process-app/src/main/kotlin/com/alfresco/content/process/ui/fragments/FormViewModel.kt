@@ -305,7 +305,33 @@ class FormViewModel(
             DefaultOutcomesID.DEFAULT_START_WORKFLOW.value() -> startWorkflow()
             DefaultOutcomesID.DEFAULT_COMPLETE.value() -> completeTask()
             DefaultOutcomesID.DEFAULT_SAVE.value() -> saveForm()
+            DefaultOutcomesID.DEFAULT_CLAIM.value() -> claimTask()
             else -> actionOutcome(optionsModel.outcome)
+        }
+    }
+
+    /**
+     * execute API to claim the task
+     */
+    private fun claimTask() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::claimTask.asFlow(state.parent.taskEntry.id).execute {
+                when (it) {
+                    is Loading -> copy(requestClaimRelease = Loading())
+                    is Fail -> {
+                        copy(requestClaimRelease = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestClaimRelease = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
         }
     }
 

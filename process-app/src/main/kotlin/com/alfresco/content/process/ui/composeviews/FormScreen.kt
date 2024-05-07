@@ -28,9 +28,20 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
 
     val state by viewModel.collectAsState()
 
+    val task = state.parent.taskEntry
+
     val customOutcomes = when {
         state.formFields.isEmpty() -> emptyList()
         state.processOutcomes.isEmpty() -> defaultOutcomes(state)
+        task.assignee?.id == 0 -> {
+            listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_CLAIM.value(),
+                    name = stringResource(id = R.string.action_menu_claim),
+                ),
+            )
+        }
+
         else -> customOutcomes(state)
     }
 

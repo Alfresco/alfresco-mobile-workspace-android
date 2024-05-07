@@ -154,7 +154,8 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             state.requestAccountInfo is Loading || state.requestContent is Loading
 
         when {
-            state.requestStartWorkflow is Success || state.requestSaveForm is Success || state.requestOutcomes is Success -> {
+            state.requestStartWorkflow is Success || state.requestSaveForm is Success ||
+                state.requestOutcomes is Success || state.requestClaimRelease is Success -> {
                 viewModel.updateProcessList()
                 requireActivity().finish()
             }

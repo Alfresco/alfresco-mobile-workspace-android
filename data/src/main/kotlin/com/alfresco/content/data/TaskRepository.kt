@@ -7,7 +7,6 @@ import com.alfresco.content.data.payloads.CommentPayload
 import com.alfresco.content.data.payloads.LinkContentPayload
 import com.alfresco.content.data.payloads.SystemPropertiesEntry
 import com.alfresco.content.data.payloads.TaskProcessFiltersPayload
-import com.alfresco.content.data.payloads.convertModelToMapValues
 import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
@@ -418,11 +417,11 @@ class TaskRepository {
     /**
      * Call to perform the outcomes
      */
-    suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry) = tasksService.taskFormAction(
+    suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry, values: Map<String, Any?>) = tasksService.taskFormAction(
         taskEntry.id,
         RequestOutcomes(
             outcome = outcome,
-            values = convertModelToMapValues(taskEntry),
+            values = values,
         ),
     )
 

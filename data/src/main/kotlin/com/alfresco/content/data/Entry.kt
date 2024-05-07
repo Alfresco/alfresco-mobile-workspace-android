@@ -379,7 +379,7 @@ data class Entry(
             ).withOfflineStatus()
         }
 
-        fun with(contentEntry: ContentEntry): Entry {
+        fun with(contentEntry: ContentEntry, observerID: String): Entry {
             return Entry(
                 id = contentEntry.id.toString(),
                 name = contentEntry.name,
@@ -388,6 +388,8 @@ data class Entry(
                 isRelatedContent = contentEntry.isRelatedContent,
                 isContentAvailable = contentEntry.isContentAvailable,
                 mimeType = contentEntry.mimeType,
+                observerID = observerID,
+                uploadServer = UploadServerType.DATA_FROM_SERVER,
 
             )
         }
@@ -558,6 +560,7 @@ enum class UploadServerType {
     DEFAULT,
     UPLOAD_TO_TASK,
     UPLOAD_TO_PROCESS,
+    DATA_FROM_SERVER,
     NONE,
     ;
 

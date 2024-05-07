@@ -25,6 +25,7 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.hideSoftInput
@@ -207,9 +208,11 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
-    override fun onAttachFiles(field: FieldsData) = withState(viewModel) { state ->
+    override fun onAttachFiles(field: FieldsData, deletedFiles: MutableMap<String, Entry>) = withState(viewModel) { state ->
         if (isAdded && field.type == FieldType.UPLOAD.value()) {
-            val listContents = viewModel.getContents(state, field.id)
+            val serverUploads = field.getContentList().filter { it.uploadServer == UploadServerType.DATA_FROM_SERVER }.filterNot { item -> deletedFiles.any { it.value.id == item.id } }
+
+            val listContents = serverUploads + viewModel.getContents(state, field.id)
             val isError = field.required && listContents.isEmpty()
 
             viewModel.updateFieldValue(field.id, listContents, Pair(isError, ""))

@@ -53,7 +53,7 @@ class FormViewModel(
         OfflineRepository().removeCompletedUploads()
 
         if (state.parent.processInstanceId != null) {
-            getTaskForms(state.parent)
+            getTaskDetails()
         } else {
             singleProcessDefinition(state.parent.id)
         }
@@ -66,7 +66,7 @@ class FormViewModel(
 
         viewModelScope.on<AttachFilesData> {
             it.field?.let { field ->
-                entryListener?.onAttachFiles(field)
+                entryListener?.onAttachFiles(field, it.deletedFiles)
             }
         }
     }
@@ -80,12 +80,15 @@ class FormViewModel(
         observeUploadsJob = repo.observeProcessUploads(parentId, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
                 if (it is Success) {
-                    val listFields = state.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
-                    listFields.forEach { field ->
-                        val listContents = it().filter { content -> content.observerID == field.id }
-                        val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
-                        updateFieldValue(field.id, listContents, Pair(isError, ""))
+                    withState { newState ->
+                        val listFields = newState.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
+                        listFields.forEach { field ->
+                            val listContents = field.getContentList().filter { filter -> filter.uploadServer == UploadServerType.DATA_FROM_SERVER } + it().filter { content -> content.observerID == field.id }
+                            val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
+                            updateFieldValue(field.id, listContents, Pair(isError, ""))
+                        }
                     }
+
                     this
                 } else {
                     this
@@ -197,6 +200,33 @@ class FormViewModel(
         }
     }
 
+    private fun getTaskDetails() = withState { state ->
+        viewModelScope.launch {
+            // Fetch tasks detail data
+            repository::getTaskDetails.asFlow(
+                state.parent.taskEntry.id,
+            ).execute {
+                when (it) {
+                    is Loading -> copy(request = Loading())
+                    is Fail -> copy(request = Fail(it.error))
+                    is Success -> {
+                        val updateState = update(it())
+                        getTaskForms(updateState.parent)
+                        updateState.copy(request = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    internal fun isAssigneeAndLoggedInSame(assignee: UserGroupDetails?) = getAPSUser().id == assignee?.id
+
+    internal fun isStartedByAndLoggedInSame(initiatorId: String?) = getAPSUser().id.toString() == initiatorId
+
     fun linkContentToProcess(state: FormViewState, entry: Entry, sourceName: String, field: FieldsData?) =
         viewModelScope.launch {
             repository::linkADWContentToProcess
@@ -306,6 +336,7 @@ class FormViewModel(
             DefaultOutcomesID.DEFAULT_COMPLETE.value() -> completeTask()
             DefaultOutcomesID.DEFAULT_SAVE.value() -> saveForm()
             DefaultOutcomesID.DEFAULT_CLAIM.value() -> claimTask()
+            DefaultOutcomesID.DEFAULT_RELEASE.value() -> releaseTask()
             else -> actionOutcome(optionsModel.outcome)
         }
     }
@@ -317,6 +348,31 @@ class FormViewModel(
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::claimTask.asFlow(state.parent.taskEntry.id).execute {
+                when (it) {
+                    is Loading -> copy(requestClaimRelease = Loading())
+                    is Fail -> {
+                        copy(requestClaimRelease = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        copy(requestClaimRelease = Success(it()))
+                    }
+
+                    else -> {
+                        this
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * execute API to release the task
+     */
+    private fun releaseTask() = withState { state ->
+        requireNotNull(state.parent)
+        viewModelScope.launch {
+            repository::releaseTask.asFlow(state.parent.taskEntry.id).execute {
                 when (it) {
                     is Loading -> copy(requestClaimRelease = Loading())
                     is Fail -> {
@@ -446,6 +502,7 @@ class FormViewModel(
                     val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4_1, DATE_FORMAT_5)
                     values[field.id] = convertedDate
                 }
+
                 FieldType.DATE.value() -> {
                     val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
                     values[field.id] = convertedDate

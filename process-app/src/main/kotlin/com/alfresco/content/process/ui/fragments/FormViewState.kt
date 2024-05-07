@@ -11,6 +11,7 @@ import com.alfresco.content.data.ResponseAccountInfo
 import com.alfresco.content.data.ResponseFormVariables
 import com.alfresco.content.data.ResponseListForm
 import com.alfresco.content.data.ResponseListProcessDefinition
+import com.alfresco.content.data.TaskEntry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.process.models.ProfileData
 import retrofit2.Response
@@ -31,8 +32,20 @@ data class FormViewState(
     val requestAccountInfo: Async<ResponseAccountInfo> = Uninitialized,
     val requestProfile: Async<ProfileData> = Uninitialized,
     val requestClaimRelease: Async<Response<Unit>> = Uninitialized,
+    val request: Async<TaskEntry> = Uninitialized,
 ) : MavericksState {
     constructor(target: ProcessEntry) : this(parent = target)
+
+    /**
+     * update the taskDetailObj params after getting the response from server.
+     */
+    fun update(response: TaskEntry?): FormViewState {
+        if (response == null) return this
+
+        val processEntry = ProcessEntry.with(response)
+
+        return copy(parent = processEntry)
+    }
 
     /**
      * update the single process definition entry

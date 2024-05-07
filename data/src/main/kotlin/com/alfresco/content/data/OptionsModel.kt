@@ -51,6 +51,7 @@ enum class DefaultOutcomesID {
     DEFAULT_START_WORKFLOW,
     DEFAULT_SAVE,
     DEFAULT_CLAIM,
+    DEFAULT_RELEASE,
     DEFAULT_COMPLETE,
     ;
     fun value() = name.lowercase()

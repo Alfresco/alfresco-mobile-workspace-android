@@ -28,20 +28,10 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
 
     val state by viewModel.collectAsState()
 
-    val task = state.parent.taskEntry
-
     val customOutcomes = when {
         state.formFields.isEmpty() -> emptyList()
         state.processOutcomes.isEmpty() -> defaultOutcomes(state)
-        task.assignee?.id == 0 -> {
-            listOf(
-                OptionsModel(
-                    id = DefaultOutcomesID.DEFAULT_CLAIM.value(),
-                    name = stringResource(id = R.string.action_menu_claim),
-                ),
-            )
-        }
-
+        state.parent.taskEntry.memberOfCandidateGroup == true -> pooledOutcomes(state, viewModel)
         else -> customOutcomes(state)
     }
 
@@ -126,5 +116,36 @@ private fun customOutcomes(state: FormViewState): List<OptionsModel> {
                 name = stringResource(id = R.string.action_text_save),
             ),
         ) + state.processOutcomes
+    }
+}
+
+@Composable
+private fun pooledOutcomes(state: FormViewState, viewModel: FormViewModel): List<OptionsModel> {
+    val dataObj = state.parent.taskEntry
+
+    when {
+        dataObj.assignee?.id == null || dataObj.assignee?.id == 0 -> {
+            return listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_CLAIM.value(),
+                    name = stringResource(id = R.string.action_menu_claim),
+                ),
+            )
+        }
+
+        viewModel.isAssigneeAndLoggedInSame(dataObj.assignee) -> {
+            return listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_RELEASE.value(),
+                    name = stringResource(id = R.string.action_menu_release),
+                ),
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_SAVE.value(),
+                    name = stringResource(id = R.string.action_text_save),
+                ),
+            ) + state.processOutcomes
+        }
+
+        else -> return emptyList()
     }
 }

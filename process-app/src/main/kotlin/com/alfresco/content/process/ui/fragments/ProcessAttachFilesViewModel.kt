@@ -27,6 +27,7 @@ class ProcessAttachFilesViewModel(
     private var observeUploadsJob: Job? = null
     var parentId: String = ""
     var entryListener: EntryListener? = null
+    var serverdeletedFiles: MutableMap<String, Entry> = mutableMapOf()
 
     init {
 
@@ -44,6 +45,7 @@ class ProcessAttachFilesViewModel(
             }
 
             else -> {
+                setState { copy(listContents = field.getContentList(), baseEntries = field.getContentList()) }
                 observeUploads(state)
             }
         }
@@ -58,7 +60,11 @@ class ProcessAttachFilesViewModel(
      * delete content locally
      */
     fun deleteAttachment(entry: Entry) = stateFlow.execute {
-        OfflineRepository().remove(entry)
+        if (entry.uploadServer != UploadServerType.DATA_FROM_SERVER) {
+            OfflineRepository().remove(entry)
+        } else {
+            serverdeletedFiles[entry.id] = entry
+        }
         deleteUploads(entry.id)
     }
 

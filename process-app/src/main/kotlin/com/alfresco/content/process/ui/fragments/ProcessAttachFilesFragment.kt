@@ -159,7 +159,7 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
     override fun onDestroy() {
         withState(viewModel) {
             CoroutineScope(Dispatchers.Main).launch {
-                EventBus.default.send(AttachFilesData(it.parent.field))
+                EventBus.default.send(AttachFilesData(it.parent.field, viewModel.serverdeletedFiles))
             }
         }
         super.onDestroy()

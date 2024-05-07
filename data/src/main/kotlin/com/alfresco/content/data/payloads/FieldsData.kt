@@ -47,7 +47,7 @@ data class FieldsData(
 
     fun getContentList(): List<Entry> {
         return if (((value as? List<*>)?.firstOrNull() is Map<*, *>)) {
-            (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it) } ?: emptyList()
+            (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it, id) } ?: emptyList()
         } else {
             (value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
         }

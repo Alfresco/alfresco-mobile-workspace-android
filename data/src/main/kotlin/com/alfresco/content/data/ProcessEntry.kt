@@ -90,6 +90,7 @@ data class ProcessEntry(
          */
         fun with(data: TaskEntry): ProcessEntry {
             return ProcessEntry(
+                name = data.name,
                 description = data.description ?: "",
                 processInstanceId = data.processInstanceId,
                 taskEntry = data,

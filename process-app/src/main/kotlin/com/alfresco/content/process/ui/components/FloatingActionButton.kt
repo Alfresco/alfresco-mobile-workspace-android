@@ -2,11 +2,14 @@ package com.alfresco.content.process.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlaylistAdd
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.airbnb.mvrx.compose.collectAsState
@@ -58,8 +61,8 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                     .show()
             }
         },
-        containerColor = White60,
-        icon = { Icon(Icons.Filled.PlaylistAdd, stringResource(id = R.string.accessibility_process_actions)) },
-        text = { Text(text = stringResource(id = R.string.title_actions)) },
+        containerColor = MaterialTheme.colorScheme.primary,
+        icon = { Icon(Icons.Filled.PlaylistAdd, stringResource(id = R.string.accessibility_process_actions), tint = Color.White) },
+        text = { Text(text = stringResource(id = R.string.title_actions), color = Color.White) },
     )
 }

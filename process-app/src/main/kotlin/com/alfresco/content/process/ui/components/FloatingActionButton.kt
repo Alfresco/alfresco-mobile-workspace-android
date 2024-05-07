@@ -2,7 +2,6 @@ package com.alfresco.content.process.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlaylistAdd
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +19,6 @@ import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.ProcessFragment
-import com.alfresco.content.process.ui.theme.White60
 
 @Composable
 fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment, viewModel: FormViewModel) {
@@ -48,7 +46,7 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                         } else {
                             viewModel.performOutcomes(
                                 OptionsModel(
-                                    id = query,
+                                    id = query.ifEmpty { name },
                                     name = name,
                                 ),
                             )

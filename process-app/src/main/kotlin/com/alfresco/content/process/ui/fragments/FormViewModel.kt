@@ -380,7 +380,13 @@ class FormViewModel(
     private fun actionOutcome(outcome: String) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
-            repository::actionOutcomes.asFlow(outcome, state.parent.taskEntry).execute {
+            repository::actionOutcomes.asFlow(
+                outcome, state.parent.taskEntry,
+                convertFieldsToValues(
+                    state.formFields
+                        .filter { it.type !in listOf(FieldType.READONLY.value(), FieldType.READONLY_TEXT.value()) },
+                )
+            ).execute {
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
                     is Fail -> {
@@ -420,6 +426,7 @@ class FormViewModel(
                     val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4_1, DATE_FORMAT_5)
                     values[field.id] = convertedDate
                 }
+
                 FieldType.DATE.value() -> {
                     val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
                     values[field.id] = convertedDate

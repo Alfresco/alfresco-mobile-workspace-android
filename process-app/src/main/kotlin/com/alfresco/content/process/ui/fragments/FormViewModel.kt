@@ -461,7 +461,13 @@ class FormViewModel(
     private fun actionOutcome(outcome: String) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
-            repository::actionOutcomes.asFlow(outcome, state.parent.taskEntry).execute {
+            repository::actionOutcomes.asFlow(
+                outcome, state.parent.taskEntry,
+                convertFieldsToValues(
+                    state.formFields
+                        .filter { it.type !in listOf(FieldType.READONLY.value(), FieldType.READONLY_TEXT.value()) },
+                )
+            ).execute {
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
                     is Fail -> {

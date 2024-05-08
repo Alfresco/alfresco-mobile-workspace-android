@@ -44,7 +44,7 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                         } else {
                             viewModel.performOutcomes(
                                 OptionsModel(
-                                    id = query,
+                                    id = query.ifEmpty { name },
                                     name = name,
                                 ),
                             )

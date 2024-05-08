@@ -1,14 +1,15 @@
 package com.alfresco.content.process.ui.components
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Attachment
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.theme.AlfrescoBlue300
@@ -36,6 +38,7 @@ import com.alfresco.content.process.ui.theme.AlfrescoError
 fun AttachFolderField(
     fieldsData: FieldsData = FieldsData(),
     onUserTap: (Boolean) -> Unit = { },
+    onResetFolder: (Boolean) -> Unit = { },
     navController: NavController,
     errorData: Pair<Boolean, String> = Pair(false, ""),
 ) {
@@ -48,11 +51,7 @@ fun AttachFolderField(
         }
     }
 
-    val contentValue = if (fieldsData.value == null) {
-        stringResource(id = R.string.no_attached_folder)
-    } else {
-        stringResource(id = R.string.text_attached_folder, 1)
-    }
+    val contentValue = (fieldsData.value as? Entry)?.name ?: stringResource(id = R.string.no_attached_folder)
 
     val context = LocalContext.current
     Column(
@@ -73,11 +72,6 @@ fun AttachFolderField(
 
             IconButton(onClick = {
                 onUserTap(true)
-                val intent = Intent(
-                    context,
-                    Class.forName("com.alfresco.content.app.activity.MoveActivity"),
-                )
-                context.startActivity(intent)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,
@@ -86,16 +80,40 @@ fun AttachFolderField(
                 )
             }
         }
-        Text(
-            text = contentValue,
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 12.sp,
-            ),
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(start = 4.dp, top = 0.dp)
-                .align(alignment = Alignment.Start),
-        )
+                .fillMaxWidth()
+                .padding(start = 4.dp, end = 12.dp, top = 0.dp),
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(top = 0.dp)
+                    .align(alignment = Alignment.CenterVertically),
+                text = contentValue,
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 12.sp,
+                ),
+            )
+            if (fieldsData.value != null) {
+                IconButton(
+                    onClick = {
+                        onResetFolder(true)
+                    },
+                    modifier = Modifier
+                        .size(20.dp)
+                        .padding(top = 0.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        tint = AlfrescoBlue300,
+                        contentDescription = "",
+                    )
+                }
+            }
+        }
     }
 }
 

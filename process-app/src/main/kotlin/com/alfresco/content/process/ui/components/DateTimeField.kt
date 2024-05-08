@@ -10,10 +10,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.DATE_FORMAT_1
+import com.alfresco.content.DATE_FORMAT_2_1
 import com.alfresco.content.component.DatePickerBuilder
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
+import com.alfresco.content.getLocalFormattedDate
 import com.alfresco.content.process.ui.utils.inputField
+import com.alfresco.content.updateDateFormat
 
 @Composable
 fun DateTimeField(
@@ -28,6 +32,21 @@ fun DateTimeField(
     )
 
     val context = LocalContext.current
+
+    var dateTime = dateTimeValue
+
+    when (fieldsData.type.lowercase()) {
+        FieldType.DATE.value() -> {
+            if (dateTime.isNotEmpty() && dateTime.contains("T")) {
+                val date = dateTime.split("T").firstOrNull() ?: ""
+                if (date.isNotEmpty()) {
+                    val dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_2_1
+                    dateTime = date.getLocalFormattedDate(DATE_FORMAT_1, dateFormat)
+                }
+            }
+        }
+    }
+
     InputField(
         colors = OutlinedTextFieldDefaults.colors(
             disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -43,7 +62,7 @@ fun DateTimeField(
                     fromDate = "",
                     isFrom = true,
                     isFutureDate = true,
-                    dateFormat = DATE_FORMAT_4,
+                    dateFormat = DATE_FORMAT_2_1,
                     fieldsData = fieldsData,
                 )
                     .onSuccess { date ->
@@ -53,7 +72,7 @@ fun DateTimeField(
                     .show()
             },
         maxLines = 1,
-        textFieldValue = dateTimeValue,
+        textFieldValue = dateTime,
         onValueChanged = onValueChanged,
         fieldsData = fieldsData,
         keyboardOptions = keyboardOptions,

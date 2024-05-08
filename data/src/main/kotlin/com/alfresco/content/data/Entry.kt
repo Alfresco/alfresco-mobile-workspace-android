@@ -379,8 +379,9 @@ data class Entry(
             ).withOfflineStatus()
         }
 
-        fun with(contentEntry: ContentEntry): Entry {
+        fun with(contentEntry: ContentEntry, observerID: String, parentId: String?): Entry {
             return Entry(
+                parentId = parentId,
                 id = contentEntry.id.toString(),
                 name = contentEntry.name,
                 userGroupDetails = contentEntry.userDetails,
@@ -388,6 +389,9 @@ data class Entry(
                 isRelatedContent = contentEntry.isRelatedContent,
                 isContentAvailable = contentEntry.isContentAvailable,
                 mimeType = contentEntry.mimeType,
+                observerID = observerID,
+                uploadServer = UploadServerType.UPLOAD_TO_PROCESS,
+                offlineStatus = OfflineStatus.UNDEFINED,
 
             )
         }

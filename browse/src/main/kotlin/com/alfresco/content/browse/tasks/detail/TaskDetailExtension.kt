@@ -100,7 +100,7 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
             when (dataObj.memberOfCandidateGroup) {
                 true -> {
                     if (dataObj.assignee?.id == null || dataObj.assignee?.id == 0) {
-                        makeClaimButton()
+//                        makeClaimButton()
                     } else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
                         menuDetail.findItem(R.id.action_release).isVisible = true
 //                        makeOutcomes()

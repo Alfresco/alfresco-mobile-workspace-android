@@ -1,5 +1,6 @@
 package com.alfresco.content.process.ui.composeviews
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -34,6 +35,7 @@ import com.alfresco.content.process.ui.utils.amountInputError
 import com.alfresco.content.process.ui.utils.booleanInputError
 import com.alfresco.content.process.ui.utils.dateTimeInputError
 import com.alfresco.content.process.ui.utils.dropDownRadioInputError
+import com.alfresco.content.process.ui.utils.folderInputError
 import com.alfresco.content.process.ui.utils.integerInputError
 import com.alfresco.content.process.ui.utils.multiLineInputError
 import com.alfresco.content.process.ui.utils.singleLineInputError
@@ -124,7 +126,23 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
             )
         }
 
-        FieldType.DATETIME.value(), FieldType.DATE.value() -> {
+        FieldType.DATE.value() -> {
+            var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+            var errorData by remember { mutableStateOf(Pair(false, "")) }
+
+            DateTimeField(
+                dateTimeValue = textFieldValue,
+                onValueChanged = { newText ->
+                    textFieldValue = newText
+                    errorData = dateTimeInputError(newText, field, context)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
+                },
+                errorData = errorData,
+                fieldsData = field,
+            )
+        }
+
+        FieldType.DATETIME.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
 
@@ -165,7 +183,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 viewModel = viewModel,
                 fieldsData = field,
                 onUserTap = {
-                    if (it && field.value is List<*>) {
+                    if (it && field.value is List<*> && (field.value as List<*>).isNotEmpty()) {
                         val bundle = Bundle().apply {
                             putParcelable(
                                 Mavericks.KEY_ARG,
@@ -214,7 +232,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.UPLOAD.value() -> {
-            val listContents = field.getContentList()
+            val listContents = field.getContentList(state.parent.processDefinitionId)
 
             AttachFilesField(
                 contents = listContents,
@@ -248,6 +266,17 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onUserTap = {
                     if (it) {
                         viewModel.selectedField = field
+                        val intent = Intent(
+                            context,
+                            Class.forName("com.alfresco.content.app.activity.MoveActivity"),
+                        )
+                        context.startActivity(intent)
+                    }
+                },
+                onResetFolder = {
+                    if (it) {
+                        val errorData = folderInputError(null, field, context)
+                        viewModel.updateFieldValue(field.id, null, errorData)
                     }
                 },
             )

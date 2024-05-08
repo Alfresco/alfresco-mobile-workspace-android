@@ -8,9 +8,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineStatus
 import com.alfresco.content.data.UserGroupDetails
+import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
+import com.alfresco.content.process.ui.fragments.FormViewState
 
 @Composable
 fun trailingIconColor() = MaterialTheme.colorScheme.onPrimary
@@ -144,4 +148,21 @@ fun userGroupInputError(value: UserGroupDetails?, fieldsData: FieldsData, contex
     val errorMessage = ""
 
     return Pair(isError, errorMessage)
+}
+
+fun folderInputError(value: Entry?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
+    val isError = (fieldsData.required && value == null)
+
+    val errorMessage = ""
+
+    return Pair(isError, errorMessage)
+}
+
+fun getContentList(state: FormViewState): List<Entry> {
+    val uploadList = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
+
+    return uploadList.flatMap { it.getContentList(state.parent.processDefinitionId) }.filter {
+        (!it.isUpload && it.offlineStatus == OfflineStatus.SYNCED) ||
+            (it.isUpload && it.offlineStatus == OfflineStatus.UNDEFINED)
+    }
 }

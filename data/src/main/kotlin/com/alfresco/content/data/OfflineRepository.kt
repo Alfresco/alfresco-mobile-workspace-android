@@ -277,6 +277,10 @@ class OfflineRepository(otherSession: Session? = null) {
         File(srcPath).renameTo(dest)
     }
 
+    fun addServerEntry(entry: Entry) {
+        update(entry)
+    }
+
     internal fun fetchPendingUploads() =
         box.query()
             .equal(Entry_.isUpload, true)
@@ -291,8 +295,7 @@ class OfflineRepository(otherSession: Session? = null) {
             .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
             .order(Entry_.name)
             .build()
-        val list = query.find()
-        return list
+        return query.find()
     }
 
     /**
@@ -314,10 +317,9 @@ class OfflineRepository(otherSession: Session? = null) {
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
-    fun observeProcessUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT): Flow<List<Entry>> = callbackFlow {
+    fun observeProcessUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT, isUpload: Boolean = true): Flow<List<Entry>> = callbackFlow {
         val query = box.query()
             .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.isUpload, true)
             .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
             .order(Entry_.name)
             .build()
@@ -360,6 +362,19 @@ class OfflineRepository(otherSession: Session? = null) {
         box.query()
             .equal(Entry_.isUpload, true)
             .equal(Entry_.offlineStatus, OfflineStatus.SYNCED.value(), StringOrder.CASE_SENSITIVE)
+            .notEqual(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
+            .apply {
+                if (parentId != null) {
+                    equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                }
+            }.build().remove()
+
+    /**
+     * remove the task entries on the basis of task ID from local db.
+     */
+    fun removeCompletedUploadsProcess(parentId: String? = null) =
+        box.query()
+            .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
             .apply {
                 if (parentId != null) {
                     equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)

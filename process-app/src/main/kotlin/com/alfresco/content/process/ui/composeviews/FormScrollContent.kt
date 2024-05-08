@@ -34,6 +34,7 @@ import com.alfresco.content.process.ui.utils.amountInputError
 import com.alfresco.content.process.ui.utils.booleanInputError
 import com.alfresco.content.process.ui.utils.dateTimeInputError
 import com.alfresco.content.process.ui.utils.dropDownRadioInputError
+import com.alfresco.content.process.ui.utils.folderInputError
 import com.alfresco.content.process.ui.utils.integerInputError
 import com.alfresco.content.process.ui.utils.multiLineInputError
 import com.alfresco.content.process.ui.utils.singleLineInputError
@@ -248,6 +249,12 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onUserTap = {
                     if (it) {
                         viewModel.selectedField = field
+                    }
+                },
+                onResetFolder = {
+                    if (it) {
+                        val errorData = folderInputError(null, field, context)
+                        viewModel.updateFieldValue(field.id, null, errorData)
                     }
                 },
             )

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alfresco.content.data.Entry
 import com.alfresco.content.data.UserGroupDetails
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.process.R
@@ -139,6 +140,13 @@ fun dropDownRadioInputError(value: String?, fieldsData: FieldsData, context: Con
 }
 
 fun userGroupInputError(value: UserGroupDetails?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
+    val isError = (fieldsData.required && value == null)
+
+    val errorMessage = ""
+
+    return Pair(isError, errorMessage)
+}
+fun folderInputError(value: Entry?, fieldsData: FieldsData, context: Context): Pair<Boolean, String> {
     val isError = (fieldsData.required && value == null)
 
     val errorMessage = ""

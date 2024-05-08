@@ -201,7 +201,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         if (isAdded) {
             viewModel.updateFieldValue(
                 viewModel.selectedField?.id ?: "",
-                (entry as Entry).id,
+                entry as? Entry,
                 Pair(false, ""),
             )
             viewModel.selectedField = null

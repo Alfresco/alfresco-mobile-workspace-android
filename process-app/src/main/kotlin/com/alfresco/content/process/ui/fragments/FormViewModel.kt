@@ -517,6 +517,11 @@ class FormViewModel(
                     values[field.id] = listContents.joinToString(separator = ",") { content -> content.id }
                 }
 
+                FieldType.SELECT_FOLDER.value() -> {
+                    val selectedFolder = (field.value as? Entry)?.id ?: ""
+                    values[field.id] = selectedFolder
+                }
+
                 else -> {
                     values[field.id] = field.value
                 }

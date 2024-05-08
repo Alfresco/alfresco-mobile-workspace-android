@@ -45,9 +45,9 @@ data class FieldsData(
     var errorData: Pair<Boolean, String> = Pair(false, ""),
 ) : Parcelable {
 
-    fun getContentList(): List<Entry> {
+    fun getContentList(parentId: String? = null): List<Entry> {
         return if (((value as? List<*>)?.firstOrNull() is Map<*, *>)) {
-            (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it, id) } ?: emptyList()
+            (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it, id, parentId) } ?: emptyList()
         } else {
             (value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
         }

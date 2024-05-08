@@ -15,10 +15,10 @@ import com.airbnb.mvrx.compose.collectAsState
 import com.alfresco.content.component.ComponentBuilder
 import com.alfresco.content.component.ComponentData
 import com.alfresco.content.data.OptionsModel
-import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.ProcessFragment
+import com.alfresco.content.process.ui.utils.getContentList
 
 @Composable
 fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment, viewModel: FormViewModel) {
@@ -36,9 +36,7 @@ fun FloatingActionButton(outcomes: List<OptionsModel>, fragment: ProcessFragment
                 ComponentBuilder(context, componentData)
                     .onApply { name, query, _ ->
 
-                        val uploadList = state.formFields.filter { it.type == FieldType.UPLOAD.value() }
-
-                        val contentList = uploadList.flatMap { it.getContentList() }.filter { !it.isUpload }
+                        val contentList = getContentList(state)
 
                         if (contentList.isNotEmpty()) {
                             viewModel.optionsModel = OptionsModel(id = query, name = name)

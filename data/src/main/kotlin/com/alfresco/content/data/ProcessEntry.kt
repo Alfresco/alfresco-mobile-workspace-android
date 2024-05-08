@@ -92,6 +92,7 @@ data class ProcessEntry(
             return ProcessEntry(
                 name = data.name,
                 description = data.description ?: "",
+                processDefinitionId = data.processDefinitionId,
                 processInstanceId = data.processInstanceId,
                 taskEntry = data,
             )

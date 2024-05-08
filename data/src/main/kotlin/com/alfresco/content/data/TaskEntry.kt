@@ -25,6 +25,7 @@ data class TaskEntry(
     val duration: Long? = null,
     val isNewTaskCreated: Boolean = false,
     val processInstanceId: String? = null,
+    val processDefinitionId: String? = null,
     val statusOption: List<OptionsModel> = emptyList(),
     val listContents: List<Entry> = emptyList(),
     val outcomes: List<OptionsModel> = emptyList(),
@@ -56,6 +57,7 @@ data class TaskEntry(
                 involvedPeople = data.involvedPeople?.map { UserGroupDetails.with(it) } ?: emptyList(),
                 isNewTaskCreated = isNewTaskCreated,
                 processInstanceId = data.processInstanceId,
+                processDefinitionId = data.processDefinitionId,
                 processInstanceStartUserId = data.processInstanceStartUserId,
                 memberOfCandidateGroup = data.memberOfCandidateGroup,
             )
@@ -120,6 +122,7 @@ data class TaskEntry(
                 endDate = parent.endDate,
                 duration = parent.duration,
                 processInstanceId = parent.processInstanceId,
+                processDefinitionId = parent.processDefinitionId,
                 outcomes = response.outcomes,
                 processInstanceStartUserId = parent.processInstanceStartUserId,
                 memberOfCandidateGroup = parent.memberOfCandidateGroup,

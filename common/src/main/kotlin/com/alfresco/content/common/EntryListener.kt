@@ -1,6 +1,5 @@
 package com.alfresco.content.common
 
-import com.alfresco.content.data.Entry
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.payloads.FieldsData
 
@@ -20,5 +19,5 @@ interface EntryListener {
     fun onProcessStart(entries: List<ParentEntry>) {}
 
     fun onAttachFolder(entry: ParentEntry) {}
-    fun onAttachFiles(field: FieldsData, deletedFiles: MutableMap<String, Entry>) {}
+    fun onAttachFiles(field: FieldsData) {}
 }

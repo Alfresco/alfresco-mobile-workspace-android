@@ -24,8 +24,8 @@ import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.ParentEntry
-import com.alfresco.content.data.UploadServerType
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
 import com.alfresco.content.hideSoftInput
@@ -34,6 +34,8 @@ import com.alfresco.content.process.databinding.FragmentProcessBinding
 import com.alfresco.content.process.ui.components.updateProcessList
 import com.alfresco.content.process.ui.composeviews.FormScreen
 import com.alfresco.content.process.ui.theme.AlfrescoBaseTheme
+import com.alfresco.kotlin.FilenameComparator
+import com.alfresco.list.merge
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.lang.ref.WeakReference
@@ -171,6 +173,12 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
                 if (hasUploadField) {
                     viewModel.observeUploads(state)
+                    val fields = state.formFields
+                    fields.forEach { field ->
+                        if (field.type == FieldType.UPLOAD.value()) {
+                            field.getContentList(state.parent.processDefinitionId).forEach(OfflineRepository()::addServerEntry)
+                        }
+                    }
                 }
 
                 viewModel.resetRequestState(state.requestForm)
@@ -198,7 +206,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     }
 
     override fun onAttachFolder(entry: ParentEntry) = withState(viewModel) {
-        if (isAdded) {
+        if (isAdded && viewModel.selectedField?.type == FieldType.SELECT_FOLDER.value()) {
             viewModel.updateFieldValue(
                 viewModel.selectedField?.id ?: "",
                 entry as? Entry,
@@ -208,17 +216,28 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
         }
     }
 
-    override fun onAttachFiles(field: FieldsData, deletedFiles: MutableMap<String, Entry>) = withState(viewModel) { state ->
+    override fun onAttachFiles(field: FieldsData) = withState(viewModel) { state ->
         if (isAdded && field.type == FieldType.UPLOAD.value()) {
-            val serverUploads = field.getContentList().filter { it.uploadServer == UploadServerType.DATA_FROM_SERVER }.filterNot { item -> deletedFiles.any { it.value.id == item.id } }
+//            val serverUploads = field.getContentList().filter { it.uploadServer == UploadServerType.UPLOAD_TO_PROCESS }
+//                .filterNot { item -> deletedFiles.any { it.value.id == item.id } }
 
-            val listContents = serverUploads + viewModel.getContents(state, field.id)
+            val listContents = mergeInUploads(field.getContentList(state.parent.processDefinitionId), viewModel.getContents(state, field.id))
             val isError = field.required && listContents.isEmpty()
 
             viewModel.updateFieldValue(field.id, listContents, Pair(isError, ""))
 
             viewModel.selectedField = null
         }
+    }
+
+    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>): List<Entry> {
+        if (uploads.isEmpty()) {
+            return emptyList()
+        }
+
+        return merge(base, uploads, includeRemainingRight = true) { left: Entry, right: Entry ->
+            FilenameComparator.compare(left.name, right.name)
+        }.distinctBy { it.id.ifEmpty { it.boxId } }
     }
 
     /**

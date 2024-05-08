@@ -1,5 +1,6 @@
 package com.alfresco.content.process.ui.composeviews
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -231,7 +232,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
         }
 
         FieldType.UPLOAD.value() -> {
-            val listContents = field.getContentList()
+            val listContents = field.getContentList(state.parent.processDefinitionId)
 
             AttachFilesField(
                 contents = listContents,
@@ -265,6 +266,11 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 onUserTap = {
                     if (it) {
                         viewModel.selectedField = field
+                        val intent = Intent(
+                            context,
+                            Class.forName("com.alfresco.content.app.activity.MoveActivity"),
+                        )
+                        context.startActivity(intent)
                     }
                 },
                 onResetFolder = {

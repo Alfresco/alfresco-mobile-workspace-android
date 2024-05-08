@@ -50,7 +50,7 @@ class FormViewModel(
 
     init {
 
-        OfflineRepository().removeCompletedUploads()
+        OfflineRepository().removeCompletedUploadsProcess()
 
         if (state.parent.processInstanceId != null) {
             getTaskDetails()
@@ -66,16 +66,16 @@ class FormViewModel(
 
         viewModelScope.on<AttachFilesData> {
             it.field?.let { field ->
-                entryListener?.onAttachFiles(field, it.deletedFiles)
+                entryListener?.onAttachFiles(field)
             }
         }
     }
 
     fun observeUploads(state: FormViewState) {
-        val parentId = state.parent.id
+        val parentId = state.parent.id.ifEmpty { state.parent.processDefinitionId } ?: ""
 
         val repo = OfflineRepository()
-
+        OfflineRepository().removeCompletedUploadsProcess(parentId)
         observeUploadsJob?.cancel()
         observeUploadsJob = repo.observeProcessUploads(parentId, UploadServerType.UPLOAD_TO_PROCESS)
             .execute {
@@ -83,7 +83,7 @@ class FormViewModel(
                     withState { newState ->
                         val listFields = newState.formFields.filter { fieldsData -> fieldsData.type == FieldType.UPLOAD.value() }
                         listFields.forEach { field ->
-                            val listContents = field.getContentList().filter { filter -> filter.uploadServer == UploadServerType.DATA_FROM_SERVER } + it().filter { content -> content.observerID == field.id }
+                            val listContents = it().filter { content -> content.observerID == field.id }
                             val isError = field.required && listContents.isEmpty() && listContents.all { content -> !content.isUpload }
                             updateFieldValue(field.id, listContents, Pair(isError, ""))
                         }
@@ -318,7 +318,6 @@ class FormViewModel(
                         updatedValue = null
                     }
                 }
-
                 updatedFieldList.add(FieldsData.withUpdateField(field, updatedValue, errorData))
             } else {
                 updatedFieldList.add(field)
@@ -545,7 +544,7 @@ class FormViewModel(
         entryListener = listener
     }
 
-    fun getContents(state: FormViewState, fieldId: String) = OfflineRepository().fetchProcessEntries(parentId = state.parent.id, observerId = fieldId)
+    fun getContents(state: FormViewState, fieldId: String) = OfflineRepository().fetchProcessEntries(parentId = state.parent.id.ifEmpty { state.parent.processDefinitionId } ?: "", observerId = fieldId)
 
     fun resetRequestState(request: Async<*>) {
         when (request.invoke()) {

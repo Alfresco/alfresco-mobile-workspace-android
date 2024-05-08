@@ -1,6 +1,5 @@
 package com.alfresco.content.process.ui.components
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,11 +72,6 @@ fun AttachFolderField(
 
             IconButton(onClick = {
                 onUserTap(true)
-                val intent = Intent(
-                    context,
-                    Class.forName("com.alfresco.content.app.activity.MoveActivity"),
-                )
-                context.startActivity(intent)
             }) {
                 Icon(
                     imageVector = Icons.Default.Attachment,

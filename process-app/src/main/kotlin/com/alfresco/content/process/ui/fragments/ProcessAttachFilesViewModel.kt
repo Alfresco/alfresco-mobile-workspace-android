@@ -26,8 +26,7 @@ class ProcessAttachFilesViewModel(
 
     private var observeUploadsJob: Job? = null
     var parentId: String = ""
-    var entryListener: EntryListener? = null
-    var serverdeletedFiles: MutableMap<String, Entry> = mutableMapOf()
+    private var entryListener: EntryListener? = null
 
     init {
 
@@ -41,11 +40,12 @@ class ProcessAttachFilesViewModel(
 
         when (field.type) {
             FieldType.READONLY.value(), FieldType.READONLY_TEXT.value() -> {
-                setState { copy(listContents = field.getContentList(), baseEntries = field.getContentList()) }
+                state.parent.process
+                setState { copy(listContents = field.getContentList(state.parent.process.processDefinitionId), baseEntries = field.getContentList(state.parent.process.processDefinitionId)) }
             }
 
             else -> {
-                setState { copy(listContents = field.getContentList(), baseEntries = field.getContentList()) }
+//                setState { copy(listContents = field.getContentList(state.parent.process.processDefinitionId), baseEntries = field.getContentList(state.parent.process.processDefinitionId)) }
                 observeUploads(state)
             }
         }
@@ -60,18 +60,14 @@ class ProcessAttachFilesViewModel(
      * delete content locally
      */
     fun deleteAttachment(entry: Entry) = stateFlow.execute {
-        if (entry.uploadServer != UploadServerType.DATA_FROM_SERVER) {
-            OfflineRepository().remove(entry)
-        } else {
-            serverdeletedFiles[entry.id] = entry
-        }
+        OfflineRepository().remove(entry)
         deleteUploads(entry.id)
     }
 
     private fun observeUploads(state: ProcessAttachFilesViewState) {
         val process = state.parent.process
 
-        parentId = process.id
+        parentId = process.id.ifEmpty { process.processDefinitionId } ?: ""
 
         val repo = OfflineRepository()
 

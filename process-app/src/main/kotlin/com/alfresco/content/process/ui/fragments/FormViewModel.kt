@@ -9,7 +9,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.alfresco.content.DATE_FORMAT_4
+import com.alfresco.content.DATE_FORMAT_2_1
 import com.alfresco.content.DATE_FORMAT_4_1
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
@@ -504,7 +504,7 @@ class FormViewModel(
                 }
 
                 FieldType.DATE.value() -> {
-                    val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5)
+                    val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_2_1, DATE_FORMAT_5)
                     values[field.id] = convertedDate
                 }
 

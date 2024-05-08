@@ -125,7 +125,23 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
             )
         }
 
-        FieldType.DATETIME.value(), FieldType.DATE.value() -> {
+        FieldType.DATE.value() -> {
+            var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
+            var errorData by remember { mutableStateOf(Pair(false, "")) }
+
+            DateTimeField(
+                dateTimeValue = textFieldValue,
+                onValueChanged = { newText ->
+                    textFieldValue = newText
+                    errorData = dateTimeInputError(newText, field, context)
+                    viewModel.updateFieldValue(field.id, newText, errorData)
+                },
+                errorData = errorData,
+                fieldsData = field,
+            )
+        }
+
+        FieldType.DATETIME.value() -> {
             var textFieldValue by remember { mutableStateOf(field.value as? String ?: "") }
             var errorData by remember { mutableStateOf(Pair(false, "")) }
 

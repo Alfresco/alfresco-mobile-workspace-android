@@ -462,11 +462,12 @@ class FormViewModel(
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::actionOutcomes.asFlow(
-                outcome, state.parent.taskEntry,
+                outcome,
+                state.parent.taskEntry,
                 convertFieldsToValues(
                     state.formFields
                         .filter { it.type !in listOf(FieldType.READONLY.value(), FieldType.READONLY_TEXT.value()) },
-                )
+                ),
             ).execute {
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
@@ -542,8 +543,10 @@ class FormViewModel(
 
     private fun hasFieldValidData(fields: List<FieldsData>): Boolean {
         val hasValidDataInRequiredFields = !fields.filter { it.required }.any { (it.value == null || it.errorData.first) }
+        val hasValidDataInDropDownRequiredFields = fields.filter { it.required && it.options.isNotEmpty() }
+            .any { field -> (field.options.find { option -> option.name == field.value }?.id != "empty") }
         val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
-        return (hasValidDataInRequiredFields && hasValidDataInOtherFields)
+        return (hasValidDataInRequiredFields && hasValidDataInOtherFields && hasValidDataInDropDownRequiredFields)
     }
 
     fun setListener(listener: EntryListener) {

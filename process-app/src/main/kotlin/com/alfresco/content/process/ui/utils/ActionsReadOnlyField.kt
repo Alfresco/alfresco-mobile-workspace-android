@@ -14,8 +14,11 @@ import com.alfresco.content.process.R
 import com.alfresco.content.process.ui.fragments.FormViewState
 
 fun actionsReadOnlyField(
-    isTapped: Boolean, field: FieldsData, navController: NavController,
-    state: FormViewState, context: Context
+    isTapped: Boolean,
+    field: FieldsData,
+    navController: NavController,
+    state: FormViewState,
+    context: Context,
 ) {
     when (field.params?.field?.type?.lowercase()) {
         FieldType.UPLOAD.value() -> {

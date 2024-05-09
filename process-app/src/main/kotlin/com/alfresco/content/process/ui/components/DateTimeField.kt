@@ -42,7 +42,6 @@ fun DateTimeField(
                 val dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_2_1
                 dateTime = date.first.getLocalFormattedDate(date.second, dateFormat)
             }
-
         }
     }
 

@@ -23,6 +23,9 @@ fun convertModelToMapValues(data: UserGroupDetails?) =
     }
 
 fun convertModelToMapValues(data: FieldsData): Map<String, Any?> {
+    if (data.value == null) {
+        return mapOf()
+    }
     val id = data.options.find { it.name == data.value }?.id
     requireNotNull(id)
     return mapOf<String, Any?>(

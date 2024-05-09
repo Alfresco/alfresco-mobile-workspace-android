@@ -159,12 +159,12 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
     override fun invalidate() = withState(viewModel) { state ->
         binding.loading.isVisible = state.requestForm is Loading || state.requestStartWorkflow is Loading ||
-                state.requestSaveForm is Loading || state.requestOutcomes is Loading || state.requestProfile is Loading ||
-                state.requestAccountInfo is Loading || state.requestContent is Loading
+            state.requestSaveForm is Loading || state.requestOutcomes is Loading || state.requestProfile is Loading ||
+            state.requestAccountInfo is Loading || state.requestContent is Loading
 
         when {
             state.requestStartWorkflow is Success || state.requestSaveForm is Success ||
-                    state.requestOutcomes is Success || state.requestClaimRelease is Success -> {
+                state.requestOutcomes is Success || state.requestClaimRelease is Success -> {
                 viewModel.updateProcessList()
                 requireActivity().finish()
             }
@@ -172,11 +172,13 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             state.requestForm is Success -> {
                 val hasUploadField = state.formFields.any { it.type == FieldType.UPLOAD.value() }
 
-                if (hasUploadField && state.parent.defaultEntries.isNotEmpty()) {
-                    viewModel.fetchUserProfile()
-                    viewModel.fetchAccountInfo()
-                } else {
-                    showSnackBar(getString(R.string.error_no_upload_fields))
+                if (state.parent.defaultEntries.isNotEmpty()) {
+                    if (hasUploadField) {
+                        viewModel.fetchUserProfile()
+                        viewModel.fetchAccountInfo()
+                    } else {
+                        showSnackBar(getString(R.string.error_no_upload_fields))
+                    }
                 }
 
                 if (hasUploadField) {
@@ -226,7 +228,6 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
     override fun onAttachFiles(field: FieldsData) = withState(viewModel) { state ->
         if (isAdded && field.type == FieldType.UPLOAD.value()) {
-
             val listContents = mergeInUploads(field.getContentList(state.parent.processDefinitionId), viewModel.getContents(state, field.id))
             val isError = field.required && listContents.isEmpty()
 

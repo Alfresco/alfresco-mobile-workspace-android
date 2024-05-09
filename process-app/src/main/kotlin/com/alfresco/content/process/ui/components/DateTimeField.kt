@@ -37,13 +37,12 @@ fun DateTimeField(
 
     when (fieldsData.type.lowercase()) {
         FieldType.DATE.value() -> {
-            if (dateTime.isNotEmpty() && dateTime.contains("T")) {
-                val date = dateTime.split("T").firstOrNull() ?: ""
-                if (date.isNotEmpty()) {
-                    val dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_2_1
-                    dateTime = date.getLocalFormattedDate(DATE_FORMAT_1, dateFormat)
-                }
+            val date = fieldsData.getDate(DATE_FORMAT_1, DATE_FORMAT_2_1)
+            if (date.first.isNotEmpty()) {
+                val dateFormat = updateDateFormat(fieldsData.params?.field?.dateDisplayFormat) ?: DATE_FORMAT_2_1
+                dateTime = date.first.getLocalFormattedDate(date.second, dateFormat)
             }
+
         }
     }
 

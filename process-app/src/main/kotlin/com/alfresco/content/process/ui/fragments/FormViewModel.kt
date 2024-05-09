@@ -512,7 +512,7 @@ class FormViewModel(
 
                 FieldType.DATE.value() -> {
                     val date = field.getDate(DATE_FORMAT_1, DATE_FORMAT_2_1)
-                    val convertedDate = date.first.getFormattedDate(date.second, DATE_FORMAT_5)
+                    val convertedDate = date.first.takeIf { it.isNotEmpty() }?.getFormattedDate(date.second, DATE_FORMAT_5) ?: ""
                     values[field.id] = convertedDate
                 }
 

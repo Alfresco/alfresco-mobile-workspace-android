@@ -60,6 +60,7 @@ data class TaskEntry(
                 processDefinitionId = data.processDefinitionId,
                 processInstanceStartUserId = data.processInstanceStartUserId,
                 memberOfCandidateGroup = data.memberOfCandidateGroup,
+                formattedDueDate = data.dueDate?.toLocalDate()?.toString(),
             )
         }
 

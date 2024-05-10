@@ -48,14 +48,20 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
     private var menu: Menu? = null
     private var isExecuted = false
     private var confirmContentQueueDialog = WeakReference<AlertDialog>(null)
+    private var oldSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    fun showSnackBar(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showSnackBar(message: String) {
+        val snackbar = Snackbar.make(binding.flComposeParent, message, Snackbar.LENGTH_SHORT)
+        if (oldSnackbar == null || oldSnackbar?.isShownOrQueued == false) {
+            oldSnackbar?.dismiss()
+            snackbar.show()
+            oldSnackbar = snackbar
+        }
     }
 
     override fun onCreateView(
@@ -166,9 +172,13 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             state.requestForm is Success -> {
                 val hasUploadField = state.formFields.any { it.type == FieldType.UPLOAD.value() }
 
-                if (hasUploadField && state.parent.defaultEntries.isNotEmpty()) {
-                    viewModel.fetchUserProfile()
-                    viewModel.fetchAccountInfo()
+                if (state.parent.defaultEntries.isNotEmpty()) {
+                    if (hasUploadField) {
+                        viewModel.fetchUserProfile()
+                        viewModel.fetchAccountInfo()
+                    } else {
+                        showSnackBar(getString(R.string.error_no_upload_fields))
+                    }
                 }
 
                 if (hasUploadField) {
@@ -218,9 +228,6 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
     override fun onAttachFiles(field: FieldsData) = withState(viewModel) { state ->
         if (isAdded && field.type == FieldType.UPLOAD.value()) {
-//            val serverUploads = field.getContentList().filter { it.uploadServer == UploadServerType.UPLOAD_TO_PROCESS }
-//                .filterNot { item -> deletedFiles.any { it.value.id == item.id } }
-
             val listContents = mergeInUploads(field.getContentList(state.parent.processDefinitionId), viewModel.getContents(state, field.id))
             val isError = field.required && listContents.isEmpty()
 

@@ -73,6 +73,16 @@ data class FieldsData(
         return userGroupDetails
     }
 
+    fun getDate(serverFormat: String, localFormat: String): Pair<String, String> {
+        val dateTime = value as? String ?: ""
+
+        if (dateTime.isNotEmpty() && dateTime.contains("T")) {
+            return Pair(dateTime.split("T").firstOrNull() ?: "", serverFormat)
+        }
+
+        return Pair(dateTime, localFormat)
+    }
+
     companion object {
         /**
          * returns the FieldsData obj by using Fields obj

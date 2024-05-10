@@ -9,6 +9,7 @@ import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.DATE_FORMAT_1
 import com.alfresco.content.DATE_FORMAT_2_1
 import com.alfresco.content.DATE_FORMAT_4_1
 import com.alfresco.content.DATE_FORMAT_5
@@ -495,7 +496,7 @@ class FormViewModel(
                 FieldType.PEOPLE.value(), FieldType.FUNCTIONAL_GROUP.value() -> {
                     when {
                         field.value != null -> {
-                            values[field.id] = convertModelToMapValues(field.value as? UserGroupDetails)
+                            values[field.id] = convertModelToMapValues(field.getUserGroupDetails(getAPSUser()))
                         }
 
                         else -> {
@@ -510,7 +511,8 @@ class FormViewModel(
                 }
 
                 FieldType.DATE.value() -> {
-                    val convertedDate = (field.value as? String)?.getFormattedDate(DATE_FORMAT_2_1, DATE_FORMAT_5)
+                    val date = field.getDate(DATE_FORMAT_1, DATE_FORMAT_2_1)
+                    val convertedDate = date.first.takeIf { it.isNotEmpty() }?.getFormattedDate(date.second, DATE_FORMAT_5) ?: ""
                     values[field.id] = convertedDate
                 }
 

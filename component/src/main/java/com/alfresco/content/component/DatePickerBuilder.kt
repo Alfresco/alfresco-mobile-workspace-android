@@ -100,7 +100,7 @@ data class DatePickerBuilder(
             if (fieldsData?.type == FieldType.DATETIME.value()) {
                 stringDateTime = getFormatDate(date)
                 timePicker.show(fragmentManager, DatePickerBuilder::class.java.name)
-            } else if (fieldsData?.type == FieldType.DATE.value()) {
+            } else {
                 onSuccess?.invoke(getFormatDate(date))
             }
         }

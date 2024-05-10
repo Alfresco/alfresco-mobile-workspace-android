@@ -9,7 +9,6 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
-import com.alfresco.content.actions.ActionUpdateNameDescription
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.component.ComponentMetaData
 import com.alfresco.content.data.Entry
@@ -48,9 +47,9 @@ class ProcessDetailViewModel(
                 entryListener?.onEntryCreated(it.entry)
             }
         }
-        viewModelScope.on<ActionUpdateNameDescription> {
-            setState { copy(parent = it.entry as ProcessEntry) }
-        }
+//        viewModelScope.on<ActionUpdateNameDescription> {
+//            setState { copy(parent = it.entry as ProcessEntry) }
+//        }
 
         fetchUserProfile()
         fetchAccountInfo()

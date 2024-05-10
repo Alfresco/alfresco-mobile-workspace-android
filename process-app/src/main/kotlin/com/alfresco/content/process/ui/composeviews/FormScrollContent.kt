@@ -31,6 +31,7 @@ import com.alfresco.content.process.ui.components.ReadOnlyField
 import com.alfresco.content.process.ui.components.SingleLineInputField
 import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
+import com.alfresco.content.process.ui.utils.actionsReadOnlyField
 import com.alfresco.content.process.ui.utils.amountInputError
 import com.alfresco.content.process.ui.utils.booleanInputError
 import com.alfresco.content.process.ui.utils.dateTimeInputError
@@ -183,21 +184,7 @@ fun FormScrollContent(field: FieldsData, viewModel: FormViewModel, state: FormVi
                 viewModel = viewModel,
                 fieldsData = field,
                 onUserTap = {
-                    if (it && field.value is List<*> && (field.value as List<*>).isNotEmpty()) {
-                        val bundle = Bundle().apply {
-                            putParcelable(
-                                Mavericks.KEY_ARG,
-                                UploadData(
-                                    field = field,
-                                    process = state.parent,
-                                ),
-                            )
-                        }
-                        navController.navigate(
-                            R.id.action_nav_process_form_to_nav_attach_files,
-                            bundle,
-                        )
-                    }
+                    actionsReadOnlyField(it, field, navController, state, context)
                 },
             )
         }

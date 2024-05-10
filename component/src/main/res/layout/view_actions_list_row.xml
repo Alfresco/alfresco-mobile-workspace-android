@@ -11,6 +11,7 @@
         style="@style/Widget.Alfresco.Component.Primary"
         android:layout_width="0dp"
         android:layout_height="48dp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

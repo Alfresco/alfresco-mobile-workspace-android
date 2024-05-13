@@ -33,4 +33,9 @@ class ListViewMessage @JvmOverloads constructor(
     fun setMessage(@StringRes stringRes: Int) {
         binding.message.text = resources.getText(stringRes)
     }
+
+    @ModelProp
+    fun setMessage(stringRes: String) {
+        binding.message.text = stringRes
+    }
 }

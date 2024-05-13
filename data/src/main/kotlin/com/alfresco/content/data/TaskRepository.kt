@@ -384,7 +384,7 @@ class TaskRepository {
         processesService.createProcessInstance(
             RequestProcessInstances(
                 name = processEntry?.name,
-                processDefinitionId = "",
+                processDefinitionId = processEntry?.id,
                 values = values,
             ),
         ),

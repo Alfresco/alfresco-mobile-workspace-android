@@ -13,8 +13,10 @@
     <string name="no_attached_folder">No Folder Attached</string>
     <string name="text_attached_folder">%d folder(s)</string>
     <string name="action_info">Info</string>
-    <string name="file_empty_message">Looks like you haven’t\nadded any files yet.</string>
+    <string name="file_empty_message">Looks like you haven’t\nadded any files yet\n(Max file size: %d MB).</string>
     <string name="title_search_folder">Search Folder</string>
     <string name="error_hyperlink_invalid_url">%1$s has Invalid URL</string>
     <string name="error_no_upload_fields">Not able to attach the selected content in this form.</string>
+    <string name="process_max_file_size">Please note: Maximum file size for uploads is %d MB.</string>
+    <string name="error_process_failure">Something went wrong. Contact your administrator for help.</string>
 </resources>

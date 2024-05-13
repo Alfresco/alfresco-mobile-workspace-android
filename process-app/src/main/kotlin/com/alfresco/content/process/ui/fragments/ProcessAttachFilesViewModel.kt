@@ -5,6 +5,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
+import com.alfresco.content.GetMultipleContents
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ActionOpenWith
 import com.alfresco.content.common.EntryListener
@@ -85,7 +86,7 @@ class ProcessAttachFilesViewModel(
     fun emptyMessageArgs(state: ProcessAttachFilesViewState) =
         when {
             else ->
-                Triple(R.drawable.ic_empty_files, R.string.no_attached_files, R.string.file_empty_message)
+                Triple(R.drawable.ic_empty_files, R.string.no_attached_files, context.getString(R.string.file_empty_message, GetMultipleContents.MAX_FILE_SIZE_10))
         }
 
     /**

@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.Logger
+import com.alfresco.content.GetMultipleContents.Companion.MAX_FILE_SIZE_10
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
@@ -55,9 +56,10 @@ interface Action {
                     ex.message == ERROR_FILE_SIZE_EXCEED -> {
                     bus.send(Error(context.getString(R.string.error_file_size_exceed)))
                 }
+
                 entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_PROCESS &&
                     ex.message == ERROR_FILE_SIZE_EXCEED -> {
-                    bus.send(Error(context.getString(R.string.error_file_size_exceed_10mb)))
+                    bus.send(Error(context.getString(R.string.error_file_size_exceed_10mb, MAX_FILE_SIZE_10)))
                 }
             }
         } catch (ex: Exception) {

@@ -10,4 +10,5 @@
     <string name="title_actions">Azioni</string>
     <string name="accessibility_process_actions">Pulsante Elabora azioni</string>
     <string name="no_attachments">Nessun allegato</string>
+    <string name="error_process_failure">Si è verificato un problema. Per assistenza, contatta il tuo amministratore.</string>
 </resources>

@@ -10,4 +10,5 @@
     <string name="title_actions">Aktionen</string>
     <string name="accessibility_process_actions">Schaltfläche „Aktionen verarbeiten“</string>
     <string name="no_attachments">Keine Anhänge</string>
+    <string name="error_process_failure">Etwas ist schiefgelaufen. Kontaktieren Sie Ihren Administrator für Hilfe.</string>
 </resources>

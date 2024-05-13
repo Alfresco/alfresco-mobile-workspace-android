@@ -10,4 +10,5 @@
     <string name="title_actions">Actions</string>
     <string name="accessibility_process_actions">Bouton d\'actions de traitement</string>
     <string name="no_attachments">Aucune pièce jointe</string>
+    <string name="error_process_failure">Un problème est survenu. Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</string>
 </resources>

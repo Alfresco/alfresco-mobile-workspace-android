@@ -10,4 +10,5 @@
     <string name="title_actions">Acciones</string>
     <string name="accessibility_process_actions">Botón de acciones de procesos</string>
     <string name="no_attachments">Sin adjuntos</string>
+    <string name="error_process_failure">Ha surgido un error. Contacte a su administrador para obtener ayuda.</string>
 </resources>

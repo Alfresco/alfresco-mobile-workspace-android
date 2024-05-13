@@ -10,4 +10,5 @@
     <string name="title_actions">Acties</string>
     <string name="accessibility_process_actions">Knop Procesacties</string>
     <string name="no_attachments">Geen bijlagen</string>
+    <string name="error_process_failure">Er is iets fout gegaan. Neem contact op met uw beheerder voor hulp.</string>
 </resources>

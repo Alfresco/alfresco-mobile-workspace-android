@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
 import com.airbnb.mvrx.Mavericks
 import com.airbnb.mvrx.MavericksView
@@ -162,6 +163,7 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             state.requestSaveForm is Loading || state.requestOutcomes is Loading || state.requestProfile is Loading ||
             state.requestAccountInfo is Loading || state.requestContent is Loading
 
+        handleError(state)
         when {
             state.requestStartWorkflow is Success || state.requestSaveForm is Success ||
                 state.requestOutcomes is Success || state.requestClaimRelease is Success -> {
@@ -213,6 +215,17 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
             }
         }
         menu?.findItem(R.id.action_info)?.isVisible = state.parent.processInstanceId != null
+    }
+
+    private fun handleError(state: FormViewState) {
+        when {
+            state.requestStartWorkflow is Fail<*> || state.requestForm is Fail<*> ||
+                state.requestSaveForm is Fail<*> || state.requestProfile is Fail<*> || state.request is Fail<*> ||
+                state.requestOutcomes is Fail<*> || state.requestContent is Fail<*> || state.requestProcessDefinition is Fail<*> ||
+                state.requestClaimRelease is Fail<*> || state.requestFormVariables is Fail<*> || state.requestAccountInfo is Fail<*> -> {
+                showSnackBar(getString(R.string.error_process_failure))
+            }
+        }
     }
 
     override fun onAttachFolder(entry: ParentEntry) = withState(viewModel) {

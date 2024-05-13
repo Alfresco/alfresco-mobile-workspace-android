@@ -14,6 +14,8 @@ import com.alfresco.content.DATE_FORMAT_2_1
 import com.alfresco.content.DATE_FORMAT_4_1
 import com.alfresco.content.DATE_FORMAT_5
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.APIEvent
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AttachFilesData
 import com.alfresco.content.data.AttachFolderSearchData
 import com.alfresco.content.data.DefaultOutcomesID
@@ -448,8 +450,16 @@ class FormViewModel(
             repository::startWorkflow.asFlow(state.parent, "", convertFieldsToValues(state.formFields)).execute {
                 when (it) {
                     is Loading -> copy(requestStartWorkflow = Loading())
-                    is Fail -> copy(requestStartWorkflow = Fail(it.error))
-                    is Success -> copy(requestStartWorkflow = Success(it()))
+                    is Fail -> {
+                        AnalyticsManager().apiTracker(APIEvent.StartWorkflow, false)
+                        copy(requestStartWorkflow = Fail(it.error))
+                    }
+
+                    is Success -> {
+                        AnalyticsManager().apiTracker(APIEvent.StartWorkflow, true)
+                        copy(requestStartWorkflow = Success(it()))
+                    }
+
                     else -> this
                 }
             }
@@ -473,10 +483,12 @@ class FormViewModel(
                 when (it) {
                     is Loading -> copy(requestOutcomes = Loading())
                     is Fail -> {
+                        AnalyticsManager().apiTracker(APIEvent.Outcomes, false, outcome = outcome)
                         copy(requestOutcomes = Fail(it.error))
                     }
 
                     is Success -> {
+                        AnalyticsManager().apiTracker(APIEvent.Outcomes, true, outcome = outcome)
                         copy(requestOutcomes = Success(it()))
                     }
 

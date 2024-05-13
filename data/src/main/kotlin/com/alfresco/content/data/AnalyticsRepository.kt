@@ -156,6 +156,8 @@ enum class APIEvent(val value: String) {
     DeleteTaskAttachment("event_api_delete_task_attachment"),
     AssignUser("event_api_assign_user"),
     SearchUser("event_api_search_user"),
+    StartWorkflow("event_api_start_workflow"),
+    Outcomes("event_api_outcomes"),
 }
 
 /**
@@ -191,4 +193,5 @@ enum class Parameters(val value: String) {
     NumberOfFiles("number_of_files"),
     FacetName("facet_name"),
     Success("success"),
+    ActionOutcome("action_outcome"),
 }

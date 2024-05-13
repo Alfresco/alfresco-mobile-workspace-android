@@ -118,7 +118,7 @@ class AnalyticsManager(otherSession: Session? = null) {
     /**
      * analytics for API tracker
      */
-    fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "") {
+    fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "", outcome: String = "") {
         val apiTrackName = if (status) "${apiName.value}_success".lowercase() else "${apiName.value}_fail".lowercase()
 
         val params = repository.defaultParams()
@@ -126,6 +126,9 @@ class AnalyticsManager(otherSession: Session? = null) {
         params.putBoolean(Parameters.Success.value, status)
         if (size.isNotEmpty()) {
             params.putString(Parameters.FileSize.value, size)
+        }
+        if (outcome.isNotEmpty()) {
+            params.putString(Parameters.ActionOutcome.value, outcome)
         }
         repository.logEvent(apiTrackName, params)
     }

@@ -86,9 +86,13 @@ class ProcessAttachFilesFragment : ProcessBaseFragment(), MavericksView, EntryLi
                 if (state.listContents.isNotEmpty()) {
                     binding.tvNoOfAttachments.visibility = View.VISIBLE
                     val filesHeader = StringBuilder()
-                    filesHeader.append(getString(R.string.text_multiple_attachment, state.listContents.size))
-                        .append("\n")
-                        .append(getString(R.string.process_max_file_size, GetMultipleContents.MAX_FILE_SIZE_10))
+                    filesHeader.append(getString(R.string.text_multiple_attachment, state.listContents.size)).apply {
+                        if (!state.isReadOnlyField) {
+                            this.append("\n")
+                                .append(getString(R.string.process_max_file_size, GetMultipleContents.MAX_FILE_SIZE_10))
+                        }
+                    }
+
                     binding.tvNoOfAttachments.text = filesHeader
                 } else {
                     binding.tvNoOfAttachments.visibility = View.GONE

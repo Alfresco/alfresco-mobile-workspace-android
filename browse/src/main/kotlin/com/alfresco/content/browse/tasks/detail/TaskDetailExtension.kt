@@ -97,25 +97,6 @@ internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
             }
             binding.clStatus.visibility = View.VISIBLE
 
-            when (dataObj.memberOfCandidateGroup) {
-                true -> {
-                    if (dataObj.assignee?.id == null || dataObj.assignee?.id == 0) {
-//                        makeClaimButton()
-                    } else if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
-                        menuDetail.findItem(R.id.action_release).isVisible = true
-//                        makeOutcomes()
-                    }
-                }
-
-                else -> {
-                    if (viewModel.isStartedByAndLoggedInSame(dataObj.processInstanceStartUserId) ||
-                        viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)
-                    ) {
-//                        makeOutcomes()
-                    }
-                }
-            }
-
             binding.tvStatusValue.text = getString(R.string.status_active)
         }
     }

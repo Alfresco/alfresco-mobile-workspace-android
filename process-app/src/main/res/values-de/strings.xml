@@ -3,12 +3,18 @@
     <string name="accessibility_clear_text">Text löschen</string>
     <string name="accessibility_date_icon">Symbol für Datum</string>
     <string name="accessibility_link_icon">Symbol für Verknüpfung</string>
-    <string name="error_min_value">Darf nicht kleiner als %1$d sein</string>
-    <string name="error_max_value">Darf nicht größer als %1$d sein</string>
+    <string name="error_min_value">Darf nicht kleiner sein als %1$d</string>
+    <string name="error_max_value">Darf nicht größer sein als %1$d</string>
     <string name="error_invalid_format">Verwenden Sie ein anderes Zahlenformat</string>
     <string name="error_required_field">Dies ist ein Pflichtfeld.</string>
     <string name="title_actions">Aktionen</string>
     <string name="accessibility_process_actions">Schaltfläche „Aktionen verarbeiten“</string>
     <string name="no_attachments">Keine Anhänge</string>
     <string name="error_process_failure">Etwas ist schiefgelaufen. Kontaktieren Sie Ihren Administrator für Hilfe.</string>
+    <string name="no_attached_folder">Kein angehängter Ordner</string>
+    <string name="action_info">Information</string>
+    <string name="file_empty_message">Sie haben anscheinend\nnoch keine Dateien angehängt\n(max. Dateigröße: %d MB).</string>
+    <string name="error_hyperlink_invalid_url">%1$s hat ungültige URL</string>
+    <string name="error_no_upload_fields">Der ausgewählte Inhalt kann in dieser Form nicht angehängt werden.</string>
+    <string name="process_max_file_size">Maximale Dateigröße für Uploads: %d MB.</string>
 </resources>

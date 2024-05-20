@@ -13,6 +13,6 @@
     <string name="title_priority">Priority</string>
     <string name="title_assignee">Assignee</string>
     <string name="title_tasks">Tasks</string>
-    <string name="warning_max_item_multi_selection">Select a maximum of %d items</string>
     <string name="select_button">Select</string>
+    <string name="warning_max_item_multi_selection">Select a maximum of %d items</string>
 </resources>

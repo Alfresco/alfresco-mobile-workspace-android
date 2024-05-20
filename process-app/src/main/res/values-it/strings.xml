@@ -1,14 +1,20 @@
 <resources>
-    <string name="error_min_length">Immettere almeno %1$d caratteri</string>
+    <string name="error_min_length">Inserire almeno %1$d caratteri</string>
     <string name="accessibility_clear_text">Elimina testo</string>
     <string name="accessibility_date_icon">Icona data</string>
     <string name="accessibility_link_icon">Icona link</string>
     <string name="error_min_value">Non deve essere inferiore a %1$d</string>
     <string name="error_max_value">Non deve essere superiore a %1$d</string>
-    <string name="error_invalid_format">Usare un formato numerico diverso</string>
+    <string name="error_invalid_format">Utilizzare un formato numerico diverso</string>
     <string name="error_required_field">Questo è un campo obbligatorio.</string>
     <string name="title_actions">Azioni</string>
     <string name="accessibility_process_actions">Pulsante Elabora azioni</string>
     <string name="no_attachments">Nessun allegato</string>
     <string name="error_process_failure">Si è verificato un problema. Per assistenza, contatta il tuo amministratore.</string>
+    <string name="no_attached_folder">Cartella non allegata</string>
+    <string name="action_info">Informazione</string>
+    <string name="file_empty_message">Non è stato ancora\naggiunto alcun file\n(dimensioni max. file: %d MB).</string>
+    <string name="error_hyperlink_invalid_url">%1$s ha un URL non valido</string>
+    <string name="error_no_upload_fields">Impossibile allegare il contenuto selezionato al presente modulo.</string>
+    <string name="process_max_file_size">Per gli upload la dimensione massima del file è %d MB.</string>
 </resources>

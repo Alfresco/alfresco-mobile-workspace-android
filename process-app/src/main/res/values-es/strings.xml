@@ -3,12 +3,18 @@
     <string name="accessibility_clear_text">Borrar texto</string>
     <string name="accessibility_date_icon">Icono de fecha</string>
     <string name="accessibility_link_icon">Icono de enlace</string>
-    <string name="error_min_value">No puede ser menor que %1$d</string>
-    <string name="error_max_value">No puede ser mayor que %1$d</string>
-    <string name="error_invalid_format">Utilice un formato de número distinto</string>
+    <string name="error_min_value">No puede ser inferior a %1$d</string>
+    <string name="error_max_value">Ne peut pas être supérieur à %1$d</string>
+    <string name="error_invalid_format">Utilice un formato de número diferente</string>
     <string name="error_required_field">Este campo es obligatorio.</string>
     <string name="title_actions">Acciones</string>
     <string name="accessibility_process_actions">Botón de acciones de procesos</string>
     <string name="no_attachments">Sin adjuntos</string>
     <string name="error_process_failure">Ha surgido un error. Contacte a su administrador para obtener ayuda.</string>
+    <string name="no_attached_folder">No hay ninguna carpeta adjunta</string>
+    <string name="action_info">Información</string>
+    <string name="file_empty_message">Parece que aún no ha\nañadido ningún archivo\n(tamaño máximo de archivo: %d MB).</string>
+    <string name="error_hyperlink_invalid_url">La URL de %1$s no es válida</string>
+    <string name="error_no_upload_fields">Fallo al adjuntar el contenido seleccionado en este formulario.</string>
+    <string name="process_max_file_size">El tamaño máximo de archivo de carga es de %d MB.</string>
 </resources>

@@ -1,14 +1,20 @@
 <resources>
-    <string name="error_min_length">Voer minstens %1$d tekens in</string>
+    <string name="error_min_length">Voer ten minste %1$d tekens in</string>
     <string name="accessibility_clear_text">Tekst wissen</string>
     <string name="accessibility_date_icon">Datumpictogram</string>
     <string name="accessibility_link_icon">Koppelingpictogram</string>
     <string name="error_min_value">Mag niet minder zijn dan %1$d</string>
     <string name="error_max_value">Mag niet meer zijn dan %1$d</string>
-    <string name="error_invalid_format">Gebruik een andere getalnotatie</string>
+    <string name="error_invalid_format">Gebruik een ander getalsformaat</string>
     <string name="error_required_field">Dit is een verplicht veld.</string>
     <string name="title_actions">Acties</string>
     <string name="accessibility_process_actions">Knop Procesacties</string>
     <string name="no_attachments">Geen bijlagen</string>
     <string name="error_process_failure">Er is iets fout gegaan. Neem contact op met uw beheerder voor hulp.</string>
+    <string name="no_attached_folder">Geen map bijgevoegd</string>
+    <string name="action_info">Informatie</string>
+    <string name="file_empty_message">Het lijkt erop dat je nog geen\nbestanden hebt toegevoegd\n(max bestandsgrootte: %d MB).</string>
+    <string name="error_hyperlink_invalid_url">%1$s heeft ongeldige URL</string>
+    <string name="error_no_upload_fields">Niet mogelijk om de geselecteerde inhoud in deze vorm toe te voegen.</string>
+    <string name="process_max_file_size">Maximum bestandsformaat voor uploads is %d MB.</string>
 </resources>

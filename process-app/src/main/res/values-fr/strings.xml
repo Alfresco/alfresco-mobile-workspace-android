@@ -1,14 +1,20 @@
 <resources>
-    <string name="error_min_length">Veuillez saisir au moins %1$d caractères</string>
+    <string name="error_min_length">Saisir au moins %1$d caractères</string>
     <string name="accessibility_clear_text">Effacer le texte</string>
     <string name="accessibility_date_icon">Icône de date</string>
     <string name="accessibility_link_icon">Icône de lien</string>
     <string name="error_min_value">Ne peut pas être inférieur à %1$d</string>
     <string name="error_max_value">Ne peut pas être supérieur à %1$d</string>
-    <string name="error_invalid_format">Utiliser un format numérique différent</string>
+    <string name="error_invalid_format">Essayez un autre format de chiffre</string>
     <string name="error_required_field">Ceci est un champ obligatoire.</string>
     <string name="title_actions">Actions</string>
     <string name="accessibility_process_actions">Bouton d\'actions de traitement</string>
     <string name="no_attachments">Aucune pièce jointe</string>
     <string name="error_process_failure">Un problème est survenu. Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</string>
+    <string name="no_attached_folder">Aucun dossier joint</string>
+    <string name="action_info">Information</string>
+    <string name="file_empty_message">Vous n’avez pas encore\najouté de fichiers\n(taille de fichier max. : %d Mo).</string>
+    <string name="error_hyperlink_invalid_url">%1$s a une URL non valide</string>
+    <string name="error_no_upload_fields">Impossible de joindre le contenu sélectionné à ce formulaire.</string>
+    <string name="process_max_file_size">La taille de fichier maximale pour les chargements est de %d Mo.</string>
 </resources>

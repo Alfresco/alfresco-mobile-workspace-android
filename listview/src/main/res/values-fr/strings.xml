@@ -13,4 +13,6 @@
     <string name="title_priority">Priorité</string>
     <string name="title_assignee">Personne assignée</string>
     <string name="title_tasks">Tâches</string>
+    <string name="warning_max_item_multi_selection">Sélectionner un maximum de %d éléments</string>
+    <string name="select_button">Sélectionner</string>
 </resources>

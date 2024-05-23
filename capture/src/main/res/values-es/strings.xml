@@ -27,7 +27,6 @@
     <string name="capture_failure_permissions">Para tomar fotos o grabar vídeos, active los permisos de Cámara y Micrófono.</string>
     <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
     <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
-    <string name="error_file_size_exceed">El tamaño del fichero seleccionado no puede superar los 100 MB para cargarlo.</string>
-    <string name="error_file_size_exceed_10mb">El tamaño máximo de archivo de carga es de %d MB.</string>
+    <string name="error_file_size_exceed">El tamaño máximo de archivo de carga es de %d MB.</string>
 
 </resources>

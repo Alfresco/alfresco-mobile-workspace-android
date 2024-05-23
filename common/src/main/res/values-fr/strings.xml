@@ -39,7 +39,7 @@
     <string name="dialog_title_delete_content">Supprimer un fichier ?</string>
     <string name="dialog_negative_button_task">Annuler</string>
     <string name="dialog_positive_button_task">Confirmer</string>
-    <string name="text_complete">Terminé</string>
+    <string name="text_complete">Complet</string>
     <string name="title_content_in_queue">Avertissement</string>
     <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
     <string name="no_attached_files">Aucun fichier joint</string>

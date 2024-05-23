@@ -9,7 +9,7 @@
     <string name="error_required_field">Ceci est un champ obligatoire.</string>
     <string name="title_actions">Actions</string>
     <string name="accessibility_process_actions">Bouton d\'actions de traitement</string>
-    <string name="no_attachments">Aucune pièce jointe</string>
+    <string name="no_attachments">Aucun fichier joint</string>
     <string name="error_process_failure">Un problème est survenu. Pour obtenir de l\'aide, contactez votre administrateur Alfresco.</string>
     <string name="no_attached_folder">Aucun dossier joint</string>
     <string name="action_info">Information</string>

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.alfresco.Logger
 import com.alfresco.content.GetMultipleContents.Companion.MAX_FILE_SIZE_10
+import com.alfresco.content.GetMultipleContents.Companion.MAX_FILE_SIZE_100
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
@@ -54,12 +55,12 @@ interface Action {
             when {
                 entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
                     ex.message == ERROR_FILE_SIZE_EXCEED -> {
-                    bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+                    bus.send(Error(context.getString(R.string.error_file_size_exceed, MAX_FILE_SIZE_100)))
                 }
 
                 entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_PROCESS &&
                     ex.message == ERROR_FILE_SIZE_EXCEED -> {
-                    bus.send(Error(context.getString(R.string.error_file_size_exceed_10mb, MAX_FILE_SIZE_10)))
+                    bus.send(Error(context.getString(R.string.error_file_size_exceed, MAX_FILE_SIZE_10)))
                 }
             }
         } catch (ex: Exception) {
@@ -98,7 +99,7 @@ interface Action {
             if (entry is Entry && (entry as Entry).uploadServer == UploadServerType.UPLOAD_TO_TASK &&
                 ex.message == ERROR_FILE_SIZE_EXCEED
             ) {
-                bus.send(Error(context.getString(R.string.error_file_size_exceed)))
+                bus.send(Error(context.getString(R.string.error_file_size_exceed, MAX_FILE_SIZE_100)))
             }
         } catch (ex: Exception) {
             sendAnalytics(false)

@@ -39,7 +39,8 @@
     <string name="dialog_title_delete_content">Delete a file?</string>
     <string name="dialog_negative_button_task">Cancel</string>
     <string name="dialog_positive_button_task">Confirm</string>
-    <string name="text_complete">Complete</string><string name="title_content_in_queue">Warning</string>
+    <string name="text_complete">Complete</string>
+    <string name="title_content_in_queue">Warning</string>
     <string name="message_content_in_queue">Files uploading is in progress. Tap on Confirm to continue without in-progress files.</string>
     <string name="no_attached_files">No Attached Files</string>
     <string name="title_no_name">No Name</string>

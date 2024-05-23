@@ -39,7 +39,7 @@
     <string name="dialog_title_delete_content">Bestand verwijderen?</string>
     <string name="dialog_negative_button_task">Annuleren</string>
     <string name="dialog_positive_button_task">Bevestigen</string>
-    <string name="text_complete">Voltooien</string>
+    <string name="text_complete">Compleet</string>
     <string name="title_content_in_queue">Waarschuwing</string>
     <string name="message_content_in_queue">Er worden bestanden geüpload. Tik om te bevestigen dat u wilt doorgaan zonder de bestanden in uitvoering.</string>
     <string name="no_attached_files">Geen bijgevoegde bestanden</string>

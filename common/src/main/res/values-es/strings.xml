@@ -39,7 +39,7 @@
     <string name="dialog_title_delete_content">¿Eliminar un fichero?</string>
     <string name="dialog_negative_button_task">Cancelar</string>
     <string name="dialog_positive_button_task">Confirmar</string>
-    <string name="text_complete">Por completar</string>
+    <string name="text_complete">Completar</string>
     <string name="title_content_in_queue">Advertencia</string>
     <string name="message_content_in_queue">La carga de ficheros está en curso. Toque Confirmar para continuar sin los ficheros en curso.</string>
     <string name="no_attached_files">No hay ficheros adjuntos</string>

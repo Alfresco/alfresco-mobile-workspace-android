@@ -9,7 +9,7 @@
     <string name="error_required_field">Questo è un campo obbligatorio.</string>
     <string name="title_actions">Azioni</string>
     <string name="accessibility_process_actions">Pulsante Elabora azioni</string>
-    <string name="no_attachments">Nessun allegato</string>
+    <string name="no_attachments">Nessun file allegato</string>
     <string name="error_process_failure">Si è verificato un problema. Per assistenza, contatta il tuo amministratore.</string>
     <string name="no_attached_folder">Cartella non allegata</string>
     <string name="action_info">Informazione</string>

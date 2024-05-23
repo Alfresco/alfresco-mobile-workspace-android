@@ -27,7 +27,6 @@
     <string name="capture_failure_permissions">Für Medienaufnahmen müssen die Berechtigungen zur Nutzung von Kamera und Mikrofon erteilt werden.</string>
     <string name="format_video_duration_hour" translatable="false">%02d:%02d:%02d</string>
     <string name="format_video_duration_minute" translatable="false">%02d:%02d</string>
-    <string name="error_file_size_exceed">Die ausgewählte Dateigröße darf beim Hochladen 100 MB nicht überschreiten.</string>
-    <string name="error_file_size_exceed_10mb">Maximale Dateigröße für Uploads: %d MB.</string>
+    <string name="error_file_size_exceed">Maximale Dateigröße für Uploads: %d MB.</string>
 
 </resources>

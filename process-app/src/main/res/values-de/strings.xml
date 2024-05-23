@@ -9,7 +9,7 @@
     <string name="error_required_field">Dies ist ein Pflichtfeld.</string>
     <string name="title_actions">Aktionen</string>
     <string name="accessibility_process_actions">Schaltfläche „Aktionen verarbeiten“</string>
-    <string name="no_attachments">Keine Anhänge</string>
+    <string name="no_attachments">Keine angehängten Dateien</string>
     <string name="error_process_failure">Etwas ist schiefgelaufen. Kontaktieren Sie Ihren Administrator für Hilfe.</string>
     <string name="no_attached_folder">Kein angehängter Ordner</string>
     <string name="action_info">Information</string>

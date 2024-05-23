@@ -375,7 +375,15 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                                     navigateToSave()
                                 } else {
                                     file.delete()
-                                    Snackbar.make(layout.captureDurationView, getString(R.string.error_file_size_exceed), Snackbar.LENGTH_SHORT).show()
+                                    Snackbar.make(
+                                        layout.captureDurationView,
+                                        if (viewModel.isProcessUpload) {
+                                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_10)
+                                        } else {
+                                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_100)
+                                        },
+                                        Snackbar.LENGTH_SHORT,
+                                    ).show()
                                 }
                             }
                         }

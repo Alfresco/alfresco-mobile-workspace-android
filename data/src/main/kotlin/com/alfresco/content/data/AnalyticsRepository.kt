@@ -142,6 +142,8 @@ enum class PageView(val value: String) {
     WorkflowView("page_view_workflow_view"),
     WorkflowTaskView("page_view_workflow_task_view"),
     WorkflowTaskStatusView("page_view_workflow_task_status"),
+    StartFormView("page_view_start_form"),
+    TaskFormView("page_view_task_form"),
     None("none"),
 }
 

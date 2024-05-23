@@ -24,8 +24,10 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
+import com.alfresco.content.data.PageView
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.payloads.FieldType
 import com.alfresco.content.data.payloads.FieldsData
@@ -117,11 +119,10 @@ class ProcessFragment : Fragment(), MavericksView, EntryListener {
 
         withState(viewModel) {
             if (it.parent.processInstanceId != null) {
-                if (it.parent.processInstanceId != null) {
-                    supportActionBar?.title = it.parent.taskEntry.name.ifEmpty { getString(R.string.title_no_name) }
-                } else {
-                    supportActionBar?.title = getString(R.string.title_workflow)
-                }
+                AnalyticsManager().screenViewEvent(PageView.TaskFormView)
+                supportActionBar?.title = it.parent.taskEntry.name.ifEmpty { getString(R.string.title_no_name) }
+            } else {
+                AnalyticsManager().screenViewEvent(PageView.StartFormView)
             }
         }
 

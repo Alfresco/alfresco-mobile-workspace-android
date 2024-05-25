@@ -41,7 +41,15 @@ object DownloadMonitor {
 
             val newReceiver = DownloadCompleteReceiver(::onDownloadComplete)
             val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-            context.applicationContext.registerReceiver(newReceiver, filter)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.applicationContext.registerReceiver(
+                    newReceiver,
+                    filter,
+                    Context.RECEIVER_EXPORTED,
+                )
+            } else {
+                context.applicationContext.registerReceiver(newReceiver, filter)
+            }
             receiver = newReceiver
         }
 

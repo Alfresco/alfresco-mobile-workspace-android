@@ -32,7 +32,7 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
         state.formFields.isEmpty() -> emptyList()
         state.processOutcomes.isEmpty() -> defaultOutcomes(state)
         state.parent.taskEntry.memberOfCandidateGroup == true -> pooledOutcomes(state, viewModel)
-        else -> customOutcomes(state)
+        else -> customOutcomes(state, viewModel)
     }
 
     when {
@@ -48,7 +48,13 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(viewModel, customOutcomes, navController, fragment, snackbarHostState)
+                    FormDetailScreen(
+                        viewModel,
+                        customOutcomes,
+                        navController,
+                        fragment,
+                        snackbarHostState,
+                    )
                 }
             }
         }
@@ -56,7 +62,13 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
         else -> {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
-                floatingActionButton = { FloatingActionButton(customOutcomes, fragment, viewModel) },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        customOutcomes,
+                        fragment,
+                        viewModel,
+                    )
+                },
                 floatingActionButtonPosition = FabPosition.End,
             ) { padding ->
                 val colorScheme = MaterialTheme.colorScheme
@@ -67,7 +79,13 @@ fun FormScreen(navController: NavController, viewModel: FormViewModel, fragment:
                     color = colorScheme.background,
                     contentColor = colorScheme.onBackground,
                 ) {
-                    FormDetailScreen(viewModel, emptyList(), navController, fragment, snackbarHostState)
+                    FormDetailScreen(
+                        viewModel,
+                        emptyList(),
+                        navController,
+                        fragment,
+                        snackbarHostState,
+                    )
                 }
             }
         }
@@ -106,16 +124,21 @@ private fun defaultOutcomes(state: FormViewState): List<OptionsModel> {
 }
 
 @Composable
-private fun customOutcomes(state: FormViewState): List<OptionsModel> {
+private fun customOutcomes(state: FormViewState, viewModel: FormViewModel): List<OptionsModel> {
+    val dataObj = state.parent.taskEntry
     return if (state.parent.processInstanceId == null) {
         state.processOutcomes
     } else {
-        listOf(
-            OptionsModel(
-                id = DefaultOutcomesID.DEFAULT_SAVE.value(),
-                name = stringResource(id = R.string.action_text_save),
-            ),
-        ) + state.processOutcomes
+        if (viewModel.isAssigneeAndLoggedInSame(dataObj.assignee)) {
+            listOf(
+                OptionsModel(
+                    id = DefaultOutcomesID.DEFAULT_SAVE.value(),
+                    name = stringResource(id = R.string.action_text_save),
+                ),
+            ) + state.processOutcomes
+        } else {
+            emptyList()
+        }
     }
 }
 

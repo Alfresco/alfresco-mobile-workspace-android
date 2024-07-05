@@ -36,6 +36,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                     navigateToMain()
                 }
             } catch (ex: Exception) {
+                ex.printStackTrace()
                 onError(R.string.auth_error_wrong_credentials)
             }
         }
@@ -53,6 +54,8 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.displayName ?: "",
                 person.email,
                 myFiles,
+                credentials.hostName,
+                credentials.clientId,
             )
         } else {
             val current = Account.getAccount(applicationContext)
@@ -69,6 +72,8 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.displayName ?: "",
                 person.email,
                 myFiles,
+                credentials.hostName,
+                credentials.clientId,
             )
         }
     }

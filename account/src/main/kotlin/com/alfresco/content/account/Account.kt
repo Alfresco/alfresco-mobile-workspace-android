@@ -17,6 +17,8 @@ data class Account(
     val displayName: String? = null,
     val email: String? = null,
     val myFiles: String? = null,
+    val hostName: String? = null,
+    val clientId: String? = null,
 ) {
     companion object {
         private const val displayNameKey = "displayName"
@@ -25,6 +27,8 @@ data class Account(
         private const val authConfigKey = "config"
         private const val serverKey = "server"
         private const val myFilesKey = "myFiles"
+        private const val hostNameKey = "auth0HostName"
+        private const val clientIdKey = "auth0ClientId"
 
         fun createAccount(
             context: Context,
@@ -36,6 +40,8 @@ data class Account(
             displayName: String,
             email: String,
             myFiles: String,
+            hostName: String,
+            clientId: String,
         ) {
             val sharedSecure = SecureSharedPreferencesManager(context)
 
@@ -46,10 +52,12 @@ data class Account(
             b.putString(displayNameKey, KEY_DISPLAY_NAME)
             b.putString(emailKey, KEY_EMAIL)
             b.putString(myFilesKey, myFiles)
+            b.putString(hostNameKey, hostName)
+            b.putString(clientIdKey, clientId)
             val acc = AndroidAccount(id, context.getString(R.string.android_auth_account_type))
 
             // Save credentials securely using the SecureSharedPreferencesManager
-            sharedSecure.saveCredentials(email, authState, displayName)
+            sharedSecure.saveCredentials(email, authState, displayName, hostName, clientId)
 
             AccountManager.get(context).addAccountExplicitly(acc, KEY_PASSWORD, b)
         }
@@ -72,18 +80,22 @@ data class Account(
             displayName: String,
             email: String,
             myFiles: String,
+            hostName: String,
+            clientId: String,
         ) {
             val sharedSecure = SecureSharedPreferencesManager(context)
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
 
             // Save credentials securely using the SecureSharedPreferencesManager
-            sharedSecure.saveCredentials(email, authState, displayName)
+            sharedSecure.saveCredentials(email, authState, displayName, hostName, clientId)
 
             am.setPassword(acc, KEY_PASSWORD)
             am.setUserData(acc, displayNameKey, KEY_DISPLAY_NAME)
             am.setUserData(acc, emailKey, KEY_EMAIL)
             am.setUserData(acc, myFilesKey, myFiles)
+            am.setUserData(acc, hostNameKey, hostName)
+            am.setUserData(acc, clientIdKey, clientId)
 
             if (acc?.name != id) {
                 am.renameAccount(acc, id, null, null)
@@ -105,6 +117,7 @@ data class Account(
             val secureCredentials = sharedSecure.getSavedCredentials()
             if (accountList.isNotEmpty() && secureCredentials != null) {
                 val acc = accountList[0]
+                val secureAuth0 = sharedSecure.getSavedAuth0Data()
                 return Account(
                     acc.name,
                     secureCredentials.second,
@@ -114,6 +127,8 @@ data class Account(
                     secureCredentials.third,
                     secureCredentials.first,
                     am.getUserData(acc, myFilesKey),
+                    secureAuth0?.first,
+                    secureAuth0?.second,
                 )
             }
             return null

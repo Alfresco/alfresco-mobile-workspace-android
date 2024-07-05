@@ -11,17 +11,19 @@ import androidx.lifecycle.viewModelScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.AuthType
-import com.alfresco.auth.config.defaultConfig
+import com.alfresco.auth.config.defaultAuth0Config
+import com.alfresco.auth.config.defaultKeycloakConfig
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
 import com.alfresco.auth.ui.AuthenticationViewModel
+import com.alfresco.content.data.OptionsModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val applicationContext: Context,
-    authType: AuthType?,
+    val authType: AuthType?,
     authState: String?,
     authConfig: AuthConfig?,
     endpoint: String?,
@@ -58,7 +60,9 @@ class LoginViewModel(
     val canonicalApplicationUrl: String
         get() {
             return previousAppEndpoint
-                ?: discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
+                ?: if (authType == AuthType.PKCE) {
+                    discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
+                } else discoveryService.oidcUrl(applicationUrl.value!!).toString()
         }
 
     // Used for display purposes
@@ -126,6 +130,18 @@ class LoginViewModel(
                 }
             }
 
+            AuthType.OIDC -> {
+                viewModelScope.launch {
+                    val isOIDCInstalled = withContext(Dispatchers.IO) {
+                        discoveryService.isOIDCInstalled(identityUrl.value ?: "")
+                    }
+                    if (isOIDCInstalled) {
+                        applicationUrl.value = identityUrl.value
+                        moveToStep(Step.EnterAuth0Credentials)
+                    }
+                }
+            }
+
             AuthType.BASIC -> {
                 moveToStep(Step.EnterBasicCredentials)
             }
@@ -172,7 +188,7 @@ class LoginViewModel(
         val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val configJson = sharedPrefs.getString(SHARED_PREFS_CONFIG_KEY, null) ?: ""
 
-        authConfig = AuthConfig.jsonDeserialize(configJson) ?: AuthConfig.defaultConfig
+        authConfig = AuthConfig.jsonDeserialize(configJson) ?: AuthConfig.defaultKeycloakConfig
     }
 
     fun saveConfigChanges() {
@@ -199,15 +215,19 @@ class LoginViewModel(
         when (step) {
             Step.InputIdentityServer -> {
             }
+
             Step.InputAppServer -> {
                 applicationUrl.value = ""
             }
+
             Step.EnterBasicCredentials -> {
                 // Assume application url is the same as identity for basic auth
                 applicationUrl.value = identityUrl.value
             }
-            Step.EnterPkceCredentials -> {
+
+            Step.EnterPkceCredentials, Step.EnterAuth0Credentials -> {
             }
+
             Step.Cancelled -> {
             }
         }
@@ -220,6 +240,7 @@ class LoginViewModel(
         InputAppServer,
         EnterBasicCredentials,
         EnterPkceCredentials,
+        EnterAuth0Credentials,
         Cancelled,
     }
 
@@ -287,16 +308,32 @@ class LoginViewModel(
         private lateinit var source: AuthConfig
         private val _changed = MediatorLiveData<Boolean>()
 
+        val authTypeValue = MutableLiveData<String>()
+        val authTypeName = MutableLiveData<String>()
         val https = MutableLiveData<Boolean>()
         val port = MutableLiveData<String>()
         val contentServicePath = MutableLiveData<String>()
         val realm = MutableLiveData<String>()
         val clientId = MutableLiveData<String>()
         private var redirectUrl: String = ""
+        private var scheme: String = ""
 
         val changed: LiveData<Boolean> get() = _changed
 
+        val listAuthType = listOf(
+            OptionsModel(
+                id = AuthType.PKCE.value,
+                name = "Keycloak",
+            ),
+            OptionsModel(
+                id = AuthType.OIDC.value,
+                name = "Auth0",
+            ),
+        )
+
         init {
+            _changed.addSource(authTypeValue, this::onChange)
+            _changed.addSource(authTypeName, this::onChange)
             _changed.addSource(https, this::onChange)
             _changed.addSource(port, this::onChange)
             _changed.addSource(contentServicePath, this::onChange)
@@ -314,6 +351,15 @@ class LoginViewModel(
          */
         fun onHttpsToggle() {
             port.value = if (https.value == true) DEFAULT_HTTPS_PORT else DEFAULT_HTTP_PORT
+        }
+
+        fun onAuthChange(authName: String, authValue: String) {
+            authTypeName.value = authName
+            authTypeValue.value = authValue
+            when (authValue.lowercase()) {
+                AuthType.PKCE.value.lowercase() -> load(AuthConfig.defaultKeycloakConfig)
+                AuthType.OIDC.value.lowercase() -> load(AuthConfig.defaultAuth0Config)
+            }
         }
 
         private fun onChange(@Suppress("UNUSED_PARAMETER") value: Boolean) {
@@ -335,16 +381,22 @@ class LoginViewModel(
 
         fun resetToDefaultConfig() {
             // Source is not changed as resetting to default does not commit changes
-            load(AuthConfig.defaultConfig)
+            when (authTypeValue.value?.lowercase()) {
+                AuthType.PKCE.value.lowercase() -> load(AuthConfig.defaultKeycloakConfig)
+                AuthType.OIDC.value.lowercase() -> load(AuthConfig.defaultAuth0Config)
+            }
         }
 
         private fun load(config: AuthConfig) {
+            authTypeName.value = listAuthType.find { it.id == config.authType }?.name ?: ""
+            authTypeValue.value = config.authType
             https.value = config.https
             port.value = config.port
             contentServicePath.value = config.contentServicePath
             realm.value = config.realm
             clientId.value = config.clientId
             redirectUrl = config.redirectUrl
+            scheme = config.scheme
             onChange()
         }
 
@@ -356,6 +408,8 @@ class LoginViewModel(
                 realm = realm.value ?: "",
                 clientId = clientId.value ?: "",
                 redirectUrl = redirectUrl,
+                scheme = scheme,
+                authType = authTypeValue.value ?: "",
             )
         }
 

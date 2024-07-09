@@ -99,7 +99,7 @@ class LoginViewModel(
     }
 
     fun startEditing() {
-        authConfigEditor = AuthConfigEditor()
+        authConfigEditor = AuthConfigEditor(context)
         authConfigEditor.reset(authConfig)
     }
 
@@ -304,7 +304,7 @@ class LoginViewModel(
         }
     }
 
-    class AuthConfigEditor {
+    class AuthConfigEditor(val context: Context) {
         private lateinit var source: AuthConfig
         private val _changed = MediatorLiveData<Boolean>()
 
@@ -323,11 +323,11 @@ class LoginViewModel(
         val listAuthType = listOf(
             OptionsModel(
                 id = AuthType.PKCE.value,
-                name = "Keycloak",
+                name = context.getString(R.string.text_auth_keycloak),
             ),
             OptionsModel(
                 id = AuthType.OIDC.value,
-                name = "Auth0",
+                name = context.getString(R.string.text_auth_oidc_auth0),
             ),
         )
 

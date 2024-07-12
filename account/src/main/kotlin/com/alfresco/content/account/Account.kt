@@ -54,12 +54,25 @@ data class Account(
             b.putString(myFilesKey, myFiles)
             b.putString(hostNameKey, hostName)
             b.putString(clientIdKey, clientId)
-            val acc = AndroidAccount(id, context.getString(R.string.android_auth_account_type))
+
+            val accountType = context.getString(R.string.android_auth_account_type)
+
+            val acc = AndroidAccount(id, accountType)
 
             // Save credentials securely using the SecureSharedPreferencesManager
             sharedSecure.saveCredentials(email, authState, displayName, hostName, clientId)
 
-            AccountManager.get(context).addAccountExplicitly(acc, KEY_PASSWORD, b)
+            val accountManager = AccountManager.get(context)
+            val accounts = accountManager.getAccountsByType(accountType)
+
+            val removeOtherAccounts = accounts.filter { it.name != id }
+
+            if (removeOtherAccounts.isNotEmpty()) {
+                removeOtherAccounts.forEach { account ->
+                    accountManager.removeAccountExplicitly(account)
+                }
+            }
+            accountManager.addAccountExplicitly(acc, KEY_PASSWORD, b)
         }
 
         fun update(context: Context, id: String, authState: String) {

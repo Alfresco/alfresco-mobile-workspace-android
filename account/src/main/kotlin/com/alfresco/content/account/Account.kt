@@ -67,11 +67,9 @@ data class Account(
             val accountManager = AccountManager.get(context)
             val accounts = accountManager.getAccountsByType(accountType)
 
-            // Filter accounts with the same ID
             val removeOtherAccounts = accounts.filter { it.name != id }
 
             if (removeOtherAccounts.isNotEmpty()) {
-                // If there are duplicates, remove all but one
                 removeOtherAccounts.forEach { account ->
                     accountManager.removeAccountExplicitly(account)
                 }

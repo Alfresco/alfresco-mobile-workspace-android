@@ -17,6 +17,7 @@ dependencies {
     implementation project(':theme')
     implementation project(':data')
     implementation project(':common')
+    implementation project(':component')
 
     implementation libs.kotlin.stdlib
 

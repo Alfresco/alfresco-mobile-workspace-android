@@ -17,7 +17,7 @@ material = "1.11.0"
 constraintlayout = "2.1.4"
 
 [libraries]
-alfresco-auth = "com.alfresco.android:auth:0.8.1-SNAPSHOT"
+alfresco-auth = "com.alfresco.android:auth:0.8.2-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.4-SNAPSHOT"
 alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.2-SNAPSHOT"
 alfresco-process = "com.alfresco.android:process:0.1.3-SNAPSHOT"
@@ -136,7 +136,4 @@ ui-compose-viewbinding = "androidx.compose.ui:ui-viewbinding:1.6.3"
 navigation-compose = "androidx.navigation:navigation-compose:2.7.6"
 compose-runtime = "androidx.compose.runtime:runtime:1.5.4"
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-

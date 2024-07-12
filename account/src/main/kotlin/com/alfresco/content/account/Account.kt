@@ -57,8 +57,6 @@ data class Account(
 
             val accountType = context.getString(R.string.android_auth_account_type)
 
-            println("Account.createAccount == $id")
-
             val acc = AndroidAccount(id, accountType)
 
             // Save credentials securely using the SecureSharedPreferencesManager

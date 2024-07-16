@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.alfresco.android.aims.R
 import com.alfresco.android.aims.databinding.FragmentAuthSettingsBinding
+import com.alfresco.auth.AuthType
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.FragmentBuilder
@@ -28,12 +29,6 @@ class AdvancedSettingsFragment : DialogFragment() {
     private val viewModel: LoginViewModel by activityViewModels()
     private val rootView: View get() = requireView()
     private lateinit var binding: FragmentAuthSettingsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +51,7 @@ class AdvancedSettingsFragment : DialogFragment() {
         binding.tieAuthType.setSafeOnClickListener {
             openAuthSelection()
         }
+        onAuthChange(viewModel.authConfigEditor.authTypeValue.value ?: "")
     }
 
     override fun onStart() {
@@ -104,14 +100,29 @@ class AdvancedSettingsFragment : DialogFragment() {
         ComponentBuilder(requireContext(), componentData)
             .onApply { name, query, _ ->
                 viewModel.authConfigEditor.onAuthChange(name, query)
+                onAuthChange(query)
             }
             .onReset { name, query, _ ->
                 viewModel.authConfigEditor.onAuthChange(name, query)
+                onAuthChange(query)
             }
             .onCancel {
                 viewModel.authConfigEditor.onAuthChange(authName, authValue)
+                onAuthChange(authValue)
             }
             .show()
+    }
+
+    private fun onAuthChange(auth: String) {
+        when (auth.lowercase()) {
+            AuthType.PKCE.value.lowercase() -> {
+                setHasOptionsMenu(true)
+            }
+
+            else -> {
+                setHasOptionsMenu(false)
+            }
+        }
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

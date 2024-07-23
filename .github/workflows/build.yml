@@ -14,10 +14,11 @@ jobs:
       !contains(github.event.head_commit.message, '[skip pmd]') &&
       !contains(github.event.head_commit.message, '[force]')
     steps:
-      - uses: Alfresco/ya-pmd-scan@v2.0.2
+      - uses: Alfresco/ya-pmd-scan@v4.0.0
         with:
           fail-on-new-issues: "false"
           create-github-annotations: "false"
+          classpath-enable: "false"
   build:
     runs-on: ubuntu-latest
 

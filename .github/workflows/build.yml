@@ -18,6 +18,7 @@ jobs:
         with:
           fail-on-new-issues: "false"
           create-github-annotations: "false"
+          classpath-enable: "false"
   build:
     runs-on: ubuntu-latest
 

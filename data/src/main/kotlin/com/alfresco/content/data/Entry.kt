@@ -59,6 +59,8 @@ data class Entry(
     @Transient
     val canCreate: Boolean = false,
     @Transient
+    val canCreateUpdate: Boolean = false,
+    @Transient
     val isTrashed: Boolean = false,
     @Transient
     val otherId: String? = null,
@@ -193,6 +195,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
+                canCreateUpdate = canCreateUpdate(node.allowableOperations),
             ).withOfflineStatus()
         }
 
@@ -210,6 +213,7 @@ data class Entry(
                 result.isFavorite ?: false,
                 canDelete(result.allowableOperations),
                 canCreate(result.allowableOperations),
+                canCreateUpdate = canCreateUpdate(result.allowableOperations),
                 parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf(),
             ).withOfflineStatus()
         }
@@ -231,6 +235,7 @@ data class Entry(
                 result.isFavorite ?: false,
                 canDelete(result.allowableOperations),
                 canCreate(result.allowableOperations),
+                canCreateUpdate = canCreateUpdate(result.allowableOperations),
                 isExtension = isExtension,
                 parentPaths = result.path?.elements?.map { it.id!! }?.toMutableList() ?: mutableListOf(),
             ).withOfflineStatus()
@@ -250,6 +255,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
+                canCreateUpdate = canCreateUpdate(node.allowableOperations),
                 otherId = node.properties?.get("cm:destination") as String?,
             ).withOfflineStatus()
         }
@@ -271,6 +277,7 @@ data class Entry(
                 node.isFavorite ?: false,
                 canDelete(node.allowableOperations),
                 canCreate(node.allowableOperations),
+                canCreateUpdate = canCreateUpdate(node.allowableOperations),
                 otherId = node.properties?.get("cm:destination") as String?,
                 isExtension = isExtension,
             ).withOfflineStatus()
@@ -292,6 +299,7 @@ data class Entry(
                     file.allowableOperations == null,
                     true,
                     canDelete(favorite.allowableOperations),
+                    canCreateUpdate = canCreateUpdate(favorite.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.folder != null) {
@@ -309,6 +317,7 @@ data class Entry(
                     true,
                     canDelete(favorite.allowableOperations),
                     canCreate(favorite.allowableOperations),
+                    canCreateUpdate = canCreateUpdate(favorite.allowableOperations),
                 ).withOfflineStatus()
             }
             if (map.site != null) {
@@ -501,6 +510,9 @@ data class Entry(
 
         private fun canCreate(operations: List<String>?) =
             operations?.contains("create") ?: false
+
+        private fun canCreateUpdate(operations: List<String>?) =
+            listOf("create", "update").any { operations?.contains(it) == true }
 
         private fun propertiesCompat(src: Map<String, Any?>?): MutableMap<String, String> {
             val map = mutableMapOf<String, String>()

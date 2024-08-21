@@ -237,7 +237,7 @@ class ContextualActionsViewModel(
         listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
 
     private fun externalActionsFor(entry: Entry) =
-        if (entry.isFile) {
+        if (entry.isFile && entry.canCreateUpdate) {
             listOf(ActionOpenWith(entry), ActionDownload(entry))
         } else {
             listOf()

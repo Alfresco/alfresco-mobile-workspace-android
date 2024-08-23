@@ -76,6 +76,26 @@
                     android:path="/auth"
                     android:scheme="androidacsapp" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="demo" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="alfrescomobile://callback" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.alfresco.content.browse.preview.LocalPreviewActivity"

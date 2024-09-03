@@ -19,4 +19,6 @@ dependencies {
     implementation libs.coil.core
 
     implementation libs.okhttp.logginginterceptor
+
+    implementation 'com.datatheorem.android.trustkit:trustkit:1.1.3'
 }

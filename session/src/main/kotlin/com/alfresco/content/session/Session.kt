@@ -10,6 +10,7 @@ import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
+import com.datatheorem.android.trustkit.TrustKit
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -26,6 +27,7 @@ class Session(
     private var onSignedOut: (() -> Unit)? = null
 
     init {
+
         require(context == context.applicationContext)
 
         authInterceptor = AuthInterceptor(
@@ -79,10 +81,13 @@ class Session(
     val processBaseUrl get() = account.serverUrl.replace("/alfresco", "/activiti-app/")
 
     fun <T> createService(service: Class<T>): T {
+        println("Session.createService == ${account.serverUrl}")
+
         val okHttpClient: OkHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor(authInterceptor)
             .addOptionalInterceptor(loggingInterceptor)
+            .sslSocketFactory(TrustKit.getInstance().getSSLSocketFactory("mobileapps.envalfresco.com"), TrustKit.getInstance().getTrustManager("mobileapps.envalfresco.com"))
             .build()
 
         val retrofit = Retrofit.Builder()

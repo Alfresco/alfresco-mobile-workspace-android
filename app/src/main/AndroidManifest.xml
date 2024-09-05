@@ -77,7 +77,7 @@
                     android:scheme="androidacsapp" />
             </intent-filter>
 
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -85,7 +85,7 @@
 
                 <data
                     android:scheme="demo" />
-            </intent-filter>
+            </intent-filter>-->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -94,7 +94,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="alfrescomobile://callback" />
+                    android:host="callback"
+                    android:scheme="alfrescomobile" />
             </intent-filter>
         </activity>
         <activity

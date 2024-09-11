@@ -6,7 +6,6 @@ import coil.ImageLoader
 import coil.disk.DiskCache
 import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
-import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
@@ -51,12 +50,12 @@ class Session(
             }
         })
 
-        if (BuildConfig.DEBUG) {
-            loggingInterceptor = HttpLoggingInterceptor().apply {
-                redactHeader("Authorization")
-                setLevel(HttpLoggingInterceptor.Level.BODY)
-            }
+//        if (BuildConfig.DEBUG) {
+        loggingInterceptor = HttpLoggingInterceptor().apply {
+            redactHeader("Authorization")
+            setLevel(HttpLoggingInterceptor.Level.BODY)
         }
+//        }
 
         val imageLoader = ImageLoader.Builder(context)
             .diskCache {

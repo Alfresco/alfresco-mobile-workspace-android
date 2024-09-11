@@ -12,7 +12,10 @@ dependencies {
     api project(':account')
 
     implementation libs.alfresco.auth
-    implementation libs.alfresco.content
+//    implementation libs.alfresco.content
+    implementation project(':content')
+
+    implementation libs.retrofit.core
 
     implementation libs.kotlin.stdlib
 

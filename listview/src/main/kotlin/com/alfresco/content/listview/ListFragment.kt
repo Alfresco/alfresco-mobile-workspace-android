@@ -36,6 +36,7 @@ import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
@@ -193,9 +194,17 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private var delayedBoundary: Boolean = false
     private var isViewRequiredMultiSelection = false
     var bottomMoveButtonLayout: ConstraintLayout? = null
+    var menuActionsEnabled: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
+            ?.menus
+
+        println("ListFragment.onViewCreated === ${menus?.size}")
+
+        menuActionsEnabled = menus?.isEmpty() == true || menus?.any { it.enabled } == true
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
         recyclerView = view.findViewById(R.id.recycler_view)
@@ -314,6 +323,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         id(stableId(it))
                         data(it)
                         compact(state.isCompact)
+                        menuAction(menuActionsEnabled)
                         multiSelection(state.selectedEntries.isNotEmpty())
                         clickListener { model, _, _, _ ->
                             if (!viewModel.longPressHandled) {

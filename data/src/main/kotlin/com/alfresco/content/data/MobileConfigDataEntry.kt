@@ -41,16 +41,29 @@ data class MobileFeatures(
 @Parcelize
 data class AppMenu(
     val id: String,
-    val name: String,
     val enabled: Boolean,
 ) : Parcelable {
     companion object {
         fun with(menuData: DynamicMenu): AppMenu {
             return AppMenu(
                 id = menuData.id ?: "",
-                name = menuData.name ?: "",
                 enabled = menuData.enabled ?: false,
             )
         }
     }
+}
+
+enum class MenuActions(val value: String) {
+    AddFavourite("app.menu.addFavourite"),
+    RemoveFavourite("app.menu.removeFavourite"),
+    Rename("app.menu.rename"),
+    Move("app.menu.move"),
+    OpenWith("app.menu.openWith"),
+    Download("app.menu.download"),
+    Trash("app.menu.trash"),
+    AddOffline("app.menu.addOffline"),
+    RemoveOffline("app.menu.removeOffline"),
+    Restore("app.menu.restore"),
+    PermanentlyDelete("app.menu.permanentlyDelete"),
+    StartProcess("app.menu.startProcess"),
 }

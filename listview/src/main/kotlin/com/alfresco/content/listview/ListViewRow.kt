@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
@@ -30,6 +31,7 @@ class ListViewRow @JvmOverloads constructor(
     private var isCompact: Boolean = false
     private lateinit var entry: Entry
     private var multiSelectionEnabled = false
+    private var menuActionsEnabled = false
 
     @ModelProp
     fun setData(entry: Entry) {
@@ -117,12 +119,16 @@ class ListViewRow @JvmOverloads constructor(
                 } else {
                     Pair(R.drawable.ic_offline_status_pending, null)
                 }
+
             OfflineStatus.SYNCING ->
                 Pair(R.drawable.ic_offline_status_in_progress_anim, R.string.offline_status_in_progress)
+
             OfflineStatus.SYNCED ->
                 Pair(R.drawable.ic_offline_status_synced, null)
+
             OfflineStatus.ERROR ->
                 Pair(R.drawable.ic_offline_status_error, R.string.offline_status_error)
+
             else ->
                 Pair(R.drawable.ic_offline_status_synced, null)
         }
@@ -154,6 +160,11 @@ class ListViewRow @JvmOverloads constructor(
         this.multiSelectionEnabled = isMultiSelection
     }
 
+    @ModelProp
+    fun setMenuAction(enabled: Boolean) {
+        menuActionsEnabled = enabled
+    }
+
     @AfterPropsSet
     fun bind() {
         binding.checkBox.isChecked = entry.isSelectedForMultiSelection
@@ -176,7 +187,14 @@ class ListViewRow @JvmOverloads constructor(
     private fun postDataSet() {
         binding.checkBox.isVisible = false
         binding.checkBox.isChecked = false
-        binding.moreButton.isVisible = actionButtonVisibility(entry)
+
+        if (!menuActionsEnabled) {
+            binding.moreButton.visibility = View.GONE
+            binding.moreButton.isVisible = false
+        } else {
+            binding.moreButton.visibility = View.VISIBLE
+            binding.moreButton.isVisible = actionButtonVisibility(entry)
+        }
         configureOfflineStatus(entry)
     }
 

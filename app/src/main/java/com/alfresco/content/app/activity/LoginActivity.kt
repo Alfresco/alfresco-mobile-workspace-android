@@ -29,15 +29,16 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val session = Session(context, account)
                 val person = PeopleRepository(session).me()
                 val myFiles = BrowseRepository(session).myFilesNodeId()
+                AnalyticsManager(session).apiTracker(APIEvent.Login, true)
                 CommonRepository(session).getMobileConfigData()
                 processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
-                AnalyticsManager(session).apiTracker(APIEvent.Login, true)
                 if (isExtension) {
                     navigateToExtension()
                 } else {
                     navigateToMain()
                 }
             } catch (ex: Exception) {
+                ex.printStackTrace()
                 onError(R.string.auth_error_wrong_credentials)
             }
         }

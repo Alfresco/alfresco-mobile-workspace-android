@@ -8,18 +8,17 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.BrowseRepository
-import com.alfresco.content.data.CommonRepository
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
-import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SearchRepository.Companion.SERVER_VERSION_NUMBER
 import com.alfresco.content.data.Settings
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class ContextualActionsViewModel(
@@ -31,6 +30,7 @@ class ContextualActionsViewModel(
     var listener: EntryListener? = null
 
     init {
+
         if (!state.isMultiSelection) {
             buildModelSingleSelection()
         } else {
@@ -52,19 +52,9 @@ class ContextualActionsViewModel(
 
         if (state.entries.isNotEmpty()) {
             state.entries.first().let { entry ->
+
                 if (entry.isPartial && !entry.hasOfflineStatus) {
                     viewModelScope.launch {
-                        mobileConfigData().execute {
-                            when (it) {
-                                is Success ->
-                                    copy()
-
-                                is Fail ->
-                                    copy()
-
-                                else -> copy()
-                            }
-                        }
                         fetchEntry(entry).execute {
                             when (it) {
                                 is Success ->
@@ -119,8 +109,6 @@ class ContextualActionsViewModel(
             Entry.Type.SITE -> FavoritesRepository()::getFavoriteSite.asFlow(entry.id)
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
-
-    private fun mobileConfigData(): Flow<MobileConfigDataEntry> = CommonRepository()::getMobileConfigData.asFlow()
 
     fun execute(action: Action) =
         action.execute(context, GlobalScope)

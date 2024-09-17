@@ -9,6 +9,8 @@ import com.alfresco.events.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.http.Url
+import java.net.URL
 
 class CommonRepository(otherSession: Session? = null) {
 
@@ -32,5 +34,14 @@ class CommonRepository(otherSession: Session? = null) {
         session.createService(MobileConfigApi::class.java)
     }
 
-    suspend fun getMobileConfigData() = MobileConfigDataEntry.with(service.getMobileConfig("https://run.mocky.io/v3/7b75235d-381a-4cdb-9eed-2eec246f38f4"))
+    suspend fun getMobileConfigData() {
+
+        val data = MobileConfigDataEntry.with(service.getMobileConfig("https://${URL(session.account.serverUrl).host}/app-config.json"))
+
+        saveJsonToSharedPrefs(context, KEY_FEATURES_MOBILE, data)
+    }
+
+    companion object {
+        const val KEY_FEATURES_MOBILE = "features_mobile"
+    }
 }

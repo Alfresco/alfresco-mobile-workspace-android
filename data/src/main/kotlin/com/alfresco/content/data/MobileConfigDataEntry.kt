@@ -41,14 +41,12 @@ data class MobileFeatures(
 @Parcelize
 data class AppMenu(
     val id: String,
-    val name: String,
     val enabled: Boolean,
 ) : Parcelable {
     companion object {
         fun with(menuData: DynamicMenu): AppMenu {
             return AppMenu(
                 id = menuData.id ?: "",
-                name = menuData.name ?: "",
                 enabled = menuData.enabled ?: false,
             )
         }

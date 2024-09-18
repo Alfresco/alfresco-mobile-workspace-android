@@ -154,8 +154,6 @@ private val formatter = DateTimeFormatterBuilder()
     .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
     .toFormatter()
 
-
-
 // Function to store a JSON object
 fun saveJsonToSharedPrefs(context: Context, key: String, obj: Any) {
     val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -169,7 +167,6 @@ fun saveJsonToSharedPrefs(context: Context, key: String, obj: Any) {
     editor.putString(key, jsonString)
     editor.apply()
 }
-
 
 // Function to retrieve a JSON object
 inline fun <reified T> getJsonFromSharedPrefs(context: Context, key: String): T? {
@@ -186,5 +183,3 @@ inline fun <reified T> getJsonFromSharedPrefs(context: Context, key: String): T?
         null
     }
 }
-
-

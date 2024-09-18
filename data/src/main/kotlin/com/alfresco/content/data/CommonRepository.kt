@@ -9,7 +9,6 @@ import com.alfresco.events.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.http.Url
 import java.net.URL
 
 class CommonRepository(otherSession: Session? = null) {
@@ -35,7 +34,6 @@ class CommonRepository(otherSession: Session? = null) {
     }
 
     suspend fun getMobileConfigData() {
-
         val data = MobileConfigDataEntry.with(service.getMobileConfig("https://${URL(session.account.serverUrl).host}/app-config.json"))
 
         saveJsonToSharedPrefs(context, KEY_FEATURES_MOBILE, data)

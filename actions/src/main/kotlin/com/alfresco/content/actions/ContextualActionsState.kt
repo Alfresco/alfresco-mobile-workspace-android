@@ -15,6 +15,9 @@ data class ContextualActionsState(
     val fetch: Async<Entry> = Uninitialized,
     val mobileConfigDataEntry: MobileConfigDataEntry? = null,
 ) : MavericksState {
-    constructor(target: ContextualActionData) : this(entries = target.entries, isMultiSelection = target.isMultiSelection,
-        mobileConfigDataEntry = target.mobileConfigData)
+    constructor(target: ContextualActionData) : this(
+        entries = target.entries,
+        isMultiSelection = target.isMultiSelection,
+        mobileConfigDataEntry = target.mobileConfigData,
+    )
 }

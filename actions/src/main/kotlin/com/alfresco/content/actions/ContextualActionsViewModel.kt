@@ -8,13 +8,11 @@ import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.ViewModelContext
 import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.BrowseRepository
-import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SearchRepository.Companion.SERVER_VERSION_NUMBER
 import com.alfresco.content.data.Settings
-import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.coroutines.asFlow
 import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope

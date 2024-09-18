@@ -15,7 +15,7 @@ data class ContextualActionData(
             return ContextualActionData(
                 entries = entries,
                 isMultiSelection = isMultiSelection,
-                mobileConfigData = mobileConfigData
+                mobileConfigData = mobileConfigData,
             )
         }
     }

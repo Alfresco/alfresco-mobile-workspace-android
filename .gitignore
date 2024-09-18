@@ -81,3 +81,8 @@ lint/reports/
 /gradle/libs.versions_app.toml
 app/google-services_1.json
 app/google-services_2.json
+/alfresco-auth/
+/gradle/libs.versions-app.toml
+/gradle/libs.versions-other.toml
+/build-app.gradle
+/build-other.gradle

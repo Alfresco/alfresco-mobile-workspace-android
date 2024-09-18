@@ -202,8 +202,6 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
             ?.menus
 
-        println("ListFragment.onViewCreated === ${menus?.size}")
-
         menuActionsEnabled = menus?.isEmpty() == true || menus?.any { it.enabled } == true
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
@@ -383,6 +381,11 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(listOf(entry), mobileConfigData = getJsonFromSharedPrefs(requireContext(), KEY_FEATURES_MOBILE))).show(childFragmentManager, null)
+        ContextualActionsSheet.with(
+            ContextualActionData.withEntries(
+                listOf(entry),
+                mobileConfigData = getJsonFromSharedPrefs(requireContext(), KEY_FEATURES_MOBILE),
+            ),
+        ).show(childFragmentManager, null)
     }
 }

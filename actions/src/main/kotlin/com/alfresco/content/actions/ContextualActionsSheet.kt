@@ -54,10 +54,18 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
         setHeader(state)
 
         binding.recyclerView.withModels {
-            if (state.actions.isEmpty()) {
+            if (state.actions == null) {
                 actionListLoading { id("loading") }
             }
-            state.actions.forEach {
+            if (state.actions?.isEmpty() == true) {
+                val error = Pair(R.string.no_actions_available_title, R.string.no_actions_available_message)
+                viewEmptyMessage {
+                    id("empty_message")
+                    title(error.first)
+                    message(error.second)
+                }
+            }
+            state.actions?.forEach {
                 val entry = it.entry as Entry
                 actionListRow {
                     id(it.title)

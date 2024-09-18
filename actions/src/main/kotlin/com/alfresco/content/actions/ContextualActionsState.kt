@@ -10,7 +10,7 @@ import com.alfresco.content.data.Entry
 data class ContextualActionsState(
     val entries: List<Entry> = emptyList(),
     val isMultiSelection: Boolean = false,
-    val actions: List<Action> = emptyList(),
+    val actions: List<Action>? = null,
     val topActions: List<Action> = emptyList(),
     val fetch: Async<Entry> = Uninitialized,
     val appMenu: List<AppMenu>? = null,

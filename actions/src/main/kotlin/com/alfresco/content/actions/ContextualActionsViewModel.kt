@@ -28,6 +28,7 @@ class ContextualActionsViewModel(
     var listener: EntryListener? = null
 
     init {
+
         if (!state.isMultiSelection) {
             buildModelSingleSelection()
         } else {
@@ -46,8 +47,10 @@ class ContextualActionsViewModel(
 
     private fun buildModelSingleSelection() = withState { state ->
         // If entry is partial and not in the offline tab
+
         if (state.entries.isNotEmpty()) {
             state.entries.first().let { entry ->
+
                 if (entry.isPartial && !entry.hasOfflineStatus) {
                     viewModelScope.launch {
                         fetchEntry(entry).execute {

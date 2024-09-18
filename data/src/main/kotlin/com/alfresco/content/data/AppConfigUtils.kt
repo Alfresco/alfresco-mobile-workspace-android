@@ -1,7 +1,11 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
 import android.os.Environment
+import androidx.annotation.RequiresApi
+import androidx.preference.PreferenceManager
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -135,6 +139,7 @@ val gson: Gson = GsonBuilder()
                 out.value(value.toString())
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun read(inType: JsonReader): ZonedDateTime? {
                 return ZonedDateTime.parse(inType.nextString(), formatter)
             }
@@ -143,7 +148,38 @@ val gson: Gson = GsonBuilder()
     .enableComplexMapKeySerialization()
     .create()
 
+@RequiresApi(Build.VERSION_CODES.O)
 private val formatter = DateTimeFormatterBuilder()
     .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
     .toFormatter()
+
+// Function to store a JSON object
+fun saveJsonToSharedPrefs(context: Context, key: String, obj: Any) {
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val editor = sharedPreferences.edit()
+    val gson = Gson()
+
+    // Convert object to JSON
+    val jsonString = gson.toJson(obj)
+
+    // Save JSON string in SharedPreferences
+    editor.putString(key, jsonString)
+    editor.apply()
+}
+
+// Function to retrieve a JSON object
+inline fun <reified T> getJsonFromSharedPrefs(context: Context, key: String): T? {
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val gson = Gson()
+
+    // Retrieve JSON string
+    val jsonString = sharedPreferences.getString(key, null)
+
+    // Convert JSON string back to object
+    return if (jsonString != null) {
+        gson.fromJson(jsonString, T::class.java)
+    } else {
+        null
+    }
+}

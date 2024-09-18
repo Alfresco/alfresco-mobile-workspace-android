@@ -50,12 +50,12 @@ class Session(
             }
         })
 
-//        if (BuildConfig.DEBUG) {
-        loggingInterceptor = HttpLoggingInterceptor().apply {
-            redactHeader("Authorization")
-            setLevel(HttpLoggingInterceptor.Level.BODY)
+        if (BuildConfig.DEBUG) {
+            loggingInterceptor = HttpLoggingInterceptor().apply {
+                redactHeader("Authorization")
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
         }
-//        }
 
         val imageLoader = ImageLoader.Builder(context)
             .diskCache {

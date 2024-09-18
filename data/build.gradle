@@ -21,11 +21,8 @@ dependencies {
 
     implementation libs.alfresco.auth
 
-//    implementation libs.alfresco.content
-//    implementation libs.alfresco.contentKtx
-    implementation project(':content')
-    implementation project(':content-ktx')
-
+    implementation libs.alfresco.content
+    implementation libs.alfresco.contentKtx
     implementation libs.alfresco.process
     implementation libs.androidx.preference
     api libs.androidx.work

@@ -34,8 +34,7 @@ dependencies {
     implementation project(':component')
     implementation project(':process-app')
 
-//    implementation libs.alfresco.content
-    implementation project(':content')
+    implementation libs.alfresco.content
     implementation libs.alfresco.process
     implementation libs.kotlin.reflect
     implementation libs.androidx.core

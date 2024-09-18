@@ -48,20 +48,24 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
     }
 
     override fun invalidate() = withState(viewModel) {
-        it.entries.first().let { entry ->
-            (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
-        }
+        val entry = it.entries.first()
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
 
         view.removeAllViews()
-        addButtons(view, it.topActions)
+        addButtons(view, it.topActions, entry)
     }
 
-    private fun addButtons(container: LinearLayout, actions: List<Action>) {
+    private fun addButtons(container: LinearLayout, actions: List<Action>, entry: Entry) {
         container.addView(createSeparator())
+
         for (action in actions) {
-            container.addView(createButton(action))
-            container.addView(createSeparator())
+            if (action !is ActionDownload || entry.canCreateUpdate) {
+                container.addView(createButton(action))
+                container.addView(createSeparator())
+            }
         }
+
         if (actions.isNotEmpty()) {
             container.addView(createMoreButton())
             container.addView(createSeparator())

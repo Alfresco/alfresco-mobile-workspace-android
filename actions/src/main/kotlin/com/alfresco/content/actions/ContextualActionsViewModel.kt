@@ -281,7 +281,7 @@ class ContextualActionsViewModel(
         )
 
     private fun externalActionsFor(entry: Entry): List<Action> =
-        if (entry.isFile) {
+        if (entry.isFile && entry.canCreateUpdate) {
             listOfNotNull(
                 if (isMenuActionEnabled(MenuActions.OpenWith)) ActionOpenWith(entry) else null,
                 if (isMenuActionEnabled(MenuActions.Download)) ActionDownload(entry) else null,

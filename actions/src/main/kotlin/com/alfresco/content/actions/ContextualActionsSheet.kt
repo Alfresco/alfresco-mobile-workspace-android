@@ -33,6 +33,7 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
         return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         dialog?.window?.decorView?.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO

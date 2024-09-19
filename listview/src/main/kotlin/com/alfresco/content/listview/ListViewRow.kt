@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
@@ -189,10 +188,9 @@ class ListViewRow @JvmOverloads constructor(
         binding.checkBox.isChecked = false
 
         if (!menuActionsEnabled) {
-            binding.moreButton.visibility = View.GONE
-            binding.moreButton.isVisible = false
+            binding.moreButton.isEnabled = false
         } else {
-            binding.moreButton.visibility = View.VISIBLE
+            binding.moreButton.isEnabled = true
             binding.moreButton.isVisible = actionButtonVisibility(entry)
         }
         configureOfflineStatus(entry)

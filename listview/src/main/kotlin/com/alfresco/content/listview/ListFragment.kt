@@ -33,6 +33,7 @@ import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
@@ -194,15 +195,9 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private var delayedBoundary: Boolean = false
     private var isViewRequiredMultiSelection = false
     var bottomMoveButtonLayout: ConstraintLayout? = null
-    var menuActionsEnabled: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
-            ?.menus
-
-        menuActionsEnabled = menus?.isEmpty() == true || menus?.any { it.enabled } == true
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
         recyclerView = view.findViewById(R.id.recycler_view)
@@ -317,6 +312,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         title(it.name)
                     }
                 } else {
+                    val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
+                        ?.menus
+                    val menuActionsEnabled = CommonRepository().isAllSingleFileActionsEnabled(menus, it)
+
                     listViewRow {
                         id(stableId(it))
                         data(it)

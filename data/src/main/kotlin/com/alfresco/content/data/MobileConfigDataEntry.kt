@@ -12,6 +12,7 @@ data class MobileConfigDataEntry(
 ) : Parcelable {
 
     companion object {
+
         fun with(configData: MobileConfigData): MobileConfigDataEntry {
             return MobileConfigDataEntry(
                 featuresMobile = MobileFeatures.with(configData.featuresMobile),
@@ -66,4 +67,7 @@ enum class MenuActions(val value: String) {
     Restore("app.menu.restore"),
     PermanentlyDelete("app.menu.permanentlyDelete"),
     StartProcess("app.menu.startProcess"),
+    ;
+
+    fun value() = value.lowercase()
 }

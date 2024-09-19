@@ -35,6 +35,7 @@ import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var isNewIntent = false
     private var actionMode: ActionMode? = null
-    var mobileConfigDataEntry: MobileConfigDataEntry? = null
+    private var mobileConfigDataEntry: MobileConfigDataEntry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +88,11 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 Handler(Looper.getMainLooper()).post {
                     viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
+                        println("MainActivity.onCreate test 1")
                         viewModel.path = it.path
                         enableMultiSelection(it.selectedEntries)
                     } else {
+                        println("MainActivity.onCreate test 2")
                         disableMultiSelection()
                     }
                 }
@@ -199,7 +202,6 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
-//        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
 
         bottomNav.setOnItemSelectedListener { item ->
@@ -270,6 +272,14 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         title.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)), 0, title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         actionMode?.title = title
+
+        val isMultiActionsEnabled = CommonRepository().isAllMultiActionsEnabled(
+            mobileConfigDataEntry?.featuresMobile?.menus,
+            viewModel.entriesMultiSelection,
+        )
+
+        actionMode?.menu?.findItem(R.id.move)?.isEnabled = isMultiActionsEnabled
+        actionMode?.menu?.findItem(R.id.more_vert)?.isEnabled = isMultiActionsEnabled
 
         actionBarController?.showHideActionBarLayout(false)
         bottomNav.slideBottom()

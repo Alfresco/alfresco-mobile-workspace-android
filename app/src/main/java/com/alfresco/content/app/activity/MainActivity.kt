@@ -35,10 +35,14 @@ import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MenuActions
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.slideBottom
 import com.alfresco.content.slideTop
@@ -70,11 +74,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var isNewIntent = false
     private var actionMode: ActionMode? = null
+    var mobileConfigDataEntry: MobileConfigDataEntry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        mobileConfigDataEntry = getJsonFromSharedPrefs(this, KEY_FEATURES_MOBILE)
         observe(viewModel.navigationMode, ::navigateTo)
 
         GlobalScope.launch {
@@ -296,8 +301,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        val isMoveActionEnabled = mobileConfigDataEntry?.featuresMobile?.menus?.find { it.id.lowercase() == MenuActions.Move.value.lowercase() }?.enabled ?: false
         if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) ||
-            navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline
+            navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline || !isMoveActionEnabled
         ) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
@@ -331,6 +337,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun showCreateSheet() = withState(viewModel) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(viewModel.entriesMultiSelection, true)).show(supportFragmentManager, null)
+        ContextualActionsSheet.with(
+            ContextualActionData.withEntries(
+                viewModel.entriesMultiSelection,
+                true,
+                mobileConfigData = mobileConfigDataEntry,
+            ),
+        ).show(supportFragmentManager, null)
     }
 }

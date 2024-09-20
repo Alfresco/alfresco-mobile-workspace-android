@@ -314,7 +314,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 } else {
                     val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
                         ?.menus
-                    val menuActionsEnabled = CommonRepository().isAllSingleFileActionsEnabled(menus, it)
+                    val menuActionsEnabled = CommonRepository().isAllSingleActionsEnabled(menus, it)
 
                     listViewRow {
                         id(stableId(it))

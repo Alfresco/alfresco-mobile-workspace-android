@@ -311,12 +311,14 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        val isMoveActionEnabled = mobileConfigDataEntry?.featuresMobile?.menus?.find { it.id.lowercase() == MenuActions.Move.value.lowercase() }?.enabled ?: false
         if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) ||
-            navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline || !isMoveActionEnabled
+            navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline
         ) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
+
+        menu?.findItem(R.id.move)?.isEnabled = CommonRepository().isActionEnabled(MenuActions.Move, mobileConfigDataEntry?.featuresMobile?.menus)
+
         return true
     }
 

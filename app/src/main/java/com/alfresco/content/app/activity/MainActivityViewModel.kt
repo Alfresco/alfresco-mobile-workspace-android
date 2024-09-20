@@ -26,6 +26,7 @@ import com.alfresco.content.actions.isMoveDeleteAllowed
 import com.alfresco.content.browse.transfer.TransferSyncNow
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.AuthenticationRepository
+import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
@@ -75,6 +76,9 @@ class MainActivityViewModel(
         val session = SessionManager.newSession(appContext)
         if (session != null) {
             init(appContext, session)
+            viewModelScope.launch {
+                CommonRepository(session).getMobileConfigData()
+            }
         }
 
         viewModelScope.on<ActionSessionInvalid> {

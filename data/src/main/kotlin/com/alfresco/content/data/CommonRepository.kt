@@ -94,7 +94,7 @@ class CommonRepository(val session: Session = SessionManager.requireSession) {
         }
     }
 
-    fun isAllSingleFileActionsEnabled(serverList: List<AppMenu>?, entry: Entry): Boolean {
+    fun isAllSingleActionsEnabled(serverList: List<AppMenu>?, entry: Entry): Boolean {
         val list = mutableListOf<MenuActions>()
 
         if (serverList?.isEmpty() == true) {
@@ -120,6 +120,10 @@ class CommonRepository(val session: Session = SessionManager.requireSession) {
             list.addAll(enabledActions)
             return list.isNotEmpty()
         }
+    }
+
+    fun isActionEnabled(action: MenuActions, serverList: List<AppMenu>?): Boolean {
+        return serverList?.find { it.id.lowercase() == action.value() }?.enabled == true
     }
 
     companion object {

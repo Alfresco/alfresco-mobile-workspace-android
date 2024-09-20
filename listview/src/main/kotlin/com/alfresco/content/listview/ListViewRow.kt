@@ -187,12 +187,8 @@ class ListViewRow @JvmOverloads constructor(
         binding.checkBox.isVisible = false
         binding.checkBox.isChecked = false
 
-        if (!menuActionsEnabled) {
-            binding.moreButton.isEnabled = false
-        } else {
-            binding.moreButton.isEnabled = true
-            binding.moreButton.isVisible = actionButtonVisibility(entry)
-        }
+        binding.moreButton.isEnabled = menuActionsEnabled
+        binding.moreButton.isVisible = actionButtonVisibility(entry)
         configureOfflineStatus(entry)
     }
 

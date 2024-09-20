@@ -14,9 +14,11 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MenuActions
 import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.ParentEntry
 import com.alfresco.content.data.getJsonFromSharedPrefs
@@ -27,8 +29,7 @@ import kotlinx.coroutines.delay
 class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
     private val viewModel: ContextualActionsViewModel by fragmentViewModel()
     private lateinit var view: LinearLayout
-    var mobileConfigData: MobileConfigDataEntry? = null
-    var menuActionEnabled = false
+    private var mobileConfigData: MobileConfigDataEntry? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +45,6 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mobileConfigData = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)
-        val menus = mobileConfigData?.featuresMobile?.menus ?: emptyList()
-        menuActionEnabled = menus.isEmpty() || menus.any { it.enabled }
-
         lifecycleScope.on<ActionDelete> {
             // delayed back to present the toast
             delay(1000)
@@ -61,10 +58,8 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
 
-        if (menuActionEnabled) {
-            view.removeAllViews()
-            addButtons(view, it.topActions, entry)
-        }
+        view.removeAllViews()
+        addButtons(view, it.topActions, entry)
     }
 
     private fun addButtons(container: LinearLayout, actions: List<Action>, entry: Entry) {
@@ -72,8 +67,15 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
 
         for (action in actions) {
             if (action !is ActionDownload || entry.canCreateUpdate) {
-                container.addView(createButton(action))
-                container.addView(createSeparator())
+                val downloadAction = createButton(action)
+
+                mobileConfigData = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)
+                val menus = mobileConfigData?.featuresMobile?.menus ?: emptyList()
+
+                if (CommonRepository().isActionEnabled(MenuActions.Download, menus)) {
+                    container.addView(downloadAction)
+                    container.addView(createSeparator())
+                }
             }
         }
 

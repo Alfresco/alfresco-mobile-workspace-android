@@ -1300,57 +1300,5 @@
     "pendoKey": "pendoKey",
     "pendoExcludeAllText": false,
     "pendoCustomerName": "pendoUser"
-  },
-  "features_mobile": {
-    "menu": [
-      {
-        "id": "app.menu.addFavourite",
-        "enabled": false
-      },
-      {
-        "id": "app.menu.removeFavourite",
-        "enabled": false
-      },
-      {
-        "id": "app.menu.rename",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.move",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.openWith",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.download",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.trash",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.addOffline",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.removeOffline",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.restore",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.permanentlyDelete",
-        "enabled": true
-      },
-      {
-        "id": "app.menu.startProcess",
-        "enabled": false
-      }
-    ]
   }
 }

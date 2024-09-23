@@ -10,7 +10,6 @@ import com.alfresco.content.app.R
 import com.alfresco.content.data.APIEvent
 import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.BrowseRepository
-import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.PeopleRepository
 import com.alfresco.content.data.SearchRepository
@@ -29,15 +28,15 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 val session = Session(context, account)
                 val person = PeopleRepository(session).me()
                 val myFiles = BrowseRepository(session).myFilesNodeId()
-                CommonRepository(session).getMobileConfigData()
-                processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
                 AnalyticsManager(session).apiTracker(APIEvent.Login, true)
+                processAccountInformation(person, myFiles, credentials, authConfig, endpoint)
                 if (isExtension) {
                     navigateToExtension()
                 } else {
                     navigateToMain()
                 }
             } catch (ex: Exception) {
+                ex.printStackTrace()
                 onError(R.string.auth_error_wrong_credentials)
             }
         }

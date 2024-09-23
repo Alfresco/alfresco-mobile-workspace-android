@@ -67,7 +67,7 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
             }
             if (state.listProcessDefinitions?.isEmpty() == true) {
                 val args = viewModel.emptyMessageArgs()
-                listViewProcessErrorMessage {
+                listViewErrorMessage {
                     id("empty_message")
                     iconRes(args.first)
                     title(args.second)

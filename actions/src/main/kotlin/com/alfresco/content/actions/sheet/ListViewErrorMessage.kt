@@ -11,7 +11,7 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.actions.databinding.ViewListProcessMessageBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
-class ListViewProcessErrorMessage @JvmOverloads constructor(
+class ListViewErrorMessage @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

@@ -10,6 +10,7 @@ import com.alfresco.content.common.EntryListener
 import com.alfresco.content.data.BrowseRepository
 import com.alfresco.content.data.Entry
 import com.alfresco.content.data.FavoritesRepository
+import com.alfresco.content.data.MenuActions
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.data.SearchRepository.Companion.SERVER_VERSION_NUMBER
 import com.alfresco.content.data.Settings
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class ContextualActionsViewModel(
-    state: ContextualActionsState,
+    val state: ContextualActionsState,
     val context: Context,
     private val settings: Settings,
 ) : MavericksViewModel<ContextualActionsState>(state) {
@@ -136,13 +137,17 @@ class ContextualActionsViewModel(
         when {
             state.entries.all { it.isTrashed } -> {
                 // Added restore and delete actions
-                actions.add(ActionRestore(entry, state.entries))
-                actions.add(ActionDeleteForever(entry, state.entries))
+                actions.addAll(
+                    listOfNotNull(
+                        if (isMenuActionEnabled(MenuActions.Restore)) ActionRestore(entry, state.entries) else null,
+                        if (isMenuActionEnabled(MenuActions.PermanentlyDelete)) ActionDeleteForever(entry, state.entries) else null,
+                    ),
+                )
             }
 
             state.entries.all { it.hasOfflineStatus } -> {
                 // Added Offline action
-                actions.add(offlineMultiActionFor(entry, state.entries))
+                actions.addAll(offlineMultiActionFor(entry, state.entries))
             }
 
             else -> {
@@ -159,30 +164,39 @@ class ContextualActionsViewModel(
         // Added Favorite Action
         val version = SearchRepository().getPrefsServerVersion()
 
-        if (version.toInt() >= SERVER_VERSION_NUMBER) {
-            if (entries.any { !it.isFavorite }) {
-                actions.add(ActionAddFavorite(entry, entries))
-            } else {
-                actions.add(ActionRemoveFavorite(entry, entries))
-            }
+        val hasNonFavoriteEntries = entries.any { !it.isFavorite }
+
+        val favouriteActions = when {
+            version.toInt() < SERVER_VERSION_NUMBER -> null
+            hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry, entries)
+            !hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry, entries)
+            else -> null
         }
 
+        actions.addAll(listOfNotNull(favouriteActions))
+
         // Added Start Process Action
-        processMultiActionFor(entry, entries)?.let { action ->
-            actions.add(action)
-        }
+        actions.addAll(processMultiActionFor(entry, entries))
 
         // Added Move Action
         if (isMoveDeleteAllowed(entries)) {
-            actions.add(ActionMoveFilesFolders(entry, entries))
+            actions.addAll(
+                listOfNotNull(
+                    if (isMenuActionEnabled(MenuActions.Move)) ActionMoveFilesFolders(entry, entries) else null,
+                ),
+            )
         }
 
         // Added Offline Action
-        actions.add(offlineMultiActionFor(entry, entries))
+        actions.addAll(offlineMultiActionFor(entry, entries))
 
         // Added Delete Action
         if (isMoveDeleteAllowed(entries)) {
-            actions.add((ActionDelete(entry, entries)))
+            actions.addAll(
+                listOfNotNull(
+                    if (isMenuActionEnabled(MenuActions.Trash)) ActionDelete(entry, entries) else null,
+                ),
+            )
         }
         return actions
     }
@@ -198,7 +212,10 @@ class ContextualActionsViewModel(
         ).flatten()
 
     private fun actionsForTrashed(entry: Entry): List<Action> =
-        listOf(ActionRestore(entry), ActionDeleteForever(entry))
+        listOfNotNull(
+            if (isMenuActionEnabled(MenuActions.Restore)) ActionRestore(entry) else null,
+            if (isMenuActionEnabled(MenuActions.PermanentlyDelete)) ActionDeleteForever(entry) else null,
+        )
 
     private fun actionsForOffline(entry: Entry): List<Action> =
         listOf(
@@ -208,68 +225,106 @@ class ContextualActionsViewModel(
         ).flatten()
 
     private fun actionsProcesses(entry: Entry): List<Action> =
-        listOf(ActionStartProcess(entry))
+        listOfNotNull(
+            if (isMenuActionEnabled(MenuActions.StartProcess)) ActionStartProcess(entry) else null,
+        )
 
-    private fun processMultiActionFor(entry: Entry, entries: List<Entry>): Action? {
-        if (settings.isProcessEnabled && (entries.isNotEmpty() && entries.all { it.isFile })) {
-            return ActionStartProcess(entry, entries)
+    private fun processMultiActionFor(entry: Entry, entries: List<Entry>): List<Action> {
+        return if (settings.isProcessEnabled && (entries.isNotEmpty() && entries.all { it.isFile })) {
+            listOfNotNull(
+                if (isMenuActionEnabled(MenuActions.StartProcess)) ActionStartProcess(entry, entries) else null,
+            )
+        } else {
+            emptyList()
         }
-        return null
     }
 
-    private fun offlineActionFor(entry: Entry) =
-        if (!entry.isFile && !entry.isFolder) {
-            listOf()
-        } else if (entry.hasOfflineStatus && !entry.isOffline) {
-            listOf()
-        } else {
-            listOf(if (entry.isOffline) ActionRemoveOffline(entry) else ActionAddOffline(entry))
+    private fun offlineActionFor(entry: Entry): List<Action> {
+        if (!entry.isFile && !entry.isFolder || (entry.hasOfflineStatus && !entry.isOffline)) {
+            return emptyList()
         }
 
-    private fun offlineMultiActionFor(entry: Entry, entries: List<Entry>): Action {
+        return listOfNotNull(
+            when {
+                entry.isOffline && isMenuActionEnabled(MenuActions.RemoveOffline) -> ActionRemoveOffline(entry)
+                !entry.isOffline && isMenuActionEnabled(MenuActions.AddOffline) -> ActionAddOffline(entry)
+                else -> null
+            },
+        )
+    }
+
+    private fun offlineMultiActionFor(entry: Entry, entries: List<Entry>): List<Action> {
         val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
-        return if (filteredOffline.any { !it.isOffline }) {
-            ActionAddOffline(entry, entries)
-        } else {
-            ActionRemoveOffline(entry, entries)
-        }
-    }
+        return when {
+            filteredOffline.any { !it.isOffline } -> {
+                listOfNotNull(
+                    if (isMenuActionEnabled(MenuActions.AddOffline)) ActionAddOffline(entry, entries) else null,
+                )
+            }
 
-    private fun favoriteActionFor(entry: Entry) =
-        listOf(if (entry.isFavorite) ActionRemoveFavorite(entry) else ActionAddFavorite(entry))
-
-    private fun externalActionsFor(entry: Entry) =
-        if (entry.isFile && entry.canCreateUpdate) {
-            listOf(ActionOpenWith(entry), ActionDownload(entry))
-        } else {
-            listOf()
-        }
-
-    private fun deleteActionFor(entry: Entry) = if (entry.canDelete) listOf(ActionDelete(entry)) else listOf()
-
-    private fun renameMoveActionFor(entry: Entry): List<Action> {
-        val actions = mutableListOf<Action>()
-        if (entry.canDelete && (entry.isFile || entry.isFolder)) {
-            actions.add(ActionUpdateFileFolder(entry))
-            actions.add(ActionMoveFilesFolders(entry))
-        }
-        return actions
-    }
-
-    private fun makeTopActions(entry: Entry): List<Action> {
-        val actions = mutableListOf<Action>()
-        if (!entry.hasOfflineStatus) {
-            if (entry.isFavorite) {
-                actions.add(ActionRemoveFavorite(entry))
-            } else {
-                actions.add(ActionAddFavorite(entry))
+            else -> {
+                listOfNotNull(
+                    if (isMenuActionEnabled(MenuActions.RemoveOffline)) ActionRemoveOffline(entry, entries) else null,
+                )
             }
         }
-        if (entry.isFile) {
-            actions.add(ActionDownload(entry))
+    }
+
+    private fun favoriteActionFor(entry: Entry): List<Action> =
+        listOfNotNull(
+            when {
+                entry.isFavorite && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry)
+                !entry.isFavorite && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry)
+                else -> null
+            },
+        )
+
+    private fun externalActionsFor(entry: Entry): List<Action> =
+        if (entry.isFile && entry.canCreateUpdate) {
+            listOfNotNull(
+                if (isMenuActionEnabled(MenuActions.OpenWith)) ActionOpenWith(entry) else null,
+                if (isMenuActionEnabled(MenuActions.Download)) ActionDownload(entry) else null,
+            )
+        } else {
+            emptyList()
         }
-        return actions
+
+    private fun deleteActionFor(entry: Entry) = if (entry.canDelete) listOfNotNull(if (isMenuActionEnabled(MenuActions.Trash)) ActionDelete(entry) else null) else listOf()
+
+    private fun renameMoveActionFor(entry: Entry): List<Action> {
+        return if (entry.canDelete && (entry.isFile || entry.isFolder)) {
+            listOfNotNull(
+                if (isMenuActionEnabled(MenuActions.Rename)) ActionUpdateFileFolder(entry) else null,
+                if (isMenuActionEnabled(MenuActions.Move)) ActionMoveFilesFolders(entry) else null,
+            )
+        } else {
+            emptyList()
+        }
+    }
+
+    private fun makeTopActions(entry: Entry): List<Action> =
+        listOfNotNull(
+            // Add or Remove favorite actions based on favorite status
+            when {
+                !entry.hasOfflineStatus -> when {
+                    entry.isFavorite && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry)
+                    !entry.isFavorite && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry)
+                    else -> null
+                }
+
+                else -> null
+            },
+            // Download action if entry is a file
+            if (entry.isFile && isMenuActionEnabled(MenuActions.Download)) ActionDownload(entry) else null,
+        )
+
+    private fun isMenuActionEnabled(menuActions: MenuActions): Boolean {
+        if (state.appMenu?.isEmpty() == true) {
+            return true
+        }
+
+        return state.appMenu?.find { it.id.lowercase() == menuActions.value.lowercase() }?.enabled == true
     }
 
     companion object : MavericksViewModelFactory<ContextualActionsViewModel, ContextualActionsState> {

@@ -35,10 +35,15 @@ import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.CommonRepository
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MenuActions
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.slideBottom
 import com.alfresco.content.slideTop
@@ -70,11 +75,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var isNewIntent = false
     private var actionMode: ActionMode? = null
+    private var mobileConfigDataEntry: MobileConfigDataEntry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        mobileConfigDataEntry = getJsonFromSharedPrefs(this, KEY_FEATURES_MOBILE)
         observe(viewModel.navigationMode, ::navigateTo)
 
         GlobalScope.launch {
@@ -82,9 +88,11 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 Handler(Looper.getMainLooper()).post {
                     viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
+                        println("MainActivity.onCreate test 1")
                         viewModel.path = it.path
                         enableMultiSelection(it.selectedEntries)
                     } else {
+                        println("MainActivity.onCreate test 2")
                         disableMultiSelection()
                     }
                 }
@@ -194,7 +202,6 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         bottomNav.setupWithNavController(navController)
 
         setupActionToasts()
-//        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
         setupDownloadNotifications()
 
         bottomNav.setOnItemSelectedListener { item ->
@@ -266,6 +273,14 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
 
         actionMode?.title = title
 
+        val isMultiActionsEnabled = CommonRepository().isAllMultiActionsEnabled(
+            mobileConfigDataEntry?.featuresMobile?.menus,
+            viewModel.entriesMultiSelection,
+        )
+
+        actionMode?.menu?.findItem(R.id.move)?.isEnabled = isMultiActionsEnabled
+        actionMode?.menu?.findItem(R.id.more_vert)?.isEnabled = isMultiActionsEnabled
+
         actionBarController?.showHideActionBarLayout(false)
         bottomNav.slideBottom()
         if (bottomNav.isVisible) {
@@ -301,6 +316,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         ) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
+
+        menu?.findItem(R.id.move)?.isEnabled = CommonRepository().isActionEnabled(MenuActions.Move, mobileConfigDataEntry?.featuresMobile?.menus)
+
         return true
     }
 
@@ -331,6 +349,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun showCreateSheet() = withState(viewModel) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(viewModel.entriesMultiSelection, true)).show(supportFragmentManager, null)
+        ContextualActionsSheet.with(
+            ContextualActionData.withEntries(
+                viewModel.entriesMultiSelection,
+                true,
+                mobileConfigData = mobileConfigDataEntry,
+            ),
+        ).show(supportFragmentManager, null)
     }
 }

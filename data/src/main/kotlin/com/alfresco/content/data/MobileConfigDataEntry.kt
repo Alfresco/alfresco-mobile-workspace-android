@@ -12,6 +12,7 @@ data class MobileConfigDataEntry(
 ) : Parcelable {
 
     companion object {
+
         fun with(configData: MobileConfigData): MobileConfigDataEntry {
             return MobileConfigDataEntry(
                 featuresMobile = MobileFeatures.with(configData.featuresMobile),
@@ -51,4 +52,22 @@ data class AppMenu(
             )
         }
     }
+}
+
+enum class MenuActions(val value: String) {
+    AddFavourite("app.menu.addFavourite"),
+    RemoveFavourite("app.menu.removeFavourite"),
+    Rename("app.menu.rename"),
+    Move("app.menu.move"),
+    OpenWith("app.menu.openWith"),
+    Download("app.menu.download"),
+    Trash("app.menu.trash"),
+    AddOffline("app.menu.addOffline"),
+    RemoveOffline("app.menu.removeOffline"),
+    Restore("app.menu.restore"),
+    PermanentlyDelete("app.menu.permanentlyDelete"),
+    StartProcess("app.menu.startProcess"),
+    ;
+
+    fun value() = value.lowercase()
 }

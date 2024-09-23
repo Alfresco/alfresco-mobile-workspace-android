@@ -14,9 +14,14 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.alfresco.content.actions.sheet.ProcessDefinitionsSheet
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.CommonRepository
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MenuActions
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.ParentEntry
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.events.on
 import com.alfresco.ui.getDrawableForAttribute
 import kotlinx.coroutines.delay
@@ -24,6 +29,7 @@ import kotlinx.coroutines.delay
 class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
     private val viewModel: ContextualActionsViewModel by fragmentViewModel()
     private lateinit var view: LinearLayout
+    private var mobileConfigData: MobileConfigDataEntry? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,8 +67,15 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
 
         for (action in actions) {
             if (action !is ActionDownload || entry.canCreateUpdate) {
-                container.addView(createButton(action))
-                container.addView(createSeparator())
+                val downloadAction = createButton(action)
+
+                mobileConfigData = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)
+                val menus = mobileConfigData?.featuresMobile?.menus ?: emptyList()
+
+                if (CommonRepository().isActionEnabled(MenuActions.Download, menus)) {
+                    container.addView(downloadAction)
+                    container.addView(createSeparator())
+                }
             }
         }
 
@@ -122,7 +135,12 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
             setImageResource(R.drawable.ic_more_vert)
             setOnClickListener {
                 withState(viewModel) { state ->
-                    ContextualActionsSheet.with(ContextualActionData.withEntries(state.entries)).show(childFragmentManager, null)
+                    ContextualActionsSheet.with(
+                        ContextualActionData.withEntries(
+                            state.entries,
+                            mobileConfigData = mobileConfigData,
+                        ),
+                    ).show(childFragmentManager, null)
                 }
             }
         }

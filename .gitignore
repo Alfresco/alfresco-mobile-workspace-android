@@ -86,3 +86,8 @@ app/google-services_2.json
 /gradle/libs.versions-other.toml
 /build-app.gradle
 /build-other.gradle
+/alfresco-auth/
+/gradle/libs.versions-app.toml
+/gradle/libs.versions-other.toml
+/build-app.gradle
+/build-other.gradle

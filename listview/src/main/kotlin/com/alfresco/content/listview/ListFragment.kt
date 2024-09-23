@@ -33,9 +33,11 @@ import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.CommonRepository
 import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
@@ -310,10 +312,15 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                         title(it.name)
                     }
                 } else {
+                    val menus = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
+                        ?.menus
+                    val menuActionsEnabled = CommonRepository().isAllSingleActionsEnabled(menus, it)
+
                     listViewRow {
                         id(stableId(it))
                         data(it)
                         compact(state.isCompact)
+                        menuAction(menuActionsEnabled)
                         multiSelection(state.selectedEntries.isNotEmpty())
                         clickListener { model, _, _, _ ->
                             if (!viewModel.longPressHandled) {
@@ -373,6 +380,11 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(listOf(entry), mobileConfigData = getJsonFromSharedPrefs(requireContext(), KEY_FEATURES_MOBILE))).show(childFragmentManager, null)
+        ContextualActionsSheet.with(
+            ContextualActionData.withEntries(
+                listOf(entry),
+                mobileConfigData = getJsonFromSharedPrefs(requireContext(), KEY_FEATURES_MOBILE),
+            ),
+        ).show(childFragmentManager, null)
     }
 }

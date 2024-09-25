@@ -51,8 +51,12 @@ class CommonRepository(val session: Session = SessionManager.requireSession) {
     }
 
     suspend fun getMobileConfigData() {
-        val data = MobileConfigDataEntry.with(service.getMobileConfig("https://${URL(session.account.serverUrl).host}/app-config.json"))
-
+        var data = MobileConfigDataEntry.default()
+        try {
+            data = MobileConfigDataEntry.with(service.getMobileConfig("https://${URL(session.account.serverUrl).host}/app-config.json"))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
         saveJsonToSharedPrefs(session.context, KEY_FEATURES_MOBILE, data)
     }
 

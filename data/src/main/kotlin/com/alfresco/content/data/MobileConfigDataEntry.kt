@@ -18,6 +18,10 @@ data class MobileConfigDataEntry(
                 featuresMobile = MobileFeatures.with(configData.featuresMobile),
             )
         }
+
+        fun default(): MobileConfigDataEntry {
+            return MobileConfigDataEntry(featuresMobile = MobileFeatures())
+        }
     }
 }
 

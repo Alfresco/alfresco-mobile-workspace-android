@@ -22,7 +22,7 @@ internal class ListViewUserRow @JvmOverloads constructor(
     @ModelProp
     fun setData(dataObj: UserGroupDetails) {
         binding.tvUserInitial.text = context.getLocalizedName(dataObj.nameInitial)
-        binding.tvName.text = dataObj.groupName.ifEmpty { context.getLocalizedName(dataObj.name ?: "") }
+        binding.tvName.text = dataObj.groupName.ifEmpty { context.getLocalizedName(dataObj.name) }
     }
 
     /**

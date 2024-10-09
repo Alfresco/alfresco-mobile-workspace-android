@@ -7,7 +7,6 @@
     <string name="hint_range_from_date">Date de début</string>
     <string name="hint_range_to_date">Date de fin</string>
     <string name="component_number_range_invalid_input">La valeur \'De\' doit être inférieure à la valeur \'A\'</string>
-    <string name="component_action_reset">Réinitialiser</string>
     <string name="component_action_apply">Appliquer</string>
     <string name="component_action_cancel">Annuler</string>
     <string name="component_number_range_empty">Valeur requise</string>

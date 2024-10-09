@@ -1,5 +1,6 @@
 package com.alfresco.content.app.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -150,13 +151,13 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
         isNewIntent = true
         viewModel.handleDataIntent(
-            intent?.extras?.getString(MODE_KEY, ""),
-            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false,
+            intent.extras?.getString(MODE_KEY, ""),
+            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false,
         )
     }
 

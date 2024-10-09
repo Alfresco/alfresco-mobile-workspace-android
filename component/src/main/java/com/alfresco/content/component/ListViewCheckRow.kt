@@ -20,7 +20,7 @@ internal class ListViewCheckRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(options: ComponentOptions) {
-        binding.title.text = context.getLocalizedName(options.label ?: "")
+        binding.title.text = context.getLocalizedName(options.label)
     }
 
     @ModelProp

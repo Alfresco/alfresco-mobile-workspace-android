@@ -21,7 +21,7 @@ internal class ListViewActionsRow @JvmOverloads constructor(
 
     @ModelProp
     fun setData(options: ComponentOptions) {
-        binding.actionButton.text = context.getLocalizedName(options.label ?: "")
+        binding.actionButton.text = context.getLocalizedName(options.label)
     }
 
     @CallbackProp

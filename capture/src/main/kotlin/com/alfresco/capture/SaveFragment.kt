@@ -53,7 +53,7 @@ class SaveFragment : Fragment(), MavericksView {
 
         if (savedInstanceState == null) {
             withState(viewModel) {
-                binding.fileNameInputLayout.text = it.listCapture.first()?.name ?: ""
+                binding.fileNameInputLayout.text = it.listCapture.first().name
             }
         }
 

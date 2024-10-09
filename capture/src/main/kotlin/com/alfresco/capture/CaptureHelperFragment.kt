@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import com.alfresco.content.withFragment
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.resume
 
 class CaptureHelperFragment : Fragment() {
     private lateinit var requestLauncher: ActivityResultLauncher<Unit>
@@ -17,7 +19,16 @@ class CaptureHelperFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         requestLauncher = registerForActivityResult(CapturePhotoResultContract()) {
-            onResult?.resume(it, null)
+//            onResult?.resume(it, null)
+            onResult?.let { continuation ->
+                continuation.resume(it) { cause, _, _ ->
+                    // Send null if cancelled
+                    if (cause is CancellationException) {
+                        continuation.resume(null)
+                    }
+                }
+            }
+
         }
     }
 

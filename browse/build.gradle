@@ -1,8 +1,9 @@
 plugins{
-    id('com.android.library')
-    id('kotlin-android')
-    id('kotlin-kapt')
-    id('kotlin-parcelize')
+    id 'com.android.library'
+    id 'kotlin-android'
+//    id('kotlin-kapt')
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp'
 }
 android {
 
@@ -34,8 +35,10 @@ dependencies {
     implementation project(':component')
     implementation project(':process-app')
 
-    implementation libs.alfresco.content
-    implementation libs.alfresco.process
+//    implementation libs.alfresco.content
+//    implementation libs.alfresco.process
+    implementation project(':content')
+    implementation project(':process')
     implementation libs.kotlin.reflect
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
@@ -50,7 +53,7 @@ dependencies {
     implementation libs.mavericks
 
     implementation libs.epoxy.core
-    kapt libs.epoxy.processor
+    ksp libs.epoxy.processor
 
     // Testing
     testImplementation libs.junit
@@ -69,4 +72,6 @@ dependencies {
     testImplementation libs.mockito.core
     // Optional -- Mockk framework
     testImplementation libs.mockk
+
+    implementation libs.retrofit.core
 }

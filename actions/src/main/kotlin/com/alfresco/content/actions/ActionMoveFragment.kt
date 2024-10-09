@@ -26,7 +26,7 @@ class ActionMoveFragment : Fragment() {
         arguments?.let { bundle ->
             val entryObj = bundle.getParcelable(ENTRY_OBJ_KEY) as Entry?
             requestLauncher = registerForActivityResult(MoveResultContract(entryObj)) {
-                viewModel.onResult?.resume(it, null)
+                viewModel.onResult?.resume(it) { cause, _, _ -> null(cause) }
             }
         }
     }

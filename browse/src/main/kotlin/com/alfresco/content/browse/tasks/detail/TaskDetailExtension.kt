@@ -27,80 +27,90 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) = withState(viewModel) { state ->
-    viewModel.hasTaskEditMode = isEdit
-    menuDetail.findItem(R.id.action_edit).isVisible = !isEdit
-    menuDetail.findItem(R.id.action_done).isVisible = isEdit
-    if (isEdit) {
-        binding.iconTitleEdit.visibility = View.VISIBLE
-        if (state.parent?.localDueDate != null) {
-            binding.iconDueDateEdit.visibility = View.GONE
-            binding.iconDueDateClear.visibility = View.VISIBLE
+internal fun TaskDetailFragment.updateTaskDetailUI(isEdit: Boolean) =
+    withState(viewModel) { state ->
+        viewModel.hasTaskEditMode = isEdit
+        menuDetail.findItem(R.id.action_edit).isVisible = !isEdit
+        menuDetail.findItem(R.id.action_done).isVisible = isEdit
+        if (isEdit) {
+            binding.iconTitleEdit.visibility = View.VISIBLE
+            if (state.parent?.localDueDate != null) {
+                binding.iconDueDateEdit.visibility = View.GONE
+                binding.iconDueDateClear.visibility = View.VISIBLE
+            } else {
+                binding.iconDueDateClear.visibility = View.GONE
+                binding.iconDueDateEdit.visibility = View.VISIBLE
+            }
+            binding.iconPriorityEdit.visibility = View.VISIBLE
+            binding.iconAssignedEdit.visibility = View.VISIBLE
+            binding.completeButton.isEnabled = false
         } else {
-            binding.iconDueDateClear.visibility = View.GONE
-            binding.iconDueDateEdit.visibility = View.VISIBLE
+            binding.iconTitleEdit.visibility = View.GONE
+            binding.iconDueDateEdit.visibility = View.INVISIBLE
+            binding.iconDueDateClear.visibility = View.INVISIBLE
+            binding.iconPriorityEdit.visibility = View.INVISIBLE
+            binding.iconAssignedEdit.visibility = View.INVISIBLE
+            binding.completeButton.isEnabled = true
         }
-        binding.iconPriorityEdit.visibility = View.VISIBLE
-        binding.iconAssignedEdit.visibility = View.VISIBLE
-        binding.completeButton.isEnabled = false
-    } else {
-        binding.iconTitleEdit.visibility = View.GONE
-        binding.iconDueDateEdit.visibility = View.INVISIBLE
-        binding.iconDueDateClear.visibility = View.INVISIBLE
-        binding.iconPriorityEdit.visibility = View.INVISIBLE
-        binding.iconAssignedEdit.visibility = View.INVISIBLE
-        binding.completeButton.isEnabled = true
     }
-}
 
-internal fun TaskDetailFragment.enableTaskFormUI() = withState(viewModel) { state ->
-    binding.clComment.visibility = View.GONE
-    binding.clIdentifier.visibility = View.VISIBLE
+internal fun TaskDetailFragment.enableTaskFormUI() =
+    withState(viewModel) { state ->
+        binding.clComment.visibility = View.GONE
+        binding.clIdentifier.visibility = View.VISIBLE
 //    binding.iconStatus.setImageResource(R.drawable.ic_task_status_star)
 
     /*binding.clStatus.setSafeOnClickListener {
         findNavController().navigate(R.id.action_nav_task_detail_to_nav_task_status)
     }*/
-}
+    }
 
-internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) = withState(viewModel) { state ->
-    if (viewModel.isTaskFormAndDetailRequestCompleted(state) || viewModel.isTaskDetailRequestCompleted(state)) {
-        if (dataObj.localDueDate != null) {
-            binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-        } else {
-            binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
-        }
-
-        binding.tvPriorityValue.updatePriorityView(dataObj.priority)
-        binding.tvDescription.text = if (dataObj.description.isNullOrEmpty()) requireContext().getString(R.string.empty_description) else dataObj.description
-        binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
-            showTitleDescriptionComponent()
-        }
-
-        binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
-
-        if (viewModel.isTaskCompleted(state)) {
-            binding.tvAddComment.visibility = View.GONE
-            binding.iconAddCommentUser.visibility = View.GONE
-            binding.clCompleted.visibility = View.VISIBLE
-            if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
-            binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
-
-            (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
-                topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+internal fun TaskDetailFragment.setTaskDetailAfterResponse(dataObj: TaskEntry) =
+    withState(viewModel) { state ->
+        if (viewModel.isTaskFormAndDetailRequestCompleted(state) || viewModel.isTaskDetailRequestCompleted(state)) {
+            if (dataObj.localDueDate != null) {
+                binding.tvDueDateValue.text = dataObj.localDueDate?.getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+            } else {
+                binding.tvDueDateValue.text = requireContext().getString(R.string.empty_no_due_date)
             }
-            binding.clStatus.visibility = View.GONE
-        } else {
-            binding.clCompleted.visibility = View.GONE
-            (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
-                topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
-            }
-            binding.clStatus.visibility = View.VISIBLE
 
-            binding.tvStatusValue.text = getString(R.string.status_active)
+            binding.tvPriorityValue.updatePriorityView(dataObj.priority)
+            binding.tvDescription.text =
+                if (dataObj.description.isNullOrEmpty()) {
+                    requireContext().getString(
+                        R.string.empty_description,
+                    )
+                } else {
+                    dataObj.description
+                }
+            binding.tvDescription.addTextViewPrefix(requireContext().getString(R.string.suffix_view_all)) {
+                showTitleDescriptionComponent()
+            }
+
+            binding.completeButton.visibility = if (viewModel.isCompleteButtonVisible(state)) View.VISIBLE else View.GONE
+
+            if (viewModel.isTaskCompleted(state)) {
+                binding.tvAddComment.visibility = View.GONE
+                binding.iconAddCommentUser.visibility = View.GONE
+                binding.clCompleted.visibility = View.VISIBLE
+                if (state.listComments.isEmpty()) binding.viewComment2.visibility = View.GONE else View.VISIBLE
+                binding.tvCompletedValue.text = dataObj.endDate?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4)
+
+                (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+                }
+                binding.clStatus.visibility = View.GONE
+            } else {
+                binding.clCompleted.visibility = View.GONE
+                (binding.clDueDate.layoutParams as ConstraintLayout.LayoutParams).apply {
+                    topMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0f, resources.displayMetrics).toInt()
+                }
+                binding.clStatus.visibility = View.VISIBLE
+
+                binding.tvStatusValue.text = getString(R.string.status_active)
+            }
         }
     }
-}
 
 internal fun TaskDetailFragment.setListeners() {
     viewModel.setListener(this)
@@ -152,14 +162,15 @@ internal fun TaskDetailFragment.setListeners() {
         withState(viewModel) { state ->
             val dataObj = state.parent
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = showComponentSheetDialog(
-                    requireContext(),
-                    ComponentData(
-                        name = requireContext().getString(R.string.title_priority),
-                        query = dataObj?.priority.toString(),
-                        selector = ComponentType.TASK_PROCESS_PRIORITY.value,
-                    ),
-                )
+                val result =
+                    showComponentSheetDialog(
+                        requireContext(),
+                        ComponentData(
+                            name = requireContext().getString(R.string.title_priority),
+                            query = dataObj?.priority.toString(),
+                            selector = ComponentType.TASK_PROCESS_PRIORITY.value,
+                        ),
+                    )
 
                 if (result != null) {
                     viewModel.updatePriority(result)
@@ -171,10 +182,11 @@ internal fun TaskDetailFragment.setListeners() {
         withState(viewModel) { state ->
             requireNotNull(state.parent)
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = showSearchUserComponentDialog(
-                    requireContext(),
-                    state.parent,
-                )
+                val result =
+                    showSearchUserComponentDialog(
+                        requireContext(),
+                        state.parent,
+                    )
                 if (result != null) {
                     viewModel.updateAssignee(result)
                 }
@@ -196,18 +208,19 @@ private fun TaskDetailFragment.navigateToCommentScreen() {
 
 private fun TaskDetailFragment.showCalendar(fromDate: String) {
     viewLifecycleOwner.lifecycleScope.launch {
-        val result = suspendCoroutine {
-            DatePickerBuilder(
-                context = requireContext(),
-                fromDate = fromDate,
-                isFrom = true,
-                isFutureDate = true,
-                dateFormat = DATE_FORMAT_4,
-            )
-                .onSuccess { date -> it.resume(date) }
-                .onFailure { it.resume(null) }
-                .show()
-        }
+        val result =
+            suspendCoroutine {
+                DatePickerBuilder(
+                    context = requireContext(),
+                    fromDate = fromDate,
+                    isFrom = true,
+                    isFutureDate = true,
+                    dateFormat = DATE_FORMAT_4,
+                )
+                    .onSuccess { date -> it.resume(date) }
+                    .onFailure { it.resume(null) }
+                    .show()
+            }
 
         result?.let { date ->
             viewModel.updateDate(date.getFormattedDate(DATE_FORMAT_4, DATE_FORMAT_5))
@@ -215,27 +228,29 @@ private fun TaskDetailFragment.showCalendar(fromDate: String) {
     }
 }
 
-internal fun TaskDetailFragment.showTitleDescriptionComponent() = withState(viewModel) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        showComponentSheetDialog(
-            requireContext(),
-            ComponentData(
-                name = requireContext().getString(R.string.task_title),
-                query = it.parent?.name,
-                value = it.parent?.description,
-                selector = ComponentType.VIEW_TEXT.value,
-            ),
-        )
-    }
-}
-
-internal fun TaskDetailFragment.makeClaimButton() = withState(viewModel) { state ->
-    if (binding.parentOutcomes.childCount == 0) {
-        val button = this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
-        button.text = getString(R.string.action_menu_claim)
-        button.setOnClickListener {
-            viewModel.claimTask()
+internal fun TaskDetailFragment.showTitleDescriptionComponent() =
+    withState(viewModel) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            showComponentSheetDialog(
+                requireContext(),
+                ComponentData(
+                    name = requireContext().getString(R.string.task_title),
+                    query = it.parent?.name,
+                    value = it.parent?.description,
+                    selector = ComponentType.VIEW_TEXT.value,
+                ),
+            )
         }
-        binding.parentOutcomes.addView(button)
     }
-}
+
+internal fun TaskDetailFragment.makeClaimButton() =
+    withState(viewModel) { state ->
+        if (binding.parentOutcomes.childCount == 0) {
+            val button = this.layoutInflater.inflate(R.layout.view_layout_positive_outcome, binding.parentOutcomes, false) as MaterialButton
+            button.text = getString(R.string.action_menu_claim)
+            button.setOnClickListener {
+                viewModel.claimTask()
+            }
+            binding.parentOutcomes.addView(button)
+        }
+    }

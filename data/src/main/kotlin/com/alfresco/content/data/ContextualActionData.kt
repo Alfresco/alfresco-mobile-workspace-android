@@ -10,8 +10,11 @@ data class ContextualActionData(
     val appMenu: List<AppMenu> = emptyList(),
 ) : Parcelable {
     companion object {
-
-        fun withEntries(entries: List<Entry>, isMultiSelection: Boolean = false, mobileConfigData: MobileConfigDataEntry? = null): ContextualActionData {
+        fun withEntries(
+            entries: List<Entry>,
+            isMultiSelection: Boolean = false,
+            mobileConfigData: MobileConfigDataEntry? = null,
+        ): ContextualActionData {
             return ContextualActionData(
                 entries = entries,
                 isMultiSelection = isMultiSelection,

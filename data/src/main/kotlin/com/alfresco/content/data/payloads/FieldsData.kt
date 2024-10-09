@@ -44,10 +44,11 @@ data class FieldsData(
     var displayText: String? = null,
     var errorData: Pair<Boolean, String> = Pair(false, ""),
 ) : Parcelable {
-
     fun getContentList(parentId: String? = null): List<Entry> {
         return if (((value as? List<*>)?.firstOrNull() is Map<*, *>)) {
-            (value as? List<*>)?.map { Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java) }?.map { Entry.with(it, id, parentId) } ?: emptyList()
+            (value as? List<*>)?.map {
+                Gson().fromJson(JSONObject(it as Map<String, ContentEntry>).toString(), ContentEntry::class.java)
+            }?.map { Entry.with(it, id, parentId) } ?: emptyList()
         } else {
             (value as? List<*>)?.mapNotNull { it as? Entry } ?: emptyList()
         }
@@ -58,11 +59,12 @@ data class FieldsData(
             return null
         }
 
-        val userGroupDetails: UserGroupDetails? = if ((value is Map<*, *>)) {
-            Gson().fromJson(JSONObject(value as Map<String, UserGroupDetails>).toString(), UserGroupDetails::class.java)
-        } else {
-            value as? UserGroupDetails
-        }
+        val userGroupDetails: UserGroupDetails? =
+            if ((value is Map<*, *>)) {
+                Gson().fromJson(JSONObject(value as Map<String, UserGroupDetails>).toString(), UserGroupDetails::class.java)
+            } else {
+                value as? UserGroupDetails
+            }
 
         val isAssigneeUser = apsUser?.id == userGroupDetails?.id
 
@@ -73,7 +75,10 @@ data class FieldsData(
         return userGroupDetails
     }
 
-    fun getDate(serverFormat: String, localFormat: String): Pair<String, String> {
+    fun getDate(
+        serverFormat: String,
+        localFormat: String,
+    ): Pair<String, String> {
         val dateTime = value as? String ?: ""
 
         if (dateTime.isNotEmpty() && dateTime.contains("T")) {
@@ -119,7 +124,11 @@ data class FieldsData(
         /**
          * returns the FieldsData obj by using Fields obj
          */
-        fun withUpdateField(raw: FieldsData, value: Any?, errorData: Pair<Boolean, String>): FieldsData {
+        fun withUpdateField(
+            raw: FieldsData,
+            value: Any?,
+            errorData: Pair<Boolean, String>,
+        ): FieldsData {
             return FieldsData(
                 fieldType = raw.fieldType,
                 id = raw.id,
@@ -200,9 +209,7 @@ data class FileSourceData(
     val name: String = "",
 ) : Parcelable {
     companion object {
-        fun with(
-            raw: FieldSource?,
-        ): FileSourceData {
+        fun with(raw: FieldSource?): FileSourceData {
             return FileSourceData(raw?.serviceId ?: "", raw?.name ?: "")
         }
     }

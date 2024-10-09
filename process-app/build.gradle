@@ -63,8 +63,7 @@ dependencies {
     implementation project(':mimetype')
     implementation project(':search')
 
-//    implementation libs.alfresco.process
-    implementation project(':process')
+    implementation libs.alfresco.process
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.androidx.lifecycle.runtime
@@ -82,12 +81,8 @@ dependencies {
     implementation libs.androidx.compose.material.iconsExtended
     debugImplementation libs.androidx.ui.tooling
 
-
     implementation libs.androidx.swiperefreshlayout
     implementation libs.mavericks
     implementation libs.epoxy.core
     ksp libs.epoxy.processor
-
-    implementation libs.retrofit.core
-
 }

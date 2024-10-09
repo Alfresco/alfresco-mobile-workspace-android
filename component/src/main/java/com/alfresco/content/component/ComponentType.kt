@@ -4,7 +4,6 @@ package com.alfresco.content.component
  * Marked as ComponentType class
  */
 enum class ComponentType(val value: String) {
-
     TEXT("text"),
     VIEW_TEXT("view-text"),
     CHECK_LIST("check-list"),

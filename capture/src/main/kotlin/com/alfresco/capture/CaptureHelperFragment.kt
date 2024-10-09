@@ -18,18 +18,18 @@ class CaptureHelperFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestLauncher = registerForActivityResult(CapturePhotoResultContract()) {
+        requestLauncher =
+            registerForActivityResult(CapturePhotoResultContract()) {
 //            onResult?.resume(it, null)
-            onResult?.let { continuation ->
-                continuation.resume(it) { cause, _, _ ->
-                    // Send null if cancelled
-                    if (cause is CancellationException) {
-                        continuation.resume(null)
+                onResult?.let { continuation ->
+                    continuation.resume(it) { cause, _, _ ->
+                        // Send null if cancelled
+                        if (cause is CancellationException) {
+                            continuation.resume(null)
+                        }
                     }
                 }
             }
-
-        }
     }
 
     private suspend fun capturePhoto(): List<CaptureItem>? =
@@ -41,9 +41,7 @@ class CaptureHelperFragment : Fragment() {
     companion object {
         private val TAG = CaptureHelperFragment::class.java.simpleName
 
-        suspend fun capturePhoto(
-            context: Context,
-        ): List<CaptureItem>? =
+        suspend fun capturePhoto(context: Context): List<CaptureItem>? =
             withFragment(
                 context,
                 TAG,
@@ -63,7 +61,6 @@ class CaptureHelperFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
             )
 
-        fun permissionRationale(context: Context) =
-            context.getString(R.string.capture_permissions_rationale)
+        fun permissionRationale(context: Context) = context.getString(R.string.capture_permissions_rationale)
     }
 }

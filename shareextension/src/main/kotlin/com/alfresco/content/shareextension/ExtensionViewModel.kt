@@ -21,14 +21,12 @@ class ExtensionViewModel(
     state: ExtensionViewState,
     val context: Context,
 ) : MavericksViewModel<ExtensionViewState>(state) {
-
     /**
      * returns the nodeID for my files
      */
     fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
 
     companion object : MavericksViewModelFactory<ExtensionViewModel, ExtensionViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: ExtensionViewState,

@@ -19,17 +19,16 @@ data class CaptureItem(
     val filename: String
         get() = "$name$extension"
     val extension: String
-        get() = when (mimeType) {
-            PHOTO_MIMETYPE -> PHOTO_EXTENSION
-            VIDEO_MIMETYPE -> VIDEO_EXTENSION
-            else -> throw IllegalArgumentException()
-        }
+        get() =
+            when (mimeType) {
+                PHOTO_MIMETYPE -> PHOTO_EXTENSION
+                VIDEO_MIMETYPE -> VIDEO_EXTENSION
+                else -> throw IllegalArgumentException()
+            }
 
-    internal fun isPhoto() =
-        mimeType == PHOTO_MIMETYPE
+    internal fun isPhoto() = mimeType == PHOTO_MIMETYPE
 
-    internal fun isVideo() =
-        mimeType == VIDEO_MIMETYPE
+    internal fun isVideo() = mimeType == VIDEO_MIMETYPE
 
     internal companion object {
         const val PHOTO_EXTENSION = ".jpg"
@@ -39,11 +38,9 @@ data class CaptureItem(
         private const val PHOTO_NAME_PREFIX = "IMG_"
         private const val VIDEO_NAME_PREFIX = "VID_"
 
-        fun photoCapture(uri: Uri) =
-            CaptureItem(uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
+        fun photoCapture(uri: Uri) = CaptureItem(uri, PHOTO_MIMETYPE, defaultFilename(PHOTO_NAME_PREFIX))
 
-        fun videoCapture(uri: Uri) =
-            CaptureItem(uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
+        fun videoCapture(uri: Uri) = CaptureItem(uri, VIDEO_MIMETYPE, defaultFilename(VIDEO_NAME_PREFIX))
 
         private fun defaultFilename(prefix: String): String {
             val formatter = SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US)

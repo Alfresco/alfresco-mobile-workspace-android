@@ -25,9 +25,10 @@ class ActionMoveFragment : Fragment() {
 
         arguments?.let { bundle ->
             val entryObj = bundle.getParcelable(ENTRY_OBJ_KEY) as Entry?
-            requestLauncher = registerForActivityResult(MoveResultContract(entryObj)) {
-                viewModel.onResult?.resume(it, null)
-            }
+            requestLauncher =
+                registerForActivityResult(MoveResultContract(entryObj)) {
+                    viewModel.onResult?.resume(it, null)
+                }
         }
     }
 
@@ -48,9 +49,10 @@ class ActionMoveFragment : Fragment() {
             entry: Entry,
         ): String? {
             val fragment = ActionMoveFragment()
-            val bundle = Bundle().apply {
-                putParcelable(ENTRY_OBJ_KEY, entry)
-            }
+            val bundle =
+                Bundle().apply {
+                    putParcelable(ENTRY_OBJ_KEY, entry)
+                }
             fragment.arguments = bundle
             return withNewFragment(
                 context,

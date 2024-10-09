@@ -12,16 +12,23 @@ import com.alfresco.content.data.Entry
  */
 class MoveResultContract(private val entryObj: Entry?) : ActivityResultContract<Unit, String?>() {
     @CallSuper
-    override fun createIntent(context: Context, input: Unit): Intent {
-        val intent = Intent(
-            context,
-            Class.forName("com.alfresco.content.app.activity.MoveActivity"),
-        )
+    override fun createIntent(
+        context: Context,
+        input: Unit,
+    ): Intent {
+        val intent =
+            Intent(
+                context,
+                Class.forName("com.alfresco.content.app.activity.MoveActivity"),
+            )
         intent.putExtra(ENTRY_OBJ_KEY, entryObj)
         return intent
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): String? {
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): String? {
         return if (intent == null || resultCode != Activity.RESULT_OK) {
             null
         } else {

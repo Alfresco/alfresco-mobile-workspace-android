@@ -30,8 +30,7 @@ dependencies {
     implementation project(':data')
     implementation project(':theme')
 
-//    implementation libs.alfresco.content
-    implementation project(':content')
+    implementation libs.alfresco.content
 
     implementation libs.coroutines.core
     implementation libs.androidx.appcompat

@@ -21,14 +21,12 @@ class MoveViewModel(
     state: MoveViewState,
     val context: Context,
 ) : MavericksViewModel<MoveViewState>(state) {
-
     /**
      * returns the nodeID for my files
      */
     fun getMyFilesNodeId() = BrowseRepository().myFilesNodeId
 
     companion object : MavericksViewModelFactory<MoveViewModel, MoveViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: MoveViewState,

@@ -20,7 +20,6 @@ import kotlin.coroutines.cancellation.CancellationException
  * Marked as ActionPermission
  */
 interface ActionPermission {
-
     /**
      * It executed when we have read permission granted
      */
@@ -68,11 +67,14 @@ interface ActionPermission {
     class Error(val message: String)
 
     companion object {
-
         /**
          * show Message on coroutine scope using lifecycle
          */
-        fun showActionPermissionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
+        fun showActionPermissionToasts(
+            scope: CoroutineScope,
+            view: View?,
+            anchorView: View? = null,
+        ) {
             scope.on<Error> {
                 if (view != null) {
                     showToast(view, anchorView, it.message)
@@ -120,7 +122,6 @@ interface ActionPermission {
                 )
             }
 
-        private fun permissionRationale(context: Context) =
-            context.getString(R.string.share_files_permissions_rationale)
+        private fun permissionRationale(context: Context) = context.getString(R.string.share_files_permissions_rationale)
     }
 }

@@ -19,7 +19,6 @@ class FlashMenu(
     defStyleAttr: Int,
     defStyleRes: Int,
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
-
     private val binding: ViewFlashMenuBinding
     var onMenuItemClick: ((FlashMenuItem) -> Unit)? = null
 
@@ -39,11 +38,12 @@ class FlashMenu(
 
         arrayOf(binding.flashModeAuto, binding.flashModeOn, binding.flashModeOff).map {
             it.setOnClickListener { item ->
-                val mode = when (item) {
-                    binding.flashModeOn -> FlashMenuItem.On
-                    binding.flashModeOff -> FlashMenuItem.Off
-                    else -> FlashMenuItem.Auto
-                }
+                val mode =
+                    when (item) {
+                        binding.flashModeOn -> FlashMenuItem.On
+                        binding.flashModeOff -> FlashMenuItem.Off
+                        else -> FlashMenuItem.Auto
+                    }
                 onMenuItemClick?.invoke(mode)
             }
         }

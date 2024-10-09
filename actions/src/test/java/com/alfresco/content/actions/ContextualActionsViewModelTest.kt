@@ -17,11 +17,10 @@ import org.junit.ClassRule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import java.util.*
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class ContextualActionsViewModelTest {
-
     @Mock
     private lateinit var mockContext: Context
 
@@ -46,22 +45,58 @@ class ContextualActionsViewModelTest {
 
     @Test
     fun `test makeMultiActions and returns ActionAddFavorite`() {
-        val entries = createEntries(
-            Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = false, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-        )
+        val entries =
+            createEntries(
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = false,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = false,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = false,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = false,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = false,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+            )
 
         val initialState = ContextualActionsState(ContextualActionData(entries = entries, isMultiSelection = true))
         val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
         withState(viewModel) { newState ->
             viewModel.makeMultiActions(newState)
-            assertEquals(1, newState.actions.size)
+            assertEquals(1, newState.actions?.size ?: 0)
 
-            newState.actions.forEach {
+            newState.actions?.forEach {
                 assertEquals(true, it is ActionAddFavorite)
             }
         }
@@ -69,22 +104,58 @@ class ContextualActionsViewModelTest {
 
     @Test
     fun `test makeMultiActions and returns ActionRemoveFavorite`() {
-        val entries = createEntries(
-            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-            Entry(id = UUID.randomUUID().toString(), isFavorite = true, type = Entry.Type.FILE, canDelete = false, offlineStatus = OfflineStatus.UNDEFINED, isOffline = false),
-        )
+        val entries =
+            createEntries(
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = true,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = true,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = true,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = true,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+                Entry(
+                    id = UUID.randomUUID().toString(),
+                    isFavorite = true,
+                    type = Entry.Type.FILE,
+                    canDelete = false,
+                    offlineStatus = OfflineStatus.UNDEFINED,
+                    isOffline = false,
+                ),
+            )
 
         val initialState = ContextualActionsState(ContextualActionData(entries = entries, isMultiSelection = true))
         val viewModel = ContextualActionsViewModel(initialState, mockContext, settings)
 
         withState(viewModel) { newState ->
             viewModel.makeMultiActions(newState)
-            assertEquals(1, newState.actions.size)
+            assertEquals(1, newState.actions?.size)
 
-            newState.actions.forEach {
+            newState.actions?.forEach {
                 assertEquals(true, it is ActionRemoveFavorite)
             }
         }

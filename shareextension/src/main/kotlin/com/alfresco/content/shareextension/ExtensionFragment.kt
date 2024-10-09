@@ -51,6 +51,7 @@ class ExtensionFragment : Fragment(), MavericksView {
         findNavController().navigateToParent(nodeId, "")
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-    }
+    override fun invalidate() =
+        withState(viewModel) { state ->
+        }
 }

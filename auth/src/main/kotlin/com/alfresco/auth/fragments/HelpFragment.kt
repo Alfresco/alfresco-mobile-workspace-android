@@ -14,10 +14,13 @@ import com.alfresco.common.FragmentBuilder
 import com.alfresco.ui.BottomSheetDialogFragment
 
 class HelpFragment : BottomSheetDialogFragment() {
-
     override val requiresFullscreen = true
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.fragment_auth_help, container, false)
     }
 
@@ -47,7 +50,9 @@ class HelpFragment : BottomSheetDialogFragment() {
             return fragment
         }
 
-        fun message(@StringRes msgResId: Int): Builder {
+        fun message(
+            @StringRes msgResId: Int,
+        ): Builder {
             extraConfiguration.putInt(ARG_MESSAGE_RES_ID, msgResId)
             return this
         }

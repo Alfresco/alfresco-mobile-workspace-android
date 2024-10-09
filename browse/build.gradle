@@ -35,10 +35,8 @@ dependencies {
     implementation project(':component')
     implementation project(':process-app')
 
-//    implementation libs.alfresco.content
-//    implementation libs.alfresco.process
-    implementation project(':content')
-    implementation project(':process')
+    implementation libs.alfresco.content
+    implementation libs.alfresco.process
     implementation libs.kotlin.reflect
     implementation libs.androidx.core
     implementation libs.androidx.lifecycle.viewmodel
@@ -62,7 +60,7 @@ dependencies {
 
     // Mockito
     // Coroutines test
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0'
 
     testImplementation libs.mavericks.testing
 
@@ -72,6 +70,4 @@ dependencies {
     testImplementation libs.mockito.core
     // Optional -- Mockk framework
     testImplementation libs.mockk
-
-    implementation libs.retrofit.core
 }

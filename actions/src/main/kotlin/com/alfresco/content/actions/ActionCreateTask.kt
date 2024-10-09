@@ -27,16 +27,17 @@ data class ActionCreateTask(
         return TaskRepository().createTask(result.name, result.description)
     }
 
-    private suspend fun showCreateTaskDialog(context: Context) = withContext(Dispatchers.Main) {
-        suspendCoroutine {
-            CreateTaskDialog.Builder(context, false, CreateMetadata(entry.name, entry.description ?: ""))
-                .onSuccess { title, description ->
-                    it.resume(CreateMetadata(title, description))
-                }
-                .onCancel { it.resume(null) }
-                .show()
+    private suspend fun showCreateTaskDialog(context: Context) =
+        withContext(Dispatchers.Main) {
+            suspendCoroutine {
+                CreateTaskDialog.Builder(context, false, CreateMetadata(entry.name, entry.description ?: ""))
+                    .onSuccess { title, description ->
+                        it.resume(CreateMetadata(title, description))
+                    }
+                    .onCancel { it.resume(null) }
+                    .show()
+            }
         }
-    }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as TaskEntry)
 }

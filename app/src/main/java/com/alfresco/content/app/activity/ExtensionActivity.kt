@@ -33,7 +33,6 @@ import java.lang.ref.WeakReference
  * Marked as ExtensionActivity class
  */
 class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
-
     @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -91,23 +90,29 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         }
     }
 
-    private fun configure() = withState(viewModel) {
-        val graph = navController.navInflater.inflate(R.navigation.nav_share_extension)
-        graph.setStartDestination(R.id.nav_extension)
-        navController.graph = graph
+    private fun configure() =
+        withState(viewModel) {
+            val graph = navController.navInflater.inflate(R.navigation.nav_share_extension)
+            graph.setStartDestination(R.id.nav_extension)
+            navController.graph = graph
 
-        actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController.setupActionBar(this, navController)
-    }
+            actionBarController = ActionBarController(findViewById(R.id.toolbar))
+            actionBarController.setupActionBar(this, navController)
+        }
 
     override fun onSupportNavigateUp(): Boolean {
         return if (navController.currentDestination?.id == R.id.nav_browse_extension) {
             finish()
             false
-        } else navController.navigateUp()
+        } else {
+            navController.navigateUp()
+        }
     }
 
-    private fun handleFiles(intent: Intent, isMultipleFiles: Boolean) {
+    private fun handleFiles(
+        intent: Intent,
+        isMultipleFiles: Boolean,
+    ) {
         if (!isMultipleFiles) {
             (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
                 saveShareData(arrayOf(it.toString()))
@@ -136,65 +141,74 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         editor.apply()
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (viewModel.readPermission) {
-            if (state.requiresReLogin && state.isOnline) {
-                showAlertPrompt(
-                    resources.getString(R.string.auth_signed_out_title),
-                    resources.getString(R.string.auth_signed_out_subtitle),
-                    resources.getString(R.string.auth_basic_sign_in_button),
-                    resources.getString(R.string.sign_out_confirmation_negative),
-                    AlertType.TYPE_SIGN_OUT,
-                )
-            } else if (!state.isOnline) {
-                showAlertPrompt(
-                    resources.getString(R.string.auth_internet_unavailable_title),
-                    resources.getString(R.string.auth_internet_unavailable_subtitle),
-                    resources.getString(R.string.auth_internet_unavailable_ok_button),
-                    null,
-                    AlertType.TYPE_INTERNET_UNAVAILABLE,
-                )
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (viewModel.readPermission) {
+                if (state.requiresReLogin && state.isOnline) {
+                    showAlertPrompt(
+                        resources.getString(R.string.auth_signed_out_title),
+                        resources.getString(R.string.auth_signed_out_subtitle),
+                        resources.getString(R.string.auth_basic_sign_in_button),
+                        resources.getString(R.string.sign_out_confirmation_negative),
+                        AlertType.TYPE_SIGN_OUT,
+                    )
+                } else if (!state.isOnline) {
+                    showAlertPrompt(
+                        resources.getString(R.string.auth_internet_unavailable_title),
+                        resources.getString(R.string.auth_internet_unavailable_subtitle),
+                        resources.getString(R.string.auth_internet_unavailable_ok_button),
+                        null,
+                        AlertType.TYPE_INTERNET_UNAVAILABLE,
+                    )
+                }
             }
         }
-    }
 
-    private fun showAlertPrompt(title: String, message: String, positive: String, negative: String? = null, type: AlertType) {
+    private fun showAlertPrompt(
+        title: String,
+        message: String,
+        positive: String,
+        negative: String? = null,
+        type: AlertType,
+    ) {
         val oldDialog = alertDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
         val dialog: AlertDialog
         if (negative != null) {
-            dialog = MaterialAlertDialogBuilder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
-                .setNegativeButton(negative, null)
-                .setPositiveButton(positive) { _, _ ->
-                    when (type) {
-                        AlertType.TYPE_SIGN_OUT -> navigateToReLogin()
-                        else -> {
-                            Logger.d(getString(R.string.no_type))
+            dialog =
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .setNegativeButton(negative, null)
+                    .setPositiveButton(positive) { _, _ ->
+                        when (type) {
+                            AlertType.TYPE_SIGN_OUT -> navigateToReLogin()
+                            else -> {
+                                Logger.d(getString(R.string.no_type))
+                            }
                         }
                     }
-                }
-                .show()
+                    .show()
         } else {
-            dialog = MaterialAlertDialogBuilder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(positive) { _, _ ->
-                    when (type) {
-                        AlertType.TYPE_NO_LOGIN -> {
-                            startActivity(Intent(this, LoginActivity::class.java))
-                            finish()
-                        }
-                        AlertType.TYPE_INTERNET_UNAVAILABLE -> finish()
-                        else -> {
-                            Logger.d(getString(R.string.no_type))
+            dialog =
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton(positive) { _, _ ->
+                        when (type) {
+                            AlertType.TYPE_NO_LOGIN -> {
+                                startActivity(Intent(this, LoginActivity::class.java))
+                                finish()
+                            }
+                            AlertType.TYPE_INTERNET_UNAVAILABLE -> finish()
+                            else -> {
+                                Logger.d(getString(R.string.no_type))
+                            }
                         }
                     }
-                }
-                .show()
+                    .show()
         }
         alertDialog = WeakReference(dialog)
     }

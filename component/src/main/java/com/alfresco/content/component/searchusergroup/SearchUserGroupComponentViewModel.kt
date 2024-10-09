@@ -54,15 +54,16 @@ class SearchUserGroupComponentViewModel(
         setState {
             canSearchGroups = parent is ProcessEntry
             var listUserGroup: List<UserGroupDetails> = listOf()
-            listUserGroup = when (parent) {
-                is ProcessEntry -> {
-                    if (parent.reviewerType != ReviewerType.FUNCTIONAL_GROUP) {
-                        listOf(getLoggedInUser())
-                    } else {
-                        listOf()
-                    }
-                } else -> listOf(getLoggedInUser())
-            }
+            listUserGroup =
+                when (parent) {
+                    is ProcessEntry -> {
+                        if (parent.reviewerType != ReviewerType.FUNCTIONAL_GROUP) {
+                            listOf(getLoggedInUser())
+                        } else {
+                            listOf()
+                        }
+                    } else -> listOf(getLoggedInUser())
+                }
             copy(listUserGroup = listUserGroup)
         }
 
@@ -75,8 +76,9 @@ class SearchUserGroupComponentViewModel(
             }.executeOnLatest({
                 if (canSearchGroups && it.emailOrGroups.isNotEmpty()) {
                     repository.searchGroups(it.emailOrGroups)
-                } else
+                } else {
                     repository.searchUser(it.nameOrIndividual, it.emailOrGroups)
+                }
             }) {
                 if (it is Loading) {
                     copy(requestUser = it)
@@ -116,13 +118,14 @@ class SearchUserGroupComponentViewModel(
      * update the params on the basis of name or email to search the user.
      */
     fun setSearchQuery(term: String) {
-        params = if (searchByNameOrIndividual) {
-            if (term.isEmpty()) updateDefaultUserGroup(listOf(getLoggedInUser()))
-            params.copy(nameOrIndividual = term, emailOrGroups = "")
-        } else {
-            if (canSearchGroups && term.isEmpty()) updateDefaultUserGroup(emptyList())
-            params.copy(nameOrIndividual = "", emailOrGroups = term)
-        }
+        params =
+            if (searchByNameOrIndividual) {
+                if (term.isEmpty()) updateDefaultUserGroup(listOf(getLoggedInUser()))
+                params.copy(nameOrIndividual = term, emailOrGroups = "")
+            } else {
+                if (canSearchGroups && term.isEmpty()) updateDefaultUserGroup(emptyList())
+                params.copy(nameOrIndividual = "", emailOrGroups = term)
+            }
 
         liveSearchUserEvents.value = params
     }
@@ -134,6 +137,7 @@ class SearchUserGroupComponentViewModel(
     companion object : MavericksViewModelFactory<SearchUserGroupComponentViewModel, SearchUserGroupComponentState> {
         const val MIN_QUERY_LENGTH = 1
         const val DEFAULT_DEBOUNCE_TIME = 300L
+
         override fun create(
             viewModelContext: ViewModelContext,
             state: SearchUserGroupComponentState,

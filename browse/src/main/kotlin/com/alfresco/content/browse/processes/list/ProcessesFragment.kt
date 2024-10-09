@@ -30,10 +30,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  * Marked as ProcessesFragment
  */
 class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewState>() {
-
     override val viewModel: ProcessesViewModel by fragmentViewModel()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setupDropDown()
     }
@@ -43,15 +45,16 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
         AnalyticsManager().screenViewEvent(PageView.Workflows)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        super.invalidate()
-        filterTitle.text = requireContext().getLocalizedName(viewModel.filterName)
-        rlFilters.contentDescription = getString(R.string.text_filter_option, viewModel.filterName)
-        scrollToTop()
-        if (state.request is Success) {
-            clParent.addView(makeFab(requireContext()))
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            super.invalidate()
+            filterTitle.text = requireContext().getLocalizedName(viewModel.filterName)
+            rlFilters.contentDescription = getString(R.string.text_filter_option, viewModel.filterName)
+            scrollToTop()
+            if (state.request is Success) {
+                clParent.addView(makeFab(requireContext()))
+            }
         }
-    }
 
     private fun scrollToTop() {
         if (isResumed && viewModel.scrollToTop) {
@@ -86,17 +89,18 @@ class ProcessesFragment : ProcessListFragment<ProcessesViewModel, ProcessesViewS
 
     private fun makeFab(context: Context) =
         FloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.END
-                // TODO: define margins
-                setMargins(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt(),
-                )
-            }
+            layoutParams =
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.END
+                    // TODO: define margins
+                    setMargins(
+                        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                            .toInt(),
+                    )
+                }
             id = R.id.fab_create_task
             contentDescription = context.getString(R.string.title_start_workflow)
             setImageResource(R.drawable.ic_add_fab)

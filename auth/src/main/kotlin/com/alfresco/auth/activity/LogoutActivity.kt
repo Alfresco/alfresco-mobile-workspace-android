@@ -11,28 +11,31 @@ import org.json.JSONException
 
 class LogoutViewModel(context: Context, authType: AuthType?, authState: String, authConfig: AuthConfig) :
     EndSessionViewModel(context, authType, authState, authConfig) {
-
     companion object {
         const val EXTRA_AUTH_TYPE = "authType"
         const val EXTRA_AUTH_STATE = "authState"
         const val EXTRA_AUTH_CONFIG = "authConfig"
 
-        fun with(context: Context, bundle: Bundle?): LogoutViewModel {
+        fun with(
+            context: Context,
+            bundle: Bundle?,
+        ): LogoutViewModel {
             requireNotNull(bundle)
 
             val stateString = bundle.getString(EXTRA_AUTH_STATE)
             val configString = bundle.getString(EXTRA_AUTH_CONFIG)
             val authType = bundle.getString(EXTRA_AUTH_TYPE)?.let { AuthType.fromValue(it) }
 
-            val config = try {
-                if (configString != null) {
-                    AuthConfig.jsonDeserialize(configString)
-                } else {
+            val config =
+                try {
+                    if (configString != null) {
+                        AuthConfig.jsonDeserialize(configString)
+                    } else {
+                        null
+                    }
+                } catch (ex: JSONException) {
                     null
                 }
-            } catch (ex: JSONException) {
-                null
-            }
 
             requireNotNull(stateString)
             requireNotNull(config)
@@ -43,7 +46,6 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
 }
 
 class LogoutActivity : EndSessionActivity<LogoutViewModel>() {
-
     override val viewModel: LogoutViewModel by lazy {
         getViewModel {
             LogoutViewModel.with(applicationContext, intent.extras)

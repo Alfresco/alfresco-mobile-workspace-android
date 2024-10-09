@@ -29,7 +29,9 @@ fun TaskDetailViewModel.executePreview(action: Action) {
     val file = File(repository.session.contentDir, entry.fileName)
     if (!entry.isDocFile && repository.session.isFileExists(file) && file.length() != 0L) {
         entryListener?.onEntryCreated(Entry.updateDownloadEntry(entry, file.path))
-    } else action.execute(context, GlobalScope)
+    } else {
+        action.execute(context, GlobalScope)
+    }
 }
 
 /**
@@ -37,7 +39,8 @@ fun TaskDetailViewModel.executePreview(action: Action) {
  */
 internal fun TaskDetailViewModel.isTaskCompleted(state: TaskDetailViewState): Boolean = state.parent?.endDate != null
 
-internal fun TaskDetailViewModel.hasTaskStatusEnabled(state: TaskDetailViewState): Boolean = state.parent?.statusOption?.isNotEmpty() == true
+internal fun TaskDetailViewModel.hasTaskStatusEnabled(state: TaskDetailViewState): Boolean =
+    state.parent?.statusOption?.isNotEmpty() == true
 
 /**
  * returns true if the endDate is empty and the assignee user is same as loggedIn user otherwise false
@@ -58,7 +61,8 @@ fun TaskDetailViewModel.isCompleteButtonVisible(state: TaskDetailViewState): Boo
 /**
  * returns true if taskFormStatus has value otherwise false
  */
-fun TaskDetailViewModel.hasTaskStatusValue(state: TaskDetailViewState) = state.parent?.taskFormStatus != state.parent?.statusOption?.find { option -> option.id == "empty" }?.name
+fun TaskDetailViewModel.hasTaskStatusValue(state: TaskDetailViewState) =
+    state.parent?.taskFormStatus != state.parent?.statusOption?.find { option -> option.id == "empty" }?.name
 
 /**
  * return true if uploading files are in queue otherwise false
@@ -73,6 +77,9 @@ internal fun TaskDetailViewModel.removeTaskEntries(state: TaskDetailViewState) {
 }
 
 internal fun TaskDetailViewModel.isAssigneeAndLoggedInSame(assignee: UserGroupDetails?) = getAPSUser().id == assignee?.id
+
 internal fun TaskDetailViewModel.isStartedByAndLoggedInSame(initiatorId: String?) = getAPSUser().id.toString() == initiatorId
+
 internal fun TaskDetailViewModel.isTaskFormAndDetailRequestCompleted(state: TaskDetailViewState) = isWorkflowTask && state.request.complete
+
 internal fun TaskDetailViewModel.isTaskDetailRequestCompleted(state: TaskDetailViewState) = !isWorkflowTask && state.request.complete

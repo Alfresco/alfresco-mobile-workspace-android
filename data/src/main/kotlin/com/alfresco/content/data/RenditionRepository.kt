@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import com.alfresco.content.models.Rendition as RenditionModel
 
 class RenditionRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -77,16 +76,19 @@ class RenditionRepository {
                             mimeType,
                         )
                     }
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
                 delay(RETRY_DELAY)
             }
         }
         return null
     }
 
-    private fun renditionUri(id: String, renditionId: String) =
-        "${session.baseUrl}alfresco/versions/1/nodes/$id/renditions/$renditionId/content" +
-            "?attachment=false&alf_ticket=${session.ticket}"
+    private fun renditionUri(
+        id: String,
+        renditionId: String,
+    ) = "${session.baseUrl}alfresco/versions/1/nodes/$id/renditions/$renditionId/content" +
+        "?attachment=false&alf_ticket=${session.ticket}"
 
     companion object {
         private const val MAX_TRIES = 10

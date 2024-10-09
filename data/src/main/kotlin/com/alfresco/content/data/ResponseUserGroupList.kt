@@ -14,7 +14,6 @@ data class ResponseUserGroupList(
     val listUserGroup: List<UserGroupDetails> = emptyList(),
 ) {
     companion object {
-
         /**
          * return the ResponseUserList obj using ResultUserList
          */

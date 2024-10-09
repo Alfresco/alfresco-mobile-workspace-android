@@ -42,7 +42,6 @@ class TransferFilesViewModel(
     state: TransferFilesViewState,
     val context: Context,
 ) : MavericksViewModel<TransferFilesViewState>(state) {
-
     private var observeExtensionUploadsJob: Job? = null
 
     init {
@@ -72,14 +71,15 @@ class TransferFilesViewModel(
         val repo = OfflineRepository()
 
         observeExtensionUploadsJob?.cancel()
-        observeExtensionUploadsJob = repo.observeTransferUploads()
-            .execute {
-                if (it is Success) {
-                    updateTransferUploads(it())
-                } else {
-                    this
+        observeExtensionUploadsJob =
+            repo.observeTransferUploads()
+                .execute {
+                    if (it is Success) {
+                        updateTransferUploads(it())
+                    } else {
+                        this
+                    }
                 }
-            }
     }
 
     /**
@@ -90,7 +90,6 @@ class TransferFilesViewModel(
             !ConnectivityTracker.isActiveNetworkMetered(context)
 
     companion object : MavericksViewModelFactory<TransferFilesViewModel, TransferFilesViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: TransferFilesViewState,

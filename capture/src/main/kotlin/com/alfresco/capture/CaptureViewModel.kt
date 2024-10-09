@@ -46,9 +46,10 @@ class CaptureViewModel(
     /**
      * remove all the capture from the list
      */
-    fun clearCaptureList() = setState {
-        copy(listCapture = listOf())
-    }
+    fun clearCaptureList() =
+        setState {
+            copy(listCapture = listOf())
+        }
 
     /**
      * remove capture object from the list and delete it's uri from capture directory
@@ -65,14 +66,14 @@ class CaptureViewModel(
     private fun deleteCapture(captureItem: CaptureItem) =
         setState {
             copy(
-                listCapture = listCapture.filter {
-                    it.uri != captureItem.uri
-                },
+                listCapture =
+                    listCapture.filter {
+                        it.uri != captureItem.uri
+                    },
             )
         }
 
-    fun prepareCaptureFile(mode: CaptureMode) =
-        File(captureDir, "${System.currentTimeMillis()}${extensionFor(mode)}")
+    fun prepareCaptureFile(mode: CaptureMode) = File(captureDir, "${System.currentTimeMillis()}${extensionFor(mode)}")
 
     private fun extensionFor(mode: CaptureMode) =
         when (mode) {
@@ -83,21 +84,20 @@ class CaptureViewModel(
     /**
      * send capture list as result to the previous controller
      */
-    fun save() = withState {
-        requireNotNull(it.listCapture)
+    fun save() =
+        withState {
+            requireNotNull(it.listCapture)
 
-        it.listCapture.let { capturedList ->
-            onSaveComplete?.invoke(
-                capturedList,
-            )
+            it.listCapture.let { capturedList ->
+                onSaveComplete?.invoke(
+                    capturedList,
+                )
+            }
         }
-    }
 
-    fun onCapturePhoto(uri: Uri) =
-        onCaptureMedia(CaptureItem.photoCapture(uri))
+    fun onCapturePhoto(uri: Uri) = onCaptureMedia(CaptureItem.photoCapture(uri))
 
-    fun onCaptureVideo(uri: Uri) =
-        onCaptureMedia(CaptureItem.videoCapture(uri))
+    fun onCaptureVideo(uri: Uri) = onCaptureMedia(CaptureItem.videoCapture(uri))
 
     private fun onCaptureMedia(media: CaptureItem) =
         setState {
@@ -133,34 +133,38 @@ class CaptureViewModel(
     /**
      * update the name for the current visible capture on carousel
      */
-    fun updateName(newFileName: String) = withState {
-        val newList = it.listCapture.map { captureItem ->
-            if (captureItem == it.visibleItem) {
-                val updateCapture = captureItem.copy(name = newFileName)
-                setState { copy(visibleItem = updateCapture) }
-                updateCapture
-            } else {
-                captureItem
-            }
+    fun updateName(newFileName: String) =
+        withState {
+            val newList =
+                it.listCapture.map { captureItem ->
+                    if (captureItem == it.visibleItem) {
+                        val updateCapture = captureItem.copy(name = newFileName)
+                        setState { copy(visibleItem = updateCapture) }
+                        updateCapture
+                    } else {
+                        captureItem
+                    }
+                }
+            setState { copy(listCapture = newList) }
         }
-        setState { copy(listCapture = newList) }
-    }
 
     /**
      * update the description for the current visible capture on carousel
      */
-    fun updateDescription(newDescription: String) = withState {
-        val newList = it.listCapture.map { captureItem ->
-            if (captureItem == it.visibleItem) {
-                val updateCapture = captureItem.copy(description = newDescription)
-                setState { copy(visibleItem = updateCapture) }
-                updateCapture
-            } else {
-                captureItem
-            }
+    fun updateDescription(newDescription: String) =
+        withState {
+            val newList =
+                it.listCapture.map { captureItem ->
+                    if (captureItem == it.visibleItem) {
+                        val updateCapture = captureItem.copy(description = newDescription)
+                        setState { copy(visibleItem = updateCapture) }
+                        updateCapture
+                    } else {
+                        captureItem
+                    }
+                }
+            setState { copy(listCapture = newList) }
         }
-        setState { copy(listCapture = newList) }
-    }
 
     /**
      * copy the visible item from the carousel as current item

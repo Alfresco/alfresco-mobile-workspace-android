@@ -19,15 +19,11 @@ dependencies {
     api project(':session')
     implementation project(':download')
 
-//    implementation libs.alfresco.auth
+    implementation libs.alfresco.auth
 
-//    implementation libs.alfresco.content
-//    implementation libs.alfresco.contentKtx
-//    implementation libs.alfresco.process
-    implementation project(':alfresco-auth')
-    implementation project(':content')
-    implementation project(':content-ktx')
-    implementation project(':process')
+    implementation libs.alfresco.content
+    implementation libs.alfresco.contentKtx
+    implementation libs.alfresco.process
     implementation libs.androidx.preference
     api libs.androidx.work
 
@@ -43,8 +39,4 @@ dependencies {
     implementation libs.firebase.analytics
 
     implementation libs.rooted
-
-    implementation libs.retrofit.core
-    implementation libs.moshi.core
-    implementation libs.moshi.adapters
 }

@@ -28,7 +28,6 @@ class TextViewerViewModel(
     state: TextViewerState,
     context: Context,
 ) : MavericksViewModel<TextViewerState>(state) {
-
     val docPath: File
 
     init {

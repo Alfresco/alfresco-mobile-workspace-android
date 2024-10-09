@@ -10,9 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class MobileConfigDataEntry(
     val featuresMobile: MobileFeatures? = null,
 ) : Parcelable {
-
     companion object {
-
         fun with(configData: MobileConfigData): MobileConfigDataEntry {
             return MobileConfigDataEntry(
                 featuresMobile = MobileFeatures.with(configData.featuresMobile),
@@ -29,15 +27,15 @@ data class MobileConfigDataEntry(
 data class MobileFeatures(
     val menus: List<AppMenu> = emptyList(),
 ) : Parcelable {
-
     companion object {
         fun with(features: Features?): MobileFeatures {
             return MobileFeatures(
-                menus = features?.dynamicMenus?.map {
-                    AppMenu.with(
-                        it,
-                    )
-                } ?: emptyList(),
+                menus =
+                    features?.dynamicMenus?.map {
+                        AppMenu.with(
+                            it,
+                        )
+                    } ?: emptyList(),
             )
         }
     }

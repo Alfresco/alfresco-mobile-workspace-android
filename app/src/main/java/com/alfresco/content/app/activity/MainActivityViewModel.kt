@@ -48,7 +48,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class MainActivityState(
-    val reLoginCount: Int = 0, // new state on each invalid auth
+    // new state on each invalid auth
+    val reLoginCount: Int = 0,
     val requiresReLogin: Boolean = false,
     val isOnline: Boolean = true,
 ) : MavericksState
@@ -58,7 +59,6 @@ class MainActivityViewModel(
     private val appContext: Context,
     private val activityContext: Context,
 ) : MavericksViewModel<MainActivityState>(state), LifecycleObserver {
-
     private val processLifecycleOwner = ProcessLifecycleOwner.get()
     private var refreshTicketJob: Job? = null
     private var syncService: SyncService? = null
@@ -86,7 +86,10 @@ class MainActivityViewModel(
         }
     }
 
-    private fun init(context: Context, session: Session) {
+    private fun init(
+        context: Context,
+        session: Session,
+    ) {
         AnalyticsManager(session).appLaunch()
         session.onSignedOut {
             TaskRepository().clearAPSData()
@@ -145,7 +148,10 @@ class MainActivityViewModel(
         OfflineRepository(session).removeCompletedUploads()
     }
 
-    private fun configureSync(context: Context, coroutineScope: CoroutineScope) = SyncService(context, coroutineScope).also { service ->
+    private fun configureSync(
+        context: Context,
+        coroutineScope: CoroutineScope,
+    ) = SyncService(context, coroutineScope).also { service ->
         coroutineScope.on<ActionAddOffline> { service.sync() }
         coroutineScope.on<ActionRemoveOffline> { service.sync() }
         coroutineScope.on<ActionCaptureMedia> { service.upload() }
@@ -169,38 +175,47 @@ class MainActivityViewModel(
 
     private fun refreshTicket() {
         refreshTicketJob?.cancel()
-        refreshTicketJob = viewModelScope.launch {
-            var success = false
-            while (!success && isActive) {
-                try {
-                    val session = SessionManager.currentSession ?: return@launch
-                    session.ticket = AuthenticationRepository().fetchTicket()
-                    success = true
-                    if (!mode.isNullOrEmpty() && mode.equals(REMOTE)) {
-                        if (!isFolder) {
-                            _navigationMode.value = NavigationMode.FILE
-                        } else _navigationMode.value = NavigationMode.FOLDER
+        refreshTicketJob =
+            viewModelScope.launch {
+                var success = false
+                while (!success && isActive) {
+                    try {
+                        val session = SessionManager.currentSession ?: return@launch
+                        session.ticket = AuthenticationRepository().fetchTicket()
+                        success = true
+                        if (!mode.isNullOrEmpty() && mode.equals(REMOTE)) {
+                            if (!isFolder) {
+                                _navigationMode.value = NavigationMode.FILE
+                            } else {
+                                _navigationMode.value = NavigationMode.FOLDER
+                            }
+                        }
+                    } catch (_: Exception) {
+                        delay(60 * 1000L)
                     }
-                } catch (_: Exception) {
-                    delay(60 * 1000L)
                 }
+                syncService?.uploadIfNeeded()
+                syncService?.syncIfNeeded()
             }
-            syncService?.uploadIfNeeded()
-            syncService?.syncIfNeeded()
-        }
     }
 
     /**
      * Mark as NavigationMode enum
      */
     enum class NavigationMode {
-        FOLDER, FILE, LOGIN, DEFAULT
+        FOLDER,
+        FILE,
+        LOGIN,
+        DEFAULT,
     }
 
     /**
      * it will handle the intent which will come from the shareable link.
      */
-    fun handleDataIntent(mode: String?, isFolder: Boolean) {
+    fun handleDataIntent(
+        mode: String?,
+        isFolder: Boolean,
+    ) {
         this.mode = mode
         this.isFolder = isFolder
         when (mode) {
@@ -211,7 +226,9 @@ class MainActivityViewModel(
             VALUE_REMOTE -> {
                 if (requiresLogin) {
                     _navigationMode.value = NavigationMode.LOGIN
-                } else _navigationMode.value = NavigationMode.DEFAULT
+                } else {
+                    _navigationMode.value = NavigationMode.DEFAULT
+                }
             }
 
             else -> _navigationMode.value = NavigationMode.DEFAULT
@@ -224,11 +241,9 @@ class MainActivityViewModel(
         }
     }
 
-    private fun execute(action: Action) =
-        action.executeMulti(activityContext, GlobalScope)
+    private fun execute(action: Action) = action.executeMulti(activityContext, GlobalScope)
 
     companion object : MavericksViewModelFactory<MainActivityViewModel, MainActivityState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: MainActivityState,

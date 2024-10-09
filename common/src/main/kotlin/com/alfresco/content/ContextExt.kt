@@ -35,8 +35,7 @@ fun FragmentActivity.hideSoftInput() {
 /**
  * hiding the keyboard
  */
-fun View.hideSoftInput() =
-    context.getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(this.windowToken, 0)
+fun View.hideSoftInput() = context.getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(this.windowToken, 0)
 
 fun Fragment.hideSoftInput() = requireActivity().hideSoftInput()
 
@@ -69,8 +68,9 @@ fun Context.getLocalizedName(name: String): String {
  * avoiding the multiple click listener on view
  */
 fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
-    val safeClickListener = SafeClickListener {
-        onSafeClick(it)
-    }
+    val safeClickListener =
+        SafeClickListener {
+            onSafeClick(it)
+        }
     setOnClickListener(safeClickListener)
 }

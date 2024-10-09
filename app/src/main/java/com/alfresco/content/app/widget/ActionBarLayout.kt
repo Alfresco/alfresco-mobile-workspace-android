@@ -15,7 +15,6 @@ import com.alfresco.content.app.R
 import com.alfresco.ui.MaterialShapeView
 
 class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-
     lateinit var toolbar: Toolbar
     lateinit var taskToolbar: Toolbar
     lateinit var background: MaterialShapeView
@@ -63,7 +62,10 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
         expandedView.visibility = View.VISIBLE
     }
 
-    fun collapse(animated: Boolean, isTaskScreen: Boolean = false) {
+    fun collapse(
+        animated: Boolean,
+        isTaskScreen: Boolean = false,
+    ) {
         if (animated) {
             TransitionManager.beginDelayedTransition(this, makeTransition())
         }

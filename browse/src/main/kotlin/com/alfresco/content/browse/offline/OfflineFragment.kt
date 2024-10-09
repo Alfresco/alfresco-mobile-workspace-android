@@ -30,7 +30,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
-
     @OptIn(InternalMavericksApi::class)
     override val viewModel: OfflineViewModel by fragmentViewModelWithArgs { OfflineBrowseArgs.with(arguments) }
     private var fab: ExtendedFloatingActionButton? = null
@@ -48,7 +47,10 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setViewRequiredMultiSelection(true)
     }
@@ -59,43 +61,47 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
         fab = null
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        super.invalidate()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            super.invalidate()
 
-        // Add fab only to root folder
-        if (state.parentId == null && fab == null) {
-            fab = makeFab(requireContext()).apply {
-                visibility = View.INVISIBLE // required for animation
-            }
-            (view as ViewGroup).addView(fab)
-        }
-
-        fab?.apply {
-            if (state.entries.isNotEmpty()) {
-                show()
-            } else {
-                hide()
+            // Add fab only to root folder
+            if (state.parentId == null && fab == null) {
+                fab =
+                    makeFab(requireContext()).apply {
+                        visibility = View.INVISIBLE // required for animation
+                    }
+                (view as ViewGroup).addView(fab)
             }
 
-            isEnabled = state.syncNowEnabled
-        }
+            fab?.apply {
+                if (state.entries.isNotEmpty()) {
+                    show()
+                } else {
+                    hide()
+                }
 
-        fab?.visibility = if (state.selectedEntries.isNotEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
+                isEnabled = state.syncNowEnabled
+            }
+
+            fab?.visibility =
+                if (state.selectedEntries.isNotEmpty()) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
         }
-    }
 
     private fun makeFab(context: Context) =
         ExtendedFloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())
-            }
+            layoutParams =
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                    setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())
+                }
             text = context.getText(R.string.offline_sync_button_title)
             gravity = Gravity.CENTER
             setOnClickListener {
@@ -122,8 +128,7 @@ class OfflineFragment : ListFragment<OfflineViewModel, OfflineViewState>() {
                 startSync(false)
             }
 
-    private fun startSync(overrideNetwork: Boolean) =
-        lifecycleScope.emit(ActionSyncNow(overrideNetwork))
+    private fun startSync(overrideNetwork: Boolean) = lifecycleScope.emit(ActionSyncNow(overrideNetwork))
 
     override fun onItemClicked(entry: Entry) {
         if (entry.isFolder || entry.isSynced) {

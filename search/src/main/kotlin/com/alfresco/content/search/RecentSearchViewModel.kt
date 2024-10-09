@@ -15,7 +15,6 @@ class RecentSearchViewModel(
     viewState: RecentSearchViewState,
     val context: Context,
 ) : MavericksViewModel<RecentSearchViewState>(viewState) {
-
     @Suppress("unused")
     val changeListener = SearchRepository.RecentSearchesChangeListener(context) { refresh() }
 

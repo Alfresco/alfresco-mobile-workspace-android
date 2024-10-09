@@ -49,47 +49,48 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        setHeader(state)
+            setHeader(state)
 
-        binding.recyclerView.withModels {
-            if (state.actions == null) {
-                actionListLoading { id("loading") }
-            }
-            if (state.actions?.isEmpty() == true) {
-                val error = Pair(R.string.no_actions_available_title, R.string.no_actions_available_message)
-                viewEmptyMessage {
-                    id("empty_message")
-                    title(error.first)
-                    message(error.second)
+            binding.recyclerView.withModels {
+                if (state.actions == null) {
+                    actionListLoading { id("loading") }
                 }
-            }
-            state.actions?.forEach {
-                val entry = it.entry as Entry
-                actionListRow {
-                    id(it.title)
-                    action(it)
-                    clickListener { _ ->
-                        AnalyticsManager().fileActionEvent(
-                            entry.mimeType ?: "",
-                            entry.name.substringAfterLast(".", ""),
-                            it.eventName,
-                        )
-                        withState(viewModel) { newState ->
-                            if (!newState.isMultiSelection) {
-                                viewModel.execute(it)
+                if (state.actions?.isEmpty() == true) {
+                    val error = Pair(R.string.no_actions_available_title, R.string.no_actions_available_message)
+                    viewEmptyMessage {
+                        id("empty_message")
+                        title(error.first)
+                        message(error.second)
+                    }
+                }
+                state.actions?.forEach {
+                    val entry = it.entry as Entry
+                    actionListRow {
+                        id(it.title)
+                        action(it)
+                        clickListener { _ ->
+                            AnalyticsManager().fileActionEvent(
+                                entry.mimeType ?: "",
+                                entry.name.substringAfterLast(".", ""),
+                                it.eventName,
+                            )
+                            withState(viewModel) { newState ->
+                                if (!newState.isMultiSelection) {
+                                    viewModel.execute(it)
 
-                                dismiss()
-                            } else {
-                                executeMultiAction(it)
+                                    dismiss()
+                                } else {
+                                    executeMultiAction(it)
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
 
     private fun executeMultiAction(action: Action) {
         when (viewModel.canPerformActionOverNetwork()) {
@@ -115,8 +116,9 @@ class ContextualActionsSheet : BottomSheetDialogFragment(), MavericksView {
     }
 
     companion object {
-        fun with(contextualActionData: ContextualActionData) = ContextualActionsSheet().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to contextualActionData)
-        }
+        fun with(contextualActionData: ContextualActionData) =
+            ContextualActionsSheet().apply {
+                arguments = bundleOf(Mavericks.KEY_ARG to contextualActionData)
+            }
     }
 }

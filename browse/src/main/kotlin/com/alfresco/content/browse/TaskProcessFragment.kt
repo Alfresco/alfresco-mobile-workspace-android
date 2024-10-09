@@ -16,7 +16,6 @@ import com.alfresco.content.browse.tasks.list.TasksFragment
  * Marked as TaskProcessFragment
  */
 class TaskProcessFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,7 +27,10 @@ class TaskProcessFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         view.requestFocus()
@@ -36,7 +38,6 @@ class TaskProcessFragment : Fragment() {
 
     private class PagerAdapter(val context: Context, fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> TasksFragment()

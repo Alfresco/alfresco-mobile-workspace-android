@@ -17,7 +17,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
-
     private lateinit var pager: NonSwipeableViewPager
     private lateinit var pagerAdapter: PagerAdapter
     private var listFragments = mutableListOf<Fragment>()
@@ -31,16 +30,20 @@ class FavoritesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
         pager = view.findViewById(R.id.pager)
         tabs = view.findViewById(R.id.tabs)
-        listFragments = mutableListOf(
-            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_favorites)),
-            BrowseFragment.withArg(requireContext().getString(R.string.nav_path_fav_libraries)),
-        )
+        listFragments =
+            mutableListOf(
+                BrowseFragment.withArg(requireContext().getString(R.string.nav_path_favorites)),
+                BrowseFragment.withArg(requireContext().getString(R.string.nav_path_fav_libraries)),
+            )
         pagerAdapter = PagerAdapter(requireContext(), childFragmentManager, listFragments)
         pager.adapter = pagerAdapter
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         view.requestFocus()
@@ -66,7 +69,6 @@ class FavoritesFragment : Fragment() {
 
     private class PagerAdapter(val context: Context, fragmentManager: FragmentManager, val listFragments: List<Fragment>) :
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> listFragments[position]

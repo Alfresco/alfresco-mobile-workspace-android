@@ -22,12 +22,18 @@ data class UserGroupDetails(
     val groups: String = "",
     val isGroup: Boolean? = false,
 ) : Parcelable {
-
     val name: String
         get() = if (isAssigneeUser) "me_title" else "$firstName $lastName"
 
     private val firstNameInitial: String
-        get() = if (firstName.isNotEmpty()) firstName.substring(0, 1) else if (groupName.isNotEmpty()) getGroupInitial(groupName) else ""
+        get() =
+            if (firstName.isNotEmpty()) {
+                firstName.substring(0, 1)
+            } else if (groupName.isNotEmpty()) {
+                getGroupInitial(groupName)
+            } else {
+                ""
+            }
 
     private val lastNameInitial: String
         get() = if (lastName.isNotEmpty()) lastName.substring(0, 1) else ""
@@ -45,7 +51,6 @@ data class UserGroupDetails(
     }
 
     companion object {
-
         /**
          * return the UserDetails obj using UserInfo
          */

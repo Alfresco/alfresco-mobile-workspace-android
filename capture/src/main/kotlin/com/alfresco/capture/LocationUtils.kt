@@ -4,7 +4,6 @@ import android.content.Context
 import android.location.LocationManager
 
 object LocationUtils {
-
     /**
      * Function to check if location of the device is enabled or not
      */

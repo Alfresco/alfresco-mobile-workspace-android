@@ -27,7 +27,6 @@ data class ActionDownload(
     override val title: Int = R.string.action_download_title,
     override val eventName: EventName = EventName.Download,
 ) : Action {
-
     override suspend fun execute(context: Context): Entry {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
             PermissionFragment.requestPermission(
@@ -56,33 +55,37 @@ data class ActionDownload(
         val filename = entry.name
         val mimeType = DocumentFile.fromFile(src).type
 
-        val legacyPath = uniqueFilePath(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            filename,
-        )
+        val legacyPath =
+            uniqueFilePath(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                filename,
+            )
 
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+        val contentValues =
+            ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                put(MediaStore.MediaColumns.IS_PENDING, 1)
-            } else {
-                put(MediaStore.MediaColumns.DATA, legacyPath)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    put(MediaStore.MediaColumns.IS_PENDING, 1)
+                } else {
+                    put(MediaStore.MediaColumns.DATA, legacyPath)
+                }
             }
-        }
 
-        val target = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Downloads.EXTERNAL_CONTENT_URI
-        } else {
-            MediaStore.Files.getContentUri("external")
-        }
+        val target =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI
+            } else {
+                MediaStore.Files.getContentUri("external")
+            }
 
-        val dest = resolver.insert(
-            target,
-            contentValues,
-        ) ?: throw FileNotFoundException("Could not create destination file.")
+        val dest =
+            resolver.insert(
+                target,
+                contentValues,
+            ) ?: throw FileNotFoundException("Could not create destination file.")
 
         try {
             resolver.openOutputStream(dest).use { output ->
@@ -94,9 +97,10 @@ data class ActionDownload(
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val updatedValues = ContentValues().apply {
-                    put(MediaStore.Images.ImageColumns.IS_PENDING, 0)
-                }
+                val updatedValues =
+                    ContentValues().apply {
+                        put(MediaStore.Images.ImageColumns.IS_PENDING, 0)
+                    }
                 resolver.update(dest, updatedValues, null, null)
             }
         } catch (ex: Exception) {
@@ -105,7 +109,10 @@ data class ActionDownload(
         }
     }
 
-    private fun uniqueFilePath(directory: File, fileName: String): String {
+    private fun uniqueFilePath(
+        directory: File,
+        fileName: String,
+    ): String {
         val fileExtension = fileName.substringAfterLast(".")
         val baseFileName = fileName.replace(".$fileExtension", "")
 
@@ -134,12 +141,15 @@ data class ActionDownload(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        toastMessage.let { Action.showToast(view, anchorView, it) }
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) = toastMessage.let { Action.showToast(view, anchorView, it) }
 
-    private val toastMessage = if (entry.isSynced) {
-        R.string.action_export_toast
-    } else {
-        R.string.action_download_toast
-    }
+    private val toastMessage =
+        if (entry.isSynced) {
+            R.string.action_export_toast
+        } else {
+            R.string.action_download_toast
+        }
 }

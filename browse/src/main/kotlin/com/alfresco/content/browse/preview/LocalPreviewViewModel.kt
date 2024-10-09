@@ -25,23 +25,22 @@ class LocalPreviewViewModel(
     state: LocalPreviewState,
     val context: Context,
 ) : MavericksViewModel<LocalPreviewState>(state) {
-
     /**
      * execute to download the files
      */
-    fun execute() = withState { state ->
-        state.entry?.let {
-            val action = ActionOpenWith(it, hasChooser = true)
-            action.execute(context, GlobalScope)
+    fun execute() =
+        withState { state ->
+            state.entry?.let {
+                val action = ActionOpenWith(it, hasChooser = true)
+                action.execute(context, GlobalScope)
+            }
         }
-    }
 
     companion object : MavericksViewModelFactory<LocalPreviewViewModel, LocalPreviewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: LocalPreviewState,
-        ) =
-            // Requires activity context in order to present other fragments
+        ) = // Requires activity context in order to present other fragments
             LocalPreviewViewModel(state, viewModelContext.activity())
     }
 }

@@ -36,7 +36,6 @@ data class DatePickerBuilder(
     var onFailure: DatePickerOnFailure? = null,
     var fieldsData: FieldsData? = null,
 ) {
-
     private val dateFormatddMMMyy = "dd-MMM-yy"
     private val dateFormatddMMyyyy = "dd-MM-yyyy"
     private val addOneDay = 1000 * 60 * 60 * 24
@@ -50,49 +49,50 @@ data class DatePickerBuilder(
     /**
      * success callback
      */
-    fun onSuccess(callback: DatePickerOnSuccess?) =
-        apply { this.onSuccess = callback }
+    fun onSuccess(callback: DatePickerOnSuccess?) = apply { this.onSuccess = callback }
 
     /**
      * failure callback
      */
-    fun onFailure(callback: DatePickerOnFailure?) =
-        apply { this.onFailure = callback }
+    fun onFailure(callback: DatePickerOnFailure?) = apply { this.onFailure = callback }
 
     /**
      * show material date picker
      */
     fun show() {
-        val fragmentManager = when (context) {
-            is AppCompatActivity -> context.supportFragmentManager
-            is Fragment -> context.childFragmentManager
-            else -> throw IllegalArgumentException()
-        }
+        val fragmentManager =
+            when (context) {
+                is AppCompatActivity -> context.supportFragmentManager
+                is Fragment -> context.childFragmentManager
+                else -> throw IllegalArgumentException()
+            }
 
         val constraintsBuilder = CalendarConstraints.Builder()
 
         constraintsBuilder.setValidator(CompositeDateValidator.allOf(getValidators(fieldsData)))
 
-        val datePicker = MaterialDatePicker.Builder.datePicker().apply {
-            if (fieldsData != null) {
-                setTitleText(fieldsData?.name)
-            } else {
-                if (isFrom) {
-                    setTitleText(context.getString(R.string.hint_range_from_date))
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker().apply {
+                if (fieldsData != null) {
+                    setTitleText(fieldsData?.name)
                 } else {
-                    setTitleText(context.getString(R.string.hint_range_to_date))
+                    if (isFrom) {
+                        setTitleText(context.getString(R.string.hint_range_from_date))
+                    } else {
+                        setTitleText(context.getString(R.string.hint_range_to_date))
+                    }
                 }
-            }
-            setSelection(getSelectionDate())
-            setCalendarConstraints(constraintsBuilder.build())
-        }.build()
+                setSelection(getSelectionDate())
+                setCalendarConstraints(constraintsBuilder.build())
+            }.build()
 
         datePicker.show(fragmentManager, DatePickerBuilder::class.java.simpleName)
 
-        val timePicker = MaterialTimePicker
-            .Builder()
-            .setTitleText(fieldsData?.name)
-            .build()
+        val timePicker =
+            MaterialTimePicker
+                .Builder()
+                .setTitleText(fieldsData?.name)
+                .build()
 
         var stringDateTime = ""
         datePicker.addOnPositiveButtonClickListener {

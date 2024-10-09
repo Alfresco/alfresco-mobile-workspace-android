@@ -11,17 +11,12 @@ dependencies {
     implementation project(':base')
     api project(':account')
 
-//    implementation libs.alfresco.auth
-//    implementation libs.alfresco.content
-
-    implementation project(':alfresco-auth')
-    implementation project(':content')
+    implementation libs.alfresco.auth
+    implementation libs.alfresco.content
 
     implementation libs.kotlin.stdlib
 
     implementation libs.coil.core
 
     implementation libs.okhttp.logginginterceptor
-
-    implementation libs.retrofit.core
 }

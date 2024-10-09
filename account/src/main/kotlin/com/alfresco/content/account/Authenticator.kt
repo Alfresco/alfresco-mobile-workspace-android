@@ -8,7 +8,6 @@ import android.os.Bundle
 
 class Authenticator(context: Context) :
     AbstractAccountAuthenticator(context) {
-
     override fun getAuthTokenLabel(authTokenType: String?): String {
         throw UnsupportedOperationException()
     }

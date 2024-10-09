@@ -34,7 +34,6 @@ data class TaskDetailViewState(
     val requestSaveForm: Async<Response<Unit>> = Uninitialized,
     val requestClaimRelease: Async<Response<Unit>> = Uninitialized,
 ) : MavericksState {
-
     constructor(target: TaskEntry) : this(parent = target)
 
     /**
@@ -91,7 +90,10 @@ data class TaskDetailViewState(
         )
     }
 
-    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>): List<Entry> {
+    private fun mergeInUploads(
+        base: List<Entry>,
+        uploads: List<Entry>,
+    ): List<Entry> {
         return (uploads + base).distinctBy { if (it.id.isEmpty()) it.boxId else it.id }
     }
 
@@ -121,7 +123,10 @@ data class TaskDetailViewState(
     /**
      * update the taskDetailObj params after getting the response from server.
      */
-    fun update(oldEntry: TaskEntry, response: ResponseListForm?): TaskDetailViewState {
+    fun update(
+        oldEntry: TaskEntry,
+        response: ResponseListForm?,
+    ): TaskDetailViewState {
         if (response == null) return this
 
         val taskEntry = TaskEntry.withTaskForm(response, oldEntry)

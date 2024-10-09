@@ -13,7 +13,6 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 open class PermissionFragment : Fragment() {
-
     private lateinit var requestLauncher: ActivityResultLauncher<Array<String>>
     private var requestCallback: ((Map<String, Boolean>) -> Unit)? = null
 
@@ -21,11 +20,12 @@ open class PermissionFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Register for result is not allowed after onCreate
-        requestLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-        ) {
-            requestCallback?.invoke(it)
-        }
+        requestLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions(),
+            ) {
+                requestCallback?.invoke(it)
+            }
     }
 
     private fun requestPermissions(
@@ -66,8 +66,7 @@ open class PermissionFragment : Fragment() {
         }
     }
 
-    private fun shouldShowRequestRationale(permissions: List<String>) =
-        permissions.any { shouldShowRequestPermissionRationale(it) }
+    private fun shouldShowRequestRationale(permissions: List<String>) = permissions.any { shouldShowRequestPermissionRationale(it) }
 
     private fun showRationaleDialog(
         rationale: String,
@@ -101,9 +100,8 @@ open class PermissionFragment : Fragment() {
         rationale: String,
     ): Boolean = suspendCancellableCoroutine { requestPermissions(permission, rationale, it) }
 
-    private suspend fun requestOptionalPermissions(
-        permission: List<String>,
-    ): Boolean = suspendCancellableCoroutine { requestOptionalPermissions(permission, it) }
+    private suspend fun requestOptionalPermissions(permission: List<String>): Boolean =
+        suspendCancellableCoroutine { requestOptionalPermissions(permission, it) }
 
     companion object {
         private val TAG = PermissionFragment::class.java.simpleName
@@ -137,9 +135,11 @@ open class PermissionFragment : Fragment() {
                 { PermissionFragment() },
             )
 
-        fun deniedPermissions(context: Context, permissions: List<String>) =
-            permissions.filter {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED
-            }
+        fun deniedPermissions(
+            context: Context,
+            permissions: List<String>,
+        ) = permissions.filter {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED
+        }
     }
 }

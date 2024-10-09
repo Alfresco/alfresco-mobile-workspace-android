@@ -25,7 +25,6 @@ data class TasksViewState(
     val loadItemsCount: Int = 0,
     val page: Int = 0,
 ) : TaskListViewState {
-
     constructor(target: ProcessEntry) : this (processEntry = target)
 
     override fun copy(_entries: List<TaskEntry>) = copy(taskEntries = _entries)
@@ -33,22 +32,21 @@ data class TasksViewState(
     /**
      * update the latest response
      */
-    fun update(
-        response: ResponseList?,
-    ): TasksViewState {
+    fun update(response: ResponseList?): TasksViewState {
         if (response == null) return this
 
         val totalLoadCount: Int
 
         val taskPageEntries = response.listTask
 
-        val newTaskEntries = if (response.start != 0) {
-            totalLoadCount = loadItemsCount.plus(response.size)
-            baseTaskEntries + taskPageEntries
-        } else {
-            totalLoadCount = response.size
-            taskPageEntries
-        }
+        val newTaskEntries =
+            if (response.start != 0) {
+                totalLoadCount = loadItemsCount.plus(response.size)
+                baseTaskEntries + taskPageEntries
+            } else {
+                totalLoadCount = response.size
+                taskPageEntries
+            }
 
         return copy(
             taskEntries = newTaskEntries,

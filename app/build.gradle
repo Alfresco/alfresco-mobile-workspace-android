@@ -105,8 +105,8 @@ dependencies {
     implementation project(':move')
     implementation project(':process-app')
     implementation project(':data')
-//    implementation libs.alfresco.content
-    implementation project(':content')
+    implementation libs.alfresco.content
+//    implementation project(':content')
 
     implementation libs.kotlin.stdlib
 

@@ -8,7 +8,6 @@ import com.google.android.material.chip.Chip
  * Convenience subclass which enables toggling checked status without notifying the listener.
  */
 class FilterChip(context: Context, attrs: AttributeSet?) : Chip(context, attrs) {
-
     private var onCheckedChangeListener: OnCheckedChangeListener? = null
 
     override fun setOnCheckedChangeListener(listener: OnCheckedChangeListener?) {
@@ -19,7 +18,10 @@ class FilterChip(context: Context, attrs: AttributeSet?) : Chip(context, attrs) 
     /**
      * Changes [checked] state and will [notify] the listener if required.
      */
-    fun setChecked(checked: Boolean, notify: Boolean) {
+    fun setChecked(
+        checked: Boolean,
+        notify: Boolean,
+    ) {
         if (!notify) {
             super.setOnCheckedChangeListener(null)
             super.setChecked(checked)

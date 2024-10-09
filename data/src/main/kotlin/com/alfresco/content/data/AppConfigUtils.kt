@@ -42,7 +42,10 @@ fun isTimeToFetchConfig(previousFetchTime: Long): Boolean {
  * @property fileName
  * get the Json file from the asset folder
  */
-fun getJsonDataFromAsset(context: Context, fileName: String): String? {
+fun getJsonDataFromAsset(
+    context: Context,
+    fileName: String,
+): String? {
     val jsonString: String
     try {
         val inputStream = context.assets.open(fileName)
@@ -74,7 +77,10 @@ inline fun <reified T> getModelFromStringJSON(jsonFileString: String): T {
  * @property jsonFileString
  * Save AppConfigJSON to the internal storage
  */
-fun saveJSONToInternalDirectory(context: Context, jsonFileString: String) {
+fun saveJSONToInternalDirectory(
+    context: Context,
+    jsonFileString: String,
+) {
     val fileDirectory = getAppConfigParentDirectory(context)
     if (fileDirectory != null && !fileDirectory.exists()) {
         fileDirectory.mkdirs()
@@ -131,31 +137,40 @@ fun retrieveJSONFromInternalDirectory(context: Context): String {
  */
 inline fun <reified T> getJSONFromModel(model: T): String = Gson().toJson(model)
 
-val gson: Gson = GsonBuilder()
-    .registerTypeAdapter(
-        ZonedDateTime::class.java,
-        object : TypeAdapter<ZonedDateTime?>() {
-            override fun write(out: JsonWriter, value: ZonedDateTime?) {
-                out.value(value.toString())
-            }
+val gson: Gson =
+    GsonBuilder()
+        .registerTypeAdapter(
+            ZonedDateTime::class.java,
+            object : TypeAdapter<ZonedDateTime?>() {
+                override fun write(
+                    out: JsonWriter,
+                    value: ZonedDateTime?,
+                ) {
+                    out.value(value.toString())
+                }
 
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun read(inType: JsonReader): ZonedDateTime? {
-                return ZonedDateTime.parse(inType.nextString(), formatter)
-            }
-        },
-    )
-    .enableComplexMapKeySerialization()
-    .create()
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun read(inType: JsonReader): ZonedDateTime? {
+                    return ZonedDateTime.parse(inType.nextString(), formatter)
+                }
+            },
+        )
+        .enableComplexMapKeySerialization()
+        .create()
 
 @RequiresApi(Build.VERSION_CODES.O)
-private val formatter = DateTimeFormatterBuilder()
-    .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-    .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
-    .toFormatter()
+private val formatter =
+    DateTimeFormatterBuilder()
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
+        .toFormatter()
 
 // Function to store a JSON object
-fun saveJsonToSharedPrefs(context: Context, key: String, obj: Any) {
+fun saveJsonToSharedPrefs(
+    context: Context,
+    key: String,
+    obj: Any,
+) {
     val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     val editor = sharedPreferences.edit()
     val gson = Gson()
@@ -169,7 +184,10 @@ fun saveJsonToSharedPrefs(context: Context, key: String, obj: Any) {
 }
 
 // Function to retrieve a JSON object
-inline fun <reified T> getJsonFromSharedPrefs(context: Context, key: String): T? {
+inline fun <reified T> getJsonFromSharedPrefs(
+    context: Context,
+    key: String,
+): T? {
     val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     val gson = Gson()
 

@@ -24,41 +24,43 @@ import com.alfresco.content.listview.databinding.ViewListTaskRowBinding
  * Marked as ListViewTaskRow class
  */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-class ListViewTaskRow @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
+class ListViewTaskRow
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : FrameLayout(context, attrs, defStyleAttr) {
+        private val binding = ViewListTaskRowBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val binding = ViewListTaskRowBinding.inflate(LayoutInflater.from(context), this, true)
+        /**
+         * set the data on view
+         */
+        @RequiresApi(Build.VERSION_CODES.O)
+        @ModelProp
+        fun setData(entry: TaskEntry) {
+            binding.title.text = entry.name.ifEmpty { context.getString(R.string.title_no_name) }
+            val localizedName = context.getLocalizedName(entry.assignee?.name ?: "")
+            binding.subtitle.visibility = if (localizedName.trim().isNotEmpty()) View.VISIBLE else View.GONE
+            binding.subtitle.text = localizedName
+            binding.timeStamp.text = entry.created?.toLocalDateTime().toString().getLocalFormattedDate(DATE_FORMAT_6, DATE_FORMAT_7)
+            val accessibilityText =
+                context.getString(
+                    R.string.accessibility_text_task_row,
+                    entry.name,
+                    localizedName,
+                    getTaskPriority(entry.priority).value,
+                )
+            binding.parent.contentDescription = accessibilityText
 
-    /**
-     * set the data on view
-     */
-    @RequiresApi(Build.VERSION_CODES.O)
-    @ModelProp
-    fun setData(entry: TaskEntry) {
-        binding.title.text = entry.name.ifEmpty { context.getString(R.string.title_no_name) }
-        val localizedName = context.getLocalizedName(entry.assignee?.name ?: "")
-        binding.subtitle.visibility = if (localizedName.trim().isNotEmpty()) View.VISIBLE else View.GONE
-        binding.subtitle.text = localizedName
-        binding.timeStamp.text = entry.created?.toLocalDateTime().toString().getLocalFormattedDate(DATE_FORMAT_6, DATE_FORMAT_7)
-        val accessibilityText = context.getString(
-            R.string.accessibility_text_task_row,
-            entry.name,
-            localizedName,
-            getTaskPriority(entry.priority).value,
-        )
-        binding.parent.contentDescription = accessibilityText
+            binding.tvPriority.updatePriorityView(entry.priority)
+        }
 
-        binding.tvPriority.updatePriorityView(entry.priority)
+        /**
+         * row click listener
+         */
+        @CallbackProp
+        fun setClickListener(listener: OnClickListener?) {
+            setOnClickListener(listener)
+        }
     }
-
-    /**
-     * row click listener
-     */
-    @CallbackProp
-    fun setClickListener(listener: OnClickListener?) {
-        setOnClickListener(listener)
-    }
-}

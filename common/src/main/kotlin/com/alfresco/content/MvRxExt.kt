@@ -26,19 +26,21 @@ inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name },
     crossinline argsProvider: () -> Any?,
-) where T : Fragment, T : MavericksView = lifecycleAwareLazy(this) {
-    MavericksViewModelProvider.get(
-        viewModelClass = viewModelClass.java,
-        stateClass = S::class.java,
-        viewModelContext = FragmentViewModelContext(
-            activity = requireActivity(),
-            args = argsProvider(),
-            fragment = this,
-        ),
-        key = keyFactory(),
-        initialStateFactory = RealMavericksStateFactory(),
-    ).apply { _internal(this@fragmentViewModelWithArgs, action = { postInvalidate() }) }
-}
+) where T : Fragment, T : MavericksView =
+    lifecycleAwareLazy(this) {
+        MavericksViewModelProvider.get(
+            viewModelClass = viewModelClass.java,
+            stateClass = S::class.java,
+            viewModelContext =
+                FragmentViewModelContext(
+                    activity = requireActivity(),
+                    args = argsProvider(),
+                    fragment = this,
+                ),
+            key = keyFactory(),
+            initialStateFactory = RealMavericksStateFactory(),
+        ).apply { _internal(this@fragmentViewModelWithArgs, action = { postInvalidate() }) }
+    }
 
 /**
  * Gets or creates a ViewModel scoped to this activity. You will get the same instance every time
@@ -50,15 +52,17 @@ inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T
 inline fun <T, reified VM : MavericksViewModel<S>, reified S : MavericksState> T.activityViewModel(
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name },
-) where T : AppCompatActivity, T : MavericksView = lifecycleAwareLazy(this) {
-    MavericksViewModelProvider.get(
-        viewModelClass = viewModelClass.java,
-        stateClass = S::class.java,
-        viewModelContext = ActivityViewModelContext(
-            activity = this,
-            args = intent.extras?.get(Mavericks.KEY_ARG),
-        ),
-        key = keyFactory(),
-        initialStateFactory = RealMavericksStateFactory(),
-    ).apply { _internal(this@activityViewModel, action = { postInvalidate() }) }
-}
+) where T : AppCompatActivity, T : MavericksView =
+    lifecycleAwareLazy(this) {
+        MavericksViewModelProvider.get(
+            viewModelClass = viewModelClass.java,
+            stateClass = S::class.java,
+            viewModelContext =
+                ActivityViewModelContext(
+                    activity = this,
+                    args = intent.extras?.get(Mavericks.KEY_ARG),
+                ),
+            key = keyFactory(),
+            initialStateFactory = RealMavericksStateFactory(),
+        ).apply { _internal(this@activityViewModel, action = { postInvalidate() }) }
+    }

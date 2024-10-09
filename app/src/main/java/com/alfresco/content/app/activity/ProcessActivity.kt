@@ -13,7 +13,6 @@ import com.alfresco.content.app.widget.ActionBarLayout
 import com.alfresco.content.common.BaseActivity
 
 class ProcessActivity : BaseActivity(), MavericksView {
-
     private lateinit var binding: ActivityProcessBinding
     private lateinit var actionBarController: ActionBarController
 
@@ -44,11 +43,12 @@ class ProcessActivity : BaseActivity(), MavericksView {
         actionBarLayout.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        binding.parentView,
-        binding.bottomView,
-    )
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            binding.parentView,
+            binding.bottomView,
+        )
 
     override fun invalidate() {
     }

@@ -22,7 +22,6 @@ data class ActionMoveFilesFolders(
     override val title: Int = R.string.action_move_title,
     override val eventName: EventName = EventName.MoveToFolder,
 ) : Action {
-
     override suspend fun execute(context: Context): Entry {
         val result = ActionMoveFragment.moveItem(context, entry)
         if (!result.isNullOrEmpty()) {
@@ -35,25 +34,30 @@ data class ActionMoveFilesFolders(
         return entry
     }
 
-    override suspend fun executeMulti(context: Context): Pair<Entry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        val result = ActionMoveFragment.moveItem(context, entry)
-        if (!result.isNullOrEmpty()) {
-            entriesObj.map {
-                async(Dispatchers.IO) {
-                    BrowseRepository().moveNode(it.id, result)
+    override suspend fun executeMulti(context: Context): Pair<Entry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            val result = ActionMoveFragment.moveItem(context, entry)
+            if (!result.isNullOrEmpty()) {
+                entriesObj.map {
+                    async(Dispatchers.IO) {
+                        BrowseRepository().moveNode(it.id, result)
+                    }
                 }
+            } else {
+                throw CancellationException("User Cancellation")
             }
-        } else {
-            throw CancellationException("User Cancellation")
+            return@coroutineScope Pair(entry, entriesObj)
         }
-        return@coroutineScope Pair(entry, entriesObj)
-    }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_move_multiple_toast, entries.size.toString())
         } else {

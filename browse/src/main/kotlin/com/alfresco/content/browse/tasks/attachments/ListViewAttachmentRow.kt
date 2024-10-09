@@ -21,87 +21,88 @@ import com.alfresco.content.mimetype.MimeType
  * Marked as ListViewAttachmentRow class
  */
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-class ListViewAttachmentRow @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
+class ListViewAttachmentRow
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : FrameLayout(context, attrs, defStyleAttr) {
+        private val binding = ViewListAttachmentRowBinding.inflate(LayoutInflater.from(context), this)
 
-    private val binding = ViewListAttachmentRowBinding.inflate(LayoutInflater.from(context), this)
+        /**
+         * set the content data on list row
+         */
+        @ModelProp
+        fun setData(data: Entry) {
+            binding.tvName.text = data.name
+            binding.iconFile.setImageDrawable(ResourcesCompat.getDrawable(resources, MimeType.with(data.mimeType).icon, context.theme))
 
-    /**
-     * set the content data on list row
-     */
-    @ModelProp
-    fun setData(data: Entry) {
-        binding.tvName.text = data.name
-        binding.iconFile.setImageDrawable(ResourcesCompat.getDrawable(resources, MimeType.with(data.mimeType).icon, context.theme))
+            configureOfflineStatus(data)
 
-        configureOfflineStatus(data)
+            binding.deleteContentButton.visibility = if (actionButtonVisibility(data)) View.VISIBLE else View.INVISIBLE
+        }
 
-        binding.deleteContentButton.visibility = if (actionButtonVisibility(data)) View.VISIBLE else View.INVISIBLE
-    }
-
-    private fun configureOfflineStatus(entry: Entry) {
-        // Offline screen items and uploads
-        if (entry.isFile && entry.hasOfflineStatus) {
-            val drawableRes = makeOfflineStatusConfig(entry)
-            if (drawableRes != null) {
-                val drawable =
-                    ResourcesCompat.getDrawable(resources, drawableRes, context.theme)
-                if (drawable is AnimatedVectorDrawable) {
-                    drawable.start()
+        private fun configureOfflineStatus(entry: Entry) {
+            // Offline screen items and uploads
+            if (entry.isFile && entry.hasOfflineStatus) {
+                val drawableRes = makeOfflineStatusConfig(entry)
+                if (drawableRes != null) {
+                    val drawable =
+                        ResourcesCompat.getDrawable(resources, drawableRes, context.theme)
+                    if (drawable is AnimatedVectorDrawable) {
+                        drawable.start()
+                    }
+                    binding.offlineIcon.setImageDrawable(drawable)
+                    binding.offlineIcon.isVisible = true
+                } else {
+                    binding.offlineIcon.isVisible = false
                 }
-                binding.offlineIcon.setImageDrawable(drawable)
-                binding.offlineIcon.isVisible = true
             } else {
                 binding.offlineIcon.isVisible = false
             }
-        } else {
-            binding.offlineIcon.isVisible = false
-        }
-    }
-
-    private fun makeOfflineStatusConfig(entry: Entry): Int? =
-        when (entry.offlineStatus) {
-            OfflineStatus.PENDING ->
-                if (entry.isUpload) {
-                    R.drawable.ic_offline_upload
-                } else {
-                    R.drawable.ic_offline_status_pending
-                }
-
-            OfflineStatus.SYNCING ->
-                R.drawable.ic_offline_status_in_progress_anim
-
-            OfflineStatus.SYNCED ->
-                R.drawable.ic_offline_status_synced
-
-            OfflineStatus.ERROR ->
-                R.drawable.ic_offline_status_error
-
-            else ->
-                R.drawable.ic_offline_status_synced
         }
 
-    private fun actionButtonVisibility(entry: Entry) =
-        !entry.isLink && !entry.isUpload &&
-            // Child folder in offline tab
-            !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
+        private fun makeOfflineStatusConfig(entry: Entry): Int? =
+            when (entry.offlineStatus) {
+                OfflineStatus.PENDING ->
+                    if (entry.isUpload) {
+                        R.drawable.ic_offline_upload
+                    } else {
+                        R.drawable.ic_offline_status_pending
+                    }
 
-    /**
-     * list row click listener
-     */
-    @CallbackProp
-    fun setClickListener(listener: OnClickListener?) {
-        setOnClickListener(listener)
-    }
+                OfflineStatus.SYNCING ->
+                    R.drawable.ic_offline_status_in_progress_anim
 
-    /**
-     * delete icon click listener
-     */
-    @CallbackProp
-    fun setDeleteContentClickListener(listener: OnClickListener?) {
-        binding.deleteContentButton.setOnClickListener(listener)
+                OfflineStatus.SYNCED ->
+                    R.drawable.ic_offline_status_synced
+
+                OfflineStatus.ERROR ->
+                    R.drawable.ic_offline_status_error
+
+                else ->
+                    R.drawable.ic_offline_status_synced
+            }
+
+        private fun actionButtonVisibility(entry: Entry) =
+            !entry.isLink && !entry.isUpload &&
+                // Child folder in offline tab
+                !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly
+
+        /**
+         * list row click listener
+         */
+        @CallbackProp
+        fun setClickListener(listener: OnClickListener?) {
+            setOnClickListener(listener)
+        }
+
+        /**
+         * delete icon click listener
+         */
+        @CallbackProp
+        fun setDeleteContentClickListener(listener: OnClickListener?) {
+            binding.deleteContentButton.setOnClickListener(listener)
+        }
     }
-}

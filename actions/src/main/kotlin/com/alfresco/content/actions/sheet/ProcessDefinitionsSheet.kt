@@ -25,7 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  * Marked as ProcessDefinitionsSheet
  */
 class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
-
     private val viewModel: ProcessDefinitionsViewModel by fragmentViewModel()
     private lateinit var binding: SheetActionListBinding
 
@@ -54,53 +53,56 @@ class ProcessDefinitionsSheet : BottomSheetDialogFragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        binding.header.apply {
-            parentTitle.contentDescription = getString(R.string.title_select_workflow)
-            icon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_start_workflow, context?.theme))
-            title.text = getString(R.string.title_select_workflow)
-        }
-
-        binding.recyclerView.withModels {
-            if (state.listProcessDefinitions == null) {
-                actionListLoading { id("loading") }
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            binding.header.apply {
+                parentTitle.contentDescription = getString(R.string.title_select_workflow)
+                icon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_start_workflow, context?.theme))
+                title.text = getString(R.string.title_select_workflow)
             }
-            if (state.listProcessDefinitions?.isEmpty() == true) {
-                val args = viewModel.emptyMessageArgs()
-                listViewErrorMessage {
-                    id("empty_message")
-                    iconRes(args.first)
-                    title(args.second)
-                    message(args.third)
-                }
-            } else {
-                state.listProcessDefinitions?.forEach {
-                    listRowProcessDefinitions {
-                        id(it.id)
-                        processDefinition(it)
-                        clickListener { model, _, _, _ ->
-                            val processEntry = ProcessEntry.with(model.processDefinition(), state.entries)
 
-                            val intent = Intent(
-                                requireActivity(),
-                                Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
-                            )
-                            intent.putExtra(Mavericks.KEY_ARG, processEntry)
-                            startActivity(intent)
-                            dismiss()
+            binding.recyclerView.withModels {
+                if (state.listProcessDefinitions == null) {
+                    actionListLoading { id("loading") }
+                }
+                if (state.listProcessDefinitions?.isEmpty() == true) {
+                    val args = viewModel.emptyMessageArgs()
+                    listViewErrorMessage {
+                        id("empty_message")
+                        iconRes(args.first)
+                        title(args.second)
+                        message(args.third)
+                    }
+                } else {
+                    state.listProcessDefinitions?.forEach {
+                        listRowProcessDefinitions {
+                            id(it.id)
+                            processDefinition(it)
+                            clickListener { model, _, _, _ ->
+                                val processEntry = ProcessEntry.with(model.processDefinition(), state.entries)
+
+                                val intent =
+                                    Intent(
+                                        requireActivity(),
+                                        Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
+                                    )
+                                intent.putExtra(Mavericks.KEY_ARG, processEntry)
+                                startActivity(intent)
+                                dismiss()
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     companion object {
         /**
          * returns the instance of ProcessDefinitionsSheet with attached entry as bundle
          */
-        fun with(entries: List<Entry> = emptyList()) = ProcessDefinitionsSheet().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to entries)
-        }
+        fun with(entries: List<Entry> = emptyList()) =
+            ProcessDefinitionsSheet().apply {
+                arguments = bundleOf(Mavericks.KEY_ARG to entries)
+            }
     }
 }

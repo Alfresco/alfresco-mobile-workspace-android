@@ -4,12 +4,17 @@ import android.content.Context
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
-const val chipTextDisplayLimit = 30
+const val CHIP_TEXT_DISPLAY_LIMIT = 30
 
 /**
  * returns the formatted text string as per chip display conditions
  */
-fun String.wrapWithLimit(context: Context, limit: Int, delimiter: String? = null, multipleValue: Boolean = false): String {
+fun String.wrapWithLimit(
+    context: Context,
+    limit: Int,
+    delimiter: String? = null,
+    multipleValue: Boolean = false,
+): String {
     if (this.length <= limit && delimiter == null) {
         return this
     }
@@ -19,18 +24,23 @@ fun String.wrapWithLimit(context: Context, limit: Int, delimiter: String? = null
             val splitStringArray = this.split(delimiter)
             val chip1stString = splitStringArray[0]
             if (chip1stString.length > limit) {
-                return context.getString(R.string.name_truncate_in_end, chip1stString.wrapWithLimit(context, chipTextDisplayLimit, multipleValue = true), splitStringArray.size.minus(1))
+                return context.getString(
+                    R.string.name_truncate_in_end,
+                    chip1stString.wrapWithLimit(context, CHIP_TEXT_DISPLAY_LIMIT, multipleValue = true),
+                    splitStringArray.size.minus(1),
+                )
             }
             return context.getString(R.string.name_truncate_in_end, chip1stString, splitStringArray.size.minus(1))
         } else {
-            return this.wrapWithLimit(context, chipTextDisplayLimit)
+            return this.wrapWithLimit(context, CHIP_TEXT_DISPLAY_LIMIT)
         }
     }
 
     return if (multipleValue) {
         context.getString(R.string.name_truncate_in, this.take(5), this.takeLast(5))
-    } else
-        context.getString(R.string.name_truncate_end, this.take(chipTextDisplayLimit))
+    } else {
+        context.getString(R.string.name_truncate_end, this.take(CHIP_TEXT_DISPLAY_LIMIT))
+    }
 }
 
 /**

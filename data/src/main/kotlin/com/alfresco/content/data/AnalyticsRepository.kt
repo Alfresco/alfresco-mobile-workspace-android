@@ -16,7 +16,6 @@ import com.google.firebase.ktx.Firebase
  * Marked as AnalyticsRepository class
  */
 class AnalyticsRepository(val session: Session) {
-
     private val context get() = session.context
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
@@ -33,11 +32,12 @@ class AnalyticsRepository(val session: Session) {
         return "${manufacturer.uppercase()} $model"
     }
 
-    private fun deviceOS() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        "android: ${Build.VERSION.RELEASE_OR_CODENAME}"
-    } else {
-        "android: ${Build.VERSION.RELEASE}"
-    }
+    private fun deviceOS() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            "android: ${Build.VERSION.RELEASE_OR_CODENAME}"
+        } else {
+            "android: ${Build.VERSION.RELEASE}"
+        }
 
     private fun deviceNetwork(): String {
         val cm = context.getSystemService<ConnectivityManager>() ?: return NetworkStatus.NOT_CONNECTED.name
@@ -60,21 +60,25 @@ class AnalyticsRepository(val session: Session) {
      * default parameters added in bundle for analytics
      */
     fun defaultParams(): Bundle {
-        val bundle = Bundle().apply {
-            putString(DefaultParameters.ServerURL.value, serverURL())
-            putString(DefaultParameters.DeviceName.value, deviceName())
-            putString(DefaultParameters.DeviceOS.value, deviceOS())
-            putString(DefaultParameters.DeviceNetwork.value, deviceNetwork())
-            putString(DefaultParameters.AppVersion.value, appVersion())
-            putString(DefaultParameters.DeviceID.value, deviceID())
-        }
+        val bundle =
+            Bundle().apply {
+                putString(DefaultParameters.ServerURL.value, serverURL())
+                putString(DefaultParameters.DeviceName.value, deviceName())
+                putString(DefaultParameters.DeviceOS.value, deviceOS())
+                putString(DefaultParameters.DeviceNetwork.value, deviceNetwork())
+                putString(DefaultParameters.AppVersion.value, appVersion())
+                putString(DefaultParameters.DeviceID.value, deviceID())
+            }
         return bundle
     }
 
     /**
      * It will get triggered to log analytics on firebase console
      */
-    fun logEvent(type: String, params: Bundle) {
+    fun logEvent(
+        type: String,
+        params: Bundle,
+    ) {
         firebaseAnalytics.logEvent(type, params)
     }
 }

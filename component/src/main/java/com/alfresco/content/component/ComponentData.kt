@@ -26,14 +26,17 @@ data class ComponentData(
     val selectedQueryMap: Map<String, String> = mapOf(),
 ) : Parcelable {
     companion object {
-
         /**
          * update the ComponentData obj after getting the result (name and query) from filters
          * @param category
          * @param name
          * @param query
          */
-        fun with(category: CategoriesItem?, name: String, query: String): ComponentData {
+        fun with(
+            category: CategoriesItem?,
+            name: String,
+            query: String,
+        ): ComponentData {
             return ComponentData(
                 id = category?.id ?: "",
                 name = category?.name ?: "",
@@ -51,13 +54,18 @@ data class ComponentData(
          * @param name
          * @param query
          */
-        fun with(fieldsData: FieldsData, name: String, query: String): ComponentData {
+        fun with(
+            fieldsData: FieldsData,
+            name: String,
+            query: String,
+        ): ComponentData {
             return ComponentData(
                 id = fieldsData.id,
                 name = fieldsData.name,
                 selector = ComponentType.DROPDOWN_RADIO.value,
-                options = fieldsData.options.filter { it.id != "empty" }
-                    .map { ComponentOptions.withProcess(it) },
+                options =
+                    fieldsData.options.filter { it.id != "empty" }
+                        .map { ComponentOptions.withProcess(it) },
                 selectedName = name,
                 selectedQuery = query,
             )
@@ -69,7 +77,11 @@ data class ComponentData(
          * @param name
          * @param query
          */
-        fun with(outcomes: List<OptionsModel>, name: String, query: String): ComponentData {
+        fun with(
+            outcomes: List<OptionsModel>,
+            name: String,
+            query: String,
+        ): ComponentData {
             return ComponentData(
                 selector = ComponentType.PROCESS_ACTION.value,
                 options = outcomes.map { ComponentOptions.withProcess(it) },
@@ -84,7 +96,11 @@ data class ComponentData(
          * @param name
          * @param query
          */
-        fun with(facets: Facets?, name: String, query: String): ComponentData {
+        fun with(
+            facets: Facets?,
+            name: String,
+            query: String,
+        ): ComponentData {
             return ComponentData(
                 id = facets?.hashCode().toString(),
                 name = facets?.label ?: "",
@@ -119,7 +135,11 @@ data class ComponentData(
          * @param name
          * @param query
          */
-        fun with(componentData: ComponentData?, name: String, query: String): ComponentData {
+        fun with(
+            componentData: ComponentData?,
+            name: String,
+            query: String,
+        ): ComponentData {
             return ComponentData(
                 id = componentData?.id,
                 name = componentData?.name,
@@ -165,8 +185,9 @@ data class ComponentData(
             return ComponentData(
                 name = "title_status",
                 selector = ComponentType.RADIO.value,
-                options = taskEntry.statusOption.filter { it.id != "empty" }
-                    .map { ComponentOptions.withTaskStatus(it) },
+                options =
+                    taskEntry.statusOption.filter { it.id != "empty" }
+                        .map { ComponentOptions.withTaskStatus(it) },
                 selectedName = taskEntry.taskFormStatus ?: "",
                 selectedQuery = taskEntry.taskFormStatus ?: "",
             )

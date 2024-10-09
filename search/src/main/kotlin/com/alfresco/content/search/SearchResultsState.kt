@@ -42,7 +42,6 @@ data class SearchResultsState(
     val isProcess: Boolean? = null,
     val moveId: String = "",
 ) : ListViewState {
-
     constructor(args: ContextualSearchArgs) : this(
         contextId = args.id,
         contextTitle = args.title,
@@ -69,11 +68,12 @@ data class SearchResultsState(
 
         val nextPage = response.pagination.skipCount > 0
         val pageEntries = response.entries.filter { it.id != moveId }
-        val newEntries = if (nextPage) {
-            entries + pageEntries
-        } else {
-            pageEntries
-        }
+        val newEntries =
+            if (nextPage) {
+                entries + pageEntries
+            } else {
+                pageEntries
+            }
 
         val facets = response.facetContext?.facetResponse?.facets
         val list: MutableList<SearchChipCategory>? = listSearchCategoryChips?.toMutableList()
@@ -111,7 +111,11 @@ data class SearchResultsState(
         }
     }
 
-    private fun isChipSelected(list: MutableList<SearchChipCategory>?, newEntries: List<Entry>, facets: List<Facets>?): MutableList<SearchChipCategory>? {
+    private fun isChipSelected(
+        list: MutableList<SearchChipCategory>?,
+        newEntries: List<Entry>,
+        facets: List<Facets>?,
+    ): MutableList<SearchChipCategory>? {
         val facetChipObj = list?.find { filterChip -> filterChip.category?.component != null && filterChip.isSelected }
 
         if (facetChipObj != null && newEntries.isEmpty()) {
@@ -141,7 +145,10 @@ data class SearchResultsState(
         return null
     }
 
-    private fun getFacetBucketList(obj: SearchChipCategory, facets: Facets): List<Buckets> {
+    private fun getFacetBucketList(
+        obj: SearchChipCategory,
+        facets: Facets,
+    ): List<Buckets> {
         val listBuckets: MutableList<Buckets> = mutableListOf()
         obj.facets?.buckets?.forEach { oldBucket ->
             val bucketObj = Buckets.updateIntervalBucketCount(oldBucket)

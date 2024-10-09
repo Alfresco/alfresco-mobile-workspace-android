@@ -14,46 +14,50 @@ internal class ProcessDefinitionsViewModel(
     state: ProcessDefinitionsState,
     val context: Context,
 ) : MavericksViewModel<ProcessDefinitionsState>(state) {
-
     init {
         buildModel()
     }
 
-    private fun buildModel() = withState { state ->
-        viewModelScope.launch {
-            processDefinitions().execute {
-                when (it) {
-                    is Success -> {
-                        ProcessDefinitionsState(
-                            entries = state.entries,
-                            listProcessDefinitions = it().listRuntimeProcessDefinitions,
-                        )
-                    }
+    private fun buildModel() =
+        withState { state ->
+            viewModelScope.launch {
+                processDefinitions().execute {
+                    when (it) {
+                        is Success -> {
+                            ProcessDefinitionsState(
+                                entries = state.entries,
+                                listProcessDefinitions = it().listRuntimeProcessDefinitions,
+                            )
+                        }
 
-                    else -> {
-                        ProcessDefinitionsState(
-                            entries = state.entries,
-                            listProcessDefinitions = null,
-                        )
+                        else -> {
+                            ProcessDefinitionsState(
+                                entries = state.entries,
+                                listProcessDefinitions = null,
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
     private fun processDefinitions() = TaskRepository()::processDefinitions.asFlow()
 
     /**
      * returns the empty data if no workflows available
      */
-    fun emptyMessageArgs() = Triple(R.drawable.ic_empty_workflow, R.string.workflows_unavailable_title, R.string.workflow_unavailable_message)
+    fun emptyMessageArgs() =
+        Triple(
+            R.drawable.ic_empty_workflow,
+            R.string.workflows_unavailable_title,
+            R.string.workflow_unavailable_message,
+        )
 
     companion object : MavericksViewModelFactory<ProcessDefinitionsViewModel, ProcessDefinitionsState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: ProcessDefinitionsState,
-        ) =
-            // Requires activity context in order to present other fragments
+        ) = // Requires activity context in order to present other fragments
             ProcessDefinitionsViewModel(state, viewModelContext.activity())
     }
 }

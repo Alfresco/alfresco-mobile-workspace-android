@@ -24,7 +24,7 @@ import com.alfresco.events.on
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 /**
  * Marked as ProcessDetailViewModel
@@ -34,7 +34,6 @@ class ProcessDetailViewModel(
     val context: Context,
     private val repository: TaskRepository,
 ) : MavericksViewModel<ProcessDetailViewState>(state) {
-
     private var observeUploadsJob: Job? = null
     var entryListener: EntryListener? = null
     var observerID: String = ""
@@ -111,14 +110,15 @@ class ProcessDetailViewModel(
         repo.removeCompletedUploads()
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
-            .execute {
-                if (it is Success) {
-                    updateUploads(it())
-                } else {
-                    this
+        observeUploadsJob =
+            repo.observeUploads(observerID, UploadServerType.UPLOAD_TO_PROCESS)
+                .execute {
+                    if (it is Success) {
+                        updateUploads(it())
+                    } else {
+                        this
+                    }
                 }
-            }
     }
 
     private fun getStartForm(processEntry: ProcessEntry) {
@@ -143,64 +143,69 @@ class ProcessDetailViewModel(
     /**
      * delete content locally
      */
-    fun deleteAttachment(contentId: String) = stateFlow.execute {
-        deleteUploads(contentId)
-    }
-
-    private fun linkContentToProcess(entry: Entry, sourceName: String) =
-        viewModelScope.launch {
-            repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry, sourceName)).execute {
-                when (it) {
-                    is Loading -> copy(requestContent = Loading())
-                    is Fail -> copy(requestContent = Fail(it.error))
-                    is Success -> {
-                        updateContent(it()).copy(requestContent = Success(it()))
-                    }
-
-                    else -> this
-                }
-            }
+    fun deleteAttachment(contentId: String) =
+        stateFlow.execute {
+            deleteUploads(contentId)
         }
 
-    private fun singleProcessDefinition(appDefinitionId: String) = withState { state ->
-        viewModelScope.launch {
-            repository::singleProcessDefinition.asFlow(appDefinitionId).execute {
-                when (it) {
-                    is Loading -> copy(requestProcessDefinition = Loading())
-                    is Fail -> copy(requestProcessDefinition = Fail(it.error))
-                    is Success -> {
-                        val updatedState = updateSingleProcessDefinition(it())
-                        observeUploads(updatedState)
-                        updatedState.parent?.let { processEntry ->
-                            getStartForm(processEntry)
+    private fun linkContentToProcess(
+        entry: Entry,
+        sourceName: String,
+    ) = viewModelScope.launch {
+        repository::linkADWContentToProcess.asFlow(LinkContentPayload.with(entry, sourceName)).execute {
+            when (it) {
+                is Loading -> copy(requestContent = Loading())
+                is Fail -> copy(requestContent = Fail(it.error))
+                is Success -> {
+                    updateContent(it()).copy(requestContent = Success(it()))
+                }
+
+                else -> this
+            }
+        }
+    }
+
+    private fun singleProcessDefinition(appDefinitionId: String) =
+        withState { state ->
+            viewModelScope.launch {
+                repository::singleProcessDefinition.asFlow(appDefinitionId).execute {
+                    when (it) {
+                        is Loading -> copy(requestProcessDefinition = Loading())
+                        is Fail -> copy(requestProcessDefinition = Fail(it.error))
+                        is Success -> {
+                            val updatedState = updateSingleProcessDefinition(it())
+                            observeUploads(updatedState)
+                            updatedState.parent?.let { processEntry ->
+                                getStartForm(processEntry)
+                            }
+                            copy(requestProcessDefinition = Success(it()))
                         }
-                        copy(requestProcessDefinition = Success(it()))
-                    }
 
-                    else -> {
-                        this
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
     /**
      * This method will execute the start flow api with required data
      */
-    fun startWorkflow() = withState { state ->
-        val items = state.listContents.joinToString(separator = ",") { it.id }
-        viewModelScope.launch {
-            repository::startWorkflow.asFlow(state.parent, items, mapOf()).execute {
-                when (it) {
-                    is Loading -> copy(requestStartWorkflow = Loading())
-                    is Fail -> copy(requestStartWorkflow = Fail(it.error))
-                    is Success -> copy(requestStartWorkflow = Success(it()))
-                    else -> this
+    fun startWorkflow() =
+        withState { state ->
+            val items = state.listContents.joinToString(separator = ",") { it.id }
+            viewModelScope.launch {
+                repository::startWorkflow.asFlow(state.parent, items, mapOf()).execute {
+                    when (it) {
+                        is Loading -> copy(requestStartWorkflow = Loading())
+                        is Fail -> copy(requestStartWorkflow = Fail(it.error))
+                        is Success -> copy(requestStartWorkflow = Success(it()))
+                        else -> this
+                    }
                 }
             }
         }
-    }
 
     /**
      * adding listener to update the View after downloading the content
@@ -233,58 +238,59 @@ class ProcessDetailViewModel(
         }
     }
 
-    private fun fetchAccountInfo() = withState { state ->
-        viewModelScope.launch {
-            repository::getAccountInfo.execute {
-                when (it) {
-                    is Loading -> copy(requestAccountInfo = Loading())
-                    is Fail -> copy(requestAccountInfo = Fail(it.error))
-                    is Success -> {
-                        val response = it()
+    private fun fetchAccountInfo() =
+        withState { state ->
+            viewModelScope.launch {
+                repository::getAccountInfo.execute {
+                    when (it) {
+                        is Loading -> copy(requestAccountInfo = Loading())
+                        is Fail -> copy(requestAccountInfo = Fail(it.error))
+                        is Success -> {
+                            val response = it()
 
-                        repository.saveSourceName(response.listAccounts.first())
-                        val sourceName = response.listAccounts.first().sourceName
-                        if (!isExecuted) {
-                            isExecuted = true
-                            state.parent?.defaultEntries?.map { entry ->
-                                linkContentToProcess(entry, sourceName)
+                            repository.saveSourceName(response.listAccounts.first())
+                            val sourceName = response.listAccounts.first().sourceName
+                            if (!isExecuted) {
+                                isExecuted = true
+                                state.parent?.defaultEntries?.map { entry ->
+                                    linkContentToProcess(entry, sourceName)
+                                }
                             }
+                            copy(requestAccountInfo = Success(response))
                         }
-                        copy(requestAccountInfo = Success(response))
-                    }
 
-                    else -> {
-                        this
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
-    private fun fetchTasks() = withState { state ->
-        viewModelScope.launch {
-            // Fetch tasks data
-            repository::getTasks.asFlow(
-                TaskProcessFiltersPayload.defaultTasksOfProcess(state.parent?.id),
-            ).execute {
-                when (it) {
-                    is Loading -> copy(requestTasks = Loading())
-                    is Fail -> copy(requestTasks = Fail(it.error))
-                    is Success -> {
-                        val response = it()
-                        updateTasks(response).copy(requestTasks = Success(response))
-                    }
+    private fun fetchTasks() =
+        withState { state ->
+            viewModelScope.launch {
+                // Fetch tasks data
+                repository::getTasks.asFlow(
+                    TaskProcessFiltersPayload.defaultTasksOfProcess(state.parent?.id),
+                ).execute {
+                    when (it) {
+                        is Loading -> copy(requestTasks = Loading())
+                        is Fail -> copy(requestTasks = Fail(it.error))
+                        is Success -> {
+                            val response = it()
+                            updateTasks(response).copy(requestTasks = Success(response))
+                        }
 
-                    else -> {
-                        this
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
     companion object : MavericksViewModelFactory<ProcessDetailViewModel, ProcessDetailViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: ProcessDetailViewState,

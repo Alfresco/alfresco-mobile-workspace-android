@@ -38,7 +38,10 @@ data class ActionAddOffline(
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_add_offline_multiple_toast, entries.size.toString())
         } else {
@@ -69,8 +72,13 @@ data class ActionRemoveOffline(
     }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
-    override fun showToast(view: View, anchorView: View?) {
+
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_remove_offline_multiple_toast, entries.size.toString())
         } else {

@@ -23,7 +23,6 @@ import java.lang.ref.WeakReference
  * Marked as TaskViewerActivity class
  */
 class TaskViewerActivity : BaseActivity(), MavericksView {
-
     private lateinit var binding: ActivityTaskViewerBinding
 
     @OptIn(InternalMavericksApi::class)
@@ -47,23 +46,25 @@ class TaskViewerActivity : BaseActivity(), MavericksView {
         navController.setGraph(graph, intent.extras)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.requiresReLogin) {
-            if (state.isOnline) {
-                showSignedOutPrompt()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.requiresReLogin) {
+                if (state.isOnline) {
+                    showSignedOutPrompt()
+                }
             }
         }
-    }
 
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(this).setTitle(resources.getString(com.alfresco.content.app.R.string.auth_signed_out_title))
-            .setMessage(resources.getString(com.alfresco.content.app.R.string.auth_signed_out_subtitle))
-            .setNegativeButton(resources.getString(com.alfresco.content.app.R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(com.alfresco.content.app.R.string.auth_basic_sign_in_button)) { _, _ ->
-                navigateToReLogin()
-            }.show()
+        val dialog =
+            MaterialAlertDialogBuilder(this).setTitle(resources.getString(com.alfresco.content.app.R.string.auth_signed_out_title))
+                .setMessage(resources.getString(com.alfresco.content.app.R.string.auth_signed_out_subtitle))
+                .setNegativeButton(resources.getString(com.alfresco.content.app.R.string.sign_out_confirmation_negative), null)
+                .setPositiveButton(resources.getString(com.alfresco.content.app.R.string.auth_basic_sign_in_button)) { _, _ ->
+                    navigateToReLogin()
+                }.show()
         signedOutDialog = WeakReference(dialog)
     }
 
@@ -81,9 +82,10 @@ class TaskViewerActivity : BaseActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        binding.root,
-        binding.bottomView,
-    )
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            binding.root,
+            binding.bottomView,
+        )
 }

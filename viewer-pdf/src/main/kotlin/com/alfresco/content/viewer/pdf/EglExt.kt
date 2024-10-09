@@ -13,13 +13,14 @@ object EglExt {
         val version = IntArray(2)
         EGL14.eglInitialize(dpy, version, 0, version, 1)
 
-        val configAttr = intArrayOf(
-            EGL14.EGL_COLOR_BUFFER_TYPE, EGL14.EGL_RGB_BUFFER,
-            EGL14.EGL_LEVEL, 0,
-            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-            EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
-            EGL14.EGL_NONE,
-        )
+        val configAttr =
+            intArrayOf(
+                EGL14.EGL_COLOR_BUFFER_TYPE, EGL14.EGL_RGB_BUFFER,
+                EGL14.EGL_LEVEL, 0,
+                EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
+                EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
+                EGL14.EGL_NONE,
+            )
         val configs: Array<EGLConfig?> = arrayOfNulls(1)
         val numConfig = IntArray(1)
         EGL14.eglChooseConfig(
@@ -38,20 +39,22 @@ object EglExt {
         }
         val config: EGLConfig? = configs[0]
 
-        val surfAttr = intArrayOf(
-            EGL14.EGL_WIDTH,
-            64,
-            EGL14.EGL_HEIGHT,
-            64,
-            EGL14.EGL_NONE,
-        )
+        val surfAttr =
+            intArrayOf(
+                EGL14.EGL_WIDTH,
+                64,
+                EGL14.EGL_HEIGHT,
+                64,
+                EGL14.EGL_NONE,
+            )
         val surf: EGLSurface = EGL14.eglCreatePbufferSurface(dpy, config, surfAttr, 0)
 
-        val ctxAttrib = intArrayOf(
-            EGL14.EGL_CONTEXT_CLIENT_VERSION,
-            2,
-            EGL14.EGL_NONE,
-        )
+        val ctxAttrib =
+            intArrayOf(
+                EGL14.EGL_CONTEXT_CLIENT_VERSION,
+                2,
+                EGL14.EGL_NONE,
+            )
         val ctx: EGLContext =
             EGL14.eglCreateContext(dpy, config, EGL14.EGL_NO_CONTEXT, ctxAttrib, 0)
 

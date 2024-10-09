@@ -25,7 +25,10 @@ interface ActionExtension {
     /**
      * execute declaration for uploading the files
      */
-    suspend fun execute(context: Context, list: List<Uri>): Entry
+    suspend fun execute(
+        context: Context,
+        list: List<Uri>,
+    ): Entry
 
     /**
      * copied entry obj
@@ -60,7 +63,10 @@ interface ActionExtension {
     /**
      * showing toast on execution complete
      */
-    fun showToast(view: View, anchorView: View? = null)
+    fun showToast(
+        view: View,
+        anchorView: View? = null,
+    )
 
     /**
      * Mark as Error
@@ -73,11 +79,14 @@ interface ActionExtension {
     class Exception(string: String) : kotlin.Exception(string)
 
     companion object {
-
         /**
          * show Message on coroutine scope using lifecycle
          */
-        fun showActionExtensionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
+        fun showActionExtensionToasts(
+            scope: CoroutineScope,
+            view: View?,
+            anchorView: View? = null,
+        ) {
             scope.on<ActionExtension>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
@@ -86,7 +95,10 @@ interface ActionExtension {
             }
         }
 
-        private fun <T : ActionExtension> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
+        private fun <T : ActionExtension> showToast(
+            view: View?,
+            anchorView: View?,
+        ): suspend (value: T) -> Unit {
             return { action: T ->
                 // Don't call on backstack views
                 if (view != null) {

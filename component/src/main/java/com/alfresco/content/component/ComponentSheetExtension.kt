@@ -45,7 +45,10 @@ fun ComponentSheet.setupCheckListComponent(viewModel: ComponentViewModel) {
  * @param state
  * @param viewModel
  */
-fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupRadioListComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     binding.parentView.addView(binding.frameRadio)
     viewModel.buildSingleDataModel()
     if (state.parent?.selectedName?.isEmpty() == true) {
@@ -60,7 +63,10 @@ fun ComponentSheet.setupRadioListComponent(state: ComponentState, viewModel: Com
  * @param state
  * @param viewModel
  */
-fun ComponentSheet.setupNumberRangeComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupNumberRangeComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     binding.parentView.addView(binding.frameNumberRange)
     binding.title.text = requireContext().getString(R.string.size_end_kb, binding.title.text.toString())
     binding.numberRangeComponent.componentParent.visibility = View.VISIBLE
@@ -83,7 +89,10 @@ fun ComponentSheet.setupNumberRangeComponent(state: ComponentState, viewModel: C
  * @param state
  * @param viewModel
  */
-fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupSliderComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     binding.parentView.addView(binding.frameSlider)
     binding.sliderComponent.componentParent.visibility = View.VISIBLE
 
@@ -113,7 +122,10 @@ fun ComponentSheet.setupSliderComponent(state: ComponentState, viewModel: Compon
  * @param state
  * @param viewModel
  */
-fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupDateRangeComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     binding.parentView.addView(binding.frameDateRange)
     binding.dateRangeComponent.componentParent.visibility = View.VISIBLE
 
@@ -140,13 +152,25 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
     if (state.parent?.selector == ComponentType.DATE_RANGE_FUTURE.value) {
         if (state.parent.selectedQueryMap.containsKey(DUE_BEFORE)) {
             val dueBeforeArray = state.parent.selectedQueryMap[DUE_BEFORE]!!.split("-")
-            viewModel.toDate = getString(R.string.date_format_new, dueBeforeArray[0].trim(), dueBeforeArray[1].trim(), dueBeforeArray[2].trim())
+            viewModel.toDate =
+                getString(
+                    R.string.date_format_new,
+                    dueBeforeArray[0].trim(),
+                    dueBeforeArray[1].trim(),
+                    dueBeforeArray[2].trim(),
+                )
             binding.dateRangeComponent.toInput.setText(viewModel.toDate)
         }
 
         if (state.parent.selectedQueryMap.containsKey(DUE_AFTER)) {
             val dueAfterArray = state.parent.selectedQueryMap[DUE_AFTER]!!.split("-")
-            viewModel.fromDate = getString(R.string.date_format_new, dueAfterArray[0].trim(), dueAfterArray[1].trim(), dueAfterArray[2].trim())
+            viewModel.fromDate =
+                getString(
+                    R.string.date_format_new,
+                    dueAfterArray[0].trim(),
+                    dueAfterArray[1].trim(),
+                    dueAfterArray[2].trim(),
+                )
             binding.dateRangeComponent.fromInput.setText(viewModel.fromDate)
         }
     }
@@ -168,7 +192,10 @@ fun ComponentSheet.setupDateRangeComponent(state: ComponentState, viewModel: Com
  * @param viewModel
  */
 @SuppressLint("ClickableViewAccessibility")
-fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupFacetComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     viewModel.buildCheckListModel()
     state.parent?.options?.let {
         if (it.size > minVisibleItem) {
@@ -189,7 +216,10 @@ fun ComponentSheet.setupFacetComponent(state: ComponentState, viewModel: Compone
  * @param viewModel
  */
 @SuppressLint("ClickableViewAccessibility")
-fun ComponentSheet.setupProcessActionsComponent(state: ComponentState, viewModel: ComponentViewModel) {
+fun ComponentSheet.setupProcessActionsComponent(
+    state: ComponentState,
+    viewModel: ComponentViewModel,
+) {
     viewModel.buildCheckListModel()
     binding.parentView.addView(binding.frameActions)
 
@@ -265,8 +295,16 @@ fun ComponentSheet.setupTaskPriorityComponent(state: ComponentState) {
     binding.bottomSeparator.visibility = View.GONE
 }
 
-private fun getRecyclerviewLayoutParams(context: Context, minVisibleItem: Int): LinearLayout.LayoutParams {
-    val calculatedHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, minVisibleItem * 48f, context.resources.displayMetrics).toInt()
+private fun getRecyclerviewLayoutParams(
+    context: Context,
+    minVisibleItem: Int,
+): LinearLayout.LayoutParams {
+    val calculatedHeight =
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            minVisibleItem * 48f,
+            context.resources.displayMetrics,
+        ).toInt()
     return LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, calculatedHeight)
 }
 

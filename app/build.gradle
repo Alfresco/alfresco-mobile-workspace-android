@@ -63,6 +63,9 @@ android {
         resources {
             pickFirsts += ['META-INF/auth_release.kotlin_module']
         }
+        dex {
+            useLegacyPackaging false
+        }
     }
 
     // Temporary kotlin module duplication fix
@@ -103,6 +106,7 @@ dependencies {
     implementation project(':process-app')
     implementation project(':data')
     implementation libs.alfresco.content
+//    implementation project(':content')
 
     implementation libs.kotlin.stdlib
 

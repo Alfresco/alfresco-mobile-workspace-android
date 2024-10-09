@@ -19,15 +19,16 @@ object ConnectivityTracker {
         if (isTracking) return
 
         val cm = context.getSystemService<ConnectivityManager>()
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                _networkAvailable.value = true
-            }
+        val networkCallback =
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    _networkAvailable.value = true
+                }
 
-            override fun onLost(network: Network) {
-                _networkAvailable.value = false
+                override fun onLost(network: Network) {
+                    _networkAvailable.value = false
+                }
             }
-        }
         cm?.registerDefaultNetworkCallback(networkCallback)
         isTracking = true
     }
@@ -35,8 +36,7 @@ object ConnectivityTracker {
     /**
      * returns true if network is metered otherwise false
      */
-    fun isActiveNetworkMetered(context: Context): Boolean =
-        context.getSystemService<ConnectivityManager>()?.isActiveNetworkMetered == true
+    fun isActiveNetworkMetered(context: Context): Boolean = context.getSystemService<ConnectivityManager>()?.isActiveNetworkMetered == true
 
     /**
      * returns true if network is active otherwise false

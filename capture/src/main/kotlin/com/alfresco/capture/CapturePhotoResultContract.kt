@@ -11,11 +11,17 @@ import androidx.annotation.CallSuper
  */
 class CapturePhotoResultContract : ActivityResultContract<Unit, List<CaptureItem>?>() {
     @CallSuper
-    override fun createIntent(context: Context, input: Unit): Intent {
+    override fun createIntent(
+        context: Context,
+        input: Unit,
+    ): Intent {
         return Intent(context, CaptureActivity::class.java)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): List<CaptureItem>? {
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): List<CaptureItem>? {
         return if (intent == null || resultCode != Activity.RESULT_OK) {
             null
         } else {

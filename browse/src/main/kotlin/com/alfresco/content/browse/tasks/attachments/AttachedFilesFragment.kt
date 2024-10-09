@@ -38,7 +38,6 @@ import com.alfresco.ui.getDrawableForAttribute
  * Marked as AttachedFilesFragment class
  */
 class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
-
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentAttachedFilesBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
@@ -52,7 +51,10 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
@@ -66,14 +68,19 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
         binding.recyclerView.setController(epoxyController)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    binding.recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        binding.recyclerView.layoutManager?.scrollToPosition(0)
+                    }
                 }
-            }
-        })
+            },
+        )
         binding.refreshLayout.setOnRefreshListener {
             viewModel.getContents()
         }
@@ -85,61 +92,65 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         viewModel.deleteAttachment(contentId)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        val handler = Handler(Looper.getMainLooper())
-        binding.loading.isVisible = state.requestDeleteContent is Loading
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            val handler = Handler(Looper.getMainLooper())
+            binding.loading.isVisible = state.requestDeleteContent is Loading
 
-        if (state.requestContents.complete) {
-            binding.refreshLayout.isRefreshing = false
-        }
-        handler.post {
-            if (state.listContents.size > 4) {
-                binding.tvNoOfAttachments.visibility = View.VISIBLE
-                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
-            } else {
-                binding.tvNoOfAttachments.visibility = View.GONE
+            if (state.requestContents.complete) {
+                binding.refreshLayout.isRefreshing = false
             }
-        }
-
-        if (state.requestContents is Success && !viewModel.isTaskCompleted(state)) {
-            binding.fabAddAttachments.visibility = View.VISIBLE
-            binding.fabAddAttachments.setOnClickListener {
-                showCreateSheet(state)
+            handler.post {
+                if (state.listContents.size > 4) {
+                    binding.tvNoOfAttachments.visibility = View.VISIBLE
+                    binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                } else {
+                    binding.tvNoOfAttachments.visibility = View.GONE
+                }
             }
+
+            if (state.requestContents is Success && !viewModel.isTaskCompleted(state)) {
+                binding.fabAddAttachments.visibility = View.VISIBLE
+                binding.fabAddAttachments.setOnClickListener {
+                    showCreateSheet(state)
+                }
+            }
+
+            binding.recyclerView.isNestedScrollingEnabled = !viewModel.isTaskCompleted(state)
+
+            if (state.listContents.isEmpty()) requireActivity().onBackPressed()
+
+            epoxyController.requestModelBuild()
         }
 
-        binding.recyclerView.isNestedScrollingEnabled = !viewModel.isTaskCompleted(state)
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
 
-        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
-
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-
-        if (state.listContents.isNotEmpty()) {
-            state.listContents.forEach { obj ->
-                listViewAttachmentRow {
-                    id(stableId(obj))
-                    data(obj)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
-                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
+            if (state.listContents.isNotEmpty()) {
+                state.listContents.forEach { obj ->
+                    listViewAttachmentRow {
+                        id(stableId(obj))
+                        data(obj)
+                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                        deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
+                    }
                 }
             }
         }
-    }
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
-            val entry = Entry.convertContentEntryToEntry(
-                contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType),
-                UploadServerType.UPLOAD_TO_TASK,
-            )
+            val entry =
+                Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType),
+                    UploadServerType.UPLOAD_TO_TASK,
+                )
             if (!contentEntry.source.isNullOrEmpty()) {
                 remoteViewerIntent(entry)
-            } else
+            } else {
                 viewModel.executePreview(ActionOpenWith(entry))
+            }
         } else {
             localViewerIntent(contentEntry)
         }

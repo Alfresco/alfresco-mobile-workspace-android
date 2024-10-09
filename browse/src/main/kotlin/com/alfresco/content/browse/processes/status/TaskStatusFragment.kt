@@ -43,7 +43,6 @@ import kotlin.coroutines.suspendCoroutine
  * TaskStatusFragment
  */
 class TaskStatusFragment : Fragment(), MavericksView {
-
     val viewModel: TaskDetailViewModel by activityViewModel()
     lateinit var binding: FragmentTaskStatusBinding
     private var viewLayout: View? = null
@@ -61,7 +60,10 @@ class TaskStatusFragment : Fragment(), MavericksView {
         return viewLayout as View
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsManager().screenViewEvent(PageView.WorkflowTaskStatusView)
 
@@ -102,7 +104,10 @@ class TaskStatusFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.menu_process, menu)
     }
 
@@ -152,19 +157,24 @@ class TaskStatusFragment : Fragment(), MavericksView {
         }
     }
 
-    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+    private fun executeContinuation(
+        continuation: Continuation<ComponentMetaData?>,
+        name: String,
+        query: String,
+    ) {
         continuation.resume(ComponentMetaData(name = name, query = query))
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        binding.loading.isVisible = (state.requestSaveForm is Loading)
+            binding.loading.isVisible = (state.requestSaveForm is Loading)
 
-        if (state.requestSaveForm.invoke()?.code() == 200) {
-            viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
-            requireActivity().onBackPressed()
+            if (state.requestSaveForm.invoke()?.code() == 200) {
+                viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
+                requireActivity().onBackPressed()
+            }
+
+            binding.tvStatus.text = state.parent?.taskFormStatus
         }
-
-        binding.tvStatus.text = state.parent?.taskFormStatus
-    }
 }

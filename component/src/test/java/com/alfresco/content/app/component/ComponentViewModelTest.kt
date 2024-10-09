@@ -20,7 +20,6 @@ import org.junit.ClassRule
 import org.junit.Test
 
 class ComponentViewModelTest {
-
     private lateinit var viewModel: ComponentViewModel
 
     private lateinit var state: ComponentState
@@ -32,19 +31,21 @@ class ComponentViewModelTest {
     @Test
     fun dateNumberRange_success() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -63,26 +64,31 @@ class ComponentViewModelTest {
         withState(viewModel) {
             assertEquals(it.parent?.selector, ComponentType.DATE_RANGE.value)
             assertEquals(it.parent?.selectedName, "${viewModel.fromValue} - ${viewModel.toValue}")
-            assertEquals(it.parent?.selectedQuery, "${componentData.properties?.field}:[${viewModel.fromValue.kBToByte()} TO ${viewModel.toValue.kBToByte()}]")
+            assertEquals(
+                it.parent?.selectedQuery,
+                "${componentData.properties?.field}:[${viewModel.fromValue.kBToByte()} TO ${viewModel.toValue.kBToByte()}]",
+            )
         }
     }
 
     @Test
     fun test_dateNumberRange_empty() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -107,19 +113,21 @@ class ComponentViewModelTest {
     @Test
     fun sliderNumberRange_success() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -136,26 +144,31 @@ class ComponentViewModelTest {
         withState(viewModel) {
             assertEquals(it.parent?.selector, ComponentType.DATE_RANGE.value)
             assertEquals(it.parent?.selectedName, viewModel.toValue)
-            assertEquals(it.parent?.selectedQuery, "${componentData.properties?.field}:[${viewModel.fromValue.kBToByte()} TO ${viewModel.toValue.kBToByte()}]")
+            assertEquals(
+                it.parent?.selectedQuery,
+                "${componentData.properties?.field}:[${viewModel.fromValue.kBToByte()} TO ${viewModel.toValue.kBToByte()}]",
+            )
         }
     }
 
     @Test
     fun test_sliderNumberRange_empty() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -177,19 +190,21 @@ class ComponentViewModelTest {
     @Test
     fun test_updateFormatDateRange_empty() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -210,19 +225,21 @@ class ComponentViewModelTest {
     @Test
     fun test_updateFormatDateRange() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -241,7 +258,10 @@ class ComponentViewModelTest {
             assertNotEquals(viewModel.fromDate, "")
             assertNotEquals(viewModel.toDate, "")
             val query =
-                "${componentData.properties?.field}:['${viewModel.fromDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}' TO '${viewModel.toDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}']"
+                "${componentData.properties?.field}:['${viewModel.fromDate.getFormattedDate(
+                    DATE_FORMAT_2,
+                    DATE_FORMAT_1,
+                )}' TO '${viewModel.toDate.getFormattedDate(DATE_FORMAT_2, DATE_FORMAT_1)}']"
             assertEquals(it.parent?.selectedQuery, query)
             assertEquals(it.parent?.selectedName, "${viewModel.fromDate} - ${viewModel.toDate}")
         }
@@ -250,19 +270,21 @@ class ComponentViewModelTest {
     @Test
     fun test_buildSingleDataModel() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "createdDateRange",
-            name = "Date Range",
-            selector = "date-range",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:created",
-                maxDate = "today",
-                dateFormat = DATE_FORMAT,
-            ),
-            selectedName = TEST_NAME,
-            selectedQuery = TEST_QUERY,
-        )
+        componentData =
+            ComponentData(
+                id = "createdDateRange",
+                name = "Date Range",
+                selector = "date-range",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:created",
+                        maxDate = "today",
+                        dateFormat = DATE_FORMAT,
+                    ),
+                selectedName = TEST_NAME,
+                selectedQuery = TEST_QUERY,
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -282,23 +304,25 @@ class ComponentViewModelTest {
     @Test
     fun test_searchBucket() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "FacetsID",
-            name = "Facets",
-            selector = "facets",
-            options = listOf(
-                ComponentOptions(
-                    label = "test label 1",
-                    query = "test query 1",
-                ),
-                ComponentOptions(
-                    label = "test label 2",
-                    query = TEST_QUERY_2,
-                ),
-            ),
-            selectedName = TEST_NAME,
-            selectedQuery = TEST_QUERY,
-        )
+        componentData =
+            ComponentData(
+                id = "FacetsID",
+                name = "Facets",
+                selector = "facets",
+                options =
+                    listOf(
+                        ComponentOptions(
+                            label = "test label 1",
+                            query = "test query 1",
+                        ),
+                        ComponentOptions(
+                            label = "test label 2",
+                            query = TEST_QUERY_2,
+                        ),
+                    ),
+                selectedName = TEST_NAME,
+                selectedQuery = TEST_QUERY,
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -318,23 +342,25 @@ class ComponentViewModelTest {
     @Test
     fun test_searchBucket_empty() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "FacetsID",
-            name = "Facets",
-            selector = "facets",
-            options = listOf(
-                ComponentOptions(
-                    label = "test label 1",
-                    query = "test query 1",
-                ),
-                ComponentOptions(
-                    label = "test label 2",
-                    query = TEST_QUERY_2,
-                ),
-            ),
-            selectedName = TEST_NAME,
-            selectedQuery = TEST_QUERY,
-        )
+        componentData =
+            ComponentData(
+                id = "FacetsID",
+                name = "Facets",
+                selector = "facets",
+                options =
+                    listOf(
+                        ComponentOptions(
+                            label = "test label 1",
+                            query = "test query 1",
+                        ),
+                        ComponentOptions(
+                            label = "test label 2",
+                            query = TEST_QUERY_2,
+                        ),
+                    ),
+                selectedName = TEST_NAME,
+                selectedQuery = TEST_QUERY,
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -354,24 +380,26 @@ class ComponentViewModelTest {
     @Test
     fun test_copyDefaultComponentData_radioType_selected() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "queryType",
-            name = "Radio",
-            selector = "radio",
-            options = listOf(
-                ComponentOptions(
-                    label = "None",
-                    query = "",
-                    default = true,
-                ),
-                ComponentOptions(
-                    label = "All",
-                    query = TEST_QUERY_2,
-                ),
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "queryType",
+                name = "Radio",
+                selector = "radio",
+                options =
+                    listOf(
+                        ComponentOptions(
+                            label = "None",
+                            query = "",
+                            default = true,
+                        ),
+                        ComponentOptions(
+                            label = "All",
+                            query = TEST_QUERY_2,
+                        ),
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -390,23 +418,25 @@ class ComponentViewModelTest {
     @Test
     fun test_copyDefaultComponentData_radioType_notSelected() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "queryType",
-            name = "Radio",
-            selector = "radio",
-            options = listOf(
-                ComponentOptions(
-                    label = "None",
-                    query = "",
-                ),
-                ComponentOptions(
-                    label = "All",
-                    query = TEST_QUERY_2,
-                ),
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "queryType",
+                name = "Radio",
+                selector = "radio",
+                options =
+                    listOf(
+                        ComponentOptions(
+                            label = "None",
+                            query = "",
+                        ),
+                        ComponentOptions(
+                            label = "All",
+                            query = TEST_QUERY_2,
+                        ),
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -425,17 +455,19 @@ class ComponentViewModelTest {
     @Test
     fun test_updateSingleComponentData_name_only() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "queryName",
-            name = "File Name",
-            selector = "text",
-            options = emptyList(),
-            properties = ComponentProperties(
-                field = "cm:name",
-            ),
-            selectedName = "",
-            selectedQuery = "",
-        )
+        componentData =
+            ComponentData(
+                id = "queryName",
+                name = "File Name",
+                selector = "text",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        field = "cm:name",
+                    ),
+                selectedName = "",
+                selectedQuery = "",
+            )
 
         // Initializing the state
         state = ComponentState(componentData)
@@ -484,17 +516,19 @@ class ComponentViewModelTest {
     @Test
     fun test_buildCheckListModel() {
         // Creating the actual data for ComponentData.
-        componentData = ComponentData(
-            id = "queryType",
-            name = "check-list",
-            selector = "Check List",
-            options = emptyList(),
-            properties = ComponentProperties(
-                operator = "OR",
-            ),
-            selectedName = "data 1,data 2,data 3,data 4",
-            selectedQuery = "query 1 OR query 2 OR query 3 OR query4",
-        )
+        componentData =
+            ComponentData(
+                id = "queryType",
+                name = "check-list",
+                selector = "Check List",
+                options = emptyList(),
+                properties =
+                    ComponentProperties(
+                        operator = "OR",
+                    ),
+                selectedName = "data 1,data 2,data 3,data 4",
+                selectedQuery = "query 1 OR query 2 OR query 3 OR query4",
+            )
 
         val nameListSize = componentData.selectedName.split(",").size
         val queryListSize = componentData.selectedName.split(componentData.properties?.operator ?: "").size

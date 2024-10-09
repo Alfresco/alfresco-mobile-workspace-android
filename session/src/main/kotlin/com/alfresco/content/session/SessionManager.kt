@@ -14,14 +14,15 @@ object SessionManager {
 
         // Create a new session
         val account = Account.getAccount(context)
-        currentSession = if (account != null) {
-            Session(
-                context.applicationContext,
-                account,
-            )
-        } else {
-            null
-        }
+        currentSession =
+            if (account != null) {
+                Session(
+                    context.applicationContext,
+                    account,
+                )
+            } else {
+                null
+            }
         return currentSession
     }
 }

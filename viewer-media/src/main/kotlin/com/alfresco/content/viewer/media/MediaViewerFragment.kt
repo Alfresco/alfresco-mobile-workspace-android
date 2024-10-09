@@ -40,7 +40,6 @@ import com.google.android.exoplayer2.util.Util
 import kotlin.math.max
 
 class MediaViewerFragment : ChildViewerFragment(), MavericksView {
-
     private lateinit var args: ChildViewerArgs
     private val viewModel: MediaViewerViewModel by fragmentViewModel()
 
@@ -61,15 +60,19 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
         savedInstanceState: Bundle?,
     ): View? {
         args = requireNotNull(arguments?.getParcelable(Mavericks.KEY_ARG))
-        val layout = if (args.type.startsWith("audio/")) {
-            R.layout.fragment_viewer_audio
-        } else {
-            R.layout.fragment_viewer_video
-        }
+        val layout =
+            if (args.type.startsWith("audio/")) {
+                R.layout.fragment_viewer_audio
+            } else {
+                R.layout.fragment_viewer_video
+            }
         return inflater.inflate(layout, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         dataSourceFactory = DefaultDataSourceFactory(requireContext().applicationContext)
@@ -163,10 +166,11 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
             val trackSelector = DefaultTrackSelector(context)
             trackSelector.parameters = trackSelectorParameters!!
             lastSeenTrackGroupArray = null
-            player = SimpleExoPlayer.Builder(requireContext(), renderersFactory)
-                .setMediaSourceFactory(mediaSourceFactory)
-                .setTrackSelector(trackSelector)
-                .build()
+            player =
+                SimpleExoPlayer.Builder(requireContext(), renderersFactory)
+                    .setMediaSourceFactory(mediaSourceFactory)
+                    .setTrackSelector(trackSelector)
+                    .build()
             player.addListener(PlayerEventListener())
             player.addAnalyticsListener(EventLogger(trackSelector))
             player.setAudioAttributes(AudioAttributes.DEFAULT, true)
@@ -245,7 +249,6 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
     }
 
     private inner class PlayerEventListener : Player.EventListener {
-
         override fun onPlaybackStateChanged(state: Int) {
             if (state == PlaybackState.STATE_PLAYING ||
                 state == PlaybackState.STATE_STOPPED
@@ -254,7 +257,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
                 loadingListener?.onContentLoaded()
             }
             if (state == Player.STATE_ENDED) {
-                /*player?.seekTo(0)*/
+                // player?.seekTo(0)
                 resetToDefault()
             }
         }
@@ -289,30 +292,31 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
                 val cause = e.rendererException
                 if (cause is DecoderInitializationException) {
                     // Special case for decoder initialization failures.
-                    errorString = if (cause.codecInfo == null) {
-                        when {
-                            cause.cause is DecoderQueryException -> {
-                                getString(R.string.error_querying_decoders)
+                    errorString =
+                        if (cause.codecInfo == null) {
+                            when {
+                                cause.cause is DecoderQueryException -> {
+                                    getString(R.string.error_querying_decoders)
+                                }
+                                cause.secureDecoderRequired -> {
+                                    getString(
+                                        R.string.error_no_secure_decoder,
+                                        cause.mimeType,
+                                    )
+                                }
+                                else -> {
+                                    getString(
+                                        R.string.error_no_decoder,
+                                        cause.mimeType,
+                                    )
+                                }
                             }
-                            cause.secureDecoderRequired -> {
-                                getString(
-                                    R.string.error_no_secure_decoder,
-                                    cause.mimeType,
-                                )
-                            }
-                            else -> {
-                                getString(
-                                    R.string.error_no_decoder,
-                                    cause.mimeType,
-                                )
-                            }
+                        } else {
+                            getString(
+                                R.string.error_instantiating_decoder,
+                                cause.codecInfo?.name,
+                            )
                         }
-                    } else {
-                        getString(
-                            R.string.error_instantiating_decoder,
-                            cause.codecInfo?.name,
-                        )
-                    }
                 }
             }
             return Pair.create(0, errorString)
@@ -325,7 +329,7 @@ class MediaViewerFragment : ChildViewerFragment(), MavericksView {
             return (
                 trackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO)
                     != MappedTrackInfo.RENDERER_SUPPORT_NO_TRACKS
-                )
+            )
         }
         return false
     }

@@ -12,10 +12,9 @@ class FabAwareScrollingBehavior(
     context: Context?,
     attrs: AttributeSet?,
 ) : CoordinatorLayout.Behavior<View>(
-    context,
-    attrs,
-) {
-
+        context,
+        attrs,
+    ) {
     override fun layoutDependsOn(
         parent: CoordinatorLayout,
         child: View,

@@ -20,7 +20,6 @@ import com.alfresco.common.FragmentBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class AdvancedSettingsFragment : DialogFragment() {
-
     private val viewModel: LoginViewModel by activityViewModels()
     private val rootView: View get() = requireView()
 
@@ -51,7 +50,9 @@ class AdvancedSettingsFragment : DialogFragment() {
         observe(viewModel.onSaveSettings, ::onSave)
     }
 
-    private fun onSave(@Suppress("UNUSED_PARAMETER") value: Int) {
+    private fun onSave(
+        @Suppress("UNUSED_PARAMETER") value: Int,
+    ) {
         Snackbar.make(
             rootView,
             R.string.auth_settings_prompt_success,
@@ -59,7 +60,10 @@ class AdvancedSettingsFragment : DialogFragment() {
         ).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.options_auth_settings, menu)
     }
 

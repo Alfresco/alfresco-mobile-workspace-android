@@ -13,9 +13,11 @@ import androidx.annotation.CallSuper
  * that allows specifying multiple mimeTypes.
  */
 class GetSingleContent : ActivityResultContract<Array<String>, List<Uri>>() {
-
     @CallSuper
-    override fun createIntent(context: Context, input: Array<String>): Intent {
+    override fun createIntent(
+        context: Context,
+        input: Array<String>,
+    ): Intent {
         return Intent(Intent.ACTION_GET_CONTENT)
             .addCategory(Intent.CATEGORY_OPENABLE)
             .setType("*/*")
@@ -23,7 +25,10 @@ class GetSingleContent : ActivityResultContract<Array<String>, List<Uri>>() {
             .putExtra(Intent.EXTRA_MIME_TYPES, input)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): List<Uri> {
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): List<Uri> {
         return if (intent == null || resultCode != Activity.RESULT_OK) {
             emptyList()
         } else {

@@ -68,19 +68,22 @@ class AlfrescoCameraController(context: Context) :
             Logger.d("CameraProvider is not ready.")
             return null
         }
-        val useCaseGroup = createUseCaseGroup() // Use cases can't be created.
-            ?: return null
+        val useCaseGroup =
+            createUseCaseGroup() // Use cases can't be created.
+                ?: return null
         return mCameraProvider!!.bindToLifecycle(mLifecycleOwner!!, mCameraSelector, useCaseGroup)
     }
 
-    fun setCameraSelector(@LensFacing lensFacing: Int) {
-        this.cameraSelector = CameraSelector.Builder()
-            .requireLensFacing(lensFacing)
-            .build()
+    fun setCameraSelector(
+        @LensFacing lensFacing: Int,
+    ) {
+        this.cameraSelector =
+            CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build()
     }
 
-    fun hasFlashUnit() =
-        mCamera?.cameraInfo?.hasFlashUnit() == true
+    fun hasFlashUnit() = mCamera?.cameraInfo?.hasFlashUnit() == true
 
     /**
      * @hide

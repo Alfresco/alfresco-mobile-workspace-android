@@ -44,4 +44,5 @@
     <string name="message_content_in_queue">Le téléchargement des fichiers est en cours. Tapez sur Confirmer pour continuer sans fichiers en cours.</string>
     <string name="no_attached_files">Aucun fichier joint</string>
     <string name="title_no_name">Sans nom</string>
+    <string name="component_action_reset">Réinitialiser</string>
 </resources>

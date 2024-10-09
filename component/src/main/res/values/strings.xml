@@ -7,7 +7,6 @@
     <string name="hint_range_from_date">From Date</string>
     <string name="hint_range_to_date">To Date</string>
     <string name="component_number_range_invalid_input">From value should be less than To value</string>
-    <string name="component_action_reset">Reset</string>
     <string name="component_action_apply">Apply</string>
     <string name="component_action_cancel">Cancel</string>
     <string name="component_number_range_empty">Required value</string>

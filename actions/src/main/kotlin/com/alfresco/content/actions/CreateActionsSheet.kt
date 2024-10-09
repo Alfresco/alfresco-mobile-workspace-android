@@ -34,7 +34,6 @@ internal class ActionCreateViewModel(
     val context: Context,
     state: ActionCreateState,
 ) : MavericksViewModel<ActionCreateState>(state) {
-
     init {
         buildModel()
     }
@@ -47,8 +46,7 @@ internal class ActionCreateViewModel(
         }
     }
 
-    fun execute(action: Action) =
-        action.execute(context, GlobalScope)
+    fun execute(action: Action) = action.execute(context, GlobalScope)
 
     private fun makeActions(parent: Entry): List<Action> {
         val actions = mutableListOf<Action>()
@@ -94,26 +92,28 @@ class CreateActionsSheet : BottomSheetDialogFragment(), MavericksView {
         return binding.root
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        binding.recyclerView.withModels {
-            state.actions.forEach {
-                actionListRow {
-                    id(it.title)
-                    action(it)
-                    clickListener { _ ->
-                        AnalyticsManager().fileActionEvent(eventName = it.eventName)
-                        viewModel.execute(it)
-                        dismiss()
+            binding.recyclerView.withModels {
+                state.actions.forEach {
+                    actionListRow {
+                        id(it.title)
+                        action(it)
+                        clickListener { _ ->
+                            AnalyticsManager().fileActionEvent(eventName = it.eventName)
+                            viewModel.execute(it)
+                            dismiss()
+                        }
                     }
                 }
             }
         }
-    }
 
     companion object {
-        fun with(entry: Entry) = CreateActionsSheet().apply {
-            arguments = bundleOf(Mavericks.KEY_ARG to entry)
-        }
+        fun with(entry: Entry) =
+            CreateActionsSheet().apply {
+                arguments = bundleOf(Mavericks.KEY_ARG to entry)
+            }
     }
 }

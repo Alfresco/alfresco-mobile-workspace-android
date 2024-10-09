@@ -104,7 +104,9 @@ data class Facets(
                 result.type,
                 if (result.label?.lowercase().equals("search.facet_fields.size")) {
                     result.buckets?.map { Buckets.updateBucketLabel(it) } ?: emptyList()
-                } else result.buckets,
+                } else {
+                    result.buckets
+                },
             )
         }
     }
@@ -128,7 +130,13 @@ data class Buckets(
          * returns the Buckets type of data using ResultBucketsBuckets
          */
         fun with(result: ResultBucketsBuckets): Buckets {
-            return Buckets(originalLabel = result.label, label = result.label, filterQuery = result.filterQuery, count = result.count, display = result.display)
+            return Buckets(
+                originalLabel = result.label,
+                label = result.label,
+                filterQuery = result.filterQuery,
+                count = result.count,
+                display = result.display,
+            )
         }
 
         /**

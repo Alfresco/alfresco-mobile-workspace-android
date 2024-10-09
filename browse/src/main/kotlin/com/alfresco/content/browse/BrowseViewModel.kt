@@ -47,7 +47,6 @@ class BrowseViewModel(
     private val browseRepository: BrowseRepository,
     private val offlineRepository: OfflineRepository,
 ) : ListViewModel<BrowseViewState>(state) {
-
     private var observeUploadsJob: Job? = null
     private var observeTransferUploadsJob: Job? = null
 
@@ -92,7 +91,10 @@ class BrowseViewModel(
         }
     }
 
-    private fun removeDataEntry(entry: Entry, entries: List<Entry>) {
+    private fun removeDataEntry(
+        entry: Entry,
+        entries: List<Entry>,
+    ) {
         if (entries.isNotEmpty()) {
             entries.forEach { entryObj ->
                 removeEntry(entryObj)
@@ -109,7 +111,10 @@ class BrowseViewModel(
         when (state.path) {
             context.getString(R.string.nav_path_recents) -> AnalyticsManager().screenViewEvent(PageView.Recent)
             context.getString(R.string.nav_path_favorites) -> AnalyticsManager().screenViewEvent(PageView.Favorites)
-            context.getString(R.string.nav_path_extension) -> AnalyticsManager().screenViewEvent(PageView.ShareExtension, noOfFiles = browseRepository.getExtensionDataList().size)
+            context.getString(
+                R.string.nav_path_extension,
+            ),
+            -> AnalyticsManager().screenViewEvent(PageView.ShareExtension, noOfFiles = browseRepository.getExtensionDataList().size)
         }
     }
 
@@ -133,75 +138,86 @@ class BrowseViewModel(
 
     override fun refresh() = fetchInitial()
 
-    override fun fetchNextPage() = withState { state ->
-        val path = state.path
-        val nodeId = state.nodeId
-        val skipCount = state.baseEntries.count()
+    override fun fetchNextPage() =
+        withState { state ->
+            val path = state.path
+            val nodeId = state.nodeId
+            val skipCount = state.baseEntries.count()
 
-        viewModelScope.launch {
-            loadResults(
-                path,
-                nodeId,
-                skipCount,
-                ITEMS_PER_PAGE,
-            ).execute {
-                when (it) {
-                    is Loading -> copy(request = Loading())
-                    is Fail -> copy(request = Fail(it.error))
-                    is Success -> {
-                        update(it()).copy(request = Success(it()))
-                    }
+            viewModelScope.launch {
+                loadResults(
+                    path,
+                    nodeId,
+                    skipCount,
+                    ITEMS_PER_PAGE,
+                ).execute {
+                    when (it) {
+                        is Loading -> copy(request = Loading())
+                        is Fail -> copy(request = Fail(it.error))
+                        is Success -> {
+                            update(it()).copy(request = Success(it()))
+                        }
 
-                    else -> {
-                        this
-                    }
-                }
-            }
-        }
-    }
-
-    private fun fetchInitial() = withState { state ->
-        viewModelScope.launch {
-            // Fetch children and folder information
-            loadResults(
-                state.path,
-                state.nodeId,
-                0,
-                ITEMS_PER_PAGE,
-            ).zip(
-                fetchNode(state.path, state.nodeId),
-            ) { paging, parent ->
-                Pair(paging, parent)
-            }.execute {
-                when (it) {
-                    is Loading -> copy(request = Loading())
-                    is Fail -> copy(request = Fail(it.error))
-                    is Success -> {
-                        observeUploads(it().second?.id)
-                        update(it().first).copy(parent = it().second, request = Success(it().first))
-                    }
-
-                    else -> {
-                        this
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
-    private suspend fun fetchNode(path: String, item: String?): Flow<Entry?> = if (item.isNullOrEmpty()) {
-        flowOf(null)
-    } else {
-        when (path) {
-            context.getString(R.string.nav_path_site) ->
-                BrowseRepository()::fetchLibraryDocumentsFolder.asFlow(item)
+    private fun fetchInitial() =
+        withState { state ->
+            viewModelScope.launch {
+                // Fetch children and folder information
+                loadResults(
+                    state.path,
+                    state.nodeId,
+                    0,
+                    ITEMS_PER_PAGE,
+                ).zip(
+                    fetchNode(state.path, state.nodeId),
+                ) { paging, parent ->
+                    Pair(paging, parent)
+                }.execute {
+                    when (it) {
+                        is Loading -> copy(request = Loading())
+                        is Fail -> copy(request = Fail(it.error))
+                        is Success -> {
+                            observeUploads(it().second?.id)
+                            update(it().first).copy(parent = it().second, request = Success(it().first))
+                        }
 
-            else ->
-                BrowseRepository()::fetchEntry.asFlow(item)
+                        else -> {
+                            this
+                        }
+                    }
+                }
+            }
         }
-    }
 
-    private suspend fun loadResults(path: String, item: String?, skipCount: Int, maxItems: Int): Flow<ResponsePaging> {
+    private suspend fun fetchNode(
+        path: String,
+        item: String?,
+    ): Flow<Entry?> =
+        if (item.isNullOrEmpty()) {
+            flowOf(null)
+        } else {
+            when (path) {
+                context.getString(R.string.nav_path_site) ->
+                    BrowseRepository()::fetchLibraryDocumentsFolder.asFlow(item)
+
+                else ->
+                    BrowseRepository()::fetchEntry.asFlow(item)
+            }
+        }
+
+    private suspend fun loadResults(
+        path: String,
+        item: String?,
+        skipCount: Int,
+        maxItems: Int,
+    ): Flow<ResponsePaging> {
         return when (path) {
             context.getString(R.string.nav_path_recents) -> {
                 SearchRepository()::getRecents.asFlow(skipCount, maxItems)
@@ -244,14 +260,15 @@ class BrowseViewModel(
         repo.removeCompletedUploads(nodeId)
 
         observeUploadsJob?.cancel()
-        observeUploadsJob = repo.observeUploads(nodeId)
-            .execute {
-                if (it is Success) {
-                    updateUploads(it())
-                } else {
-                    this
+        observeUploadsJob =
+            repo.observeUploads(nodeId)
+                .execute {
+                    if (it is Success) {
+                        updateUploads(it())
+                    } else {
+                        this
+                    }
                 }
-            }
     }
 
     /**
@@ -259,14 +276,15 @@ class BrowseViewModel(
      */
     fun observeTransferUploads() {
         observeTransferUploadsJob?.cancel()
-        observeTransferUploadsJob = OfflineRepository().observeTransferUploads()
-            .execute {
-                if (it is Success) {
-                    updateTransferUploads(it())
-                } else {
-                    this
+        observeTransferUploadsJob =
+            OfflineRepository().observeTransferUploads()
+                .execute {
+                    if (it is Success) {
+                        updateTransferUploads(it())
+                    } else {
+                        this
+                    }
                 }
-            }
     }
 
     /**
@@ -319,44 +337,49 @@ class BrowseViewModel(
         }
     }
 
-    private fun execute(action: ActionExtension, list: List<Uri>) =
-        action.execute(context, GlobalScope, list)
+    private fun execute(
+        action: ActionExtension,
+        list: List<Uri>,
+    ) = action.execute(context, GlobalScope, list)
 
-    private fun execute(action: Action) =
-        action.execute(context, GlobalScope)
+    private fun execute(action: Action) = action.execute(context, GlobalScope)
 
-    fun toggleSelection(entry: Entry) = setState {
-        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
-        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
-            copy(maxLimitReachedForMultiSelection = true)
-        } else {
-            val updatedEntries = entries.map {
-                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
-                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
-                } else {
-                    it
-                }
+    fun toggleSelection(entry: Entry) =
+        setState {
+            val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+            if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+                copy(maxLimitReachedForMultiSelection = true)
+            } else {
+                val updatedEntries =
+                    entries.map {
+                        if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                            it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                        } else {
+                            it
+                        }
+                    }
+                copy(
+                    baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP },
+                    entries = updatedEntries,
+                    selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                    maxLimitReachedForMultiSelection = false,
+                )
             }
+        }
+
+    fun resetMultiSelection() =
+        setState {
+            val resetMultiEntries =
+                entries.map {
+                    it.copy(isSelectedForMultiSelection = false)
+                }
             copy(
-                baseEntries = updatedEntries.filter { it.type != Entry.Type.GROUP },
-                entries = updatedEntries,
-                selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                baseEntries = resetMultiEntries.filter { it.type != Entry.Type.GROUP },
+                entries = resetMultiEntries,
+                selectedEntries = emptyList(),
                 maxLimitReachedForMultiSelection = false,
             )
         }
-    }
-
-    fun resetMultiSelection() = setState {
-        val resetMultiEntries = entries.map {
-            it.copy(isSelectedForMultiSelection = false)
-        }
-        copy(
-            baseEntries = resetMultiEntries.filter { it.type != Entry.Type.GROUP },
-            entries = resetMultiEntries,
-            selectedEntries = emptyList(),
-            maxLimitReachedForMultiSelection = false,
-        )
-    }
 
     fun setSearchResult(entry: Entry) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -367,7 +390,6 @@ class BrowseViewModel(
     override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
 
     companion object : MavericksViewModelFactory<BrowseViewModel, BrowseViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: BrowseViewState,

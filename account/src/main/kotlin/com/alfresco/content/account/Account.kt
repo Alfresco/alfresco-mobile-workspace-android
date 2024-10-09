@@ -19,12 +19,12 @@ data class Account(
     val myFiles: String? = null,
 ) {
     companion object {
-        private const val displayNameKey = "displayName"
-        private const val emailKey = "email"
-        private const val authTypeKey = "type"
-        private const val authConfigKey = "config"
-        private const val serverKey = "server"
-        private const val myFilesKey = "myFiles"
+        private const val DISPLAY_NAME_KEY = "displayName"
+        private const val EMAIL_KEY = "email"
+        private const val AUTH_TYPE_KEY = "type"
+        private const val AUTH_CONFIG_KEY = "config"
+        private const val SERVER_KEY = "server"
+        private const val MY_FILES_KEY = "myFiles"
 
         fun createAccount(
             context: Context,
@@ -40,12 +40,12 @@ data class Account(
             val sharedSecure = SecureSharedPreferencesManager(context)
 
             val b = Bundle()
-            b.putString(authTypeKey, authType)
-            b.putString(authConfigKey, authConfig)
-            b.putString(serverKey, serverUrl)
-            b.putString(displayNameKey, KEY_DISPLAY_NAME)
-            b.putString(emailKey, KEY_EMAIL)
-            b.putString(myFilesKey, myFiles)
+            b.putString(AUTH_TYPE_KEY, authType)
+            b.putString(AUTH_CONFIG_KEY, authConfig)
+            b.putString(SERVER_KEY, serverUrl)
+            b.putString(DISPLAY_NAME_KEY, KEY_DISPLAY_NAME)
+            b.putString(EMAIL_KEY, KEY_EMAIL)
+            b.putString(MY_FILES_KEY, myFiles)
             val acc = AndroidAccount(id, context.getString(R.string.android_auth_account_type))
 
             // Save credentials securely using the SecureSharedPreferencesManager
@@ -54,7 +54,11 @@ data class Account(
             AccountManager.get(context).addAccountExplicitly(acc, KEY_PASSWORD, b)
         }
 
-        fun update(context: Context, id: String, authState: String) {
+        fun update(
+            context: Context,
+            id: String,
+            authState: String,
+        ) {
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
             val sharedSecure = SecureSharedPreferencesManager(context)
@@ -81,16 +85,19 @@ data class Account(
             sharedSecure.saveCredentials(email, authState, displayName)
 
             am.setPassword(acc, KEY_PASSWORD)
-            am.setUserData(acc, displayNameKey, KEY_DISPLAY_NAME)
-            am.setUserData(acc, emailKey, KEY_EMAIL)
-            am.setUserData(acc, myFilesKey, myFiles)
+            am.setUserData(acc, DISPLAY_NAME_KEY, KEY_DISPLAY_NAME)
+            am.setUserData(acc, EMAIL_KEY, KEY_EMAIL)
+            am.setUserData(acc, MY_FILES_KEY, myFiles)
 
             if (acc?.name != id) {
                 am.renameAccount(acc, id, null, null)
             }
         }
 
-        fun delete(context: Context, callback: () -> Unit) {
+        fun delete(
+            context: Context,
+            callback: () -> Unit,
+        ) {
             AccountManager.get(context)
                 .removeAccount(getAndroidAccount(context), null, {
                     callback()
@@ -108,12 +115,12 @@ data class Account(
                 return Account(
                     acc.name,
                     secureCredentials.second,
-                    am.getUserData(acc, authTypeKey),
-                    am.getUserData(acc, authConfigKey),
-                    am.getUserData(acc, serverKey),
+                    am.getUserData(acc, AUTH_TYPE_KEY),
+                    am.getUserData(acc, AUTH_CONFIG_KEY),
+                    am.getUserData(acc, SERVER_KEY),
                     secureCredentials.third,
                     secureCredentials.first,
-                    am.getUserData(acc, myFilesKey),
+                    am.getUserData(acc, MY_FILES_KEY),
                 )
             }
             return null

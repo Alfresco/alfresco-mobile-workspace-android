@@ -16,20 +16,21 @@ fun NavController.navigateTo(entry: Entry) {
     }
 }
 
-private fun NavController.navigateToFolder(entry: Entry) =
-    navigateToFolder(entry.id, entry.name, modeFor(entry))
+private fun NavController.navigateToFolder(entry: Entry) = navigateToFolder(entry.id, entry.name, modeFor(entry))
 
 /**
  * navigate to move screen
  */
-fun NavController.navigateToFolder(entry: Entry, moveId: String = "", isProcess: Boolean = false) =
-    navigateToChildFolder(entry.id, entry.name, moveId, modeFor(entry), isProcess = isProcess)
+fun NavController.navigateToFolder(
+    entry: Entry,
+    moveId: String = "",
+    isProcess: Boolean = false,
+) = navigateToChildFolder(entry.id, entry.name, moveId, modeFor(entry), isProcess = isProcess)
 
 /**
  * navigate to extension child folders
  */
-fun NavController.navigateToExtensionFolder(entry: Entry) =
-    navigateToChildFolder(entry.id, entry.name, mode = modeFor(entry))
+fun NavController.navigateToExtensionFolder(entry: Entry) = navigateToChildFolder(entry.id, entry.name, mode = modeFor(entry))
 
 private fun modeFor(entry: Entry) =
     if (entry.hasOfflineStatus) {
@@ -38,12 +39,18 @@ private fun modeFor(entry: Entry) =
         REMOTE
     }
 
-fun NavController.navigateToFolder(id: String, title: String, mode: String = REMOTE) {
+fun NavController.navigateToFolder(
+    id: String,
+    title: String,
+    mode: String = REMOTE,
+) {
     navigate(Uri.parse("$BASE_URI/browse/folder/$mode/$id?title=${Uri.encode(title)}"))
 }
 
-fun NavController.navigateToKnownPath(path: String, title: String) =
-    navigate(Uri.parse("$BASE_URI/browse/$path/$REMOTE?title=${Uri.encode(title)}"))
+fun NavController.navigateToKnownPath(
+    path: String,
+    title: String,
+) = navigate(Uri.parse("$BASE_URI/browse/$path/$REMOTE?title=${Uri.encode(title)}"))
 
 private fun NavController.navigateToSite(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/site/$REMOTE/${entry.id}?title=${Uri.encode(entry.name)}"))
@@ -60,7 +67,12 @@ private fun NavController.navigateFolderLink(entry: Entry) =
 /**
  * navigate to contextual search
  */
-fun NavController.navigateToContextualSearch(id: String, title: String, isExtension: Boolean, moveId: String = "") {
+fun NavController.navigateToContextualSearch(
+    id: String,
+    title: String,
+    isExtension: Boolean,
+    moveId: String = "",
+) {
     if (moveId.isNotEmpty()) {
         navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)},extension=$isExtension,moveId=$moveId"))
     } else {
@@ -71,21 +83,34 @@ fun NavController.navigateToContextualSearch(id: String, title: String, isExtens
 /**
  * navigate to contextual search from process app
  */
-fun NavController.navigateToContextualSearch(id: String, title: String, isProcess: Boolean) {
+fun NavController.navigateToContextualSearch(
+    id: String,
+    title: String,
+    isProcess: Boolean,
+) {
     navigate(Uri.parse("$BASE_URI/search/folder/$id?title=${Uri.encode(title)},isProcess=$isProcess"))
 }
 
 /**
  * navigate to browse parent folder
  */
-fun NavController.navigateToParent(id: String, title: String, mode: String = REMOTE) {
+fun NavController.navigateToParent(
+    id: String,
+    title: String,
+    mode: String = REMOTE,
+) {
     navigate(Uri.parse("$BASE_URI/browse_parent/extension/$mode/$id?title=${Uri.encode(title)}"))
 }
 
 /**
  * navigate to browse move parent folder
  */
-fun NavController.navigateToMoveParent(id: String, moveId: String, title: String, isProcess: Boolean = false) {
+fun NavController.navigateToMoveParent(
+    id: String,
+    moveId: String,
+    title: String,
+    isProcess: Boolean = false,
+) {
     val path = "move"
     navigate(Uri.parse("$BASE_URI/browse_move_parent/$id?title=${Uri.encode(title)},moveId=$moveId,path=$path,isProcess=$isProcess"))
 }
@@ -93,7 +118,13 @@ fun NavController.navigateToMoveParent(id: String, moveId: String, title: String
 /**
  * navigate to browse child folder
  */
-fun NavController.navigateToChildFolder(id: String, title: String, moveId: String = "", mode: String = REMOTE, isProcess: Boolean = false) {
+fun NavController.navigateToChildFolder(
+    id: String,
+    title: String,
+    moveId: String = "",
+    mode: String = REMOTE,
+    isProcess: Boolean = false,
+) {
     when {
         moveId.isNotEmpty() -> {
             navigate(Uri.parse("$BASE_URI/browse_move_child/$mode/$id?title=${Uri.encode(title)},moveId=$moveId,path=extension"))
@@ -112,20 +143,28 @@ fun NavController.navigateToChildFolder(id: String, title: String, moveId: Strin
 /**
  * navigate to transfer files
  */
-fun NavController.navigateToUploadFilesPath(extension: Boolean, title: String) =
-    navigate(Uri.parse("$BASE_URI/transfer_files/$extension?title=${Uri.encode(title)}"))
+fun NavController.navigateToUploadFilesPath(
+    extension: Boolean,
+    title: String,
+) = navigate(Uri.parse("$BASE_URI/transfer_files/$extension?title=${Uri.encode(title)}"))
 
 /**
  * navigate to preview activity using deep linking
  */
-fun NavController.navigateToPreview(mimeType: String, path: String, title: String) =
-    navigate(Uri.parse("$BASE_URI/view/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
+fun NavController.navigateToPreview(
+    mimeType: String,
+    path: String,
+    title: String,
+) = navigate(Uri.parse("$BASE_URI/view/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
 
 /**
  * navigate to local preview activity using deep linking
  */
-fun NavController.navigateToLocalPreview(mimeType: String, path: String, title: String) =
-    navigate(Uri.parse("$BASE_URI/view/local/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
+fun NavController.navigateToLocalPreview(
+    mimeType: String,
+    path: String,
+    title: String,
+) = navigate(Uri.parse("$BASE_URI/view/local/preview?title=${Uri.encode(title)},mimeType=$mimeType,path=$path"))
 
 private const val BASE_URI = "alfresco://content"
 const val REMOTE = "remote"

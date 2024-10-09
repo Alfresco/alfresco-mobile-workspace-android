@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SharedLinksRepository() {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -31,12 +30,14 @@ class SharedLinksRepository() {
         session.createService(SharedLinksApi::class.java)
     }
 
-    suspend fun getSharedLinks(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            service.listSharedLinks(
-                skipCount,
-                maxItems,
-                include = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations"),
-            ),
-        )
+    suspend fun getSharedLinks(
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.with(
+        service.listSharedLinks(
+            skipCount,
+            maxItems,
+            include = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations"),
+        ),
+    )
 }

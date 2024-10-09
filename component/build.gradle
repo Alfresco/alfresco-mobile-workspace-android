@@ -3,7 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-    id 'kotlin-kapt'
+//    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.0.20'
 }
 
 android {
@@ -19,10 +21,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 dependencies {
@@ -44,7 +42,7 @@ dependencies {
     implementation libs.mavericks
 
     implementation libs.epoxy.core
-    kapt libs.epoxy.processor
+    ksp libs.epoxy.processor
 
     implementation libs.ui
     implementation libs.activity.compose

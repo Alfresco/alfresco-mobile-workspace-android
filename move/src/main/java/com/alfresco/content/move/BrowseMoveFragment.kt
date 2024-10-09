@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.collectLatest
  * Mark as BrowseMoveFragment
  */
 class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_move_list) {
-
     private lateinit var args: BrowseArgs
 
     @OptIn(InternalMavericksApi::class)
@@ -42,7 +41,10 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         setHasOptionsMenu(true)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         if (args.isProcess) {
@@ -60,9 +62,10 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
                     requireActivity().finish()
                 } else {
                     val activity = requireActivity()
-                    val intent = Intent().apply {
-                        putExtra(MoveResultContract.OUTPUT_KEY, state.nodeId)
-                    }
+                    val intent =
+                        Intent().apply {
+                            putExtra(MoveResultContract.OUTPUT_KEY, state.nodeId)
+                        }
                     activity.setResult(Activity.RESULT_OK, intent)
                     activity.finish()
                 }
@@ -80,7 +83,10 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         if (args.isProcess) {
             inflater.inflate(R.menu.menu_browse_folder, menu)
         } else {
@@ -118,18 +124,19 @@ class BrowseMoveFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layo
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.path == getString(R.string.nav_path_move)) {
-            super.disableRefreshLayout()
-        }
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.path == getString(R.string.nav_path_move)) {
+                super.disableRefreshLayout()
+            }
 
-        if (state.title != null) {
-            bottomMoveButtonLayout?.visibility = View.VISIBLE
-        } else {
-            bottomMoveButtonLayout?.visibility = View.INVISIBLE
+            if (state.title != null) {
+                bottomMoveButtonLayout?.visibility = View.VISIBLE
+            } else {
+                bottomMoveButtonLayout?.visibility = View.INVISIBLE
+            }
+            super.invalidate()
         }
-        super.invalidate()
-    }
 
     /**
      * return callback for list item

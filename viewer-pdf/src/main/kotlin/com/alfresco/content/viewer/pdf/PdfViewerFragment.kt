@@ -21,7 +21,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 
 class PdfViewerFragment : ChildViewerFragment(), MavericksView {
-
     private val viewModel: PdfViewerViewModel by fragmentViewModel()
     private lateinit var webView: WebView
 
@@ -34,7 +33,10 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         webView = view.findViewById(R.id.webview)
@@ -42,13 +44,14 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
-        val jsBridge = withState(viewModel) {
-            NativeBridge(EglExt.maxTextureSize, viewModel.assetUrl(it)) { reason ->
-                activity?.runOnUiThread {
-                    showPasswordPrompt(reason)
+        val jsBridge =
+            withState(viewModel) {
+                NativeBridge(EglExt.maxTextureSize, viewModel.assetUrl(it)) { reason ->
+                    activity?.runOnUiThread {
+                        showPasswordPrompt(reason)
+                    }
                 }
             }
-        }
 
         webView.settings.apply {
             allowContentAccess = false
@@ -69,51 +72,53 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
 
         webView.addJavascriptInterface(jsBridge, "bridge")
 
-        webView.webViewClient = object : WebViewClient() {
-
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?,
-            ): Boolean {
-                // Open URIs in external browser
-                startActivity(Intent(Intent.ACTION_VIEW, request?.url))
-                return true
-            }
-
-            override fun shouldInterceptRequest(
-                view: WebView?,
-                request: WebResourceRequest?,
-            ): WebResourceResponse? {
-                if (request?.method != "GET") {
-                    return null
+        webView.webViewClient =
+            object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                ): Boolean {
+                    // Open URIs in external browser
+                    startActivity(Intent(Intent.ACTION_VIEW, request?.url))
+                    return true
                 }
 
-                return assetLoader.shouldInterceptRequest(request.url)
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                ): WebResourceResponse? {
+                    if (request?.method != "GET") {
+                        return null
+                    }
+
+                    return assetLoader.shouldInterceptRequest(request.url)
+                }
             }
-        }
 
         // Loading state is handled by pdf viewer
         loadingListener?.onContentLoaded()
     }
 
-    private fun makeAssetLoader() = withState(viewModel) {
-        val ctx = requireContext()
-        val builder = WebViewAssetLoader.Builder()
-            .setDomain(viewModel.assetDomain(it))
-            .setHttpAllowed(true)
-            .addPathHandler(
-                "/${PdfViewerViewModel.RESERVED_ASSETS_PATH}/",
-                WebViewAssetLoader.AssetsPathHandler(ctx),
-            )
-        val docPath = viewModel.localDir(it)
-        if (docPath != null) {
-            builder.addPathHandler(
-                "/${PdfViewerViewModel.RESERVED_FILES_PATH}/",
-                WebViewAssetLoader.InternalStoragePathHandler(ctx, docPath),
-            )
+    private fun makeAssetLoader() =
+        withState(viewModel) {
+            val ctx = requireContext()
+            val builder =
+                WebViewAssetLoader.Builder()
+                    .setDomain(viewModel.assetDomain(it))
+                    .setHttpAllowed(true)
+                    .addPathHandler(
+                        "/${PdfViewerViewModel.RESERVED_ASSETS_PATH}/",
+                        WebViewAssetLoader.AssetsPathHandler(ctx),
+                    )
+            val docPath = viewModel.localDir(it)
+            if (docPath != null) {
+                builder.addPathHandler(
+                    "/${PdfViewerViewModel.RESERVED_FILES_PATH}/",
+                    WebViewAssetLoader.InternalStoragePathHandler(ctx, docPath),
+                )
+            }
+            builder.build()
         }
-        builder.build()
-    }
 
     class NativeBridge(
         @get:JavascriptInterface val maxTextureSize: Int,
@@ -152,22 +157,23 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
 
         val title = if (reason == 1) getString(R.string.password_prompt_title) else getString(R.string.password_prompt_fail_title)
         val message = if (reason == 1) getString(R.string.password_prompt_message) else getString(R.string.password_prompt_fail_message)
-        val alert = MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setView(view)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.password_prompt_positive)) { _, _ ->
-                webView.evaluateJavascript(
-                    "PDFViewerApplication.onPassword(\"${input.text}\")",
-                    null,
-                )
-            }
-            .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
-                dialog.cancel()
-            }
-            .setOnCancelListener {
-                requireActivity().onBackPressed()
-            }.create()
+        val alert =
+            MaterialAlertDialogBuilder(context)
+                .setTitle(title)
+                .setView(view)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.password_prompt_positive)) { _, _ ->
+                    webView.evaluateJavascript(
+                        "PDFViewerApplication.onPassword(\"${input.text}\")",
+                        null,
+                    )
+                }
+                .setNegativeButton(getString(R.string.password_prompt_negative)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setOnCancelListener {
+                    requireActivity().onBackPressed()
+                }.create()
 
         alert.show()
     }

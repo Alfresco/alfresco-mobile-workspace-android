@@ -19,17 +19,23 @@ import java.io.IOException
 import kotlin.coroutines.resumeWithException
 
 object ContentDownloader {
-
     const val FILE_PROVIDER_AUTHORITY = "com.alfresco.content.fileprovider"
 
-    suspend fun downloadFileTo(uri: String, outputPath: String, httpClient: OkHttpClient? = null) {
+    suspend fun downloadFileTo(
+        uri: String,
+        outputPath: String,
+        httpClient: OkHttpClient? = null,
+    ) {
         Logger.d("Downloading: $uri to: $outputPath")
         val req = Request.Builder().get().url(uri).build()
         val client = httpClient ?: OkHttpClient()
         client.newCall(req).downloadAndSaveTo(File(outputPath))
     }
 
-    suspend fun downloadFile(uri: String, outputPath: String): Flow<String> {
+    suspend fun downloadFile(
+        uri: String,
+        outputPath: String,
+    ): Flow<String> {
         return flow {
             downloadFileTo(uri, outputPath)
             emit(outputPath)
@@ -53,54 +59,63 @@ suspend fun Call.downloadAndSaveTo(
     bufferSize: Long = DEFAULT_BUFFER_SIZE.toLong(),
     blockingDispatcher: CoroutineDispatcher = OK_IO,
     progress: ((downloaded: Long, total: Long) -> Unit)? = null,
-): File = withContext(blockingDispatcher) {
-    suspendCancellableCoroutine { cont ->
-        enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                cont.resumeWithException(e)
-            }
+): File =
+    withContext(blockingDispatcher) {
+        suspendCancellableCoroutine { cont ->
+            enqueue(
+                object : Callback {
+                    override fun onFailure(
+                        call: Call,
+                        e: IOException,
+                    ) {
+                        cont.resumeWithException(e)
+                    }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    cont.resumeWithException(IOException("Unexpected HTTP code: ${response.code}"))
-                    return
-                }
-                try {
-                    val body = response.body
-                    if (body == null) {
-                        cont.resumeWithException(IllegalStateException("Body is null"))
-                        return
-                    }
-                    val contentLength = body.contentLength()
-                    var finished = false
-                    output.sink().buffer().use { out ->
-                        body.source().use { source ->
-                            val buffer = out.buffer
-                            var totalLength = 0L
-                            while (cont.isActive) {
-                                val read = source.read(buffer, bufferSize)
-                                if (read == -1L) {
-                                    finished = true
-                                    break
-                                }
-                                out.emit()
-                                totalLength += read
-                                progress?.invoke(totalLength, contentLength)
+                    override fun onResponse(
+                        call: Call,
+                        response: Response,
+                    ) {
+                        if (!response.isSuccessful) {
+                            cont.resumeWithException(IOException("Unexpected HTTP code: ${response.code}"))
+                            return
+                        }
+                        try {
+                            val body = response.body
+                            if (body == null) {
+                                cont.resumeWithException(IllegalStateException("Body is null"))
+                                return
                             }
-                            out.flush()
+                            val contentLength = body.contentLength()
+                            var finished = false
+                            output.sink().buffer().use { out ->
+                                body.source().use { source ->
+                                    val buffer = out.buffer
+                                    var totalLength = 0L
+                                    while (cont.isActive) {
+                                        val read = source.read(buffer, bufferSize)
+                                        if (read == -1L) {
+                                            finished = true
+                                            break
+                                        }
+                                        out.emit()
+                                        totalLength += read
+                                        progress?.invoke(totalLength, contentLength)
+                                    }
+                                    out.flush()
+                                }
+                            }
+                            if (finished) {
+                                cont.resume(output) {
+                                    cancel()
+                                }
+                            } else {
+                                cont.resumeWithException(IOException("Download cancelled"))
+                            }
+                        } catch (e: Exception) {
+                            cont.resumeWithException(e)
                         }
                     }
-                    if (finished) {
-                        cont.resume(output) {
-                            cancel()
-                        }
-                    } else {
-                        cont.resumeWithException(IOException("Download cancelled"))
-                    }
-                } catch (e: Exception) {
-                    cont.resumeWithException(e)
-                }
-            }
-        })
+                },
+            )
+        }
     }
-}

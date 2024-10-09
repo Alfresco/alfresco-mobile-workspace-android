@@ -93,13 +93,19 @@ class LocalPreviewFragment : Fragment(), MavericksView {
         setHasOptionsMenu(true)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         configureViewer(args)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         withState(viewModel) { state ->
             when (state.entry?.uploadServer) {
                 UploadServerType.UPLOAD_TO_TASK -> {

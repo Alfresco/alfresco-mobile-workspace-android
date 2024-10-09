@@ -15,7 +15,6 @@ import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.common.FragmentBuilder
 
 class BasicAuthFragment : DialogFragment() {
-
     private val viewModel: LoginViewModel by activityViewModels()
 
     private var withCloud: Boolean = false

@@ -16,11 +16,13 @@ data class TaskProcessFiltersPayload(
     var dueAfter: String = "",
 ) {
     companion object {
-
         /**
          * update the filters and return the payload obj
          */
-        fun updateFilters(obj: TaskProcessFiltersPayload, page: Int = 0): TaskProcessFiltersPayload {
+        fun updateFilters(
+            obj: TaskProcessFiltersPayload,
+            page: Int = 0,
+        ): TaskProcessFiltersPayload {
             return TaskProcessFiltersPayload(
                 assignment = obj.assignment,
                 sort = obj.sort,
@@ -36,7 +38,11 @@ data class TaskProcessFiltersPayload(
         /**
          *
          */
-        fun updateFilters(obj: TaskProcessFiltersPayload, state: String, page: Int = 0): TaskProcessFiltersPayload {
+        fun updateFilters(
+            obj: TaskProcessFiltersPayload,
+            state: String,
+            page: Int = 0,
+        ): TaskProcessFiltersPayload {
             return TaskProcessFiltersPayload(
                 assignment = obj.assignment,
                 sort = obj.sort,

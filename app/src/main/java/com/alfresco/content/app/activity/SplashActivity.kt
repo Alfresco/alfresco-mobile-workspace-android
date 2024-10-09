@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 
 class SplashActivity : com.alfresco.ui.SplashActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

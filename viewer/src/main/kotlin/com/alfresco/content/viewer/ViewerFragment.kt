@@ -53,7 +53,6 @@ data class ViewerArgs(
 }
 
 class ViewerFragment : Fragment(), MavericksView {
-
     private lateinit var args: ViewerArgs
 
     @OptIn(InternalMavericksApi::class)
@@ -62,15 +61,16 @@ class ViewerFragment : Fragment(), MavericksView {
     private var childFragment: ChildViewerFragment? = null
     private var hasLoadingStatus: Boolean = false
 
-    private val viewerLoadingListener = object : LoadingListener {
-        override fun onContentLoaded() {
-            show(Status.PreviewLoaded)
-        }
+    private val viewerLoadingListener =
+        object : LoadingListener {
+            override fun onContentLoaded() {
+                show(Status.PreviewLoaded)
+            }
 
-        override fun onContentError() {
-            show(Status.NotSupported)
+            override fun onContentError() {
+                show(Status.NotSupported)
+            }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,9 +91,10 @@ class ViewerFragment : Fragment(), MavericksView {
         super.onAttachFragment(childFragment)
 
         if (childFragment is ChildViewerFragment) {
-            this.childFragment = childFragment.apply {
-                loadingListener = viewerLoadingListener
-            }
+            this.childFragment =
+                childFragment.apply {
+                    loadingListener = viewerLoadingListener
+                }
         }
     }
 
@@ -103,51 +104,57 @@ class ViewerFragment : Fragment(), MavericksView {
         childFragment?.loadingListener = null
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.entry?.name != null) {
-            (requireActivity() as AppCompatActivity).supportActionBar?.title = state.entry.name
-            binding.title.text = state.entry.name
-        } else binding.title.text = args.title
-        val type = MimeType.with(state.entry?.mimeType)
-        binding.icon.setImageDrawable(
-            ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme),
-        )
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.entry?.name != null) {
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = state.entry.name
+                binding.title.text = state.entry.name
+            } else {
+                binding.title.text = args.title
+            }
+            val type = MimeType.with(state.entry?.mimeType)
+            binding.icon.setImageDrawable(
+                ResourcesCompat.getDrawable(resources, type.icon, requireContext().theme),
+            )
 
-        if (state.entry != null) {
-            configureActionBar(state.entry)
-        }
+            if (state.entry != null) {
+                configureActionBar(state.entry)
+            }
 
-        if (state.ready) {
-            if (state.viewerMimeType != null && state.viewerUri != null) {
-                configureViewer(
-                    state.viewerUri,
-                    state.viewerMimeType,
-                )
-                if (!hasLoadingStatus) {
-                    show(Status.LoadingPreview)
+            if (state.ready) {
+                if (state.viewerMimeType != null && state.viewerUri != null) {
+                    configureViewer(
+                        state.viewerUri,
+                        state.viewerMimeType,
+                    )
+                    if (!hasLoadingStatus) {
+                        show(Status.LoadingPreview)
+                    }
+                } else {
+                    show(Status.NotSupported)
                 }
             } else {
-                show(Status.NotSupported)
-            }
-        } else {
-            if (state.entry == null) {
-                show(Status.LoadingMetadata)
-            } else {
-                show(Status.PreparingPreview)
+                if (state.entry == null) {
+                    show(Status.LoadingMetadata)
+                } else {
+                    show(Status.PreparingPreview)
+                }
             }
         }
-    }
 
     private fun configureActionBar(entry: Entry) {
         val mobileConfigDataEntry = getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)
-        val fragment = ContextualActionsBarFragment().apply {
-            arguments = bundleOf(
-                Mavericks.KEY_ARG to ContextualActionData.withEntries(
-                    listOf(entry),
-                    mobileConfigData = mobileConfigDataEntry,
-                ),
-            )
-        }
+        val fragment =
+            ContextualActionsBarFragment().apply {
+                arguments =
+                    bundleOf(
+                        Mavericks.KEY_ARG to
+                            ContextualActionData.withEntries(
+                                listOf(entry),
+                                mobileConfigData = mobileConfigDataEntry,
+                            ),
+                    )
+            }
         parentFragmentManager.beginTransaction().replace(R.id.action_list_bar, fragment).commit()
     }
 
@@ -157,10 +164,11 @@ class ViewerFragment : Fragment(), MavericksView {
     ) {
         val tag = mimeType
         if (childFragmentManager.findFragmentByTag(tag) == null) {
-            val args = ChildViewerArgs(
-                viewerUri,
-                mimeType,
-            )
+            val args =
+                ChildViewerArgs(
+                    viewerUri,
+                    mimeType,
+                )
             val fragment = ViewerRegistry.previewProvider(mimeType)?.createViewer()
             requireNotNull(fragment)
             fragment.arguments = bundleOf(Mavericks.KEY_ARG to args)
@@ -208,6 +216,10 @@ class ViewerFragment : Fragment(), MavericksView {
     }
 
     private enum class Status {
-        LoadingMetadata, PreparingPreview, LoadingPreview, PreviewLoaded, NotSupported
+        LoadingMetadata,
+        PreparingPreview,
+        LoadingPreview,
+        PreviewLoaded,
+        NotSupported,
     }
 }

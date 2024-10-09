@@ -3,7 +3,10 @@ package com.alfresco.content.component
 /**
  * return true if the component is selected,otherwise false
  */
-fun ComponentViewModel.isOptionSelected(state: ComponentState, options: ComponentOptions): Boolean {
+fun ComponentViewModel.isOptionSelected(
+    state: ComponentState,
+    options: ComponentOptions,
+): Boolean {
     if (state.parent?.selectedQuery?.isEmpty() == true) {
         return options.default
     }
@@ -31,8 +34,9 @@ fun ComponentViewModel.isToValueValid(to: String): Boolean {
 
     return if (fromValue.isEmpty()) {
         true
-    } else
+    } else {
         to.toLong() > fromValue.toLong()
+    }
 }
 
 /**
@@ -45,6 +49,7 @@ fun ComponentViewModel.isFromValueValid(from: String): Boolean {
 
     return if (toValue.isEmpty()) {
         true
-    } else
+    } else {
         from.toLong() < toValue.toLong()
+    }
 }

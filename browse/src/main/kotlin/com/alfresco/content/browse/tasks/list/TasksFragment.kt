@@ -45,11 +45,13 @@ import kotlin.coroutines.suspendCoroutine
  * Marked as TasksFragment
  */
 class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
-
     override val viewModel: TasksViewModel by fragmentViewModel()
     private val epoxyControllerFilters: AsyncEpoxyController by lazy { epoxyControllerFilters() }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         actionReset.setOnClickListener {
             AnalyticsManager().taskFiltersEvent(EventName.TaskFilterReset.value)
@@ -70,10 +72,11 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         recyclerViewFilters.setController(epoxyControllerFilters)
     }
 
-    private fun resetAllFilters() = withState(viewModel) { state ->
-        val listReset = viewModel.resetChips(state)
-        viewModel.applyFilters(listReset)
-    }
+    private fun resetAllFilters() =
+        withState(viewModel) { state ->
+            val listReset = viewModel.resetChips(state)
+            viewModel.applyFilters(listReset)
+        }
 
     override fun onResume() {
         super.onResume()
@@ -94,29 +97,34 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        super.invalidate()
-        epoxyControllerFilters.requestModelBuild()
-        scrollToTop()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            super.invalidate()
+            epoxyControllerFilters.requestModelBuild()
+            scrollToTop()
 
-        if (state.request is Success && !viewModel.isWorkflowTask) {
-            clParent.addView(makeFab(requireContext()))
+            if (state.request is Success && !viewModel.isWorkflowTask) {
+                clParent.addView(makeFab(requireContext()))
+            }
         }
-    }
 
-    private fun epoxyControllerFilters() = simpleController(viewModel) { state ->
-        state.listSortDataChips.forEach { sortDataObj ->
-            listViewSortChips {
-                id(sortDataObj.name)
-                data(sortDataObj)
-                clickListener { model, _, chipView, _ ->
-                    onChipClicked(model.data(), chipView)
+    private fun epoxyControllerFilters() =
+        simpleController(viewModel) { state ->
+            state.listSortDataChips.forEach { sortDataObj ->
+                listViewSortChips {
+                    id(sortDataObj.name)
+                    data(sortDataObj)
+                    clickListener { model, _, chipView, _ ->
+                        onChipClicked(model.data(), chipView)
+                    }
                 }
             }
         }
-    }
 
-    private fun onChipClicked(data: TaskFilterData, chipView: View) {
+    private fun onChipClicked(
+        data: TaskFilterData,
+        chipView: View,
+    ) {
         hideSoftInput()
         if (recyclerViewFilters.isEnabled) {
             AnalyticsManager().taskFiltersEvent(data.name ?: "")
@@ -138,7 +146,9 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                     }
                 }
             }
-        } else (chipView as FilterChip).isChecked = false
+        } else {
+            (chipView as FilterChip).isChecked = false
+        }
     }
 
     private suspend fun showFilterSheetDialog(
@@ -162,17 +172,18 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
 
     private fun makeFab(context: Context) =
         FloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.END
-                // TODO: define margins
-                setMargins(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt(),
-                )
-            }
+            layoutParams =
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.END
+                    // TODO: define margins
+                    setMargins(
+                        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                            .toInt(),
+                    )
+                }
             id = R.id.fab_create_task
             contentDescription = context.getString(R.string.text_create_task)
             setImageResource(R.drawable.ic_add_fab)
@@ -190,21 +201,22 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
     ) = continuation.resume(ComponentMetaData(name = name, query = query, queryMap = queryMap))
 
     override fun onItemClicked(entry: TaskEntry) {
-        val intent = if (entry.processInstanceId != null) {
-            Intent(
-                requireActivity(),
-                Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
-            ).apply {
-                putExtra(Mavericks.KEY_ARG, ProcessEntry.with(entry))
+        val intent =
+            if (entry.processInstanceId != null) {
+                Intent(
+                    requireActivity(),
+                    Class.forName("com.alfresco.content.app.activity.ProcessActivity"),
+                ).apply {
+                    putExtra(Mavericks.KEY_ARG, ProcessEntry.with(entry))
+                }
+            } else {
+                Intent(
+                    requireActivity(),
+                    Class.forName("com.alfresco.content.app.activity.TaskViewerActivity"),
+                ).apply {
+                    putExtra(Mavericks.KEY_ARG, entry)
+                }
             }
-        } else {
-            Intent(
-                requireActivity(),
-                Class.forName("com.alfresco.content.app.activity.TaskViewerActivity"),
-            ).apply {
-                putExtra(Mavericks.KEY_ARG, entry)
-            }
-        }
         startActivity(intent)
     }
 }

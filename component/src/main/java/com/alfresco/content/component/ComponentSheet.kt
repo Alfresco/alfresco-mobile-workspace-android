@@ -27,7 +27,6 @@ import kotlin.coroutines.suspendCoroutine
  * Marked as ComponentSheet class
  */
 class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
-
     internal val viewModel: ComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentFilterBinding
 
@@ -44,120 +43,191 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
     val minVisibleItem = 10
     private val textFileSize = "search.facet_fields.size"
 
-    val nameInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
+    val nameInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
+            }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
+            }
 
-        override fun afterTextChanged(s: Editable?) {
-            viewModel.updateSingleComponentData(s.toString())
-        }
-    }
-
-    val fromInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-            viewModel.fromDate = s.toString()
-            if (s.toString().isNotEmpty()) {
-                binding.dateRangeComponent.fromInputLayout.error = null
-                binding.dateRangeComponent.fromInputLayout.isErrorEnabled = false
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateSingleComponentData(s.toString())
             }
         }
-    }
 
-    val toInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
+    val fromInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
+            }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
+            }
 
-        override fun afterTextChanged(s: Editable?) {
-            viewModel.toDate = s.toString()
-            if (s.toString().isNotEmpty()) {
-                binding.dateRangeComponent.toInputLayout.error = null
-                binding.dateRangeComponent.toInputLayout.isErrorEnabled = false
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.fromDate = s.toString()
+                if (s.toString().isNotEmpty()) {
+                    binding.dateRangeComponent.fromInputLayout.error = null
+                    binding.dateRangeComponent.fromInputLayout.isErrorEnabled = false
+                }
             }
         }
-    }
 
-    val searchInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-            viewModel.searchQuery = s.toString().trim().replace("\\s+".toRegex(), " ").trim()
-            viewModel.searchBucket(searchText = viewModel.searchQuery)
-        }
-    }
-
-    val numberFromInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-            val min = s.toString().trim()
-            val valid = viewModel.isFromValueValid(min)
-            binding.numberRangeComponent.numberRangeError.visibility = when {
-                !valid -> View.VISIBLE
-                else -> View.GONE
+    val toInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
             }
-            viewModel.fromValue = min
-            viewModel.updateFormatNumberRange(false)
-        }
-    }
 
-    val numberToInputTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            // no-op
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // no-op
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-            val max = s.toString().trim()
-            val valid = viewModel.isToValueValid(max)
-            binding.numberRangeComponent.numberRangeError.visibility = when {
-                !valid -> View.VISIBLE
-                else -> View.GONE
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
             }
-            viewModel.toValue = max
-            viewModel.updateFormatNumberRange(false)
-        }
-    }
 
-    val sliderChangeListener = Slider.OnChangeListener { _, value, _ ->
-        val sliderValue = value.toInt().toString()
-        if (viewModel.isToValueValid(sliderValue)) {
-            viewModel.toValue = sliderValue
-        } else viewModel.toValue = ""
-        viewModel.updateFormatNumberRange(true)
-    }
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.toDate = s.toString()
+                if (s.toString().isNotEmpty()) {
+                    binding.dateRangeComponent.toInputLayout.error = null
+                    binding.dateRangeComponent.toInputLayout.isErrorEnabled = false
+                }
+            }
+        }
+
+    val searchInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.searchQuery = s.toString().trim().replace("\\s+".toRegex(), " ").trim()
+                viewModel.searchBucket(searchText = viewModel.searchQuery)
+            }
+        }
+
+    val numberFromInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val min = s.toString().trim()
+                val valid = viewModel.isFromValueValid(min)
+                binding.numberRangeComponent.numberRangeError.visibility =
+                    when {
+                        !valid -> View.VISIBLE
+                        else -> View.GONE
+                    }
+                viewModel.fromValue = min
+                viewModel.updateFormatNumberRange(false)
+            }
+        }
+
+    val numberToInputTextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+                // no-op
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                // no-op
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val max = s.toString().trim()
+                val valid = viewModel.isToValueValid(max)
+                binding.numberRangeComponent.numberRangeError.visibility =
+                    when {
+                        !valid -> View.VISIBLE
+                        else -> View.GONE
+                    }
+                viewModel.toValue = max
+                viewModel.updateFormatNumberRange(false)
+            }
+        }
+
+    val sliderChangeListener =
+        Slider.OnChangeListener { _, value, _ ->
+            val sliderValue = value.toInt().toString()
+            if (viewModel.isToValueValid(sliderValue)) {
+                viewModel.toValue = sliderValue
+            } else {
+                viewModel.toValue = ""
+            }
+            viewModel.updateFormatNumberRange(true)
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -168,9 +238,14 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog?.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,
+        )
         dialog?.setOnCancelListener {
             onCancel?.invoke()
         }
@@ -193,67 +268,69 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         }
     }
 
-    private fun setupComponents() = withState(viewModel) { state ->
-        binding.parentView.removeAllViews()
+    private fun setupComponents() =
+        withState(viewModel) { state ->
+            binding.parentView.removeAllViews()
 
-        if (state.parent?.selector != ComponentType.PROCESS_ACTION.value) {
-            binding.parentView.addView(binding.topView)
-            binding.parentView.addView(binding.separator)
-        }
-
-        when {
-            (state.parent?.selector == ComponentType.DROPDOWN_RADIO.value) ||
-                (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
+            if (state.parent?.selector != ComponentType.PROCESS_ACTION.value) {
+                binding.parentView.addView(binding.topView)
+                binding.parentView.addView(binding.separator)
             }
 
-            else -> {
-                binding.bottomSeparator.visibility = View.VISIBLE
-                binding.bottomView.visibility = View.VISIBLE
-            }
-        }
-
-        val replacedString = state.parent?.name?.replace(" ", ".") ?: ""
-        val localizedName = requireContext().getLocalizedName(replacedString)
-
-        if (localizedName == replacedString) {
-            binding.title.text = state.parent?.name ?: ""
-        } else if (state.parent?.name?.lowercase().equals(textFileSize)) {
-            binding.title.text = requireContext().getString(R.string.size_end_kb, localizedName)
-        } else
-            binding.title.text = localizedName
-
-        when (val selector = state.parent?.selector) {
-            ComponentType.TEXT.value -> setupSingleInputTextComponent(state)
-            ComponentType.TASK_PROCESS_PRIORITY.value -> setupTaskPriorityComponent(state)
-            ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
-            ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
-            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> setupRadioListComponent(state, viewModel)
-            ComponentType.NUMBER_RANGE.value -> setupNumberRangeComponent(state, viewModel)
-            ComponentType.SLIDER.value -> setupSliderComponent(state, viewModel)
-            ComponentType.DATE_RANGE.value, ComponentType.DATE_RANGE_FUTURE.value -> {
-                setupDateRangeComponent(state, viewModel)
-
-                binding.dateRangeComponent.fromInput.setOnClickListener {
-                    if (!executedPicker) {
-                        binding.dateRangeComponent.componentParent.isEnabled = false
-                        executedPicker = true
-                        showCalendar(true, (selector == ComponentType.DATE_RANGE_FUTURE.value))
-                    }
+            when {
+                (state.parent?.selector == ComponentType.DROPDOWN_RADIO.value) ||
+                    (state.parent?.selector == ComponentType.PROCESS_ACTION.value) -> {
                 }
 
-                binding.dateRangeComponent.toInput.setOnClickListener {
-                    if (!executedPicker) {
-                        binding.dateRangeComponent.componentParent.isEnabled = false
-                        executedPicker = true
-                        showCalendar(false, (selector == ComponentType.DATE_RANGE_FUTURE.value))
-                    }
+                else -> {
+                    binding.bottomSeparator.visibility = View.VISIBLE
+                    binding.bottomView.visibility = View.VISIBLE
                 }
             }
 
-            ComponentType.FACETS.value -> setupFacetComponent(state, viewModel)
-            ComponentType.PROCESS_ACTION.value -> setupProcessActionsComponent(state, viewModel)
+            val replacedString = state.parent?.name?.replace(" ", ".") ?: ""
+            val localizedName = requireContext().getLocalizedName(replacedString)
+
+            if (localizedName == replacedString) {
+                binding.title.text = state.parent?.name ?: ""
+            } else if (state.parent?.name?.lowercase().equals(textFileSize)) {
+                binding.title.text = requireContext().getString(R.string.size_end_kb, localizedName)
+            } else {
+                binding.title.text = localizedName
+            }
+
+            when (val selector = state.parent?.selector) {
+                ComponentType.TEXT.value -> setupSingleInputTextComponent(state)
+                ComponentType.TASK_PROCESS_PRIORITY.value -> setupTaskPriorityComponent(state)
+                ComponentType.VIEW_TEXT.value -> setupTextComponent(state)
+                ComponentType.CHECK_LIST.value -> setupCheckListComponent(viewModel)
+                ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> setupRadioListComponent(state, viewModel)
+                ComponentType.NUMBER_RANGE.value -> setupNumberRangeComponent(state, viewModel)
+                ComponentType.SLIDER.value -> setupSliderComponent(state, viewModel)
+                ComponentType.DATE_RANGE.value, ComponentType.DATE_RANGE_FUTURE.value -> {
+                    setupDateRangeComponent(state, viewModel)
+
+                    binding.dateRangeComponent.fromInput.setOnClickListener {
+                        if (!executedPicker) {
+                            binding.dateRangeComponent.componentParent.isEnabled = false
+                            executedPicker = true
+                            showCalendar(true, (selector == ComponentType.DATE_RANGE_FUTURE.value))
+                        }
+                    }
+
+                    binding.dateRangeComponent.toInput.setOnClickListener {
+                        if (!executedPicker) {
+                            binding.dateRangeComponent.componentParent.isEnabled = false
+                            executedPicker = true
+                            showCalendar(false, (selector == ComponentType.DATE_RANGE_FUTURE.value))
+                        }
+                    }
+                }
+
+                ComponentType.FACETS.value -> setupFacetComponent(state, viewModel)
+                ComponentType.PROCESS_ACTION.value -> setupProcessActionsComponent(state, viewModel)
+            }
         }
-    }
 
     private fun setListeners() {
         binding.applyButton.setOnClickListener {
@@ -315,61 +392,95 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        when (state.parent?.selector) {
-            ComponentType.CHECK_LIST.value -> {
-                epoxyCheckListController.requestModelBuild()
-            }
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            when (state.parent?.selector) {
+                ComponentType.CHECK_LIST.value -> {
+                    epoxyCheckListController.requestModelBuild()
+                }
 
-            ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> {
-                epoxyRadioListController.requestModelBuild()
-            }
+                ComponentType.RADIO.value, ComponentType.DROPDOWN_RADIO.value -> {
+                    epoxyRadioListController.requestModelBuild()
+                }
 
-            ComponentType.FACETS.value -> {
-                epoxyCheckFacetListController.requestModelBuild()
-            }
+                ComponentType.FACETS.value -> {
+                    epoxyCheckFacetListController.requestModelBuild()
+                }
 
-            ComponentType.PROCESS_ACTION.value -> {
-                epoxyActionListController.requestModelBuild()
+                ComponentType.PROCESS_ACTION.value -> {
+                    epoxyActionListController.requestModelBuild()
+                }
             }
         }
-    }
 
-    private fun epoxyCheckListController() = simpleController(viewModel) { state ->
-        if (state.parent?.options?.isNotEmpty() == true) {
-            state.parent.options.forEach { option ->
-                listViewCheckRow {
-                    id(option.hashCode())
-                    data(option)
-                    optionSelected(viewModel.isOptionSelected(state, option))
-                    clickListener { model, _, _, _ ->
-                        viewModel.updateMultipleComponentData(
-                            model.data().label,
-                            model.data().value,
-                        )
+    private fun epoxyCheckListController() =
+        simpleController(viewModel) { state ->
+            if (state.parent?.options?.isNotEmpty() == true) {
+                state.parent.options.forEach { option ->
+                    listViewCheckRow {
+                        id(option.hashCode())
+                        data(option)
+                        optionSelected(viewModel.isOptionSelected(state, option))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateMultipleComponentData(
+                                model.data().label,
+                                model.data().value,
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    private fun epoxyRadioListController() = simpleController(viewModel) { state ->
-        if (state.parent?.options?.isNotEmpty() == true) {
-            state.parent.options.forEach { option ->
-                listViewRadioRow {
-                    id(option.hashCode())
-                    data(option)
-                    optionSelected(viewModel.isOptionSelected(state, option))
-                    clickListener { model, _, _, _ ->
-                        if (state.parent.selector == ComponentType.DROPDOWN_RADIO.value) {
-                            onApply?.invoke(
-                                requireContext().getLocalizedName(model.data().label),
-                                model.data().query,
-                                mapOf(),
-                            )
-                            dismiss()
+    private fun epoxyRadioListController() =
+        simpleController(viewModel) { state ->
+            if (state.parent?.options?.isNotEmpty() == true) {
+                state.parent.options.forEach { option ->
+                    listViewRadioRow {
+                        id(option.hashCode())
+                        data(option)
+                        optionSelected(viewModel.isOptionSelected(state, option))
+                        clickListener { model, _, _, _ ->
+                            if (state.parent.selector == ComponentType.DROPDOWN_RADIO.value) {
+                                onApply?.invoke(
+                                    requireContext().getLocalizedName(model.data().label),
+                                    model.data().query,
+                                    mapOf(),
+                                )
+                                dismiss()
+                            } else {
+                                viewModel.updateSingleComponentData(
+                                    requireContext().getLocalizedName(model.data().label),
+                                    model.data().query,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    private fun epoxyCheckFacetListController() =
+        simpleController(viewModel) { state ->
+            var listBucket: List<ComponentOptions>? = null
+            when (state.parent?.selector) {
+                ComponentType.FACETS.value -> {
+                    listBucket =
+                        if (viewModel.searchQuery.isNotEmpty()) {
+                            viewModel.searchComponentList
                         } else {
-                            viewModel.updateSingleComponentData(
+                            state.parent.options
+                        }
+                }
+            }
+            if (listBucket?.isNotEmpty() == true) {
+                listBucket.forEach { bucket ->
+                    listViewFacetCheckRow {
+                        id(bucket.hashCode())
+                        data(bucket)
+                        optionSelected(viewModel.isOptionSelected(state, bucket))
+                        clickListener { model, _, _, _ ->
+                            viewModel.updateMultipleComponentData(
                                 requireContext().getLocalizedName(model.data().label),
                                 model.data().query,
                             )
@@ -378,66 +489,43 @@ class ComponentSheet : BottomSheetDialogFragment(), MavericksView {
                 }
             }
         }
-    }
 
-    private fun epoxyCheckFacetListController() = simpleController(viewModel) { state ->
-        var listBucket: List<ComponentOptions>? = null
-        when (state.parent?.selector) {
-            ComponentType.FACETS.value -> {
-                listBucket = if (viewModel.searchQuery.isNotEmpty()) {
-                    viewModel.searchComponentList
-                } else
-                    state.parent.options
-            }
-        }
-        if (listBucket?.isNotEmpty() == true) {
-            listBucket.forEach { bucket ->
-                listViewFacetCheckRow {
-                    id(bucket.hashCode())
-                    data(bucket)
-                    optionSelected(viewModel.isOptionSelected(state, bucket))
-                    clickListener { model, _, _, _ ->
-                        viewModel.updateMultipleComponentData(
-                            requireContext().getLocalizedName(model.data().label),
-                            model.data().query,
-                        )
+    private fun epoxyActionListController() =
+        simpleController(viewModel) { state ->
+
+            if (state.parent?.options?.isNotEmpty() == true) {
+                state.parent.options.forEach { option ->
+                    listViewActionsRow {
+                        id(option.hashCode())
+                        data(option)
+                        clickListener { model, _, _, _ ->
+                            onApply?.invoke(model.data().label, model.data().query, mapOf())
+                            dismiss()
+                        }
                     }
                 }
             }
         }
-    }
 
-    private fun epoxyActionListController() = simpleController(viewModel) { state ->
-
-        if (state.parent?.options?.isNotEmpty() == true) {
-            state.parent.options.forEach { option ->
-                listViewActionsRow {
-                    id(option.hashCode())
-                    data(option)
-                    clickListener { model, _, _, _ ->
-                        onApply?.invoke(model.data().label, model.data().query, mapOf())
-                        dismiss()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showCalendar(isFrom: Boolean, isFutureDate: Boolean) {
+    private fun showCalendar(
+        isFrom: Boolean,
+        isFutureDate: Boolean,
+    ) {
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = suspendCoroutine {
-                DatePickerBuilder(
-                    context = requireContext(),
-                    fromDate = viewModel.fromDate,
-                    toDate = viewModel.toDate,
-                    isFrom = isFrom,
-                    isFutureDate = isFutureDate,
-                    dateFormat = viewModel.dateFormat,
-                )
-                    .onSuccess { date -> it.resume(date) }
-                    .onFailure { it.resume(null) }
-                    .show()
-            }
+            val result =
+                suspendCoroutine {
+                    DatePickerBuilder(
+                        context = requireContext(),
+                        fromDate = viewModel.fromDate,
+                        toDate = viewModel.toDate,
+                        isFrom = isFrom,
+                        isFutureDate = isFutureDate,
+                        dateFormat = viewModel.dateFormat,
+                    )
+                        .onSuccess { date -> it.resume(date) }
+                        .onFailure { it.resume(null) }
+                        .show()
+                }
             executedPicker = false
             binding.dateRangeComponent.componentParent.isEnabled = true
             result?.let { date ->

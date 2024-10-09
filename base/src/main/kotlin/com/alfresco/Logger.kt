@@ -10,11 +10,18 @@ object Logger {
         }
     }
 
-    fun v(message: String, vararg args: Any?) {
+    fun v(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.v(message, *args)
     }
 
-    fun v(t: Throwable, message: String, vararg args: Any?) {
+    fun v(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.v(t, message, *args)
     }
 
@@ -22,11 +29,18 @@ object Logger {
         Timber.v(t)
     }
 
-    fun d(message: String, vararg args: Any?) {
+    fun d(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.d(message, *args)
     }
 
-    fun d(t: Throwable, message: String, vararg args: Any?) {
+    fun d(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.d(t, message, *args)
     }
 
@@ -34,11 +48,18 @@ object Logger {
         Timber.d(t)
     }
 
-    fun i(message: String, vararg args: Any?) {
+    fun i(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.i(message, *args)
     }
 
-    fun i(t: Throwable, message: String, vararg args: Any?) {
+    fun i(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.i(t, message, *args)
     }
 
@@ -46,11 +67,18 @@ object Logger {
         Timber.i(t)
     }
 
-    fun w(message: String, vararg args: Any?) {
+    fun w(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.w(message, *args)
     }
 
-    fun w(t: Throwable, message: String, vararg args: Any?) {
+    fun w(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.w(t, message, *args)
     }
 
@@ -58,11 +86,18 @@ object Logger {
         Timber.w(t)
     }
 
-    fun e(message: String, vararg args: Any?) {
+    fun e(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.e(message, *args)
     }
 
-    fun e(t: Throwable, message: String, vararg args: Any?) {
+    fun e(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.e(t, message, *args)
     }
 
@@ -70,11 +105,18 @@ object Logger {
         Timber.e(t)
     }
 
-    fun wtf(message: String, vararg args: Any?) {
+    fun wtf(
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.wtf(message, *args)
     }
 
-    fun wtf(t: Throwable, message: String, vararg args: Any?) {
+    fun wtf(
+        t: Throwable,
+        message: String,
+        vararg args: Any?,
+    ) {
         Timber.wtf(t, message, *args)
     }
 
@@ -87,7 +129,12 @@ object Logger {
  * DebugTree tailored for Timber being wrapped within another class.
  */
 private class DebugTree : Timber.DebugTree() {
-    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    override fun log(
+        priority: Int,
+        tag: String?,
+        message: String,
+        t: Throwable?,
+    ) {
         super.log(priority, createClassTag(), message, t)
     }
 

@@ -25,7 +25,6 @@ class CaptureModeSelectorView(
     defStyleAttr: Int,
     defStyleRes: Int,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
-
     var modes: List<CaptureMode> = listOf(CaptureMode.Photo, CaptureMode.Video)
         set(value) {
             field = value
@@ -52,16 +51,18 @@ class CaptureModeSelectorView(
 
     private fun createRecyclerView() =
         RecyclerView(context).apply {
-            layoutParams = LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT,
-            )
+            layoutParams =
+                LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT,
+                )
             adapter = Adapter(modes.map { it.title(context) })
-            layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false,
-            )
+            layoutManager =
+                LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.HORIZONTAL,
+                    false,
+                )
             addItemDecoration(
                 SpacingDecoration(
                     resources.getDimension(R.dimen.capture_button_min_spacing).toInt(),
@@ -100,20 +101,25 @@ class CaptureModeSelectorView(
 
     private inner class Adapter(private val dataSet: List<String>) :
         RecyclerView.Adapter<Adapter.ViewHolder>() {
-
         inner class ViewHolder(val view: ModeView) : RecyclerView.ViewHolder(view)
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
-            ViewHolder(
-                ModeView(viewGroup.context).apply {
-                    layoutParams = RecyclerView.LayoutParams(
+        override fun onCreateViewHolder(
+            viewGroup: ViewGroup,
+            viewType: Int,
+        ) = ViewHolder(
+            ModeView(viewGroup.context).apply {
+                layoutParams =
+                    RecyclerView.LayoutParams(
                         RecyclerView.LayoutParams.WRAP_CONTENT,
                         resources.getDimension(R.dimen.capture_button_size).toInt(),
                     )
-                },
-            )
+            },
+        )
 
-        override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(
+            viewHolder: ViewHolder,
+            position: Int,
+        ) {
             viewHolder.view.apply {
                 text = dataSet[position]
                 setOnClickListener {
@@ -129,10 +135,10 @@ class CaptureModeSelectorView(
     private class ModeView(
         context: Context,
     ) : AppCompatTextView(
-        ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
-        null,
-        0,
-    ) {
+            ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
+            null,
+            0,
+        ) {
         init {
             gravity = Gravity.CENTER
             val pad = resources.getDimension(R.dimen.capture_button_padding).toInt()
@@ -140,9 +146,10 @@ class CaptureModeSelectorView(
         }
     }
 
-    private class SpacingDecoration(@Px private val innerSpacing: Int) :
+    private class SpacingDecoration(
+        @Px private val innerSpacing: Int,
+    ) :
         RecyclerView.ItemDecoration() {
-
         override fun getItemOffsets(
             outRect: Rect,
             view: View,
@@ -191,7 +198,10 @@ class CaptureModeSelectorView(
     ) : RecyclerView.OnScrollListener() {
         private var snapPosition = RecyclerView.NO_POSITION
 
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        override fun onScrollStateChanged(
+            recyclerView: RecyclerView,
+            newState: Int,
+        ) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val snapPosition = snapHelper.getSnapPosition(recyclerView)
                 val snapPositionChanged = this.snapPosition != snapPosition
@@ -210,20 +220,24 @@ class CaptureModeSelectorView(
     }
 
     private fun RecyclerView.smoothScrollToCenteredPosition(position: Int) {
-        val smoothScroller = object : LinearSmoothScroller(context) {
-            private val MILLISECONDS_PER_INCH = 65f
+        val smoothScroller =
+            object : LinearSmoothScroller(context) {
+                private val MILLISECONDS_PER_INCH = 65f
 
-            override fun calculateDxToMakeVisible(view: View?, snapPreference: Int): Int {
-                val dxToStart = super.calculateDxToMakeVisible(view, SNAP_TO_START)
-                val dxToEnd = super.calculateDxToMakeVisible(view, SNAP_TO_END)
+                override fun calculateDxToMakeVisible(
+                    view: View?,
+                    snapPreference: Int,
+                ): Int {
+                    val dxToStart = super.calculateDxToMakeVisible(view, SNAP_TO_START)
+                    val dxToEnd = super.calculateDxToMakeVisible(view, SNAP_TO_END)
 
-                return (dxToStart + dxToEnd) / 2
+                    return (dxToStart + dxToEnd) / 2
+                }
+
+                override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+                    return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+                }
             }
-
-            override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-                return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
-            }
-        }
 
         smoothScroller.targetPosition = position
         layoutManager?.startSmoothScroll(smoothScroller)

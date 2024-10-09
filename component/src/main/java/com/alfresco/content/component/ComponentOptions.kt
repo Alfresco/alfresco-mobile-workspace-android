@@ -18,7 +18,6 @@ data class ComponentOptions(
     val count: Int = 0,
 ) : Parcelable {
     companion object {
-
         /**
          * return the updated ComponentOptions obj by using OptionsModel obj
          * @param optionsModel
@@ -65,7 +64,6 @@ data class ComponentOptions(
                 label = options.name ?: "",
                 query = options.value ?: "",
                 default = options.default ?: false,
-
             )
         }
 
@@ -78,7 +76,6 @@ data class ComponentOptions(
                 label = options.name,
                 query = options.id,
                 default = options.default,
-
             )
         }
     }

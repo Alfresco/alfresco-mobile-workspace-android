@@ -16,7 +16,6 @@ import org.junit.ClassRule
 import org.junit.Test
 
 class SearchUserGroupComponentViewModelTest {
-
     private lateinit var viewModel: SearchUserGroupComponentViewModel
 
     private lateinit var state: SearchUserGroupComponentState

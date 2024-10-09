@@ -17,7 +17,6 @@ class MaterialShapeView(
     defStyleAttr: Int,
     defStyleRes: Int,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
-
     private val background = MaterialShapeDrawable(context, attrs, defStyleAttr, defStyleRes)
     private var onElevation: ((Float) -> Unit)? = null
 
@@ -61,12 +60,13 @@ class MaterialShapeView(
         ViewCompat.setBackground(this, background)
 
         // Load attributes
-        val attributes = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.MaterialShapeView,
-            defStyleAttr,
-            defStyleRes,
-        )
+        val attributes =
+            context.obtainStyledAttributes(
+                attrs,
+                R.styleable.MaterialShapeView,
+                defStyleAttr,
+                defStyleRes,
+            )
 
         try {
             loadFromAttributes(attributes)

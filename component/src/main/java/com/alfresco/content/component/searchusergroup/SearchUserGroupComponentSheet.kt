@@ -33,7 +33,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  * Marked as SearchUserGroupComponentSheet class
  */
 class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView {
-
     internal val viewModel: SearchUserGroupComponentViewModel by fragmentViewModel()
     lateinit var binding: SheetComponentSearchUserBinding
 
@@ -51,9 +50,14 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog?.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,
+        )
         binding.toolbar.apply {
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener { dismiss() }
@@ -66,19 +70,21 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (isResumed) {
-                    setSearchQuery(newText ?: "")
+        binding.searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (isResumed) {
+                        setSearchQuery(newText ?: "")
+                    }
+                    return true
                 }
-                return true
-            }
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                binding.searchView.hideSoftInput()
-                return true
-            }
-        })
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    binding.searchView.hideSoftInput()
+                    return true
+                }
+            },
+        )
 
         binding.searchByNameOrIndividual.setOnCheckedChangeListener { button, isChecked ->
             if (isChecked) {
@@ -103,7 +109,10 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         }
     }
 
-    private fun changeTab(selected: CompoundButton, notSelected: CompoundButton) {
+    private fun changeTab(
+        selected: CompoundButton,
+        notSelected: CompoundButton,
+    ) {
         selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color))
         notSelected.setTextColor(ContextCompat.getColor(requireContext(), R.color.alfresco_gray_radio_text_color_60))
         setSearchQuery(binding.searchView.query.toString())
@@ -152,29 +161,31 @@ class SearchUserGroupComponentSheet : BottomSheetDialogFragment(), MavericksView
         binding.componentParent.requestLayout()
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = state.requestUser is Loading
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            binding.loading.isVisible = state.requestUser is Loading
 
-        if (viewModel.canSearchGroups) {
-            binding.rgSelector.visibility = View.GONE
-            binding.searchView.queryHint = when ((state.parent as ProcessEntry).reviewerType) {
-                ReviewerType.FUNCTIONAL_GROUP -> {
-                    viewModel.searchByNameOrIndividual = false
-                    getString(R.string.search_group)
-                }
-                else -> {
-                    viewModel.searchByNameOrIndividual = true
-                    getString(R.string.search_user)
-                }
+            if (viewModel.canSearchGroups) {
+                binding.rgSelector.visibility = View.GONE
+                binding.searchView.queryHint =
+                    when ((state.parent as ProcessEntry).reviewerType) {
+                        ReviewerType.FUNCTIONAL_GROUP -> {
+                            viewModel.searchByNameOrIndividual = false
+                            getString(R.string.search_group)
+                        }
+                        else -> {
+                            viewModel.searchByNameOrIndividual = true
+                            getString(R.string.search_user)
+                        }
+                    }
+                binding.searchByNameOrIndividual.text = getString(R.string.individual_title)
+                binding.searchByEmailOrGroups.text = getString(R.string.group_title)
+            } else {
+                binding.rgSelector.visibility = View.VISIBLE
+                binding.searchByNameOrIndividual.text = getString(R.string.text_by_name)
+                binding.searchByEmailOrGroups.text = getString(R.string.text_by_email)
             }
-            binding.searchByNameOrIndividual.text = getString(R.string.individual_title)
-            binding.searchByEmailOrGroups.text = getString(R.string.group_title)
-        } else {
-            binding.rgSelector.visibility = View.VISIBLE
-            binding.searchByNameOrIndividual.text = getString(R.string.text_by_name)
-            binding.searchByEmailOrGroups.text = getString(R.string.text_by_email)
-        }
 
-        epoxyController.requestModelBuild()
-    }
+            epoxyController.requestModelBuild()
+        }
 }

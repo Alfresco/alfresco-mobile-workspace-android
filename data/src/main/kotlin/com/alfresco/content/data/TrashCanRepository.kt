@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TrashCanRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -36,17 +35,18 @@ class TrashCanRepository {
         session.createService(TrashcanApiExt::class.java)
     }
 
-    suspend fun getDeletedNodes(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            service.listDeletedNodes(
-                skipCount,
-                maxItems,
-                AlfrescoApi.csvQueryParam("path"),
-            ),
-        )
+    suspend fun getDeletedNodes(
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.with(
+        service.listDeletedNodes(
+            skipCount,
+            maxItems,
+            AlfrescoApi.csvQueryParam("path"),
+        ),
+    )
 
-    suspend fun restoreEntry(entry: Entry) =
-        Entry.with(serviceExt.restoreDeletedNode(entry.id).entry)
+    suspend fun restoreEntry(entry: Entry) = Entry.with(serviceExt.restoreDeletedNode(entry.id).entry)
 
     suspend fun deleteForeverEntry(entry: Entry) {
         service.deleteDeletedNode(entry.id)

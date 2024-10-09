@@ -13,11 +13,10 @@ class CaptureDurationView(
     attrs: AttributeSet?,
     defStyleAttr: Int,
 ) : Chronometer(
-    ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
-    attrs,
-    defStyleAttr,
-) {
-
+        ContextThemeWrapper(context, R.style.Widget_Alfresco_Camera_Mode_Button),
+        attrs,
+        defStyleAttr,
+    ) {
     constructor(context: Context) :
         this(context, null)
 
@@ -30,7 +29,10 @@ class CaptureDurationView(
         setPadding(pad, 0, pad, 0)
     }
 
-    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+    override fun onVisibilityChanged(
+        changedView: View,
+        visibility: Int,
+    ) {
         super.onVisibilityChanged(changedView, visibility)
 
         if (visibility == View.VISIBLE) {

@@ -28,13 +28,14 @@ data class PreviewArgs(
             )
         }
 
-        fun bundle(path: String, mimeType: String) =
-            bundleOf(PATH_KEY to path, MIME_TYPE_KEY to mimeType)
+        fun bundle(
+            path: String,
+            mimeType: String,
+        ) = bundleOf(PATH_KEY to path, MIME_TYPE_KEY to mimeType)
     }
 }
 
 class PreviewFragment : Fragment() {
-
     private lateinit var binding: FragmentPreviewBinding
 
     override fun onCreateView(
@@ -46,7 +47,10 @@ class PreviewFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val args = PreviewArgs.with(requireArguments())

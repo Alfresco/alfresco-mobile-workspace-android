@@ -20,7 +20,6 @@ data class ProcessesViewState(
     val loadItemsCount: Int = 0,
     val page: Int = 0,
 ) : ProcessListViewState {
-
     override val isCompact = false
 
     override fun copy(_entries: List<ProcessEntry>) = copy(processEntries = _entries)
@@ -28,22 +27,21 @@ data class ProcessesViewState(
     /**
      * update the latest response
      */
-    fun update(
-        response: ResponseList?,
-    ): ProcessesViewState {
+    fun update(response: ResponseList?): ProcessesViewState {
         if (response == null) return this
 
         val totalLoadCount: Int
 
         val taskPageEntries = response.listProcesses
 
-        val newTaskEntries = if (response.start != 0) {
-            totalLoadCount = loadItemsCount.plus(response.size)
-            baseTaskEntries + taskPageEntries
-        } else {
-            totalLoadCount = response.size
-            taskPageEntries
-        }
+        val newTaskEntries =
+            if (response.start != 0) {
+                totalLoadCount = loadItemsCount.plus(response.size)
+                baseTaskEntries + taskPageEntries
+            } else {
+                totalLoadCount = response.size
+                taskPageEntries
+            }
 
         return copy(
             processEntries = newTaskEntries,

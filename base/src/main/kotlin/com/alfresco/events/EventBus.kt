@@ -11,7 +11,9 @@ import kotlin.coroutines.EmptyCoroutineContext
 class EventBus {
     val bus = MutableSharedFlow<Any>()
 
-    suspend fun send(obj: Any) { bus.emit(obj) }
+    suspend fun send(obj: Any) {
+        bus.emit(obj)
+    }
 
     inline fun <reified T> on() = bus.filter { it is T }.map { it as T }
 

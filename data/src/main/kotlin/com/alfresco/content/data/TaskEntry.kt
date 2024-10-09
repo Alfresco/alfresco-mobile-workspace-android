@@ -33,23 +33,32 @@ data class TaskEntry(
     val processInstanceStartUserId: String? = null,
     val memberOfCandidateGroup: Boolean? = null,
 ) : ParentEntry(), Parcelable {
-
     val localDueDate: String?
         get() = formattedDueDate ?: dueDate?.toLocalDate()?.toString()
 
     companion object {
-
         /**
          * return the TaskEntry obj using TaskDataEntry
          */
-        fun with(data: TaskDataEntry, apsUser: UserGroupDetails? = null, isNewTaskCreated: Boolean = false): TaskEntry {
+        fun with(
+            data: TaskDataEntry,
+            apsUser: UserGroupDetails? = null,
+            isNewTaskCreated: Boolean = false,
+        ): TaskEntry {
             val isAssigneeUser = apsUser?.id == data.assignee?.id
             return TaskEntry(
                 id = data.id ?: "",
                 name = data.name ?: "",
                 description = data.description,
                 created = data.created,
-                assignee = if (isAssigneeUser) apsUser?.let { UserGroupDetails.with(it) } else data.assignee?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
+                assignee =
+                    if (isAssigneeUser) {
+                        apsUser?.let {
+                            UserGroupDetails.with(it)
+                        }
+                    } else {
+                        data.assignee?.let { UserGroupDetails.with(it) } ?: UserGroupDetails()
+                    },
                 priority = data.priority?.toInt() ?: 0,
                 endDate = data.endDate,
                 dueDate = data.dueDate,
@@ -67,7 +76,10 @@ data class TaskEntry(
         /**
          * return the TaskEntry obj using ResponseListForm and existing TaskEntry
          */
-        fun withTaskForm(response: ResponseListForm, parent: TaskEntry): TaskEntry {
+        fun withTaskForm(
+            response: ResponseListForm,
+            parent: TaskEntry,
+        ): TaskEntry {
             val formFields = response.fields.first().fields
             var description: String? = null
             var comment: String? = null
@@ -103,7 +115,10 @@ data class TaskEntry(
                     }
 
                     TaskFields.ITEMS.value() -> {
-                        listContents = (it.value as? List<*>)?.map { mapData -> gson.fromJson(JSONObject(mapData as Map<String, Entry>).toString(), Entry::class.java) } ?: emptyList()
+                        listContents = (it.value as? List<*>)?.map {
+                                mapData ->
+                            gson.fromJson(JSONObject(mapData as Map<String, Entry>).toString(), Entry::class.java)
+                        } ?: emptyList()
                     }
                 }
             }
@@ -156,7 +171,11 @@ data class TaskEntry(
         /**
          * updating the task due date into existing object
          */
-        fun updateTaskDueDate(data: TaskEntry, formattedDueDate: String?, isClearDueDate: Boolean): TaskEntry {
+        fun updateTaskDueDate(
+            data: TaskEntry,
+            formattedDueDate: String?,
+            isClearDueDate: Boolean,
+        ): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,
@@ -175,7 +194,10 @@ data class TaskEntry(
         /**
          * updating the task priority into existing object
          */
-        fun updateTaskPriority(data: TaskEntry, priority: Int): TaskEntry {
+        fun updateTaskPriority(
+            data: TaskEntry,
+            priority: Int,
+        ): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,
@@ -194,7 +216,10 @@ data class TaskEntry(
         /**
          * updating the task assignee into existing object
          */
-        fun updateAssignee(data: TaskEntry, assignee: UserGroupDetails): TaskEntry {
+        fun updateAssignee(
+            data: TaskEntry,
+            assignee: UserGroupDetails,
+        ): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,
@@ -212,7 +237,10 @@ data class TaskEntry(
         /**
          * updating the task status into existing object
          */
-        fun updateTaskStatus(data: TaskEntry, status: String?): TaskEntry {
+        fun updateTaskStatus(
+            data: TaskEntry,
+            status: String?,
+        ): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,
@@ -236,7 +264,11 @@ data class TaskEntry(
         /**
          * update the status and comment and return the TaskEntry
          */
-        fun updateTaskStatusAndComment(data: TaskEntry, status: String?, comment: String?): TaskEntry {
+        fun updateTaskStatusAndComment(
+            data: TaskEntry,
+            status: String?,
+            comment: String?,
+        ): TaskEntry {
             return TaskEntry(
                 id = data.id,
                 name = data.name,
@@ -264,7 +296,6 @@ data class TaskEntry(
  * Marked as TaskFields enum
  */
 enum class TaskFields {
-
     MESSAGE,
     ITEMS,
     PRIORITY,

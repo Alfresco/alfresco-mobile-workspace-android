@@ -44,4 +44,5 @@
     <string name="message_content_in_queue">La carga de ficheros está en curso. Toque Confirmar para continuar sin los ficheros en curso.</string>
     <string name="no_attached_files">No hay ficheros adjuntos</string>
     <string name="title_no_name">No tiene ningún nombre</string>
+    <string name="component_action_reset">Reiniciar</string>
 </resources>

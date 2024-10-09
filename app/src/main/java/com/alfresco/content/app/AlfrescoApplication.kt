@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 @Suppress("unused")
 class AlfrescoApplication : Application() {
-
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private lateinit var settings: Settings
 

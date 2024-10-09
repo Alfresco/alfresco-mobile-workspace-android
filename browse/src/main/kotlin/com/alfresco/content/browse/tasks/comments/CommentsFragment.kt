@@ -29,7 +29,6 @@ import com.alfresco.ui.getDrawableForAttribute
  * Marked as CommentsFragment class
  */
 class CommentsFragment : Fragment(), MavericksView {
-
     val viewModel: TaskDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentCommentsBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
@@ -44,7 +43,10 @@ class CommentsFragment : Fragment(), MavericksView {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.Comments)
@@ -58,14 +60,19 @@ class CommentsFragment : Fragment(), MavericksView {
 
         binding.recyclerView.setController(epoxyController)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    binding.recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        binding.recyclerView.layoutManager?.scrollToPosition(0)
+                    }
                 }
-            }
-        })
+            },
+        )
         updateSendIconView(binding.commentInput.text.toString())
 
         withState(viewModel) { state ->
@@ -88,19 +95,31 @@ class CommentsFragment : Fragment(), MavericksView {
             binding.commentInput.setText("")
         }
 
-        binding.commentInputLayout.editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // no-op
-            }
+        binding.commentInputLayout.editText?.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // no-op
-            }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                updateSendIconView(s.toString())
-            }
-        })
+                override fun afterTextChanged(s: Editable?) {
+                    updateSendIconView(s.toString())
+                }
+            },
+        )
 
         requireActivity().window.decorView.viewTreeObserver.addOnGlobalLayoutListener {
             if (isAdded) {
@@ -113,7 +132,9 @@ class CommentsFragment : Fragment(), MavericksView {
                         binding.recyclerView.scrollToPosition(state.listComments.size - 1)
                     }
                     isScrolled = true
-                } else isScrolled = false
+                } else {
+                    isScrolled = false
+                }
             }
         }
 
@@ -133,38 +154,40 @@ class CommentsFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.requestComments.complete) {
-            binding.refreshLayout.isRefreshing = false
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.requestComments.complete) {
+                binding.refreshLayout.isRefreshing = false
+            }
+
+            if (viewModel.isAddComment) {
+                requireContext().showKeyboard(binding.commentInput)
+                viewModel.isAddComment = false
+            }
+
+            epoxyController.requestModelBuild()
+
+            if (state.listComments.size > 1) {
+                binding.tvNoOfComments.visibility = View.VISIBLE
+                binding.tvNoOfComments.text = getString(R.string.text_multiple_comments, state.listComments.size)
+            } else {
+                binding.tvNoOfComments.visibility = View.GONE
+            }
         }
 
-        if (viewModel.isAddComment) {
-            requireContext().showKeyboard(binding.commentInput)
-            viewModel.isAddComment = false
-        }
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
 
-        epoxyController.requestModelBuild()
-
-        if (state.listComments.size > 1) {
-            binding.tvNoOfComments.visibility = View.VISIBLE
-            binding.tvNoOfComments.text = getString(R.string.text_multiple_comments, state.listComments.size)
-        } else {
-            binding.tvNoOfComments.visibility = View.GONE
-        }
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-
-        if (state.listComments.isNotEmpty()) {
-            state.listComments.forEach { obj ->
-                listViewCommentRow {
-                    id(obj.id)
-                    data(obj)
+            if (state.listComments.isNotEmpty()) {
+                state.listComments.forEach { obj ->
+                    listViewCommentRow {
+                        id(obj.id)
+                        data(obj)
+                    }
+                }
+                binding.recyclerView.post {
+                    binding.recyclerView.scrollToPosition(state.listComments.size - 1)
                 }
             }
-            binding.recyclerView.post {
-                binding.recyclerView.scrollToPosition(state.listComments.size - 1)
-            }
         }
-    }
 }

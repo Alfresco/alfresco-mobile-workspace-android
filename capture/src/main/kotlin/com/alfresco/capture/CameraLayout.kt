@@ -19,7 +19,6 @@ class CameraLayout(
     defStyleAttr: Int,
     defStyleRes: Int,
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
-
     private lateinit var topBar: ViewGroup
     private lateinit var previewHolder: ViewGroup
     private lateinit var onFrameControls: ViewGroup
@@ -96,7 +95,10 @@ class CameraLayout(
         messageView.isVisible = false
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
         val parentHeight = MeasureSpec.getSize(heightMeasureSpec)
 
@@ -110,10 +112,11 @@ class CameraLayout(
         )
 
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = topBar.measuredHeight +
-            previewHolder.measuredHeight +
-            shutterBar.measuredHeight +
-            modeBar.measuredHeight
+        val height =
+            topBar.measuredHeight +
+                previewHolder.measuredHeight +
+                shutterBar.measuredHeight +
+                modeBar.measuredHeight
 
         setMeasuredDimension(
             resolveSize(width, widthMeasureSpec),
@@ -126,7 +129,13 @@ class CameraLayout(
         flashMenu.measure(flashMenuMeasureSpec, flashMenuMeasureSpec)
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    override fun onLayout(
+        changed: Boolean,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+    ) {
         val width = right - left
         val height = bottom - top
 
@@ -177,27 +186,29 @@ class CameraLayout(
         modeBar.layout(0, modeGuide, width, modeGuide + modeHeight)
     }
 
-    private val orientationEventListener = object : OrientationEventListener(context) {
-        override fun onOrientationChanged(orientation: Int) {
-            // Doesn't support upside down orientation
-            val rotation = when (orientation) {
-                in 45 until 135 -> -90
-                in 135 until 225 -> controlRotation
-                in 225 until 315 -> 90
-                else -> 0
-            }
+    private val orientationEventListener =
+        object : OrientationEventListener(context) {
+            override fun onOrientationChanged(orientation: Int) {
+                // Doesn't support upside down orientation
+                val rotation =
+                    when (orientation) {
+                        in 45 until 135 -> -90
+                        in 135 until 225 -> controlRotation
+                        in 225 until 315 -> 90
+                        else -> 0
+                    }
 
-            if (controlRotation != rotation &&
-                abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS
-            ) {
-                controlRotation = rotation
-                deviceOrientation = orientation
-                orientationAwareControls.map {
-                    it.animate().rotation(rotation.toFloat()).start()
+                if (controlRotation != rotation &&
+                    abs(deviceOrientation - orientation) > ORIENTATION_HYSTERESIS
+                ) {
+                    controlRotation = rotation
+                    deviceOrientation = orientation
+                    orientationAwareControls.map {
+                        it.animate().rotation(rotation.toFloat()).start()
+                    }
                 }
             }
         }
-    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AuthenticationRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 

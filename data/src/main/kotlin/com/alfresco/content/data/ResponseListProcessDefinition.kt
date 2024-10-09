@@ -12,7 +12,6 @@ data class ResponseListProcessDefinition(
     val listProcessDefinitions: List<ProcessDefinitionDataEntry> = emptyList(),
 ) {
     companion object {
-
         /**
          * return the ResponseListProcessDefinition obj using ResultListProcessDefinitions
          */

@@ -17,9 +17,13 @@ data class ActionCaptureMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_capture_photo,
     override val title: Int = R.string.action_capture_media_title,
-    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskCreateMedia else EventName.CreateMedia,
+    override val eventName: EventName =
+        if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) {
+            EventName.TaskCreateMedia
+        } else {
+            EventName.CreateMedia
+        },
 ) : Action {
-
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
@@ -60,6 +64,8 @@ data class ActionCaptureMedia(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_upload_media_toast)
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) = Action.showToast(view, anchorView, R.string.action_upload_media_toast)
 }

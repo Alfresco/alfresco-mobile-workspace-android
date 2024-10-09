@@ -23,7 +23,6 @@ internal typealias CreateTaskCancelCallback = () -> Unit
  * Mark as CreateTaskDialog class
  */
 class CreateTaskDialog : DialogFragment() {
-
     private val binding: DialogCreateLayoutBinding by lazy {
         DialogCreateLayoutBinding.inflate(LayoutInflater.from(requireContext()), null, false)
     }
@@ -36,6 +35,7 @@ class CreateTaskDialog : DialogFragment() {
     var onCancel: CreateTaskCancelCallback? = null
     var isUpdate: Boolean = false
     var dataObj: CreateMetadata? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
@@ -63,19 +63,31 @@ class CreateTaskDialog : DialogFragment() {
         super.onStart()
         binding.nameInput.filters = arrayOf<InputFilter>(LengthFilter(255))
         binding.descriptionInput.filters = arrayOf<InputFilter>(LengthFilter(500))
-        binding.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // no-op
-            }
+        binding.nameInputLayout.editText?.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // no-op
-            }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                validateInput(s.toString())
-            }
-        })
+                override fun afterTextChanged(s: Editable?) {
+                    validateInput(s.toString())
+                }
+            },
+        )
 
         if (isUpdate && dataObj?.name != null) {
             binding.nameInput.setText(dataObj?.name)
@@ -92,10 +104,11 @@ class CreateTaskDialog : DialogFragment() {
     private fun validateInput(title: String) {
         val isEmpty = title.isEmpty()
 
-        binding.nameInputLayout.error = when {
-            isEmpty -> resources.getString(R.string.action_task_name_empty)
-            else -> null
-        }
+        binding.nameInputLayout.error =
+            when {
+                isEmpty -> resources.getString(R.string.action_task_name_empty)
+                else -> null
+            }
 
         positiveButton.isEnabled = !isEmpty
     }
@@ -110,28 +123,26 @@ class CreateTaskDialog : DialogFragment() {
         var onSuccess: CreateTaskSuccessCallback? = null,
         var onCancel: CreateTaskCancelCallback? = null,
     ) {
-
         /**
          * success callback if create the task
          */
-        fun onSuccess(callback: CreateTaskSuccessCallback?) =
-            apply { this.onSuccess = callback }
+        fun onSuccess(callback: CreateTaskSuccessCallback?) = apply { this.onSuccess = callback }
 
         /**
          * cancel callback if dismiss the dialog
          */
-        fun onCancel(callback: CreateTaskCancelCallback?) =
-            apply { this.onCancel = callback }
+        fun onCancel(callback: CreateTaskCancelCallback?) = apply { this.onCancel = callback }
 
         /**
          * It will show the create task dialog
          */
         fun show() {
-            val fragmentManager = when (context) {
-                is AppCompatActivity -> context.supportFragmentManager
-                is Fragment -> context.childFragmentManager
-                else -> throw IllegalArgumentException()
-            }
+            val fragmentManager =
+                when (context) {
+                    is AppCompatActivity -> context.supportFragmentManager
+                    is Fragment -> context.childFragmentManager
+                    else -> throw IllegalArgumentException()
+                }
             CreateTaskDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel

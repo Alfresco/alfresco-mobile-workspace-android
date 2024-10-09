@@ -31,11 +31,13 @@ interface Action {
     val eventName: EventName
 
     suspend fun execute(context: Context): ParentEntry
+
     suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> {
         return Pair(entry, entries)
     }
 
     fun copy(_entry: ParentEntry): Action
+
     fun copy(_entries: List<Entry>): Action {
         return this
     }
@@ -139,10 +141,12 @@ interface Action {
         }
     }
 
-    fun showToast(view: View, anchorView: View? = null) {}
+    fun showToast(
+        view: View,
+        anchorView: View? = null,
+    ) {}
 
-    fun maxFileNameInToast(view: View) =
-        view.context.resources.getInteger(R.integer.action_toast_file_name_max_length)
+    fun maxFileNameInToast(view: View) = view.context.resources.getInteger(R.integer.action_toast_file_name_max_length)
 
     data class Error(val message: String)
 
@@ -150,7 +154,12 @@ interface Action {
 
     companion object {
         const val ERROR_FILE_SIZE_EXCEED = "File size exceed"
-        fun showActionToasts(scope: CoroutineScope, view: View?, anchorView: View? = null) {
+
+        fun showActionToasts(
+            scope: CoroutineScope,
+            view: View?,
+            anchorView: View? = null,
+        ) {
             scope.on<Action>(block = showToast(view, anchorView))
             scope.on<Error> {
                 if (view != null) {
@@ -159,7 +168,10 @@ interface Action {
             }
         }
 
-        private fun <T : Action> showToast(view: View?, anchorView: View?): suspend (value: T) -> Unit {
+        private fun <T : Action> showToast(
+            view: View?,
+            anchorView: View?,
+        ): suspend (value: T) -> Unit {
             return { action: T ->
                 // Don't call on backstack views
                 if (view != null) {

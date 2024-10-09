@@ -48,10 +48,11 @@ class SyncService(
     fun sync() {
         cancelPendingSync()
         cancelScheduledSync()
-        pendingSync = scope.launch {
-            delay(TRIGGER_DELAY)
-            execute()
-        }
+        pendingSync =
+            scope.launch {
+                delay(TRIGGER_DELAY)
+                execute()
+            }
     }
 
     /**
@@ -68,10 +69,11 @@ class SyncService(
      */
     fun scheduleForegroundSync() {
         cancelScheduledSync()
-        scheduledSync = scope.launch {
-            delay(FOREGROUND_DELAY)
-            syncOrWait()
-        }
+        scheduledSync =
+            scope.launch {
+                delay(FOREGROUND_DELAY)
+                syncOrWait()
+            }
     }
 
     /**
@@ -114,26 +116,30 @@ class SyncService(
     }
 
     private fun scheduleSyncWork(overrideNetwork: Boolean) {
-        val networkType = if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {
-            NetworkType.CONNECTED
-        } else {
-            NetworkType.UNMETERED
-        }
+        val networkType =
+            if (Settings(context).canSyncOverMeteredNetwork || overrideNetwork) {
+                NetworkType.CONNECTED
+            } else {
+                NetworkType.UNMETERED
+            }
 
-        val policy = if (latestWorkInfo?.state == WorkInfo.State.RUNNING) {
-            ExistingWorkPolicy.APPEND
-        } else {
-            // Existing work may start before scheduling new work causing a cancellation
-            ExistingWorkPolicy.REPLACE
-        }
+        val policy =
+            if (latestWorkInfo?.state == WorkInfo.State.RUNNING) {
+                ExistingWorkPolicy.APPEND
+            } else {
+                // Existing work may start before scheduling new work causing a cancellation
+                ExistingWorkPolicy.REPLACE
+            }
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(networkType)
-            .build()
+        val constraints =
+            Constraints.Builder()
+                .setRequiredNetworkType(networkType)
+                .build()
 
-        val request = OneTimeWorkRequestBuilder<SyncWorker>()
-            .setConstraints(constraints)
-            .build()
+        val request =
+            OneTimeWorkRequestBuilder<SyncWorker>()
+                .setConstraints(constraints)
+                .build()
 
         workManager
             .beginUniqueWork(UNIQUE_SYNC_WORK_NAME, policy, request)
@@ -155,21 +161,24 @@ class SyncService(
     private fun scheduleUploadWork() {
         val networkType = NetworkType.CONNECTED
 
-        val policy = if (latestUploadWorkInfo?.state == WorkInfo.State.RUNNING) {
-            ExistingWorkPolicy.APPEND
-        } else {
-            // Existing work may start before scheduling new work causing a cancellation
-            ExistingWorkPolicy.REPLACE
-        }
+        val policy =
+            if (latestUploadWorkInfo?.state == WorkInfo.State.RUNNING) {
+                ExistingWorkPolicy.APPEND
+            } else {
+                // Existing work may start before scheduling new work causing a cancellation
+                ExistingWorkPolicy.REPLACE
+            }
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(networkType)
-            .build()
+        val constraints =
+            Constraints.Builder()
+                .setRequiredNetworkType(networkType)
+                .build()
 
-        val request = OneTimeWorkRequestBuilder<UploadWorker>()
-            .setConstraints(constraints)
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, UPLOAD_BACKOFF_DELAY, TimeUnit.SECONDS)
-            .build()
+        val request =
+            OneTimeWorkRequestBuilder<UploadWorker>()
+                .setConstraints(constraints)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, UPLOAD_BACKOFF_DELAY, TimeUnit.SECONDS)
+                .build()
 
         workManager
             .beginUniqueWork(UNIQUE_UPLOAD_WORK_NAME, policy, request)

@@ -12,11 +12,13 @@ data class LinkContentPayload(
     val name: String = "",
 ) {
     companion object {
-
         /**
          * returns the LinkContentPayload as obj
          */
-        fun with(entry: Entry, sourceName: String): LinkContentPayload {
+        fun with(
+            entry: Entry,
+            sourceName: String,
+        ): LinkContentPayload {
             return LinkContentPayload(
                 source = sourceName,
                 sourceId = entry.id,

@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FavoritesRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -32,7 +31,10 @@ class FavoritesRepository {
         session.createService(FavoritesApi::class.java)
     }
 
-    suspend fun getFavorites(skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun getFavorites(
+        skipCount: Int,
+        maxItems: Int,
+    ): ResponsePaging {
         val where = "(EXISTS(target/file) OR EXISTS(target/folder))"
         val include = AlfrescoApi.csvQueryParam("path", "allowableOperations")
         val orderBy = listOf("title ASC")
@@ -49,7 +51,10 @@ class FavoritesRepository {
         )
     }
 
-    suspend fun getFavoriteLibraries(skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun getFavoriteLibraries(
+        skipCount: Int,
+        maxItems: Int,
+    ): ResponsePaging {
         val where = "(EXISTS(target/site))"
         val orderBy = listOf("title ASC")
         return ResponsePaging.with(
@@ -64,12 +69,13 @@ class FavoritesRepository {
     }
 
     suspend fun addFavorite(entry: Entry) {
-        val key = when (entry.type) {
-            Entry.Type.FILE -> "file"
-            Entry.Type.FOLDER -> "folder"
-            Entry.Type.SITE -> "site"
-            else -> ""
-        }
+        val key =
+            when (entry.type) {
+                Entry.Type.FILE -> "file"
+                Entry.Type.FOLDER -> "folder"
+                Entry.Type.SITE -> "site"
+                else -> ""
+            }
 
         service.createFavorite(
             AlfrescoApi.CURRENT_USER,
@@ -81,8 +87,7 @@ class FavoritesRepository {
         service.deleteFavorite(AlfrescoApi.CURRENT_USER, entry.id)
     }
 
-    suspend fun getFavoriteSite(id: String) =
-        Entry.with(service.getFavorite(AlfrescoApi.CURRENT_USER, id).entry)
+    suspend fun getFavoriteSite(id: String) = Entry.with(service.getFavorite(AlfrescoApi.CURRENT_USER, id).entry)
 
     companion object {
         fun getRepoInstance(): FavoritesRepository? {

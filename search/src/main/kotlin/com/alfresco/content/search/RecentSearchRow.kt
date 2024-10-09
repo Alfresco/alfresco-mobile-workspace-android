@@ -10,21 +10,22 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.search.databinding.ViewRecentSearchRowBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-class RecentSearchRow @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
+class RecentSearchRow
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : FrameLayout(context, attrs, defStyleAttr) {
+        private val binding = ViewRecentSearchRowBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val binding = ViewRecentSearchRowBinding.inflate(LayoutInflater.from(context), this, true)
+        @ModelProp
+        fun setTitle(text: String) {
+            binding.title.text = text
+        }
 
-    @ModelProp
-    fun setTitle(text: String) {
-        binding.title.text = text
+        @CallbackProp
+        fun setClickListener(listener: OnClickListener?) {
+            setOnClickListener(listener)
+        }
     }
-
-    @CallbackProp
-    fun setClickListener(listener: OnClickListener?) {
-        setOnClickListener(listener)
-    }
-}

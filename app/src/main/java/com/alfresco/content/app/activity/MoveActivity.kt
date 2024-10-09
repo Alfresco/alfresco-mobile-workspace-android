@@ -26,7 +26,6 @@ import java.lang.ref.WeakReference
  * Marked as MoveActivity class
  */
 class MoveActivity : AppCompatActivity(), MavericksView {
-
     @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -53,11 +52,12 @@ class MoveActivity : AppCompatActivity(), MavericksView {
     private fun configure() {
         val graph = navController.navInflater.inflate(R.navigation.nav_move_paths)
         graph.setStartDestination(R.id.nav_move)
-        val bundle = Bundle().apply {
-            if (entryObj != null) {
-                putParcelable(ENTRY_OBJ_KEY, entryObj)
+        val bundle =
+            Bundle().apply {
+                if (entryObj != null) {
+                    putParcelable(ENTRY_OBJ_KEY, entryObj)
+                }
             }
-        }
         navController.setGraph(graph, bundle)
         setupActionToasts()
         actionBarController = ActionBarController(findViewById(R.id.toolbar))
@@ -68,33 +68,37 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         return if (navController.currentDestination?.id == R.id.nav_browse_move) {
             finish()
             false
-        } else navController.navigateUp()
-    }
-
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.requiresReLogin) {
-            if (state.isOnline) {
-                showSignedOutPrompt()
-            }
         } else {
-            // Only when logged in otherwise triggers re-login prompts
-            actionBarController.setProfileIcon(viewModel.profileIcon)
+            navController.navigateUp()
         }
-
-        actionBarController.setOnline(state.isOnline)
     }
+
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.requiresReLogin) {
+                if (state.isOnline) {
+                    showSignedOutPrompt()
+                }
+            } else {
+                // Only when logged in otherwise triggers re-login prompts
+                actionBarController.setProfileIcon(viewModel.profileIcon)
+            }
+
+            actionBarController.setOnline(state.isOnline)
+        }
 
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.auth_signed_out_title))
-            .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
-            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
-            .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
-                navigateToReLogin()
-            }
-            .show()
+        val dialog =
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.auth_signed_out_title))
+                .setMessage(resources.getString(R.string.auth_signed_out_subtitle))
+                .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null)
+                .setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
+                    navigateToReLogin()
+                }
+                .show()
         signedOutDialog = WeakReference(dialog)
     }
 
@@ -109,11 +113,12 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         startActivity(i)
     }
 
-    private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        findViewById(android.R.id.content),
-        bottomView,
-    )
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content),
+            bottomView,
+        )
 
     override fun onBackPressed() {
         onSupportNavigateUp()

@@ -39,7 +39,6 @@ import java.net.URL
  * Marked as TaskRepository class
  */
 class TaskRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -72,22 +71,24 @@ class TaskRepository {
     /**
      * execute the task list api and returns the response as ResponseList obj
      */
-    suspend fun getTasks(filters: TaskProcessFiltersPayload) = ResponseList.with(
-        tasksService.taskList(
-            includeTaskFilters(filters),
-        ),
-        getAPSUser(),
-    )
+    suspend fun getTasks(filters: TaskProcessFiltersPayload) =
+        ResponseList.with(
+            tasksService.taskList(
+                includeTaskFilters(filters),
+            ),
+            getAPSUser(),
+        )
 
     /**
      * execute the task list api and returns the response as ResponseList obj
      */
-    suspend fun getProcesses(filters: TaskProcessFiltersPayload) = ResponseList.with(
-        processesService.processInstancesQuery(
-            includeProcessFilters(filters),
-        ),
-        getAPSUser(),
-    )
+    suspend fun getProcesses(filters: TaskProcessFiltersPayload) =
+        ResponseList.with(
+            processesService.processInstancesQuery(
+                includeProcessFilters(filters),
+            ),
+            getAPSUser(),
+        )
 
     /**
      * returns the content uri to fetch the content data from server
@@ -105,30 +106,36 @@ class TaskRepository {
     /**
      * execute the task details api and returns the response as TaskDataEntry obj
      */
-    suspend fun getTaskDetails(taskID: String) = TaskEntry.with(
-        tasksService.getTaskDetails(taskID),
-    )
+    suspend fun getTaskDetails(taskID: String) =
+        TaskEntry.with(
+            tasksService.getTaskDetails(taskID),
+        )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
-    suspend fun getComments(taskID: String) = ResponseComments.with(
-        tasksService.getComments(taskID),
-    )
+    suspend fun getComments(taskID: String) =
+        ResponseComments.with(
+            tasksService.getComments(taskID),
+        )
 
     /**
      * execute the get comments api and returns the response as ResponseComments obj
      */
-    suspend fun addComments(taskID: String, payload: CommentPayload) = CommentEntry.with(
+    suspend fun addComments(
+        taskID: String,
+        payload: CommentPayload,
+    ) = CommentEntry.with(
         tasksService.addComment(taskID, includeComment(payload)),
     )
 
     /**
      * execute the get contents api and returns the response as ResponseContents obj
      */
-    suspend fun getContents(taskID: String) = ResponseContents.with(
-        tasksService.getContents(taskID),
-    )
+    suspend fun getContents(taskID: String) =
+        ResponseContents.with(
+            tasksService.getContents(taskID),
+        )
 
     /**
      * execute the get complete task api and returns the response as Unit obj
@@ -234,7 +241,10 @@ class TaskRepository {
     /**
      * It will call the api to create the task and return the TaskEntry type obj
      */
-    suspend fun createTask(name: String, description: String): TaskEntry {
+    suspend fun createTask(
+        name: String,
+        description: String,
+    ): TaskEntry {
         return TaskEntry.with(
             tasksService.createTask(TaskBodyCreate(name = name, description = description)),
             isNewTaskCreated = true,
@@ -244,7 +254,10 @@ class TaskRepository {
     /**
      * It will call the api to search the user by name or email and returns the ResponseUserList type obj
      */
-    suspend fun searchUser(name: String, email: String): ResponseUserGroupList {
+    suspend fun searchUser(
+        name: String,
+        email: String,
+    ): ResponseUserGroupList {
         return ResponseUserGroupList.with(
             tasksService.searchUser(filter = name, email = email),
         )
@@ -280,7 +293,10 @@ class TaskRepository {
     /**
      * It will call the api to update the task api and return the TaskEntry obj
      */
-    suspend fun assignUser(taskID: String, assigneeID: String): TaskEntry {
+    suspend fun assignUser(
+        taskID: String,
+        assigneeID: String,
+    ): TaskEntry {
         return TaskEntry.with(
             tasksService.assignUser(taskID, AssignUserBody(assignee = assigneeID)),
         )
@@ -294,7 +310,11 @@ class TaskRepository {
     /**
      * It will call the api to upload the raw content on process services.
      */
-    suspend fun createEntry(local: Entry, file: File, uploadServerType: UploadServerType): Entry {
+    suspend fun createEntry(
+        local: Entry,
+        file: File,
+        uploadServerType: UploadServerType,
+    ): Entry {
         // TODO: Support creating empty entries and folders
         requireNotNull(local.mimeType)
         requireNotNull(local.parentId)
@@ -321,14 +341,15 @@ class TaskRepository {
                 )
             }
 
-            UploadServerType.UPLOAD_TO_PROCESS -> Entry.with(
-                processesService.uploadRawContent(
-                    multipartBody,
-                ),
-                local.parentId,
-                uploadServer = uploadServerType,
-                observerID = local.observerID,
-            )
+            UploadServerType.UPLOAD_TO_PROCESS ->
+                Entry.with(
+                    processesService.uploadRawContent(
+                        multipartBody,
+                    ),
+                    local.parentId,
+                    uploadServer = uploadServerType,
+                    observerID = local.observerID,
+                )
 
             else -> Entry()
         }
@@ -373,14 +394,19 @@ class TaskRepository {
     /**
      * execute the start-form apis to fetch the form presentation
      */
-    suspend fun startForm(processDefinitionId: String) = ResponseListForm.with(
-        processesService.startForm(processDefinitionId),
-    )
+    suspend fun startForm(processDefinitionId: String) =
+        ResponseListForm.with(
+            processesService.startForm(processDefinitionId),
+        )
 
     /**
      * Execute the start flow integration
      */
-    suspend fun startWorkflow(processEntry: ProcessEntry?, items: String, values: Map<String, Any?>) = ProcessEntry.with(
+    suspend fun startWorkflow(
+        processEntry: ProcessEntry?,
+        items: String,
+        values: Map<String, Any?>,
+    ) = ProcessEntry.with(
         processesService.createProcessInstance(
             RequestProcessInstances(
                 name = processEntry?.name,
@@ -417,7 +443,11 @@ class TaskRepository {
     /**
      * Call to perform the outcomes
      */
-    suspend fun actionOutcomes(outcome: String, taskEntry: TaskEntry, values: Map<String, Any?>) = tasksService.taskFormAction(
+    suspend fun actionOutcomes(
+        outcome: String,
+        taskEntry: TaskEntry,
+        values: Map<String, Any?>,
+    ) = tasksService.taskFormAction(
         taskEntry.id,
         RequestOutcomes(
             outcome = outcome,
@@ -428,7 +458,10 @@ class TaskRepository {
     /**
      * Call to perform the outcomes
      */
-    suspend fun actionCompleteOutcome(taskID: String, values: Map<String, Any?>) = tasksService.taskFormAction(
+    suspend fun actionCompleteOutcome(
+        taskID: String,
+        values: Map<String, Any?>,
+    ) = tasksService.taskFormAction(
         taskID,
         RequestOutcomes(
             outcome = null,
@@ -439,7 +472,10 @@ class TaskRepository {
     /**
      * Call to save the form data
      */
-    suspend fun saveForm(taskID: String, values: Map<String, Any?>) = tasksService.saveForm(
+    suspend fun saveForm(
+        taskID: String,
+        values: Map<String, Any?>,
+    ) = tasksService.saveForm(
         taskID,
         RequestSaveForm(
             values = values,

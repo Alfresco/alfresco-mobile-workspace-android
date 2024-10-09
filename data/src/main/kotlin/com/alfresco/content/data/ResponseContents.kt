@@ -12,7 +12,6 @@ data class ResponseContents(
     val listContents: List<Entry>,
 ) {
     companion object {
-
         /**
          * return the ResponseComments obj using ResultComments
          */

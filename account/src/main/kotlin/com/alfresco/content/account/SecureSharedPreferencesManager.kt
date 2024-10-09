@@ -9,20 +9,25 @@ import androidx.security.crypto.MasterKey
  * Marked as SecureSharedPreferencesManager
  */
 class SecureSharedPreferencesManager(private val context: Context) {
+    private val masterKey: MasterKey =
+        MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
-    private val masterKey: MasterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    fun saveCredentials(email: String, password: String, displayName: String) {
+    fun saveCredentials(
+        email: String,
+        password: String,
+        displayName: String,
+    ) {
         try {
-            val encryptedSharedPreferences = EncryptedSharedPreferences.create(
-                context,
-                KEY_PREF_NAME,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-            )
+            val encryptedSharedPreferences =
+                EncryptedSharedPreferences.create(
+                    context,
+                    KEY_PREF_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+                )
 
             encryptedSharedPreferences.edit()
                 .putString(KEY_EMAIL, email)
@@ -38,13 +43,14 @@ class SecureSharedPreferencesManager(private val context: Context) {
 
     fun savePassword(password: String) {
         try {
-            val encryptedSharedPreferences = EncryptedSharedPreferences.create(
-                context,
-                KEY_PREF_NAME,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-            )
+            val encryptedSharedPreferences =
+                EncryptedSharedPreferences.create(
+                    context,
+                    KEY_PREF_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+                )
 
             encryptedSharedPreferences.edit()
                 .putString(KEY_PASSWORD, password)
@@ -58,13 +64,14 @@ class SecureSharedPreferencesManager(private val context: Context) {
 
     fun getSavedCredentials(): Triple<String, String, String>? {
         try {
-            val encryptedSharedPreferences = EncryptedSharedPreferences.create(
-                context,
-                KEY_PREF_NAME,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-            )
+            val encryptedSharedPreferences =
+                EncryptedSharedPreferences.create(
+                    context,
+                    KEY_PREF_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+                )
 
             val email = encryptedSharedPreferences.getString(KEY_EMAIL, null)
             val password = encryptedSharedPreferences.getString(KEY_PASSWORD, null)

@@ -11,25 +11,27 @@ import com.alfresco.content.component.databinding.ViewRadioListRowBinding
 import com.alfresco.content.getLocalizedName
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-internal class ListViewRadioRow @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
-    private val binding = ViewRadioListRowBinding.inflate(LayoutInflater.from(context), this, true)
+internal class ListViewRadioRow
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : FrameLayout(context, attrs, defStyleAttr) {
+        private val binding = ViewRadioListRowBinding.inflate(LayoutInflater.from(context), this, true)
 
-    @ModelProp
-    fun setData(options: ComponentOptions) {
-        binding.title.text = context.getLocalizedName(options.label)
-    }
+        @ModelProp
+        fun setData(options: ComponentOptions) {
+            binding.title.text = context.getLocalizedName(options.label)
+        }
 
-    @ModelProp
-    fun setOptionSelected(isSelected: Boolean) {
-        binding.radioButton.isChecked = isSelected
-    }
+        @ModelProp
+        fun setOptionSelected(isSelected: Boolean) {
+            binding.radioButton.isChecked = isSelected
+        }
 
-    @CallbackProp
-    fun setClickListener(listener: OnClickListener?) {
-        binding.parentListRow.setOnClickListener(listener)
+        @CallbackProp
+        fun setClickListener(listener: OnClickListener?) {
+            binding.parentListRow.setOnClickListener(listener)
+        }
     }
-}

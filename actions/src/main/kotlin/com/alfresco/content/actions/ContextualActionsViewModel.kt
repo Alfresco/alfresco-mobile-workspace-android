@@ -25,7 +25,6 @@ class ContextualActionsViewModel(
     val context: Context,
     private val settings: Settings,
 ) : MavericksViewModel<ContextualActionsState>(state) {
-
     var listener: EntryListener? = null
 
     init {
@@ -46,38 +45,50 @@ class ContextualActionsViewModel(
         viewModelScope.on<ActionStartProcess>(block = ::updateState)
     }
 
-    private fun buildModelSingleSelection() = withState { state ->
-        // If entry is partial and not in the offline tab
+    private fun buildModelSingleSelection() =
+        withState { state ->
+            // If entry is partial and not in the offline tab
 
-        if (state.entries.isNotEmpty()) {
-            state.entries.first().let { entry ->
+            if (state.entries.isNotEmpty()) {
+                state.entries.first().let { entry ->
 
-                if (entry.isPartial && !entry.hasOfflineStatus) {
-                    viewModelScope.launch {
-                        fetchEntry(entry).execute {
-                            when (it) {
-                                is Success ->
-                                    ContextualActionsState(entries = listOf(it()), actions = makeActions(it()), topActions = makeTopActions(it()), fetch = it)
+                    if (entry.isPartial && !entry.hasOfflineStatus) {
+                        viewModelScope.launch {
+                            fetchEntry(entry).execute {
+                                when (it) {
+                                    is Success ->
+                                        ContextualActionsState(
+                                            entries = listOf(it()),
+                                            actions = makeActions(it()),
+                                            topActions = makeTopActions(it()),
+                                            fetch = it,
+                                        )
 
-                                is Fail ->
-                                    ContextualActionsState(entries = listOf(entry), actions = makeActions(entry), topActions = makeTopActions(entry), fetch = it)
+                                    is Fail ->
+                                        ContextualActionsState(
+                                            entries = listOf(entry),
+                                            actions = makeActions(entry),
+                                            topActions = makeTopActions(entry),
+                                            fetch = it,
+                                        )
 
-                                else ->
-                                    copy(fetch = it)
+                                    else ->
+                                        copy(fetch = it)
+                                }
                             }
                         }
+                    } else {
+                        setState { copy(actions = makeActions(entry), topActions = makeTopActions(entry), fetch = Success(entry)) }
                     }
-                } else {
-                    setState { copy(actions = makeActions(entry), topActions = makeTopActions(entry), fetch = Success(entry)) }
                 }
             }
         }
-    }
 
-    private fun buildModelForMultiSelection() = withState { state ->
-        // If entry is partial and not in the offline tab
-        setState { copy(entries = state.entries, actions = makeMultiActions(state), topActions = emptyList()) }
-    }
+    private fun buildModelForMultiSelection() =
+        withState { state ->
+            // If entry is partial and not in the offline tab
+            setState { copy(entries = state.entries, actions = makeMultiActions(state), topActions = emptyList()) }
+        }
 
     private fun updateState(action: Action) {
         val entry = action.entry as Entry
@@ -97,11 +108,12 @@ class ContextualActionsViewModel(
         this.listener = listener
     }
 
-    private fun onStartProcess(entries: List<Entry>) = entries.run {
-        if (entries.all { it.isFile }) {
-            listener?.onProcessStart(entries)
+    private fun onStartProcess(entries: List<Entry>) =
+        entries.run {
+            if (entries.all { it.isFile }) {
+                listener?.onProcessStart(entries)
+            }
         }
-    }
 
     private fun fetchEntry(entry: Entry): Flow<Entry> =
         when (entry.type) {
@@ -109,11 +121,9 @@ class ContextualActionsViewModel(
             else -> BrowseRepository()::fetchEntry.asFlow(entry.id)
         }
 
-    fun execute(action: Action) =
-        action.execute(context, GlobalScope)
+    fun execute(action: Action) = action.execute(context, GlobalScope)
 
-    fun executeMulti(action: Action) =
-        action.executeMulti(context, GlobalScope)
+    fun executeMulti(action: Action) = action.executeMulti(context, GlobalScope)
 
     private fun makeActions(entry: Entry): List<Action> =
         when {
@@ -159,19 +169,23 @@ class ContextualActionsViewModel(
         return actions
     }
 
-    private fun sharedActions(entry: Entry, entries: List<Entry>): List<Action> {
+    private fun sharedActions(
+        entry: Entry,
+        entries: List<Entry>,
+    ): List<Action> {
         val actions = mutableListOf<Action>()
         // Added Favorite Action
         val version = SearchRepository().getPrefsServerVersion()
 
         val hasNonFavoriteEntries = entries.any { !it.isFavorite }
 
-        val favouriteActions = when {
-            version.toInt() < SERVER_VERSION_NUMBER -> null
-            hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry, entries)
-            !hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry, entries)
-            else -> null
-        }
+        val favouriteActions =
+            when {
+                version.toInt() < SERVER_VERSION_NUMBER -> null
+                hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry, entries)
+                !hasNonFavoriteEntries && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry, entries)
+                else -> null
+            }
 
         actions.addAll(listOfNotNull(favouriteActions))
 
@@ -229,7 +243,10 @@ class ContextualActionsViewModel(
             if (isMenuActionEnabled(MenuActions.StartProcess)) ActionStartProcess(entry) else null,
         )
 
-    private fun processMultiActionFor(entry: Entry, entries: List<Entry>): List<Action> {
+    private fun processMultiActionFor(
+        entry: Entry,
+        entries: List<Entry>,
+    ): List<Action> {
         return if (settings.isProcessEnabled && (entries.isNotEmpty() && entries.all { it.isFile })) {
             listOfNotNull(
                 if (isMenuActionEnabled(MenuActions.StartProcess)) ActionStartProcess(entry, entries) else null,
@@ -253,7 +270,10 @@ class ContextualActionsViewModel(
         )
     }
 
-    private fun offlineMultiActionFor(entry: Entry, entries: List<Entry>): List<Action> {
+    private fun offlineMultiActionFor(
+        entry: Entry,
+        entries: List<Entry>,
+    ): List<Action> {
         val filteredOffline = entries.filter { it.isFile || it.isFolder }.filter { !it.hasOfflineStatus || it.isOffline }
 
         return when {
@@ -290,7 +310,14 @@ class ContextualActionsViewModel(
             emptyList()
         }
 
-    private fun deleteActionFor(entry: Entry) = if (entry.canDelete) listOfNotNull(if (isMenuActionEnabled(MenuActions.Trash)) ActionDelete(entry) else null) else listOf()
+    private fun deleteActionFor(entry: Entry) =
+        if (entry.canDelete) {
+            listOfNotNull(
+                if (isMenuActionEnabled(MenuActions.Trash)) ActionDelete(entry) else null,
+            )
+        } else {
+            listOf()
+        }
 
     private fun renameMoveActionFor(entry: Entry): List<Action> {
         return if (entry.canDelete && (entry.isFile || entry.isFolder)) {
@@ -307,11 +334,12 @@ class ContextualActionsViewModel(
         listOfNotNull(
             // Add or Remove favorite actions based on favorite status
             when {
-                !entry.hasOfflineStatus -> when {
-                    entry.isFavorite && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry)
-                    !entry.isFavorite && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry)
-                    else -> null
-                }
+                !entry.hasOfflineStatus ->
+                    when {
+                        entry.isFavorite && isMenuActionEnabled(MenuActions.RemoveFavourite) -> ActionRemoveFavorite(entry)
+                        !entry.isFavorite && isMenuActionEnabled(MenuActions.AddFavourite) -> ActionAddFavorite(entry)
+                        else -> null
+                    }
 
                 else -> null
             },
@@ -331,8 +359,7 @@ class ContextualActionsViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: ContextualActionsState,
-        ) =
-            // Requires activity context in order to present other fragments
+        ) = // Requires activity context in order to present other fragments
             ContextualActionsViewModel(state, viewModelContext.activity, Settings(viewModelContext.activity))
     }
 }

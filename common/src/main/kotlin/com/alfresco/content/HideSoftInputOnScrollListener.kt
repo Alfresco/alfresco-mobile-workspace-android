@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 class HideSoftInputOnScrollListener : RecyclerView.OnScrollListener() {
     private var imm: InputMethodManager? = null
 
-    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+    override fun onScrollStateChanged(
+        recyclerView: RecyclerView,
+        newState: Int,
+    ) {
         if (newState == RecyclerView.SCROLL_STATE_DRAGGING && recyclerView.childCount > 0) {
             if (imm == null) {
                 imm = recyclerView.context.getSystemService()

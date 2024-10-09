@@ -22,7 +22,6 @@ class OfflineViewModel(
     state: OfflineViewState,
     val context: Context,
 ) : ListViewModel<OfflineViewState>(state) {
-
     init {
         AnalyticsManager().screenViewEvent(PageView.Offline)
         viewModelScope.launch {
@@ -54,11 +53,12 @@ class OfflineViewModel(
         }
     }
 
-    override fun refresh() = withState {
-        // Faking a refresh since changes are updated via [observeDataChanges]
-        setState { copy(request = Loading()) }
-        setState { copy(request = it.request) }
-    }
+    override fun refresh() =
+        withState {
+            // Faking a refresh since changes are updated via [observeDataChanges]
+            setState { copy(request = Loading()) }
+            setState { copy(request = it.request) }
+        }
 
     override fun fetchNextPage() = Unit
 
@@ -69,39 +69,44 @@ class OfflineViewModel(
         Settings(context).canSyncOverMeteredNetwork ||
             !ConnectivityTracker.isActiveNetworkMetered(context)
 
-    fun toggleSelection(entry: Entry) = setState {
-        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
-        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
-            copy(maxLimitReachedForMultiSelection = true)
-        } else {
-            val updatedEntries = entries.map {
-                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
-                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
-                } else {
-                    it
-                }
+    fun toggleSelection(entry: Entry) =
+        setState {
+            val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+            if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+                copy(maxLimitReachedForMultiSelection = true)
+            } else {
+                val updatedEntries =
+                    entries.map {
+                        if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                            it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                        } else {
+                            it
+                        }
+                    }
+                copy(
+                    entries = updatedEntries,
+                    selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                    maxLimitReachedForMultiSelection = false,
+                )
             }
+        }
+
+    fun resetMultiSelection() =
+        setState {
+            val resetMultiEntries =
+                entries.map {
+                    it.copy(isSelectedForMultiSelection = false)
+                }
             copy(
-                entries = updatedEntries,
-                selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                entries = resetMultiEntries,
+                selectedEntries = emptyList(),
                 maxLimitReachedForMultiSelection = false,
             )
         }
-    }
 
-    fun resetMultiSelection() = setState {
-        val resetMultiEntries = entries.map {
-            it.copy(isSelectedForMultiSelection = false)
-        }
-        copy(
-            entries = resetMultiEntries,
-            selectedEntries = emptyList(),
-            maxLimitReachedForMultiSelection = false,
-        )
-    }
     override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
-    companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
 
+    companion object : MavericksViewModelFactory<OfflineViewModel, OfflineViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: OfflineViewState,

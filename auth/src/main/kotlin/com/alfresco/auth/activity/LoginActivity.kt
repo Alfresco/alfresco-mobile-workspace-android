@@ -31,7 +31,6 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.ArrayDeque
 
 abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
-
     override val viewModel: LoginViewModel by lazy {
         getViewModel {
             LoginViewModel.with(applicationContext, intent)
@@ -105,7 +104,12 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         }
     }
 
-    abstract fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig, isExtension: Boolean)
+    abstract fun onCredentials(
+        credentials: Credentials,
+        endpoint: String,
+        authConfig: AuthConfig,
+        isExtension: Boolean,
+    )
 
     override fun onCredentials(credentials: Credentials) {
         onCredentials(credentials, viewModel.canonicalApplicationUrl, viewModel.authConfig, viewModel.isExtension)
@@ -128,15 +132,21 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
         }
     }
 
-    protected fun onError(@StringRes messageResId: Int) {
+    protected fun onError(
+        @StringRes messageResId: Int,
+    ) {
         onError(resources.getString(messageResId))
     }
 
-    private fun showSettings(@Suppress("UNUSED_PARAMETER") value: Int) {
+    private fun showSettings(
+        @Suppress("UNUSED_PARAMETER") value: Int,
+    ) {
         AdvancedSettingsFragment.with(this).display()
     }
 
-    private fun showHelp(@StringRes msgResId: Int) {
+    private fun showHelp(
+        @StringRes msgResId: Int,
+    ) {
         HelpFragment.with(this).message(msgResId).show()
     }
 

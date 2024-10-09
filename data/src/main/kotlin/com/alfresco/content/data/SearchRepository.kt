@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -110,37 +109,43 @@ class SearchRepository {
         filters: SearchFilters,
         skipCount: Int,
         maxItems: Int,
-    ) =
-        ResponsePaging.withExtension(
-            searchService.simpleSearch(
-                terms,
-                if (filters.contains(SearchFilter.Contextual)) nodeId else null,
-                skipCount,
-                maxItems,
-                includeFrom(filters),
-            ),
-        )
+    ) = ResponsePaging.withExtension(
+        searchService.simpleSearch(
+            terms,
+            if (filters.contains(SearchFilter.Contextual)) nodeId else null,
+            skipCount,
+            maxItems,
+            includeFrom(filters),
+        ),
+    )
 
     /**
      * returns the ResponsePaging obj after filtering the data on the basis of files and folders
      */
-    fun offlineSearch(name: String, listFacetFields: AdvanceSearchFilters): ResponsePaging {
+    fun offlineSearch(
+        name: String,
+        listFacetFields: AdvanceSearchFilters,
+    ): ResponsePaging {
         val folderSearchData = listFacetFields.find { it.query.contains("cm:folder") }
         val fileSearchData = listFacetFields.find { it.query.contains("cm:content") }
-        val list = if (fileSearchData != null && folderSearchData != null) {
-            offlineRepository.offlineSearch(name)
-        } else if (folderSearchData != null) {
-            offlineRepository.offlineSearch(name).filter { it.isFolder }
-        } else if (fileSearchData != null) {
-            offlineRepository.offlineSearch(name).filter { it.isFile }
-        } else offlineRepository.offlineSearch(name)
+        val list =
+            if (fileSearchData != null && folderSearchData != null) {
+                offlineRepository.offlineSearch(name)
+            } else if (folderSearchData != null) {
+                offlineRepository.offlineSearch(name).filter { it.isFolder }
+            } else if (fileSearchData != null) {
+                offlineRepository.offlineSearch(name).filter { it.isFile }
+            } else {
+                offlineRepository.offlineSearch(name)
+            }
         return ResponsePaging.with(list)
     }
 
     private fun getNodeID(advanceSearchFilters: AdvanceSearchFilters): Boolean {
-        val isContextual = advanceSearchFilters.find {
-            it.query.contains(SearchFilter.Contextual.name)
-        }
+        val isContextual =
+            advanceSearchFilters.find {
+                it.query.contains(SearchFilter.Contextual.name)
+            }
         return isContextual != null
     }
 
@@ -156,9 +161,10 @@ class SearchRepository {
     private fun includeFrom(advanceSearchFilters: AdvanceSearchFilters): MutableSet<AdvanceSearchInclude> {
         val listFilter = advanceSearchFilters.filter { it.query != SearchFilter.Contextual.name }
 
-        val advanceSet = listFilter.mapTo(mutableSetOf()) {
-            AdvanceSearchInclude(name = it.name, query = it.query)
-        }
+        val advanceSet =
+            listFilter.mapTo(mutableSetOf()) {
+                AdvanceSearchInclude(name = it.name, query = it.query)
+            }
         return advanceSet
     }
 
@@ -216,7 +222,10 @@ class SearchRepository {
             null
         }
 
-    suspend fun getRecents(skipCount: Int, maxItems: Int): ResponsePaging {
+    suspend fun getRecents(
+        skipCount: Int,
+        maxItems: Int,
+    ): ResponsePaging {
         val version = getServerVersion()
 
         if (version.toInt() >= SERVER_VERSION_NUMBER) {
@@ -264,9 +273,10 @@ class SearchRepository {
 
                 val discoveryService = DiscoveryService(context, config)
 
-                val contentServiceDetailsObj = withContext(Dispatchers.IO) {
-                    discoveryService.getContentServiceDetails(Uri.parse(acc.serverUrl).host ?: "")
-                }
+                val contentServiceDetailsObj =
+                    withContext(Dispatchers.IO) {
+                        discoveryService.getContentServiceDetails(Uri.parse(acc.serverUrl).host ?: "")
+                    }
 
                 val serverVersion = contentServiceDetailsObj?.version?.split(".")?.get(0) ?: ""
                 saveServerVersion(serverVersion)
@@ -315,7 +325,6 @@ class SearchRepository {
         val context: Context,
         val onChange: () -> Unit,
     ) : SharedPreferences.OnSharedPreferenceChangeListener {
-
         init {
             PreferenceManager.getDefaultSharedPreferences(context)
                 .registerOnSharedPreferenceChangeListener(this)

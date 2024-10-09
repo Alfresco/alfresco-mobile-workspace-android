@@ -10,7 +10,6 @@ import com.alfresco.content.app.R
 import com.google.android.material.button.MaterialButton
 
 class AccountPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
-
     private lateinit var signOutButton: MaterialButton
     private lateinit var parentUserInfo: LinearLayout
     var onSignOutClickListener: View.OnClickListener? = null

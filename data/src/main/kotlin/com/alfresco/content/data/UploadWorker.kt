@@ -11,7 +11,6 @@ class UploadWorker(
     appContext: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params) {
-
     private val repository = OfflineRepository()
 
     override suspend fun doWork(): Result {
@@ -23,8 +22,7 @@ class UploadWorker(
         return if (result.any { !it }) Result.retry() else Result.success()
     }
 
-    private fun pendingUploads(): List<Entry> =
-        repository.fetchPendingUploads()
+    private fun pendingUploads(): List<Entry> = repository.fetchPendingUploads()
 
     private suspend fun createItem(entry: Entry): Boolean {
         val file = repository.contentFile(entry)
@@ -35,7 +33,15 @@ class UploadWorker(
                 status = true,
                 size = "${file.length().div(1024).div(1024)} MB",
             )
-            val res = if (entry.uploadServer == UploadServerType.DEFAULT) BrowseRepository().createEntry(entry, file) else TaskRepository().createEntry(entry, file, entry.uploadServer)
+            val res =
+                if (entry.uploadServer == UploadServerType.DEFAULT) {
+                    BrowseRepository().createEntry(
+                        entry,
+                        file,
+                    )
+                } else {
+                    TaskRepository().createEntry(entry, file, entry.uploadServer)
+                }
             file.delete() // TODO: what if delete fails?
             repository.update(
                 entry.copyWithMetadata(res)

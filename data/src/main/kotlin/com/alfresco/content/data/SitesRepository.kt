@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SitesRepository {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -31,15 +30,16 @@ class SitesRepository {
         session.createService(SitesApi::class.java)
     }
 
-    suspend fun getMySites(skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            service.listSiteMembershipsForPerson(
-                AlfrescoApi.CURRENT_USER,
-                skipCount,
-                maxItems,
-            ),
-        )
+    suspend fun getMySites(
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.with(
+        service.listSiteMembershipsForPerson(
+            AlfrescoApi.CURRENT_USER,
+            skipCount,
+            maxItems,
+        ),
+    )
 
-    suspend fun deleteSite(entry: Entry) =
-        service.deleteSite(entry.otherId ?: "", null)
+    suspend fun deleteSite(entry: Entry) = service.deleteSite(entry.otherId ?: "", null)
 }

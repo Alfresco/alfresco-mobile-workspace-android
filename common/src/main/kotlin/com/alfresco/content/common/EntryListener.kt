@@ -7,7 +7,6 @@ import com.alfresco.content.data.payloads.FieldsData
  * Mark as EntryListener interface
  */
 interface EntryListener {
-
     /**
      * It will get called once new entry created.
      */
@@ -19,5 +18,6 @@ interface EntryListener {
     fun onProcessStart(entries: List<ParentEntry>) {}
 
     fun onAttachFolder(entry: ParentEntry) {}
+
     fun onAttachFiles(field: FieldsData) {}
 }

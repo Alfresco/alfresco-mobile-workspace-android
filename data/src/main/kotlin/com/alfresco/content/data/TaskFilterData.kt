@@ -27,7 +27,6 @@ data class TaskFilterData(
     val isSelected: Boolean = false,
 ) : Parcelable {
     companion object {
-
         /**
          * update to default values on reset
          * @param obj
@@ -49,7 +48,11 @@ data class TaskFilterData(
          * @param selectedName
          * @param selectedQuery
          */
-        fun with(obj: TaskFilterData?, selectedName: String, selectedQuery: String): TaskFilterData {
+        fun with(
+            obj: TaskFilterData?,
+            selectedName: String,
+            selectedQuery: String,
+        ): TaskFilterData {
             return TaskFilterData(
                 id = obj?.id,
                 name = obj?.name,
@@ -69,7 +72,11 @@ data class TaskFilterData(
          * @param selectedName
          * @param selectedQueryMap
          */
-        fun with(obj: TaskFilterData?, selectedName: String, selectedQueryMap: Map<String, String>): TaskFilterData {
+        fun with(
+            obj: TaskFilterData?,
+            selectedName: String,
+            selectedQueryMap: Map<String, String>,
+        ): TaskFilterData {
             return TaskFilterData(
                 id = obj?.id,
                 name = obj?.name,
@@ -117,7 +124,10 @@ data class TaskFilterData(
          * @param obj
          * @param isSelected
          */
-        fun updateData(obj: TaskFilterData, isSelected: Boolean): TaskFilterData {
+        fun updateData(
+            obj: TaskFilterData,
+            isSelected: Boolean,
+        ): TaskFilterData {
             return TaskFilterData(
                 id = obj.id,
                 name = obj.name,

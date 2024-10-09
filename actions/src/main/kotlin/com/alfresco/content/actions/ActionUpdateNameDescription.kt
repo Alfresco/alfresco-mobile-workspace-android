@@ -26,20 +26,22 @@ data class ActionUpdateNameDescription(
         AnalyticsManager().taskEvent(eventName)
         return if (entry is ProcessEntry) {
             ProcessEntry.updateNameDescription(entry as ProcessEntry, result.name, result.description)
-        } else
+        } else {
             TaskEntry.updateTaskNameDescription(entry as TaskEntry, result.name, result.description)
-    }
-
-    private suspend fun showCreateTaskDialog(context: Context) = withContext(Dispatchers.Main) {
-        suspendCoroutine {
-            CreateTaskDialog.Builder(context, true, getMetaData(entry))
-                .onSuccess { title, description ->
-                    it.resume(CreateMetadata(title, description))
-                }
-                .onCancel { it.resume(null) }
-                .show()
         }
     }
+
+    private suspend fun showCreateTaskDialog(context: Context) =
+        withContext(Dispatchers.Main) {
+            suspendCoroutine {
+                CreateTaskDialog.Builder(context, true, getMetaData(entry))
+                    .onSuccess { title, description ->
+                        it.resume(CreateMetadata(title, description))
+                    }
+                    .onCancel { it.resume(null) }
+                    .show()
+            }
+        }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry)
 

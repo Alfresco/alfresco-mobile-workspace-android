@@ -27,11 +27,13 @@ object DownloadMonitor {
     private var tint: Int? = null
     private val notificationId = AtomicInteger(0)
 
-    fun smallIcon(@DrawableRes drawableResId: Int) =
-        apply { smallIcon = drawableResId }
+    fun smallIcon(
+        @DrawableRes drawableResId: Int,
+    ) = apply { smallIcon = drawableResId }
 
-    fun tint(@ColorInt color: Int) =
-        apply { tint = color }
+    fun tint(
+        @ColorInt color: Int,
+    ) = apply { tint = color }
 
     fun observe(context: Context) =
         apply {
@@ -65,13 +67,17 @@ object DownloadMonitor {
             ?.createNotificationChannel(channel)
     }
 
-    private fun onDownloadComplete(context: Context?, downloadId: Long) {
+    private fun onDownloadComplete(
+        context: Context?,
+        downloadId: Long,
+    ) {
         if (context == null) return
         if (downloadId == -1L) return
 
-        val query = DownloadManager.Query().apply {
-            setFilterById(downloadId)
-        }
+        val query =
+            DownloadManager.Query().apply {
+                setFilterById(downloadId)
+            }
 
         val manager = ContextCompat.getSystemService(context, DownloadManager::class.java) ?: return
 
@@ -83,39 +89,43 @@ object DownloadMonitor {
         cursor.close()
 
         val formattedSize = Formatter.formatFileSize(context, size)
-        val content = if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            context.getString(R.string.notification_download_content, formattedSize)
-        } else {
-            context.getString(R.string.notification_download_content_error)
-        }
-
-        val intent = if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val content =
+            if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                context.getString(R.string.notification_download_content, formattedSize)
+            } else {
+                context.getString(R.string.notification_download_content_error)
             }
-        } else {
-            context.packageManager.getLaunchIntentForPackage(context.applicationContext.packageName)
-        }
 
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            when {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
-                else -> FLAG_UPDATE_CURRENT
-            },
-        )
+        val intent =
+            if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            } else {
+                context.packageManager.getLaunchIntentForPackage(context.applicationContext.packageName)
+            }
+
+        val pendingIntent =
+            PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                when {
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
+                    else -> FLAG_UPDATE_CURRENT
+                },
+            )
 
         val smallIcon = this.smallIcon ?: return
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(smallIcon)
-            .setContentTitle(title)
-            .setContentText(content)
-            .setColor(tint ?: Color.WHITE)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
+        val builder =
+            NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(smallIcon)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setColor(tint ?: Color.WHITE)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
 
         with(NotificationManagerCompat.from(context)) {
             notify(notificationId.incrementAndGet(), builder.build())
@@ -126,6 +136,8 @@ object DownloadMonitor {
 class DownloadCompleteReceiver(
     private val onComplete: (context: Context?, downloadId: Long) -> Unit,
 ) : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) =
-        onComplete(context, intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1)
+    override fun onReceive(
+        context: Context?,
+        intent: Intent?,
+    ) = onComplete(context, intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?: -1)
 }

@@ -1,8 +1,9 @@
 plugins{
-    id('com.android.library')
-    id('kotlin-android')
-    id('kotlin-kapt')
-    id('kotlin-parcelize')
+    id 'com.android.library'
+    id 'kotlin-android'
+//    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -39,5 +40,5 @@ dependencies {
     implementation libs.mavericks
 
     implementation libs.epoxy.core
-    kapt libs.epoxy.processor
+    ksp libs.epoxy.processor
 }

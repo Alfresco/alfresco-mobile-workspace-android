@@ -25,11 +25,12 @@ class LocalPreviewActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = if (intent.extras?.containsKey(KEY_ENTRY_OBJ) == true) {
-            (intent.extras?.getParcelable(KEY_ENTRY_OBJ) as Entry?)?.name
-        } else {
-            intent.extras?.getString("title")
-        }
+        supportActionBar?.title =
+            if (intent.extras?.containsKey(KEY_ENTRY_OBJ) == true) {
+                (intent.extras?.getParcelable(KEY_ENTRY_OBJ) as Entry?)?.name
+            } else {
+                intent.extras?.getString("title")
+            }
         supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
 

@@ -5,7 +5,6 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 internal class AppConfigUtilsKtTest {
-
     @Test
     fun previous_time_passed() {
         val previousFetchTime = TimeUnit.HOURS.toMillis(25)

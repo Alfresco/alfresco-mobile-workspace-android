@@ -23,13 +23,15 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.chrisbanes.photoview.PhotoView
 
 class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), MavericksView {
-
     private val viewModel: ImageViewerViewModel by fragmentViewModel()
 
     private lateinit var largeScaleViewer: SubsamplingScaleImageView
     private lateinit var compatViewer: PhotoView
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val container = view.findViewById<FrameLayout>(R.id.container)
@@ -43,24 +45,26 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.largeScale) {
-            if (state.path is Success) {
-                largeScaleViewer.loadImage(state.path() ?: "")
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.largeScale) {
+                if (state.path is Success) {
+                    largeScaleViewer.loadImage(state.path() ?: "")
+                }
+            } else {
+                compatViewer.loadImage(state.uri)
             }
-        } else {
-            compatViewer.loadImage(state.uri)
         }
-    }
 
     private fun setupLargeScalePreview(container: FrameLayout): SubsamplingScaleImageView {
         val view = SubsamplingScaleImageView(container.context)
         view.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
 
-        view.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-        )
+        view.layoutParams =
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+            )
 
         container.addView(view)
         return view
@@ -75,63 +79,70 @@ class ImageViewerFragment : ChildViewerFragment(R.layout.viewer_image), Maverick
         val view = PhotoView(container.context)
 
         // Override double-tap behavior to bypass medium zoom
-        view.setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                return false
-            }
-
-            override fun onDoubleTap(e: MotionEvent): Boolean {
-                if (e == null) return false
-
-                if (view.scale > view.minimumScale) {
-                    view.setScale(view.minimumScale, e.x, e.y, true)
-                } else {
-                    view.setScale(view.maximumScale, e.x, e.y, true)
+        view.setOnDoubleTapListener(
+            object : GestureDetector.OnDoubleTapListener {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    return false
                 }
 
-                return true
-            }
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    if (e == null) return false
 
-            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
-                return false
-            }
-        })
+                    if (view.scale > view.minimumScale) {
+                        view.setScale(view.minimumScale, e.x, e.y, true)
+                    } else {
+                        view.setScale(view.maximumScale, e.x, e.y, true)
+                    }
 
-        view.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
+                    return true
+                }
+
+                override fun onDoubleTapEvent(e: MotionEvent): Boolean {
+                    return false
+                }
+            },
         )
+
+        view.layoutParams =
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+            )
 
         container.addView(view)
         return view
     }
 
     private fun PhotoView.loadImage(uri: String) {
-        val imageLoader = ImageLoader.Builder(requireContext())
-            .components {
-                if (Build.VERSION.SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
+        val imageLoader =
+            ImageLoader.Builder(requireContext())
+                .components {
+                    if (Build.VERSION.SDK_INT >= 28) {
+                        add(ImageDecoderDecoder.Factory())
+                    } else {
+                        add(GifDecoder.Factory())
+                    }
+                    add(SvgDecoder.Factory())
                 }
-                add(SvgDecoder.Factory())
-            }
-            .build()
+                .build()
 
-        val request = ImageRequest.Builder(context)
-            .data(uri)
-            .target(object : ImageViewTarget(this) {
-                override fun onSuccess(result: Drawable) {
-                    super.onSuccess(result)
-                    loadingListener?.onContentLoaded()
-                }
+        val request =
+            ImageRequest.Builder(context)
+                .data(uri)
+                .target(
+                    object : ImageViewTarget(this) {
+                        override fun onSuccess(result: Drawable) {
+                            super.onSuccess(result)
+                            loadingListener?.onContentLoaded()
+                        }
 
-                override fun onError(error: Drawable?) {
-                    super.onError(error)
-                    loadingListener?.onContentError()
-                }
-            })
-            .build()
+                        override fun onError(error: Drawable?) {
+                            super.onError(error)
+                            loadingListener?.onContentError()
+                        }
+                    },
+                )
+                .build()
         imageLoader.enqueue(request)
     }
 }

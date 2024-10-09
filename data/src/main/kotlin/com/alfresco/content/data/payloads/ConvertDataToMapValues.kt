@@ -34,13 +34,17 @@ fun convertModelToMapValues(data: FieldsData): Map<String, Any?> {
     )
 }
 
-fun convertModelToMapValues(data: TaskEntry, commentEntry: String? = null): Map<String, Any?> =
+fun convertModelToMapValues(
+    data: TaskEntry,
+    commentEntry: String? = null,
+): Map<String, Any?> =
     if (data.taskFormStatus != null) {
         mapOf(
-            "status" to mapOf<String, Any?>(
-                "id" to data.taskFormStatus,
-                "name" to data.taskFormStatus,
-            ),
+            "status" to
+                mapOf<String, Any?>(
+                    "id" to data.taskFormStatus,
+                    "name" to data.taskFormStatus,
+                ),
             "comment" to (commentEntry ?: data.comment),
         )
     } else {

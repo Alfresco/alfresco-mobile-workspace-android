@@ -37,13 +37,14 @@ data class ProcessEntry(
     val reviewerType: ReviewerType = ReviewerType.OTHER,
     val taskEntry: TaskEntry = TaskEntry(),
 ) : ParentEntry(), Parcelable {
-
     companion object {
-
         /**
          * return the ProcessEntry using ProcessInstanceEntry
          */
-        fun with(data: ProcessInstanceEntry, apsUser: UserGroupDetails? = null): ProcessEntry {
+        fun with(
+            data: ProcessInstanceEntry,
+            apsUser: UserGroupDetails? = null,
+        ): ProcessEntry {
             val isAssigneeUser = apsUser?.id == data.startedBy?.id
             return ProcessEntry(
                 id = data.id ?: "",
@@ -53,7 +54,14 @@ data class ProcessEntry(
                 tenantId = data.tenantId,
                 started = data.started,
                 ended = data.ended,
-                startedBy = if (isAssigneeUser) apsUser?.let { UserGroupDetails.with(it) } else data.startedBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails(),
+                startedBy =
+                    if (isAssigneeUser) {
+                        apsUser?.let {
+                            UserGroupDetails.with(it)
+                        }
+                    } else {
+                        data.startedBy?.let { UserGroupDetails.with(it) } ?: UserGroupDetails()
+                    },
                 processDefinitionName = data.processDefinitionName,
                 processDefinitionDescription = data.processDefinitionDescription,
                 processDefinitionKey = data.processDefinitionKey,
@@ -69,7 +77,10 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: RuntimeProcessDefinitionDataEntry, entries: List<Entry>): ProcessEntry {
+        fun with(
+            data: RuntimeProcessDefinitionDataEntry,
+            entries: List<Entry>,
+        ): ProcessEntry {
             return ProcessEntry(
                 id = data.id?.toString() ?: "",
                 name = data.name ?: "",
@@ -81,7 +92,10 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(data: ProcessEntry, entries: List<Entry>): ProcessEntry {
+        fun with(
+            data: ProcessEntry,
+            entries: List<Entry>,
+        ): ProcessEntry {
             return data.copy(defaultEntries = entries)
         }
 
@@ -101,7 +115,10 @@ data class ProcessEntry(
         /**
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
-        fun with(dataObj: ProcessDefinitionDataEntry, processEntry: ProcessEntry?): ProcessEntry {
+        fun with(
+            dataObj: ProcessDefinitionDataEntry,
+            processEntry: ProcessEntry?,
+        ): ProcessEntry {
             return ProcessEntry(
                 id = dataObj.id ?: "",
                 name = dataObj.name ?: "",
@@ -116,7 +133,10 @@ data class ProcessEntry(
         /**
          * updating the priority into existing object
          */
-        fun updatePriority(data: ProcessEntry, priority: Int): ProcessEntry {
+        fun updatePriority(
+            data: ProcessEntry,
+            priority: Int,
+        ): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
                 name = data.name,
@@ -146,7 +166,10 @@ data class ProcessEntry(
          * updating the due date into existing object
          */
 
-        fun updateDueDate(data: ProcessEntry, formattedDate: String?): ProcessEntry {
+        fun updateDueDate(
+            data: ProcessEntry,
+            formattedDate: String?,
+        ): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
                 name = data.name,
@@ -208,7 +231,10 @@ data class ProcessEntry(
         /**
          * updating the task assignee into existing object
          */
-        fun updateAssignee(data: ProcessEntry, assignee: UserGroupDetails): ProcessEntry {
+        fun updateAssignee(
+            data: ProcessEntry,
+            assignee: UserGroupDetails,
+        ): ProcessEntry {
             return ProcessEntry(
                 id = data.id,
                 name = data.name,
@@ -237,7 +263,10 @@ data class ProcessEntry(
         /**
          * update reviewerType into existing ProcessEntry obj
          */
-        fun updateReviewerType(data: ProcessEntry, listFields: List<FieldsData>): ProcessEntry {
+        fun updateReviewerType(
+            data: ProcessEntry,
+            listFields: List<FieldsData>,
+        ): ProcessEntry {
             var reviewerType: ReviewerType = ReviewerType.PEOPLE
             listFields.forEach {
                 if (it.type == ReviewerType.FUNCTIONAL_GROUP.value()) {
@@ -270,7 +299,10 @@ data class ProcessEntry(
             )
         }
 
-        fun withProcess(data: ProcessEntry, fieldType: String): ProcessEntry {
+        fun withProcess(
+            data: ProcessEntry,
+            fieldType: String,
+        ): ProcessEntry {
             var reviewerType: ReviewerType = ReviewerType.PEOPLE
 
             if (fieldType == FieldType.FUNCTIONAL_GROUP.value()) {

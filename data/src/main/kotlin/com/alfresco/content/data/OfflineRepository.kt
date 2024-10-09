@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class OfflineRepository(otherSession: Session? = null) {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -63,7 +62,10 @@ class OfflineRepository(otherSession: Session? = null) {
             .build()
             .findFirst()
 
-    fun markForSync(entry: Entry) = update(entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING, isSelectedForMultiSelection = false))
+    fun markForSync(entry: Entry) =
+        update(
+            entry.copy(isOffline = true, offlineStatus = OfflineStatus.PENDING, isSelectedForMultiSelection = false),
+        )
 
     fun removeFromSync(entry: Entry) = update(entry.copy(isOffline = false, isSelectedForMultiSelection = false))
 
@@ -75,11 +77,12 @@ class OfflineRepository(otherSession: Session? = null) {
      * updating the total transfer count
      */
     fun updateTransferSize(size: Int) {
-        val list = box.query()
-            .equal(Entry_.isTotalEntry, true)
-            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
-            .build()
-            .find()
+        val list =
+            box.query()
+                .equal(Entry_.isTotalEntry, true)
+                .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
+                .build()
+                .find()
         if (list.isEmpty()) {
             val entry = Entry(totalCount = size, isTotalEntry = true)
             entry.also { box.put(it) }
@@ -94,33 +97,36 @@ class OfflineRepository(otherSession: Session? = null) {
      * returns the transfer size count
      */
     fun getTotalTransfersSize(): Int {
-        val list = box.query()
-            .equal(Entry_.isTotalEntry, true)
-            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
-            .build()
-            .find()
+        val list =
+            box.query()
+                .equal(Entry_.isTotalEntry, true)
+                .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
+                .build()
+                .find()
         return if (list.isEmpty()) 0 else list[0].totalCount
     }
 
-    fun offlineEntries(parentId: String?): Flow<ResponsePaging> = callbackFlow {
-        val query = offlineEntriesQuery(parentId)
-        val subscription = query.subscribe().observer { data ->
-            val count = data.count().toLong()
-            trySendBlocking(
-                ResponsePaging(
-                    data,
-                    Pagination(
-                        count,
-                        false,
-                        0,
-                        count,
-                        count,
-                    ),
-                ),
-            )
+    fun offlineEntries(parentId: String?): Flow<ResponsePaging> =
+        callbackFlow {
+            val query = offlineEntriesQuery(parentId)
+            val subscription =
+                query.subscribe().observer { data ->
+                    val count = data.count().toLong()
+                    trySendBlocking(
+                        ResponsePaging(
+                            data,
+                            Pagination(
+                                count,
+                                false,
+                                0,
+                                count,
+                                count,
+                            ),
+                        ),
+                    )
+                }
+            awaitClose { subscription.cancel() }
         }
-        awaitClose { subscription.cancel() }
-    }
 
     private fun offlineEntriesQuery(parentId: String?) =
         box.query()
@@ -209,17 +215,18 @@ class OfflineRepository(otherSession: Session? = null) {
         requireNotNull(name)
         requireNotNull(mimeType)
 
-        val entry = Entry(
-            parentId = parentId,
-            name = name,
-            type = Entry.Type.FILE,
-            mimeType = mimeType,
-            isUpload = true,
-            offlineStatus = OfflineStatus.PENDING,
-            isExtension = isExtension,
-            uploadServer = uploadServerType,
-            observerID = observerId ?: "",
-        )
+        val entry =
+            Entry(
+                parentId = parentId,
+                name = name,
+                type = Entry.Type.FILE,
+                mimeType = mimeType,
+                isUpload = true,
+                offlineStatus = OfflineStatus.PENDING,
+                isExtension = isExtension,
+                uploadServer = uploadServerType,
+                observerID = observerId ?: "",
+            )
 
         if (observerId == null) {
             clearData()
@@ -253,17 +260,18 @@ class OfflineRepository(otherSession: Session? = null) {
         observerId: String? = null,
     ) {
         // TODO: This process may fail resulting in an orphan file? or node?
-        val entry = Entry(
-            parentId = parentId,
-            name = name,
-            type = Entry.Type.FILE,
-            mimeType = mimeType,
-            properties = mapOf("cm:description" to description),
-            isUpload = true,
-            offlineStatus = OfflineStatus.PENDING,
-            uploadServer = uploadServerType,
-            observerID = observerId ?: "",
-        )
+        val entry =
+            Entry(
+                parentId = parentId,
+                name = name,
+                type = Entry.Type.FILE,
+                mimeType = mimeType,
+                properties = mapOf("cm:description" to description),
+                isUpload = true,
+                offlineStatus = OfflineStatus.PENDING,
+                uploadServer = uploadServerType,
+                observerID = observerId ?: "",
+            )
 
         if (observerId == null) {
             clearData()
@@ -288,62 +296,82 @@ class OfflineRepository(otherSession: Session? = null) {
             .build()
             .find()
 
-    fun fetchProcessEntries(parentId: String, observerId: String): MutableList<Entry> {
-        val query = box.query()
-            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.observerID, observerId, StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
-            .order(Entry_.name)
-            .build()
+    fun fetchProcessEntries(
+        parentId: String,
+        observerId: String,
+    ): MutableList<Entry> {
+        val query =
+            box.query()
+                .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                .equal(Entry_.observerID, observerId, StringOrder.CASE_SENSITIVE)
+                .equal(Entry_.uploadServer, UploadServerType.UPLOAD_TO_PROCESS.value(), StringOrder.CASE_SENSITIVE)
+                .order(Entry_.name)
+                .build()
         return query.find()
     }
 
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
-    fun observeUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT): Flow<List<Entry>> = callbackFlow {
-        val query = box.query()
-            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.isUpload, true)
-            .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
-            .order(Entry_.name)
-            .build()
-        val subscription = query.subscribe().observer {
-            trySendBlocking(it)
+    fun observeUploads(
+        parentId: String,
+        uploadServerType: UploadServerType = UploadServerType.DEFAULT,
+    ): Flow<List<Entry>> =
+        callbackFlow {
+            val query =
+                box.query()
+                    .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                    .equal(Entry_.isUpload, true)
+                    .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
+                    .order(Entry_.name)
+                    .build()
+            val subscription =
+                query.subscribe().observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
         }
-        awaitClose { subscription.cancel() }
-    }
 
     /**
      * returns the list of uploads which is being uploaded on the server.
      */
-    fun observeProcessUploads(parentId: String, uploadServerType: UploadServerType = UploadServerType.DEFAULT, isUpload: Boolean = true): Flow<List<Entry>> = callbackFlow {
-        val query = box.query()
-            .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
-            .order(Entry_.name)
-            .build()
-        val subscription = query.subscribe().observer {
-            trySendBlocking(it)
+    fun observeProcessUploads(
+        parentId: String,
+        uploadServerType: UploadServerType = UploadServerType.DEFAULT,
+        isUpload: Boolean = true,
+    ): Flow<List<Entry>> =
+        callbackFlow {
+            val query =
+                box.query()
+                    .equal(Entry_.parentId, parentId, StringOrder.CASE_SENSITIVE)
+                    .equal(Entry_.uploadServer, uploadServerType.value(), StringOrder.CASE_SENSITIVE)
+                    .order(Entry_.name)
+                    .build()
+            val subscription =
+                query.subscribe().observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
         }
-        awaitClose { subscription.cancel() }
-    }
 
     /**
      * observer for transfer uploads
      */
-    fun observeTransferUploads(): Flow<List<Entry>> = callbackFlow {
-        val query = box.query()
-            .equal(Entry_.isUpload, true)
-            .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
-            .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
-            .order(Entry_.name)
-            .build()
-        val subscription = query.subscribe().observer {
-            trySendBlocking(it)
+    fun observeTransferUploads(): Flow<List<Entry>> =
+        callbackFlow {
+            val query =
+                box.query()
+                    .equal(Entry_.isUpload, true)
+                    .equal(Entry_.uploadServer, UploadServerType.DEFAULT.value(), StringOrder.CASE_SENSITIVE)
+                    .equal(Entry_.id, "", StringOrder.CASE_SENSITIVE)
+                    .order(Entry_.name)
+                    .build()
+            val subscription =
+                query.subscribe().observer {
+                    trySendBlocking(it)
+                }
+            awaitClose { subscription.cancel() }
         }
-        awaitClose { subscription.cancel() }
-    }
 
     /**
      * Removes a completed upload with id
@@ -395,11 +423,12 @@ class OfflineRepository(otherSession: Session? = null) {
 
     fun contentUri(entry: Entry): String = "file://${contentFile(entry).absolutePath}"
 
-    fun contentFile(entry: Entry): File = if (entry.isUpload) {
-        File(session.uploadDir, entry.boxId.toString())
-    } else {
-        File(contentDir(entry), entry.name)
-    }
+    fun contentFile(entry: Entry): File =
+        if (entry.isUpload) {
+            File(session.uploadDir, entry.boxId.toString())
+        } else {
+            File(contentDir(entry), entry.name)
+        }
 
     fun contentDir(entry: Entry): File = File(session.filesDir, entry.id)
 

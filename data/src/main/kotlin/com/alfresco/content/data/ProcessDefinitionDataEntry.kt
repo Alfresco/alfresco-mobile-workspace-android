@@ -20,7 +20,6 @@ data class ProcessDefinitionDataEntry(
     val hasStartForm: Boolean? = null,
 ) : ParentEntry(), Parcelable {
     companion object {
-
         /**
          * return RuntimeProcessDefinitionDataEntry by using RuntimeProcessDefinitionEntry
          */

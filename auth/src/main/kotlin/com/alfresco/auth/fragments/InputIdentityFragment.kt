@@ -15,7 +15,6 @@ import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.common.FragmentBuilder
 
 class InputIdentityFragment : DialogFragment() {
-
     private val viewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -23,7 +22,13 @@ class InputIdentityFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = DataBindingUtil.inflate<ContainerAuthInputIdentityBinding>(inflater, R.layout.container_auth_input_identity, container, false)
+        val binding =
+            DataBindingUtil.inflate<ContainerAuthInputIdentityBinding>(
+                inflater,
+                R.layout.container_auth_input_identity,
+                container,
+                false,
+            )
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         return binding.root

@@ -60,7 +60,6 @@ interface TaskListViewState : MavericksState {
 abstract class TaskListViewModel<S : TaskListViewState>(
     initialState: S,
 ) : MavericksViewModel<S>(initialState) {
-
     private var folderListener: EntryListener? = null
 
     init {
@@ -115,7 +114,10 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
     lateinit var actionReset: ImageView
     lateinit var toolbar: Toolbar
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
@@ -135,14 +137,19 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
         recyclerView.setController(epoxyController)
         viewModel.setListener(this)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        recyclerView.layoutManager?.scrollToPosition(0)
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     private fun visibleFilters(isVisible: Boolean) {
@@ -158,68 +165,70 @@ abstract class TaskListFragment<VM : TaskListViewModel<S>, S : TaskListViewState
      */
     abstract fun onItemClicked(entry: TaskEntry)
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        toolbar.visibility = if (state.processEntry != null) View.VISIBLE else View.GONE
+            toolbar.visibility = if (state.processEntry != null) View.VISIBLE else View.GONE
 
-        loadingAnimation.isVisible =
-            state.request is Loading && state.taskEntries.isEmpty() && !refreshLayout.isRefreshing
+            loadingAnimation.isVisible =
+                state.request is Loading && state.taskEntries.isEmpty() && !refreshLayout.isRefreshing
 
-        topLoadingIndicator.isVisible =
-            state.request is Loading && state.taskEntries.isNotEmpty() && !refreshLayout.isRefreshing
+            topLoadingIndicator.isVisible =
+                state.request is Loading && state.taskEntries.isNotEmpty() && !refreshLayout.isRefreshing
 
-        if (state.request.complete) {
-            refreshLayout.isRefreshing = false
-        }
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.request.complete && state.request is Fail) {
-            visibleFilters(false)
-        }
-        if (state.taskEntries.isEmpty() && state.request.complete) {
-            visibleFilters((state.request is Success && state.processEntry == null))
-            val args = viewModel.emptyMessageArgs(state)
-            listViewMessage {
-                id("empty_message")
-                iconRes(args.first)
-                title(args.second)
-                message(args.third)
+            if (state.request.complete) {
+                refreshLayout.isRefreshing = false
             }
-        } else if (state.taskEntries.isNotEmpty()) {
-            visibleFilters((state.taskEntries.isNotEmpty() && state.processEntry == null))
-            state.taskEntries.forEach {
-                listViewTaskRow {
-                    id(it.id)
-                    data(it)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+            epoxyController.requestModelBuild()
+        }
+
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
+            if (state.request.complete && state.request is Fail) {
+                visibleFilters(false)
+            }
+            if (state.taskEntries.isEmpty() && state.request.complete) {
+                visibleFilters((state.request is Success && state.processEntry == null))
+                val args = viewModel.emptyMessageArgs(state)
+                listViewMessage {
+                    id("empty_message")
+                    iconRes(args.first)
+                    title(args.second)
+                    message(args.third)
+                }
+            } else if (state.taskEntries.isNotEmpty()) {
+                visibleFilters((state.taskEntries.isNotEmpty() && state.processEntry == null))
+                state.taskEntries.forEach {
+                    listViewTaskRow {
+                        id(it.id)
+                        data(it)
+                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    }
                 }
             }
-        }
 
-        if (state.hasMoreItems) {
-            if (state.request is Loading) {
-                listViewPageLoading {
-                    id("loading at ${state.taskEntries.size}")
-                }
-            } else {
-                // On failure delay creating the boundary so that the list scrolls up
-                // and the user has to scroll back down to activate a retry
-                val isFail = state.request is Fail
-                if (isFail && !delayedBoundary) {
-                    delayedBoundary = true
-                    Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
+            if (state.hasMoreItems) {
+                if (state.request is Loading) {
+                    listViewPageLoading {
+                        id("loading at ${state.taskEntries.size}")
+                    }
                 } else {
-                    if (isFail) {
-                        delayedBoundary = false
-                    }
-                    listViewPageBoundary {
-                        id("boundary at ${state.taskEntries.size}")
-                        onBind { _, _, _ -> viewModel.fetchNextPage() }
+                    // On failure delay creating the boundary so that the list scrolls up
+                    // and the user has to scroll back down to activate a retry
+                    val isFail = state.request is Fail
+                    if (isFail && !delayedBoundary) {
+                        delayedBoundary = true
+                        Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
+                    } else {
+                        if (isFail) {
+                            delayedBoundary = false
+                        }
+                        listViewPageBoundary {
+                            id("boundary at ${state.taskEntries.size}")
+                            onBind { _, _, _ -> viewModel.fetchNextPage() }
+                        }
                     }
                 }
             }
         }
-    }
 }

@@ -31,7 +31,6 @@ import com.alfresco.ui.getDrawableForAttribute
  * Marked as ProcessAttachedFilesFragment class
  */
 class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener {
-
     val viewModel: ProcessDetailViewModel by activityViewModel()
     private lateinit var binding: FragmentAttachedFilesBinding
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
@@ -45,7 +44,10 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsManager().screenViewEvent(PageView.AttachedFiles)
@@ -59,64 +61,72 @@ class ProcessAttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryL
 
         binding.recyclerView.setController(epoxyController)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    binding.recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        binding.recyclerView.layoutManager?.scrollToPosition(0)
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     override fun onConfirmDelete(contentId: String) {
         viewModel.deleteAttachment(contentId)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        val handler = Handler(Looper.getMainLooper())
-        binding.refreshLayout.isRefreshing = false
-        binding.loading.isVisible = false
-        handler.post {
-            if (state.listContents.size > 4) {
-                binding.tvNoOfAttachments.visibility = View.VISIBLE
-                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
-            } else {
-                binding.tvNoOfAttachments.visibility = View.GONE
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            val handler = Handler(Looper.getMainLooper())
+            binding.refreshLayout.isRefreshing = false
+            binding.loading.isVisible = false
+            handler.post {
+                if (state.listContents.size > 4) {
+                    binding.tvNoOfAttachments.visibility = View.VISIBLE
+                    binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                } else {
+                    binding.tvNoOfAttachments.visibility = View.GONE
+                }
             }
+
+            binding.fabAddAttachments.visibility = View.VISIBLE
+            binding.fabAddAttachments.setOnClickListener {
+                showCreateSheet(state, viewModel.observerID)
+            }
+
+            if (state.listContents.isEmpty()) requireActivity().onBackPressed()
+
+            epoxyController.requestModelBuild()
         }
 
-        binding.fabAddAttachments.visibility = View.VISIBLE
-        binding.fabAddAttachments.setOnClickListener {
-            showCreateSheet(state, viewModel.observerID)
-        }
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
 
-        if (state.listContents.isEmpty()) requireActivity().onBackPressed()
-
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-
-        if (state.listContents.isNotEmpty()) {
-            state.listContents.forEach { obj ->
-                listViewAttachmentRow {
-                    id(stableId(obj))
-                    data(obj)
-                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+            if (state.listContents.isNotEmpty()) {
+                state.listContents.forEach { obj ->
+                    listViewAttachmentRow {
+                        id(stableId(obj))
+                        data(obj)
+                        deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+                    }
                 }
             }
         }
-    }
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
             if (!contentEntry.source.isNullOrEmpty()) {
-                val entry = Entry.convertContentEntryToEntry(
-                    contentEntry,
-                    MimeType.isDocFile(contentEntry.mimeType),
-                    UploadServerType.UPLOAD_TO_PROCESS,
-                )
+                val entry =
+                    Entry.convertContentEntryToEntry(
+                        contentEntry,
+                        MimeType.isDocFile(contentEntry.mimeType),
+                        UploadServerType.UPLOAD_TO_PROCESS,
+                    )
                 remoteViewerIntent(entry)
             }
         } else {

@@ -24,19 +24,25 @@ data class ActionAddFavorite(
         return entry.copy(isFavorite = true)
     }
 
-    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        entriesObj.map {
-            async(Dispatchers.IO) {
-                repository.addFavorite(it)
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            entriesObj.map {
+                async(Dispatchers.IO) {
+                    repository.addFavorite(it)
+                }
             }
+            return@coroutineScope Pair(entry, entriesObj.map { it.copy(isFavorite = true, isSelectedForMultiSelection = false) })
         }
-        return@coroutineScope Pair(entry, entriesObj.map { it.copy(isFavorite = true, isSelectedForMultiSelection = false) })
-    }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
-    override fun showToast(view: View, anchorView: View?) {
+
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_add_favorite_multiple_toast, entries.size.toString())
         } else {
@@ -63,24 +69,30 @@ data class ActionRemoveFavorite(
         return entry.copy(isFavorite = false)
     }
 
-    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        try {
-            entriesObj.map {
-                async(Dispatchers.IO) {
-                    repository.removeFavorite(it)
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            try {
+                entriesObj.map {
+                    async(Dispatchers.IO) {
+                        repository.removeFavorite(it)
+                    }
                 }
+            } catch (ex: KotlinNullPointerException) {
+                // no-op. expected for 204
+                ex.printStackTrace()
             }
-        } catch (ex: KotlinNullPointerException) {
-            // no-op. expected for 204
-            ex.printStackTrace()
+            return@coroutineScope Pair(entry, entriesObj.map { it.copy(isFavorite = false, isSelectedForMultiSelection = false) })
         }
-        return@coroutineScope Pair(entry, entriesObj.map { it.copy(isFavorite = false, isSelectedForMultiSelection = false) })
-    }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
+
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
-    override fun showToast(view: View, anchorView: View?) {
+
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_remove_favorite_multiple_toast, entries.size.toString())
         } else {

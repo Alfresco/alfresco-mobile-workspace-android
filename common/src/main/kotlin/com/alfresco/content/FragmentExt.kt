@@ -44,11 +44,12 @@ private fun <F : Fragment> findFragmentAndResume(
     continuation: CancellableContinuation<F>,
     factory: () -> F,
 ) {
-    val fragmentManager = when (context) {
-        is AppCompatActivity -> context.supportFragmentManager
-        is Fragment -> context.childFragmentManager
-        else -> null
-    }
+    val fragmentManager =
+        when (context) {
+            is AppCompatActivity -> context.supportFragmentManager
+            is Fragment -> context.childFragmentManager
+            else -> null
+        }
 
     if (fragmentManager == null) {
         continuation.cancel(ClassCastException())
@@ -79,11 +80,12 @@ private fun <F : Fragment> findNewInstance(
     continuation: CancellableContinuation<F>,
     factory: () -> F,
 ) {
-    val fragmentManager = when (context) {
-        is AppCompatActivity -> context.supportFragmentManager
-        is Fragment -> context.childFragmentManager
-        else -> null
-    }
+    val fragmentManager =
+        when (context) {
+            is AppCompatActivity -> context.supportFragmentManager
+            is Fragment -> context.childFragmentManager
+            else -> null
+        }
 
     if (fragmentManager == null) {
         continuation.cancel(ClassCastException())

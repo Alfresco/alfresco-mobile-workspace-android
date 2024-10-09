@@ -14,7 +14,12 @@ import com.alfresco.content.mimetype.MimeType
 fun ContextualActionsSheet.setHeader(state: ContextualActionsState) {
     if (state.isMultiSelection) {
         val titleHeader = SpannableString(getString(R.string.title_action_mode, state.entries.size))
-        titleHeader.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorActionMode)), 0, titleHeader.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        titleHeader.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorActionMode)),
+            0,
+            titleHeader.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
         binding.header.apply {
             parentTitle.contentDescription = titleHeader
             icon.visibility = View.GONE
@@ -26,11 +31,12 @@ fun ContextualActionsSheet.setHeader(state: ContextualActionsState) {
     } else {
         val entryObj = state.entries.first()
         entryObj.let { entry ->
-            val type = when (entry.type) {
-                Entry.Type.SITE -> MimeType.LIBRARY
-                Entry.Type.FOLDER -> MimeType.FOLDER
-                else -> MimeType.with(entry.mimeType)
-            }
+            val type =
+                when (entry.type) {
+                    Entry.Type.SITE -> MimeType.LIBRARY
+                    Entry.Type.FOLDER -> MimeType.FOLDER
+                    else -> MimeType.with(entry.mimeType)
+                }
 
             binding.header.apply {
                 parentTitle.contentDescription = getString(R.string.accessibility_text_title_type, entry.name, type.name)

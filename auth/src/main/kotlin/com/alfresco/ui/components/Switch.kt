@@ -11,7 +11,6 @@ import androidx.databinding.BindingAdapter
  * Subclass used only for data binding drag interaction
  */
 class Switch(context: Context, attrs: AttributeSet?) : Switch(context, attrs) {
-
     internal var touchAction: OnTouchEvent? = null
 
     @SuppressLint("ClickableViewAccessibility")
@@ -23,10 +22,16 @@ class Switch(context: Context, attrs: AttributeSet?) : Switch(context, attrs) {
 }
 
 @BindingAdapter("android:onTouchEvent")
-fun setOnTouchListener(switch: com.alfresco.ui.components.Switch, action: OnTouchEvent) {
+fun setOnTouchListener(
+    switch: com.alfresco.ui.components.Switch,
+    action: OnTouchEvent,
+) {
     switch.touchAction = action
 }
 
 interface OnTouchEvent {
-    fun onTouchEvent(switch: Switch, event: MotionEvent?)
+    fun onTouchEvent(
+        switch: Switch,
+        event: MotionEvent?,
+    )
 }

@@ -24,9 +24,13 @@ data class ActionUploadFiles(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload,
     override val title: Int = R.string.action_upload_files_title,
-    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskUploadFiles else EventName.UploadFiles,
+    override val eventName: EventName =
+        if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) {
+            EventName.TaskUploadFiles
+        } else {
+            EventName.UploadFiles
+        },
 ) : Action {
-
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
@@ -36,7 +40,11 @@ data class ActionUploadFiles(
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
                     result.forEach {
                         val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
-                        if (GetMultipleContents.isFileSizeExceed(fileLength, if (entry.observerID.isNotEmpty()) MAX_FILE_SIZE_10 else MAX_FILE_SIZE_100)) {
+                        if (GetMultipleContents.isFileSizeExceed(
+                                fileLength,
+                                if (entry.observerID.isNotEmpty()) MAX_FILE_SIZE_10 else MAX_FILE_SIZE_100,
+                            )
+                        ) {
                             throw CancellationException(ERROR_FILE_SIZE_EXCEED)
                         }
                     }
@@ -64,7 +72,10 @@ data class ActionUploadFiles(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         Action.showToast(view, anchorView, R.string.action_upload_media_toast)
     }
 

@@ -12,7 +12,6 @@ data class ResponseListRuntimeProcessDefinition(
     val listRuntimeProcessDefinitions: List<RuntimeProcessDefinitionDataEntry> = emptyList(),
 ) {
     companion object {
-
         /**
          * return the ResponseListProcessDefinitions obj using ResultListRuntimeProcessDefinitions
          */
@@ -21,7 +20,10 @@ data class ResponseListRuntimeProcessDefinition(
                 size = raw.size ?: 0,
                 total = raw.total ?: 0,
                 start = raw.start ?: 0,
-                listRuntimeProcessDefinitions = raw.data?.filter { it.deploymentId != null }?.map { RuntimeProcessDefinitionDataEntry.with(it) } ?: emptyList(),
+                listRuntimeProcessDefinitions =
+                    raw.data?.filter {
+                        it.deploymentId != null
+                    }?.map { RuntimeProcessDefinitionDataEntry.with(it) } ?: emptyList(),
             )
         }
     }

@@ -24,7 +24,6 @@ data class ViewerState(
 class ViewerViewModel(
     state: ViewerState,
 ) : MavericksViewModel<ViewerState>(state) {
-
     private lateinit var offlineRepository: OfflineRepository
     private lateinit var browseRepository: BrowseRepository
     private lateinit var renditionRepository: RenditionRepository
@@ -58,7 +57,10 @@ class ViewerViewModel(
         }
     }
 
-    private suspend fun loadContent(id: String, loader: ContentLoader) {
+    private suspend fun loadContent(
+        id: String,
+        loader: ContentLoader,
+    ) {
         val entry = loader.fetchEntry(id)
         requireNotNull(entry)
         val mimeType = entry.mimeType
@@ -97,7 +99,6 @@ class ViewerViewModel(
     }
 
     private interface ContentLoader {
-
         suspend fun fetchEntry(id: String): Entry?
 
         fun contentUri(entry: Entry): String
@@ -109,26 +110,19 @@ class ViewerViewModel(
         val browseRepository: BrowseRepository,
         val renditionRepository: RenditionRepository,
     ) : ContentLoader {
+        override suspend fun fetchEntry(id: String) = browseRepository.fetchEntry(id)
 
-        override suspend fun fetchEntry(id: String) =
-            browseRepository.fetchEntry(id)
+        override fun contentUri(entry: Entry) = browseRepository.contentUri(entry)
 
-        override fun contentUri(entry: Entry) =
-            browseRepository.contentUri(entry)
-
-        override suspend fun rendition(entry: Entry) =
-            renditionRepository.fetchRendition(entry.id)
+        override suspend fun rendition(entry: Entry) = renditionRepository.fetchRendition(entry.id)
     }
 
     private class OfflineContentLoader(
         val offlineRepository: OfflineRepository,
     ) : ContentLoader {
+        override suspend fun fetchEntry(id: String) = offlineRepository.entry(id)
 
-        override suspend fun fetchEntry(id: String) =
-            offlineRepository.entry(id)
-
-        override fun contentUri(entry: Entry) =
-            offlineRepository.contentUri(entry)
+        override fun contentUri(entry: Entry) = offlineRepository.contentUri(entry)
 
         override suspend fun rendition(entry: Entry): Rendition {
             val dir = offlineRepository.contentDir(entry)

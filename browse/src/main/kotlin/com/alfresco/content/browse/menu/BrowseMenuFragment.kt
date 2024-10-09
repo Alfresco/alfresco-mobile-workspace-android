@@ -19,7 +19,6 @@ import com.alfresco.content.viewer.ViewerArgs.Companion.ID_KEY
 import com.alfresco.content.viewer.ViewerArgs.Companion.MODE_KEY
 
 class BrowseMenuFragment : Fragment(), MavericksView {
-
     private val viewModel: BrowseMenuViewModel by fragmentViewModel()
     private lateinit var binding: FragmentBrowseMenuBinding
 
@@ -32,7 +31,10 @@ class BrowseMenuFragment : Fragment(), MavericksView {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().intent?.let {
             it.extras?.let { bundle ->
@@ -50,30 +52,36 @@ class BrowseMenuFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) {
-        binding.recyclerView.withModels {
-            it.entries.forEach {
-                if (it.path.isNotEmpty()) {
-                    browseMenuRow {
-                        id(it.title)
-                        entry(it)
-                        clickListener { _ -> navigateTo(it.path, it.title, it.pageView) }
-                    }
-                } else {
-                    browseMenuSeparator {
-                        id(it.title)
+    override fun invalidate() =
+        withState(viewModel) {
+            binding.recyclerView.withModels {
+                it.entries.forEach {
+                    if (it.path.isNotEmpty()) {
+                        browseMenuRow {
+                            id(it.title)
+                            entry(it)
+                            clickListener { _ -> navigateTo(it.path, it.title, it.pageView) }
+                        }
+                    } else {
+                        browseMenuSeparator {
+                            id(it.title)
+                        }
                     }
                 }
             }
         }
-    }
 
     override fun onResume() {
         super.onResume()
         AnalyticsManager().screenViewEvent(PageView.Browse)
     }
 
-    private fun navigateTo(path: String, title: String, pageView: PageView, nodeId: String = viewModel.getMyFilesNodeId()) {
+    private fun navigateTo(
+        path: String,
+        title: String,
+        pageView: PageView,
+        nodeId: String = viewModel.getMyFilesNodeId(),
+    ) {
         AnalyticsManager().screenViewEvent(pageView)
         if (path == getString(R.string.nav_path_my_files)) {
             findNavController().navigateToFolder(nodeId, title)

@@ -60,7 +60,6 @@ import kotlin.coroutines.suspendCoroutine
  * Marked as TaskDetailFragment class
  */
 class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
-
     val viewModel: TaskDetailViewModel by activityViewModel()
     lateinit var binding: FragmentTaskDetailBinding
     lateinit var commentViewBinding: ViewListCommentRowBinding
@@ -84,7 +83,10 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         return viewLayout as View
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsManager().screenViewEvent(if (viewModel.isWorkflowTask) PageView.WorkflowTaskView else PageView.TaskView)
         (requireActivity() as BaseActivity).setSupportActionBar(binding.toolbar)
@@ -101,7 +103,9 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 withState(viewModel) { state ->
                     if (!viewModel.isWorkflowTask && (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))) {
                         discardTaskPrompt()
-                    } else requireActivity().onBackPressed()
+                    } else {
+                        requireActivity().onBackPressed()
+                    }
                 }
             }
             title = resources.getString(R.string.title_task_view)
@@ -111,7 +115,10 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         setListeners()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         if (!viewModel.isWorkflowTask) {
             inflater.inflate(R.menu.menu_task_detail, menu)
             menuDetail = menu
@@ -180,44 +187,45 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         viewModel.deleteAttachment(contentId)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
-            (state.requestComments is Loading && state.listComments.isEmpty()) ||
-            (state.requestContents is Loading && state.listContents.isEmpty()) ||
-            (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
-            (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
-            (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading)
+            binding.loading.isVisible = (state.request is Loading && state.parent != null) ||
+                (state.requestComments is Loading && state.listComments.isEmpty()) ||
+                (state.requestContents is Loading && state.listContents.isEmpty()) ||
+                (state.requestCompleteTask is Loading) || (state.requestUpdateTask is Loading) ||
+                (state.requestDeleteContent is Loading) || (state.requestTaskForm is Loading) ||
+                (state.requestOutcomes is Loading) || (state.requestClaimRelease is Loading)
 
-        setData(state)
+            setData(state)
 
-        setCommentData(state.listComments)
+            setCommentData(state.listComments)
 
-        when {
-            (state.requestCompleteTask.invoke()?.code() == 200) ||
-                (state.requestOutcomes.invoke()?.code() == 200) ||
-                (state.requestClaimRelease.invoke()?.code() == 200) -> {
-                viewModel.updateTaskList()
-                requireActivity().onBackPressed()
-            }
-
-            state.requestUpdateTask is Success -> {
-                if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
-                    AnalyticsManager().taskEvent(EventName.DoneTask)
-                    menuDetail.findItem(R.id.action_done).isVisible = false
-                    menuDetail.findItem(R.id.action_edit).isVisible = true
-                    updateTaskDetailUI(false)
-                    viewModel.copyEntry(state.parent)
-                    viewModel.resetUpdateTaskRequest()
+            when {
+                (state.requestCompleteTask.invoke()?.code() == 200) ||
+                    (state.requestOutcomes.invoke()?.code() == 200) ||
+                    (state.requestClaimRelease.invoke()?.code() == 200) -> {
                     viewModel.updateTaskList()
+                    requireActivity().onBackPressed()
+                }
+
+                state.requestUpdateTask is Success -> {
+                    if (!viewModel.isExecutingUpdateDetails && !viewModel.isExecutingAssignUser) {
+                        AnalyticsManager().taskEvent(EventName.DoneTask)
+                        menuDetail.findItem(R.id.action_done).isVisible = false
+                        menuDetail.findItem(R.id.action_edit).isVisible = true
+                        updateTaskDetailUI(false)
+                        viewModel.copyEntry(state.parent)
+                        viewModel.resetUpdateTaskRequest()
+                        viewModel.updateTaskList()
+                    }
                 }
             }
-        }
 
-        if (state.requestContents.complete || (viewModel.isWorkflowTask && state.requestTaskForm.complete)) {
-            epoxyAttachmentController.requestModelBuild()
+            if (state.requestContents.complete || (viewModel.isWorkflowTask && state.requestTaskForm.complete)) {
+                epoxyAttachmentController.requestModelBuild()
+            }
         }
-    }
 
     private fun setCommentData(listComments: List<CommentEntry>) {
         if (listComments.isNotEmpty()) {
@@ -239,7 +247,15 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
 
             commentViewBinding.tvUserInitial.text = requireContext().getLocalizedName(commentObj.userGroupDetails?.nameInitial ?: "")
             commentViewBinding.tvName.text = requireContext().getLocalizedName(commentObj.userGroupDetails?.name ?: "")
-            commentViewBinding.tvDate.text = if (commentObj.created != null) commentObj.created?.toLocalDate().toString().getFormattedDate(DATE_FORMAT_1, DATE_FORMAT_4) else ""
+            commentViewBinding.tvDate.text =
+                if (commentObj.created != null) {
+                    commentObj.created?.toLocalDate().toString().getFormattedDate(
+                        DATE_FORMAT_1,
+                        DATE_FORMAT_4,
+                    )
+                } else {
+                    ""
+                }
             commentViewBinding.tvComment.text = commentObj.message
         } else {
             binding.clCommentHeader.visibility = View.GONE
@@ -260,76 +276,85 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
             }
 
             binding.tvAssignedValue.apply {
-                text = if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
-                    requireContext().getLocalizedName(dataObj.assignee?.let { UserGroupDetails.with(it).name } ?: "")
-                } else requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
+                text =
+                    if (viewModel.getAPSUser().id == dataObj.assignee?.id) {
+                        requireContext().getLocalizedName(dataObj.assignee?.let { UserGroupDetails.with(it).name } ?: "")
+                    } else {
+                        requireContext().getLocalizedName(dataObj.assignee?.name ?: "")
+                    }
             }
             binding.tvIdentifierValue.text = dataObj.id
             setTaskDetailAfterResponse(dataObj)
         }
     }
 
-    private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
-        val handler = Handler(Looper.getMainLooper())
-        if (state.listContents.isNotEmpty()) {
-            handler.post {
-                binding.clAddAttachment.visibility = View.VISIBLE
-                binding.tvNoAttachedFilesError.visibility = View.GONE
-                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                binding.recyclerViewAttachments.visibility = View.VISIBLE
-
-                if (state.listContents.size > 1) {
-                    binding.tvNoOfAttachments.visibility = View.VISIBLE
-                } else binding.tvNoOfAttachments.visibility = View.GONE
-
-                if (state.listContents.size > 4) {
-                    binding.tvAttachmentViewAll.visibility = View.VISIBLE
-                } else
-                    binding.tvAttachmentViewAll.visibility = View.GONE
-
-                binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state) && !viewModel.isWorkflowTask
-
-                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
-            }
-
-            state.listContents.take(4).forEach { obj ->
-                listViewAttachmentRow {
-                    id(stableId(obj))
-                    data(obj)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
-                    deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
-                }
-            }
-        } else {
-            handler.post {
-                binding.recyclerViewAttachments.visibility = View.GONE
-                binding.tvAttachmentViewAll.visibility = View.GONE
-                binding.tvNoOfAttachments.visibility = View.GONE
-                if (!viewModel.isTaskCompleted(state)) {
-                    binding.clAddAttachment.visibility = if (!viewModel.isWorkflowTask) View.VISIBLE else View.GONE
-                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                    binding.tvNoAttachedFilesError.visibility = View.VISIBLE
-                    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
-                } else {
-                    binding.clAddAttachment.visibility = View.GONE
-                    binding.tvAttachedTitle.text = ""
+    private fun epoxyAttachmentController() =
+        simpleController(viewModel) { state ->
+            val handler = Handler(Looper.getMainLooper())
+            if (state.listContents.isNotEmpty()) {
+                handler.post {
+                    binding.clAddAttachment.visibility = View.VISIBLE
                     binding.tvNoAttachedFilesError.visibility = View.GONE
+                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                    binding.recyclerViewAttachments.visibility = View.VISIBLE
+
+                    if (state.listContents.size > 1) {
+                        binding.tvNoOfAttachments.visibility = View.VISIBLE
+                    } else {
+                        binding.tvNoOfAttachments.visibility = View.GONE
+                    }
+
+                    if (state.listContents.size > 4) {
+                        binding.tvAttachmentViewAll.visibility = View.VISIBLE
+                    } else {
+                        binding.tvAttachmentViewAll.visibility = View.GONE
+                    }
+
+                    binding.clAddAttachment.isVisible = !viewModel.isTaskCompleted(state) && !viewModel.isWorkflowTask
+
+                    binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                }
+
+                state.listContents.take(4).forEach { obj ->
+                    listViewAttachmentRow {
+                        id(stableId(obj))
+                        data(obj)
+                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                        deleteContentClickListener { model, _, _, _ -> deleteContentPrompt(model.data()) }
+                    }
+                }
+            } else {
+                handler.post {
+                    binding.recyclerViewAttachments.visibility = View.GONE
+                    binding.tvAttachmentViewAll.visibility = View.GONE
+                    binding.tvNoOfAttachments.visibility = View.GONE
+                    if (!viewModel.isTaskCompleted(state)) {
+                        binding.clAddAttachment.visibility = if (!viewModel.isWorkflowTask) View.VISIBLE else View.GONE
+                        binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                        binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                        binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
+                    } else {
+                        binding.clAddAttachment.visibility = View.GONE
+                        binding.tvAttachedTitle.text = ""
+                        binding.tvNoAttachedFilesError.visibility = View.GONE
+                    }
                 }
             }
         }
-    }
 
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
-            val entry = Entry.convertContentEntryToEntry(
-                contentEntry,
-                MimeType.isDocFile(contentEntry.mimeType),
-                UploadServerType.UPLOAD_TO_TASK,
-            )
+            val entry =
+                Entry.convertContentEntryToEntry(
+                    contentEntry,
+                    MimeType.isDocFile(contentEntry.mimeType),
+                    UploadServerType.UPLOAD_TO_TASK,
+                )
             if (!contentEntry.source.isNullOrEmpty()) {
                 remoteViewerIntent(entry)
-            } else
+            } else {
                 viewModel.executePreview(ActionOpenWith(entry))
+            }
         } else {
             localViewerIntent(contentEntry)
         }
@@ -338,35 +363,45 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
     internal fun taskCompletePrompt(filesInQueue: Boolean) {
         val oldDialog = taskCompleteConfirmationDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_title_complete_task))
-            .setMessage(if (filesInQueue) getString(R.string.dialog_message_complete_task_files_queue) else getString(R.string.dialog_message_complete_task))
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                if (filesInQueue) {
-                    withState(viewModel) { state ->
-                        viewModel.removeTaskEntries(state)
+        val dialog =
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.dialog_title_complete_task))
+                .setMessage(
+                    if (filesInQueue) {
+                        getString(
+                            R.string.dialog_message_complete_task_files_queue,
+                        )
+                    } else {
+                        getString(R.string.dialog_message_complete_task)
+                    },
+                )
+                .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+                .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                    if (filesInQueue) {
+                        withState(viewModel) { state ->
+                            viewModel.removeTaskEntries(state)
+                        }
                     }
+                    AnalyticsManager().taskEvent(EventName.TaskComplete)
+                    viewModel.completeTask()
                 }
-                AnalyticsManager().taskEvent(EventName.TaskComplete)
-                viewModel.completeTask()
-            }
-            .show()
+                .show()
         taskCompleteConfirmationDialog = WeakReference(dialog)
     }
 
     private fun discardTaskPrompt() {
         val oldDialog = discardTaskDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setCancelable(false)
-            .setTitle(getString(R.string.dialog_title_discard_task))
-            .setMessage(getString(R.string.dialog_message_discard_task))
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                requireActivity().onBackPressed()
-            }
-            .show()
+        val dialog =
+            MaterialAlertDialogBuilder(requireContext())
+                .setCancelable(false)
+                .setTitle(getString(R.string.dialog_title_discard_task))
+                .setMessage(getString(R.string.dialog_message_discard_task))
+                .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+                .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                    requireActivity().onBackPressed()
+                }
+                .show()
         discardTaskDialog = WeakReference(dialog)
     }
 
@@ -411,7 +446,11 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
         }
     }
 
-    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+    private fun executeContinuation(
+        continuation: Continuation<ComponentMetaData?>,
+        name: String,
+        query: String,
+    ) {
         continuation.resume(ComponentMetaData(name = name, query = query))
     }
 }

@@ -28,7 +28,10 @@ class SignedOutFragment private constructor() {
         val TAG: String = SignedOutBottomSheet::class.java.name
 
         @JvmStatic
-        fun with(context: Context, adapter: SignedOutAdapter): DialogFragment {
+        fun with(
+            context: Context,
+            adapter: SignedOutAdapter,
+        ): DialogFragment {
             return if (context.resources.getBoolean(R.bool.isTablet)) {
                 SignedOutDialog(adapter)
             } else {
@@ -37,7 +40,12 @@ class SignedOutFragment private constructor() {
         }
 
         @JvmStatic
-        fun accountViewWith(fr: Fragment, container: ViewGroup, title: String, subtitle: String): View {
+        fun accountViewWith(
+            fr: Fragment,
+            container: ViewGroup,
+            title: String,
+            subtitle: String,
+        ): View {
             val view = fr.layoutInflater.inflate(R.layout.layout_auth_account_row, container, false)
 
             view.findViewById<TextView>(R.id.title).text = title
@@ -50,10 +58,23 @@ class SignedOutFragment private constructor() {
 }
 
 interface SignedOutAdapter {
-    fun onSignInButtonClicked(fragment: DialogFragment, view: View)
-    fun onAddAccountButtonClicked(fragment: DialogFragment, view: View)
+    fun onSignInButtonClicked(
+        fragment: DialogFragment,
+        view: View,
+    )
+
+    fun onAddAccountButtonClicked(
+        fragment: DialogFragment,
+        view: View,
+    )
+
     fun numberOfAccounts(): Int
-    fun viewForAccount(fragment: DialogFragment, container: ViewGroup, index: Int): View
+
+    fun viewForAccount(
+        fragment: DialogFragment,
+        container: ViewGroup,
+        index: Int,
+    ): View
 }
 
 class SignedOutBottomSheet() : BottomSheetDialogFragment() {
@@ -65,11 +86,18 @@ class SignedOutBottomSheet() : BottomSheetDialogFragment() {
         this.adapter = adapter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.fragment_auth_signed_out, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         if (adapter != null) {
@@ -111,11 +139,18 @@ class SignedOutDialog() : AppCompatDialogFragment() {
         this.adapter = adapter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.fragment_auth_signed_out, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         if (adapter != null) {
@@ -143,7 +178,11 @@ class SignedOutFragmentViewModel : ViewModel() {
     lateinit var adapter: SignedOutAdapter
 }
 
-private fun onViewCreated(self: AppCompatDialogFragment, view: View, adapter: SignedOutAdapter) {
+private fun onViewCreated(
+    self: AppCompatDialogFragment,
+    view: View,
+    adapter: SignedOutAdapter,
+) {
     // Disable dismissing the dialog
     self.isCancelable = false
 

@@ -67,6 +67,8 @@ fun InputChip(
         shape = RoundedCornerShape(24.dp),
         border = InputChipDefaults.inputChipBorder(
             selectedBorderWidth = 0.dp,
+            enabled = true, // or false depending on your use case
+            selected = false // or true if the chip is selected
 
         ),
         colors = getInputChipColors(),

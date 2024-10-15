@@ -20,7 +20,6 @@ data class RuntimeProcessDefinitionDataEntry(
     val tenantId: Int? = null,
 ) : ParentEntry(), Parcelable {
     companion object {
-
         /**
          * return RuntimeProcessDefinitionDataEntry by using RuntimeProcessDefinitionEntry
          */

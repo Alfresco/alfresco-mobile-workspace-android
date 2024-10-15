@@ -8,13 +8,11 @@ import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 
 class PeopleRepository(session: Session = SessionManager.requireSession) {
-
     private val service: PeopleApi by lazy {
         session.createService(PeopleApi::class.java)
     }
 
-    suspend fun me(): Person =
-        service.getPerson(AlfrescoApi.CURRENT_USER).entry
+    suspend fun me(): Person = service.getPerson(AlfrescoApi.CURRENT_USER).entry
 
     companion object {
         fun myPicture(): Uri {

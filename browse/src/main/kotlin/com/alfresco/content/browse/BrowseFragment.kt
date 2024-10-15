@@ -72,7 +72,6 @@ data class BrowseArgs(
 }
 
 class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
-
     private lateinit var args: BrowseArgs
     private var fab: FloatingActionButton? = null
 
@@ -105,7 +104,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         setViewRequiredMultiSelection(true)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         withState(viewModel) { state ->
             if (state.path == getString(R.string.nav_path_recents)) {
@@ -114,35 +116,39 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
                 bannerTransferData?.setOnClickListener {
                     findNavController().navigateToUploadFilesPath(true, requireContext().getString(R.string.title_transfers))
                 }
-            } else bannerTransferData?.visibility = View.GONE
-        }
-    }
-
-    override fun invalidate() = withState(viewModel) { state ->
-        super.invalidate()
-
-        if (state.path == getString(R.string.nav_path_recents)) {
-            updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
-            if (state.uploadTransferList.isEmpty()) {
-                viewModel.resetTransferData()
+            } else {
+                bannerTransferData?.visibility = View.GONE
             }
         }
-
-        state.title?.let {
-            (requireActivity() as AppCompatActivity).supportActionBar?.title = it
-        }
-
-        if (viewModel.canAddItems(state) && fab == null) {
-            fab = makeFab(requireContext())
-            (view as ViewGroup).addView(fab)
-        }
-
-        fab?.visibility = if (state.selectedEntries.isNotEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
+
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            super.invalidate()
+
+            if (state.path == getString(R.string.nav_path_recents)) {
+                updateBanner(state.totalTransfersSize, state.uploadTransferList.size)
+                if (state.uploadTransferList.isEmpty()) {
+                    viewModel.resetTransferData()
+                }
+            }
+
+            state.title?.let {
+                (requireActivity() as AppCompatActivity).supportActionBar?.title = it
+            }
+
+            if (viewModel.canAddItems(state) && fab == null) {
+                fab = makeFab(requireContext())
+                (view as ViewGroup).addView(fab)
+            }
+
+            fab?.visibility =
+                if (state.selectedEntries.isNotEmpty()) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+        }
 
     override fun onResume() {
         super.onResume()
@@ -151,7 +157,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
+    private fun updateBanner(
+        totalSize: Int,
+        pendingFilesCount: Int,
+    ) {
         if (totalSize != 0 && pendingFilesCount != 0) {
             bannerTransferData?.visibility = View.VISIBLE
         }
@@ -161,10 +170,18 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
         if (pendingFilesCount != 0) {
             tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload, 0, 0, 0)
-            tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_file_text_multiple), pendingFilesCount)
+            tvUploadingFiles?.text =
+                String.format(
+                    getString(com.alfresco.content.listview.R.string.upload_file_text_multiple),
+                    pendingFilesCount,
+                )
         } else {
             tvUploadingFiles?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_upload_done, 0, 0, 0)
-            tvUploadingFiles?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple), totalSize)
+            tvUploadingFiles?.text =
+                String.format(
+                    getString(com.alfresco.content.listview.R.string.upload_complete_text_multiple),
+                    totalSize,
+                )
         }
 
         tvPercentage?.text = String.format(getString(com.alfresco.content.listview.R.string.upload_percentage_text), percentage)
@@ -190,7 +207,10 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }, millis)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.menu_browse, menu)
     }
 
@@ -217,8 +237,9 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             entry.mimeType?.let {
                 findNavController().navigateToLocalPreview(it, entry.path.toString(), entry.name)
             }
-        } else
+        } else {
             findNavController().navigateTo(entry)
+        }
     }
 
     override fun onItemLongClicked(entry: Entry) {
@@ -230,17 +251,18 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
 
     private fun makeFab(context: Context) =
         FloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.END
-                // TODO: define margins
-                setMargins(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
-                        .toInt(),
-                )
-            }
+            layoutParams =
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.END
+                    // TODO: define margins
+                    setMargins(
+                        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+                            .toInt(),
+                    )
+                }
             contentDescription = getString(R.string.accessibility_text_create_button)
             setImageResource(R.drawable.ic_add_fab)
             setOnClickListener {
@@ -248,12 +270,12 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
             }
         }
 
-    private fun showCreateSheet() = withState(viewModel) {
-        CreateActionsSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
-    }
+    private fun showCreateSheet() =
+        withState(viewModel) {
+            CreateActionsSheet.with(requireNotNull(it.parent)).show(childFragmentManager, null)
+        }
 
     companion object {
-
         fun withArg(path: String): BrowseFragment {
             val fragment = BrowseFragment()
             fragment.arguments = BrowseArgs.bundle(path)

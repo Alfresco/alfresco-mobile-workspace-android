@@ -75,7 +75,7 @@ data class Entry(
     val isDocFile: Boolean = false,
     @Transient
     val parentPaths: MutableList<String> = mutableListOf(),
-    /*APS content data*/
+    // APS content data
     @Convert(converter = BoxDateConverter::class, dbType = Long::class)
     val created: ZonedDateTime? = null,
     @Transient
@@ -95,7 +95,6 @@ data class Entry(
     var observerID: String = "",
     var isMultiple: Boolean = false,
 ) : ParentEntry(), Parcelable {
-
     val isSynced: Boolean
         get() = offlineStatus == OfflineStatus.SYNCED
 
@@ -164,7 +163,11 @@ data class Entry(
         ;
 
         companion object {
-            fun from(value: String, isFile: Boolean = false, isFolder: Boolean = false): Type {
+            fun from(
+                value: String,
+                isFile: Boolean = false,
+                isFolder: Boolean = false,
+            ): Type {
                 when (value) {
                     "cm:content" -> return FILE
                     "cm:folder" -> return FOLDER
@@ -221,7 +224,10 @@ data class Entry(
         /**
          * return the Entry obj with isExtension value true
          */
-        fun with(result: ResultNode, isExtension: Boolean): Entry {
+        fun with(
+            result: ResultNode,
+            isExtension: Boolean,
+        ): Entry {
             return Entry(
                 result.id,
                 result.parentId,
@@ -263,7 +269,10 @@ data class Entry(
         /**
          * returns the Entry obj with extension value true
          */
-        fun with(node: NodeChildAssociation, isExtension: Boolean): Entry {
+        fun with(
+            node: NodeChildAssociation,
+            isExtension: Boolean,
+        ): Entry {
             return Entry(
                 node.id,
                 node.parentId,
@@ -388,7 +397,11 @@ data class Entry(
             ).withOfflineStatus()
         }
 
-        fun with(contentEntry: ContentEntry, observerID: String, parentId: String?): Entry {
+        fun with(
+            contentEntry: ContentEntry,
+            observerID: String,
+            parentId: String?,
+        ): Entry {
             return Entry(
                 parentId = parentId,
                 id = contentEntry.id.toString(),
@@ -401,14 +414,17 @@ data class Entry(
                 observerID = observerID,
                 uploadServer = UploadServerType.UPLOAD_TO_PROCESS,
                 offlineStatus = OfflineStatus.UNDEFINED,
-
             )
         }
 
         /**
          * return the Entry obj by using the contentEntry obj.
          */
-        fun convertContentEntryToEntry(contentEntry: Entry, isDocFile: Boolean, uploadServer: UploadServerType): Entry {
+        fun convertContentEntryToEntry(
+            contentEntry: Entry,
+            isDocFile: Boolean,
+            uploadServer: UploadServerType,
+        ): Entry {
             val id = if (contentEntry.sourceId.isNullOrEmpty()) contentEntry.id else contentEntry.sourceId
             return Entry(
                 id = id,
@@ -424,7 +440,12 @@ data class Entry(
         /**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj
          */
-        fun with(data: ContentDataEntry, parentId: String? = null, uploadServer: UploadServerType, observerID: String = ""): Entry {
+        fun with(
+            data: ContentDataEntry,
+            parentId: String? = null,
+            uploadServer: UploadServerType,
+            observerID: String = "",
+        ): Entry {
             return Entry(
                 id = data.id?.toString() ?: "",
                 parentId = parentId,
@@ -448,7 +469,11 @@ data class Entry(
         /**
          * return the Entry obj
          */
-        fun with(data: Entry, parentId: String? = null, observerID: String = ""): Entry {
+        fun with(
+            data: Entry,
+            parentId: String? = null,
+            observerID: String = "",
+        ): Entry {
             return Entry(
                 id = data.id,
                 parentId = parentId,
@@ -475,7 +500,10 @@ data class Entry(
         /**
          * update entry after downloading content from process services.
          */
-        fun updateDownloadEntry(entry: Entry, path: String): Entry {
+        fun updateDownloadEntry(
+            entry: Entry,
+            path: String,
+        ): Entry {
             return Entry(id = entry.id, name = entry.name, mimeType = entry.mimeType, path = path, uploadServer = entry.uploadServer)
         }
 
@@ -489,7 +517,11 @@ data class Entry(
         /**
          * return the default Workflow content entry obj
          */
-        fun defaultWorkflowEntry(id: String?, fieldId: String = "", isMultiple: Boolean = false): Entry {
+        fun defaultWorkflowEntry(
+            id: String?,
+            fieldId: String = "",
+            isMultiple: Boolean = false,
+        ): Entry {
             return Entry(uploadServer = UploadServerType.UPLOAD_TO_PROCESS, parentId = id, observerID = fieldId, isMultiple = isMultiple)
         }
 
@@ -505,14 +537,11 @@ data class Entry(
                 ?.reduce { out, el -> "$out \u203A $el" }
         }
 
-        private fun canDelete(operations: List<String>?) =
-            operations?.contains("delete") ?: false
+        private fun canDelete(operations: List<String>?) = operations?.contains("delete") ?: false
 
-        private fun canCreate(operations: List<String>?) =
-            operations?.contains("create") ?: false
+        private fun canCreate(operations: List<String>?) = operations?.contains("create") ?: false
 
-        private fun canCreateUpdate(operations: List<String>?) =
-            listOf("create", "update").any { operations?.contains(it) == true }
+        private fun canCreateUpdate(operations: List<String>?) = listOf("create", "update").any { operations?.contains(it) == true }
 
         private fun propertiesCompat(src: Map<String, Any?>?): MutableMap<String, String> {
             val map = mutableMapOf<String, String>()
@@ -588,8 +617,7 @@ class BoxOfflineStatusConverter : PropertyConverter<OfflineStatus, String> {
             OfflineStatus.UNDEFINED
         }
 
-    override fun convertToDatabaseValue(entityProperty: OfflineStatus?) =
-        entityProperty?.value()
+    override fun convertToDatabaseValue(entityProperty: OfflineStatus?) = entityProperty?.value()
 }
 
 class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
@@ -600,8 +628,7 @@ class BoxEntryTypeConverter : PropertyConverter<Entry.Type, String> {
             Entry.Type.UNKNOWN
         }
 
-    override fun convertToDatabaseValue(entityProperty: Entry.Type?) =
-        entityProperty?.name?.lowercase()
+    override fun convertToDatabaseValue(entityProperty: Entry.Type?) = entityProperty?.name?.lowercase()
 }
 
 /**
@@ -615,8 +642,7 @@ class BoxUploadServerTypeConverter : PropertyConverter<UploadServerType, String>
             UploadServerType.NONE
         }
 
-    override fun convertToDatabaseValue(entityProperty: UploadServerType?) =
-        entityProperty?.value()
+    override fun convertToDatabaseValue(entityProperty: UploadServerType?) = entityProperty?.value()
 }
 
 object DateParceler : Parceler<ZonedDateTime> {
@@ -626,7 +652,10 @@ object DateParceler : Parceler<ZonedDateTime> {
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(parcel.readLong()), zone)
     }
 
-    override fun ZonedDateTime.write(parcel: Parcel, flags: Int) {
+    override fun ZonedDateTime.write(
+        parcel: Parcel,
+        flags: Int,
+    ) {
         parcel.writeLong(this.toInstant().epochSecond)
     }
 }
@@ -641,17 +670,17 @@ class BoxDateConverter : PropertyConverter<ZonedDateTime, Long> {
             null
         }
 
-    override fun convertToDatabaseValue(entityProperty: ZonedDateTime?) =
-        entityProperty?.toInstant()?.epochSecond
+    override fun convertToDatabaseValue(entityProperty: ZonedDateTime?) = entityProperty?.toInstant()?.epochSecond
 }
 
 class PropertiesConverter : PropertyConverter<Map<String, String>, String> {
     private var moshi = Moshi.Builder().build()
-    private var type = Types.newParameterizedType(
-        Map::class.java,
-        String::class.java,
-        String::class.java,
-    )
+    private var type =
+        Types.newParameterizedType(
+            Map::class.java,
+            String::class.java,
+            String::class.java,
+        )
     private var jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
 
     override fun convertToEntityProperty(databaseValue: String?): Map<String, String> {

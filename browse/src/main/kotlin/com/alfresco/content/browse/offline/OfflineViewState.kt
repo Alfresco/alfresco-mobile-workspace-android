@@ -15,7 +15,6 @@ data class OfflineViewState(
     override val maxLimitReachedForMultiSelection: Boolean = false,
     val syncNowEnabled: Boolean = false,
 ) : ListViewState {
-
     constructor(args: OfflineBrowseArgs) : this(parentId = args.id)
 
     override val isCompact: Boolean
@@ -28,16 +27,18 @@ data class OfflineViewState(
 
         val selectedEntriesMap = selectedEntries.associateBy { it.id }
 
-        val pageEntries = response.entries.map { entry ->
-            val isSelectedForMultiSelection = selectedEntriesMap[entry.id]?.isSelectedForMultiSelection ?: false
-            entry.copy(isSelectedForMultiSelection = isSelectedForMultiSelection)
-        }.toMutableList()
+        val pageEntries =
+            response.entries.map { entry ->
+                val isSelectedForMultiSelection = selectedEntriesMap[entry.id]?.isSelectedForMultiSelection ?: false
+                entry.copy(isSelectedForMultiSelection = isSelectedForMultiSelection)
+            }.toMutableList()
 
-        val newEntries = if (nextPage) {
-            entries + pageEntries
-        } else {
-            pageEntries
-        }
+        val newEntries =
+            if (nextPage) {
+                entries + pageEntries
+            } else {
+                pageEntries
+            }
 
         return copy(entries = newEntries, hasMoreItems = response.pagination.hasMoreItems)
     }

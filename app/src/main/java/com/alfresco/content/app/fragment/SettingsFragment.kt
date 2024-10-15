@@ -1,8 +1,11 @@
 package com.alfresco.content.app.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -24,13 +27,28 @@ import java.lang.ref.WeakReference
 
 @Suppress("unused")
 class SettingsFragment : PreferenceFragmentCompat() {
+    private lateinit var logoutActivityLauncher: ActivityResultLauncher<Intent>
 
     override fun onStart() {
         super.onStart()
         requireActivity().title = resources.getString(R.string.nav_title_settings)
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Initialize the launcher in onCreate()
+        logoutActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    deleteAccount()
+                }
+            }
+    }
+
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?,
+    ) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
         val acc = SessionManager.requireSession.account
@@ -43,9 +61,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 error(R.drawable.ic_transparent)
                 transformations(CircleCropTransformation())
             }
-            onSignOutClickListener = View.OnClickListener {
-                showSignOutConfirmation()
-            }
+            onSignOutClickListener =
+                View.OnClickListener {
+                    showSignOutConfirmation()
+                }
         }
 
         preferenceScreen.findPreference<Preference>(resources.getString(R.string.pref_version_key))?.apply {
@@ -74,16 +93,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         i.putExtra(LogoutViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_STATE, acc.authState)
-        startActivityForResult(i, REQUEST_CODE_LOGOUT)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_LOGOUT) {
-            // no-op
-            deleteAccount()
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        logoutActivityLauncher.launch(i)
     }
 
     private fun deleteAccount() {
@@ -101,9 +111,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
             activity.startActivity(intent)
             activity.finish()
         }
-    }
-
-    companion object {
-        const val REQUEST_CODE_LOGOUT = 0
     }
 }

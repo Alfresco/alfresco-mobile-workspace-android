@@ -17,7 +17,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 abstract class SplashActivity : AppCompatActivity() {
-
     private val handler = Handler(Looper.getMainLooper())
     private var entryId = ""
     private var isPreview = false

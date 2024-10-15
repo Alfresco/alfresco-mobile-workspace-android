@@ -9,7 +9,6 @@ import android.os.IBinder
  * when started.
  */
 class AuthenticatorService : Service() {
-
     private lateinit var authenticator: Authenticator
 
     override fun onCreate() {

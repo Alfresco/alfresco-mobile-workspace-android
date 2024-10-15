@@ -58,7 +58,10 @@ fun TextView.isEllipsized() = layout.text.toString() != text.toString()
 /**
  * It adds the read more text if line exceeds more than 4 lines
  */
-fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {
+fun TextView.addTextViewPrefix(
+    prefix: String,
+    callback: TextViewCallback,
+) {
     if (layout == null) {
         return
     }
@@ -89,7 +92,12 @@ fun TextView.addTextViewPrefix(prefix: String, callback: TextViewCallback) {
     }
 }
 
-private fun getTruncatedText(textView: TextView, maxLineCount: Int, count: Int, prefix: String): String {
+private fun getTruncatedText(
+    textView: TextView,
+    maxLineCount: Int,
+    count: Int,
+    prefix: String,
+): String {
     var startCount = count
     val newString: StringBuilder = StringBuilder("")
     for (i in 0 until maxLineCount) {
@@ -100,27 +108,33 @@ private fun getTruncatedText(textView: TextView, maxLineCount: Int, count: Int, 
             if (lineEnd.minus(startCount) > prefix.length + 1) {
                 newString.append(textView.text.subSequence(startCount, lineEnd - (prefix.length + 1)).toString().replace("\n", ""))
                 newString.append(" $prefix")
-            } else newString.append("${textView.text.subSequence(startCount, lineEnd).toString().replace("\n", "")} $prefix")
+            } else {
+                newString.append("${textView.text.subSequence(startCount, lineEnd).toString().replace("\n", "")} $prefix")
+            }
         }
         startCount = lineEnd
     }
     return newString.toString()
 }
 
-private fun addClickableSpan(context: Context, callback: TextViewCallback): ClickableSpan {
+private fun addClickableSpan(
+    context: Context,
+    callback: TextViewCallback,
+): ClickableSpan {
     val typedValue = TypedValue()
     context.theme.resolveAttribute(R.attr.colorControlNormal, typedValue, true)
     // Clickable Span will help us to make clickable a text
-    val clickableSpan = object : ClickableSpan() {
-        override fun onClick(textView: View) {
-            callback?.invoke(true)
-        }
+    val clickableSpan =
+        object : ClickableSpan() {
+            override fun onClick(textView: View) {
+                callback?.invoke(true)
+            }
 
-        override fun updateDrawState(ds: TextPaint) {
-            super.updateDrawState(ds)
-            ds.isUnderlineText = false
-            ds.color = typedValue.data
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+                ds.color = typedValue.data
+            }
         }
-    }
     return clickableSpan
 }

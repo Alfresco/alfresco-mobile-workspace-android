@@ -29,35 +29,35 @@ data class BrowseViewState(
     val uploadTransferList: List<Entry> = emptyList(),
     val totalTransfersSize: Int = 0,
 ) : ListViewState {
-
     constructor(args: BrowseArgs) : this(args.path, args.id, args.moveId)
 
     override val isCompact: Boolean
-        get() = when (path) {
-            "site", "folder", "extension", "move", "my-libraries", "fav-libraries" -> true
-            else -> false
-        }
+        get() =
+            when (path) {
+                "site", "folder", "extension", "move", "my-libraries", "fav-libraries" -> true
+                else -> false
+            }
 
-    fun update(
-        response: ResponsePaging?,
-    ): BrowseViewState {
+    fun update(response: ResponsePaging?): BrowseViewState {
         if (response == null) return this
 
         val nextPage = response.pagination.skipCount > 0
 
-        val listMoveIds = if (moveId.isNotEmpty() && moveId.contains(",")) {
-            moveId.split(",").toList()
-        } else {
-            listOf(moveId)
-        }
+        val listMoveIds =
+            if (moveId.isNotEmpty() && moveId.contains(",")) {
+                moveId.split(",").toList()
+            } else {
+                listOf(moveId)
+            }
 
         val pageEntries = response.entries.filterNot { listMoveIds.contains(it.id) }
 
-        val newEntries = if (nextPage) {
-            baseEntries + pageEntries
-        } else {
-            pageEntries
-        }
+        val newEntries =
+            if (nextPage) {
+                baseEntries + pageEntries
+            } else {
+                pageEntries
+            }
 
         return copyIncludingUploads(newEntries, uploads, response.pagination.hasMoreItems).copy(title = response.source?.name)
     }
@@ -96,7 +96,11 @@ data class BrowseViewState(
             )
     }
 
-    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>, includeRemaining: Boolean): List<Entry> {
+    private fun mergeInUploads(
+        base: List<Entry>,
+        uploads: List<Entry>,
+        includeRemaining: Boolean,
+    ): List<Entry> {
         return merge(base, uploads, includeRemainingRight = includeRemaining) { left: Entry, right: Entry ->
             if (left.isFolder || right.isFolder) {
                 val cmp = right.isFolder.compareTo(left.isFolder)
@@ -132,10 +136,11 @@ data class BrowseViewState(
         }
 
     val sortOrder: SortOrder
-        get() = when (path) {
-            "recents" -> SortOrder.ByModifiedDate // TODO:
-            else -> SortOrder.Default
-        }
+        get() =
+            when (path) {
+                "recents" -> SortOrder.ByModifiedDate // TODO:
+                else -> SortOrder.Default
+            }
 
     private fun defaultReducer(newEntries: List<Entry>): BrowseViewState =
         copy(
@@ -154,13 +159,14 @@ data class BrowseViewState(
         for (entry in newEntries) {
             val modified = entry.modified ?: startOfDay
 
-            val targetGroup = when {
-                modified >= startOfDay -> ModifiedGroup.Today
-                modified >= startOfYesterday -> ModifiedGroup.Yesterday
-                modified >= firstOfWeek -> ModifiedGroup.ThisWeek
-                modified >= firstOfLastWeek -> ModifiedGroup.LastWeek
-                else -> ModifiedGroup.Older
-            }
+            val targetGroup =
+                when {
+                    modified >= startOfDay -> ModifiedGroup.Today
+                    modified >= startOfYesterday -> ModifiedGroup.Yesterday
+                    modified >= firstOfWeek -> ModifiedGroup.ThisWeek
+                    modified >= firstOfLastWeek -> ModifiedGroup.LastWeek
+                    else -> ModifiedGroup.Older
+                }
 
             if (currentGroup != targetGroup) {
                 currentGroup = targetGroup

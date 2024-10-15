@@ -22,7 +22,6 @@ import com.alfresco.content.navigateToExtensionFolder
  * Mark as BrowseExtensionFragment
  */
 class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R.layout.fragment_extension_list) {
-
     private lateinit var args: BrowseArgs
 
     @OptIn(InternalMavericksApi::class)
@@ -37,7 +36,10 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         setHasOptionsMenu(true)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         uploadButton?.setOnClickListener {
@@ -51,7 +53,10 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.menu_browse_extension, menu)
     }
 
@@ -77,12 +82,13 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension)) {
-            super.disableRefreshLayout()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension)) {
+                super.disableRefreshLayout()
+            }
+            super.invalidate()
         }
-        super.invalidate()
-    }
 
     /**
      * return callback for list item

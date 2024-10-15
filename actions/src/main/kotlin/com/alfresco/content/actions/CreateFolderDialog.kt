@@ -17,7 +17,6 @@ internal typealias CreateFolderSuccessCallback = (String, String) -> Unit
 internal typealias CreateFolderCancelCallback = () -> Unit
 
 class CreateFolderDialog : DialogFragment() {
-
     private val binding: DialogCreateLayoutBinding by lazy {
         DialogCreateLayoutBinding.inflate(LayoutInflater.from(requireContext()), null, false)
     }
@@ -56,19 +55,31 @@ class CreateFolderDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
 
-        binding.nameInputLayout.editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // no-op
-            }
+        binding.nameInputLayout.editText?.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // no-op
-            }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    // no-op
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                validateInput(s.toString())
-            }
-        })
+                override fun afterTextChanged(s: Editable?) {
+                    validateInput(s.toString())
+                }
+            },
+        )
         if (isUpdate && !name.isNullOrEmpty()) {
             binding.nameInput.setText(name)
             positiveButton.isEnabled = true
@@ -82,11 +93,12 @@ class CreateFolderDialog : DialogFragment() {
         val isValid = isFolderNameValid(title)
         val isEmpty = title.isEmpty()
 
-        binding.nameInputLayout.error = when {
-            !isValid -> resources.getString(R.string.action_folder_name_invalid_chars)
-            isEmpty -> resources.getString(R.string.action_folder_name_empty)
-            else -> null
-        }
+        binding.nameInputLayout.error =
+            when {
+                !isValid -> resources.getString(R.string.action_folder_name_invalid_chars)
+                isEmpty -> resources.getString(R.string.action_folder_name_empty)
+                else -> null
+            }
 
         positiveButton.isEnabled = isValid && !isEmpty
     }
@@ -105,19 +117,17 @@ class CreateFolderDialog : DialogFragment() {
         var onSuccess: CreateFolderSuccessCallback? = null,
         var onCancel: CreateFolderCancelCallback? = null,
     ) {
+        fun onSuccess(callback: CreateFolderSuccessCallback?) = apply { this.onSuccess = callback }
 
-        fun onSuccess(callback: CreateFolderSuccessCallback?) =
-            apply { this.onSuccess = callback }
-
-        fun onCancel(callback: CreateFolderCancelCallback?) =
-            apply { this.onCancel = callback }
+        fun onCancel(callback: CreateFolderCancelCallback?) = apply { this.onCancel = callback }
 
         fun show() {
-            val fragmentManager = when (context) {
-                is AppCompatActivity -> context.supportFragmentManager
-                is Fragment -> context.childFragmentManager
-                else -> throw IllegalArgumentException()
-            }
+            val fragmentManager =
+                when (context) {
+                    is AppCompatActivity -> context.supportFragmentManager
+                    is Fragment -> context.childFragmentManager
+                    else -> throw IllegalArgumentException()
+                }
             CreateFolderDialog().apply {
                 onSuccess = this@Builder.onSuccess
                 onCancel = this@Builder.onCancel

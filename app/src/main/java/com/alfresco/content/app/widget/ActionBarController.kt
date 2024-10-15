@@ -11,13 +11,15 @@ import com.alfresco.content.app.R
 import com.alfresco.content.slideTop
 
 class ActionBarController(private val layout: ActionBarLayout) {
-
     private lateinit var navController: NavController
 
     /**
      * setup the actionbar without appbar
      */
-    fun setupActionBar(activity: AppCompatActivity, navController: NavController) {
+    fun setupActionBar(
+        activity: AppCompatActivity,
+        navController: NavController,
+    ) {
         this.navController = navController
 
         activity.setSupportActionBar(layout.toolbar)
@@ -26,7 +28,11 @@ class ActionBarController(private val layout: ActionBarLayout) {
         layout.expand(false)
     }
 
-    fun setupActionBar(activity: AppCompatActivity, navController: NavController, appBarConfiguration: AppBarConfiguration) {
+    fun setupActionBar(
+        activity: AppCompatActivity,
+        navController: NavController,
+        appBarConfiguration: AppBarConfiguration,
+    ) {
         this.navController = navController
 
         activity.setSupportActionBar(layout.toolbar)
@@ -41,10 +47,11 @@ class ActionBarController(private val layout: ActionBarLayout) {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val isTopLevelDestination = matchDestinations(
-                destination,
-                appBarConfiguration.topLevelDestinations,
-            )
+            val isTopLevelDestination =
+                matchDestinations(
+                    destination,
+                    appBarConfiguration.topLevelDestinations,
+                )
 
             if (isTopLevelDestination) {
                 layout.collapse(false, destination.label == layout.context.getString(R.string.nav_title_tasks))

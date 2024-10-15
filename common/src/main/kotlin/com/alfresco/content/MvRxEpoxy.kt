@@ -13,7 +13,6 @@ import com.airbnb.mvrx.withState
 open class MvRxEpoxyController(
     val buildModelsCallback: EpoxyController.() -> Unit = {},
 ) : AsyncEpoxyController() {
-
     override fun buildModels() {
         buildModelsCallback()
     }
@@ -22,14 +21,13 @@ open class MvRxEpoxyController(
 /**
  * Create a [MvRxEpoxyController] that builds models with the given callback.
  */
-fun Fragment.simpleController(
-    buildModels: EpoxyController.() -> Unit,
-) = MvRxEpoxyController {
-    // Models are built asynchronously, so it is possible that this is called after the fragment
-    // is detached under certain race conditions.
-    if (view == null || isRemoving) return@MvRxEpoxyController
-    buildModels()
-}
+fun Fragment.simpleController(buildModels: EpoxyController.() -> Unit) =
+    MvRxEpoxyController {
+        // Models are built asynchronously, so it is possible that this is called after the fragment
+        // is detached under certain race conditions.
+        if (view == null || isRemoving) return@MvRxEpoxyController
+        buildModels()
+    }
 
 /**
  * Create a [MvRxEpoxyController] that builds models with the given callback.

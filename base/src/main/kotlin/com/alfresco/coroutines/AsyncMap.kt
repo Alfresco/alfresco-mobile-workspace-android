@@ -11,7 +11,10 @@ suspend fun <T, R> Iterable<T>.asyncMap(f: suspend (T) -> R): List<R> =
         map { async { f(it) } }.awaitAll()
     }
 
-suspend fun <T, R> Iterable<T>.asyncMap(limit: Int, f: suspend (T) -> R): List<R> =
+suspend fun <T, R> Iterable<T>.asyncMap(
+    limit: Int,
+    f: suspend (T) -> R,
+): List<R> =
     coroutineScope {
         Semaphore(limit).run {
             map { async { withPermit { f(it) } } }.awaitAll()
@@ -23,7 +26,10 @@ suspend fun <T, R> Iterable<T>.asyncMapNotNull(f: suspend (T) -> R?): List<R> =
         mapNotNull { async { f(it) } }.awaitAll().filterNotNull()
     }
 
-suspend fun <T, R> Iterable<T>.asyncMapNotNull(limit: Int, f: suspend (T) -> R?): List<R> =
+suspend fun <T, R> Iterable<T>.asyncMapNotNull(
+    limit: Int,
+    f: suspend (T) -> R?,
+): List<R> =
     coroutineScope {
         Semaphore(limit).run {
             mapNotNull { async { withPermit { f(it) } } }.awaitAll().filterNotNull()

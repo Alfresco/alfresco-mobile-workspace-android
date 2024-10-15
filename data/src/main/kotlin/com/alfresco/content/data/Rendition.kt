@@ -7,11 +7,12 @@ data class Rendition(
     val mimeType: String,
 ) {
     val offlineFileName: String
-        get() = when (mimeType) {
-            PDF_MIME_TYPE -> PDF_FILE_NAME
-            IMG_MIME_TYPE -> IMG_FILE_NAME
-            else -> throw UnsupportedOperationException()
-        }
+        get() =
+            when (mimeType) {
+                PDF_MIME_TYPE -> PDF_FILE_NAME
+                IMG_MIME_TYPE -> IMG_FILE_NAME
+                else -> throw UnsupportedOperationException()
+            }
 
     companion object {
         private const val PDF_MIME_TYPE = "application/pdf"

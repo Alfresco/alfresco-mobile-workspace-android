@@ -32,15 +32,15 @@ data class ActionOpenWith(
     override val eventName: EventName = EventName.OpenWith,
     val hasChooser: Boolean = false,
 ) : Action {
-
     private var deferredDownload = AtomicReference<Deferred<Unit>?>(null)
 
     override suspend fun execute(context: Context): Entry {
-        val target = if (entry.isSynced) {
-            OfflineRepository().contentFile(entry)
-        } else {
-            fetchRemoteFile(context)
-        }
+        val target =
+            if (entry.isSynced) {
+                OfflineRepository().contentFile(entry)
+            } else {
+                fetchRemoteFile(context)
+            }
 
         return when (entry.uploadServer) {
             UploadServerType.DEFAULT -> {
@@ -69,9 +69,10 @@ data class ActionOpenWith(
 
         val triple = getUriClientOutputFileData(context, entry)
 
-        val deferredDownload = GlobalScope.async(Dispatchers.IO) {
-            ContentDownloader.downloadFileTo(triple.first, triple.third.path, triple.second)
-        }
+        val deferredDownload =
+            GlobalScope.async(Dispatchers.IO) {
+                ContentDownloader.downloadFileTo(triple.first, triple.third.path, triple.second)
+            }
         this.deferredDownload.compareAndSet(null, deferredDownload)
 
         try {
@@ -86,49 +87,59 @@ data class ActionOpenWith(
         return triple.third
     }
 
-    private fun getUriClientOutputFileData(context: Context, entry: Entry): Triple<String, OkHttpClient?, File> {
+    private fun getUriClientOutputFileData(
+        context: Context,
+        entry: Entry,
+    ): Triple<String, OkHttpClient?, File> {
         val triple: Triple<String, OkHttpClient?, File>
         when (entry.uploadServer) {
             UploadServerType.UPLOAD_TO_TASK -> {
-                triple = Triple(
-                    TaskRepository().contentUri(entry),
-                    TaskRepository().getHttpClient(),
-                    TaskRepository().getContentDirectory(entry.fileName),
-                )
-            }
-
-            UploadServerType.UPLOAD_TO_PROCESS -> {
-                triple = if (!entry.sourceId.isNullOrEmpty()) {
-                    Triple(
-                        BrowseRepository().contentUri(entry),
-                        null,
-                        File(context.cacheDir, entry.name),
-                    )
-                } else {
+                triple =
                     Triple(
                         TaskRepository().contentUri(entry),
                         TaskRepository().getHttpClient(),
                         TaskRepository().getContentDirectory(entry.fileName),
                     )
-                }
+            }
+
+            UploadServerType.UPLOAD_TO_PROCESS -> {
+                triple =
+                    if (!entry.sourceId.isNullOrEmpty()) {
+                        Triple(
+                            BrowseRepository().contentUri(entry),
+                            null,
+                            File(context.cacheDir, entry.name),
+                        )
+                    } else {
+                        Triple(
+                            TaskRepository().contentUri(entry),
+                            TaskRepository().getHttpClient(),
+                            TaskRepository().getContentDirectory(entry.fileName),
+                        )
+                    }
             }
 
             else -> {
-                triple = Triple(
-                    BrowseRepository().contentUri(entry),
-                    null,
-                    File(context.cacheDir, entry.name),
-                )
+                triple =
+                    Triple(
+                        BrowseRepository().contentUri(entry),
+                        null,
+                        File(context.cacheDir, entry.name),
+                    )
             }
         }
         return triple
     }
 
-    private fun showFileChooserDialog(context: Context, file: File) {
+    private fun showFileChooserDialog(
+        context: Context,
+        file: File,
+    ) {
         val contentUri = FileProvider.getUriForFile(context, ContentDownloader.FILE_PROVIDER_AUTHORITY, file)
-        val intent = Intent(Intent.ACTION_VIEW)
-            .setData(contentUri)
-            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val intent =
+            Intent(Intent.ACTION_VIEW)
+                .setData(contentUri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         val chooser = Intent.createChooser(intent, context.getString(R.string.action_open_with_title))
         if (intent.resolveActivity(context.packageManager) != null) {
@@ -141,25 +152,26 @@ data class ActionOpenWith(
     private suspend fun showProgressDialogAsync(context: Context) =
         GlobalScope.async(Dispatchers.Main) {
             suspendCancellableCoroutine<Boolean> {
-                val dialog = MaterialAlertDialogBuilder(context)
-                    .setTitle(entry.name)
-                    .setMessage(
-                        context.getString(R.string.action_open_with_downloading),
-                    )
-                    .setIcon(
-                        ResourcesCompat.getDrawable(
-                            context.resources,
-                            MimeType.with(entry.mimeType).icon,
-                            context.theme,
-                        ),
-                    )
-                    .setNegativeButton(
-                        context.getString(R.string.action_open_with_cancel),
-                    ) { _, _ ->
-                        deferredDownload.get()?.cancel()
-                    }
-                    .setCancelable(false)
-                    .show()
+                val dialog =
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(entry.name)
+                        .setMessage(
+                            context.getString(R.string.action_open_with_downloading),
+                        )
+                        .setIcon(
+                            ResourcesCompat.getDrawable(
+                                context.resources,
+                                MimeType.with(entry.mimeType).icon,
+                                context.theme,
+                            ),
+                        )
+                        .setNegativeButton(
+                            context.getString(R.string.action_open_with_cancel),
+                        ) { _, _ ->
+                            deferredDownload.get()?.cancel()
+                        }
+                        .setCancelable(false)
+                        .show()
                 it.invokeOnCancellation {
                     dialog.dismiss()
                 }
@@ -168,5 +180,8 @@ data class ActionOpenWith(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) = Unit
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) = Unit
 }

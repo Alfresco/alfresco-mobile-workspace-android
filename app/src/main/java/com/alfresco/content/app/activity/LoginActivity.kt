@@ -18,8 +18,12 @@ import com.alfresco.content.session.Session
 import kotlinx.coroutines.launch
 
 class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
-
-    override fun onCredentials(credentials: Credentials, endpoint: String, authConfig: AuthConfig, isExtension: Boolean) {
+    override fun onCredentials(
+        credentials: Credentials,
+        endpoint: String,
+        authConfig: AuthConfig,
+        isExtension: Boolean,
+    ) {
         val account = Account(credentials.username, credentials.authState, credentials.authType, authConfig.jsonSerialize(), endpoint)
         val context = applicationContext
 
@@ -42,7 +46,13 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
         }
     }
 
-    private fun processAccountInformation(person: Person, myFiles: String, credentials: Credentials, authConfig: AuthConfig, endpoint: String) {
+    private fun processAccountInformation(
+        person: Person,
+        myFiles: String,
+        credentials: Credentials,
+        authConfig: AuthConfig,
+        endpoint: String,
+    ) {
         if (!viewModel.isReLogin) {
             Account.createAccount(
                 this,

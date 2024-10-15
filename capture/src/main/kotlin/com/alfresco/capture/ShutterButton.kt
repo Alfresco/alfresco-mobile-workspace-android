@@ -13,7 +13,6 @@ class ShutterButton(
     attrs: AttributeSet?,
     defStyleAttr: Int,
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
     private val background = createBackground()
     private val imageView = createImageView()
 
@@ -36,10 +35,11 @@ class ShutterButton(
 
     private fun createImageView() =
         ImageView(context).apply {
-            layoutParams = LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT,
-            )
+            layoutParams =
+                LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT,
+                )
             setImageResource(R.drawable.ic_shutter_photo_to_video)
             // Seems that the drawable is sometimes loaded in the end state, so reset it.
             (drawable as? AnimatedVectorDrawable)?.reset()
@@ -47,23 +47,28 @@ class ShutterButton(
 
     private fun createBackground() =
         ImageView(context).apply {
-            layoutParams = LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT,
-            )
+            layoutParams =
+                LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT,
+                )
             setImageResource(R.drawable.bg_shutter_btn)
         }
 
-    private fun updateImage(old: State, new: State) {
+    private fun updateImage(
+        old: State,
+        new: State,
+    ) {
         if (old == new) return
 
-        val resId = when {
-            old == State.Photo && new == State.Video -> R.drawable.ic_shutter_photo_to_video
-            old == State.Video && new == State.Photo -> R.drawable.ic_shutter_video_to_photo
-            old == State.Video && new == State.Recording -> R.drawable.ic_shutter_video_to_record
-            old == State.Recording && new == State.Video -> R.drawable.ic_shutter_record_to_video
-            else -> throw IllegalStateException()
-        }
+        val resId =
+            when {
+                old == State.Photo && new == State.Video -> R.drawable.ic_shutter_photo_to_video
+                old == State.Video && new == State.Photo -> R.drawable.ic_shutter_video_to_photo
+                old == State.Video && new == State.Recording -> R.drawable.ic_shutter_video_to_record
+                old == State.Recording && new == State.Video -> R.drawable.ic_shutter_record_to_video
+                else -> throw IllegalStateException()
+            }
 
         imageView.setImageResource(resId)
         (imageView.drawable as? AnimatedVectorDrawable)?.start()

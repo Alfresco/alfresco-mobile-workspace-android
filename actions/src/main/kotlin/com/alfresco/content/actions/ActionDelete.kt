@@ -26,7 +26,6 @@ data class ActionDelete(
     override val title: Int = R.string.action_delete_title,
     override val eventName: EventName = EventName.MoveTrash,
 ) : Action {
-
     override suspend fun execute(context: Context): Entry {
         try {
             withContext(Dispatchers.IO) {
@@ -45,28 +44,29 @@ data class ActionDelete(
         return entry
     }
 
-    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        try {
-            entriesObj.map {
-                async(Dispatchers.IO) {
-                    delete(it)
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            try {
+                entriesObj.map {
+                    async(Dispatchers.IO) {
+                        delete(it)
+                    }
+                }
+            } catch (ex: KotlinNullPointerException) {
+                // no-op. expected for 204
+                ex.printStackTrace()
+            }
+
+            // Cleanup associated upload if any
+            entriesObj.forEach {
+                if (it.type == Entry.Type.FILE) {
+                    OfflineRepository().removeUpload(it.id)
                 }
             }
-        } catch (ex: KotlinNullPointerException) {
-            // no-op. expected for 204
-            ex.printStackTrace()
-        }
 
-        // Cleanup associated upload if any
-        entriesObj.forEach {
-            if (it.type == Entry.Type.FILE) {
-                OfflineRepository().removeUpload(it.id)
-            }
+            return@coroutineScope Pair(entry, entriesObj)
         }
-
-        return@coroutineScope Pair(entry, entriesObj)
-    }
 
     private suspend inline fun delete(entry: Entry) {
         when (entry.type) {
@@ -80,7 +80,10 @@ data class ActionDelete(
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_delete_multiple_toast, entries.size.toString())
         } else {
@@ -103,21 +106,25 @@ data class ActionRestore(
         return entry
     }
 
-    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        entriesObj.map {
-            async(Dispatchers.IO) {
-                TrashCanRepository().restoreEntry(it)
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            entriesObj.map {
+                async(Dispatchers.IO) {
+                    TrashCanRepository().restoreEntry(it)
+                }
             }
+            return@coroutineScope Pair(entry, entriesObj)
         }
-        return@coroutineScope Pair(entry, entriesObj)
-    }
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_restored_multiple_toast, entries.size.toString())
         } else {
@@ -133,7 +140,6 @@ data class ActionDeleteForever(
     override val title: Int = R.string.action_delete_forever_title,
     override val eventName: EventName = EventName.PermanentlyDelete,
 ) : Action {
-
     override suspend fun execute(context: Context): Entry {
         if (showConfirmation(context)) {
             try {
@@ -151,46 +157,50 @@ data class ActionDeleteForever(
         return entry
     }
 
-    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> = coroutineScope {
-        val entriesObj = entries.toMutableList()
-        if (showConfirmation(context)) {
-            try {
-                entriesObj.map {
-                    async(Dispatchers.IO) {
-                        delete(it)
+    override suspend fun executeMulti(context: Context): Pair<ParentEntry, List<Entry>> =
+        coroutineScope {
+            val entriesObj = entries.toMutableList()
+            if (showConfirmation(context)) {
+                try {
+                    entriesObj.map {
+                        async(Dispatchers.IO) {
+                            delete(it)
+                        }
                     }
+                } catch (ex: KotlinNullPointerException) {
+                    // no-op. expected for 204
+                    ex.printStackTrace()
                 }
-            } catch (ex: KotlinNullPointerException) {
-                // no-op. expected for 204
-                ex.printStackTrace()
+            } else {
+                throw CancellationException()
             }
-        } else {
-            throw CancellationException()
+            return@coroutineScope Pair(entry, entriesObj)
         }
-        return@coroutineScope Pair(entry, entriesObj)
-    }
 
-    private suspend fun showConfirmation(context: Context) = withContext(Dispatchers.Main) {
-        suspendCoroutine<Boolean> {
-            MaterialAlertDialogBuilder(context)
-                .setTitle(context.getString(R.string.action_delete_confirmation_title))
-                .setMessage(
-                    if (entries.size > 1) {
-                        context.getString(
-                            R.string.action_delete_multiple_confirmation_message,
-                            entries.size.toString(),
-                        )
-                    } else context.getString(R.string.action_delete_confirmation_message, entry.name),
-                )
-                .setNegativeButton(context.getString(R.string.action_delete_confirmation_negative)) { _, _ ->
-                    it.resume(false)
-                }
-                .setPositiveButton(context.getString(R.string.action_delete_confirmation_positive)) { _, _ ->
-                    it.resume(true)
-                }
-                .show()
+    private suspend fun showConfirmation(context: Context) =
+        withContext(Dispatchers.Main) {
+            suspendCoroutine<Boolean> {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(context.getString(R.string.action_delete_confirmation_title))
+                    .setMessage(
+                        if (entries.size > 1) {
+                            context.getString(
+                                R.string.action_delete_multiple_confirmation_message,
+                                entries.size.toString(),
+                            )
+                        } else {
+                            context.getString(R.string.action_delete_confirmation_message, entry.name)
+                        },
+                    )
+                    .setNegativeButton(context.getString(R.string.action_delete_confirmation_negative)) { _, _ ->
+                        it.resume(false)
+                    }
+                    .setPositiveButton(context.getString(R.string.action_delete_confirmation_positive)) { _, _ ->
+                        it.resume(true)
+                    }
+                    .show()
+            }
         }
-    }
 
     private suspend inline fun delete(entry: Entry) = TrashCanRepository().deleteForeverEntry(entry)
 
@@ -198,7 +208,10 @@ data class ActionDeleteForever(
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {
         if (entries.size > 1) {
             Action.showToast(view, anchorView, R.string.action_delete_forever_multiple_toast, entries.size.toString())
         } else {

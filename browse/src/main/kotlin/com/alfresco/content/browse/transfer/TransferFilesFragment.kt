@@ -54,7 +54,6 @@ data class TransferFilesArgs(
  * Mark as TransferFilesFragment
  */
 class TransferFilesFragment : Fragment(), MavericksView {
-
     private lateinit var args: TransferFilesArgs
 
     @OptIn(InternalMavericksApi::class)
@@ -69,72 +68,85 @@ class TransferFilesFragment : Fragment(), MavericksView {
         args = TransferFilesArgs.with(requireArguments())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         binding = FragmentTransferFilesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.setController(epoxyController)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        if (fab == null) {
-            fab = makeFab(requireContext()).apply {
-                visibility = View.INVISIBLE // required for animation
+            if (fab == null) {
+                fab =
+                    makeFab(requireContext()).apply {
+                        visibility = View.INVISIBLE // required for animation
+                    }
+                (view as ViewGroup).addView(fab)
             }
-            (view as ViewGroup).addView(fab)
+
+            fab?.apply {
+                if (state.entries.isNotEmpty()) {
+                    show()
+                } else {
+                    hide()
+                }
+
+                isEnabled = state.syncNowEnabled
+            }
+
+            epoxyController.requestModelBuild()
         }
 
-        fab?.apply {
-            if (state.entries.isNotEmpty()) {
-                show()
-            } else {
-                hide()
-            }
-
-            isEnabled = state.syncNowEnabled
-        }
-
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.entries.isEmpty()) {
-            val args = viewModel.emptyMessageArgs()
-            listViewMessage {
-                id("empty_message")
-                iconRes(args.first)
-                title(args.second)
-                message(args.third)
-            }
-        } else if (state.entries.isNotEmpty()) {
-            state.entries.forEach {
-                listViewRow {
-                    id(stableId(it))
-                    data(it)
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
+            if (state.entries.isEmpty()) {
+                val args = viewModel.emptyMessageArgs()
+                listViewMessage {
+                    id("empty_message")
+                    iconRes(args.first)
+                    title(args.second)
+                    message(args.third)
+                }
+            } else if (state.entries.isNotEmpty()) {
+                state.entries.forEach {
+                    listViewRow {
+                        id(stableId(it))
+                        data(it)
+                    }
                 }
             }
         }
-    }
 
     private fun stableId(entry: Entry): String =
         if (entry.isUpload) {
             entry.boxId.toString()
-        } else entry.id
+        } else {
+            entry.id
+        }
 
     private fun makeFab(context: Context) =
         ExtendedFloatingActionButton(context).apply {
-            layoutParams = CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-            ).apply {
-                gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())
-            }
+            layoutParams =
+                CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                    setMargins(0, 0, 0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics).toInt())
+                }
             text = context.getText(R.string.offline_sync_button_title)
             gravity = Gravity.CENTER
             setOnClickListener {
@@ -161,8 +173,7 @@ class TransferFilesFragment : Fragment(), MavericksView {
                 startSync(false)
             }
 
-    private fun startSync(overrideNetwork: Boolean) =
-        lifecycleScope.emit(TransferSyncNow(overrideNetwork))
+    private fun startSync(overrideNetwork: Boolean) = lifecycleScope.emit(TransferSyncNow(overrideNetwork))
 }
 
 /**

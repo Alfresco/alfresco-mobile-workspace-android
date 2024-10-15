@@ -11,26 +11,33 @@ import com.airbnb.epoxy.ModelView
 import com.alfresco.content.actions.databinding.ViewListProcessMessageBinding
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
-class ListViewErrorMessage @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs, defStyleAttr) {
+class ListViewErrorMessage
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : FrameLayout(context, attrs, defStyleAttr) {
+        private val binding = ViewListProcessMessageBinding.inflate(LayoutInflater.from(context), this)
 
-    private val binding = ViewListProcessMessageBinding.inflate(LayoutInflater.from(context), this)
+        @ModelProp
+        fun setIconRes(
+            @DrawableRes drawableRes: Int,
+        ) {
+            binding.icon.setImageResource(drawableRes)
+        }
 
-    @ModelProp
-    fun setIconRes(@DrawableRes drawableRes: Int) {
-        binding.icon.setImageResource(drawableRes)
+        @ModelProp
+        fun setTitle(
+            @StringRes stringRes: Int,
+        ) {
+            binding.title.text = resources.getText(stringRes)
+        }
+
+        @ModelProp
+        fun setMessage(
+            @StringRes stringRes: Int,
+        ) {
+            binding.message.text = resources.getText(stringRes)
+        }
     }
-
-    @ModelProp
-    fun setTitle(@StringRes stringRes: Int) {
-        binding.title.text = resources.getText(stringRes)
-    }
-
-    @ModelProp
-    fun setMessage(@StringRes stringRes: Int) {
-        binding.message.text = resources.getText(stringRes)
-    }
-}

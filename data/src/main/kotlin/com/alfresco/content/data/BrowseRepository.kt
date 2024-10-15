@@ -29,7 +29,6 @@ import java.io.File
  * Mark as BrowseRepository
  */
 class BrowseRepository(otherSession: Session? = null) {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -60,33 +59,38 @@ class BrowseRepository(otherSession: Session? = null) {
 
     val myFilesNodeId: String get() = session.account.myFiles ?: ""
 
-    suspend fun myFilesNodeId() =
-        service.getMyNode().entry.id
+    suspend fun myFilesNodeId() = service.getMyNode().entry.id
 
-    suspend fun fetchFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            service.listNodeChildren(
-                folderId,
-                skipCount,
-                maxItems,
-                include = extraFields(),
-                includeSource = true,
-            ),
-        )
+    suspend fun fetchFolderItems(
+        folderId: String,
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.with(
+        service.listNodeChildren(
+            folderId,
+            skipCount,
+            maxItems,
+            include = extraFields(),
+            includeSource = true,
+        ),
+    )
 
     /**
      * fetching the folder items
      */
-    suspend fun fetchExtensionFolderItems(folderId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.withExtension(
-            service.listNodeChildren(
-                folderId,
-                skipCount,
-                maxItems,
-                include = extraFields(),
-                includeSource = true,
-            ),
-        )
+    suspend fun fetchExtensionFolderItems(
+        folderId: String,
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.withExtension(
+        service.listNodeChildren(
+            folderId,
+            skipCount,
+            maxItems,
+            include = extraFields(),
+            includeSource = true,
+        ),
+    )
 
     suspend fun fetchLibraryDocumentsFolder(siteId: String) =
         Entry.with(
@@ -97,19 +101,21 @@ class BrowseRepository(otherSession: Session? = null) {
             ).entry,
         )
 
-    suspend fun fetchLibraryItems(siteId: String, skipCount: Int, maxItems: Int) =
-        ResponsePaging.with(
-            service.listNodeChildren(
-                siteId,
-                skipCount,
-                maxItems,
-                include = extraFields(),
-                relativePath = LIB_DOCUMENTS_PATH,
-            ),
-        )
+    suspend fun fetchLibraryItems(
+        siteId: String,
+        skipCount: Int,
+        maxItems: Int,
+    ) = ResponsePaging.with(
+        service.listNodeChildren(
+            siteId,
+            skipCount,
+            maxItems,
+            include = extraFields(),
+            relativePath = LIB_DOCUMENTS_PATH,
+        ),
+    )
 
-    private fun extraFields() =
-        AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations", "properties")
+    private fun extraFields() = AlfrescoApi.csvQueryParam("path", "isFavorite", "allowableOperations", "properties")
 
     suspend fun fetchEntry(entryId: String) =
         Entry.with(
@@ -123,7 +129,10 @@ class BrowseRepository(otherSession: Session? = null) {
         service.deleteNode(entry.id, null)
     }
 
-    suspend fun createEntry(local: Entry, file: File): Entry {
+    suspend fun createEntry(
+        local: Entry,
+        file: File,
+    ): Entry {
         // TODO: Support creating empty entries and folders
         requireNotNull(local.parentId)
         requireNotNull(local.mimeType)
@@ -149,18 +158,25 @@ class BrowseRepository(otherSession: Session? = null) {
         )
     }
 
-    suspend fun createFolder(name: String, description: String, parentId: String?, autoRename: Boolean = true): Entry {
-        val nodeBodyCreate = NodeBodyCreate(
-            name = name,
-            nodeType = "cm:folder",
-            properties = mapOf("cm:title" to name, "cm:description" to description),
-        )
+    suspend fun createFolder(
+        name: String,
+        description: String,
+        parentId: String?,
+        autoRename: Boolean = true,
+    ): Entry {
+        val nodeBodyCreate =
+            NodeBodyCreate(
+                name = name,
+                nodeType = "cm:folder",
+                properties = mapOf("cm:title" to name, "cm:description" to description),
+            )
 
-        val response = service.createNode(
-            nodeId = requireNotNull(parentId),
-            nodeBodyCreate = nodeBodyCreate,
-            autoRename = autoRename,
-        )
+        val response =
+            service.createNode(
+                nodeId = requireNotNull(parentId),
+                nodeBodyCreate = nodeBodyCreate,
+                autoRename = autoRename,
+            )
 
         return Entry.with(response.entry)
     }
@@ -168,12 +184,18 @@ class BrowseRepository(otherSession: Session? = null) {
     /**
      * update the file and folders data by calling update node api
      */
-    suspend fun updateFileFolder(name: String, description: String, nodeId: String?, nodeType: String): Entry {
-        val nodeBodyUpdate = NodeBodyUpdate(
-            name = name,
-            nodeType = nodeType,
-            properties = mapOf("cm:title" to name, "cm:description" to description),
-        )
+    suspend fun updateFileFolder(
+        name: String,
+        description: String,
+        nodeId: String?,
+        nodeType: String,
+    ): Entry {
+        val nodeBodyUpdate =
+            NodeBodyUpdate(
+                name = name,
+                nodeType = nodeType,
+                properties = mapOf("cm:title" to name, "cm:description" to description),
+            )
 
         return Entry.with(
             service.updateNode(
@@ -186,7 +208,10 @@ class BrowseRepository(otherSession: Session? = null) {
     /**
      * executing api for moving the items (file or folder)
      */
-    suspend fun moveNode(entryId: String, targetParentId: String): Entry {
+    suspend fun moveNode(
+        entryId: String,
+        targetParentId: String,
+    ): Entry {
         return Entry.with(service.moveNode(entryId, NodeBodyMove(targetParentId)).entry)
     }
 

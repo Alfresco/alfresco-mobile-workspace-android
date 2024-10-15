@@ -36,13 +36,17 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        view = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-        }
+        view =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+            }
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.on<ActionDelete> {
@@ -53,16 +57,21 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
         viewModel.setEntryListener(this)
     }
 
-    override fun invalidate() = withState(viewModel) {
-        val entry = it.entries.first()
+    override fun invalidate() =
+        withState(viewModel) {
+            val entry = it.entries.first()
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = entry.name
 
-        view.removeAllViews()
-        addButtons(view, it.topActions, entry)
-    }
+            view.removeAllViews()
+            addButtons(view, it.topActions, entry)
+        }
 
-    private fun addButtons(container: LinearLayout, actions: List<Action>, entry: Entry) {
+    private fun addButtons(
+        container: LinearLayout,
+        actions: List<Action>,
+        entry: Entry,
+    ) {
         container.addView(createSeparator())
 
         for (action in actions) {
@@ -87,10 +96,11 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
 
     private fun createButton(action: Action) =
         ImageButton(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-            )
+            layoutParams =
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
             when (action) {
@@ -115,19 +125,21 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
 
     private fun createSeparator() =
         View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1.0f,
-            )
+            layoutParams =
+                LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1.0f,
+                )
         }
 
     private fun createMoreButton() =
         ImageButton(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-            )
+            layoutParams =
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                )
             minimumWidth = resources.getDimension(R.dimen.action_button_min_touch_target_size).toInt()
             minimumHeight = minimumWidth
             contentDescription = getString(R.string.accessibility_text_more)

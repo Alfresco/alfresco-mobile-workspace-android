@@ -23,13 +23,17 @@ data class SearchUserGroupComponentState(
     /**
      * update search user entries after fetch the result from server.
      */
-    fun updateUserGroupEntries(response: ResponseUserGroupList?, userGroupDetails: UserGroupDetails): SearchUserGroupComponentState {
+    fun updateUserGroupEntries(
+        response: ResponseUserGroupList?,
+        userGroupDetails: UserGroupDetails,
+    ): SearchUserGroupComponentState {
         if (response == null) return this
         requireNotNull(parent)
-        val filterList = when (parent) {
-            is ProcessEntry -> response.listUserGroup.filter { it.id != parent.startedBy?.id }
-            else -> response.listUserGroup.filter { it.id != (parent as TaskEntry).assignee?.id }
-        }
+        val filterList =
+            when (parent) {
+                is ProcessEntry -> response.listUserGroup.filter { it.id != parent.startedBy?.id }
+                else -> response.listUserGroup.filter { it.id != (parent as TaskEntry).assignee?.id }
+            }
         var filterUser = filterList.toMutableList()
         if (!response.isGroupSearch) {
             filterUser = filterList.filter { it.id != userGroupDetails.id }.toMutableList()

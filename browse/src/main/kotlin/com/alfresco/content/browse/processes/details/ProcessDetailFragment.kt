@@ -45,7 +45,6 @@ import kotlin.coroutines.suspendCoroutine
  * Marked as ProcessDetailFragment
  */
 class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
-
     lateinit var binding: FragmentTaskDetailBinding
     val viewModel: ProcessDetailViewModel by activityViewModel()
     private val epoxyAttachmentController: AsyncEpoxyController by lazy { epoxyAttachmentController() }
@@ -53,7 +52,11 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     private var confirmContentQueueDialog = WeakReference<AlertDialog>(null)
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         if (viewLayout == null) {
             binding = FragmentTaskDetailBinding.inflate(inflater, container, false)
             viewLayout = binding.root
@@ -61,7 +64,10 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
         return viewLayout as View
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsManager().screenViewEvent(PageView.WorkflowView)
         (requireActivity() as ProcessDetailActivity).setSupportActionBar(binding.toolbar)
@@ -84,24 +90,25 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
         viewModel.deleteAttachment(contentId)
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading ||
-            state.requestStartWorkflow is Loading || state.requestTasks is Loading
-        setData(state)
-        if (state.parent?.processDefinitionId.isNullOrEmpty()) {
-            binding.toolbar.title = resources.getString(R.string.title_start_workflow)
-            updateUI(state)
-            when {
-                state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
-                    viewModel.updateProcessList()
-                    requireActivity().onBackPressed()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            binding.loading.isVisible = state.requestContent is Loading || state.requestProcessDefinition is Loading ||
+                state.requestStartWorkflow is Loading || state.requestTasks is Loading
+            setData(state)
+            if (state.parent?.processDefinitionId.isNullOrEmpty()) {
+                binding.toolbar.title = resources.getString(R.string.title_start_workflow)
+                updateUI(state)
+                when {
+                    state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
+                        viewModel.updateProcessList()
+                        requireActivity().onBackPressed()
+                    }
                 }
+                epoxyAttachmentController.requestModelBuild()
+            } else {
+                binding.toolbar.title = resources.getString(R.string.title_workflow)
             }
-            epoxyAttachmentController.requestModelBuild()
-        } else {
-            binding.toolbar.title = resources.getString(R.string.title_workflow)
         }
-    }
 
     internal suspend fun showComponentSheetDialog(
         context: Context,
@@ -144,59 +151,64 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     fun confirmContentQueuePrompt() {
         val oldDialog = confirmContentQueueDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setCancelable(false)
-            .setTitle(getString(R.string.title_content_in_queue))
-            .setMessage(getString(R.string.message_content_in_queue))
-            .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
-            .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                viewModel.startWorkflow()
-            }
-            .show()
+        val dialog =
+            MaterialAlertDialogBuilder(requireContext())
+                .setCancelable(false)
+                .setTitle(getString(R.string.title_content_in_queue))
+                .setMessage(getString(R.string.message_content_in_queue))
+                .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
+                .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
+                    viewModel.startWorkflow()
+                }
+                .show()
         confirmContentQueueDialog = WeakReference(dialog)
     }
 
-    private fun epoxyAttachmentController() = simpleController(viewModel) { state ->
-        val handler = Handler(Looper.getMainLooper())
-        if (state.listContents.isNotEmpty()) {
-            handler.post {
-                binding.clAddAttachment.visibility = View.VISIBLE
-                binding.tvNoAttachedFilesError.visibility = View.GONE
-                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                binding.recyclerViewAttachments.visibility = View.VISIBLE
+    private fun epoxyAttachmentController() =
+        simpleController(viewModel) { state ->
+            val handler = Handler(Looper.getMainLooper())
+            if (state.listContents.isNotEmpty()) {
+                handler.post {
+                    binding.clAddAttachment.visibility = View.VISIBLE
+                    binding.tvNoAttachedFilesError.visibility = View.GONE
+                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                    binding.recyclerViewAttachments.visibility = View.VISIBLE
 
-                if (state.listContents.size > 1) {
-                    binding.tvNoOfAttachments.visibility = View.VISIBLE
-                } else binding.tvNoOfAttachments.visibility = View.GONE
+                    if (state.listContents.size > 1) {
+                        binding.tvNoOfAttachments.visibility = View.VISIBLE
+                    } else {
+                        binding.tvNoOfAttachments.visibility = View.GONE
+                    }
 
-                if (state.listContents.size > 4) {
-                    binding.tvAttachmentViewAll.visibility = View.VISIBLE
-                } else
+                    if (state.listContents.size > 4) {
+                        binding.tvAttachmentViewAll.visibility = View.VISIBLE
+                    } else {
+                        binding.tvAttachmentViewAll.visibility = View.GONE
+                    }
+
+                    binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
+                }
+
+                state.listContents.take(4).forEach { obj ->
+                    listViewAttachmentRow {
+                        id(stableId(obj))
+                        data(obj)
+                        deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+                    }
+                }
+            } else {
+                handler.post {
+                    binding.recyclerViewAttachments.visibility = View.GONE
                     binding.tvAttachmentViewAll.visibility = View.GONE
+                    binding.tvNoOfAttachments.visibility = View.GONE
 
-                binding.tvNoOfAttachments.text = getString(R.string.text_multiple_attachment, state.listContents.size)
-            }
-
-            state.listContents.take(4).forEach { obj ->
-                listViewAttachmentRow {
-                    id(stableId(obj))
-                    data(obj)
-                    deleteContentClickListener { model, _, _, _ -> onConfirmDelete(model.data().id) }
+                    binding.clAddAttachment.visibility = View.VISIBLE
+                    binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
+                    binding.tvNoAttachedFilesError.visibility = View.VISIBLE
+                    binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
                 }
             }
-        } else {
-            handler.post {
-                binding.recyclerViewAttachments.visibility = View.GONE
-                binding.tvAttachmentViewAll.visibility = View.GONE
-                binding.tvNoOfAttachments.visibility = View.GONE
-
-                binding.clAddAttachment.visibility = View.VISIBLE
-                binding.tvAttachedTitle.text = getString(R.string.text_attached_files)
-                binding.tvNoAttachedFilesError.visibility = View.VISIBLE
-                binding.tvNoAttachedFilesError.text = getString(R.string.no_attached_files)
-            }
         }
-    }
 
     override fun onEntryCreated(entry: ParentEntry) {
         if (isAdded) {
@@ -207,11 +219,12 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
     private fun onItemClicked(contentEntry: Entry) {
         if (!contentEntry.isUpload) {
             if (!contentEntry.source.isNullOrEmpty()) {
-                val entry = Entry.convertContentEntryToEntry(
-                    contentEntry,
-                    MimeType.isDocFile(contentEntry.mimeType),
-                    UploadServerType.UPLOAD_TO_PROCESS,
-                )
+                val entry =
+                    Entry.convertContentEntryToEntry(
+                        contentEntry,
+                        MimeType.isDocFile(contentEntry.mimeType),
+                        UploadServerType.UPLOAD_TO_PROCESS,
+                    )
                 remoteViewerIntent(entry)
             }
         } else {

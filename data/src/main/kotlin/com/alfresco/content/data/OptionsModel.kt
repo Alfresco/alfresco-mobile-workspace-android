@@ -17,12 +17,10 @@ data class OptionsModel(
     val value: String = "",
     val default: Boolean = false,
 ) : Parcelable {
-
     val outcome: String
         get() = name
 
     companion object {
-
         /**
          * return the updated OptionsModel obj by using Options obj
          * @param raw
@@ -54,5 +52,6 @@ enum class DefaultOutcomesID {
     DEFAULT_RELEASE,
     DEFAULT_COMPLETE,
     ;
+
     fun value() = name.lowercase()
 }

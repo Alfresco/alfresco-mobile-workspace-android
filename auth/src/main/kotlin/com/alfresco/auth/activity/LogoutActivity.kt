@@ -11,7 +11,6 @@ import org.json.JSONException
 
 class LogoutViewModel(context: Context, authType: AuthType?, authState: String, authConfig: AuthConfig, serverURL: String, clientId: String) :
     EndSessionViewModel(context, authType, authState, authConfig, serverURL, clientId) {
-
     companion object {
         const val EXTRA_HOST_NAME = "host_name"
         const val EXTRA_CLIENT_ID = "client_id"
@@ -19,7 +18,10 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
         const val EXTRA_AUTH_STATE = "authState"
         const val EXTRA_AUTH_CONFIG = "authConfig"
 
-        fun with(context: Context, bundle: Bundle?): LogoutViewModel {
+        fun with(
+            context: Context,
+            bundle: Bundle?,
+        ): LogoutViewModel {
             requireNotNull(bundle)
 
             val stateString = bundle.getString(EXTRA_AUTH_STATE)
@@ -28,14 +30,15 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
             val clientId = bundle.getString(EXTRA_CLIENT_ID)
             val authType = bundle.getString(EXTRA_AUTH_TYPE)?.let { AuthType.fromValue(it) }
 
-            val config = try {
-                if (configString != null) {
-                    AuthConfig.jsonDeserialize(configString)
-                } else {
-                    null
-                }
-            } catch (ex: JSONException) {
-                ex.printStackTrace()
+            val config =
+                try {
+                    if (configString != null) {
+                        AuthConfig.jsonDeserialize(configString)
+                    } else {
+                        null
+                    }
+                } catch (ex: JSONException) {
+                    ex.printStackTrace()
                 null
             }
 
@@ -50,7 +53,6 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
 }
 
 class LogoutActivity : EndSessionActivity<LogoutViewModel>() {
-
     override val viewModel: LogoutViewModel by lazy {
         getViewModel {
             LogoutViewModel.with(applicationContext, intent.extras)

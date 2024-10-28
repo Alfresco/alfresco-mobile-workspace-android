@@ -12,7 +12,6 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
 class LocationData(context: Context) : LiveData<LocationModel>() {
-
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
     }
@@ -43,27 +42,30 @@ class LocationData(context: Context) : LiveData<LocationModel>() {
         )
     }
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            for (location in locationResult.locations) {
-                setLocationData(location)
+    private val locationCallback =
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for (location in locationResult.locations) {
+                    setLocationData(location)
+                }
             }
         }
-    }
 
     private fun setLocationData(location: Location) {
-        value = LocationModel(
-            longitude = location.longitude,
-            latitude = location.latitude,
-        )
+        value =
+            LocationModel(
+                longitude = location.longitude,
+                latitude = location.latitude,
+            )
     }
 
     companion object {
-        val locationRequest: LocationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 1000
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        }
+        val locationRequest: LocationRequest =
+            LocationRequest.create().apply {
+                interval = 10000
+                fastestInterval = 1000
+                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            }
     }
 }
 

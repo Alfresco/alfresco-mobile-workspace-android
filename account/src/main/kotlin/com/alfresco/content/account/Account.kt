@@ -17,18 +17,14 @@ data class Account(
     val displayName: String? = null,
     val email: String? = null,
     val myFiles: String? = null,
-    val hostName: String? = null,
-    val clientId: String? = null,
 ) {
     companion object {
-        private const val displayNameKey = "displayName"
-        private const val emailKey = "email"
-        private const val authTypeKey = "type"
-        private const val authConfigKey = "config"
-        private const val serverKey = "server"
-        private const val myFilesKey = "myFiles"
-        private const val hostNameKey = "auth0HostName"
-        private const val clientIdKey = "auth0ClientId"
+        private const val DISPLAY_NAME_KEY = "displayName"
+        private const val EMAIL_KEY = "email"
+        private const val AUTH_TYPE_KEY = "type"
+        private const val AUTH_CONFIG_KEY = "config"
+        private const val SERVER_KEY = "server"
+        private const val MY_FILES_KEY = "myFiles"
 
         fun createAccount(
             context: Context,
@@ -40,42 +36,29 @@ data class Account(
             displayName: String,
             email: String,
             myFiles: String,
-            hostName: String,
-            clientId: String,
         ) {
             val sharedSecure = SecureSharedPreferencesManager(context)
 
             val b = Bundle()
-            b.putString(authTypeKey, authType)
-            b.putString(authConfigKey, authConfig)
-            b.putString(serverKey, serverUrl)
-            b.putString(displayNameKey, KEY_DISPLAY_NAME)
-            b.putString(emailKey, KEY_EMAIL)
-            b.putString(myFilesKey, myFiles)
-            b.putString(hostNameKey, hostName)
-            b.putString(clientIdKey, clientId)
-
-            val accountType = context.getString(R.string.android_auth_account_type)
-
-            val acc = AndroidAccount(id, accountType)
+            b.putString(AUTH_TYPE_KEY, authType)
+            b.putString(AUTH_CONFIG_KEY, authConfig)
+            b.putString(SERVER_KEY, serverUrl)
+            b.putString(DISPLAY_NAME_KEY, KEY_DISPLAY_NAME)
+            b.putString(EMAIL_KEY, KEY_EMAIL)
+            b.putString(MY_FILES_KEY, myFiles)
+            val acc = AndroidAccount(id, context.getString(R.string.android_auth_account_type))
 
             // Save credentials securely using the SecureSharedPreferencesManager
-            sharedSecure.saveCredentials(email, authState, displayName, hostName, clientId)
+            sharedSecure.saveCredentials(email, authState, displayName)
 
-            val accountManager = AccountManager.get(context)
-            val accounts = accountManager.getAccountsByType(accountType)
-
-            val removeOtherAccounts = accounts.filter { it.name != id }
-
-            if (removeOtherAccounts.isNotEmpty()) {
-                removeOtherAccounts.forEach { account ->
-                    accountManager.removeAccountExplicitly(account)
-                }
-            }
-            accountManager.addAccountExplicitly(acc, KEY_PASSWORD, b)
+            AccountManager.get(context).addAccountExplicitly(acc, KEY_PASSWORD, b)
         }
 
-        fun update(context: Context, id: String, authState: String) {
+        fun update(
+            context: Context,
+            id: String,
+            authState: String,
+        ) {
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
             val sharedSecure = SecureSharedPreferencesManager(context)
@@ -93,29 +76,28 @@ data class Account(
             displayName: String,
             email: String,
             myFiles: String,
-            hostName: String,
-            clientId: String,
         ) {
             val sharedSecure = SecureSharedPreferencesManager(context)
             val am = AccountManager.get(context)
             val acc = getAndroidAccount(context)
 
             // Save credentials securely using the SecureSharedPreferencesManager
-            sharedSecure.saveCredentials(email, authState, displayName, hostName, clientId)
+            sharedSecure.saveCredentials(email, authState, displayName)
 
             am.setPassword(acc, KEY_PASSWORD)
-            am.setUserData(acc, displayNameKey, KEY_DISPLAY_NAME)
-            am.setUserData(acc, emailKey, KEY_EMAIL)
-            am.setUserData(acc, myFilesKey, myFiles)
-            am.setUserData(acc, hostNameKey, hostName)
-            am.setUserData(acc, clientIdKey, clientId)
+            am.setUserData(acc, DISPLAY_NAME_KEY, KEY_DISPLAY_NAME)
+            am.setUserData(acc, EMAIL_KEY, KEY_EMAIL)
+            am.setUserData(acc, MY_FILES_KEY, myFiles)
 
             if (acc?.name != id) {
                 am.renameAccount(acc, id, null, null)
             }
         }
 
-        fun delete(context: Context, callback: () -> Unit) {
+        fun delete(
+            context: Context,
+            callback: () -> Unit,
+        ) {
             AccountManager.get(context)
                 .removeAccount(getAndroidAccount(context), null, {
                     callback()
@@ -130,18 +112,15 @@ data class Account(
             val secureCredentials = sharedSecure.getSavedCredentials()
             if (accountList.isNotEmpty() && secureCredentials != null) {
                 val acc = accountList[0]
-                val secureAuth0 = sharedSecure.getSavedAuth0Data()
                 return Account(
                     acc.name,
                     secureCredentials.second,
-                    am.getUserData(acc, authTypeKey),
-                    am.getUserData(acc, authConfigKey),
-                    am.getUserData(acc, serverKey),
+                    am.getUserData(acc, AUTH_TYPE_KEY),
+                    am.getUserData(acc, AUTH_CONFIG_KEY),
+                    am.getUserData(acc, SERVER_KEY),
                     secureCredentials.third,
                     secureCredentials.first,
-                    am.getUserData(acc, myFilesKey),
-                    secureAuth0?.first,
-                    secureAuth0?.second,
+                    am.getUserData(acc, MY_FILES_KEY),
                 )
             }
             return null

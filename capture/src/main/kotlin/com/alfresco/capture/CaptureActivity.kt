@@ -31,7 +31,10 @@ class CaptureActivity : AppCompatActivity() {
         navController.setGraph(graph, intent.extras)
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyDown(
+        keyCode: Int,
+        event: KeyEvent,
+    ): Boolean {
         val fragment =
             supportFragmentManager
                 .primaryNavigationFragment

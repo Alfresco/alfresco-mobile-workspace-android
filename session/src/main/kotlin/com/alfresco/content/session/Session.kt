@@ -6,7 +6,6 @@ import coil.ImageLoader
 import coil.disk.DiskCache
 import com.alfresco.Logger
 import com.alfresco.auth.AuthInterceptor
-import com.alfresco.auth.BuildConfig
 import com.alfresco.content.account.Account
 import com.alfresco.content.tools.GeneratedCodeConverters
 import com.alfresco.kotlin.sha1
@@ -28,50 +27,61 @@ class Session(
     init {
         require(context == context.applicationContext)
 
-        authInterceptor = AuthInterceptor(
-            context,
-            account.id,
-            account.authType,
-            account.authState,
-            account.authConfig,
+        authInterceptor =
+            AuthInterceptor(
+                context,
+                account.id,
+                account.authType,
+                account.authState,
+                account.authConfig,
+            )
+
+        authInterceptor.setListener(
+            object : AuthInterceptor.Listener {
+                override fun onAuthFailure(
+                    accountId: String,
+                    url: String,
+                ) {
+                    Logger.d("onAuthFailure")
+                    if (!url.contains("activiti-app") && onSignedOut != null) {
+                        onSignedOut?.invoke()
+                    }
+                }
+
+                override fun onAuthStateChange(
+                    accountId: String,
+                    authState: String,
+                ) {
+                    Logger.d("onAuthStateChange")
+                    Account.update(context, accountId, authState)
+                    this@Session.account = Account.getAccount(context)!!
+                }
+            },
         )
 
-        authInterceptor.setListener(object : AuthInterceptor.Listener {
-            override fun onAuthFailure(accountId: String, url: String) {
-                Logger.d("onAuthFailure")
-                if (!url.contains("activiti-app") && onSignedOut != null) {
-                    onSignedOut?.invoke()
-                }
-            }
-
-            override fun onAuthStateChange(accountId: String, authState: String) {
-                Logger.d("onAuthStateChange")
-                Account.update(context, accountId, authState)
-                this@Session.account = Account.getAccount(context)!!
-            }
-        })
-
         if (BuildConfig.DEBUG) {
-            loggingInterceptor = HttpLoggingInterceptor().apply {
-                redactHeader("Authorization")
-                setLevel(HttpLoggingInterceptor.Level.BODY)
-            }
+            loggingInterceptor =
+                HttpLoggingInterceptor().apply {
+                    redactHeader("Authorization")
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                }
         }
 
-        val imageLoader = ImageLoader.Builder(context)
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(context.cacheDir.resolve("image_cache"))
-                    .build()
-            }
-            .crossfade(true)
-            .okHttpClient {
-                OkHttpClient.Builder()
-                    .addInterceptor(authInterceptor)
-                    .addOptionalInterceptor(loggingInterceptor)
-                    .build()
-            }
-            .build()
+        val imageLoader =
+            ImageLoader.Builder(context)
+                .diskCache {
+                    DiskCache.Builder()
+                        .directory(context.cacheDir.resolve("image_cache"))
+                        .build()
+                }
+                .crossfade(true)
+                .okHttpClient {
+                    OkHttpClient.Builder()
+                        .addInterceptor(authInterceptor)
+                        .addOptionalInterceptor(loggingInterceptor)
+                        .build()
+                }
+                .build()
         Coil.setImageLoader(imageLoader)
     }
 
@@ -79,17 +89,19 @@ class Session(
     val processBaseUrl get() = account.serverUrl.replace("/alfresco", "/activiti-app/")
 
     fun <T> createService(service: Class<T>): T {
-        val okHttpClient: OkHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(authInterceptor)
-            .addOptionalInterceptor(loggingInterceptor)
-            .build()
+        val okHttpClient: OkHttpClient =
+            OkHttpClient()
+                .newBuilder()
+                .addInterceptor(authInterceptor)
+                .addOptionalInterceptor(loggingInterceptor)
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GeneratedCodeConverters.converterFactory())
-            .baseUrl(baseUrl)
-            .build()
+        val retrofit =
+            Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GeneratedCodeConverters.converterFactory())
+                .baseUrl(baseUrl)
+                .build()
         return retrofit.create(service)
     }
 
@@ -108,17 +120,19 @@ class Session(
      * it creates the retrofit builder to access the process service apis
      */
     fun <T> createProcessService(service: Class<T>): T {
-        val okHttpClient: OkHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(authInterceptor)
-            .addOptionalInterceptor(loggingInterceptor)
-            .build()
+        val okHttpClient: OkHttpClient =
+            OkHttpClient()
+                .newBuilder()
+                .addInterceptor(authInterceptor)
+                .addOptionalInterceptor(loggingInterceptor)
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GeneratedCodeConverters.converterFactory())
-            .baseUrl(processBaseUrl)
-            .build()
+        val retrofit =
+            Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GeneratedCodeConverters.converterFactory())
+                .baseUrl(processBaseUrl)
+                .build()
         return retrofit.create(service)
     }
 
@@ -127,17 +141,19 @@ class Session(
      * This service is only built to fetch app config from server
      */
     fun <T> createServiceConfig(service: Class<T>): T {
-        val okHttpClient: OkHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(authInterceptor)
-            .addOptionalInterceptor(loggingInterceptor)
-            .build()
+        val okHttpClient: OkHttpClient =
+            OkHttpClient()
+                .newBuilder()
+                .addInterceptor(authInterceptor)
+                .addOptionalInterceptor(loggingInterceptor)
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GeneratedCodeConverters.converterFactory())
-            .baseUrl("https://mobileapps.envalfresco.com/adf/")
-            .build()
+        val retrofit =
+            Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GeneratedCodeConverters.converterFactory())
+                .baseUrl("https://mobileapps.envalfresco.com/adf/")
+                .build()
         return retrofit.create(service)
     }
 

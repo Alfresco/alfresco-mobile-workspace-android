@@ -19,7 +19,6 @@ class ProfileIconView(
     defStyleAttr: Int,
     defStyleRes: Int,
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
-
     private val binding = ViewProfileIconBinding.inflate(LayoutInflater.from(context), this)
 
     init {

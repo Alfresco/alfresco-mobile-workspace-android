@@ -29,7 +29,6 @@ class LoginViewModel(
     endpoint: String?,
     val isExtension: Boolean,
 ) : AuthenticationViewModel() {
-
     lateinit var authConfig: AuthConfig
     override var context = applicationContext
 
@@ -117,9 +116,10 @@ class LoginViewModel(
         when (authType) {
             AuthType.PKCE -> {
                 viewModelScope.launch {
-                    val isContentServicesInstalled = withContext(Dispatchers.IO) {
-                        discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
-                    }
+                    val isContentServicesInstalled =
+                        withContext(Dispatchers.IO) {
+                            discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
+                        }
 
                     if (isContentServicesInstalled) {
                         applicationUrl.value = identityUrl.value
@@ -258,7 +258,9 @@ class LoginViewModel(
             _enabled.addSource(password, this::onFieldChange)
         }
 
-        private fun onFieldChange(@Suppress("UNUSED_PARAMETER") value: String) {
+        private fun onFieldChange(
+            @Suppress("UNUSED_PARAMETER") value: String,
+        ) {
             _enabled.value = !email.value.isNullOrEmpty() && !password.value.isNullOrEmpty()
         }
 
@@ -279,7 +281,10 @@ class LoginViewModel(
         const val EXTRA_AUTH_STATE = "authState"
         const val EXTRA_AUTH_CONFIG = "authConfig"
 
-        fun with(context: Context, intent: Intent): LoginViewModel {
+        fun with(
+            context: Context,
+            intent: Intent,
+        ): LoginViewModel {
             var config: AuthConfig? = null
             var stateString: String? = null
             var authType: AuthType? = null
@@ -288,11 +293,12 @@ class LoginViewModel(
 
             val extras = intent.extras
             if (extras != null) {
-                config = try {
-                    AuthConfig.jsonDeserialize(extras.getString(EXTRA_AUTH_CONFIG)!!)
-                } catch (ex: Exception) {
-                    null
-                }
+                config =
+                    try {
+                        AuthConfig.jsonDeserialize(extras.getString(EXTRA_AUTH_CONFIG)!!)
+                    } catch (ex: Exception) {
+                        null
+                    }
 
                 stateString = extras.getString(EXTRA_AUTH_STATE)
                 endpoint = extras.getString(EXTRA_ENDPOINT)
@@ -362,11 +368,15 @@ class LoginViewModel(
             }
         }
 
-        private fun onChange(@Suppress("UNUSED_PARAMETER") value: Boolean) {
+        private fun onChange(
+            @Suppress("UNUSED_PARAMETER") value: Boolean,
+        ) {
             onChange()
         }
 
-        private fun onChange(@Suppress("UNUSED_PARAMETER") value: String) {
+        private fun onChange(
+            @Suppress("UNUSED_PARAMETER") value: String,
+        ) {
             onChange()
         }
 

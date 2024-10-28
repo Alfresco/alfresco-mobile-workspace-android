@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId "com.alfresco.content.app"
         versionCode envOrDef('VERSION_CODE', '1') as Integer
-        versionName "1.9.0"
+        versionName "1.10.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -65,6 +65,9 @@ android {
         resources {
             pickFirsts += ['META-INF/auth_release.kotlin_module']
         }
+        dex {
+            useLegacyPackaging false
+        }
     }
 
     // Temporary kotlin module duplication fix
@@ -105,6 +108,7 @@ dependencies {
     implementation project(':process-app')
     implementation project(':data')
     implementation libs.alfresco.content
+//    implementation project(':content')
 
     implementation libs.kotlin.stdlib
 

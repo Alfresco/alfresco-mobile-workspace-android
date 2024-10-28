@@ -11,7 +11,6 @@ import java.io.File
 
 class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
-
     private val repository = OfflineRepository()
 
     override suspend fun doWork(): Result {
@@ -28,34 +27,35 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         return Result.success()
     }
 
-    private fun buildLocalList(): List<Entry> =
-        repository.fetchAllOfflineEntries()
+    private fun buildLocalList(): List<Entry> = repository.fetchAllOfflineEntries()
 
     private suspend fun buildRemoteList(): List<Entry> =
         continuousMap(repository.fetchTopLevelOfflineEntries()) { entry, produce ->
             // need updated metadata only for local items
-            val remote = if (entry.hasOfflineStatus) {
-                try {
-                    BrowseRepository().fetchEntry(entry.id)
-                } catch (ex: HttpException) {
-                    if (ex.code() == HTTP_STATUS_FORBIDDEN ||
-                        ex.code() == HTTP_STATUS_NOT_FOUND
-                    ) {
-                        null
-                    } else {
-                        throw ex
+            val remote =
+                if (entry.hasOfflineStatus) {
+                    try {
+                        BrowseRepository().fetchEntry(entry.id)
+                    } catch (ex: HttpException) {
+                        if (ex.code() == HTTP_STATUS_FORBIDDEN ||
+                            ex.code() == HTTP_STATUS_NOT_FOUND
+                        ) {
+                            null
+                        } else {
+                            throw ex
+                        }
                     }
+                } else {
+                    entry
                 }
-            } else {
-                entry
-            }
             if (remote?.isFolder == true) {
                 // TODO: parallel fetch after the first page
                 var page: ResponsePaging?
                 var skip = 0L
                 do {
-                    page = BrowseRepository()
-                        .fetchFolderItems(remote.id, skip.toInt(), MAX_PAGE_SIZE)
+                    page =
+                        BrowseRepository()
+                            .fetchFolderItems(remote.id, skip.toInt(), MAX_PAGE_SIZE)
                     page.entries.map { produce(it) }
                     skip = page.pagination.skipCount + page.pagination.count
                 } while (page?.pagination?.hasMoreItems == true)
@@ -63,7 +63,10 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             remote
         }.distinctBy { it.id }
 
-    private suspend fun <T, R> continuousMap(initial: Collection<T>, f: suspend (T, suspend(T) -> Unit) -> R?): List<R> {
+    private suspend fun <T, R> continuousMap(
+        initial: Collection<T>,
+        f: suspend (T, suspend(T) -> Unit) -> R?,
+    ): List<R> {
         val queue = ArrayDeque(initial)
         val result = mutableListOf<R>()
 
@@ -82,7 +85,10 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         return result
     }
 
-    private fun calculateDiff(localList: List<Entry>, remoteList: List<Entry>): List<Operation> {
+    private fun calculateDiff(
+        localList: List<Entry>,
+        remoteList: List<Entry>,
+    ): List<Operation> {
         val localMap = localList.associateBy({ it.id }, { it })
         val remoteMap = remoteList.associateBy({ it.id }, { it })
         val operations = arrayListOf<Operation>()
@@ -118,9 +124,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         return operations
     }
 
-    private fun contentHasChanged(local: Entry, remote: Entry) =
-        remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
-            (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
+    private fun contentHasChanged(
+        local: Entry,
+        remote: Entry,
+    ) = remote.modified?.toEpochSecond() != local.modified?.toEpochSecond() ||
+        (local.isFile && local.offlineStatus != OfflineStatus.SYNCED)
 
     private suspend fun processOperations(operations: List<Operation>) =
         operations.asyncMap(MAX_CONCURRENT_OPERATIONS) {
@@ -143,11 +151,12 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             }
         }
 
-    private fun createEntry(entry: Entry) =
-        repository.update(entry.copy(offlineStatus = OfflineStatus.PENDING))
+    private fun createEntry(entry: Entry) = repository.update(entry.copy(offlineStatus = OfflineStatus.PENDING))
 
-    private fun updateEntryMetadata(local: Entry, remote: Entry) =
-        repository.update(local.copyWithMetadata(remote))
+    private fun updateEntryMetadata(
+        local: Entry,
+        remote: Entry,
+    ) = repository.update(local.copyWithMetadata(remote))
 
     private fun removeEntry(entry: Entry): Boolean {
         val dir = repository.contentDir(entry)
@@ -194,8 +203,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
         }
     }
 
-    private fun typeSupported(entry: Entry) =
-        previewRegistry?.isPreviewSupported(entry.mimeType) ?: false
+    private fun typeSupported(entry: Entry) = previewRegistry?.isPreviewSupported(entry.mimeType) ?: false
 
     companion object {
         private const val MAX_CONCURRENT_OPERATIONS = 3
@@ -211,8 +219,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
     sealed class Operation {
         class Create(val remote: Entry) : Operation()
+
         class UpdateMetadata(val local: Entry, val remote: Entry) : Operation()
+
         class UpdateContent(val local: Entry, val remote: Entry) : Operation()
+
         class Delete(val local: Entry) : Operation()
     }
 }

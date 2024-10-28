@@ -23,12 +23,11 @@ dependencies {
 
 //    api libs.alfresco.auth
     api project(':alfresco-auth')
-
     implementation libs.google.material
 
     implementation libs.androidx.appcompat
     implementation libs.androidx.core
-    implementation libs.androidx.constraintlayout
+    implementation libs.constraintlayout
 
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.runtime

@@ -7,7 +7,6 @@ import java.net.URL
 import java.net.URLDecoder
 
 class SharedURLParser {
-
     lateinit var session: Session
 
     init {
@@ -23,7 +22,10 @@ class SharedURLParser {
      * String
      * isRemoteFolder (Boolean)
      */
-    fun getEntryIdFromShareURL(url: String, isHyperLink: Boolean = false): Triple<Boolean, String, Boolean> {
+    fun getEntryIdFromShareURL(
+        url: String,
+        isHyperLink: Boolean = false,
+    ): Triple<Boolean, String, Boolean> {
         val extData = URLDecoder.decode(url, "UTF-8")
 
         val hostname = URL(session.baseUrl).host

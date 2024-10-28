@@ -1,7 +1,11 @@
 package com.alfresco.content.data
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
 import android.os.Environment
+import androidx.annotation.RequiresApi
+import androidx.preference.PreferenceManager
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -38,7 +42,10 @@ fun isTimeToFetchConfig(previousFetchTime: Long): Boolean {
  * @property fileName
  * get the Json file from the asset folder
  */
-fun getJsonDataFromAsset(context: Context, fileName: String): String? {
+fun getJsonDataFromAsset(
+    context: Context,
+    fileName: String,
+): String? {
     val jsonString: String
     try {
         val inputStream = context.assets.open(fileName)
@@ -70,7 +77,10 @@ inline fun <reified T> getModelFromStringJSON(jsonFileString: String): T {
  * @property jsonFileString
  * Save AppConfigJSON to the internal storage
  */
-fun saveJSONToInternalDirectory(context: Context, jsonFileString: String) {
+fun saveJSONToInternalDirectory(
+    context: Context,
+    jsonFileString: String,
+) {
     val fileDirectory = getAppConfigParentDirectory(context)
     if (fileDirectory != null && !fileDirectory.exists()) {
         fileDirectory.mkdirs()
@@ -127,23 +137,67 @@ fun retrieveJSONFromInternalDirectory(context: Context): String {
  */
 inline fun <reified T> getJSONFromModel(model: T): String = Gson().toJson(model)
 
-val gson: Gson = GsonBuilder()
-    .registerTypeAdapter(
-        ZonedDateTime::class.java,
-        object : TypeAdapter<ZonedDateTime?>() {
-            override fun write(out: JsonWriter, value: ZonedDateTime?) {
-                out.value(value.toString())
-            }
+val gson: Gson =
+    GsonBuilder()
+        .registerTypeAdapter(
+            ZonedDateTime::class.java,
+            object : TypeAdapter<ZonedDateTime?>() {
+                override fun write(
+                    out: JsonWriter,
+                    value: ZonedDateTime?,
+                ) {
+                    out.value(value.toString())
+                }
 
-            override fun read(inType: JsonReader): ZonedDateTime? {
-                return ZonedDateTime.parse(inType.nextString(), formatter)
-            }
-        },
-    )
-    .enableComplexMapKeySerialization()
-    .create()
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun read(inType: JsonReader): ZonedDateTime? {
+                    return ZonedDateTime.parse(inType.nextString(), formatter)
+                }
+            },
+        )
+        .enableComplexMapKeySerialization()
+        .create()
 
-private val formatter = DateTimeFormatterBuilder()
-    .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-    .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
-    .toFormatter()
+@RequiresApi(Build.VERSION_CODES.O)
+private val formatter =
+    DateTimeFormatterBuilder()
+        .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        .optionalStart().appendOffset("+HHMM", "Z").optionalEnd()
+        .toFormatter()
+
+// Function to store a JSON object
+fun saveJsonToSharedPrefs(
+    context: Context,
+    key: String,
+    obj: Any,
+) {
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val editor = sharedPreferences.edit()
+    val gson = Gson()
+
+    // Convert object to JSON
+    val jsonString = gson.toJson(obj)
+
+    // Save JSON string in SharedPreferences
+    editor.putString(key, jsonString)
+    editor.apply()
+}
+
+// Function to retrieve a JSON object
+inline fun <reified T> getJsonFromSharedPrefs(
+    context: Context,
+    key: String,
+): T? {
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val gson = Gson()
+
+    // Retrieve JSON string
+    val jsonString = sharedPreferences.getString(key, null)
+
+    // Convert JSON string back to object
+    return if (jsonString != null) {
+        gson.fromJson(jsonString, T::class.java)
+    } else {
+        null
+    }
+}

@@ -11,7 +11,6 @@ import com.airbnb.mvrx.withState
 import com.alfresco.content.search.databinding.FragmentRecentSearchBinding
 
 class RecentSearchFragment : Fragment(), MavericksView {
-
     private val viewModel: RecentSearchViewModel by fragmentViewModel()
     private lateinit var binding: FragmentRecentSearchBinding
     var onEntrySelected: ((String) -> Unit)? = null
@@ -31,15 +30,16 @@ class RecentSearchFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) {
-        binding.recyclerView.withModels {
-            it.entries.forEach {
-                recentSearchRow {
-                    id(it)
-                    title(it)
-                    clickListener { _ -> onEntrySelected?.invoke(it) }
+    override fun invalidate() =
+        withState(viewModel) {
+            binding.recyclerView.withModels {
+                it.entries.forEach {
+                    recentSearchRow {
+                        id(it)
+                        title(it)
+                        clickListener { _ -> onEntrySelected?.invoke(it) }
+                    }
                 }
             }
         }
-    }
 }

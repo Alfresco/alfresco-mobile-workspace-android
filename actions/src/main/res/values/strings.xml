@@ -94,4 +94,7 @@
     <string name="workflows_unavailable_title">Workflows unavailable!</string>
     <string name="workflow_unavailable_message">Workflows will appear here when created.</string>
 
+    <string name="no_actions_available_title">No Actions Available</string>>
+    <string name="no_actions_available_message">Contact your administrator for help.</string>>
+
 </resources>

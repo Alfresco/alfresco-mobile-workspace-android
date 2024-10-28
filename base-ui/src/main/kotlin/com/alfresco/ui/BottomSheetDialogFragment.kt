@@ -7,7 +7,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 open class BottomSheetDialogFragment : BottomSheetDialogFragment() {
-
     open val requiresFullscreen = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

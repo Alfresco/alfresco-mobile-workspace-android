@@ -9,4 +9,5 @@
     <color name="color_bg_initial">#1FFFFFFF</color>
     <color name="color_text_initial">@android:color/white</color>
     <color name="colorGray1">@android:color/white</color>
+    <color name="color_blue_30">#3D2A7DE1</color>
 </resources>

@@ -20,28 +20,26 @@ data class SearchUserGroupComponentBuilder(
     var onApply: SearchUserComponentApplyCallback? = null,
     var onCancel: SearchUserComponentCancelCallback? = null,
 ) {
-
     /**
      * Filter sheet apply callback
      */
-    fun onApply(callback: SearchUserComponentApplyCallback?) =
-        apply { this.onApply = callback }
+    fun onApply(callback: SearchUserComponentApplyCallback?) = apply { this.onApply = callback }
 
     /**
      * Filter sheet cancel callback
      */
-    fun onCancel(callback: SearchUserComponentCancelCallback?) =
-        apply { this.onCancel = callback }
+    fun onCancel(callback: SearchUserComponentCancelCallback?) = apply { this.onCancel = callback }
 
     /**
      * Filter sheet show method
      */
     fun show() {
-        val fragmentManager = when (context) {
-            is AppCompatActivity -> context.supportFragmentManager
-            is Fragment -> context.childFragmentManager
-            else -> throw IllegalArgumentException()
-        }
+        val fragmentManager =
+            when (context) {
+                is AppCompatActivity -> context.supportFragmentManager
+                is Fragment -> context.childFragmentManager
+                else -> throw IllegalArgumentException()
+            }
 
         SearchUserGroupComponentSheet().apply {
             arguments = bundleOf(Mavericks.KEY_ARG to parentEntry)

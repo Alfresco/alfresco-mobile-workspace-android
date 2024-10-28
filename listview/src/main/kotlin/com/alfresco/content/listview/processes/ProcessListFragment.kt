@@ -51,7 +51,6 @@ interface ProcessListViewState : MavericksState {
 abstract class ProcessListViewModel<S : ProcessListViewState>(
     initialState: S,
 ) : MavericksViewModel<S>(initialState) {
-
     private var folderListener: EntryListener? = null
 
     /**
@@ -94,7 +93,10 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
     lateinit var rlFilters: RelativeLayout
     lateinit var filterTitle: TextView
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
@@ -111,14 +113,19 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
         recyclerView.setController(epoxyController)
         viewModel.setListener(this)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        recyclerView.layoutManager?.scrollToPosition(0)
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     /**
@@ -126,41 +133,43 @@ abstract class ProcessListFragment<VM : ProcessListViewModel<S>, S : ProcessList
      */
     abstract fun onItemClicked(entry: ProcessEntry)
 
-    override fun invalidate() = withState(viewModel) { state ->
+    override fun invalidate() =
+        withState(viewModel) { state ->
 
-        loadingAnimation.isVisible =
-            state.request is Loading && state.processEntries.isEmpty() && !refreshLayout.isRefreshing
+            loadingAnimation.isVisible =
+                state.request is Loading && state.processEntries.isEmpty() && !refreshLayout.isRefreshing
 
-        if (state.request.complete) {
-            refreshLayout.isRefreshing = false
-        }
-        epoxyController.requestModelBuild()
-    }
-
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.request.complete && state.request is Fail) {
-            visibleFilters(false)
-        }
-        if (state.processEntries.isEmpty() && state.request.complete) {
-            if (state.request is Success) visibleFilters(true)
-            val args = viewModel.emptyMessageArgs(state)
-            listViewMessage {
-                id("empty_message")
-                iconRes(args.first)
-                title(args.second)
-                message(args.third)
+            if (state.request.complete) {
+                refreshLayout.isRefreshing = false
             }
-        } else if (state.processEntries.isNotEmpty()) {
-            visibleFilters(true)
-            state.processEntries.forEach {
-                listViewProcessRow {
-                    id(it.id)
-                    data(it)
-                    clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+            epoxyController.requestModelBuild()
+        }
+
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
+            if (state.request.complete && state.request is Fail) {
+                visibleFilters(false)
+            }
+            if (state.processEntries.isEmpty() && state.request.complete) {
+                if (state.request is Success) visibleFilters(true)
+                val args = viewModel.emptyMessageArgs(state)
+                listViewMessage {
+                    id("empty_message")
+                    iconRes(args.first)
+                    title(args.second)
+                    message(args.third)
+                }
+            } else if (state.processEntries.isNotEmpty()) {
+                visibleFilters(true)
+                state.processEntries.forEach {
+                    listViewProcessRow {
+                        id(it.id)
+                        data(it)
+                        clickListener { model, _, _, _ -> onItemClicked(model.data()) }
+                    }
                 }
             }
         }
-    }
 
     private fun visibleFilters(isVisible: Boolean) {
         GlobalScope.launch {

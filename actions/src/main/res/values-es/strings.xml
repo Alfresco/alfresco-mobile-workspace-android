@@ -91,6 +91,8 @@
     <string name="action_add_favorite_multiple_toast">%s elementos agregados a favoritos</string>
     <string name="action_remove_favorite_multiple_toast">%s elementos removidos de favoritos</string>
 
+    <string name="no_actions_available_title">No hay acciones disponibles</string>
+    <string name="no_actions_available_message">Póngase en contacto con su administrador para obtener ayuda.</string>
     <string name="workflows_empty_title">No se encontró ningún flujo de trabajo</string>
     <string name="workflows_empty_message">Inicie un flujo de trabajo nuevo que desee encontrar con facilidad más adelante.</string>
 

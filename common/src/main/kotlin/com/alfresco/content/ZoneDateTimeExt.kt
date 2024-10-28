@@ -30,7 +30,10 @@ fun String.parseDate(format: String): Date? {
  * @param format
  * @param date
  */
-fun Date.formatDate(format: String, date: Date?): String? {
+fun Date.formatDate(
+    format: String,
+    date: Date?,
+): String? {
     val formatter = SimpleDateFormat(format, Locale.ENGLISH)
     if (date != null) {
         return formatter.format(date)
@@ -43,7 +46,10 @@ fun Date.formatDate(format: String, date: Date?): String? {
  * @param currentFormat
  * @param convertFormat
  */
-fun String.getFormattedDate(currentFormat: String, convertFormat: String): String {
+fun String.getFormattedDate(
+    currentFormat: String,
+    convertFormat: String,
+): String {
     val date = SimpleDateFormat(currentFormat, Locale.ENGLISH).parse(this)
     val formatter = SimpleDateFormat(convertFormat, Locale.getDefault())
     if (date != null) {
@@ -57,7 +63,10 @@ fun String.getFormattedDate(currentFormat: String, convertFormat: String): Strin
  * @param currentFormat
  * @param convertFormat
  */
-fun String.getLocalFormattedDate(currentFormat: String, convertFormat: String): String {
+fun String.getLocalFormattedDate(
+    currentFormat: String,
+    convertFormat: String,
+): String {
     val parserFormat = SimpleDateFormat(currentFormat, Locale.getDefault())
     parserFormat.timeZone = TimeZone.getTimeZone("UTC")
     val date = parserFormat.parse(this)
@@ -73,7 +82,10 @@ fun String.getLocalFormattedDate(currentFormat: String, convertFormat: String): 
  * @param currentFormat
  * @param convertFormat
  */
-fun String.getLocalFormattedDate1(currentFormat: String, convertFormat: String): String {
+fun String.getLocalFormattedDate1(
+    currentFormat: String,
+    convertFormat: String,
+): String {
     val parserFormat = SimpleDateFormat(currentFormat, Locale.getDefault())
     parserFormat.timeZone = TimeZone.getTimeZone("UTC")
     val date = parserFormat.parse(this)
@@ -90,11 +102,14 @@ fun updateDateFormat(originalDateString: String?): String? {
     originalDateString ?: return null
 
     val (datePart, timePart) = originalDateString.split(" ", limit = 2)
-    val updatedDatePart = datePart.split("-").joinToString("-") { part ->
-        if (part.equals("MM", ignoreCase = true)) {
-            part // Keep "MM" as is
-        } else part.lowercase() // Convert "DD" and "YYYY" to lowercase
-    }
+    val updatedDatePart =
+        datePart.split("-").joinToString("-") { part ->
+            if (part.equals("MM", ignoreCase = true)) {
+                part // Keep "MM" as is
+            } else {
+                part.lowercase() // Convert "DD" and "YYYY" to lowercase
+            }
+        }
 
     return if (timePart.isNotEmpty()) "$updatedDatePart $timePart" else updatedDatePart
 }

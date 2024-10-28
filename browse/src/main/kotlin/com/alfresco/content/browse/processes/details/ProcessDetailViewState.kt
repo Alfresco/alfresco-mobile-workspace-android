@@ -32,7 +32,6 @@ data class ProcessDetailViewState(
     val requestStartWorkflow: Async<ProcessEntry> = Uninitialized,
     val requestTasks: Async<ResponseList> = Uninitialized,
 ) : MavericksState {
-
     constructor(target: ProcessEntry) : this(parent = target)
 
     /**
@@ -75,7 +74,10 @@ data class ProcessDetailViewState(
     /**
      * update form fields data
      */
-    fun updateFormFields(response: ResponseListForm, processEntry: ProcessEntry): ProcessDetailViewState {
+    fun updateFormFields(
+        response: ResponseListForm,
+        processEntry: ProcessEntry,
+    ): ProcessDetailViewState {
         val formFields = response.fields.first().fields
         return copy(formFields = formFields, parent = ProcessEntry.updateReviewerType(processEntry, formFields))
     }
@@ -117,7 +119,10 @@ data class ProcessDetailViewState(
         )
     }
 
-    private fun mergeInUploads(base: List<Entry>, uploads: List<Entry>): List<Entry> {
+    private fun mergeInUploads(
+        base: List<Entry>,
+        uploads: List<Entry>,
+    ): List<Entry> {
         return (uploads + base).distinctBy { it.id.ifEmpty { it.boxId } }
     }
 

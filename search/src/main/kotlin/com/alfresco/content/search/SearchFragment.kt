@@ -83,7 +83,6 @@ data class ContextualSearchArgs(
 }
 
 class SearchFragment : Fragment(), MavericksView {
-
     @OptIn(InternalMavericksApi::class)
     private val viewModel: SearchViewModel by fragmentViewModelWithArgs {
         ContextualSearchArgs.with(arguments)
@@ -131,7 +130,10 @@ class SearchFragment : Fragment(), MavericksView {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsManager().screenViewEvent(PageView.Search)
         binding.recyclerViewChips.setController(epoxyController)
@@ -169,17 +171,18 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        if (!state.isExtension) {
-            if (state.isOnline) {
-                disableOfflineSearch()
-            } else {
-                enableOfflineSearch()
+    override fun invalidate() =
+        withState(viewModel) { state ->
+            if (!state.isExtension) {
+                if (state.isOnline) {
+                    disableOfflineSearch()
+                } else {
+                    enableOfflineSearch()
+                }
             }
+            setSearchFilterLocalizedName(state)
+            epoxyController.requestModelBuild()
         }
-        setSearchFilterLocalizedName(state)
-        epoxyController.requestModelBuild()
-    }
 
     private fun disableOfflineSearch() {
         setAdvanceSearchFiltersData()
@@ -197,7 +200,10 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.menu_search, menu)
 
         val searchItem: MenuItem = menu.findItem(R.id.search)
@@ -209,31 +215,35 @@ class SearchFragment : Fragment(), MavericksView {
         searchView.setQuery(viewModel.getSearchQuery(), false)
         updateFragmentVisibility(viewModel.getSearchQuery())
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (isResumed) {
-                    setSearchQuery(newText ?: "")
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (isResumed) {
+                        setSearchQuery(newText ?: "")
+                    }
+                    return true
                 }
-                return true
-            }
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                resultsFragment.saveCurrentSearch()
-                hideSoftInput()
-                return true
-            }
-        })
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    resultsFragment.saveCurrentSearch()
+                    hideSoftInput()
+                    return true
+                }
+            },
+        )
 
-        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                return true
-            }
+        searchItem.setOnActionExpandListener(
+            object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    return true
+                }
 
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                this@SearchFragment.findNavController().navigateUp()
-                return true
-            }
-        })
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    this@SearchFragment.findNavController().navigateUp()
+                    return true
+                }
+            },
+        )
     }
 
     fun setSearchQuery(query: String) {
@@ -323,11 +333,12 @@ class SearchFragment : Fragment(), MavericksView {
         binding.actionReset.setOnClickListener { resetAllFilters() }
     }
 
-    private fun resetAllFilters() = withState(viewModel) { state ->
-        val listReset = viewModel.resetChips(state)
-        scrollToTop()
-        applyAdvanceFilters(state.selectedFilterIndex, listReset)
-    }
+    private fun resetAllFilters() =
+        withState(viewModel) { state ->
+            val listReset = viewModel.resetChips(state)
+            scrollToTop()
+            applyAdvanceFilters(state.selectedFilterIndex, listReset)
+        }
 
     private fun scrollToTop() {
         if (isResumed) {
@@ -404,51 +415,64 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    private fun epoxyController() = simpleController(viewModel) { state ->
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
 
-        val filterIndex = state.selectedFilterIndex
+            val filterIndex = state.selectedFilterIndex
 
-        if (filterIndex != -1) {
-            val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
+            if (filterIndex != -1) {
+                val searchChipCategory = state.listSearchCategoryChips?.toMutableList()
 
-            if (!searchChipCategory.isNullOrEmpty()) {
-                searchChipCategory.forEach { item ->
-                    val modelID = filterIndex.toString() + item.category?.id
-                    listViewFilterChips {
-                        id(modelID)
-                        data(item)
-                        clickListener { model, _, chipView, _ ->
-                            if (model.data().category?.component != null) {
-                                val entry = model.data()
-                                AnalyticsManager().searchFacets(entry.category?.component?.selector ?: "")
-                                onChipClicked(model.data(), chipView)
-                            } else {
-                                onContextualChipClicked(model.data(), chipView)
+                if (!searchChipCategory.isNullOrEmpty()) {
+                    searchChipCategory.forEach { item ->
+                        val modelID = filterIndex.toString() + item.category?.id
+                        listViewFilterChips {
+                            id(modelID)
+                            data(item)
+                            clickListener { model, _, chipView, _ ->
+                                if (model.data().category?.component != null) {
+                                    val entry = model.data()
+                                    AnalyticsManager().searchFacets(entry.category?.component?.selector ?: "")
+                                    onChipClicked(model.data(), chipView)
+                                } else {
+                                    onContextualChipClicked(model.data(), chipView)
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
 
-    private fun onContextualChipClicked(data: SearchChipCategory, chipView: View) {
+    private fun onContextualChipClicked(
+        data: SearchChipCategory,
+        chipView: View,
+    ) {
         if (binding.recyclerViewChips.isEnabled) {
             binding.recyclerViewChips.isEnabled = false
             withState(viewModel) { state ->
-                val result: ComponentMetaData = if (state.isContextual && (chipView as FilterChip).isChecked) {
-                    ComponentMetaData(requireContext().getString(R.string.search_chip_contextual, state.contextTitle), SearchFilter.Contextual.name)
-                } else {
-                    ComponentMetaData("", "")
-                }
+                val result: ComponentMetaData =
+                    if (state.isContextual && (chipView as FilterChip).isChecked) {
+                        ComponentMetaData(
+                            requireContext().getString(R.string.search_chip_contextual, state.contextTitle),
+                            SearchFilter.Contextual.name,
+                        )
+                    } else {
+                        ComponentMetaData("", "")
+                    }
                 binding.recyclerViewChips.isEnabled = true
                 val resultList = viewModel.updateChipComponentResult(state, data, result)
                 applyAdvanceFilters(state.selectedFilterIndex, resultList)
             }
-        } else (chipView as FilterChip).isChecked = false
+        } else {
+            (chipView as FilterChip).isChecked = false
+        }
     }
 
-    private fun onChipClicked(data: SearchChipCategory, chipView: View) = withState(viewModel) {
+    private fun onChipClicked(
+        data: SearchChipCategory,
+        chipView: View,
+    ) = withState(viewModel) {
         hideSoftInput()
         if (binding.recyclerViewChips.isEnabled) {
             binding.recyclerViewChips.isEnabled = false
@@ -469,7 +493,9 @@ class SearchFragment : Fragment(), MavericksView {
                     }
                 }
             }
-        } else (chipView as FilterChip).isChecked = false
+        } else {
+            (chipView as FilterChip).isChecked = false
+        }
     }
 
     private suspend fun showComponentSheetDialog(
@@ -477,17 +503,20 @@ class SearchFragment : Fragment(), MavericksView {
         searchChipCategory: SearchChipCategory,
     ) = withContext(dispatcher) {
         suspendCoroutine {
-            val componentData = if (searchChipCategory.facets == null) {
-                ComponentData.with(
-                    searchChipCategory.category,
-                    searchChipCategory.selectedName,
-                    searchChipCategory.selectedQuery,
-                )
-            } else ComponentData.with(
-                searchChipCategory.facets,
-                searchChipCategory.selectedName,
-                searchChipCategory.selectedQuery,
-            )
+            val componentData =
+                if (searchChipCategory.facets == null) {
+                    ComponentData.with(
+                        searchChipCategory.category,
+                        searchChipCategory.selectedName,
+                        searchChipCategory.selectedQuery,
+                    )
+                } else {
+                    ComponentData.with(
+                        searchChipCategory.facets,
+                        searchChipCategory.selectedName,
+                        searchChipCategory.selectedQuery,
+                    )
+                }
             ComponentBuilder(context, componentData)
                 .onApply { name, query, _ ->
                     executeContinuation(it, name, query)
@@ -502,7 +531,11 @@ class SearchFragment : Fragment(), MavericksView {
         }
     }
 
-    private fun executeContinuation(continuation: Continuation<ComponentMetaData?>, name: String, query: String) {
+    private fun executeContinuation(
+        continuation: Continuation<ComponentMetaData?>,
+        name: String,
+        query: String,
+    ) {
         continuation.resume(ComponentMetaData(name = name, query = query))
     }
 
@@ -523,13 +556,17 @@ class SearchFragment : Fragment(), MavericksView {
         resultsFragment.setFilters(filter)
     }
 
-    private fun applyAdvanceFilters(position: Int, list: MutableList<SearchChipCategory>) {
+    private fun applyAdvanceFilters(
+        position: Int,
+        list: MutableList<SearchChipCategory>,
+    ) {
         val advanceSearchFilter = emptyAdvanceFilters()
-        val facetData = SearchFacetData(
-            viewModel.defaultFacetFields(position),
-            viewModel.defaultFacetQueries(position),
-            viewModel.defaultFacetIntervals(position),
-        )
+        val facetData =
+            SearchFacetData(
+                viewModel.defaultFacetFields(position),
+                viewModel.defaultFacetQueries(position),
+                viewModel.defaultFacetIntervals(position),
+            )
 
         advanceSearchFilter.addAll(viewModel.initAdvanceFilters(position))
 

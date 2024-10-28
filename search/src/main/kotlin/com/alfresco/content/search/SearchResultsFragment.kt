@@ -26,7 +26,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>() {
-
     override val viewModel: SearchViewModel by parentFragmentViewModel()
     var topLoadingIndicator: View? = null
 
@@ -43,7 +42,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setViewRequiredMultiSelection(true)
 
@@ -64,7 +66,10 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
     /**
      * set the advance filters on the viewModel
      */
-    fun setFilters(filters: AdvanceSearchFilters, facetData: SearchFacetData) {
+    fun setFilters(
+        filters: AdvanceSearchFilters,
+        facetData: SearchFacetData,
+    ) {
         scrollToTop()
         viewModel.setFilters(filters, facetData)
     }
@@ -97,7 +102,9 @@ class SearchResultsFragment : ListFragment<SearchViewModel, SearchResultsState>(
                                 val parentId = entry.parentPaths.find { it == state.moveId }
                                 if (parentId.isNullOrEmpty()) {
                                     findNavController().navigateToFolder(entry, state.moveId)
-                                } else Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(requireContext(), getString(R.string.search_move_warning), Toast.LENGTH_SHORT).show()
+                                }
                             }
 
                             else -> findNavController().navigateToExtensionFolder(entry)

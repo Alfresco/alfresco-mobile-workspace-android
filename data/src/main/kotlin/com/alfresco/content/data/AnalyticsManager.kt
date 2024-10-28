@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
  * Marked as AnalyticsManager class
  */
 class AnalyticsManager(otherSession: Session? = null) {
-
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -33,7 +32,11 @@ class AnalyticsManager(otherSession: Session? = null) {
     /**
      * analytics event for preview file
      */
-    fun previewFile(fileMimeType: String, fileExtension: String, success: Boolean) {
+    fun previewFile(
+        fileMimeType: String,
+        fileExtension: String,
+        success: Boolean,
+    ) {
         val params = repository.defaultParams()
         params.putString(Parameters.FileMimeType.value, fileMimeType)
         params.putString(Parameters.FileExtension.value, fileExtension)
@@ -45,7 +48,11 @@ class AnalyticsManager(otherSession: Session? = null) {
     /**
      * analytics for multiple actions
      */
-    fun fileActionEvent(fileMimeType: String = "", fileExtension: String = "", eventName: EventName) {
+    fun fileActionEvent(
+        fileMimeType: String = "",
+        fileExtension: String = "",
+        eventName: EventName,
+    ) {
         val params = repository.defaultParams()
         params.putString(Parameters.FileMimeType.value, fileMimeType)
         params.putString(Parameters.FileExtension.value, fileExtension)
@@ -104,7 +111,10 @@ class AnalyticsManager(otherSession: Session? = null) {
     /**
      * analytics for multiple screen view
      */
-    fun screenViewEvent(pageViewName: PageView, noOfFiles: Int = -1) {
+    fun screenViewEvent(
+        pageViewName: PageView,
+        noOfFiles: Int = -1,
+    ) {
         val params = repository.defaultParams()
 
         if (noOfFiles > -1) {
@@ -118,7 +128,12 @@ class AnalyticsManager(otherSession: Session? = null) {
     /**
      * analytics for API tracker
      */
-    fun apiTracker(apiName: APIEvent, status: Boolean = false, size: String = "", outcome: String = "") {
+    fun apiTracker(
+        apiName: APIEvent,
+        status: Boolean = false,
+        size: String = "",
+        outcome: String = "",
+    ) {
         val apiTrackName = if (status) "${apiName.value}_success".lowercase() else "${apiName.value}_fail".lowercase()
 
         val params = repository.defaultParams()

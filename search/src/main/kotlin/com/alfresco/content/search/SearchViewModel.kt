@@ -68,16 +68,17 @@ class SearchViewModel(
         appConfigModel = repository.getAppConfig()
         // TODO: move search params to state object
         val defaultIndex = getDefaultIndex(state)
-        params = SearchParams(
-            "",
-            state.contextId,
-            defaultFilters(state),
-            defaultAdvanceFilters(state),
-            defaultFacetQueries(defaultIndex),
-            defaultFacetIntervals(defaultIndex),
-            defaultFacetFields(defaultIndex),
-            0,
-        )
+        params =
+            SearchParams(
+                "",
+                state.contextId,
+                defaultFilters(state),
+                defaultAdvanceFilters(state),
+                defaultFacetQueries(defaultIndex),
+                defaultFacetIntervals(defaultIndex),
+                defaultFacetFields(defaultIndex),
+                0,
+            )
         liveSearchEvents = MutableStateFlow(params)
         searchEvents = MutableStateFlow(params)
 
@@ -106,20 +107,24 @@ class SearchViewModel(
                             it.skipCount,
                             it.maxItems,
                         )
-                    } else repository.search(
-                        it.terms,
-                        it.contextId,
-                        it.filters,
-                        it.advanceSearchFilter,
-                        SearchFacetData(
-                            searchFacetFields = it.listFacetFields,
-                            searchFacetQueries = it.listFacetQueries,
-                            searchFacetIntervals = it.listFacetIntervals,
-                        ),
-                        it.skipCount,
-                        it.maxItems,
-                    )
-                } else repository.offlineSearch(it.terms, it.advanceSearchFilter)
+                    } else {
+                        repository.search(
+                            it.terms,
+                            it.contextId,
+                            it.filters,
+                            it.advanceSearchFilter,
+                            SearchFacetData(
+                                searchFacetFields = it.listFacetFields,
+                                searchFacetQueries = it.listFacetQueries,
+                                searchFacetIntervals = it.listFacetIntervals,
+                            ),
+                            it.skipCount,
+                            it.maxItems,
+                        )
+                    }
+                } else {
+                    repository.offlineSearch(it.terms, it.advanceSearchFilter)
+                }
             }) {
                 if (it is Loading) {
                     copy(request = it)
@@ -134,7 +139,13 @@ class SearchViewModel(
      * returns the all available search filters
      */
     fun getSearchFilterList(): List<SearchItem>? {
-        return if (!canSearchOverCurrentNetwork()) appConfigModel.search else appConfigModel.search?.filter { it.name?.lowercase() != "CATEGORY.OFFLINE".lowercase() }
+        return if (!canSearchOverCurrentNetwork()) {
+            appConfigModel.search
+        } else {
+            appConfigModel.search?.filter {
+                it.name?.lowercase() != "CATEGORY.OFFLINE".lowercase()
+            }
+        }
     }
 
     /**
@@ -172,32 +183,36 @@ class SearchViewModel(
         return list?.indexOf(list.find { it.name?.lowercase() == "CATEGORY.OFFLINE".lowercase() }) ?: -1
     }
 
-    private fun updateSearchChipCategoryList(index: Int) = withState { state ->
-        val list = mutableListOf<SearchChipCategory>()
+    private fun updateSearchChipCategoryList(index: Int) =
+        withState { state ->
+            val list = mutableListOf<SearchChipCategory>()
 
-        getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
-            list.add(SearchChipCategory(categoryItem, isSelected = false))
-        }
+            getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
+                list.add(SearchChipCategory(categoryItem, isSelected = false))
+            }
 
-        if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
-            list.add(
-                0,
-                SearchChipCategory.withContextual(
-                    context.getString(R.string.search_chip_contextual, state.contextTitle),
-                    SearchFilter.Contextual,
-                ),
-            )
-        }
+            if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
+                list.add(
+                    0,
+                    SearchChipCategory.withContextual(
+                        context.getString(R.string.search_chip_contextual, state.contextTitle),
+                        SearchFilter.Contextual,
+                    ),
+                )
+            }
 
-        setState {
-            copy(listSearchCategoryChips = list)
+            setState {
+                copy(listSearchCategoryChips = list)
+            }
         }
-    }
 
     /**
      * returns filter data on the selection on item in filter menu
      */
-    fun getSelectedFilter(index: Int, state: SearchResultsState): SearchItem? {
+    fun getSelectedFilter(
+        index: Int,
+        state: SearchResultsState,
+    ): SearchItem? {
         return state.listSearchFilters?.get(index)
     }
 
@@ -256,11 +271,12 @@ class SearchViewModel(
         return list
     }
 
-    private fun getDefaultIndex(state: SearchResultsState) = if (canSearchOverCurrentNetwork()) {
-        appConfigModel.search?.indexOfFirst { it.default == true }
-    } else {
-        getDefaultSearchFilterIndex(state.listSearchFilters)
-    }
+    private fun getDefaultIndex(state: SearchResultsState) =
+        if (canSearchOverCurrentNetwork()) {
+            appConfigModel.search?.indexOfFirst { it.default == true }
+        } else {
+            getDefaultSearchFilterIndex(state.listSearchFilters)
+        }
 
     /**
      * return the default facet fields list from app config json using the index
@@ -336,24 +352,29 @@ class SearchViewModel(
     /**
      * set advance filters to search params
      */
-    fun setFilters(advanceSearchFilter: AdvanceSearchFilters, facetData: SearchFacetData) {
+    fun setFilters(
+        advanceSearchFilter: AdvanceSearchFilters,
+        facetData: SearchFacetData,
+    ) {
         // Avoid triggering refresh when filters don't change
         if (advanceSearchFilter != params.advanceSearchFilter) {
-            params = params.copy(
-                advanceSearchFilter = advanceSearchFilter,
-                listFacetFields = facetData.searchFacetFields,
-                listFacetIntervals = facetData.searchFacetIntervals,
-                listFacetQueries = facetData.searchFacetQueries,
-            )
+            params =
+                params.copy(
+                    advanceSearchFilter = advanceSearchFilter,
+                    listFacetFields = facetData.searchFacetFields,
+                    listFacetIntervals = facetData.searchFacetIntervals,
+                    listFacetQueries = facetData.searchFacetQueries,
+                )
             refresh()
             isRefreshSearch = false
         } else if (isRefreshSearch) {
-            params = params.copy(
-                advanceSearchFilter = emptyAdvanceFilters(),
-                listFacetFields = facetData.searchFacetFields,
-                listFacetIntervals = facetData.searchFacetIntervals,
-                listFacetQueries = facetData.searchFacetQueries,
-            )
+            params =
+                params.copy(
+                    advanceSearchFilter = emptyAdvanceFilters(),
+                    listFacetFields = facetData.searchFacetFields,
+                    listFacetIntervals = facetData.searchFacetIntervals,
+                    listFacetQueries = facetData.searchFacetQueries,
+                )
             refresh()
             isRefreshSearch = false
         }
@@ -362,7 +383,11 @@ class SearchViewModel(
     /**
      * update chip component data after apply or reset the component
      */
-    fun updateChipComponentResult(state: SearchResultsState, model: SearchChipCategory, metaData: ComponentMetaData): MutableList<SearchChipCategory> {
+    fun updateChipComponentResult(
+        state: SearchResultsState,
+        model: SearchChipCategory,
+        metaData: ComponentMetaData,
+    ): MutableList<SearchChipCategory> {
         val list = mutableListOf<SearchChipCategory>()
 
         state.listSearchCategoryChips?.forEach { obj ->
@@ -376,7 +401,9 @@ class SearchViewModel(
                         selectedQuery = metaData.query ?: "",
                     ),
                 )
-            } else list.add(obj)
+            } else {
+                list.add(obj)
+            }
         }
 
         setState { copy(listSearchCategoryChips = list) }
@@ -392,7 +419,9 @@ class SearchViewModel(
         state.listSearchCategoryChips?.forEach { obj ->
             if (obj.selectedQuery == SearchFilter.Contextual.name) {
                 list.add(obj)
-            } else list.add(SearchChipCategory.resetData(obj))
+            } else {
+                list.add(SearchChipCategory.resetData(obj))
+            }
         }
         setState { copy(listSearchCategoryChips = list) }
 
@@ -402,7 +431,11 @@ class SearchViewModel(
     /**
      * update isSelected when chip is selected
      */
-    fun updateSelected(state: SearchResultsState, model: SearchChipCategory, isSelected: Boolean) {
+    fun updateSelected(
+        state: SearchResultsState,
+        model: SearchChipCategory,
+        isSelected: Boolean,
+    ) {
         val list = mutableListOf<SearchChipCategory>()
 
         state.listSearchCategoryChips?.forEach { obj ->
@@ -416,7 +449,9 @@ class SearchViewModel(
                         selectedQuery = obj.selectedQuery,
                     ),
                 )
-            } else list.add(obj)
+            } else {
+                list.add(obj)
+            }
         }
 
         setState { copy(listSearchCategoryChips = list) }
@@ -438,36 +473,40 @@ class SearchViewModel(
         }
     }
 
-    fun toggleSelection(entry: Entry) = setState {
-        val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
-        if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
-            copy(maxLimitReachedForMultiSelection = true)
-        } else {
-            val updatedEntries = entries.map {
-                if (it.id == entry.id && it.type != Entry.Type.GROUP) {
-                    it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
-                } else {
-                    it
-                }
+    fun toggleSelection(entry: Entry) =
+        setState {
+            val hasReachedLimit = selectedEntries.size == MULTI_SELECTION_LIMIT
+            if (!entry.isSelectedForMultiSelection && hasReachedLimit) {
+                copy(maxLimitReachedForMultiSelection = true)
+            } else {
+                val updatedEntries =
+                    entries.map {
+                        if (it.id == entry.id && it.type != Entry.Type.GROUP) {
+                            it.copy(isSelectedForMultiSelection = !it.isSelectedForMultiSelection)
+                        } else {
+                            it
+                        }
+                    }
+                copy(
+                    entries = updatedEntries,
+                    selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                    maxLimitReachedForMultiSelection = false,
+                )
             }
+        }
+
+    fun resetMultiSelection() =
+        setState {
+            val resetMultiEntries =
+                entries.map {
+                    it.copy(isSelectedForMultiSelection = false)
+                }
             copy(
-                entries = updatedEntries,
-                selectedEntries = updatedEntries.filter { it.isSelectedForMultiSelection },
+                entries = resetMultiEntries,
+                selectedEntries = emptyList(),
                 maxLimitReachedForMultiSelection = false,
             )
         }
-    }
-
-    fun resetMultiSelection() = setState {
-        val resetMultiEntries = entries.map {
-            it.copy(isSelectedForMultiSelection = false)
-        }
-        copy(
-            entries = resetMultiEntries,
-            selectedEntries = emptyList(),
-            maxLimitReachedForMultiSelection = false,
-        )
-    }
 
     override fun resetMaxLimitError() = setState { copy(maxLimitReachedForMultiSelection = false) }
 
@@ -476,7 +515,12 @@ class SearchViewModel(
      */
     fun canSearchOverCurrentNetwork() = ConnectivityTracker.isActiveNetwork(context)
 
-    override fun emptyMessageArgs(state: ListViewState) = Triple(R.drawable.ic_empty_search, R.string.search_empty_title, R.string.search_empty_message)
+    override fun emptyMessageArgs(state: ListViewState) =
+        Triple(
+            R.drawable.ic_empty_search,
+            R.string.search_empty_title,
+            R.string.search_empty_message,
+        )
 
     companion object : MavericksViewModelFactory<SearchViewModel, SearchResultsState> {
         const val MIN_QUERY_LENGTH = 3

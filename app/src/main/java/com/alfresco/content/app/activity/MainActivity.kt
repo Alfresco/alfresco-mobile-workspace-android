@@ -35,10 +35,15 @@ import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.activityViewModel
 import com.alfresco.content.app.R
 import com.alfresco.content.app.widget.ActionBarController
+import com.alfresco.content.data.CommonRepository
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MenuActions
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.Settings.Companion.IS_PROCESS_ENABLED_KEY
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.content.session.SessionManager
 import com.alfresco.content.slideBottom
 import com.alfresco.content.slideTop
@@ -60,7 +65,6 @@ import java.lang.ref.WeakReference
  * Marked as MainActivity class
  */
 class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
-
     @OptIn(InternalMavericksApi::class)
     private val viewModel: MainActivityViewModel by activityViewModel()
     private val navController by lazy { findNavController(R.id.nav_host_fragment) }
@@ -70,11 +74,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     private var signedOutDialog = WeakReference<AlertDialog>(null)
     private var isNewIntent = false
     private var actionMode: ActionMode? = null
+    private var mobileConfigDataEntry: MobileConfigDataEntry? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        mobileConfigDataEntry = getJsonFromSharedPrefs(this, KEY_FEATURES_MOBILE)
         observe(viewModel.navigationMode, ::navigateTo)
 
         GlobalScope.launch {
@@ -82,9 +87,11 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 Handler(Looper.getMainLooper()).post {
                     viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
+                        println("MainActivity.onCreate test 1")
                         viewModel.path = it.path
                         enableMultiSelection(it.selectedEntries)
                     } else {
+                        println("MainActivity.onCreate test 2")
                         disableMultiSelection()
                     }
                 }
@@ -120,11 +127,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
     }
 
     private fun navigateTo(mode: MainActivityViewModel.NavigationMode) {
-        val data = Triple(
-            intent.extras?.getString(ID_KEY, "") ?: "",
-            intent.extras?.getString(MODE_KEY, "") ?: "",
-            "Preview",
-        )
+        val data =
+            Triple(
+                intent.extras?.getString(ID_KEY, "") ?: "",
+                intent.extras?.getString(MODE_KEY, "") ?: "",
+                "Preview",
+            )
 
         when (mode) {
             MainActivityViewModel.NavigationMode.FOLDER -> {
@@ -142,13 +150,13 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
         isNewIntent = true
         viewModel.handleDataIntent(
-            intent?.extras?.getString(MODE_KEY, ""),
-            intent?.extras?.getBoolean(KEY_FOLDER, false) ?: false,
+            intent.extras?.getString(MODE_KEY, ""),
+            intent.extras?.getBoolean(KEY_FOLDER, false) ?: false,
         )
     }
 
@@ -181,54 +189,63 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         finish()
     }
 
-    private fun configure() = withState(viewModel) { state ->
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
-        graph.setStartDestination(if (state.isOnline) R.id.nav_recents else R.id.nav_offline)
-        navController.graph = graph
+    private fun configure() =
+        withState(viewModel) { state ->
+            navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val graph = navController.navInflater.inflate(R.navigation.nav_bottom)
+            graph.setStartDestination(if (state.isOnline) R.id.nav_recents else R.id.nav_offline)
+            navController.graph = graph
 
-        val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
-        actionBarController = ActionBarController(findViewById(R.id.toolbar))
-        actionBarController?.setupActionBar(this, navController, appBarConfiguration)
+            val appBarConfiguration = AppBarConfiguration(bottomNav.menu)
+            actionBarController = ActionBarController(findViewById(R.id.toolbar))
+            actionBarController?.setupActionBar(this, navController, appBarConfiguration)
 
-        bottomNav.setupWithNavController(navController)
+            bottomNav.setupWithNavController(navController)
 
-        setupActionToasts()
-//        MoveResultContract.addMoveIntent(Intent(this, MoveActivity::class.java))
-        setupDownloadNotifications()
+            setupActionToasts()
+            setupDownloadNotifications()
 
-        bottomNav.setOnItemSelectedListener { item ->
-            // In order to get the expected behavior, you have to call default Navigation method manually
-            NavigationUI.onNavDestinationSelected(item, navController)
-            true
-        }
-    }
-
-    override fun invalidate() = withState(viewModel) { state ->
-
-        if (state.requiresReLogin) {
-            if (state.isOnline) {
-                showSignedOutPrompt()
+            bottomNav.setOnItemSelectedListener { item ->
+                // In order to get the expected behavior, you have to call default Navigation method manually
+                NavigationUI.onNavDestinationSelected(item, navController)
+                true
             }
-        } else {
-            viewModel.checkIfAPSEnabled()
-            // Only when logged in otherwise triggers re-login prompts
-            actionBarController?.setProfileIcon(viewModel.profileIcon)
         }
-        if (actionBarController != null) {
-            actionBarController?.setOnline(state.isOnline)
+
+    override fun invalidate() =
+        withState(viewModel) { state ->
+
+            if (state.requiresReLogin) {
+                if (state.isOnline) {
+                    showSignedOutPrompt()
+                }
+            } else {
+                viewModel.checkIfAPSEnabled()
+                // Only when logged in otherwise triggers re-login prompts
+                actionBarController?.setProfileIcon(viewModel.profileIcon)
+            }
+            if (actionBarController != null) {
+                actionBarController?.setOnline(state.isOnline)
+            }
         }
-    }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
 
     private fun showSignedOutPrompt() {
         val oldDialog = signedOutDialog.get()
         if (oldDialog != null && oldDialog.isShowing) return
-        val dialog = MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.auth_signed_out_title)).setMessage(resources.getString(R.string.auth_signed_out_subtitle))
-            .setNegativeButton(resources.getString(R.string.sign_out_confirmation_negative), null).setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
-                navigateToReLogin()
-            }.show()
+        val dialog =
+            MaterialAlertDialogBuilder(
+                this,
+            ).setTitle(
+                resources.getString(R.string.auth_signed_out_title),
+            ).setMessage(resources.getString(R.string.auth_signed_out_subtitle))
+                .setNegativeButton(
+                    resources.getString(R.string.sign_out_confirmation_negative),
+                    null,
+                ).setPositiveButton(resources.getString(R.string.auth_basic_sign_in_button)) { _, _ ->
+                    navigateToReLogin()
+                }.show()
         signedOutDialog = WeakReference(dialog)
     }
 
@@ -246,13 +263,17 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         startActivity(i)
     }
 
-    private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        findViewById(android.R.id.content),
-        bottomNav,
-    )
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            findViewById(android.R.id.content),
+            bottomNav,
+        )
 
-    private fun setupDownloadNotifications() = DownloadMonitor.smallIcon(R.drawable.ic_notification_small).tint(primaryColor(this)).observe(this)
+    private fun setupDownloadNotifications() =
+        DownloadMonitor.smallIcon(
+            R.drawable.ic_notification_small,
+        ).tint(primaryColor(this)).observe(this)
 
     private fun primaryColor(context: Context) = context.getColorForAttribute(R.attr.colorPrimary)
 
@@ -262,9 +283,23 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         }
         viewModel.entriesMultiSelection = selectedEntries
         val title = SpannableString(getString(R.string.title_action_mode, selectedEntries.size))
-        title.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)), 0, title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        title.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorActionMode)),
+            0,
+            title.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
 
         actionMode?.title = title
+
+        val isMultiActionsEnabled =
+            CommonRepository().isAllMultiActionsEnabled(
+                mobileConfigDataEntry?.featuresMobile?.menus,
+                viewModel.entriesMultiSelection,
+            )
+
+        actionMode?.menu?.findItem(R.id.move)?.isEnabled = isMultiActionsEnabled
+        actionMode?.menu?.findItem(R.id.more_vert)?.isEnabled = isMultiActionsEnabled
 
         actionBarController?.showHideActionBarLayout(false)
         bottomNav.slideBottom()
@@ -286,7 +321,10 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         actionMode = null
     }
 
-    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onCreateActionMode(
+        mode: ActionMode?,
+        menu: Menu?,
+    ): Boolean {
         mode?.apply {
             val inflater: MenuInflater = menuInflater
             inflater.inflate(R.menu.menu_action_multi_selection, menu)
@@ -295,16 +333,27 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         return false
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(
+        mode: ActionMode?,
+        menu: Menu?,
+    ): Boolean {
         if ((viewModel.path.isNotEmpty() && viewModel.path == getString(com.alfresco.content.browse.R.string.nav_path_trash)) ||
             navHostFragment?.navController?.currentDestination?.id == R.id.nav_offline
         ) {
             menu?.findItem(R.id.move)?.isVisible = false
         }
+
+        menu?.findItem(
+            R.id.move,
+        )?.isEnabled = CommonRepository().isActionEnabled(MenuActions.Move, mobileConfigDataEntry?.featuresMobile?.menus)
+
         return true
     }
 
-    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+    override fun onActionItemClicked(
+        mode: ActionMode?,
+        item: MenuItem?,
+    ): Boolean {
         when (item?.itemId) {
             R.id.move -> {
                 withState(viewModel) { state ->
@@ -330,7 +379,14 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         disableMultiSelection()
     }
 
-    private fun showCreateSheet() = withState(viewModel) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(viewModel.entriesMultiSelection, true)).show(supportFragmentManager, null)
-    }
+    private fun showCreateSheet() =
+        withState(viewModel) {
+            ContextualActionsSheet.with(
+                ContextualActionData.withEntries(
+                    viewModel.entriesMultiSelection,
+                    true,
+                    mobileConfigData = mobileConfigDataEntry,
+                ),
+            ).show(supportFragmentManager, null)
+        }
 }

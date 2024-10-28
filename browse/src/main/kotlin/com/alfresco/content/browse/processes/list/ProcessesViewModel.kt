@@ -26,12 +26,12 @@ class ProcessesViewModel(
     val context: Context,
     private val repository: TaskRepository,
 ) : ProcessListViewModel<ProcessesViewState>(state) {
-
-    val listProcesses = mapOf(
-        ProcessFilters.All.filter to ProcessFilters.All.name,
-        ProcessFilters.Active.filter to ProcessFilters.Running.name,
-        ProcessFilters.Completed.filter to ProcessFilters.Completed.name,
-    )
+    val listProcesses =
+        mapOf(
+            ProcessFilters.All.filter to ProcessFilters.All.name,
+            ProcessFilters.Active.filter to ProcessFilters.Running.name,
+            ProcessFilters.Completed.filter to ProcessFilters.Completed.name,
+        )
 
     var filterName: String = ProcessFilters.Active.filter
     var filterValue: String = ""
@@ -49,7 +49,6 @@ class ProcessesViewModel(
     }
 
     companion object : MavericksViewModelFactory<ProcessesViewModel, ProcessesViewState> {
-
         override fun create(
             viewModelContext: ViewModelContext,
             state: ProcessesViewState,
@@ -58,26 +57,27 @@ class ProcessesViewModel(
 
     override fun refresh() = fetchInitial()
 
-    override fun fetchNextPage() = withState { state ->
-        val newPage = state.page.plus(1)
-        viewModelScope.launch {
-            // Fetch processes data
-            repository::getProcesses.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage),
-            ).execute {
-                when (it) {
-                    is Loading -> copy(request = Loading())
-                    is Fail -> copy(processEntries = emptyList(), request = Fail(it.error))
-                    is Success -> {
-                        update(it()).copy(request = Success(it()))
-                    }
-                    else -> {
-                        this
+    override fun fetchNextPage() =
+        withState { state ->
+            val newPage = state.page.plus(1)
+            viewModelScope.launch {
+                // Fetch processes data
+                repository::getProcesses.asFlow(
+                    TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue, newPage),
+                ).execute {
+                    when (it) {
+                        is Loading -> copy(request = Loading())
+                        is Fail -> copy(processEntries = emptyList(), request = Fail(it.error))
+                        is Success -> {
+                            update(it()).copy(request = Success(it()))
+                        }
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
     override fun emptyMessageArgs(state: ProcessListViewState): Triple<Int, Int, Int> {
         return when (state.request) {
@@ -86,25 +86,26 @@ class ProcessesViewModel(
         }
     }
 
-    private fun fetchInitial() = withState { state ->
-        viewModelScope.launch {
-            // Fetch processes data
-            repository::getProcesses.asFlow(
-                TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue),
-            ).execute {
-                when (it) {
-                    is Loading -> copy(request = Loading())
-                    is Fail -> copy(processEntries = emptyList(), request = Fail(it.error))
-                    is Success -> {
-                        update(it()).copy(request = Success(it()))
-                    }
-                    else -> {
-                        this
+    private fun fetchInitial() =
+        withState { state ->
+            viewModelScope.launch {
+                // Fetch processes data
+                repository::getProcesses.asFlow(
+                    TaskProcessFiltersPayload.updateFilters(state.filterParams, filterValue),
+                ).execute {
+                    when (it) {
+                        is Loading -> copy(request = Loading())
+                        is Fail -> copy(processEntries = emptyList(), request = Fail(it.error))
+                        is Success -> {
+                            update(it()).copy(request = Success(it()))
+                        }
+                        else -> {
+                            this
+                        }
                     }
                 }
             }
         }
-    }
 
     /**
      * Filter applied and execute api

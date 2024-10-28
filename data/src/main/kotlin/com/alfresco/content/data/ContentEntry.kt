@@ -22,7 +22,6 @@ data class ContentEntry(
     val previewStatus: String? = "",
     val thumbnailStatus: String? = "",
 ) : Parcelable {
-
     companion object {
         /**
          * return the ContentEntry obj after converting the data from ContentDataEntry obj

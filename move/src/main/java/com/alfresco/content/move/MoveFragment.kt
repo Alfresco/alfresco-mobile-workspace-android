@@ -62,6 +62,7 @@ class MoveFragment : Fragment(), MavericksView {
         args = MoveArgs.with(requireArguments())
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-    }
+    override fun invalidate() =
+        withState(viewModel) { state ->
+        }
 }

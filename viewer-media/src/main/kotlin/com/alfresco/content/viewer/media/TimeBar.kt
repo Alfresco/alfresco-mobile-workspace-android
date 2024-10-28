@@ -12,11 +12,11 @@ class TimeBar(
     defStyleAttr: Int,
     timeBarAttrs: AttributeSet?,
 ) : DefaultTimeBar(
-    context,
-    attrs,
-    defStyleAttr,
-    timeBarAttrs,
-) {
+        context,
+        attrs,
+        defStyleAttr,
+        timeBarAttrs,
+    ) {
     init {
         val a = context.theme.obtainStyledAttributes(timeBarAttrs, R.styleable.DefaultTimeBar, 0, 0)
         try {
@@ -39,7 +39,10 @@ class TimeBar(
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         this(context, attrs, defStyleAttr, attrs)
 
-    private fun getColorWithAlpha(color: Int, ratio: Float): Int {
+    private fun getColorWithAlpha(
+        color: Int,
+        ratio: Float,
+    ): Int {
         val alpha = (Color.alpha(color) * ratio).roundToInt()
         val r: Int = Color.red(color)
         val g: Int = Color.green(color)

@@ -50,7 +50,6 @@ import java.util.concurrent.Executors
 
 @OptIn(ExperimentalVideo::class)
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
-
     private val viewModel: CaptureViewModel by activityViewModel()
 
     private lateinit var layout: CameraLayout
@@ -118,10 +117,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? =
-        inflater.inflate(R.layout.fragment_camera, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_camera, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         layout = view as CameraLayout
@@ -165,11 +166,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
                 // Select lensFacing depending on the available cameras
                 if (viewModel.lensFacing == -1) {
-                    viewModel.lensFacing = when {
-                        hasBackCamera() -> CameraSelector.LENS_FACING_BACK
-                        hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
-                        else -> throw IllegalStateException("Back and front camera are unavailable")
-                    }
+                    viewModel.lensFacing =
+                        when {
+                            hasBackCamera() -> CameraSelector.LENS_FACING_BACK
+                            hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
+                            else -> throw IllegalStateException("Back and front camera are unavailable")
+                        }
                 }
 
                 // Enable or disable switching between cameras
@@ -185,17 +187,18 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun configureCamera() {
         layout.aspectRatio = viewModel.mode.aspectRatio().toFloat()
 
-        cameraController = AlfrescoCameraController(requireContext()).apply {
-            setEnabledUseCases(useCaseFor(viewModel.mode))
-            setCameraSelector(viewModel.lensFacing)
-            imageCaptureFlashMode = viewModel.flashMode
-        }.also {
-            it.bindToLifecycle(this)
-            it.initializationFuture.addListener({
-                // Update flash button when ready
-                updateFlashControlState()
-            }, ContextCompat.getMainExecutor(requireContext()))
-        }
+        cameraController =
+            AlfrescoCameraController(requireContext()).apply {
+                setEnabledUseCases(useCaseFor(viewModel.mode))
+                setCameraSelector(viewModel.lensFacing)
+                imageCaptureFlashMode = viewModel.flashMode
+            }.also {
+                it.bindToLifecycle(this)
+                it.initializationFuture.addListener({
+                    // Update flash button when ready
+                    updateFlashControlState()
+                }, ContextCompat.getMainExecutor(requireContext()))
+            }
 
         layout.viewFinder.controller = cameraController
 
@@ -211,7 +214,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             CaptureMode.Video -> CameraController.VIDEO_CAPTURE
         }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyDown(
+        keyCode: Int,
+        event: KeyEvent,
+    ): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 // When the volume down button is pressed, simulate a shutter button click
@@ -265,11 +271,12 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         // Setup for button used to switch cameras
         layout.cameraSwitchButton.setOnClickListener {
             loadDefaultSettings()
-            viewModel.lensFacing = if (CameraSelector.LENS_FACING_FRONT == viewModel.lensFacing) {
-                CameraSelector.LENS_FACING_BACK
-            } else {
-                CameraSelector.LENS_FACING_FRONT
-            }
+            viewModel.lensFacing =
+                if (CameraSelector.LENS_FACING_FRONT == viewModel.lensFacing) {
+                    CameraSelector.LENS_FACING_BACK
+                } else {
+                    CameraSelector.LENS_FACING_FRONT
+                }
             cameraController?.setCameraSelector(viewModel.lensFacing)
             cameraController?.imageCaptureFlashMode = viewModel.flashMode
             updateFlashControlState()
@@ -302,16 +309,17 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
         // Create output options object which contains file + metadata
 
-        val outputOptions = when {
-            LocationUtils.isLocationEnabled(requireActivity()) -> {
-                ImageCapture.OutputFileOptions.Builder(photoFile)
-                    .setMetadata(viewModel.getMetaData()).build()
-            }
+        val outputOptions =
+            when {
+                LocationUtils.isLocationEnabled(requireActivity()) -> {
+                    ImageCapture.OutputFileOptions.Builder(photoFile)
+                        .setMetadata(viewModel.getMetaData()).build()
+                }
 
-            else -> {
-                ImageCapture.OutputFileOptions.Builder(photoFile).build()
+                else -> {
+                    ImageCapture.OutputFileOptions.Builder(photoFile).build()
+                }
             }
-        }
 
         // Setup image capture listener which is triggered after photo has been taken
         controller.takePicture(
@@ -366,27 +374,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     override fun onVideoSaved(output: OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(videoFile)
                         Logger.d("Video capture succeeded: $savedUri")
-                        savedUri.path?.let {
-                            val file = File(it)
-                            val length = file.length()
-                            if (length > 0L) {
-                                if (!GetMultipleContents.isFileSizeExceed(length, if (viewModel.isProcessUpload) GetMultipleContents.MAX_FILE_SIZE_10 else GetMultipleContents.MAX_FILE_SIZE_100)) {
-                                    viewModel.onCaptureVideo(savedUri)
-                                    navigateToSave()
-                                } else {
-                                    file.delete()
-                                    Snackbar.make(
-                                        layout.captureDurationView,
-                                        if (viewModel.isProcessUpload) {
-                                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_10)
-                                        } else {
-                                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_100)
-                                        },
-                                        Snackbar.LENGTH_SHORT,
-                                    ).show()
-                                }
-                            }
-                        }
+                        onSavedURI(savedUri)
                     }
 
                     override fun onError(
@@ -402,10 +390,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun configureShutterButton(mode: CaptureMode) {
-        layout.shutterButton.state = when (mode) {
-            CaptureMode.Photo -> ShutterButton.State.Photo
-            CaptureMode.Video -> ShutterButton.State.Video
-        }
+        layout.shutterButton.state =
+            when (mode) {
+                CaptureMode.Photo -> ShutterButton.State.Photo
+                CaptureMode.Video -> ShutterButton.State.Video
+            }
     }
 
     private fun navigateToSave() {
@@ -417,17 +406,48 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private fun showFlashMenu() {
         layout.flashMenu.isVisible = true
         layout.flashMenu.onMenuItemClick = { mode ->
-            viewModel.flashMode = when (mode) {
-                FlashMenuItem.On -> ImageCapture.FLASH_MODE_ON
-                FlashMenuItem.Off -> ImageCapture.FLASH_MODE_OFF
-                FlashMenuItem.Auto -> ImageCapture.FLASH_MODE_AUTO
-            }
+            viewModel.flashMode =
+                when (mode) {
+                    FlashMenuItem.On -> ImageCapture.FLASH_MODE_ON
+                    FlashMenuItem.Off -> ImageCapture.FLASH_MODE_OFF
+                    FlashMenuItem.Auto -> ImageCapture.FLASH_MODE_AUTO
+                }
 
             cameraController?.imageCaptureFlashMode = viewModel.flashMode
             layout.flashButton.setImageResource(flashModeIcon(viewModel.flashMode))
 
             // Hide menu
             layout.flashMenu.isVisible = false
+        }
+    }
+
+    private fun onSavedURI(savedUri: Uri) {
+        savedUri.path?.let {
+            val file = File(it)
+            val length = file.length()
+            if (length > 0L) {
+                val maxFileSize =
+                    if (viewModel.isProcessUpload) {
+                        GetMultipleContents.MAX_FILE_SIZE_10
+                    } else {
+                        GetMultipleContents.MAX_FILE_SIZE_100
+                    }
+                if (!GetMultipleContents.isFileSizeExceed(length, maxFileSize)) {
+                    viewModel.onCaptureVideo(savedUri)
+                    navigateToSave()
+                } else {
+                    file.delete()
+                    Snackbar.make(
+                        layout.captureDurationView,
+                        if (viewModel.isProcessUpload) {
+                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_10)
+                        } else {
+                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_100)
+                        },
+                        Snackbar.LENGTH_SHORT,
+                    ).show()
+                }
+            }
         }
     }
 
@@ -449,24 +469,25 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         layout.flashButton.setImageResource(flashModeIcon(flashMode))
     }
 
-    private fun flashControlEnabled(mode: CaptureMode, controller: AlfrescoCameraController?) =
-        when (mode) {
-            CaptureMode.Photo -> controller?.hasFlashUnit() ?: false
-            CaptureMode.Video -> false
-        }
+    private fun flashControlEnabled(
+        mode: CaptureMode,
+        controller: AlfrescoCameraController?,
+    ) = when (mode) {
+        CaptureMode.Photo -> controller?.hasFlashUnit() ?: false
+        CaptureMode.Video -> false
+    }
 
-    private fun flashModeIcon(@FlashMode flashMode: Int) =
-        when (flashMode) {
-            ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on
-            ImageCapture.FLASH_MODE_OFF -> R.drawable.ic_flash_off
-            else -> R.drawable.ic_flash_auto
-        }
+    private fun flashModeIcon(
+        @FlashMode flashMode: Int,
+    ) = when (flashMode) {
+        ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on
+        ImageCapture.FLASH_MODE_OFF -> R.drawable.ic_flash_off
+        else -> R.drawable.ic_flash_auto
+    }
 
-    private fun hasBackCamera(): Boolean =
-        cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
+    private fun hasBackCamera(): Boolean = cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
 
-    private fun hasFrontCamera(): Boolean =
-        cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
+    private fun hasFrontCamera(): Boolean = cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
     override fun invalidate() {}
 
@@ -482,7 +503,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
     }
 
     private fun invokeLocation() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             when {
                 LocationUtils.isLocationEnabled(requireActivity()) -> {
                     locationData.observe(this) {

@@ -16,16 +16,21 @@ class ContentPickerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestLauncher = registerForActivityResult(GetMultipleContents()) {
-            onResult?.resume(it, null)
-        }
+        requestLauncher =
+            registerForActivityResult(GetMultipleContents()) {
+                onResult?.resume(it, null)
+            }
 
-        requestLauncherSingle = registerForActivityResult(GetSingleContent()) {
-            onResult?.resume(it, null)
-        }
+        requestLauncherSingle =
+            registerForActivityResult(GetSingleContent()) {
+                onResult?.resume(it, null)
+            }
     }
 
-    private suspend fun pickItems(mimeTypes: Array<String>, isMultiple: Boolean): List<Uri> =
+    private suspend fun pickItems(
+        mimeTypes: Array<String>,
+        isMultiple: Boolean,
+    ): List<Uri> =
         suspendCancellableCoroutine { continuation ->
             onResult = continuation
             if (!isMultiple) {

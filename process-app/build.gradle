@@ -1,7 +1,9 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+//    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.0.20'
 }
 
 android {
@@ -79,10 +81,8 @@ dependencies {
     implementation libs.androidx.compose.material.iconsExtended
     debugImplementation libs.androidx.ui.tooling
 
-
     implementation libs.androidx.swiperefreshlayout
     implementation libs.mavericks
     implementation libs.epoxy.core
-    kapt libs.epoxy.processor
-
+    ksp libs.epoxy.processor
 }

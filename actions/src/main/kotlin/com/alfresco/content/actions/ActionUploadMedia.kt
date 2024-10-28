@@ -19,9 +19,13 @@ data class ActionUploadMedia(
     override var entry: Entry,
     override val icon: Int = R.drawable.ic_action_upload_photo,
     override val title: Int = R.string.action_upload_photo_title,
-    override val eventName: EventName = if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) EventName.TaskUploadMedia else EventName.UploadMedia,
+    override val eventName: EventName =
+        if (entry.uploadServer == UploadServerType.UPLOAD_TO_TASK) {
+            EventName.TaskUploadMedia
+        } else {
+            EventName.UploadMedia
+        },
 ) : Action {
-
     private val repository = OfflineRepository()
 
     override suspend fun execute(context: Context): Entry {
@@ -31,7 +35,15 @@ data class ActionUploadMedia(
                 UploadServerType.UPLOAD_TO_TASK, UploadServerType.UPLOAD_TO_PROCESS -> {
                     result.forEach {
                         val fileLength = DocumentFile.fromSingleUri(context, it)?.length() ?: 0L
-                        if (GetMultipleContents.isFileSizeExceed(fileLength, if (entry.observerID.isNotEmpty()) GetMultipleContents.MAX_FILE_SIZE_10 else GetMultipleContents.MAX_FILE_SIZE_100)) {
+                        if (GetMultipleContents.isFileSizeExceed(
+                                fileLength,
+                                if (entry.observerID.isNotEmpty()) {
+                                    GetMultipleContents.MAX_FILE_SIZE_10
+                                } else {
+                                    GetMultipleContents.MAX_FILE_SIZE_100
+                                },
+                            )
+                        ) {
                             throw CancellationException(ERROR_FILE_SIZE_EXCEED)
                         }
                     }
@@ -59,8 +71,10 @@ data class ActionUploadMedia(
 
     override fun copy(_entry: ParentEntry): Action = copy(entry = _entry as Entry)
 
-    override fun showToast(view: View, anchorView: View?) =
-        Action.showToast(view, anchorView, R.string.action_upload_media_toast)
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) = Action.showToast(view, anchorView, R.string.action_upload_media_toast)
 
     private companion object {
         val MIME_TYPES = arrayOf("image/*", "video/*")

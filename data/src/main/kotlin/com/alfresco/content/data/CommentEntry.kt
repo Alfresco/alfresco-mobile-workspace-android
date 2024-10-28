@@ -15,7 +15,6 @@ data class CommentEntry(
     val created: ZonedDateTime? = null,
     val userGroupDetails: UserGroupDetails? = null,
 ) : Parcelable {
-
     companion object {
         /**
          * return the CommentEntry obj after converting the data from CommentDataEntry obj
@@ -32,7 +31,10 @@ data class CommentEntry(
         /**
          * returns the CommentEntry obj by adding message
          */
-        fun addComment(message: String, userGroupDetails: UserGroupDetails): CommentEntry {
+        fun addComment(
+            message: String,
+            userGroupDetails: UserGroupDetails,
+        ): CommentEntry {
             return CommentEntry(
                 message = message,
                 userGroupDetails = userGroupDetails,

@@ -31,7 +31,6 @@ class ImageViewerViewModel(
     state: ImageViewerState,
     context: Context,
 ) : MavericksViewModel<ImageViewerState>(state) {
-
     init {
         if (state.largeScale && !state.uri.isLocalPath()) {
             val output = File(context.cacheDir, TMP_FILE_NAME)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="color_blue_30">#3D2A7DE1</color>
     <color name="alfresco_gray_radio_text_color">@color/white</color>
     <color name="alfresco_gray_radio_text_color_60">@color/white_60</color>
 </resources>

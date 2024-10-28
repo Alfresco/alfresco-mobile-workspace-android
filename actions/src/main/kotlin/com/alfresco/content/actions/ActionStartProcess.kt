@@ -16,7 +16,6 @@ data class ActionStartProcess(
     override val title: Int = R.string.action_start_workflow,
     override val eventName: EventName = EventName.StartWorkflow,
 ) : Action {
-
     override suspend fun execute(context: Context): Entry {
         return entry
     }
@@ -29,5 +28,8 @@ data class ActionStartProcess(
 
     override fun copy(_entries: List<Entry>): Action = copy(entries = _entries)
 
-    override fun showToast(view: View, anchorView: View?) {}
+    override fun showToast(
+        view: View,
+        anchorView: View?,
+    ) {}
 }

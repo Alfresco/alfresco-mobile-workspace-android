@@ -12,7 +12,6 @@ import com.alfresco.content.browse.databinding.ActivityTaskViewerBinding
  * Marked as ProcessDetailActivity class
  */
 class ProcessDetailActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityTaskViewerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +32,10 @@ class ProcessDetailActivity : AppCompatActivity() {
         navController.setGraph(graph, intent.extras)
     }
 
-    private fun setupActionToasts() = Action.showActionToasts(
-        lifecycleScope,
-        binding.parentView,
-        binding.bottomView,
-    )
+    private fun setupActionToasts() =
+        Action.showActionToasts(
+            lifecycleScope,
+            binding.parentView,
+            binding.bottomView,
+        )
 }

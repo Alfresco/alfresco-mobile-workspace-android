@@ -33,11 +33,15 @@ import com.alfresco.content.actions.ActionStartProcess
 import com.alfresco.content.actions.ActionUpdateFileFolder
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.common.EntryListener
+import com.alfresco.content.data.CommonRepository
+import com.alfresco.content.data.CommonRepository.Companion.KEY_FEATURES_MOBILE
 import com.alfresco.content.data.ContextualActionData
 import com.alfresco.content.data.Entry
+import com.alfresco.content.data.MobileConfigDataEntry
 import com.alfresco.content.data.MultiSelection
 import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
+import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.content.listview.ListViewModel.Companion.MULTI_SELECTION_LIMIT
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
@@ -76,7 +80,6 @@ interface ListViewState : MavericksState {
 abstract class ListViewModel<S : ListViewState>(
     initialState: S,
 ) : MavericksViewModel<S>(initialState) {
-
     private val _sharedFlow = MutableSharedFlow<Entry>()
     val sharedFlow = _sharedFlow.asSharedFlow()
     private var folderListener: EntryListener? = null
@@ -94,48 +97,53 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionStartProcess> { onStartProcess(it.entries.ifEmpty { listOf(it.entry) }) }
     }
 
-    private fun onStartProcess(entries: List<Entry>) = entries.run {
-        if (entries.all { it.isFile }) {
-            folderListener?.onProcessStart(entries)
-        }
-    }
-
-    private fun onDelete(action: Action) = action.run {
-        if (action.entries.isNotEmpty()) {
-            refresh()
-        } else {
-            val entry = (action.entry as Entry)
-            if (entry.isFile) {
-                removeEntry(entry)
-            } else {
-                refresh()
+    private fun onStartProcess(entries: List<Entry>) =
+        entries.run {
+            if (entries.all { it.isFile }) {
+                folderListener?.onProcessStart(entries)
             }
         }
-    }
 
-    private fun onCreateFolder(entry: Entry) = entry.run {
-        refresh()
-        if (entry.isFolder) {
-            folderListener?.onEntryCreated(entry)
+    private fun onDelete(action: Action) =
+        action.run {
+            if (action.entries.isNotEmpty()) {
+                refresh()
+            } else {
+                val entry = (action.entry as Entry)
+                if (entry.isFile) {
+                    removeEntry(entry)
+                } else {
+                    refresh()
+                }
+            }
         }
-    }
 
-    private fun onMove(action: ActionMoveFilesFolders) = action.run {
-        action.entries.forEach {
-            removeEntry(it)
+    private fun onCreateFolder(entry: Entry) =
+        entry.run {
+            refresh()
+            if (entry.isFolder) {
+                folderListener?.onEntryCreated(entry)
+            }
         }
-        refresh()
-    }
+
+    private fun onMove(action: ActionMoveFilesFolders) =
+        action.run {
+            action.entries.forEach {
+                removeEntry(it)
+            }
+            refresh()
+        }
 
     @Suppress("UNCHECKED_CAST")
-    fun removeEntry(entry: Entry) =
-        setState { copyRemoving(entry) as S }
+    fun removeEntry(entry: Entry) = setState { copyRemoving(entry) as S }
 
     @Suppress("UNCHECKED_CAST")
-    private fun updateEntry(entry: Entry) =
-        setState { copyUpdating(entry) as S }
+    private fun updateEntry(entry: Entry) = setState { copyUpdating(entry) as S }
 
-    private fun updateActionEntries(entry: Entry, entries: List<Entry>) {
+    private fun updateActionEntries(
+        entry: Entry,
+        entries: List<Entry>,
+    ) {
         if (entries.isNotEmpty()) {
             entries.forEach { obj ->
                 updateEntry(obj)
@@ -145,7 +153,10 @@ abstract class ListViewModel<S : ListViewState>(
         }
     }
 
-    private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
+    private fun <T> List<T>.replace(
+        newValue: T,
+        block: (T) -> Boolean,
+    ): List<T> {
         return map {
             if (block(it)) newValue else it
         }
@@ -159,8 +170,11 @@ abstract class ListViewModel<S : ListViewState>(
     }
 
     abstract fun refresh()
+
     abstract fun fetchNextPage()
+
     abstract fun emptyMessageArgs(state: ListViewState): Triple<Int, Int, Int>
+
     open fun resetMaxLimitError() {}
 
     companion object {
@@ -192,7 +206,10 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private var isViewRequiredMultiSelection = false
     var bottomMoveButtonLayout: ConstraintLayout? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         loadingAnimation = view.findViewById(R.id.loading_animation)
@@ -217,51 +234,61 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
 
         viewModel.setListener(this)
 
-        epoxyController.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // @see: https://github.com/airbnb/epoxy/issues/224
-                    recyclerView.layoutManager?.scrollToPosition(0)
+        epoxyController.adapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(
+                    positionStart: Int,
+                    itemCount: Int,
+                ) {
+                    if (positionStart == 0) {
+                        // @see: https://github.com/airbnb/epoxy/issues/224
+                        recyclerView.layoutManager?.scrollToPosition(0)
+                    }
+                }
+            },
+        )
+    }
+
+    override fun invalidate() =
+        withState(viewModel) { state ->
+
+            if (viewModel.longPressHandled) {
+                if (state.selectedEntries.isEmpty()) {
+                    MultiSelection.multiSelectionChangedFlow.tryEmit(
+                        MultiSelectionData(
+                            selectedEntries = state.selectedEntries,
+                            isMultiSelectionEnabled = false,
+                        ),
+                    )
+                } else {
+                    MultiSelection.multiSelectionChangedFlow.tryEmit(
+                        MultiSelectionData(
+                            selectedEntries = state.selectedEntries,
+                            isMultiSelectionEnabled = true,
+                        ),
+                    )
                 }
             }
-        })
-    }
 
-    override fun invalidate() = withState(viewModel) { state ->
-
-        if (viewModel.longPressHandled) {
-            if (state.selectedEntries.isEmpty()) {
-                MultiSelection.multiSelectionChangedFlow.tryEmit(
-                    MultiSelectionData(
-                        selectedEntries = state.selectedEntries,
-                        isMultiSelectionEnabled = false,
-                    ),
-                )
-            } else {
-                MultiSelection.multiSelectionChangedFlow.tryEmit(
-                    MultiSelectionData(
-                        selectedEntries = state.selectedEntries,
-                        isMultiSelectionEnabled = true,
-                    ),
-                )
+            if (state.maxLimitReachedForMultiSelection) {
+                Snackbar.make(
+                    recyclerView,
+                    String.format(getString(R.string.warning_max_item_multi_selection), MULTI_SELECTION_LIMIT),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
+                viewModel.resetMaxLimitError()
             }
+            loadingAnimation.isVisible =
+                state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
+
+            uploadButton?.isEnabled = state.request is Success
+
+            if (state.request.complete) {
+                refreshLayout.isRefreshing = false
+            }
+
+            epoxyController.requestModelBuild()
         }
-
-        if (state.maxLimitReachedForMultiSelection) {
-            Snackbar.make(recyclerView, String.format(getString(R.string.warning_max_item_multi_selection), MULTI_SELECTION_LIMIT), Snackbar.LENGTH_SHORT).show()
-            viewModel.resetMaxLimitError()
-        }
-        loadingAnimation.isVisible =
-            state.request is Loading && state.entries.isEmpty() && !refreshLayout.isRefreshing
-
-        uploadButton?.isEnabled = state.request is Success
-
-        if (state.request.complete) {
-            refreshLayout.isRefreshing = false
-        }
-
-        epoxyController.requestModelBuild()
-    }
 
     /**
      * Disable refresh layout while sharing files
@@ -286,91 +313,106 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
         this.isViewRequiredMultiSelection = isViewRequiredMultiSelection
     }
 
-    private fun epoxyController() = simpleController(viewModel) { state ->
-        if (state.entries.isEmpty() && state.request.complete) {
-            val args = viewModel.emptyMessageArgs(state)
-            listViewMessage {
-                id("empty_message")
-                iconRes(args.first)
-                title(args.second)
-                message(args.third)
-            }
-        } else if (state.entries.isNotEmpty()) {
-            val selectedEntries = state.entries.find { obj -> obj.isSelectedForMultiSelection }
-            if (selectedEntries == null) {
-                disableLongPress()
-            }
+    private fun epoxyController() =
+        simpleController(viewModel) { state ->
+            if (state.entries.isEmpty() && state.request.complete) {
+                val args = viewModel.emptyMessageArgs(state)
+                listViewMessage {
+                    id("empty_message")
+                    iconRes(args.first)
+                    title(args.second)
+                    message(args.third)
+                }
+            } else if (state.entries.isNotEmpty()) {
+                val selectedEntries = state.entries.find { obj -> obj.isSelectedForMultiSelection }
+                if (selectedEntries == null) {
+                    disableLongPress()
+                }
 
-            state.entries.forEach {
-                if (it.type == Entry.Type.GROUP) {
-                    listViewGroupHeader {
-                        id(it.name)
-                        title(it.name)
-                    }
-                } else {
-                    listViewRow {
-                        id(stableId(it))
-                        data(it)
-                        compact(state.isCompact)
-                        multiSelection(state.selectedEntries.isNotEmpty())
-                        clickListener { model, _, _, _ ->
-                            if (!viewModel.longPressHandled) {
-                                onItemClicked(model.data())
-                            } else if (model.data().id.isNotEmpty()) {
-                                onItemLongClicked(model.data())
-                            }
+                state.entries.forEach {
+                    if (it.type == Entry.Type.GROUP) {
+                        listViewGroupHeader {
+                            id(it.name)
+                            title(it.name)
                         }
-                        if (isViewRequiredMultiSelection) {
-                            longClickListener { model, _, _, _ ->
-                                if (!viewModel.longPressHandled && model.data().id.isNotEmpty()) {
-                                    enableLongPress()
+                    } else {
+                        val menus =
+                            getJsonFromSharedPrefs<MobileConfigDataEntry>(requireContext(), KEY_FEATURES_MOBILE)?.featuresMobile
+                                ?.menus
+                        val menuActionsEnabled = CommonRepository().isAllSingleActionsEnabled(menus, it)
+
+                        listViewRow {
+                            id(stableId(it))
+                            data(it)
+                            compact(state.isCompact)
+                            menuAction(menuActionsEnabled)
+                            multiSelection(state.selectedEntries.isNotEmpty())
+                            clickListener { model, _, _, _ ->
+                                if (!viewModel.longPressHandled) {
+                                    onItemClicked(model.data())
+                                } else if (model.data().id.isNotEmpty()) {
                                     onItemLongClicked(model.data())
-                                    true
-                                } else {
-                                    false
                                 }
                             }
+                            if (isViewRequiredMultiSelection) {
+                                longClickListener { model, _, _, _ ->
+                                    if (!viewModel.longPressHandled && model.data().id.isNotEmpty()) {
+                                        enableLongPress()
+                                        onItemLongClicked(model.data())
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
+                            }
+                            moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
                         }
-                        moreClickListener { model, _, _, _ -> onItemMoreClicked(model.data()) }
                     }
                 }
-            }
 
-            if (state.hasMoreItems) {
-                if (state.request is Loading) {
-                    listViewPageLoading {
-                        id("loading at ${state.entries.size}")
-                    }
-                } else {
-                    // On failure delay creating the boundary so that the list scrolls up
-                    // and the user has to scroll back down to activate a retry
-                    val isFail = state.request is Fail
-                    if (isFail && !delayedBoundary) {
-                        delayedBoundary = true
-                        Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
-                    } else {
-                        if (isFail) {
-                            delayedBoundary = false
+                if (state.hasMoreItems) {
+                    if (state.request is Loading) {
+                        listViewPageLoading {
+                            id("loading at ${state.entries.size}")
                         }
-                        listViewPageBoundary {
-                            id("boundary at ${state.entries.size}")
-                            onBind { _, _, _ -> viewModel.fetchNextPage() }
+                    } else {
+                        // On failure delay creating the boundary so that the list scrolls up
+                        // and the user has to scroll back down to activate a retry
+                        val isFail = state.request is Fail
+                        if (isFail && !delayedBoundary) {
+                            delayedBoundary = true
+                            Handler(Looper.getMainLooper()).postDelayed({ this.requestModelBuild() }, 300)
+                        } else {
+                            if (isFail) {
+                                delayedBoundary = false
+                            }
+                            listViewPageBoundary {
+                                id("boundary at ${state.entries.size}")
+                                onBind { _, _, _ -> viewModel.fetchNextPage() }
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     private fun stableId(entry: Entry): String =
         if (entry.isUpload) {
             entry.boxId.toString()
-        } else entry.id
+        } else {
+            entry.id
+        }
 
     abstract fun onItemClicked(entry: Entry)
+
     open fun onItemLongClicked(entry: Entry) {}
 
     open fun onItemMoreClicked(entry: Entry) {
-        ContextualActionsSheet.with(ContextualActionData.withEntries(listOf(entry))).show(childFragmentManager, null)
+        ContextualActionsSheet.with(
+            ContextualActionData.withEntries(
+                listOf(entry),
+                mobileConfigData = getJsonFromSharedPrefs(requireContext(), KEY_FEATURES_MOBILE),
+            ),
+        ).show(childFragmentManager, null)
     }
 }

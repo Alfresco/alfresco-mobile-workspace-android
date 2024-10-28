@@ -93,4 +93,6 @@
 
     <string name="workflows_unavailable_title">Workflows non disponibles</string>
     <string name="workflow_unavailable_message">Les workflows apparaîtront ici lorsqu\'ils seront créés.</string>
+    <string name="no_actions_available_title">Aucune action disponible</string>
+    <string name="no_actions_available_message">Contactez votre administrateur pour obtenir de l\'aide.</string>
 </resources>

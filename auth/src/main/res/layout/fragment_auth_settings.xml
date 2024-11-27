@@ -2,9 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
-        <import type="android.view.View" />
-
         <variable
             name="viewModel"
             type="com.alfresco.auth.activity.LoginViewModel" />
@@ -12,10 +9,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize"
         android:background="?attr/colorSurface"
-        android:fillViewport="true"
-        android:paddingTop="?attr/actionBarSize">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,164 +21,140 @@
             android:paddingStart="@dimen/auth_theme_default_padding"
             android:paddingEnd="@dimen/auth_theme_default_padding">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/auth_settings_header_height">
+
+                <TextView
+                    android:id="@+id/tvProtocolTitle"
+                    style="@style/Widget.Alfresco.Auth.SectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
+                    android:text="@string/auth_settings_transport_section" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/tvProtocol"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+
+                <TextView
+                    style="@style/Widget.Alfresco.Auth.SectionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@id/tvProtocolSwitch"
+                    android:enabled="@{viewModel.authConfigEditor.https}"
+                    android:text="@string/auth_settings_transport_https"
+                    android:textColor="@color/alfresco_text_primary_color" />
+
+                <com.alfresco.ui.components.Switch
+                    android:id="@+id/tvProtocolSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:checked="@={viewModel.authConfigEditor.https}"
+                    android:onClick="@{(v) -> viewModel.authConfigEditor.onHttpsToggle()}"
+                    android:onTouchEvent="@{(v, e) -> viewModel.authConfigEditor.onHttpsToggle()}" />
+            </RelativeLayout>
+
             <com.alfresco.ui.components.TextInputLayout
-                android:id="@+id/til_auth_type"
+                android:id="@+id/tilPort"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="AuthType">
+                android:hint="@string/auth_settings_transport_port">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_auth_type"
+                    android:id="@+id/etPort"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:maxLines="1"
-                    android:text="@={viewModel.authConfigEditor.authTypeName}" />
+                    android:text="@={viewModel.authConfigEditor.port}" />
+
             </com.alfresco.ui.components.TextInputLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_keycloak"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/auth_settings_header_height"
+                android:layout_marginTop="@dimen/auth_settings_section_spacing">
+
+                <TextView
+                    style="@style/Widget.Alfresco.Auth.SectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
+                    android:text="@string/auth_settings_service_section" />
+            </FrameLayout>
+
+            <com.alfresco.ui.components.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="@{viewModel.authConfigEditor.authTypeValue.equals(&quot;pkce&quot;)? View.VISIBLE: View.GONE}">
+                android:hint="@string/auth_settings_service_path">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/auth_settings_header_height">
-
-                    <TextView
-                        android:id="@+id/tvProtocolTitle"
-                        style="@style/Widget.Alfresco.Auth.SectionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
-                        android:text="@string/auth_settings_transport_section" />
-                </FrameLayout>
-
-                <RelativeLayout
-                    android:id="@+id/tvProtocol"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp">
-
-                    <TextView
-                        style="@style/Widget.Alfresco.Auth.SectionText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_toStartOf="@id/tvProtocolSwitch"
-                        android:enabled="@{viewModel.authConfigEditor.https}"
-                        android:text="@string/auth_settings_transport_https"
-                        android:textColor="@color/alfresco_text_primary_color" />
-
-                    <com.alfresco.ui.components.Switch
-                        android:id="@+id/tvProtocolSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:checked="@={viewModel.authConfigEditor.https}"
-                        android:onClick="@{(v) -> viewModel.authConfigEditor.onHttpsToggle()}"
-                        android:onTouchEvent="@{(v, e) -> viewModel.authConfigEditor.onHttpsToggle()}" />
-                </RelativeLayout>
-
-                <com.alfresco.ui.components.TextInputLayout
-                    android:id="@+id/tilPort"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/auth_settings_transport_port">
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:text="@={viewModel.authConfigEditor.contentServicePath}" />
+            </com.alfresco.ui.components.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPort"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:maxLines="1"
-                        android:text="@={viewModel.authConfigEditor.port}" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/auth_settings_header_height"
+                android:layout_marginTop="@dimen/auth_settings_section_spacing">
 
-                </com.alfresco.ui.components.TextInputLayout>
+                <TextView
+                    android:id="@+id/tvAuthentication"
+                    style="@style/Widget.Alfresco.Auth.SectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
+                    android:text="@string/auth_settings_auth_section" />
+            </FrameLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/auth_settings_header_height"
-                    android:layout_marginTop="@dimen/auth_settings_section_spacing">
+            <com.alfresco.ui.components.TextInputLayout
+                android:id="@+id/tilRealm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/auth_settings_auth_realm">
 
-                    <TextView
-                        style="@style/Widget.Alfresco.Auth.SectionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
-                        android:text="@string/auth_settings_service_section" />
-                </FrameLayout>
-
-                <com.alfresco.ui.components.TextInputLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRealm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/auth_settings_service_path">
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:text="@={viewModel.authConfigEditor.realm}" />
+            </com.alfresco.ui.components.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textNoSuggestions"
-                        android:maxLines="1"
-                        android:text="@={viewModel.authConfigEditor.contentServicePath}" />
-                </com.alfresco.ui.components.TextInputLayout>
+            <com.alfresco.ui.components.TextInputLayout
+                android:id="@+id/tilClientId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/auth_settings_auth_client_id">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/auth_settings_header_height"
-                    android:layout_marginTop="@dimen/auth_settings_section_spacing">
-
-                    <TextView
-                        android:id="@+id/tvAuthentication"
-                        style="@style/Widget.Alfresco.Auth.SectionText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/auth_settings_header_title_offset"
-                        android:text="@string/auth_settings_auth_section" />
-                </FrameLayout>
-
-                <com.alfresco.ui.components.TextInputLayout
-                    android:id="@+id/tilRealm"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etClientId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/auth_settings_auth_realm">
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:text="@={viewModel.authConfigEditor.clientId}" />
+            </com.alfresco.ui.components.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRealm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textNoSuggestions"
-                        android:maxLines="1"
-                        android:text="@={viewModel.authConfigEditor.realm}" />
-                </com.alfresco.ui.components.TextInputLayout>
-
-                <com.alfresco.ui.components.TextInputLayout
-                    android:id="@+id/tilClientId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:hint="@string/auth_settings_auth_client_id">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etClientId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|textNoSuggestions"
-                        android:maxLines="1"
-                        android:text="@={viewModel.authConfigEditor.clientId}" />
-                </com.alfresco.ui.components.TextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"

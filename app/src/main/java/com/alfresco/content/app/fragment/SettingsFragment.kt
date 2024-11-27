@@ -90,8 +90,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun logout() {
         val acc = SessionManager.requireSession.account
         val i = Intent(context, LogoutActivity::class.java)
-        i.putExtra(LogoutViewModel.EXTRA_HOST_NAME, acc.hostName)
-        i.putExtra(LogoutViewModel.EXTRA_CLIENT_ID, acc.clientId)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_TYPE, acc.authType)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LogoutViewModel.EXTRA_AUTH_STATE, acc.authState)

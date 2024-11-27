@@ -77,17 +77,19 @@
                     android:scheme="androidacsapp" />
             </intent-filter>
 
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="demo" />
-            </intent-filter>-->
+                    android:host="*.auth0.com"
+                    android:scheme="demo"
+                    android:path="/android/com.alfresco.content.app.debug/callback"/>
+            </intent-filter>
 
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -96,7 +98,7 @@
                 <data
                     android:host="callback"
                     android:scheme="alfrescomobile" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.alfresco.content.browse.preview.LocalPreviewActivity"

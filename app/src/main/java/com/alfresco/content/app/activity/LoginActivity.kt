@@ -64,8 +64,6 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.displayName ?: "",
                 person.email,
                 myFiles,
-                credentials.hostName,
-                credentials.clientId,
             )
         } else {
             val current = Account.getAccount(applicationContext)
@@ -82,8 +80,6 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
                 person.displayName ?: "",
                 person.email,
                 myFiles,
-                credentials.hostName,
-                credentials.clientId,
             )
         }
     }

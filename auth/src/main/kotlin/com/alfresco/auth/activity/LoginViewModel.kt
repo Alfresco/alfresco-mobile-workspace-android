@@ -11,19 +11,19 @@ import androidx.lifecycle.viewModelScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.AuthType
-import com.alfresco.auth.config.defaultAuth0Config
-import com.alfresco.auth.config.defaultKeycloakConfig
+import com.alfresco.auth.AuthTypeProvider
+import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
+import com.alfresco.auth.data.OAuth2Data
 import com.alfresco.auth.ui.AuthenticationViewModel
-import com.alfresco.content.data.OptionsModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val applicationContext: Context,
-    val authType: AuthType?,
+    authType: AuthType?,
     authState: String?,
     authConfig: AuthConfig?,
     endpoint: String?,
@@ -59,9 +59,7 @@ class LoginViewModel(
     val canonicalApplicationUrl: String
         get() {
             return previousAppEndpoint
-                ?: if (authType == AuthType.PKCE) {
-                    discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
-                } else discoveryService.oidcUrl(applicationUrl.value!!).toString()
+                ?: discoveryService.contentServiceUrl(applicationUrl.value!!, authConfig.authType).toString()
         }
 
     // Used for display purposes
@@ -98,11 +96,14 @@ class LoginViewModel(
     }
 
     fun startEditing() {
-        authConfigEditor = AuthConfigEditor(context)
+        authConfigEditor = AuthConfigEditor()
         authConfigEditor.reset(authConfig)
     }
 
     fun connect() {
+
+        println("connect to server")
+
         isLoading.value = true
 
         try {
@@ -112,33 +113,68 @@ class LoginViewModel(
         }
     }
 
-    private fun onAuthType(authType: AuthType) {
+    private fun onAuthType(authType: AuthType, oAuth2Data: OAuth2Data?) {
+
+        println("LoginViewModel.onAuthType 1 ==== $oAuth2Data")
+
+
+        if (oAuth2Data != null && oAuth2Data.secret.isNotEmpty()) {
+
+            println("LoginViewModel.onAuthType 2 ==== ${Uri.parse(oAuth2Data.host).host}")
+
+            val host = Uri.parse(oAuth2Data.host).host ?: ""
+
+            var additionalParams = mutableMapOf<String, String>()
+
+            if (oAuth2Data.audience.isNotEmpty()) {
+
+                val key = OAuth2Data::audience.name
+                val value = oAuth2Data.audience
+
+                additionalParams[key] = value
+
+            }
+
+            authConfig = AuthConfig(
+                https = authConfig.https,
+                port = "",
+                contentServicePath = "",
+                realm = "",
+                clientId = oAuth2Data.clientId,
+                redirectUrl = "demo://$host/android/com.alfresco.content.app.debug/callback",
+                host = host,
+                secret = oAuth2Data.secret,
+                scope = oAuth2Data.scope,
+                authType = AuthTypeProvider.NEW_IDP,
+                additionalParams = additionalParams
+            )
+        }
+
         when (authType) {
             AuthType.PKCE -> {
                 viewModelScope.launch {
-                    val isContentServicesInstalled =
-                        withContext(Dispatchers.IO) {
-                            discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
+
+                    when (authConfig.authType) {
+                        AuthTypeProvider.NEW_IDP -> {
+                            applicationUrl.value = identityUrl.value
+                            moveToStep(Step.EnterPkceCredentials)
                         }
 
-                    if (isContentServicesInstalled) {
-                        applicationUrl.value = identityUrl.value
-                        moveToStep(Step.EnterPkceCredentials)
-                    } else {
-                        moveToStep(Step.InputAppServer)
+                        else -> {
+                            val isContentServicesInstalled =
+                                withContext(Dispatchers.IO) {
+                                    discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
+                                }
+                            if (isContentServicesInstalled) {
+                                applicationUrl.value = identityUrl.value
+                                moveToStep(Step.EnterPkceCredentials)
+                            } else {
+                                moveToStep(Step.InputAppServer)
+                            }
+                        }
                     }
-                }
-            }
 
-            AuthType.OIDC -> {
-                viewModelScope.launch {
-                    val isOIDCInstalled = withContext(Dispatchers.IO) {
-                        discoveryService.isOIDCInstalled(identityUrl.value ?: "")
-                    }
-                    if (isOIDCInstalled) {
-                        applicationUrl.value = identityUrl.value
-                        moveToStep(Step.EnterAuth0Credentials)
-                    }
+
                 }
             }
 
@@ -156,6 +192,7 @@ class LoginViewModel(
         isLoading.value = true
 
         val endpoint = requireNotNull(identityUrl.value)
+        println("LoginViewModel.ssoLogin entered ==== $endpoint")
         pkceLogin(endpoint, authConfig, previousAuthState)
     }
 
@@ -188,7 +225,7 @@ class LoginViewModel(
         val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
         val configJson = sharedPrefs.getString(SHARED_PREFS_CONFIG_KEY, null) ?: ""
 
-        authConfig = AuthConfig.jsonDeserialize(configJson) ?: AuthConfig.defaultKeycloakConfig
+        authConfig = AuthConfig.jsonDeserialize(configJson) ?: AuthConfig.defaultConfig
     }
 
     fun saveConfigChanges() {
@@ -225,7 +262,7 @@ class LoginViewModel(
                 applicationUrl.value = identityUrl.value
             }
 
-            Step.EnterPkceCredentials, Step.EnterAuth0Credentials -> {
+            Step.EnterPkceCredentials -> {
             }
 
             Step.Cancelled -> {
@@ -240,7 +277,6 @@ class LoginViewModel(
         InputAppServer,
         EnterBasicCredentials,
         EnterPkceCredentials,
-        EnterAuth0Credentials,
         Cancelled,
     }
 
@@ -310,36 +346,20 @@ class LoginViewModel(
         }
     }
 
-    class AuthConfigEditor(val context: Context) {
+    class AuthConfigEditor {
         private lateinit var source: AuthConfig
         private val _changed = MediatorLiveData<Boolean>()
 
-        val authTypeValue = MutableLiveData<String>()
-        val authTypeName = MutableLiveData<String>()
         val https = MutableLiveData<Boolean>()
         val port = MutableLiveData<String>()
         val contentServicePath = MutableLiveData<String>()
         val realm = MutableLiveData<String>()
         val clientId = MutableLiveData<String>()
         private var redirectUrl: String = ""
-        private var scheme: String = ""
 
         val changed: LiveData<Boolean> get() = _changed
 
-        val listAuthType = listOf(
-            OptionsModel(
-                id = AuthType.PKCE.value,
-                name = context.getString(R.string.text_auth_keycloak),
-            ),
-            OptionsModel(
-                id = AuthType.OIDC.value,
-                name = context.getString(R.string.text_auth_oidc_auth0),
-            ),
-        )
-
         init {
-            _changed.addSource(authTypeValue, this::onChange)
-            _changed.addSource(authTypeName, this::onChange)
             _changed.addSource(https, this::onChange)
             _changed.addSource(port, this::onChange)
             _changed.addSource(contentServicePath, this::onChange)
@@ -357,15 +377,6 @@ class LoginViewModel(
          */
         fun onHttpsToggle() {
             port.value = if (https.value == true) DEFAULT_HTTPS_PORT else DEFAULT_HTTP_PORT
-        }
-
-        fun onAuthChange(authName: String, authValue: String) {
-            authTypeName.value = authName
-            authTypeValue.value = authValue
-            when (authValue.lowercase()) {
-                AuthType.PKCE.value.lowercase() -> load(AuthConfig.defaultKeycloakConfig)
-                AuthType.OIDC.value.lowercase() -> load(AuthConfig.defaultAuth0Config)
-            }
         }
 
         private fun onChange(
@@ -391,22 +402,16 @@ class LoginViewModel(
 
         fun resetToDefaultConfig() {
             // Source is not changed as resetting to default does not commit changes
-            when (authTypeValue.value?.lowercase()) {
-                AuthType.PKCE.value.lowercase() -> load(AuthConfig.defaultKeycloakConfig)
-                AuthType.OIDC.value.lowercase() -> load(AuthConfig.defaultAuth0Config)
-            }
+            load(AuthConfig.defaultConfig)
         }
 
         private fun load(config: AuthConfig) {
-            authTypeName.value = listAuthType.find { it.id == config.authType }?.name ?: ""
-            authTypeValue.value = config.authType
             https.value = config.https
             port.value = config.port
             contentServicePath.value = config.contentServicePath
             realm.value = config.realm
             clientId.value = config.clientId
             redirectUrl = config.redirectUrl
-            scheme = config.scheme
             onChange()
         }
 
@@ -418,8 +423,6 @@ class LoginViewModel(
                 realm = realm.value ?: "",
                 clientId = clientId.value ?: "",
                 redirectUrl = redirectUrl,
-                scheme = scheme,
-                authType = authTypeValue.value ?: "",
             )
         }
 

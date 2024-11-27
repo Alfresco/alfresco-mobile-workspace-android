@@ -17,16 +17,11 @@ import com.alfresco.android.aims.databinding.FragmentAuthSettingsBinding
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.FragmentBuilder
-import com.alfresco.content.component.ComponentBuilder
-import com.alfresco.content.component.ComponentData
-import com.alfresco.content.component.ComponentType
-import com.alfresco.content.setSafeOnClickListener
 import com.google.android.material.snackbar.Snackbar
 
 class AdvancedSettingsFragment : DialogFragment() {
     private val viewModel: LoginViewModel by activityViewModels()
     private val rootView: View get() = requireView()
-    private lateinit var binding: FragmentAuthSettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,22 +34,11 @@ class AdvancedSettingsFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth_settings, container, false)
+        val binding = DataBindingUtil.inflate<FragmentAuthSettingsBinding>(inflater, R.layout.fragment_auth_settings, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         viewModel.startEditing()
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.tieAuthType.inputType = 0
-        binding.tieAuthType.setOnFocusChangeListener { textView, hasFocus ->
-            if (hasFocus) textView.performClick()
-        }
-        binding.tieAuthType.setSafeOnClickListener {
-            openAuthSelection()
-        }
     }
 
     override fun onStart() {
@@ -89,33 +73,8 @@ class AdvancedSettingsFragment : DialogFragment() {
                 viewModel.authConfigEditor.resetToDefaultConfig()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun openAuthSelection() {
-        val authName = viewModel.authConfigEditor.authTypeName.value ?: ""
-        val authValue = viewModel.authConfigEditor.authTypeValue.value ?: ""
-
-        val componentData = ComponentData.with(
-            outcomes = viewModel.authConfigEditor.listAuthType,
-            name = authName,
-            query = authValue,
-            title = binding.tilAuthType.hint.toString(),
-            selector = ComponentType.DROPDOWN_RADIO.value,
-        )
-        ComponentBuilder(requireContext(), componentData)
-            .onApply { name, query, _ ->
-                viewModel.authConfigEditor.onAuthChange(name, query)
-            }
-            .onReset { name, query, _ ->
-                viewModel.authConfigEditor.onAuthChange(name, query)
-            }
-            .onCancel {
-                viewModel.authConfigEditor.onAuthChange(authName, authValue)
-            }
-            .show()
     }
 
     class Builder(parent: FragmentActivity) : FragmentBuilder(parent) {

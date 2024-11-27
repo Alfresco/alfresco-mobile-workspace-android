@@ -9,11 +9,9 @@ import com.alfresco.auth.ui.EndSessionViewModel
 import com.alfresco.common.getViewModel
 import org.json.JSONException
 
-class LogoutViewModel(context: Context, authType: AuthType?, authState: String, authConfig: AuthConfig, serverURL: String, clientId: String) :
-    EndSessionViewModel(context, authType, authState, authConfig, serverURL, clientId) {
+class LogoutViewModel(context: Context, authType: AuthType?, authState: String, authConfig: AuthConfig) :
+    EndSessionViewModel(context, authType, authState, authConfig) {
     companion object {
-        const val EXTRA_HOST_NAME = "host_name"
-        const val EXTRA_CLIENT_ID = "client_id"
         const val EXTRA_AUTH_TYPE = "authType"
         const val EXTRA_AUTH_STATE = "authState"
         const val EXTRA_AUTH_CONFIG = "authConfig"
@@ -26,8 +24,6 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
 
             val stateString = bundle.getString(EXTRA_AUTH_STATE)
             val configString = bundle.getString(EXTRA_AUTH_CONFIG)
-            val hostName = bundle.getString(EXTRA_HOST_NAME)
-            val clientId = bundle.getString(EXTRA_CLIENT_ID)
             val authType = bundle.getString(EXTRA_AUTH_TYPE)?.let { AuthType.fromValue(it) }
 
             val config =
@@ -38,16 +34,13 @@ class LogoutViewModel(context: Context, authType: AuthType?, authState: String, 
                         null
                     }
                 } catch (ex: JSONException) {
-                    ex.printStackTrace()
-                null
-            }
+                    null
+                }
 
             requireNotNull(stateString)
-            requireNotNull(hostName)
-            requireNotNull(clientId)
             requireNotNull(config)
 
-            return LogoutViewModel(context, authType, stateString, config, hostName, clientId)
+            return LogoutViewModel(context, authType, stateString, config)
         }
     }
 }

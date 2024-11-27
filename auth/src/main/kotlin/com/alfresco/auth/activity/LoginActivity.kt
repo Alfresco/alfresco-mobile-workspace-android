@@ -99,7 +99,11 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
             LoginViewModel.Step.InputIdentityServer -> InputIdentityFragment.with(this).display()
             LoginViewModel.Step.InputAppServer -> InputServerFragment.with(this).display()
             LoginViewModel.Step.EnterBasicCredentials -> BasicAuthFragment.with(this).display()
-            LoginViewModel.Step.EnterPkceCredentials, LoginViewModel.Step.EnterAuth0Credentials -> viewModel.ssoLogin()
+            LoginViewModel.Step.EnterPkceCredentials -> {
+                println("LoginActivity.onMoveToStep EnterPkceCredentials")
+                viewModel.ssoLogin()
+            }
+
             LoginViewModel.Step.Cancelled -> finish()
         }
     }

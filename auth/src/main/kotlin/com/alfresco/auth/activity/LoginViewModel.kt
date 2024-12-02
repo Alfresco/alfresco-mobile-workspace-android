@@ -110,42 +110,41 @@ class LoginViewModel(
         }
     }
 
-    private fun onAuthType(authType: AuthType, oAuth2Data: OAuth2Data?) {
-
+    private fun onAuthType(
+        authType: AuthType,
+        oAuth2Data: OAuth2Data?,
+    ) {
         if (oAuth2Data != null && oAuth2Data.secret.isNotEmpty()) {
-
             val host = Uri.parse(oAuth2Data.host).host ?: ""
 
             var additionalParams = mutableMapOf<String, String>()
 
             if (oAuth2Data.audience.isNotEmpty()) {
-
                 val key = OAuth2Data::audience.name
                 val value = oAuth2Data.audience
 
                 additionalParams[key] = value
-
             }
 
-            authConfig = AuthConfig(
-                https = authConfig.https,
-                port = "",
-                contentServicePath = "",
-                realm = "",
-                clientId = oAuth2Data.clientId,
-                redirectUrl = "demo://$host/android/com.alfresco.content.app.debug/callback",
-                host = host,
-                secret = oAuth2Data.secret,
-                scope = oAuth2Data.scope,
-                authType = AuthTypeProvider.NEW_IDP,
-                additionalParams = additionalParams
-            )
+            authConfig =
+                AuthConfig(
+                    https = authConfig.https,
+                    port = "",
+                    contentServicePath = "",
+                    realm = "",
+                    clientId = oAuth2Data.clientId,
+                    redirectUrl = "demo://$host/android/${context.packageName}/callback",
+                    host = host,
+                    secret = oAuth2Data.secret,
+                    scope = oAuth2Data.scope,
+                    authType = AuthTypeProvider.NEW_IDP,
+                    additionalParams = additionalParams,
+                )
         }
 
         when (authType) {
             AuthType.PKCE -> {
                 viewModelScope.launch {
-
                     when (authConfig.authType) {
                         AuthTypeProvider.NEW_IDP -> {
                             applicationUrl.value = identityUrl.value
@@ -165,8 +164,6 @@ class LoginViewModel(
                             }
                         }
                     }
-
-
                 }
             }
 

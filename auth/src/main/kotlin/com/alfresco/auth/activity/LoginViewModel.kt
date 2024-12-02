@@ -135,6 +135,8 @@ class LoginViewModel(
 
             }
 
+            println("package name == ${context.packageName}")
+
             authConfig = AuthConfig(
                 https = authConfig.https,
                 port = "",

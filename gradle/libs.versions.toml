@@ -17,7 +17,7 @@ moshi = "1.15.1"
 retrofit = "2.11.0"
 
 [libraries]
-alfresco-auth = "com.alfresco.android:auth:0.8.3-SNAPSHOT"
+alfresco-auth = "com.alfresco.android:auth:0.8.4-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.6-SNAPSHOT"
 alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.3-SNAPSHOT"
 alfresco-process = "com.alfresco.android:process:0.1.4-SNAPSHOT"

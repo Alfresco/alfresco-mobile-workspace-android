@@ -100,7 +100,6 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
             LoginViewModel.Step.InputAppServer -> InputServerFragment.with(this).display()
             LoginViewModel.Step.EnterBasicCredentials -> BasicAuthFragment.with(this).display()
             LoginViewModel.Step.EnterPkceCredentials -> {
-                println("LoginActivity.onMoveToStep EnterPkceCredentials")
                 viewModel.ssoLogin()
             }
 

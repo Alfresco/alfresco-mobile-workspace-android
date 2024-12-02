@@ -101,9 +101,6 @@ class LoginViewModel(
     }
 
     fun connect() {
-
-        println("connect to server")
-
         isLoading.value = true
 
         try {
@@ -115,12 +112,7 @@ class LoginViewModel(
 
     private fun onAuthType(authType: AuthType, oAuth2Data: OAuth2Data?) {
 
-        println("LoginViewModel.onAuthType 1 ==== $oAuth2Data")
-
-
         if (oAuth2Data != null && oAuth2Data.secret.isNotEmpty()) {
-
-            println("LoginViewModel.onAuthType 2 ==== ${Uri.parse(oAuth2Data.host).host}")
 
             val host = Uri.parse(oAuth2Data.host).host ?: ""
 
@@ -134,8 +126,6 @@ class LoginViewModel(
                 additionalParams[key] = value
 
             }
-
-            println("package name == ${context.packageName}")
 
             authConfig = AuthConfig(
                 https = authConfig.https,
@@ -194,7 +184,6 @@ class LoginViewModel(
         isLoading.value = true
 
         val endpoint = requireNotNull(identityUrl.value)
-        println("LoginViewModel.ssoLogin entered ==== $endpoint")
         pkceLogin(endpoint, authConfig, previousAuthState)
     }
 

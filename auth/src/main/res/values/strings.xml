@@ -81,8 +81,6 @@
     <string name="auth_login_app_ok_button">Ok</string>
     <string name="accessibility_text_close">Close</string>
     <string name="accessibility_text_back">Back</string>
-    <string name="text_auth_keycloak">Keycloak</string>
-    <string name="text_auth_oidc_auth0">Auth0</string>
 
 
 </resources>

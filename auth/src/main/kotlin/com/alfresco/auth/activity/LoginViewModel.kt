@@ -12,6 +12,7 @@ import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.AuthType
 import com.alfresco.auth.AuthTypeProvider
+import com.alfresco.auth.IdentityProvider
 import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
@@ -102,6 +103,7 @@ class LoginViewModel(
 
     fun connect() {
         isLoading.value = true
+        loadSavedConfig()
 
         try {
             checkAuthType(identityUrl.value!!, authConfig, ::onAuthType)
@@ -114,32 +116,31 @@ class LoginViewModel(
         authType: AuthType,
         oAuth2Data: OAuth2Data?,
     ) {
-        if (oAuth2Data != null && oAuth2Data.secret.isNotEmpty()) {
-            val host = Uri.parse(oAuth2Data.host).host ?: ""
+        when {
+            oAuth2Data != null && oAuth2Data.authType?.lowercase() == IdentityProvider.AUTH0.value() -> {
+                val host = Uri.parse(oAuth2Data.host).host ?: ""
+                var additionalParams = mutableMapOf<String, String>()
+                if (oAuth2Data.audience.isNotEmpty()) {
+                    val key = OAuth2Data::audience.name
+                    val value = oAuth2Data.audience
 
-            var additionalParams = mutableMapOf<String, String>()
-
-            if (oAuth2Data.audience.isNotEmpty()) {
-                val key = OAuth2Data::audience.name
-                val value = oAuth2Data.audience
-
-                additionalParams[key] = value
+                    additionalParams[key] = value
+                }
+                authConfig =
+                    AuthConfig(
+                        https = authConfig.https,
+                        port = "",
+                        contentServicePath = "",
+                        realm = "",
+                        clientId = oAuth2Data.clientId,
+                        redirectUrl = "demo://$host/android/${context.packageName}/callback",
+                        host = host,
+                        secret = oAuth2Data.secret,
+                        scope = oAuth2Data.scope,
+                        authType = AuthTypeProvider.NEW_IDP,
+                        additionalParams = additionalParams,
+                    )
             }
-
-            authConfig =
-                AuthConfig(
-                    https = authConfig.https,
-                    port = "",
-                    contentServicePath = "",
-                    realm = "",
-                    clientId = oAuth2Data.clientId,
-                    redirectUrl = "demo://$host/android/${context.packageName}/callback",
-                    host = host,
-                    secret = oAuth2Data.secret,
-                    scope = oAuth2Data.scope,
-                    authType = AuthTypeProvider.NEW_IDP,
-                    additionalParams = additionalParams,
-                )
         }
 
         when (authType) {

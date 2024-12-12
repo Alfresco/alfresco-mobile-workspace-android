@@ -87,11 +87,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 Handler(Looper.getMainLooper()).post {
                     viewModel.entriesMultiSelection = it.selectedEntries
                     if (it.isMultiSelectionEnabled) {
-                        println("MainActivity.onCreate test 1")
                         viewModel.path = it.path
                         enableMultiSelection(it.selectedEntries)
                     } else {
-                        println("MainActivity.onCreate test 2")
                         disableMultiSelection()
                     }
                 }

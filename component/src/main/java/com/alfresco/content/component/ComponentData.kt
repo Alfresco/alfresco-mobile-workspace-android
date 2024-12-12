@@ -81,9 +81,12 @@ data class ComponentData(
             outcomes: List<OptionsModel>,
             name: String,
             query: String,
+            title: String = "",
+            selector: String = ComponentType.PROCESS_ACTION.value,
         ): ComponentData {
             return ComponentData(
-                selector = ComponentType.PROCESS_ACTION.value,
+                name = title,
+                selector = selector,
                 options = outcomes.map { ComponentOptions.withProcess(it) },
                 selectedName = name,
                 selectedQuery = query,

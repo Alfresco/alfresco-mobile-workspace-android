@@ -6,7 +6,6 @@ import android.provider.MediaStore
 import com.alfresco.content.session.ActionSessionInvalid
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
-import com.alfresco.content.session.SessionNotFoundException
 import com.alfresco.events.EventBus
 import io.objectbox.Box
 import io.objectbox.BoxStore
@@ -24,16 +23,22 @@ import java.io.File
 class OfflineRepository(otherSession: Session? = null) {
     lateinit var session: Session
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private var box: Box<Entry>
 
     init {
         try {
             session = otherSession ?: SessionManager.requireSession
-        } catch (e: SessionNotFoundException) {
+            ObjectBox.init(session.context)
+            box = ObjectBox.boxStore.boxFor()
+        } catch (e: Exception) {
             e.printStackTrace()
             coroutineScope.launch {
                 EventBus.default.send(ActionSessionInvalid(true))
             }
         }
+
+        ObjectBox.init(session.context)
+        box = ObjectBox.boxStore.boxFor()
     }
 
     private object ObjectBox {
@@ -47,13 +52,6 @@ class OfflineRepository(otherSession: Session? = null) {
                 }
             }
         }
-    }
-
-    private val box: Box<Entry>
-
-    init {
-        ObjectBox.init(session.context)
-        box = ObjectBox.boxStore.boxFor()
     }
 
     fun entry(id: String): Entry? =

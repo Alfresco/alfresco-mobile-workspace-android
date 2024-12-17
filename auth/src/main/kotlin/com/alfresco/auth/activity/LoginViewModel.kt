@@ -141,6 +141,19 @@ class LoginViewModel(
                         additionalParams = additionalParams,
                     )
             }
+
+            oAuth2Data != null && (oAuth2Data.authType.isNullOrEmpty() || oAuth2Data.authType?.lowercase() == IdentityProvider.KEYCLOAK.value()) -> {
+                authConfig =
+                    AuthConfig(
+                        https = authConfig.https,
+                        port = authConfig.port,
+                        contentServicePath = authConfig.contentServicePath,
+                        realm = authConfig.realm,
+                        clientId = authConfig.clientId,
+                        redirectUrl = authConfig.redirectUrl,
+                        scope = oAuth2Data.scope,
+                    )
+            }
         }
 
         when (authType) {

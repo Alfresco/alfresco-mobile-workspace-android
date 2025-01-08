@@ -113,14 +113,9 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      */
     override fun onItemClicked(entry: Entry) {
 
-        if (entry.type == Entry.Type.SITE) {
-            findNavController().navigateToExtensionFolder(entry)
-        } else {
-            if (!entry.isFolder) return
-
+        if (entry.type == Entry.Type.SITE || entry.isFolder) {
             findNavController().navigateToExtensionFolder(entry)
         }
-
 
     }
 }

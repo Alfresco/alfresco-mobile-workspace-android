@@ -101,12 +101,7 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         }
 
     override fun onSupportNavigateUp(): Boolean {
-        return if (navController.currentDestination?.id == R.id.nav_browse_extension) {
-            finish()
-            false
-        } else {
-            navController.navigateUp()
-        }
+        return navController.navigateUp()
     }
 
     private fun handleFiles(

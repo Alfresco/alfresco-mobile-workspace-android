@@ -57,7 +57,8 @@
         android:layout_marginStart="@dimen/list_layout_margin_button"
         android:layout_marginTop="@dimen/list_layout_margin_button"
         android:layout_marginEnd="@dimen/list_layout_margin_button"
-        android:paddingBottom="@dimen/list_layout_margin_button">
+        android:paddingBottom="@dimen/list_layout_margin_button"
+        android:visibility="invisible">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel_button"

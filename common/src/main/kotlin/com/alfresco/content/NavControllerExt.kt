@@ -52,6 +52,11 @@ fun NavController.navigateToKnownPath(
     title: String,
 ) = navigate(Uri.parse("$BASE_URI/browse/$path/$REMOTE?title=${Uri.encode(title)}"))
 
+fun NavController.navigateToExtensionKnownPath(
+    path: String,
+    title: String,
+) = navigate(Uri.parse("$BASE_URI/browse_parent/$path/$REMOTE?title=${Uri.encode(title)}"))
+
 private fun NavController.navigateToSite(entry: Entry) =
     navigate(Uri.parse("$BASE_URI/browse/site/$REMOTE/${entry.id}?title=${Uri.encode(entry.name)}"))
 

@@ -157,7 +157,45 @@ class BrowseFragment : ListFragment<BrowseViewModel, BrowseViewState>() {
         }
     }
 
-    private fun updateBanner(
+    private fun updateBanner(totalSize: Int, pendingFilesCount: Int) {
+        if (totalSize == 0) return // Exit early if no files to process
+
+        val isUploading = pendingFilesCount != 0
+        bannerTransferData?.visibility = if (isUploading) View.VISIBLE else View.GONE
+
+        val uploadFileCount = totalSize - pendingFilesCount
+        val percentage = (uploadFileCount.toFloat() / totalSize * 100)
+
+        tvUploadingFiles?.apply {
+            setCompoundDrawablesWithIntrinsicBounds(
+                if (isUploading) R.drawable.ic_upload else R.drawable.ic_upload_done,
+                0,
+                0,
+                0
+            )
+            text = String.format(
+                getString(
+                    if (isUploading)
+                        com.alfresco.content.listview.R.string.upload_file_text_multiple
+                    else
+                        com.alfresco.content.listview.R.string.upload_complete_text_multiple
+                ),
+                if (isUploading) pendingFilesCount else totalSize
+            )
+        }
+
+        tvPercentage?.text = String.format(
+            getString(com.alfresco.content.listview.R.string.upload_percentage_text),
+            percentage
+        )
+
+        percentageFiles?.progress = percentage.toInt()
+
+        if (!isUploading) hideBanner(3000)
+    }
+
+
+    private fun updateBanner1(
         totalSize: Int,
         pendingFilesCount: Int,
     ) {

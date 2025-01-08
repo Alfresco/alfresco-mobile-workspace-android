@@ -33,7 +33,14 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
         args = BrowseArgs.with(requireArguments())
 
         // Contextual search only in folders/sites
-        setHasOptionsMenu(true)
+        withState(viewModel) { state ->
+            if (state.parent?.isFolder == null || state.parent?.isFolder == false) {
+                setHasOptionsMenu(false)
+            } else {
+                setHasOptionsMenu(true)
+            }
+        }
+
     }
 
     override fun onViewCreated(
@@ -63,15 +70,17 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", true)
+                findNavController().navigateToContextualSearch(args.id ?: "", args.title ?: "", isExtension = true)
                 true
             }
+
             R.id.new_folder -> {
                 withState(viewModel) {
                     viewModel.createFolder(it)
                 }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -87,6 +96,15 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
             if (state.path == getString(com.alfresco.content.browse.R.string.nav_path_extension)) {
                 super.disableRefreshLayout()
             }
+
+            if (state.parent?.isFolder == null || state.parent?.isFolder == false) {
+                bottomMoveButtonLayout?.visibility = View.INVISIBLE
+                setHasOptionsMenu(false)
+            } else {
+                bottomMoveButtonLayout?.visibility = View.VISIBLE
+                setHasOptionsMenu(true)
+            }
+
             super.invalidate()
         }
 
@@ -94,8 +112,15 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      * return callback for list item
      */
     override fun onItemClicked(entry: Entry) {
-        if (!entry.isFolder) return
 
-        findNavController().navigateToExtensionFolder(entry)
+        if (entry.type == Entry.Type.SITE) {
+            findNavController().navigateToExtensionFolder(entry)
+        } else {
+            if (!entry.isFolder) return
+
+            findNavController().navigateToExtensionFolder(entry)
+        }
+
+
     }
 }

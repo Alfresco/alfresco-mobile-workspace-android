@@ -13,9 +13,11 @@ activity-compose = "1.9.2"
 compose-bom = "2024.09.03"
 ui-tooling = "1.7.3"
 constraintlayout = "2.1.4"
+moshi = "1.15.1"
+retrofit = "2.11.0"
 
 [libraries]
-alfresco-auth = "com.alfresco.android:auth:0.8.4-SNAPSHOT"
+#alfresco-auth = "com.alfresco.android:auth:0.8.4-SNAPSHOT"
 alfresco-content = "com.alfresco.android:content:0.3.6-SNAPSHOT"
 alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.3-SNAPSHOT"
 alfresco-process = "com.alfresco.android:process:0.1.4-SNAPSHOT"
@@ -130,3 +132,14 @@ navigation-compose = "androidx.navigation:navigation-compose:2.8.2"
 compose-runtime = "androidx.compose.runtime:runtime:1.7.3"
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+
+dokka = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
+kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+appauth = "net.openid:appauth:0.11.1"
+jwtdecode = "com.auth0.android:jwtdecode:2.0.2"
+kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+
+androidx-lifecycle-viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6"
+androidx-browser = "androidx.browser:browser:1.8.0"
+okhttp = "com.squareup.okhttp3:okhttp:4.12.0"

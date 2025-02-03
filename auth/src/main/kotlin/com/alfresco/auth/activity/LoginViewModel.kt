@@ -12,11 +12,10 @@ import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.AuthType
 import com.alfresco.auth.AuthTypeProvider
-import com.alfresco.auth.IdentityProvider
 import com.alfresco.auth.config.defaultConfig
+import com.alfresco.auth.data.AppConfigDetails
 import com.alfresco.auth.data.LiveEvent
 import com.alfresco.auth.data.MutableLiveEvent
-import com.alfresco.auth.data.OAuth2Data
 import com.alfresco.auth.ui.AuthenticationViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,7 +59,7 @@ class LoginViewModel(
     val canonicalApplicationUrl: String
         get() {
             return previousAppEndpoint
-                ?: discoveryService.contentServiceUrl(applicationUrl.value!!, authConfig.authType).toString()
+                ?: discoveryService.contentServiceUrl(applicationUrl.value!!).toString()
         }
 
     // Used for display purposes
@@ -114,52 +113,79 @@ class LoginViewModel(
 
     private fun onAuthType(
         authType: AuthType,
-        oAuth2Data: OAuth2Data?,
+        appConfigDetails: AppConfigDetails?,
     ) {
-        when {
-            oAuth2Data != null && oAuth2Data.authType?.lowercase() == IdentityProvider.AUTH0.value() -> {
-                val host = Uri.parse(oAuth2Data.host).host ?: ""
-                var additionalParams = mutableMapOf<String, String>()
-                if (oAuth2Data.audience.isNotEmpty()) {
-                    val key = OAuth2Data::audience.name
-                    val value = oAuth2Data.audience
 
-                    additionalParams[key] = value
+        var mobileSettings = appConfigDetails?.mobileSettings
+
+        when {
+            mobileSettings != null -> {
+                val host = Uri.parse(mobileSettings.host).host ?: ""
+                var additionalParams = mutableMapOf<String, String>()
+                if (mobileSettings.audience?.isNotEmpty() == true) {
+                    val key = mobileSettings::audience.name
+                    val value = mobileSettings.audience
+
+                    additionalParams[key] = value!!
                 }
-                authConfig =
+                /*authConfig =
                     AuthConfig(
                         https = authConfig.https,
                         port = "",
                         contentServicePath = "",
                         realm = "",
-                        clientId = oAuth2Data.clientId,
+                        clientId = mobileSettings.android.clientId,
                         redirectUrl = "demo://$host/android/${context.packageName}/callback",
                         host = host,
-                        secret = oAuth2Data.secret,
-                        scope = oAuth2Data.scope,
+                        secret = mobileSettings.secret ?: "",
+                        scope = mobileSettings.scope,
                         authType = AuthTypeProvider.NEW_IDP,
                         additionalParams = additionalParams,
-                    )
+                    )*/
+                authConfig = AuthConfig(
+                    https = mobileSettings.https,
+                    port = mobileSettings.port.toString(),
+                    host = mobileSettings.host,
+                    contentServicePath = mobileSettings.contentServicePath ?: "",
+                    realm = mobileSettings.realm ?: "",
+                    clientId = mobileSettings.android.clientId,
+                    redirectUrl = mobileSettings.android.redirectUri,
+                    scope = mobileSettings.scope,
+                    additionalParams = additionalParams,
+                )
             }
 
-            oAuth2Data != null && (oAuth2Data.authType.isNullOrEmpty() || oAuth2Data.authType?.lowercase() == IdentityProvider.KEYCLOAK.value()) -> {
+            /*mobileSettings != null -> {
                 authConfig =
                     AuthConfig(
-                        https = authConfig.https,
-                        port = authConfig.port,
-                        contentServicePath = authConfig.contentServicePath,
-                        realm = authConfig.realm,
-                        clientId = authConfig.clientId,
-                        redirectUrl = authConfig.redirectUrl,
-                        scope = oAuth2Data.scope,
+                        https = mobileSettings.https,
+                        port = mobileSettings.port.toString(),
+                        host = mobileSettings.host,
+                        contentServicePath = mobileSettings.contentServicePath ?: "",
+                        realm = mobileSettings.realm?:"",
+                        clientId = mobileSettings.android.clientId,
+                        redirectUrl = mobileSettings.android.redirectUri,
+                        scope = mobileSettings.scope,
                     )
-            }
+            }*/
         }
 
         when (authType) {
             AuthType.PKCE -> {
                 viewModelScope.launch {
-                    when (authConfig.authType) {
+
+                    val isContentServicesInstalled =
+                        withContext(Dispatchers.IO) {
+                            discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
+                        }
+                    if (isContentServicesInstalled) {
+                        applicationUrl.value = identityUrl.value
+                        moveToStep(Step.EnterPkceCredentials)
+                    } else {
+                        moveToStep(Step.InputAppServer)
+                    }
+
+                    /*when (authConfig.authType) {
                         AuthTypeProvider.NEW_IDP -> {
                             applicationUrl.value = identityUrl.value
                             moveToStep(Step.EnterPkceCredentials)
@@ -177,7 +203,7 @@ class LoginViewModel(
                                 moveToStep(Step.InputAppServer)
                             }
                         }
-                    }
+                    }*/
                 }
             }
 

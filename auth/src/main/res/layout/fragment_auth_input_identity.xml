@@ -53,16 +53,6 @@
                 android:text="@string/auth_connect_button" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAdvancedSettings"
-                style="@style/Widget.Alfresco.Action.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:onClick="@{() -> viewModel.showSettings()}"
-                android:text="@string/auth_settings_button" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHelp"
                 style="@style/Widget.Alfresco.Action.Primary"
                 android:layout_width="wrap_content"

@@ -7,14 +7,12 @@ buildscript {
     dependencies {
         classpath libs.android.gradle
         classpath libs.kotlin.gradle
-        classpath libs.kotlin.serialization.plugin
 
         classpath libs.objectbox
 
         classpath libs.google.services.gradle
         classpath libs.firebase.crashlytics.gradle
 
-        classpath libs.dokka
         classpath libs.spotless
         classpath libs.gradleVersionsPlugin
         classpath libs.gradleLicensePlugin
@@ -48,7 +46,7 @@ subprojects {
     afterEvaluate {
         if(it.hasProperty('android')) {
             android {
-                compileSdkVersion 34
+                compileSdkVersion 35
 
                 defaultConfig {
                     minSdkVersion 24

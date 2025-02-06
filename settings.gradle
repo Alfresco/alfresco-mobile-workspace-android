@@ -24,7 +24,7 @@ include ':move'
 include ':component'
 include ':app'
 include ':process-app'
-include ':alfresco-auth'
+//include ':alfresco-auth'
 //include ':content'
 //include ':content-ktx'
 

@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.AuthType
-import com.alfresco.auth.AuthTypeProvider
 import com.alfresco.auth.config.defaultConfig
 import com.alfresco.auth.data.AppConfigDetails
 import com.alfresco.auth.data.LiveEvent
@@ -120,7 +119,7 @@ class LoginViewModel(
 
         when {
             mobileSettings != null -> {
-                val host = Uri.parse(mobileSettings.host).host ?: ""
+
                 var additionalParams = mutableMapOf<String, String>()
                 if (mobileSettings.audience?.isNotEmpty() == true) {
                     val key = mobileSettings::audience.name
@@ -128,20 +127,7 @@ class LoginViewModel(
 
                     additionalParams[key] = value!!
                 }
-                /*authConfig =
-                    AuthConfig(
-                        https = authConfig.https,
-                        port = "",
-                        contentServicePath = "",
-                        realm = "",
-                        clientId = mobileSettings.android.clientId,
-                        redirectUrl = "demo://$host/android/${context.packageName}/callback",
-                        host = host,
-                        secret = mobileSettings.secret ?: "",
-                        scope = mobileSettings.scope,
-                        authType = AuthTypeProvider.NEW_IDP,
-                        additionalParams = additionalParams,
-                    )*/
+
                 authConfig = AuthConfig(
                     https = mobileSettings.https,
                     port = mobileSettings.port.toString(),
@@ -154,20 +140,6 @@ class LoginViewModel(
                     additionalParams = additionalParams,
                 )
             }
-
-            /*mobileSettings != null -> {
-                authConfig =
-                    AuthConfig(
-                        https = mobileSettings.https,
-                        port = mobileSettings.port.toString(),
-                        host = mobileSettings.host,
-                        contentServicePath = mobileSettings.contentServicePath ?: "",
-                        realm = mobileSettings.realm?:"",
-                        clientId = mobileSettings.android.clientId,
-                        redirectUrl = mobileSettings.android.redirectUri,
-                        scope = mobileSettings.scope,
-                    )
-            }*/
         }
 
         when (authType) {
@@ -184,26 +156,6 @@ class LoginViewModel(
                     } else {
                         moveToStep(Step.InputAppServer)
                     }
-
-                    /*when (authConfig.authType) {
-                        AuthTypeProvider.NEW_IDP -> {
-                            applicationUrl.value = identityUrl.value
-                            moveToStep(Step.EnterPkceCredentials)
-                        }
-
-                        else -> {
-                            val isContentServicesInstalled =
-                                withContext(Dispatchers.IO) {
-                                    discoveryService.isContentServiceInstalled(identityUrl.value ?: "")
-                                }
-                            if (isContentServicesInstalled) {
-                                applicationUrl.value = identityUrl.value
-                                moveToStep(Step.EnterPkceCredentials)
-                            } else {
-                                moveToStep(Step.InputAppServer)
-                            }
-                        }
-                    }*/
                 }
             }
 

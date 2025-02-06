@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Store Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: libs
           path: ./app/build/outputs/apk/**/*.apk

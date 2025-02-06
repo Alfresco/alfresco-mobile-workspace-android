@@ -25,9 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 18
-        uses: actions/setup-java@v1
-        with:
-          java-version: 18
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v7.1.0
 
       - uses: actions/cache@v3
         name: Cache gradle

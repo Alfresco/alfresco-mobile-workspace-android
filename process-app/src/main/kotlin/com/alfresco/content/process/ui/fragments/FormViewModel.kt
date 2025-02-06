@@ -393,7 +393,7 @@ class FormViewModel(
         }
     }
 
-    private fun completeTask() = withState { state ->
+    internal fun completeTask() = withState { state ->
         viewModelScope.launch {
             repository::actionCompleteOutcome.asFlow(state.parent.taskEntry.id, convertFieldsToValues(state.formFields)).execute {
                 when (it) {

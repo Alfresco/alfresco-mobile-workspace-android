@@ -72,11 +72,6 @@ class ExtensionViewModelTest {
         // Ensure `getResourceList` is properly mocked
         every { resources.getResourceList(R.array.share_menu_icons) } returns mutableListOf(1, 2)
 
-        // Debug statements
-        println("Mocked Titles: ${resources.getStringArray(R.array.share_menu_titles).toList()}")
-        println("Mocked Icons: ${resources.getResourceList(R.array.share_menu_icons)}")
-        println("Mocked Paths: ${resources.getStringArray(R.array.share_menu_paths).toList()}")
-
     }
 
 

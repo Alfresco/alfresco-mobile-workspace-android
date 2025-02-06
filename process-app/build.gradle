@@ -26,6 +26,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
         jvmTarget = '17'
@@ -76,6 +77,8 @@ dependencies {
     implementation libs.ui.tooling.preview
     implementation libs.material3
 
+    coreLibraryDesugaring libs.android.desugar
+
     implementation libs.navigation.compose
     implementation libs.mavericks.compose
     implementation libs.androidx.compose.material.iconsExtended
@@ -85,4 +88,25 @@ dependencies {
     implementation libs.mavericks
     implementation libs.epoxy.core
     ksp libs.epoxy.processor
+
+
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.core
+    androidTestImplementation libs.androidx.test.espresso.core
+
+    // Mockito
+    // Coroutines test
+    testImplementation libs.kotlinx.coroutines.test
+
+    testImplementation libs.mavericks.testing
+
+    testImplementation libs.mockito.kotlin
+
+    // Optional -- Mockito framework
+    testImplementation libs.mockito.core
+    // Optional -- Mockk framework
+    testImplementation libs.mockk
+
 }

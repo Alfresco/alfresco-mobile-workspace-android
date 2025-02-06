@@ -152,6 +152,7 @@ class ExtensionViewModelTest {
         )
 
         val personalPageView = viewModel.getPageView(innerContext.getString(R.string.browse_menu_personal))
+
         assertEquals(PageView.PersonalFiles, personalPageView)
 
         val librariesPageView = viewModel.getPageView(innerContext.getString(R.string.browse_menu_my_libraries))

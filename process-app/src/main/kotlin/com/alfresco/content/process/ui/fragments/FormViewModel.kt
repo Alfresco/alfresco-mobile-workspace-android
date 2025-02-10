@@ -42,6 +42,7 @@ class FormViewModel(
     val state: FormViewState,
     val context: Context,
     private val repository: TaskRepository,
+    offlineRepository: OfflineRepository?,
 ) : MavericksViewModel<FormViewState>(state) {
 
     private var observeUploadsJob: Job? = null
@@ -53,7 +54,8 @@ class FormViewModel(
 
     init {
 
-        OfflineRepository().removeCompletedUploadsProcess()
+        offlineRepository?.removeCompletedUploadsProcess()
+
 
         if (state.parent.processInstanceId != null) {
             getTaskDetails()
@@ -591,6 +593,6 @@ class FormViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: FormViewState,
-        ) = FormViewModel(state, viewModelContext.activity(), TaskRepository())
+        ) = FormViewModel(state, viewModelContext.activity(), TaskRepository(), OfflineRepository())
     }
 }

@@ -51,7 +51,7 @@ data class FormViewState(
      * update the single process definition entry
      */
     fun updateSingleProcessDefinition(response: ResponseListProcessDefinition): FormViewState {
-        val processEntry = ProcessEntry.with(response.listProcessDefinitions.first(), parent)
+        val processEntry = ProcessEntry.with(response.listProcessDefinitions.firstOrNull(), parent)
         return copy(parent = processEntry)
     }
 

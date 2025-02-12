@@ -1,6 +1,7 @@
 package com.alfresco.content.process.ui.fragments
 
 import android.content.Context
+import androidx.compose.animation.scaleOut
 import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.Loading
@@ -331,6 +332,7 @@ class FormViewModel(
 
         val hasAllRequiredData = hasFieldValidData(updatedFieldList)
 
+        println("data 11")
         updateStateData(hasAllRequiredData, updatedFieldList)
     }
 
@@ -348,7 +350,7 @@ class FormViewModel(
     /**
      * execute API to claim the task
      */
-    private fun claimTask() = withState { state ->
+    internal fun claimTask() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::claimTask.asFlow(state.parent.taskEntry.id).execute {
@@ -373,7 +375,7 @@ class FormViewModel(
     /**
      * execute API to release the task
      */
-    private fun releaseTask() = withState { state ->
+    internal fun releaseTask() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::releaseTask.asFlow(state.parent.taskEntry.id).execute {
@@ -419,7 +421,7 @@ class FormViewModel(
     /**
      * execute the save-form api
      */
-    private fun saveForm() = withState { state ->
+    internal fun saveForm() = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::saveForm.asFlow(
@@ -447,7 +449,7 @@ class FormViewModel(
         }
     }
 
-    private fun startWorkflow() = withState { state ->
+    internal fun startWorkflow() = withState { state ->
         viewModelScope.launch {
             repository::startWorkflow.asFlow(state.parent, "", convertFieldsToValues(state.formFields)).execute {
                 when (it) {
@@ -471,7 +473,7 @@ class FormViewModel(
     /**
      * execute the outcome api
      */
-    private fun actionOutcome(outcome: String) = withState { state ->
+    internal fun actionOutcome(outcome: String) = withState { state ->
         requireNotNull(state.parent)
         viewModelScope.launch {
             repository::actionOutcomes.asFlow(
@@ -553,16 +555,21 @@ class FormViewModel(
         return values
     }
 
-    private fun updateStateData(enabledOutcomes: Boolean, fields: List<FieldsData>) {
+    internal fun updateStateData(enabledOutcomes: Boolean, fields: List<FieldsData>) {
         setState { copy(enabledOutcomes = enabledOutcomes, formFields = fields) }
     }
 
-    private fun hasFieldValidData(fields: List<FieldsData>): Boolean {
+    internal fun hasFieldValidData(fields: List<FieldsData>): Boolean {
         val hasValidDataInRequiredFields = !fields.filter { it.required }.any { (it.value == null || it.errorData.first) }
         val hasValidDataInDropDownRequiredFields = fields.filter { it.required && it.options.isNotEmpty() }.let { list ->
             list.isEmpty() || list.any { field -> field.options.any { option -> option.name == field.value && option.id != "empty" } }
         }
         val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
+
+//        println("hasValidDataInOtherFields ==> $hasValidDataInOtherFields")
+//        println("hasValidDataInRequiredFields ==> $hasValidDataInRequiredFields")
+//        println("hasValidDataInDropDownRequiredFields ==> $hasValidDataInDropDownRequiredFields")
+
         return (hasValidDataInRequiredFields && hasValidDataInOtherFields && hasValidDataInDropDownRequiredFields)
     }
 

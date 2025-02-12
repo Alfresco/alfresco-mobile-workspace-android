@@ -2,7 +2,6 @@ package com.alfresco.content.process.fragments
 
 import android.content.Context
 import com.airbnb.mvrx.test.MavericksTestRule
-import com.alfresco.content.data.DefaultOutcomesID
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.data.UserGroupDetails
@@ -12,21 +11,14 @@ import com.alfresco.content.process.ui.fragments.FormViewState
 import com.alfresco.content.session.Session
 import com.alfresco.content.session.SessionManager
 import io.mockk.coEvery
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.spyk
-import io.mockk.verify
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -36,7 +28,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 class FormViewModelTest {
@@ -106,7 +97,7 @@ class FormViewModelTest {
     // Add test cases for hasFieldValidData
 
     @Test
-    fun `test hasFieldValidData with valid fields`() = runTest{
+    fun `test hasFieldValidData with valid fields`() = runTest {
         // Arrange: Mock some valid fields data
         val validField1 = FieldsData(
             required = true,
@@ -124,7 +115,7 @@ class FormViewModelTest {
             required = true,
             value = "Option 1",
             errorData = Pair(false, ""),
-            options = listOf(OptionsModel(id = "12","Option 1", "validId"))
+            options = listOf(OptionsModel(id = "12", "Option 1", "validId"))
         )
 
         val viewModel = FormViewModel(FormViewState(), context, repository, null)

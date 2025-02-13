@@ -164,7 +164,6 @@ class FormViewModelTest {
 
     @Test
     fun `test hasFieldValidData with error in dropdown required field`() {
-        // Arrange: Mock a scenario where a required dropdown field has invalid selection
         val invalidDropdownField = FieldsData(
             required = true,
             value = "Invalid Option",
@@ -182,10 +181,8 @@ class FormViewModelTest {
 
         val fields = listOf(invalidDropdownField, validField)
 
-        // Act: Call the method under test
         val result = viewModel.hasFieldValidData(fields)
 
-        // Assert: The result should be true as all fields are valid
         assertTrue("Expected false, but got $!result", !result)
 
     }

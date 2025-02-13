@@ -566,10 +566,6 @@ class FormViewModel(
         }
         val hasValidDataInOtherFields = !fields.filter { !it.required }.any { it.errorData.first }
 
-//        println("hasValidDataInOtherFields ==> $hasValidDataInOtherFields")
-//        println("hasValidDataInRequiredFields ==> $hasValidDataInRequiredFields")
-//        println("hasValidDataInDropDownRequiredFields ==> $hasValidDataInDropDownRequiredFields")
-
         return (hasValidDataInRequiredFields && hasValidDataInOtherFields && hasValidDataInDropDownRequiredFields)
     }
 

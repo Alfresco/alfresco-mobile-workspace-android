@@ -40,12 +40,13 @@ class ExtensionViewModel(
         setState { copy(entries = entries) }
     }
 
-    private fun getPageView(path: String): PageView =
-        when (path) {
+    internal fun getPageView(path: String): PageView {
+        return when (path) {
             context.getString(R.string.browse_menu_personal) -> PageView.PersonalFiles
             context.getString(R.string.browse_menu_my_libraries) -> PageView.MyLibraries
             else -> PageView.None
         }
+    }
 
     /**
      * returns the nodeID for my files
@@ -60,7 +61,7 @@ class ExtensionViewModel(
     }
 }
 
-private fun Resources.getResourceList(
+internal fun Resources.getResourceList(
     @ArrayRes id: Int,
 ): MutableList<Int> {
     val typedArray = this.obtainTypedArray(id)

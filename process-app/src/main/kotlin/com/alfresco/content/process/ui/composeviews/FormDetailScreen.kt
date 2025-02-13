@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
@@ -27,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.mvrx.compose.collectAsState
+import com.alfresco.content.data.OfflineRepository
 import com.alfresco.content.data.OptionsModel
 import com.alfresco.content.data.TaskRepository
 import com.alfresco.content.process.ui.components.Outcomes
@@ -34,6 +36,7 @@ import com.alfresco.content.process.ui.fragments.FormViewModel
 import com.alfresco.content.process.ui.fragments.FormViewState
 import com.alfresco.content.process.ui.fragments.ProcessFragment
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun FormDetailScreen(viewModel: FormViewModel, outcomes: List<OptionsModel>, navController: NavController, fragment: ProcessFragment, snackbarHostState: SnackbarHostState) {
@@ -99,6 +102,7 @@ fun PreviewProcessDetailScreen() {
             state,
             LocalContext.current,
             TaskRepository(),
+            OfflineRepository(),
         ),
         emptyList(),
         rememberNavController(),

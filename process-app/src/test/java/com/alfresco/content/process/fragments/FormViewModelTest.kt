@@ -130,7 +130,7 @@ class FormViewModelTest {
         assertTrue("Expected true, but got $result", result)
     }
 
-    /* @Test
+     @Test
      fun `test hasFieldValidData with required field missing data`() {
          // Arrange: Mock some fields data where a required field has no value
          val invalidField1 = FieldsData(
@@ -149,93 +149,95 @@ class FormViewModelTest {
              required = true,
              value = "Option 1",
              errorData = Pair(false, ""),
-             options = listOf(Option("Option 1", "validId"))
+             options = listOf(OptionsModel(id = "10", "Option 1", "validId"))
          )
+
+         val viewModel = FormViewModel(FormViewState(), context, repository, null)
+
 
          val fields = listOf(invalidField1, validField2, validField3)
 
-         // Act: Call the method under test
          val result = viewModel.hasFieldValidData(fields)
 
-         // Assert: The result should be false due to the invalid required field
-         assertFalse(result)
+         assertTrue("Expected false, but got $!result", !result)
      }
 
-     @Test
-     fun `test hasFieldValidData with error in dropdown required field`() {
-         // Arrange: Mock a scenario where a required dropdown field has invalid selection
-         val invalidDropdownField = FieldsData(
-             required = true,
-             value = "Invalid Option",
-             errorData = Pair(false, ""),
-             options = listOf(Option("Option 1", "validId"), Option("Option 2", "empty"))
-         )
-         val validField = FieldsData(
-             required = false,
-             value = "Valid Value",
-             errorData = Pair(false, ""),
-             options = emptyList() // No dropdown options
-         )
+    @Test
+    fun `test hasFieldValidData with error in dropdown required field`() {
+        // Arrange: Mock a scenario where a required dropdown field has invalid selection
+        val invalidDropdownField = FieldsData(
+            required = true,
+            value = "Invalid Option",
+            errorData = Pair(false, ""),
+            options = listOf(OptionsModel("Option 1", "validId"), OptionsModel("Option 2", "empty"))
+        )
+        val validField = FieldsData(
+            required = false,
+            value = "Valid Value",
+            errorData = Pair(false, ""),
+            options = emptyList() // No dropdown options
+        )
 
-         val fields = listOf(invalidDropdownField, validField)
+        val viewModel = FormViewModel(FormViewState(), context, repository, null)
 
-         // Act: Call the method under test
-         val result = viewModel.hasFieldValidData(fields)
+        val fields = listOf(invalidDropdownField, validField)
 
-         // Assert: The result should be false due to invalid dropdown selection
-         assertFalse(result)
-     }
+        // Act: Call the method under test
+        val result = viewModel.hasFieldValidData(fields)
 
-     @Test
-     fun `test hasFieldValidData with error in non-required field`() {
-         // Arrange: Mock a scenario where a non-required field has an error
-         val invalidNonRequiredField = FieldsData(
-             required = false,
-             value = "Invalid Value",
-             errorData = Pair(true, "Some error"),
-             options = emptyList() // No dropdown options
-         )
+        // Assert: The result should be true as all fields are valid
+        assertTrue("Expected false, but got $!result", !result)
 
-         val validField = FieldsData(
-             required = true,
-             value = "Valid Value",
-             errorData = Pair(false, ""),
-             options = emptyList() // No dropdown options
-         )
+    }
 
-         val fields = listOf(invalidNonRequiredField, validField)
+    @Test
+    fun `test hasFieldValidData with error in non-required field`() {
+        // Arrange: Mock a scenario where a non-required field has an error
+        val invalidNonRequiredField = FieldsData(
+            required = false,
+            value = "Invalid Value",
+            errorData = Pair(true, "Some error"),
+            options = emptyList() // No dropdown options
+        )
 
-         // Act: Call the method under test
-         val result = viewModel.hasFieldValidData(fields)
+        val validField = FieldsData(
+            required = true,
+            value = "Valid Value",
+            errorData = Pair(false, ""),
+            options = emptyList() // No dropdown options
+        )
 
-         // Assert: The result should be false due to error in non-required field
-         assertFalse(result)
-     }
+        val viewModel = FormViewModel(FormViewState(), context, repository, null)
 
-     // More test cases
+        val fields = listOf(invalidNonRequiredField, validField)
 
-     @Test
-     fun `test hasFieldValidData with multiple required fields with errors`() {
-         // Arrange: Mock some invalid fields data
-         val invalidField1 = FieldsData(
-             required = true,
-             value = null,
-             errorData = Pair(true, "Error in field1"),
-             options = emptyList() // No dropdown options
-         )
-         val invalidField2 = FieldsData(
-             required = true,
-             value = "Invalid Option",
-             errorData = Pair(true, "Error in field2"),
-             options = listOf(Option("Option 1", "validId"), Option("Option 2", "empty"))
-         )
+        val result = viewModel.hasFieldValidData(fields)
 
-         val fields = listOf(invalidField1, invalidField2)
+        assertTrue("Expected false, but got $!result", !result)
 
-         // Act: Call the method under test
-         val result = viewModel.hasFieldValidData(fields)
+    }
 
-         // Assert: The result should be false due to errors in required fields
-         assertFalse(result)
-     }*/
+    @Test
+    fun `test hasFieldValidData with multiple required fields with errors`() {
+        // Arrange: Mock some invalid fields data
+        val invalidField1 = FieldsData(
+            required = true,
+            value = null,
+            errorData = Pair(true, "Error in field1"),
+            options = emptyList() // No dropdown options
+        )
+        val invalidField2 = FieldsData(
+            required = true,
+            value = "Invalid Option",
+            errorData = Pair(true, "Error in field2"),
+            options = listOf(OptionsModel("Option 1", "validId"), OptionsModel("Option 2", "empty"))
+        )
+        val viewModel = FormViewModel(FormViewState(), context, repository, null)
+
+        val fields = listOf(invalidField1, invalidField2)
+
+        val result = viewModel.hasFieldValidData(fields)
+
+        assertTrue("Expected false, but got $!result", !result)
+    }
 }

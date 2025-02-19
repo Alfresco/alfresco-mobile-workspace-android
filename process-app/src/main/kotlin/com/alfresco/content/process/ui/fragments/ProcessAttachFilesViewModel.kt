@@ -46,7 +46,7 @@ class ProcessAttachFilesViewModel(
             }
 
             else -> {
-//                setState { copy(listContents = field.getContentList(state.parent.process.processDefinitionId), baseEntries = field.getContentList(state.parent.process.processDefinitionId)) }
+//                setState { copy(listContents = field.getContentList(state.parent.search.processDefinitionId), baseEntries = field.getContentList(state.parent.search.processDefinitionId)) }
                 observeUploads(state)
             }
         }

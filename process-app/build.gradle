@@ -89,8 +89,6 @@ dependencies {
     implementation libs.epoxy.core
     ksp libs.epoxy.processor
 
-
-
     // Testing
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.core

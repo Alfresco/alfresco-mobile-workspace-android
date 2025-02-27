@@ -6,7 +6,9 @@ import com.airbnb.mvrx.test.MavericksTestRule
 import com.alfresco.content.data.SearchRepository
 import com.alfresco.content.network.ConnectivityTracker
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,10 +16,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
 
 @ExperimentalCoroutinesApi
 class SearchViewModelTest {
@@ -25,38 +23,34 @@ class SearchViewModelTest {
     @get:Rule
     val mvRxTestRule = MavericksTestRule()
 
+    private lateinit var viewModel: SearchViewModel
+
     @MockK
     lateinit var context: Context
 
     @MockK
     lateinit var repository: SearchRepository
 
-    private lateinit var viewModel: SearchViewModel
-
-    @Mock
+    @MockK
     lateinit var connectivityTracker: ConnectivityTracker
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
 
-        MockitoAnnotations.initMocks(this)
-        `when`(connectivityTracker.isActiveNetwork(any())).thenReturn(true)
+        val mockConnectivityManager = mockk<ConnectivityManager>(relaxed = true)
+
+        every { context.getSystemService(Context.CONNECTIVITY_SERVICE) } returns mockConnectivityManager
+        every { connectivityTracker.isActiveNetwork(any()) } returns true
 
         val initialState = SearchResultsState()
         viewModel = SearchViewModel(context, initialState, repository)
     }
 
-    @Test
-    fun testConnectivity() {
-//        val context = ApplicationProvider.getApplicationContext<Context>()
-//        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        assertNotNull(connectivityManager)
-    }
-
 
     @Test
     fun `test getSearchFilterList returns non-null list`() {
+        every { repository.getAppConfig().search } returns emptyList()
         val searchFilters = viewModel.getSearchFilterList()
         assertNotNull(searchFilters)
     }
@@ -70,15 +64,34 @@ class SearchViewModelTest {
 
     @Test
     fun `test copyFilterIndex updates state`() = runTest {
+
+        val viewModel = SearchViewModel(context, SearchResultsState(), repository)
+
+        val updateState = SearchResultsState(
+            contextId = "123456"
+        )
+        viewModel.defaultFilters(updateState)
+
         val position = 2
         viewModel.copyFilterIndex(position)
-//        assertEquals(position, viewModel.withState { it.selectedFilterIndex })
+
+        val newState = viewModel.awaitState()
+        assertEquals(position, newState.selectedFilterIndex)
     }
 
     @Test
-    fun `test refresh triggers search event`() = runTest {
-        val previousParams = viewModel.getSearchQuery()
-        viewModel.refresh()
-        assertEquals(previousParams, viewModel.getSearchQuery())
+    fun `test canSearchOverCurrentNetwork returns true`() {
+        every { connectivityTracker.isActiveNetwork(any()) } returns true
+
+        val viewModelResult = viewModel.canSearchOverCurrentNetwork(connectivityTracker)
+
+        assertEquals(true, viewModelResult) // Final assertion
+    }
+
+
+    @Test
+    fun `test canSearchOverCurrentNetwork returns false`() {
+        every { connectivityTracker.isActiveNetwork(any()) } returns false
+        assertEquals(false, viewModel.canSearchOverCurrentNetwork(connectivityTracker))
     }
 }

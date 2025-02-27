@@ -58,7 +58,7 @@ class SearchViewModel(
     private val liveSearchEvents: MutableStateFlow<SearchParams>
     private val searchEvents: MutableStateFlow<SearchParams>
     private val appConfigModel: AppConfigModel
-    private var params: SearchParams
+    var params: SearchParams
     var isRefreshSearch = false
 
     init {
@@ -187,9 +187,17 @@ class SearchViewModel(
         withState { state ->
             val list = mutableListOf<SearchChipCategory>()
 
-            getSearchFilterList()?.get(index)?.categories?.forEach { categoryItem ->
-                list.add(SearchChipCategory(categoryItem, isSelected = false))
+            getSearchFilterList()?.let { filters ->
+                if (index in filters.indices) {
+                    filters[index].categories?.forEach { categoryItem ->
+                        list.add(SearchChipCategory(categoryItem, isSelected = false))
+                    }
+                } else {
+                    println("Error: Index $index out of bounds for filters list of size ${filters.size}")
+                }
             }
+
+
 
             if (list.isNotEmpty() && state.filters.contains(SearchFilter.Contextual)) {
                 list.add(
@@ -240,7 +248,7 @@ class SearchViewModel(
         }
     }
 
-    private fun defaultFilters(state: SearchResultsState): SearchFilters {
+    internal fun defaultFilters(state: SearchResultsState): SearchFilters {
         return if (state.isExtension && state.isContextual) {
             SearchFilters.of(
                 SearchFilter.Folders,
@@ -513,7 +521,7 @@ class SearchViewModel(
     /**
      * returns true if device has active network connection otherwise false
      */
-    fun canSearchOverCurrentNetwork() = ConnectivityTracker.isActiveNetwork(context)
+    fun canSearchOverCurrentNetwork(tracker: ConnectivityTracker = ConnectivityTracker) = tracker.isActiveNetwork(context)
 
     override fun emptyMessageArgs(state: ListViewState) =
         Triple(

@@ -129,8 +129,8 @@ class LoginViewModel(
                 }
 
                 authConfig = AuthConfig(
-                    https = mobileSettings.https,
-                    port = mobileSettings.port.toString(),
+                    https = mobileSettings.https == true,
+                    port = mobileSettings.port?.toString() ?: "",
                     host = mobileSettings.host,
                     contentServicePath = mobileSettings.contentServicePath ?: "",
                     realm = mobileSettings.realm ?: "",

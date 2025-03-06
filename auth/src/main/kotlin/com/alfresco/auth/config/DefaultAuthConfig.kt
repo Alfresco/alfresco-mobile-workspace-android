@@ -7,19 +7,9 @@ val AuthConfig.Companion.defaultConfig: AuthConfig
         AuthConfig(
             https = true,
             port = "443",
-            clientId = "",
-            realm = "",
-            redirectUrl = "",
-            contentServicePath = "",
-        )
-
-/*val AuthConfig.Companion.defaultConfig: AuthConfig
-    get() =
-        AuthConfig(
-            https = true,
-            port = "443",
             clientId = "alfresco-android-acs-app",
             realm = "alfresco",
+            scope = "openid profile email",
             redirectUrl = "androidacsapp://aims/auth",
             contentServicePath = "alfresco",
-        )*/
+        )

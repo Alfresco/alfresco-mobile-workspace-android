@@ -210,6 +210,7 @@ class LoginViewModel(
 
     fun saveConfigChanges() {
         val config = authConfigEditor.get()
+        config.scope = authConfig.scope
 
         // Save state to persistent storage
         val sharedPrefs = applicationContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)

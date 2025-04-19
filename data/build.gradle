@@ -18,8 +18,9 @@ dependencies {
     implementation project(':base')
     api project(':session')
     implementation project(':download')
+    implementation project(':alfresco-auth')
 
-    implementation libs.alfresco.auth
+//    implementation libs.alfresco.auth
     implementation libs.alfresco.content
     implementation libs.alfresco.contentKtx
     implementation libs.alfresco.process

@@ -137,6 +137,7 @@ class LoginViewModel(
                     clientId = mobileSettings.android.clientId,
                     redirectUrl = mobileSettings.android.redirectUri,
                     scope = mobileSettings.scope,
+                    secret = mobileSettings.secret ?: "",
                     additionalParams = additionalParams,
                 )
             }

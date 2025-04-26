@@ -24,6 +24,7 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
         authConfig: AuthConfig,
         isExtension: Boolean,
     ) {
+        println("end point $endpoint")
         val account = Account(credentials.username, credentials.authState, credentials.authType, authConfig.jsonSerialize(), endpoint)
         val context = applicationContext
 

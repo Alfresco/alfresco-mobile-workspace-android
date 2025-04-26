@@ -21,8 +21,7 @@ dependencies {
 
     implementation libs.kotlin.stdlib
 
-    api project(':alfresco-auth')
-//    api libs.alfresco.auth
+    api libs.alfresco.auth
     implementation libs.google.material
 
     implementation libs.androidx.appcompat

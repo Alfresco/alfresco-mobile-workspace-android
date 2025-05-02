@@ -116,16 +116,16 @@ data class ProcessEntry(
          * return the ProcessEntry using RuntimeProcessDefinitionDataEntry
          */
         fun with(
-            dataObj: ProcessDefinitionDataEntry,
+            dataObj: ProcessDefinitionDataEntry?,
             processEntry: ProcessEntry?,
         ): ProcessEntry {
             return ProcessEntry(
-                id = dataObj.id ?: "",
-                name = dataObj.name ?: "",
-                description = dataObj.description ?: "",
-                startFormDefined = dataObj.hasStartForm,
-                processDefinitionKey = dataObj.key,
-                tenantId = dataObj.tenantId,
+                id = dataObj?.id ?: "",
+                name = dataObj?.name ?: "",
+                description = dataObj?.description ?: "",
+                startFormDefined = dataObj?.hasStartForm,
+                processDefinitionKey = dataObj?.key,
+                tenantId = dataObj?.tenantId,
                 defaultEntries = processEntry?.defaultEntries ?: emptyList(),
             )
         }

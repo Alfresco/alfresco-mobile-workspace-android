@@ -20,7 +20,6 @@ import com.alfresco.content.data.AnalyticsManager
 import com.alfresco.content.data.PageView
 import com.alfresco.content.fragmentViewModelWithArgs
 import com.alfresco.content.navigateToExtensionKnownPath
-import com.alfresco.content.navigateToKnownPath
 import com.alfresco.content.navigateToParent
 import kotlinx.parcelize.Parcelize
 
@@ -61,13 +60,19 @@ class ExtensionFragment : Fragment(), MavericksView {
         args = ExtensionArgs.with(requireArguments())
     }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         binding = FragmentBrowseMenuBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().intent?.let {
@@ -84,7 +89,6 @@ class ExtensionFragment : Fragment(), MavericksView {
                 }
             }
         }
-
     }
 
     override fun invalidate() =

@@ -40,7 +40,6 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
                 setHasOptionsMenu(true)
             }
         }
-
     }
 
     override fun onViewCreated(
@@ -112,10 +111,8 @@ class BrowseExtensionFragment : ListFragment<BrowseViewModel, BrowseViewState>(R
      * return callback for list item
      */
     override fun onItemClicked(entry: Entry) {
-
         if (entry.type == Entry.Type.SITE || entry.isFolder) {
             findNavController().navigateToExtensionFolder(entry)
         }
-
     }
 }

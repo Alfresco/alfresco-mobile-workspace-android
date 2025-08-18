@@ -55,6 +55,7 @@
         <item name="shapeAppearanceMediumComponent">
             @style/ShapeAppearance.Alfresco.MediumComponent
         </item>
+
     </style>
 
     <style name="Base.V21.Theme.Alfresco.Dark" parent="Base.V21.Theme.Alfresco">

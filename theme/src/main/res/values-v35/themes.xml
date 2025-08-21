@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.Alfresco" parent="Base.V21.Theme.Alfresco">
+
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+
+    </style>
+</resources>

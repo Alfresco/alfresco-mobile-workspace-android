@@ -114,12 +114,10 @@ class LoginViewModel(
         authType: AuthType,
         appConfigDetails: AppConfigDetails?,
     ) {
-
         var mobileSettings = appConfigDetails?.mobileSettings
 
         when {
             mobileSettings != null -> {
-
                 var additionalParams = mutableMapOf<String, String>()
                 if (mobileSettings.audience?.isNotEmpty() == true) {
                     val key = mobileSettings::audience.name
@@ -128,25 +126,25 @@ class LoginViewModel(
                     additionalParams[key] = value!!
                 }
 
-                authConfig = AuthConfig(
-                    https = mobileSettings.https == true,
-                    port = mobileSettings.port?.toString() ?: "",
-                    host = mobileSettings.host,
-                    contentServicePath = mobileSettings.contentServicePath ?: "",
-                    realm = mobileSettings.realm ?: "",
-                    clientId = mobileSettings.android.clientId,
-                    redirectUrl = mobileSettings.android.redirectUri,
-                    scope = mobileSettings.scope,
-                    secret = mobileSettings.secret ?: "",
-                    additionalParams = additionalParams,
-                )
+                authConfig =
+                    AuthConfig(
+                        https = mobileSettings.https == true,
+                        port = mobileSettings.port?.toString() ?: "",
+                        host = mobileSettings.host,
+                        contentServicePath = mobileSettings.contentServicePath ?: "",
+                        realm = mobileSettings.realm ?: "",
+                        clientId = mobileSettings.android.clientId,
+                        redirectUrl = mobileSettings.android.redirectUri,
+                        scope = mobileSettings.scope,
+                        secret = mobileSettings.secret ?: "",
+                        additionalParams = additionalParams,
+                    )
             }
         }
 
         when (authType) {
             AuthType.PKCE -> {
                 viewModelScope.launch {
-
                     val isContentServicesInstalled =
                         withContext(Dispatchers.IO) {
                             discoveryService.isContentServiceInstalled(identityUrl.value ?: "")

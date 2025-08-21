@@ -18,8 +18,7 @@ import com.alfresco.content.data.PageView
 data class ExtensionViewState(
     val path: String,
     val entries: List<MenuEntry> = emptyList(),
-
-    ) : MavericksState {
+) : MavericksState {
     constructor(args: ExtensionArgs) : this(args.path)
 }
 
@@ -30,7 +29,6 @@ class ExtensionViewModel(
     state: ExtensionViewState,
     val context: Context,
 ) : MavericksViewModel<ExtensionViewState>(state) {
-
     init {
         val tiles = context.resources.getStringArray(R.array.share_menu_titles)
         val icons = context.resources.getResourceList(R.array.share_menu_icons)

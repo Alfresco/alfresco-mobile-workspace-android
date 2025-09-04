@@ -20,20 +20,6 @@ class UploadWorker(
 ) : CoroutineWorker(appContext, params) {
     private val repository = OfflineRepository()
 
-    private val completedCount = AtomicInteger(0)
-    private var totalCount = 0
-    private var successCount = 0
-    private var failedCount = 0
-
-    /*override suspend fun doWork(): Result {
-        // Always return success so we don't cancel APPEND work
-        if (runAttemptCount > MAX_RETRIES) return Result.success()
-
-        val result = pendingUploads().asyncMap(MAX_CONCURRENT_OPERATIONS) { createItem(it) }
-
-        return if (result.any { !it }) Result.retry() else Result.success()
-    }*/
-
     override suspend fun doWork(): Result {
         if (runAttemptCount > MAX_RETRIES) return Result.success()
 
@@ -90,63 +76,6 @@ class UploadWorker(
 
         return if (result.any { !it }) Result.retry() else Result.success()
     }
-
-
-    /*override suspend fun doWork(): Result {
-        if (runAttemptCount > MAX_RETRIES) return Result.success()
-
-        val uploads = pendingUploads()
-        UploadCounter.totalCount.addAndGet(uploads.size)
-
-//        totalCount = uploads.size
-        if (totalCount == 0) return Result.success()
-
-        val context = applicationContext
-        UploadNotificationHelper.createChannel(context)
-
-        // Start initial notification
-        safeNotify(
-            context, UploadNotificationHelper.NOTIFICATION_ID,
-            UploadNotificationHelper.progressNotification(context, 0, totalCount)
-        )
-
-        // Run concurrent uploads
-        val result = uploads.asyncMap(MAX_CONCURRENT_OPERATIONS) { entry ->
-            val success = createItem(entry)
-
-            // increment immediately after this file is done
-            val done = completedCount.incrementAndGet()
-
-            println("done files ==> $done")
-
-            trackProgress(success) // update counters + notifications
-
-            // update notification (indefinite or determinate)
-            val notification = UploadNotificationHelper.progressNotification(context, done, totalCount)
-            safeNotify(context, UploadNotificationHelper.NOTIFICATION_ID, notification)
-            success
-        }
-
-        // Final summary notification
-        safeNotify(
-            context, UploadNotificationHelper.NOTIFICATION_ID,
-            UploadNotificationHelper.completeNotification(context, successCount, failedCount)
-        )
-
-        return if (result.any { !it }) Result.retry() else Result.success()
-    }*/
-
-    @Synchronized
-    private fun trackProgress(success: Boolean) {
-        if (success) successCount++ else failedCount++
-    }
-
-//    @Synchronized
-//    private fun trackProgress(context: Context, success: Boolean) {
-//        completedCount.incrementAndGet()
-//        if (success) successCount++ else failedCount++
-//    }
-
 
     private fun pendingUploads(): List<Entry> = repository.fetchPendingUploads()
 

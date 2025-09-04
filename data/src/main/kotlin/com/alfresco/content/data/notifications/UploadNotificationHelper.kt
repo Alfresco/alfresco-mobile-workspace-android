@@ -26,7 +26,6 @@ object UploadNotificationHelper {
             .setContentText(context.getString(R.string.upload_progress, current, total))
             .setSmallIcon(android.R.drawable.stat_sys_upload)
             .setProgress(0, 0, true)
-//            .setProgress(total, current, false)
             .setOngoing(true)
             .build()
     }

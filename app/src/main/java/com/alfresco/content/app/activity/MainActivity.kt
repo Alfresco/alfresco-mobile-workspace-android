@@ -411,21 +411,6 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_POST_NOTIFICATIONS) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // ✅ Permission granted → Worker can now post notifications
-            } else {
-                // ❌ Permission denied → uploads will work, but no notifications
-            }
-        }
-    }
-
     companion object {
         private const val REQUEST_CODE_POST_NOTIFICATIONS = 101
     }

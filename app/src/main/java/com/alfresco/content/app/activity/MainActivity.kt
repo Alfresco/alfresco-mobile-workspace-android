@@ -1,8 +1,11 @@
 package com.alfresco.content.app.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +19,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -81,6 +85,9 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         setContentView(R.layout.activity_main)
         mobileConfigDataEntry = getJsonFromSharedPrefs(this, KEY_FEATURES_MOBILE)
         observe(viewModel.navigationMode, ::navigateTo)
+
+        // Request notification permission for Android 13+
+        requestNotificationPermissionIfNeeded()
 
         GlobalScope.launch {
             MultiSelection.observeMultiSelection().collect {
@@ -387,4 +394,24 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
                 ),
             ).show(supportFragmentManager, null)
         }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_CODE_POST_NOTIFICATIONS
+                )
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_CODE_POST_NOTIFICATIONS = 101
+    }
 }

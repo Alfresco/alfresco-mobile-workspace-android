@@ -3,4 +3,11 @@
     <string name="name_truncate_in" translatable="false">%1$s ... %2$s</string>
     <string name="name_truncate_in_end" translatable="false">%1$s + %2$d</string>
     <string name="name_truncate_end" translatable="false">%1$s...</string>
+    <string name="title_upload_files" translatable="false">File Uploads</string>
+    <string name="text_upload_files" translatable="false">Uploading files…</string>
+    <string name="text_upload_complete" translatable="false">Upload complete</string>
+    <string name="upload_status" translatable="false">%1$d uploaded, %2$d failed</string>
+    <string name="upload_progress" translatable="false">%1$d of %2$d uploaded</string>
+    <string name="permission_not_granted" translatable="false">"POST_NOTIFICATIONS permission not granted, skipping notification"</string>
+
 </resources>

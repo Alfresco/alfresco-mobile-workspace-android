@@ -94,7 +94,7 @@ class ListViewAttachmentRow @JvmOverloads constructor(
         !entry.isLink && !entry.isUpload &&
             // Child folder in offline tab
             !(entry.isFolder && entry.hasOfflineStatus && !entry.isOffline) && !entry.isReadOnly &&
-            // If process is created
+            // If search is created
             !isProcessInstance
 
     /**

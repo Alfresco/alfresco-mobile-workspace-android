@@ -12,6 +12,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
+
+    defaultConfig{
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
@@ -25,6 +32,9 @@ dependencies {
 
     implementation libs.kotlin.stdlib
     implementation libs.coroutines.core
+    androidTestImplementation libs.androidx.runner
+
+    coreLibraryDesugaring libs.android.desugar
 
     implementation libs.androidx.appcompat
     implementation libs.androidx.core
@@ -39,4 +49,23 @@ dependencies {
     implementation libs.androidx.preference
 
     ksp libs.epoxy.processor
+
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.core
+    androidTestImplementation libs.androidx.test.espresso.core
+
+    // Mockito
+    // Coroutines test
+    testImplementation libs.kotlinx.coroutines.test
+
+    testImplementation libs.mavericks.testing
+
+    testImplementation libs.mockito.kotlin
+
+    // Optional -- Mockito framework
+    testImplementation libs.mockito.core
+    // Optional -- Mockk framework
+    testImplementation libs.mockk
 }

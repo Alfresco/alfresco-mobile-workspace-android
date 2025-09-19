@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_upload_files">Téléchargements de fichiers</string>
+    <string name="text_upload_files">Téléchargement des fichiers…</string>
+    <string name="text_upload_complete">Téléchargement terminé</string>
+    <string name="upload_status">%1$d téléchargé, %2$d échoué</string>
+    <string name="upload_progress">%1$d sur %2$d téléchargé</string>
+    <string name="permission_not_granted">Autorisation POST_NOTIFICATIONS non accordée, notification ignorée</string>
+</resources>

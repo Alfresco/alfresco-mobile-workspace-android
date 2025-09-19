@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_upload_files">Cargas de archivos</string>
+    <string name="text_upload_files">Subiendo archivos…</string>
+    <string name="text_upload_complete">Carga completa</string>
+    <string name="upload_status">%1$d cargado, %2$d fallido</string>
+    <string name="upload_progress">%1$d de %2$d cargado</string>
+    <string name="permission_not_granted">Permiso POST_NOTIFICATIONS no concedido, omitiendo notificación</string>
+</resources>

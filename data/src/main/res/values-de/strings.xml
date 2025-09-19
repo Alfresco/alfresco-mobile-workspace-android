@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_upload_files">Datei-Uploads</string>
+    <string name="text_upload_files">Dateien werden hochgeladen…</string>
+    <string name="text_upload_complete">Upload abgeschlossen</string>
+    <string name="upload_status">%1$d hochgeladen, %2$d fehlgeschlagen</string>
+    <string name="upload_progress">%1$d von %2$d hochgeladen</string>
+    <string name="permission_not_granted">POST_NOTIFICATIONS-Berechtigung nicht erteilt, Benachrichtigung wird übersprungen</string>
+</resources>

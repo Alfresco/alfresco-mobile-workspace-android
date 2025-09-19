@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_upload_files">Bestandsuploads</string>
+    <string name="text_upload_files">Bestanden uploaden…</string>
+    <string name="text_upload_complete">Upload voltooid</string>
+    <string name="upload_status">%1$d geüpload, %2$d mislukt</string>
+    <string name="upload_progress">%1$d van %2$d geüpload</string>
+    <string name="permission_not_granted">POST_NOTIFICATIONS-machtiging niet verleend, melding wordt overgeslagen</string>
+</resources>

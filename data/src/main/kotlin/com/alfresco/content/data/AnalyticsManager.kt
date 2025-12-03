@@ -147,4 +147,10 @@ class AnalyticsManager(otherSession: Session? = null) {
         }
         repository.logEvent(apiTrackName, params)
     }
+
+    fun commonEvent(eventName: EventName) {
+        val params = repository.defaultParams()
+        params.putString(Parameters.EventName.value, eventName.value.lowercase())
+        repository.logEvent(eventName.value.lowercase(), params)
+    }
 }

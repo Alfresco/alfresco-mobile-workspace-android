@@ -42,6 +42,10 @@ class ActionBarController(private val layout: ActionBarLayout) {
             navController.navigate(R.id.nav_settings)
         }
 
+        layout.askDiscoveryView.setOnClickListener {
+            navController.navigate(R.id.nav_ask_discovery)
+        }
+
         layout.background.setOnClickListener {
             enterSearchUi()
         }

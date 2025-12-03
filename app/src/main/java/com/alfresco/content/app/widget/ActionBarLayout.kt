@@ -19,6 +19,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
     lateinit var taskToolbar: Toolbar
     lateinit var background: MaterialShapeView
     lateinit var profileView: ProfileIconView
+    lateinit var askDiscoveryView: AskDiscoveryIconView
     lateinit var tvSearchTitle: TextView
 
     private lateinit var expandedView: View
@@ -38,6 +39,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
         collapsedView = findViewById(R.id.collapsed_toolbar)
         profileView = findViewById(R.id.profile_icon)
         tvSearchTitle = findViewById(R.id.tv_search_title)
+        askDiscoveryView = findViewById(R.id.ask_discovery_icon)
 
         originalRadius = background.radius
         originalTopMargin = (background.layoutParams as MarginLayoutParams).topMargin
@@ -56,10 +58,11 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
         params.topMargin = -background.strokeWidth
         background.layoutParams = params
 
-        background.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        background.importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
 
-        collapsedView.visibility = View.GONE
-        expandedView.visibility = View.VISIBLE
+        collapsedView.visibility = GONE
+        askDiscoveryView.visibility = GONE
+        expandedView.visibility = VISIBLE
     }
 
     fun collapse(
@@ -71,8 +74,9 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
         }
 
         if (isTaskScreen) {
-            background.visibility = View.GONE
-            tvSearchTitle.visibility = View.GONE
+            background.visibility = GONE
+            tvSearchTitle.visibility = GONE
+            askDiscoveryView.visibility = GONE
             taskToolbar.apply {
                 visibility = VISIBLE
                 title = context.getString(R.string.nav_title_tasks)
@@ -82,6 +86,7 @@ class ActionBarLayout(context: Context, attrs: AttributeSet?) : FrameLayout(cont
             tvSearchTitle.visibility = View.VISIBLE
             background.visibility = View.VISIBLE
             background.radius = originalRadius
+            askDiscoveryView.visibility = VISIBLE
         }
 
         val params = background.layoutParams as MarginLayoutParams

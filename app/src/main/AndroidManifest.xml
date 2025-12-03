@@ -64,6 +64,7 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.AskDiscoveryActivity" />
         <activity
             android:name="com.alfresco.auth.pkce.RedirectUriReceiverActivity"
             android:exported="true">

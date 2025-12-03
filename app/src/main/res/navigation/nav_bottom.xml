@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_bottom"
     app:startDestination="@id/nav_recents">
@@ -18,14 +17,12 @@
     <fragment
         android:id="@+id/nav_favorites"
         android:name="com.alfresco.content.browse.FavoritesFragment"
-        android:label="@string/nav_title_favorites">
-    </fragment>
+        android:label="@string/nav_title_favorites"/>
 
     <fragment
         android:id="@+id/nav_tasks"
         android:name="com.alfresco.content.browse.TaskProcessFragment"
-        android:label="@string/nav_title_tasks">
-    </fragment>
+        android:label="@string/nav_title_tasks"/>
 
     <fragment
         android:id="@+id/nav_offline"
@@ -49,19 +46,19 @@
     <fragment
         android:id="@+id/nav_browse"
         android:name="com.alfresco.content.browse.menu.BrowseMenuFragment"
-        android:label="@string/nav_title_browse" >
+        android:label="@string/nav_title_browse">
         <argument
             android:name="mode"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="id"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <deepLink app:uri="alfresco://content/browsemenu/{mode}/{id}?title={title}" />
     </fragment>
 
@@ -69,6 +66,10 @@
         android:id="@+id/nav_settings"
         android:name="com.alfresco.content.app.activity.SettingsActivity"
         android:label="@string/nav_title_settings" />
+    <activity
+        android:id="@+id/nav_ask_discovery"
+        android:name="com.alfresco.content.app.activity.AskDiscoveryActivity"
+        android:label="@string/nav_title_ask_an_agent" />
 
     <fragment
         android:id="@+id/searchFragment"
@@ -87,12 +88,12 @@
             app:argType="string" />
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="extension"
-            app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            app:argType="boolean" />
 
         <deepLink app:uri="alfresco://content/search/folder/{id}?title={title},extension={extension}" />
     </fragment>
@@ -103,12 +104,12 @@
         android:label="{title}">
         <argument
             android:name="extension"
-            app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <deepLink app:uri="alfresco://content/transfer_files/{extension}?title={title}" />
     </fragment>
 
@@ -121,12 +122,12 @@
             app:argType="string" />
         <argument
             android:name="id"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
 
         <deepLink app:uri="alfresco://content/browse/{path}/remote/{id}?title={title}" />
         <deepLink app:uri="alfresco://content/browse/{path}/remote?title={title}" />

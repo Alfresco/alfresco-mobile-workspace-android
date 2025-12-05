@@ -121,8 +121,6 @@ enum class EventName(val value: String) {
     StartWorkflow("start_workflow"),
     UploadProcessAttachment("event_upload_workflow_attachment"),
     None("event_none"),
-    AskDiscoveryLike("event_ask_discovery_like"),
-    AskDiscoveryDislike("event_ask_discovery_dis_like"),
 }
 
 /**
@@ -151,7 +149,6 @@ enum class PageView(val value: String) {
     StartFormView("page_view_start_form"),
     TaskFormView("page_view_task_form"),
     None("none"),
-    FakeDoorAskDiscovery("page_view_ask_discovery_feedback"),
 }
 
 /**

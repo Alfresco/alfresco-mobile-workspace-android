@@ -77,7 +77,6 @@ class FakeDoorAskDiscoveryFragment : Fragment(), MavericksView {
             binding.actionMessage.visibility = View.VISIBLE
             binding.bgLike.visibility = View.VISIBLE
             binding.iconLike.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.alfresco_blue_900))
-            AnalyticsManager().commonEvent(EventName.AskDiscoveryLike)
 
         }
         binding.iconDislike.setOnClickListener {
@@ -87,13 +86,7 @@ class FakeDoorAskDiscoveryFragment : Fragment(), MavericksView {
             binding.actionMessage.visibility = View.VISIBLE
             binding.bgDislike.visibility = View.VISIBLE
             binding.iconDislike.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.alfresco_blue_900))
-            AnalyticsManager().commonEvent(EventName.AskDiscoveryDislike)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        AnalyticsManager().screenViewEvent(PageView.FakeDoorAskDiscovery)
     }
 
     override fun invalidate() = withState(viewModel) {

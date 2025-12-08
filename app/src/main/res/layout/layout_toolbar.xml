@@ -7,57 +7,97 @@
     android:orientation="vertical">
 
 
-    <com.alfresco.ui.MaterialShapeView
-        android:id="@+id/toolbar_back"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="9dp"
-        android:contentDescription="@string/search_hint"
-        android:layout_marginBottom="0dp"
-        app:backgroundColor="?android:attr/colorBackground"
-        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
-        app:strokeColor="?attr/separatorColor"
-        app:strokeWidth="1dp" />
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/collapsed_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        <com.alfresco.ui.MaterialShapeView
+            android:id="@+id/toolbar_back"
+            android:layout_width="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ask_discovery_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="0dp"
+            android:contentDescription="@string/search_hint"
+            app:backgroundColor="?android:attr/colorBackground"
+            app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+            app:strokeColor="?attr/separatorColor"
+            app:strokeWidth="1dp" />
 
-        <TextView
-            android:id="@+id/tv_search_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="36dp"
+        <RelativeLayout
+            android:id="@+id/collapsed_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
             android:gravity="center_vertical"
-            android:importantForAccessibility="no"
-            android:text="@string/search_hint"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="@color/color_on_surface_60"
-            android:visibility="gone" />
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/ask_discovery_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/task_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:importantForAccessibility="yes"
-            android:background="@drawable/bottom_separator"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/tv_search_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="36dp"
+                android:gravity="center_vertical"
+                android:importantForAccessibility="no"
+                android:text="@string/search_hint"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="@color/color_on_surface_60"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/task_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bottom_separator"
+                android:importantForAccessibility="yes"
+                android:visibility="gone" />
 
 
-        <com.alfresco.content.app.widget.ProfileIconView
-            android:id="@+id/profile_icon"
+            <com.alfresco.content.app.widget.ProfileIconView
+                android:id="@+id/profile_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:minWidth="44dp" />
+        </RelativeLayout>
+
+        <com.alfresco.ui.MaterialShapeView
+            android:id="@+id/ask_discovery_back"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toEndOf="@id/toolbar_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar_back"
+            app:layout_constraintTop_toTopOf="@id/toolbar_back"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="0dp"
+            android:contentDescription="@string/search_hint"
+            app:backgroundColor="?android:attr/colorBackground"
+            app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+            app:strokeColor="?attr/separatorColor"
+            app:strokeWidth="1dp" />
+
+
+        <com.alfresco.content.app.widget.AskDiscoveryIconView
+            android:id="@+id/ask_discovery_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
             android:layout_marginEnd="16dp"
-            android:minWidth="44dp" />
-    </RelativeLayout>
+            android:minWidth="44dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/collapsed_toolbar"
+            app:layout_constraintTop_toTopOf="@id/collapsed_toolbar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/expanded_toolbar"

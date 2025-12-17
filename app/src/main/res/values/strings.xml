@@ -44,5 +44,6 @@
     <string name="fad_title">Knowledge Discovery is coming soon to the mobile - making it easy to extract valuable insights across your content, right from your device.</string>
     <string name="fad_message">Would this feature valuable for the work you do?</string>
     <string name="text_close">Close</string>
+    <string name="accessibility_text_ask_discovery">Ask Discovery Button</string>
 
 </resources>

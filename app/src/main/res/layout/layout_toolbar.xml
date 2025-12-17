@@ -69,7 +69,7 @@
                 android:minWidth="44dp" />
         </RelativeLayout>
 
-        <com.alfresco.ui.MaterialShapeView
+        <com.alfresco.ui.MaterialShapeADView
             android:id="@+id/ask_discovery_back"
             android:layout_width="0dp"
             app:layout_constraintStart_toEndOf="@id/toolbar_back"

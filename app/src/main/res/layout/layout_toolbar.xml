@@ -69,23 +69,6 @@
                 android:minWidth="44dp" />
         </RelativeLayout>
 
-        <com.alfresco.ui.MaterialShapeADView
-            android:id="@+id/ask_discovery_back"
-            android:layout_width="0dp"
-            app:layout_constraintStart_toEndOf="@id/toolbar_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/toolbar_back"
-            app:layout_constraintTop_toTopOf="@id/toolbar_back"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="0dp"
-            android:contentDescription="@string/search_hint"
-            app:backgroundColor="?android:attr/colorBackground"
-            app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
-            app:strokeColor="?attr/separatorColor"
-            app:strokeWidth="1dp" />
-
-
         <com.alfresco.content.app.widget.AskDiscoveryIconView
             android:id="@+id/ask_discovery_icon"
             android:layout_width="wrap_content"

@@ -1,36 +1,48 @@
 {
   "project_info": {
-    "project_number": "0000000",
+    "project_number": "471005699027",
     "firebase_url": "https://alfresco-mobile-workspace.firebaseio.com",
     "project_id": "alfresco-mobile-workspace",
-    "storage_bucket": "alfresco-mobile-workspace.appspot.com"
+    "storage_bucket": "alfresco-mobile-workspace.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "0000000",
+        "mobilesdk_app_id": "1:471005699027:android:7c63ed54923346e78e6d26",
         "android_client_info": {
           "package_name": "com.alfresco.content.app"
         }
       },
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "0000000"
+          "current_key": "AIzaSyCMvtCAKXekwyJI9_LSFU5x5_vcIzaVNis"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "0000000",
+        "mobilesdk_app_id": "1:471005699027:android:078997b35d00dcdc8e6d26",
         "android_client_info": {
           "package_name": "com.alfresco.content.app.debug"
         }
       },
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "0000000"
+          "current_key": "AIzaSyCMvtCAKXekwyJI9_LSFU5x5_vcIzaVNis"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

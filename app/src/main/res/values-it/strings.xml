@@ -40,4 +40,13 @@
         <item>Wi-Fi e dati mobili</item>
     </string-array>
 
+    <string name="nav_title_ask_an_agent">Chiedi a un agente</string>
+    <string name="fad_title">Knowledge Discovery arriverà presto sui dispositivi mobili, rendendo più semplice ottenere informazioni utili dai tuoi contenuti direttamente dal tuo dispositivo.</string>
+    <string name="fad_message">Questa funzionalità sarebbe utile per il tuo lavoro?</string>
+    <string name="text_close">Chiudi</string>
+    <string name="accessibility_text_ask_discovery">Pulsante Ask Discovery</string>
+    <string name="text_like">Mi piace</string>
+    <string name="text_dis_like">Non mi piace</string>
+    <string name="text_thanks_feedback">Grazie per il tuo feedback!</string>
+
 </resources>

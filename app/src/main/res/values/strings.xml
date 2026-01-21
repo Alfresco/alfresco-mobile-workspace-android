@@ -45,5 +45,8 @@
     <string name="fad_message">Would this feature valuable for the work you do?</string>
     <string name="text_close">Close</string>
     <string name="accessibility_text_ask_discovery">Ask Discovery Button</string>
+    <string name="text_like">Like</string>
+    <string name="text_dis_like">Dislike</string>
+    <string name="text_thanks_feedback">Thank you for your feedback!</string>
 
 </resources>

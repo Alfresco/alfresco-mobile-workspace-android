@@ -40,4 +40,13 @@
         <item>Wi-Fi en mobiele gegevens</item>
     </string-array>
 
+    <string name="nav_title_ask_an_agent">Een agent vragen</string>
+    <string name="fad_title">Knowledge Discovery komt binnenkort naar mobiel, zodat je eenvoudig waardevolle inzichten uit je content kunt halen, rechtstreeks vanaf je apparaat.</string>
+    <string name="fad_message">Zou deze functie nuttig zijn voor jouw werk?</string>
+    <string name="text_close">Sluiten</string>
+    <string name="accessibility_text_ask_discovery">Ask‑Discovery‑knop</string>
+    <string name="text_like">Vind ik leuk</string>
+    <string name="text_dis_like">Vind ik niet leuk</string>
+    <string name="text_thanks_feedback">Bedankt voor je feedback!</string>
+
 </resources>

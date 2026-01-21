@@ -40,4 +40,13 @@
         <item>Wifi y datos móviles</item>
     </string-array>
 
+    <string name="nav_title_ask_an_agent">Preguntar a un agente</string>
+    <string name="fad_title">Knowledge Discovery llegará pronto al móvil, lo que facilitará obtener información valiosa de tus contenidos directamente desde tu dispositivo.</string>
+    <string name="fad_message">¿Sería útil esta función para tu trabajo?</string>
+    <string name="text_close">Cerrar</string>
+    <string name="accessibility_text_ask_discovery">Botón de Ask Discovery</string>
+    <string name="text_like">Me gusta</string>
+    <string name="text_dis_like">No me gusta</string>
+    <string name="text_thanks_feedback">¡Gracias por tus comentarios!</string>
+
 </resources>

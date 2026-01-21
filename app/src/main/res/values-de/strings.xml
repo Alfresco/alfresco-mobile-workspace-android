@@ -40,4 +40,13 @@
         <item>WLAN und Mobile Daten</item>
     </string-array>
 
+    <string name="nav_title_ask_an_agent">Agent fragen</string>
+    <string name="fad_title">Knowledge Discovery kommt bald auf mobile Geräte – so können Sie direkt von Ihrem Gerät aus wertvolle Erkenntnisse aus Ihren Inhalten gewinnen.</string>
+    <string name="fad_message">Wäre diese Funktion für Ihre Arbeit wertvoll?</string>
+    <string name="text_close">Schließen</string>
+    <string name="accessibility_text_ask_discovery">Ask‑Discovery‑Schaltfläche</string>
+    <string name="text_like">Gefällt mir</string>
+    <string name="text_dis_like">Gefällt mir nicht</string>
+    <string name="text_thanks_feedback">Vielen Dank für Ihr Feedback!</string>
+
 </resources>

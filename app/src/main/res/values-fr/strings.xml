@@ -40,4 +40,13 @@
         <item>une connexion Wi-Fi et données mobiles</item>
     </string-array>
 
+    <string name="nav_title_ask_an_agent">Demander à un agent</string>
+    <string name="fad_title">Knowledge Discovery arrive bientôt sur mobile – vous permettant d’extraire facilement des informations précieuses à partir de vos contenus, directement depuis votre appareil.</string>
+    <string name="fad_message">Cette fonctionnalité serait‑elle utile pour votre travail?</string>
+    <string name="text_close">Fermer</string>
+    <string name="accessibility_text_ask_discovery">Bouton Ask Discovery</string>
+    <string name="text_like">J’aime</string>
+    <string name="text_dis_like">Je n’aime pas</string>
+    <string name="text_thanks_feedback">Merci pour votre retour!</string>
+
 </resources>

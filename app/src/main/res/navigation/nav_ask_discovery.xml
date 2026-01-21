@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/nav_fake_door_ask_discovery"
         android:name="com.alfresco.content.app.fragment.FakeDoorAskDiscoveryFragment"
-        android:label="Ask an Agent">
+        android:label="@string/nav_title_ask_an_agent">
 
         <argument
             android:name="path"

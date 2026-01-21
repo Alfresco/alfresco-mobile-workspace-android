@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -64,8 +63,8 @@
                 android:id="@+id/bg_like"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/text_like"
                 android:visibility="invisible"
-                android:contentDescription="@string/search_hint"
                 app:backgroundColor="?android:attr/colorBackground"
                 app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
                 app:strokeColor="?android:attr/colorPrimary"
@@ -76,33 +75,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
+                android:contentDescription="@string/text_like"
                 android:src="@drawable/icon_like" />
 
         </FrameLayout>
 
-       <FrameLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-           <com.alfresco.ui.MaterialShapeView
-               android:id="@+id/bg_dislike"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:visibility="invisible"
-               android:contentDescription="@string/search_hint"
-               app:backgroundColor="?android:attr/colorBackground"
-               app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
-               app:strokeColor="?android:attr/colorPrimary"
-               app:strokeWidth="2dp" />
+            <com.alfresco.ui.MaterialShapeView
+                android:id="@+id/bg_dislike"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/text_dis_like"
+                android:visibility="invisible"
+                app:backgroundColor="?android:attr/colorBackground"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+                app:strokeColor="?android:attr/colorPrimary"
+                app:strokeWidth="2dp" />
 
-           <ImageView
-               android:id="@+id/icon_dislike"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginStart="4dp"
-               android:src="@drawable/icon_dislike" />
+            <ImageView
+                android:id="@+id/icon_dislike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:contentDescription="@string/text_dis_like"
+                android:src="@drawable/icon_dislike" />
 
-       </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <TextView
@@ -111,12 +112,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:visibility="invisible"
         android:layout_marginBottom="16dp"
-        android:text="Thank you for your feedback!"
+        android:text="@string/text_thanks_feedback"
         android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/colorOrange"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/bottom_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

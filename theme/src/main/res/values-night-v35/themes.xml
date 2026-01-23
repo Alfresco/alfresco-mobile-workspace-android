@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Alfresco" parent="Base.Theme.Alfresco.Dark" >
+        <item name="colorPrimary">@android:color/white</item>
+
+        <!-- MUST also opt out in night -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+
+        <!-- System bars -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+    </style>
+</resources>

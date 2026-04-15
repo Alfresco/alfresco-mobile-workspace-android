@@ -92,7 +92,7 @@ class AlfrescoCameraController(context: Context) :
     fun shutDownForTests() {
         if (mCameraProvider != null) {
             mCameraProvider!!.unbindAll()
-            mCameraProvider!!.shutdown()
+            mCamera = null
         }
     }
 

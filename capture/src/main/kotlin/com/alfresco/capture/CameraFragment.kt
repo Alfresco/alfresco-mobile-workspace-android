@@ -12,19 +12,18 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.OptIn
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.FlashMode
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.FileOutputOptions
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.AlfrescoCameraController
 import androidx.camera.view.CameraController
-import androidx.camera.view.video.ExperimentalVideo
-import androidx.camera.view.video.OnVideoSavedCallback
-import androidx.camera.view.video.OutputFileOptions
-import androidx.camera.view.video.OutputFileResults
+import androidx.camera.view.video.AudioConfig
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -48,7 +47,7 @@ import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-@OptIn(ExperimentalVideo::class)
+
 class CameraFragment : Fragment(), KeyHandler, MavericksView {
     private val viewModel: CaptureViewModel by activityViewModel()
 
@@ -62,6 +61,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
+
+    private var audioConfig : AudioConfig? = null
+
+    private var recording: Recording? = null
 
     private val imageLoader: ImageLoader by lazy {
         ImageLoader.Builder(requireContext())
@@ -142,6 +145,14 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             )
         ) {
             if (cameraController == null) {
+
+                val hasAudioPermission = ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+
+                audioConfig = AudioConfig.create(hasAudioPermission)
+
                 setUpCamera()
             }
             layout.messageView.isVisible = false
@@ -357,7 +368,10 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.captureDurationView.isVisible = false
             layout.cameraSwitchButton.isVisible = true
 
-            controller.stopRecording()
+            recording?.stop()
+            recording = null
+
+            /*controller.stopRecording()*/
         } else {
             layout.shutterButton.state = ShutterButton.State.Recording
             layout.modeSelectorView.isVisible = false
@@ -365,7 +379,33 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
             layout.cameraSwitchButton.isVisible = false
 
             val videoFile = viewModel.prepareCaptureFile(viewModel.mode)
-            val outputOptions = OutputFileOptions.builder(videoFile).build()
+
+            val fileOutputOptions = FileOutputOptions.Builder(videoFile).build()
+
+            recording = cameraController?.startRecording(
+                fileOutputOptions,
+                audioConfig!!,
+                cameraExecutor
+            ) { event ->
+                when (event) {
+                    is VideoRecordEvent.Start -> {
+                        Logger.d("Recording started")
+                    }
+
+                    is VideoRecordEvent.Finalize -> {
+                        if (!event.hasError()) {
+                            val savedUri = event.outputResults.outputUri
+                            Logger.d("Video capture succeeded: $savedUri")
+                            onSavedURI(savedUri)
+                        } else {
+                            Logger.e("Video capture failed: ${event.error}")
+                        }
+                    }
+                }
+            }
+
+
+            /*val outputOptions = OutputFileOptions.builder(videoFile).build()
 
             cameraController?.startRecording(
                 outputOptions,
@@ -385,7 +425,7 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                         Logger.e("Video capture failed: ${cause?.message}", cause)
                     }
                 },
-            )
+            )*/
         }
     }
 
@@ -440,9 +480,15 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
                     Snackbar.make(
                         layout.captureDurationView,
                         if (viewModel.isProcessUpload) {
-                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_10)
+                            getString(
+                                R.string.error_file_size_exceed,
+                                GetMultipleContents.MAX_FILE_SIZE_10
+                            )
                         } else {
-                            getString(R.string.error_file_size_exceed, GetMultipleContents.MAX_FILE_SIZE_100)
+                            getString(
+                                R.string.error_file_size_exceed,
+                                GetMultipleContents.MAX_FILE_SIZE_100
+                            )
                         },
                         Snackbar.LENGTH_SHORT,
                     ).show()
@@ -485,9 +531,11 @@ class CameraFragment : Fragment(), KeyHandler, MavericksView {
         else -> R.drawable.ic_flash_auto
     }
 
-    private fun hasBackCamera(): Boolean = cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
+    private fun hasBackCamera(): Boolean =
+        cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
 
-    private fun hasFrontCamera(): Boolean = cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
+    private fun hasFrontCamera(): Boolean =
+        cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
     override fun invalidate() {}
 

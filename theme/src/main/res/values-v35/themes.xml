@@ -6,6 +6,7 @@
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+        <item name="android:fitsSystemWindows">true</item>
 
     </style>
 </resources>

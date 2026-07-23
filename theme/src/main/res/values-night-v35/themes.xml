@@ -10,6 +10,7 @@
         <!-- System bars -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fitsSystemWindows">true</item>
 
     </style>
 </resources>

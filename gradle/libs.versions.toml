@@ -21,7 +21,7 @@ alfresco-contentKtx = "com.alfresco.android:content-ktx:0.3.3-SNAPSHOT"
 alfresco-process = "com.alfresco.android:process:0.1.4-SNAPSHOT"
 
 android-desugar = "com.android.tools:desugar_jdk_libs:2.1.4"
-android-gradle = "com.android.tools.build:gradle:8.7.3"
+android-gradle = "com.android.tools.build:gradle:8.10.0"
 
 androidx-activity = "androidx.activity:activity-ktx:1.10.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"

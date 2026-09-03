@@ -1,0 +1,82 @@
+name: Tag & GitHub Release
+
+# Deliberate, one-per-marketing-version release tagging (Model B).
+# The community repo has no store-release pipeline; run this manually to create
+# the git tag + GitHub Release for a shipped version, matching the enterprise repo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit SHA or branch to tag (defaults to main)'
+        required: false
+        default: 'main'
+      version:
+        description: 'Version override (defaults to versionName in app/build.gradle)'
+        required: false
+        default: ''
+      prerelease:
+        description: 'Mark the GitHub Release as a pre-release'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag-release:
+    name: Create tag & GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -oE 'versionName "[^"]+"' app/build.gradle | head -1 | sed -E 's/versionName "([^"]+)"/\1/')
+          fi
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not determine version (no override and no versionName in app/build.gradle)."
+            exit 1
+          fi
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+([.-].+)?$'; then
+            echo "::error::Version '$VERSION' does not look like a valid marketing version."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $VERSION"
+
+      - name: Skip if release already exists
+        id: exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "::notice::Release ${{ steps.version.outputs.version }} already exists — nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag & GitHub Release
+        if: steps.exists.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.version.outputs.version }}" \
+            --target "${{ github.sha }}" \
+            --title "${{ steps.version.outputs.version }}" \
+            --generate-notes \
+            ${{ github.event.inputs.prerelease == 'true' && '--prerelease' || '' }}
+          echo "::notice::Created release ${{ steps.version.outputs.version }} at ${{ github.sha }}."

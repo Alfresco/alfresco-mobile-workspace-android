@@ -85,12 +85,13 @@ jobs:
         run: |
           # Guard: if the tag already exists on a different commit, refuse rather than
           # silently attach the Release to the wrong commit (gh ignores --target then).
-          # Use the exact-match singular ref endpoint and dereference annotated tags.
+          # Only treat the tag as existing when the ref lookup succeeds (404 => no tag).
           EXISTING=""
-          OBJ_SHA=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.sha' 2>/dev/null || true)
-          OBJ_TYPE=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.type' 2>/dev/null || true)
-          if [ -n "$OBJ_SHA" ]; then
+          if REF_JSON=$(gh api "repos/$REPO/git/ref/tags/$VERSION" 2>/dev/null); then
+            OBJ_SHA=$(printf '%s' "$REF_JSON" | jq -r '.object.sha')
+            OBJ_TYPE=$(printf '%s' "$REF_JSON" | jq -r '.object.type')
             if [ "$OBJ_TYPE" = "tag" ]; then
+              # annotated tag -> dereference to the commit it points at
               EXISTING=$(gh api "repos/$REPO/git/tags/$OBJ_SHA" --jq '.object.sha' 2>/dev/null || true)
             else
               EXISTING="$OBJ_SHA"

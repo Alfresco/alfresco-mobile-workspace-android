@@ -32,6 +32,7 @@ jobs:
   tag-release:
     name: Create tag & GitHub Release
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,10 +42,12 @@ jobs:
 
       - name: Resolve version
         id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          VERSION="${{ github.event.inputs.version }}"
+          VERSION="$INPUT_VERSION"
           if [ -z "$VERSION" ]; then
-            VERSION=$(grep -oE 'versionName "[^"]+"' app/build.gradle | head -1 | sed -E 's/versionName "([^"]+)"/\1/')
+            VERSION=$(grep -oE 'versionName "[^"]+"' app/build.gradle | head -1 | sed -E 's/versionName "([^"]+)"/\1/' || true)
           fi
           if [ -z "$VERSION" ]; then
             echo "::error::Could not determine version (no override and no versionName in app/build.gradle)."
@@ -62,9 +65,10 @@ jobs:
         id: exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          if gh release view "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
-            echo "::notice::Release ${{ steps.version.outputs.version }} already exists — nothing to do."
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "::notice::Release $VERSION already exists — nothing to do."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
@@ -74,19 +78,33 @@ jobs:
         if: steps.exists.outputs.skip == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TARGET: ${{ steps.version.outputs.target_sha }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          TARGET="${{ steps.version.outputs.target_sha }}"
           # Guard: if the tag already exists on a different commit, refuse rather than
           # silently attach the Release to the wrong commit (gh ignores --target then).
-          EXISTING=$(gh api "repos/${{ github.repository }}/git/refs/tags/$VERSION" --jq '.object.sha' 2>/dev/null || true)
+          # Use the exact-match singular ref endpoint and dereference annotated tags.
+          EXISTING=""
+          OBJ_SHA=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.sha' 2>/dev/null || true)
+          OBJ_TYPE=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.type' 2>/dev/null || true)
+          if [ -n "$OBJ_SHA" ]; then
+            if [ "$OBJ_TYPE" = "tag" ]; then
+              EXISTING=$(gh api "repos/$REPO/git/tags/$OBJ_SHA" --jq '.object.sha' 2>/dev/null || true)
+            else
+              EXISTING="$OBJ_SHA"
+            fi
+          fi
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "$TARGET" ]; then
             echo "::error::Tag $VERSION already exists at $EXISTING but target is $TARGET. Refusing to create the Release on a different commit."
             exit 1
           fi
+          PRERELEASE_FLAG=""
+          if [ "$PRERELEASE" = "true" ]; then PRERELEASE_FLAG="--prerelease"; fi
           gh release create "$VERSION" \
             --target "$TARGET" \
             --title "$VERSION" \
             --generate-notes \
-            ${{ github.event.inputs.prerelease == 'true' && '--prerelease' || '' }}
+            $PRERELEASE_FLAG
           echo "::notice::Created release $VERSION at $TARGET."

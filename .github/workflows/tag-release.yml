@@ -55,7 +55,8 @@ jobs:
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Resolved version: $VERSION"
+          echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $VERSION (target $(git rev-parse HEAD))"
 
       - name: Skip if release already exists
         id: exists
@@ -74,9 +75,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ steps.version.outputs.version }}" \
-            --target "${{ github.sha }}" \
-            --title "${{ steps.version.outputs.version }}" \
+          VERSION="${{ steps.version.outputs.version }}"
+          TARGET="${{ steps.version.outputs.target_sha }}"
+          # Guard: if the tag already exists on a different commit, refuse rather than
+          # silently attach the Release to the wrong commit (gh ignores --target then).
+          EXISTING=$(gh api "repos/${{ github.repository }}/git/refs/tags/$VERSION" --jq '.object.sha' 2>/dev/null || true)
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "$TARGET" ]; then
+            echo "::error::Tag $VERSION already exists at $EXISTING but target is $TARGET. Refusing to create the Release on a different commit."
+            exit 1
+          fi
+          gh release create "$VERSION" \
+            --target "$TARGET" \
+            --title "$VERSION" \
             --generate-notes \
             ${{ github.event.inputs.prerelease == 'true' && '--prerelease' || '' }}
-          echo "::notice::Created release ${{ steps.version.outputs.version }} at ${{ github.sha }}."
+          echo "::notice::Created release $VERSION at $TARGET."

@@ -1,0 +1,110 @@
+name: Tag & GitHub Release
+
+# Deliberate, one-per-marketing-version release tagging (Model B).
+# The community repo has no store-release pipeline; run this manually to create
+# the git tag + GitHub Release for a shipped version, matching the enterprise repo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit SHA or branch to tag (defaults to main)'
+        required: false
+        default: 'main'
+      version:
+        description: 'Version override (defaults to versionName in app/build.gradle)'
+        required: false
+        default: ''
+      prerelease:
+        description: 'Mark the GitHub Release as a pre-release'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag-release:
+    name: Create tag & GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          VERSION="$INPUT_VERSION"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -oE 'versionName "[^"]+"' app/build.gradle | head -1 | sed -E 's/versionName "([^"]+)"/\1/' || true)
+          fi
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not determine version (no override and no versionName in app/build.gradle)."
+            exit 1
+          fi
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+([.-].+)?$'; then
+            echo "::error::Version '$VERSION' does not look like a valid marketing version."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $VERSION (target $(git rev-parse HEAD))"
+
+      - name: Skip if release already exists
+        id: exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "::notice::Release $VERSION already exists — nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag & GitHub Release
+        if: steps.exists.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TARGET: ${{ steps.version.outputs.target_sha }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+        run: |
+          # Guard: if the tag already exists on a different commit, refuse rather than
+          # silently attach the Release to the wrong commit (gh ignores --target then).
+          # Use the exact-match singular ref endpoint and dereference annotated tags.
+          EXISTING=""
+          OBJ_SHA=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.sha' 2>/dev/null || true)
+          OBJ_TYPE=$(gh api "repos/$REPO/git/ref/tags/$VERSION" --jq '.object.type' 2>/dev/null || true)
+          if [ -n "$OBJ_SHA" ]; then
+            if [ "$OBJ_TYPE" = "tag" ]; then
+              EXISTING=$(gh api "repos/$REPO/git/tags/$OBJ_SHA" --jq '.object.sha' 2>/dev/null || true)
+            else
+              EXISTING="$OBJ_SHA"
+            fi
+          fi
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "$TARGET" ]; then
+            echo "::error::Tag $VERSION already exists at $EXISTING but target is $TARGET. Refusing to create the Release on a different commit."
+            exit 1
+          fi
+          PRERELEASE_FLAG=""
+          if [ "$PRERELEASE" = "true" ]; then PRERELEASE_FLAG="--prerelease"; fi
+          gh release create "$VERSION" \
+            --target "$TARGET" \
+            --title "$VERSION" \
+            --generate-notes \
+            $PRERELEASE_FLAG
+          echo "::notice::Created release $VERSION at $TARGET."

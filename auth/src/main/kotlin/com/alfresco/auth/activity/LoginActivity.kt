@@ -76,7 +76,7 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
     private fun setupToolbar() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
     private fun onLoading(isLoading: Boolean) {

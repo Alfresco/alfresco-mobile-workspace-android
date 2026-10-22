@@ -64,7 +64,7 @@ class TasksFragment : TaskListFragment<TasksViewModel, TasksViewState>() {
                 navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
                 setNavigationOnClickListener {
                     withState(viewModel) { _ ->
-                        requireActivity().onBackPressed()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     }
                 }
             }

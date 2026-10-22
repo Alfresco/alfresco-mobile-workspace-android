@@ -172,7 +172,7 @@ class PdfViewerFragment : ChildViewerFragment(), MavericksView {
                     dialog.cancel()
                 }
                 .setOnCancelListener {
-                    requireActivity().onBackPressed()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }.create()
 
         alert.show()

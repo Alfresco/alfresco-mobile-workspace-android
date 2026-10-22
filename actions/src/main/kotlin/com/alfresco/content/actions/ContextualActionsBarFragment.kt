@@ -52,7 +52,7 @@ class ContextualActionsBarFragment : Fragment(), MavericksView, EntryListener {
         lifecycleScope.on<ActionDelete> {
             // delayed back to present the toast
             delay(1000)
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         viewModel.setEntryListener(this)
     }

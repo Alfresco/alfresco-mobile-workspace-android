@@ -194,7 +194,7 @@ class SaveFragment : Fragment(), MavericksView {
     private fun goBack() {
         viewModel.clearCaptureList()
         viewModel.clearCaptures()
-        requireActivity().onBackPressed()
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun delete(captureItem: CaptureItem) {

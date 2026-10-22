@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -58,6 +59,17 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         )
 
         executePermission(this, GlobalScope)
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
+                }
+            },
+        )
     }
 
     private fun executeIntentData() {
@@ -217,11 +229,6 @@ class ExtensionActivity : AppCompatActivity(), MavericksView, ActionPermission {
         i.putExtra(LoginViewModel.EXTRA_AUTH_CONFIG, acc.authConfig)
         i.putExtra(LoginViewModel.EXTRA_AUTH_STATE, acc.authState)
         startActivity(i)
-        finish()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
         finish()
     }
 

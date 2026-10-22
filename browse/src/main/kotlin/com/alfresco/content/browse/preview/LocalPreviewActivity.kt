@@ -32,7 +32,7 @@ class LocalPreviewActivity : AppCompatActivity() {
                 intent.extras?.getString("title")
             }
         supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
-        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         Action.showActionToasts(
             lifecycleScope,

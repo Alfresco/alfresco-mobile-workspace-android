@@ -22,7 +22,7 @@ class ViewerActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeActionContentDescription(getString(R.string.label_navigation_back))
-        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         if (intent.extras?.getString("mode") == "share") {
             binding.parentActionBarList.visibility = View.GONE

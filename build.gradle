@@ -46,11 +46,11 @@ subprojects {
     afterEvaluate {
         if(it.hasProperty('android')) {
             android {
-                compileSdkVersion 36
+                compileSdkVersion "android-37.0"
 
                 defaultConfig {
                     minSdkVersion 24
-                    targetSdkVersion 36
+                    targetSdkVersion 37
                 }
                 compileOptions {
                     sourceCompatibility JavaVersion.VERSION_17

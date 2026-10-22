@@ -76,7 +76,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
             setNavigationOnClickListener {
                 withState(viewModel) { _ ->
-                    requireActivity().onBackPressed()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
         }
@@ -101,7 +101,7 @@ class ProcessDetailFragment : BaseDetailFragment(), MavericksView, EntryListener
                 when {
                     state.requestStartWorkflow is Success && state.requestStartWorkflow.complete -> {
                         viewModel.updateProcessList()
-                        requireActivity().onBackPressed()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     }
                 }
                 epoxyAttachmentController.requestModelBuild()

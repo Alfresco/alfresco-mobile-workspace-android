@@ -6,13 +6,20 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 object ConnectivityTracker {
     private var isTracking = false
     private val _networkAvailable = MutableStateFlow(false)
     val networkAvailable: StateFlow<Boolean> = _networkAvailable
+
+    // Emits on every new default network, e.g. Wi-Fi to Wi-Fi, where networkAvailable stays true.
+    private val _networkChanged = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val networkChanged: SharedFlow<Unit> = _networkChanged
 
     @RequiresApi(24)
     fun startTracking(context: Context) {
@@ -23,6 +30,7 @@ object ConnectivityTracker {
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     _networkAvailable.value = true
+                    _networkChanged.tryEmit(Unit)
                 }
 
                 override fun onLost(network: Network) {

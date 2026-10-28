@@ -15,4 +15,6 @@
     <string name="title_tasks">Tasks</string>
     <string name="select_button">Select</string>
     <string name="warning_max_item_multi_selection">Select a maximum of %d items</string>
+    <string name="error_server_unreachable_title">Unable to connect to server</string>
+    <string name="error_server_unreachable_message">Check your network connection, then pull down to refresh.</string>
 </resources>

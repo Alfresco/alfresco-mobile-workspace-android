@@ -43,6 +43,8 @@ import com.alfresco.content.data.MultiSelectionData
 import com.alfresco.content.data.ResponsePaging
 import com.alfresco.content.data.getJsonFromSharedPrefs
 import com.alfresco.content.listview.ListViewModel.Companion.MULTI_SELECTION_LIMIT
+import com.alfresco.content.network.ConnectivityTracker
+import com.alfresco.content.network.isNetworkError
 import com.alfresco.content.simpleController
 import com.alfresco.events.on
 import com.alfresco.list.replace
@@ -51,6 +53,12 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+
+/**
+ * True when the request failed because the server could not be reached.
+ */
+fun Async<*>.isNetworkFailure(): Boolean = this is Fail && error.isNetworkError()
 
 interface ListViewState : MavericksState {
     val entries: List<Entry>
@@ -95,7 +103,13 @@ abstract class ListViewModel<S : ListViewState>(
         viewModelScope.on<ActionRemoveOffline> { updateActionEntries(it.entry, it.entries) }
         viewModelScope.on<ActionMoveFilesFolders> { onMove(it) }
         viewModelScope.on<ActionStartProcess> { onStartProcess(it.entries.ifEmpty { listOf(it.entry) }) }
+        viewModelScope.launch { ConnectivityTracker.networkChanged.collect { retryAfterNetworkFailure() } }
     }
+
+    private fun retryAfterNetworkFailure() =
+        withState { state ->
+            if (state.request.isNetworkFailure()) refresh()
+        }
 
     private fun onStartProcess(entries: List<Entry>) =
         entries.run {
@@ -203,6 +217,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     var percentageFiles: LinearProgressIndicator? = null
     private val epoxyController: AsyncEpoxyController by lazy { epoxyController() }
     private var delayedBoundary: Boolean = false
+    private var reportedNetworkFailure: Throwable? = null
     private var isViewRequiredMultiSelection = false
     var bottomMoveButtonLayout: ConstraintLayout? = null
 
@@ -287,7 +302,24 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
                 refreshLayout.isRefreshing = false
             }
 
+            reportNetworkFailureOverContent(state)
+
             epoxyController.requestModelBuild()
+        }
+
+    // An empty list shows the error in place; a populated list keeps its content and shows a snackbar.
+    private fun reportNetworkFailureOverContent(state: S) {
+        val error = (state.request as? Fail)?.error ?: return
+        if (state.entries.isEmpty() || !error.isNetworkError() || error === reportedNetworkFailure) return
+        reportedNetworkFailure = error
+        Snackbar.make(recyclerView, R.string.error_server_unreachable_title, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun messageArgs(state: ListViewState): Triple<Int, Int, Int> =
+        if (state.request.isNetworkFailure()) {
+            Triple(R.drawable.ic_server_unreachable, R.string.error_server_unreachable_title, R.string.error_server_unreachable_message)
+        } else {
+            viewModel.emptyMessageArgs(state)
         }
 
     /**
@@ -316,7 +348,7 @@ abstract class ListFragment<VM : ListViewModel<S>, S : ListViewState>(layoutID: 
     private fun epoxyController() =
         simpleController(viewModel) { state ->
             if (state.entries.isEmpty() && state.request.complete) {
-                val args = viewModel.emptyMessageArgs(state)
+                val args = messageArgs(state)
                 listViewMessage {
                     id("empty_message")
                     iconRes(args.first)

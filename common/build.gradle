@@ -26,4 +26,6 @@ dependencies {
 
     implementation libs.mavericks
     implementation libs.epoxy.core
+
+    testImplementation libs.junit
 }

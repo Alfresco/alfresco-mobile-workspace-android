@@ -8,11 +8,11 @@ plugins {
 
 android {
     namespace 'com.alfresco.content.process'
-    compileSdkVersion "android-37.0"
+    compileSdk 33
 
     defaultConfig {
         minSdk 26
-        targetSdk 37
+        targetSdk 33
         vectorDrawables {
             useSupportLibrary true
         }

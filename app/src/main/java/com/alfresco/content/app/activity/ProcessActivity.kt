@@ -40,7 +40,7 @@ class ProcessActivity : BaseActivity(), MavericksView {
         actionBarController = ActionBarController(actionBarLayout)
         actionBarController.setupActionBar(this, navController)
 
-        actionBarLayout.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        actionBarLayout.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun setupActionToasts() =

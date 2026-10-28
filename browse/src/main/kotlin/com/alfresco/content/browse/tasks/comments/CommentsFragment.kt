@@ -54,7 +54,7 @@ class CommentsFragment : Fragment(), MavericksView {
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
-            setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            setNavigationOnClickListener { requireActivity().onBackPressed() }
             title = resources.getString(R.string.title_comments)
         }
 

@@ -87,7 +87,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
                     withState(viewModel) { state ->
                         viewModel.updateTaskStatusAndName(viewModel.previousTaskFormStatus, state.parent?.comment)
                     }
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    requireActivity().onBackPressed()
                 }
                 title = resources.getString(R.string.title_status)
             }
@@ -172,7 +172,7 @@ class TaskStatusFragment : Fragment(), MavericksView {
 
             if (state.requestSaveForm.invoke()?.code() == 200) {
                 viewModel.updateTaskStatusAndName(state.parent?.taskFormStatus, binding.commentInput.text.toString().trim())
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                requireActivity().onBackPressed()
             }
 
             binding.tvStatus.text = state.parent?.taskFormStatus

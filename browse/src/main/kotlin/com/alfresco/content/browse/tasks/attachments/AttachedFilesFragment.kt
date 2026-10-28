@@ -62,7 +62,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
         binding.toolbar.apply {
             navigationContentDescription = getString(R.string.label_navigation_back)
             navigationIcon = requireContext().getDrawableForAttribute(R.attr.homeAsUpIndicator)
-            setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            setNavigationOnClickListener { requireActivity().onBackPressed() }
             title = resources.getString(R.string.title_attached_files)
         }
 
@@ -118,7 +118,7 @@ class AttachedFilesFragment : BaseDetailFragment(), MavericksView, EntryListener
 
             binding.recyclerView.isNestedScrollingEnabled = !viewModel.isTaskCompleted(state)
 
-            if (state.listContents.isEmpty()) requireActivity().onBackPressedDispatcher.onBackPressed()
+            if (state.listContents.isEmpty()) requireActivity().onBackPressed()
 
             epoxyController.requestModelBuild()
         }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -48,15 +47,6 @@ class MoveActivity : AppCompatActivity(), MavericksView {
         if (!resources.getBoolean(R.bool.isTablet)) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    onSupportNavigateUp()
-                }
-            },
-        )
     }
 
     private fun configure() {
@@ -129,4 +119,8 @@ class MoveActivity : AppCompatActivity(), MavericksView {
             findViewById(android.R.id.content),
             bottomView,
         )
+
+    override fun onBackPressed() {
+        onSupportNavigateUp()
+    }
 }

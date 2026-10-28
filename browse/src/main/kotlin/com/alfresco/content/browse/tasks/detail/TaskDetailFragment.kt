@@ -104,7 +104,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     if (!viewModel.isWorkflowTask && (viewModel.isTaskAssigneeChanged(state) || viewModel.isTaskDetailsChanged(state))) {
                         discardTaskPrompt()
                     } else {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        requireActivity().onBackPressed()
                     }
                 }
             }
@@ -206,7 +206,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                     (state.requestOutcomes.invoke()?.code() == 200) ||
                     (state.requestClaimRelease.invoke()?.code() == 200) -> {
                     viewModel.updateTaskList()
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    requireActivity().onBackPressed()
                 }
 
                 state.requestUpdateTask is Success -> {
@@ -399,7 +399,7 @@ class TaskDetailFragment : BaseDetailFragment(), MavericksView, EntryListener {
                 .setMessage(getString(R.string.dialog_message_discard_task))
                 .setNegativeButton(getString(R.string.dialog_negative_button_task), null)
                 .setPositiveButton(getString(R.string.dialog_positive_button_task)) { _, _ ->
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    requireActivity().onBackPressed()
                 }
                 .show()
         discardTaskDialog = WeakReference(dialog)

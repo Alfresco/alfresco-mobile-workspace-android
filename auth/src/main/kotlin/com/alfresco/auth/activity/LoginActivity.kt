@@ -15,6 +15,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.lifecycleScope
 import com.alfresco.android.aims.R
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.Credentials
@@ -26,8 +27,10 @@ import com.alfresco.auth.fragments.InputServerFragment
 import com.alfresco.auth.ui.AuthenticationActivity
 import com.alfresco.auth.ui.observe
 import com.alfresco.common.getViewModel
+import com.alfresco.content.LocalNetworkPermission
 import com.alfresco.ui.components.TextInputLayout
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import java.util.ArrayDeque
 
 abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
@@ -69,8 +72,15 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
         observe(viewModel.onShowHelp, ::showHelp)
         observe(viewModel.onShowSettings, ::showSettings)
+        observe(viewModel.onCheckLocalNetwork, ::checkLocalNetwork)
 
         title = ""
+    }
+
+    private fun checkLocalNetwork(server: String) {
+        lifecycleScope.launch {
+            viewModel.onLocalNetworkChecked(LocalNetworkPermission.requestIfNeeded(this@LoginActivity, server))
+        }
     }
 
     private fun setupToolbar() {

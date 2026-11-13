@@ -36,12 +36,14 @@ class LoginViewModel(
     private val _onShowHelp = MutableLiveEvent<Int>()
     private val _onShowSettings = MutableLiveEvent<Int>()
     private val _onSaveSettings = MutableLiveEvent<Int>()
+    private val _onCheckLocalNetwork = MutableLiveEvent<String>()
 
     val hasNavigation: LiveData<Boolean> get() = _hasNavigation
     val step: LiveData<Step> get() = _step
     val onShowHelp: LiveEvent<Int> = _onShowHelp
     val onShowSettings: LiveEvent<Int> = _onShowSettings
     val onSaveSettings: LiveEvent<Int> = _onSaveSettings
+    val onCheckLocalNetwork: LiveEvent<String> = _onCheckLocalNetwork
     val isLoading = MutableLiveData<Boolean>()
     val identityUrl = MutableLiveData("")
     val applicationUrl = MutableLiveData("")
@@ -102,6 +104,14 @@ class LoginViewModel(
     fun connect() {
         isLoading.value = true
         loadSavedConfig()
+        _onCheckLocalNetwork.value = identityUrl.value!!
+    }
+
+    fun onLocalNetworkChecked(granted: Boolean) {
+        if (!granted) {
+            _onError.value = context.getString(com.alfresco.content.common.R.string.local_network_permission_denied)
+            return
+        }
 
         try {
             checkAuthType(identityUrl.value!!, authConfig, ::onAuthType)

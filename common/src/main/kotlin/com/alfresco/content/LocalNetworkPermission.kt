@@ -8,6 +8,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.alfresco.content.common.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.net.InetAddress
 import kotlin.coroutines.cancellation.CancellationException
@@ -33,6 +35,8 @@ object LocalNetworkPermission {
         return try {
             PermissionFragment.requestPermission(context, PERMISSION, context.getString(R.string.local_network_permission_rationale))
         } catch (ex: CancellationException) {
+            // PermissionFragment cancels the request when the rationale is dismissed; real cancellation still propagates.
+            currentCoroutineContext().ensureActive()
             false
         }
     }

@@ -32,6 +32,7 @@ import com.alfresco.ui.components.TextInputLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import java.util.ArrayDeque
+import kotlin.coroutines.cancellation.CancellationException
 
 abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
     override val viewModel: LoginViewModel by lazy {
@@ -79,7 +80,15 @@ abstract class LoginActivity : AuthenticationActivity<LoginViewModel>() {
 
     private fun checkLocalNetwork(server: String) {
         lifecycleScope.launch {
-            viewModel.onLocalNetworkChecked(LocalNetworkPermission.requestIfNeeded(this@LoginActivity, server))
+            val granted: Boolean =
+                try {
+                    LocalNetworkPermission.requestIfNeeded(this@LoginActivity, server)
+                } catch (ex: CancellationException) {
+                    // Activity recreated mid-prompt: clear the spinner so Connect can be tapped again.
+                    viewModel.isLoading.value = false
+                    throw ex
+                }
+            viewModel.onLocalNetworkChecked(granted)
         }
     }
 

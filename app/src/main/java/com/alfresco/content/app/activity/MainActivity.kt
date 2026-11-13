@@ -90,7 +90,8 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
 
         // Permission prompts run one at a time; local network first so existing on-prem sessions keep working.
         lifecycleScope.launch {
-            Account.getAccount(this@MainActivity)?.let { LocalNetworkPermission.requestIfNeeded(this@MainActivity, it.serverUrl) }
+            val account: Account? = if (savedInstanceState == null) Account.getAccount(this@MainActivity) else null
+            account?.let { LocalNetworkPermission.requestIfNeeded(this@MainActivity, it.serverUrl) }
             requestNotificationPermissionIfNeeded()
         }
 

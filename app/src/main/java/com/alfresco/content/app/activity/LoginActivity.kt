@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import com.alfresco.auth.AuthConfig
 import com.alfresco.auth.Credentials
 import com.alfresco.auth.activity.LoginViewModel.Companion.EXTRA_IS_LOGIN
+import com.alfresco.content.LocalNetworkPermission
 import com.alfresco.content.account.Account
 import com.alfresco.content.app.R
 import com.alfresco.content.data.APIEvent
@@ -29,6 +30,11 @@ class LoginActivity : com.alfresco.auth.activity.LoginActivity() {
         val context = applicationContext
 
         lifecycleScope.launch {
+            // The content service can live on a different host than the identity server checked at Connect.
+            if (!LocalNetworkPermission.requestIfNeeded(this@LoginActivity, endpoint)) {
+                onError(com.alfresco.content.common.R.string.local_network_permission_denied)
+                return@launch
+            }
             try {
                 val session = Session(context, account)
                 val person = PeopleRepository(session).me()

@@ -34,6 +34,8 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.withState
 import com.alfresco.auth.activity.LoginViewModel
 import com.alfresco.auth.ui.observe
+import com.alfresco.content.LocalNetworkPermission
+import com.alfresco.content.account.Account
 import com.alfresco.content.actions.Action
 import com.alfresco.content.actions.ContextualActionsSheet
 import com.alfresco.content.activityViewModel
@@ -86,8 +88,12 @@ class MainActivity : AppCompatActivity(), MavericksView, ActionMode.Callback {
         mobileConfigDataEntry = getJsonFromSharedPrefs(this, KEY_FEATURES_MOBILE)
         observe(viewModel.navigationMode, ::navigateTo)
 
-        // Request notification permission for Android 13+
-        requestNotificationPermissionIfNeeded()
+        // Permission prompts run one at a time; local network first so existing on-prem sessions keep working.
+        lifecycleScope.launch {
+            val account: Account? = if (savedInstanceState == null) Account.getAccount(this@MainActivity) else null
+            account?.let { LocalNetworkPermission.requestIfNeeded(this@MainActivity, it.serverUrl) }
+            requestNotificationPermissionIfNeeded()
+        }
 
         GlobalScope.launch {
             MultiSelection.observeMultiSelection().collect {
